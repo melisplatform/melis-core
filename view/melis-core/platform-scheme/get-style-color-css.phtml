@@ -32,8 +32,6 @@
 .client-contact-address .panel-default>.panel-heading {
     background-color: <?= $primaryColor; ?> !important;
 }
-.accordion-button:not(.collapsed),
-.accordion-button,
 #btnDelImg,
 .cron-info-toggle,
 .progressContent .progress .text-danger,
@@ -888,7 +886,7 @@ div.glyphicons-social.glyphicon-primary i:before {
 }
 .login-page .footer a:hover,
 .login-page .footer a {
-    color: <?= $loginLinkColor; ?>
+    color: <?= $primaryColor; //$loginLinkColor; ?>; 
 }
 /* =============== Secondary Color =============== */
 .widget.widget-tabs > .widget-head ul li.active a.glyphicons:focus i:before,
@@ -1142,4 +1140,37 @@ div.glyphicons-social.glyphicon-primary i:before {
 
 .melis-primary-bg {
     background: <?= $primaryColor; ?> !important;
+}
+
+/* Platform theme optioins */
+.navbar.main.navbar-primary .left-menu {
+    background-color: <?= $primaryColor; ?>;
+}
+.navbar.main.navbar-primary .toggle-button i {
+    color: <?= $secondaryColor; ?>;
+}
+.navbar.main.navbar-primary .appbrand span {
+    color: #fff;
+}
+
+.sidebar.sidebar-inverse .user-profile .rounded-circle, 
+.sidebar.sidebar-inverse .user-profile .img-circle {
+    border-color: #4e4e4e;
+}
+.sidebar.sidebar-inverse .user-profile ul li.active a, 
+.sidebar.sidebar-inverse .user-profile ul li.active:hover a {
+    color: <?= $primaryColor; ?>;
+}
+.sidebar.sidebar-inverse>.sidebarMenuWrapper>ul li {
+    border-bottom-color: #2c2c2c;
+}
+.sidebar.sidebar-inverse>.sidebarMenuWrapper>ul li a {
+    color: #fff;
+}
+.sidebar.sidebar-inverse>.sidebarMenuWrapper>ul li:hover>a {
+    background: #2c2c2c;
+}
+.sidebar.sidebar-inverse>.sidebarMenuWrapper>ul li.active.hasSubmenu .hasSubmenu.active>a {
+    background: #373737;
+    color: #fff;
 }

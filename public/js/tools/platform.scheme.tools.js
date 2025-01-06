@@ -113,4 +113,52 @@ $(function() {
                 }
                 $headerTitle.html(text);
         });
+
+        $body.on("click", ".platform-theme-options-toggle", function() {
+            $('.platform-theme-options').addClass("open-tools");
+            $('.platform-theme-options-overlay').fadeIn();
+            $('.platform-theme-options-toggle').hide();
+        });
+
+        $body.on("click", ".platform-theme-options-overlay, .close-tools", function () {
+            $('.platform-theme-options').removeClass("open-tools");
+            $('.platform-theme-options-overlay').fadeOut();
+            $('.platform-theme-options-toggle').fadeIn();
+        });
+
+        // Add event listeners for shown and hidden events
+        $body.on("shown.bs.collapse", ".accordion", function (e) {
+            // Highlight the header button of the active panel
+            $(e.target)
+            .prev('.accordion-header')
+            .addClass('active-header');
+        });
+
+        $body.on("hidden.bs.collapse", ".accordion", function (e) {
+            // Remove the highlight from the header button when the panel is hidden
+            $(e.target)
+            .prev('.accordion-header')
+            .removeClass('active-header');
+        });
+
+        $body.on("click", ".open-theme-options", function() {
+            $(".platform-theme-options-toggle").trigger("click");
+        });
+
+        $body.on("click", ".platform-theme-options-toggle", function() {
+            console.log(`$("#range-slider-min").length: `, $("#range-slider-min").length);
+
+            $("#range-slider-min").slider({
+                range: "min",
+                value: 37,
+                min: 1,
+                max: 700,
+                slide: function(event, ui) {
+                    $("#range-slider-value").val(ui.value);
+                }
+            });
+
+            $("#range-slider-value").val( $("#range-slider-min").slider("value") );
+
+        });
 });

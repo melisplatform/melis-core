@@ -610,16 +610,16 @@ return array(
 					            ),
 					        ),
 					    ),
-// 					    array(
-// 					        'spec' => array(
-// 					            'name' => 'usr_rem',
-// 					            'type' => 'checkbox',
-//                                  'options' => array(
-//                                      'label' => 'tr_meliscore_login_remember_me',
-//                                      'label_attributes' => array('class'=>'checkbox'),
-//                                  ),
-// 					        ),
-// 					    ),
+					    /* array(
+					        'spec' => array(
+					            'name' => 'usr_rem',
+					            'type' => 'checkbox',
+                                 'options' => array(
+                                     'label' => 'tr_meliscore_login_remember_me',
+                                     'label_attributes' => array('class'=>'checkbox'),
+                                 ),
+					        ),
+					    ), */
 					),
 				),
 			    'meliscore_forgot' => array(
@@ -883,7 +883,7 @@ return array(
                                 ),
                             ),
                         ),
-                        array(
+                        /* array(
                             'spec' => array(
                                 'name' => 'melis_core_platform_color_sidebar_bg_color',
                                 'type' => 'Text',
@@ -914,7 +914,7 @@ return array(
                                     'placeholder' => 'color',
                                 ),
                             ),
-                        ),
+                        ), */
                     ),
                     'input_filter' => array(
                         'melis_core_platform_color_primary_color' => array(
@@ -953,7 +953,7 @@ return array(
                                 array('name' => 'StringTrim'),
                             ),
                         ),
-                        'melis_core_platform_color_sidebar_bg_color' => array(
+                        /* 'melis_core_platform_color_sidebar_bg_color' => array(
                             'name'     => 'melis_core_platform_color_sidebar_bg_color',
                             'required' => false,
                             'validators' => array(
@@ -988,7 +988,7 @@ return array(
                                 array('name' => 'StripTags'),
                                 array('name' => 'StringTrim'),
                             ),
-                        ),
+                        ), */
                     )
                 ),
                 // End Platform Color scheme form

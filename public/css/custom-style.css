@@ -2377,3 +2377,151 @@ table.dataTable.dtr-inline.collapsed>tbody>tr.dtr-expanded>th.dtr-control:before
 .modal-content .widget.widget-tabs.widget-tabs-responsive > .widget-head {
     border-radius: 0 !important;
 }
+
+/* platform-scheme */
+/* accordion */
+.platform-theme-options-block .accordion-item:last-of-type>.accordion-header .accordion-button,
+.platform-theme-options-block .accordion-item:first-of-type>.accordion-header .accordion-button,
+.platform-theme-options-block .accordion-item:last-of-type,
+.platform-theme-options-block .accordion-item:first-of-type {
+	border-radius: 0;
+}
+.platform-theme-options-block .accordion-item {
+	border: 0;
+	border-bottom: var(--bs-accordion-border-width) solid #eaecef;
+	padding-bottom: 0.5rem;
+}
+.platform-theme-options-block .accordion-item .accordion-button {
+	background-color: transparent;
+	color: #686868;
+	font-size: 1rem;
+	padding: 5px;
+    margin-top: 10px;
+}
+.platform-theme-options-block .accordion-item .accordion-body {
+	padding: 1rem 0;
+}
+/* end accordion */
+
+/* platform theme options */
+.active-header {
+	background-color: #ffe9ea;
+	color: white;
+}
+.platform-theme-options-overlay {
+	display: none;
+    width: 100%;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 41;
+}
+.platform-theme-options {
+	width: 300px;
+    height: 100vh;
+    position: fixed;
+    right: 0;
+    top: 5%;
+    background-color: #ffffff;
+    -webkit-transition: all 0.3s ease;
+    transition: all 0.3s ease;
+    z-index: 41;
+    -webkit-transform: translateX(300px);
+    transform: translateX(300px);
+}
+.open-tools {
+    -webkit-transform: translateX(0);
+    transform: translateX(0);
+}
+.platform-theme-options .platform-theme-options-toggle {
+	position: absolute;
+    top: 10%;
+    right: 302px;
+    width: 40px;
+    height: 40px;
+    background-color: rgba(29, 37, 49, 0.6);
+    -webkit-transition: all ease-in 0.3s;
+    transition: all ease-in 0.3s;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+    font-size: 25px;
+    z-index: -1;
+    text-decoration: none;
+    -webkit-box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+}
+.platform-theme-options-toggle .overlay-loader {
+	color: #fff;
+	background-color: transparent;
+	position: relative;
+	top: auto !important;
+	left: auto;
+	width: auto;
+	height: auto;
+	line-height: 40px;
+}
+.platform-theme-options-toggle .overlay-loader .loader-icon {
+    position: relative;
+    top: auto;
+    left: auto;
+    width: 25px;
+    height: 25px;
+    margin: 0 auto;
+    z-index: 9999;
+}
+.platform-theme-options-title {
+	margin-bottom: 15px;
+    padding: 15px;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: row;
+    flex-direction: row;
+    -webkit-box-pack: justify;
+    -ms-flex-pack: justify;
+    justify-content: space-between;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    border-bottom: 1px solid #eee;
+}
+.platform-theme-options-detail {
+	height: calc(100vh - 72px);
+    padding: 0 15px 15px 15px;
+    overflow: auto;
+}
+.platform-theme-options-detail .platform-theme-options-block h3 {
+    margin: 15px 0;
+    font-size: 14px;
+    font-weight: 500;
+    color: #484d54;
+    font-family: "Poppins, sans-serif";
+}
+.platform-theme-options-block h5,
+.platform-theme-options-block .label-text {
+	font-weight: 600 !important;
+}
+.platform-theme-options-tools-info .form-group {
+	width: 100%;
+}
+.platform-theme-options-tools-info .minicolors-theme-default .minicolors-panel {
+	width: 250px;
+	left: -250px;
+	/* left: -173px; */
+}
+.save-platform-theme-options {
+	width: 100%;
+}
+/* end platform theme options */

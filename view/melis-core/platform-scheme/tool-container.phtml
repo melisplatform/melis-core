@@ -83,7 +83,8 @@ if($headerTitleLen > 13) {
                 }
                 echo $this->form()->closeTag();
             ?>
-            <h3><?= $this->translate('tr_meliscore_platform_scheme_images'); ?></h3>
+            <button type="button" class="btn btn-primary open-theme-options mt-2">Open theme options</button>
+            <h3 class="mt-4"><?= $this->translate('tr_meliscore_platform_scheme_images'); ?></h3>
             <form method="POST" name="melis_core_platform_scheme_images" id="melis_core_platform_scheme_images" enctype="multipart/form-data">
                 <!-- FAVICON -->
                 <div class="melis-ptb20">
@@ -188,43 +189,289 @@ if($headerTitleLen > 13) {
                     </div>
                 </div>
             </form>
-            <script type="text/javascript">
-                (function($) {
-                    //$(".osta_color_code").colorpicker({format: 'hex',useAlpha: false});
-                    $(".minicolor").each(function() {
-                        var $this = $(this);
-                            $this.minicolors({
-                                control: $this.attr("data-control") || 'hue',
-                                defaultValue: $this.attr("data-defaultValue") || '',
-                                format: $this.attr('data-format') || 'hex',
-                                keywords: $this.attr('data-keywords') || '',
-                                inline: $this.attr('data-inline') === 'true',
-                                letterCase: $this.attr('data-letterCase') || 'lowercase',
-                                opacity: $this.attr('data-opacity'),
-                                position: $this.attr('data-position') || 'bottom',
-                                swatches: $this.attr('data-swatches') ? $this.attr('data-swatches').split('|') : [],
-                                change: function(hex, opacity) {
-                                    var log;
-                                        try {
-                                            log = hex ? hex : 'transparent';
+            <div class="platform-theme-options-overlay" style="display: none;"></div>
+            <div class="platform-theme-options">
+                <a href="#" class="platform-theme-options-toggle in-out">
+                    <div class="overlay-loader">
+                        <img class="loader-icon spinning-cog" src="/MelisCore/assets/images/cog12.svg" alt="Toggle platform theme options" width="20" height="20" />
+                    </div>
+                </a>
+                <div class="platform-theme-options-title">
+                    <h6>Platform Theme Options</h6>
+                    <a href="#" class="close-tools"><i class="fa fa-close"></i></a>
+                </div>
+                <div class="platform-theme-options-detail">
+                    <div class="platform-theme-options-block">
+                        <h5>Sidebar</h5>
+                        <div class="platform-theme-options-tools-info">
+                            <form method="POST" name="melis_core_platform_theme_options" id="melis_core_platform_theme_options" enctype="multipart/form-data">
+                                <div id="accordion-sidebar" class="accordion">
+                                    <div class="accordion-item top-logo">
+                                        <h6 class="accordion-header active-header">
+                                            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#top-logo" aria-expanded="true" aria-controls="top-logo">
+                                                Top logo
+                                            </button>
+                                        </h6>
+                                        <div id="top-logo" class="accordion-collapse collapse show" data-bs-parent="#accordion-sidebar">
+                                            <div class="accordion-body">
+                                                <!-- melis_core_platform_theme_options_toggle_button -->
+                                                <div class="form-group">
+                                                    <label for="melis_core_platform_theme_options_toggle_button" class="d-flex flex-row justify-content-between"><div class="label-text">Toggle button</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the toggle button background color by typing the hexadecimal color code or by using the color picker"></i></label>
+                                                    <div class="input-group platform-scheme osta_color_code">
+                                                        <input type="text" name="melis_core_platform_theme_options_toggle_button" id="melis_core_platform_theme_options_toggle_button" class="form-control minicolor-hex" data-control="hue" placeholder="Toggle button" value="#ce5459">
+                                                        <span class="input-group-addon">
+                                                            <input type="hidden" class="minicolor" value="#ce5459"/>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                                <!-- melis_core_platform_theme_options_toggle_button_hover -->
+                                                <div class="form-group">
+                                                    <label for="melis_core_platform_theme_options_toggle_button_hover" class="d-flex flex-row justify-content-between"><div class="label-text">Toggle button hover</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the toggle button background hover color by typing the hexadecimal color code or by using the color picker"></i></label>
+                                                    <div class="input-group platform-scheme osta_color_code">
+                                                        <input type="text" name="melis_core_platform_theme_options_toggle_button_hover" id="melis_core_platform_theme_options_toggle_button_hover" class="form-control minicolor-hex" data-control="hue" placeholder="Toggle button hover" value="#fff">
+                                                        <span class="input-group-addon">
+                                                            <input type="hidden" class="minicolor" value="#fff"/>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                                <!-- melis_core_platform_theme_options_logo_background -->
+                                                <div class="form-group">
+                                                    <label for="melis_core_platform_theme_options_logo_background" class="d-flex flex-row justify-content-between"><div class="label-text">Logo background</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the logo background color by typing the hexadecimal color code or by using the color picker"></i></label>
+                                                    <div class="input-group platform-scheme osta_color_code">
+                                                        <input type="text" name="melis_core_platform_theme_options_logo_background" id="melis_core_platform_theme_options_logo_background" class="form-control minicolor-hex" data-control="hue" placeholder="Logo background" value="#e61c23">
+                                                        <span class="input-group-addon">
+                                                            <input type="hidden" class="minicolor" value="#e61c23"/>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                                <!-- melis_core_platform_theme_options_logo_text -->
+                                                <div class="form-group">
+                                                    <label for="melis_core_platform_theme_options_logo_text" class="d-flex flex-row justify-content-between"><div class="label-text">Logo text</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the logo text color by typing the hexadecimal color code or by using the color picker"></i></label>
+                                                    <div class="input-group platform-scheme osta_color_code">
+                                                        <input type="text" name="melis_core_platform_theme_options_logo_text" id="melis_core_platform_theme_options_logo_text" class="form-control minicolor-hex" data-control="hue" placeholder="Logo text" value="#fff">
+                                                        <span class="input-group-addon">
+                                                            <input type="hidden" class="minicolor" value="#fff"/>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                                <!-- melis_core_platform_theme_options_logo_text_font_size -->
+                                                <div class="form-group">
+                                                    <label for="melis_core_platform_theme_options_logo_text_font_size" class="d-flex flex-row justify-content-between"><div class="label-text">Logo text font size</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the logo text font size"></i></label>
+                                                    <input type="text" id="range-slider-value" class="logo-text-font-size range-slider-value form-control" />
+                                                    <div id="range-slider-min" class="range-slider-min logo-text-font-size" style="border: 0; color: #f6931f; font-weight: bold;"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
 
-                                            if( opacity ) 
-                                                log += ', ' + opacity;
-                                            
-                                            if ( $this.closest(".osta_color_code").find(".minicolor-hex").length ) {
-                                                $this.closest(".osta_color_code").find(".minicolor-hex").val(hex);
-                                            }
-                                        } catch(e) {}
-                                },
-                                theme: 'default'
-                            });
-                    });
-                    
-                    $("input:file").filestyle({buttonName: "btn-primary", buttonText: '<?= $this->translate('tr_meliscore_platform_scheme_file_button'); ?>'});
-                    $("input#sidebar_header_logo:file").filestyle({buttonName: "btn-primary", input: false, buttonText: '<?= $this->translate('tr_meliscore_platform_scheme_file_button'); ?>'});
-                })(jQuery);
-            </script>
+                                    <div class="accordion-item user-profile">
+                                        <h6 class="accordion-header">
+                                            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#user-profile" aria-expanded="false" aria-controls="user-profile">
+                                                User profile
+                                            </button>
+                                        </h6>
+                                        <div id="user-profile" class="accordion-collapse collapse" data-bs-parent="#accordion-sidebar">
+                                            <div class="accordion-body">
+                                                <!-- melis_core_platform_theme_options_user_profile_background -->
+                                                <div class="form-group">
+                                                    <label for="melis_core_platform_theme_options_user_profile_background" class="d-flex flex-row justify-content-between"><div class="label-text">Background</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the background color by typing the hexadecimal color code or by using the color picker"></i></label>
+                                                    <div class="input-group platform-scheme osta_color_code">
+                                                        <input type="text" name="melis_core_platform_theme_options_user_profile_background" id="melis_core_platform_theme_options_user_profile_background" class="form-control minicolor-hex" data-control="hue" placeholder="User profile background" value="#373737">
+                                                        <span class="input-group-addon">
+                                                            <input type="hidden" class="minicolor" value="#373737"/>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                                <!-- melis_core_platform_theme_options_user_profile_image_border -->
+                                                <div class="form-group">
+                                                    <label for="melis_core_platform_theme_options_user_profile_image_border" class="d-flex flex-row justify-content-between"><div class="label-text">Image border</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the border color by typing the hexadecimal color code or by using the color picker"></i></label>
+                                                    <div class="input-group platform-scheme osta_color_code">
+                                                        <input type="text" name="melis_core_platform_theme_options_user_profile_image_border" id="melis_core_platform_theme_options_user_profile_image_border" class="form-control minicolor-hex" data-control="hue" placeholder="User profile image border" value="#4e4e4e">
+                                                        <span class="input-group-addon">
+                                                            <input type="hidden" class="minicolor" value="#4e4e4e"/>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                                <!-- melis_core_platform_theme_options_user_profile_name_text -->
+                                                <div class="form-group">
+                                                    <label for="melis_core_platform_theme_options_user_profile_name_text" class="d-flex flex-row justify-content-between"><div class="label-text">Name text</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the name text color by typing the hexadecimal color code or by using the color picker"></i></label>
+                                                    <div class="input-group platform-scheme osta_color_code">
+                                                        <input type="text" name="melis_core_platform_theme_options_user_profile_name_text" id="melis_core_platform_theme_options_user_profile_name_text" class="form-control minicolor-hex" data-control="hue" placeholder="User profile name text" value="#fff">
+                                                        <span class="input-group-addon">
+                                                            <input type="hidden" class="minicolor" value="#fff"/>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                                <!-- melis_core_platform_theme_options_user_profile_status_text_icon -->
+                                                <div class="form-group">
+                                                    <label for="melis_core_platform_theme_options_user_profile_status_text_icon" class="d-flex flex-row justify-content-between"><div class="label-text">Status text and icon</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the status text and icon color by typing the hexadecimal color code or by using the color picker"></i></label>
+                                                    <div class="input-group platform-scheme osta_color_code">
+                                                        <input type="text" name="melis_core_platform_theme_options_user_profile_status_text_icon" id="melis_core_platform_theme_options_user_profile_status_text_icon" class="form-control minicolor-hex" data-control="hue" placeholder="User profile status text and icon" value="#198754">
+                                                        <span class="input-group-addon">
+                                                            <input type="hidden" class="minicolor" value="#198754"/>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="accordion-item sidebar-menu">
+                                        <h6 class="accordion-header">
+                                            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#sidebar-menu" aria-expanded="false" aria-controls="sidebar-menu">
+                                                Menu
+                                            </button>
+                                        </h6>
+                                        <div id="sidebar-menu" class="accordion-collapse collapse" data-bs-parent="#accordion-sidebar">
+                                            <div class="accordion-body">
+                                                <!-- melis_core_platform_theme_options_sidebar_menu_background -->
+                                                <div class="form-group">
+                                                    <label for="melis_core_platform_theme_options_sidebar_menu_background" class="d-flex flex-row justify-content-between"><div class="label-text">Background</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the background color by typing the hexadecimal color code or by using the color picker"></i></label>
+                                                    <div class="input-group platform-scheme osta_color_code">
+                                                        <input type="text" name="melis_core_platform_theme_options_sidebar_menu_background" id="melis_core_platform_theme_options_sidebar_menu_background" class="form-control minicolor-hex" data-control="hue" placeholder="Menu background" value="#373737">
+                                                        <span class="input-group-addon">
+                                                            <input type="hidden" class="minicolor" value="#373737"/>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                                <!-- melis_core_platform_theme_options_sidebar_menu_hover -->
+                                                <div class="form-group">
+                                                    <label for="melis_core_platform_theme_options_sidebar_menu_hover" class="d-flex flex-row justify-content-between"><div class="label-text">Menu hover</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the menu hover color by typing the hexadecimal color code or by using the color picker"></i></label>
+                                                    <div class="input-group platform-scheme osta_color_code">
+                                                        <input type="text" name="melis_core_platform_theme_options_sidebar_menu_hover" id="melis_core_platform_theme_options_sidebar_menu_hover" class="form-control minicolor-hex" data-control="hue" placeholder="Menu hover" value="#2c2c2c">
+                                                        <span class="input-group-addon">
+                                                            <input type="hidden" class="minicolor" value="#2c2c2c"/>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                                <!-- melis_core_platform_theme_options_sidebar_menu_focus -->
+                                                <div class="form-group">
+                                                    <label for="melis_core_platform_theme_options_sidebar_menu_focus" class="d-flex flex-row justify-content-between"><div class="label-text">Menu focus</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the menu hover color by typing the hexadecimal color code or by using the color picker"></i></label>
+                                                    <div class="input-group platform-scheme osta_color_code">
+                                                        <input type="text" name="melis_core_platform_theme_options_sidebar_menu_focus" id="melis_core_platform_theme_options_sidebar_menu_focus" class="form-control minicolor-hex" data-control="hue" placeholder="Menu hover" value="#e61c23">
+                                                        <span class="input-group-addon">
+                                                            <input type="hidden" class="minicolor" value="#e61c23"/>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                                <!-- melis_core_platform_theme_options_sidebar_menu_submenu_hover_active -->
+                                                <div class="form-group">
+                                                    <label for="melis_core_platform_theme_options_sidebar_menu_submenu_hover_active" class="d-flex flex-row justify-content-between"><div class="label-text">Menu submenu hover and active</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the submenu hover and active color by typing the hexadecimal color code or by using the color picker"></i></label>
+                                                    <div class="input-group platform-scheme osta_color_code">
+                                                        <input type="text" name="melis_core_platform_theme_options_sidebar_menu_submenu_hover_active" id="melis_core_platform_theme_options_sidebar_menu_submenu_hover_active" class="form-control minicolor-hex" data-control="hue" placeholder="Menu hover" value="#373737">
+                                                        <span class="input-group-addon">
+                                                            <input type="hidden" class="minicolor" value="#373737"/>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                                <!-- melis_core_platform_theme_options_sidebar_menu_submenu_hover_text_and_icon -->
+                                                <div class="form-group">
+                                                    <label for="melis_core_platform_theme_options_sidebar_menu_submenu_hover_text_and_icon" class="d-flex flex-row justify-content-between"><div class="label-text">Menu submenu text and icon</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the submenu text and icon on hover and active color by typing the hexadecimal color code or by using the color picker"></i></label>
+                                                    <div class="input-group platform-scheme osta_color_code">
+                                                        <input type="text" name="melis_core_platform_theme_options_sidebar_menu_submenu_hover_text_and_icon" id="melis_core_platform_theme_options_sidebar_menu_submenu_hover_text_and_icon" class="form-control minicolor-hex" data-control="hue" placeholder="Menu hover" value="#fff">
+                                                        <span class="input-group-addon">
+                                                            <input type="hidden" class="minicolor" value="#fff"/>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                                <!-- melis_core_platform_theme_options_sidebar_menu_submenu_default_bg -->
+                                                <div class="form-group">
+                                                    <label for="melis_core_platform_theme_options_sidebar_menu_submenu_default_bg" class="d-flex flex-row justify-content-between"><div class="label-text">Menu submenu default background</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the submenu default background color by typing the hexadecimal color code or by using the color picker"></i></label>
+                                                    <div class="input-group platform-scheme osta_color_code">
+                                                        <input type="text" name="melis_core_platform_theme_options_sidebar_menu_submenu_default_bg" id="melis_core_platform_theme_options_sidebar_menu_submenu_default_bg" class="form-control minicolor-hex" data-control="hue" placeholder="Menu submenu default background" value="#272727">
+                                                        <span class="input-group-addon">
+                                                            <input type="hidden" class="minicolor" value="#272727"/>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                                <!-- melis_core_platform_theme_options_sidebar_menu_submenu_default_text_and_icon -->
+                                                <div class="form-group">
+                                                    <label for="melis_core_platform_theme_options_sidebar_menu_submenu_default_text_and_icon" class="d-flex flex-row justify-content-between"><div class="label-text">Menu submenu default text and icon</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the submenu default text and icon color by typing the hexadecimal color code or by using the color picker"></i></label>
+                                                    <div class="input-group platform-scheme osta_color_code">
+                                                        <input type="text" name="melis_core_platform_theme_options_sidebar_menu_submenu_default_text_and_icon" id="melis_core_platform_theme_options_sidebar_menu_submenu_default_text_and_icon" class="form-control minicolor-hex" data-control="hue" placeholder="Menu hover" value="#5a5a5a">
+                                                        <span class="input-group-addon">
+                                                            <input type="hidden" class="minicolor" value="#5a5a5a"/>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                                <!-- melis_core_platform_theme_options_sidebar_menu_submenu_hover_text_and_icon -->
+                                                <div class="form-group">
+                                                    <label for="melis_core_platform_theme_options_sidebar_menu_submenu_hover_text_and_icon" class="d-flex flex-row justify-content-between"><div class="label-text">Menu submenu hover on text and icon</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the submenu hover on text and icon color by typing the hexadecimal color code or by using the color picker"></i></label>
+                                                    <div class="input-group platform-scheme osta_color_code">
+                                                        <input type="text" name="melis_core_platform_theme_options_sidebar_menu_submenu_hover_text_and_icon" id="melis_core_platform_theme_options_sidebar_menu_submenu_hover_text_and_icon" class="form-control minicolor-hex" data-control="hue" placeholder="Menu submenu hover on text and icon" value="#fff">
+                                                        <span class="input-group-addon">
+                                                            <input type="hidden" class="minicolor" value="#fff"/>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                                <!-- melis_core_platform_theme_options_sidebar_menu_border_bottom_color -->
+                                                <div class="form-group">
+                                                    <label for="melis_core_platform_theme_options_sidebar_menu_border_bottom_color" class="d-flex flex-row justify-content-between"><div class="label-text">Menu border bottom color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the menu border bottom color by typing the hexadecimal color code or by using the color picker"></i></label>
+                                                    <div class="input-group platform-scheme osta_color_code">
+                                                        <input type="text" name="melis_core_platform_theme_options_sidebar_menu_border_bottom_color" id="melis_core_platform_theme_options_sidebar_menu_border_bottom_color" class="form-control minicolor-hex" data-control="hue" placeholder="Menu text and icon" value="#2c2c2c">
+                                                        <span class="input-group-addon">
+                                                            <input type="hidden" class="minicolor" value="#2c2c2c"/>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                                <!-- melis_core_platform_theme_options_sidebar_menu_text_and_icon -->
+                                                <div class="form-group">
+                                                    <label for="melis_core_platform_theme_options_sidebar_menu_text_and_icon" class="d-flex flex-row justify-content-between"><div class="label-text">Menu text and icon</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the text and icon color by typing the hexadecimal color code or by using the color picker"></i></label>
+                                                    <div class="input-group platform-scheme osta_color_code">
+                                                        <input type="text" name="melis_core_platform_theme_options_sidebar_menu_text_and_icon" id="melis_core_platform_theme_options_sidebar_menu_text_and_icon" class="form-control minicolor-hex" data-control="hue" placeholder="Menu text and icon" value="#fff">
+                                                        <span class="input-group-addon">
+                                                            <input type="hidden" class="minicolor" value="#fff"/>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <button type="button" class="btn btn-primary mt-4 mb-4 save-platform-theme-options">Save</button>
+                </div>
+            </div>
+            <!-- end platfome-theme-options -->
         </div>
+        <script type="text/javascript">
+            (function($) {
+                //$(".osta_color_code").colorpicker({format: 'hex',useAlpha: false});
+                $(".minicolor").each(function() {
+                    var $this = $(this);
+                        $this.minicolors({
+                            control: $this.attr("data-control") || 'hue',
+                            defaultValue: $this.attr("data-defaultValue") || '',
+                            format: $this.attr('data-format') || 'hex',
+                            keywords: $this.attr('data-keywords') || '',
+                            inline: $this.attr('data-inline') === 'true',
+                            letterCase: $this.attr('data-letterCase') || 'lowercase',
+                            opacity: $this.attr('data-opacity'),
+                            position: $this.attr('data-position') || 'bottom',
+                            swatches: $this.attr('data-swatches') ? $this.attr('data-swatches').split('|') : [],
+                            change: function(hex, opacity) {
+                                var log;
+                                    try {
+                                        log = hex ? hex : 'transparent';
+
+                                        if( opacity ) 
+                                            log += ', ' + opacity;
+                                        
+                                        if ( $this.closest(".osta_color_code").find(".minicolor-hex").length ) {
+                                            $this.closest(".osta_color_code").find(".minicolor-hex").val(hex);
+                                        }
+                                    } catch(e) {}
+                            },
+                            theme: 'default'
+                        });
+                });
+                
+                $("input:file").filestyle({buttonName: "btn-primary", buttonText: '<?= $this->translate('tr_meliscore_platform_scheme_file_button'); ?>'});
+                $("input#sidebar_header_logo:file").filestyle({buttonName: "btn-primary", input: false, buttonText: '<?= $this->translate('tr_meliscore_platform_scheme_file_button'); ?>'});
+            })(jQuery);
+        </script>
         <?php
     }
     else
@@ -233,4 +480,3 @@ if($headerTitleLen > 13) {
     }
     ?>
 </div>
- 
