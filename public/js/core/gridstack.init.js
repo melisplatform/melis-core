@@ -1053,7 +1053,7 @@ var melisDashBoardDragnDrop = {
     },
     // check if gs is empty
     isEmpty: function(el) {
-        return !el.html().trim();
+        return String.prototype.trim(!el.html());
     },
     // checks dashboard's elements width adjustment
     checkDashboardElemWidths: function() {

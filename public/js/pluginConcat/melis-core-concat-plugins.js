@@ -7418,7 +7418,7 @@ if (!Function.prototype.bind) {
             props = {},
             reset_props = {},
             offset,
-            axis = this.options.axis.trim();
+            axis = String.prototype.trim(this.options.axis);
   
         // just call the original implementation of _rearrange()
         // if option `animation` is turned off
