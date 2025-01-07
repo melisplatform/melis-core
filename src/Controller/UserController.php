@@ -778,7 +778,9 @@ class UserController extends MelisAbstractActionController
 
         if (file_exists($file)) {
             $config = $this->getServiceManager()->get('MelisCoreConfig')->getItem('meliscore/datas/login');
-
+        } else {
+            //get default
+            $config = $this->getServiceManager()->get('MelisCoreConfig')->getItem('meliscore/datas/otherconfig_default/login');
         }
 
         $loginAccountLockData = new MelisResultSet();
@@ -916,7 +918,7 @@ class UserController extends MelisAbstractActionController
             $filePermissionErrors[] = 'tr_meliscore_tool_other_config_password_config_file_permission_module';
         }
 
-        if (!is_writable($configFile)) {
+        if (file_exists($configFile) && !is_writable($configFile)) {
             $filePermissionErrors[] = 'tr_meliscore_tool_other_config_password_config_file_permission_config';
         }
 
