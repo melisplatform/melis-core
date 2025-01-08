@@ -701,10 +701,21 @@ class MelisCoreModulesService extends MelisServiceManager
                 elseif ($type == 'js')
                     $this->minifyJs($moduleFileHolder, $arrayPaths);
 
+                //hot fix
+                $newModuleFildeHolder = [];
+                if(!empty($moduleFileHolder)){
+                    foreach($moduleFileHolder as $module => $moduleFiles){
+                        foreach($moduleFiles as $file) {
+                            $newModuleFildeHolder[] = $file;
+                        }
+                    }
+                }
+
                 /**
                  * We merge all bundled files
                  */
-                $allAssets = array_merge($vendorFileHolder, $moduleFileHolderAlreadyBundled, $arrayPaths);
+                $allAssets = array_merge($vendorFileHolder, $moduleFileHolderAlreadyBundled, $newModuleFildeHolder);
+//                $allAssets = array_merge($vendorFileHolder, $moduleFileHolderAlreadyBundled, $arrayPaths);
                 /**
                  * Combine all
                  */
@@ -980,9 +991,10 @@ class MelisCoreModulesService extends MelisServiceManager
     private function copyFile($fileNeeded, $type, $moduleName)
     {
         $docroot = $_SERVER['DOCUMENT_ROOT'];
-        $bundleFolder = $docroot.'/../etc';
+//        $bundleFolder = $docroot.'/../etc';
+        $bundleFolder = $docroot;
 
-        $path = $bundleFolder . '/' . ModulesController::BUNDLE_FOLDER_NAME . '/'.$type;
+        $path = $bundleFolder;// . '/' . ModulesController::BUNDLE_FOLDER_NAME . '/'.$type;
         $dir = $_SERVER['DOCUMENT_ROOT'] . '/../vendor/melisplatform/';
 
         foreach($fileNeeded as $key => $file){
@@ -1070,10 +1082,20 @@ class MelisCoreModulesService extends MelisServiceManager
                 curl_setopt($ch, CURLOPT_URL, $fileStr);
                 curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, FALSE);
                 curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
+                //to fixed problem on redirect
+                curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
                 $text = curl_exec($ch);
                 curl_close($ch);
             } else {
-                $text = file_get_contents($fileStr);
+                //to fixed problem on redirect
+                $options = [
+                    "http" => [
+                        "method" => "GET",
+                        "follow_location" => 1, // Enable following redirects
+                    ],
+                ];
+                $context = stream_context_create($options);
+                $text = file_get_contents($fileStr, false, $context);
             }
 
             if ($removeComments)
