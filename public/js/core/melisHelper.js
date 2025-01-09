@@ -1009,9 +1009,11 @@ var melisHelper = (function () {
 				var tmpDefColumns = [];
 				if (Object.keys(requiredSettings.columns).length > 0) {
 					var ctr = 0;
-					var isColumnSortable = true;
+					var isColumnSortable;
 					// loop all columns
 					$.each(requiredSettings.columns, function (index, item) {
+						isColumnSortable = true;
+						
 						tmpColumns.push({
 							data: index,
 						});
