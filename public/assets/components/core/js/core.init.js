@@ -5,19 +5,19 @@ if (window.location != window.parent.location)
 (function($, window) {
     var $body = $("body");
         //window.onunload = function(){};
-
+        
         //$.expr[':'].scrollable = function( elem ) 
         $.expr.pseudos.scrollable = function(elem) {
-        var scrollable = false,
-            props = [ '', '-x', '-y' ],
-            re = /^(?:auto|scroll)$/i,
-            elem = $(elem);
+            var scrollable = false,
+                props = [ '', '-x', '-y' ],
+                re = /^(?:auto|scroll)$/i,
+                elem = $(elem);
+            
+            $.each( props, function(i,v){
+                return !( scrollable = scrollable || re.test( elem.css( 'overflow' + v ) ) );
+            });
         
-        $.each( props, function(i,v){
-            return !( scrollable = scrollable || re.test( elem.css( 'overflow' + v ) ) );
-        });
-        
-        return scrollable;
+            return scrollable;
         };
 
         if (!Modernizr.touch && $('[href="#template-options"][data-auto-open]').length)

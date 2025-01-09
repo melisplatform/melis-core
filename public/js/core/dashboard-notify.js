@@ -35,8 +35,11 @@ var dashboardNotify = (function() {
     });
 
     // clicking on close button will enable back the plugins menu buttons
-    $body.on("click", ".enjoyhint_close_btn", function() {
+    $body.on("click", ".enjoyhint_close_btn, .enjoyhint_skip_btn", function() {
         enablePluginsMenuButton();
+
+        // destroy enjoyhint instance
+        eh.stop();
     });
 
     // init
@@ -46,10 +49,11 @@ var dashboardNotify = (function() {
             $pluginBox  = $("#id_meliscore_center_dashboard_menu"),
             melisKey    = $("#"+activeTabId).attr("data-meliskey");
 
-            // check if there is grid stack item and plugin menu is open, && $pluginBox.hasClass("shown")
+            // check if there is grid stack item and plugin menu is open & $pluginBox.hasClass("shown")
             if ( melisKey === "meliscore_dashboard" && $gsItem.length === 0 ) {
                 var interval = setInterval(function() {
-                    if ( $pluginBox.length > 0 && $pluginBox.hasClass("shown") ) {
+                    // && $pluginBox.hasClass("shown")
+                    if ( $pluginBox.length > 0 ) {
                         render();
                         clearInterval( interval );
                     }
@@ -62,7 +66,15 @@ var dashboardNotify = (function() {
     // remove enjoyhint html elements / remove style overflow hidden caused by enjoyhint while it is hidden
     function removeEnjoyHintHtml() {
         $body.find(".enjoyhint").remove();
-        $body.prop("style", null);
+        $body.css("overflow", "auto");
+
+        // if .enjoyhint doesn't get removed, this would trigger overflow: auto
+        if ( $(".enjoyhint_hide").length > 0 ) {
+            $body.css("overflow", "auto");
+        }
+
+        // destroy enjoyhint instance
+        // eh.stop();
     }
 
     // disable plugins menu buttons

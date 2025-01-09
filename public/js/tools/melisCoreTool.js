@@ -415,7 +415,7 @@ var melisCoreTool = (function (window) {
             // image changer
             changeImage: changeImage,
 
-            // overflow: hidden body tag
+            // overflow-x: hidden body tag
             addOverflowHidden : addOverflowHidden,
             removeOverflowHidden : removeOverflowHidden,
 
