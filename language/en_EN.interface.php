@@ -26,7 +26,7 @@ return [
     'tr_meliscore_dashboard_notify_steps_general_skip_text' => "Skip help",
     'tr_meliscore_dashboard_notify_step_2_next_text' => "I understood, close",
     'tr_meliscore_dashboard_bubble_plugins' => 'Bubble plugins',
-    'tr_meliscore_dashboard_content' => 'Dashboard contents',
+    'tr_meliscore_dashboard_content' => 'Dashboard',
 
     'tr_meliscore_meliscore' => 'MelisCore',
     'tr_meliscore_header' => 'Header',

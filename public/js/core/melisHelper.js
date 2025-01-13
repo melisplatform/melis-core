@@ -529,7 +529,7 @@ var melisHelper = (function () {
 				"' data-id='" +
 				zoneId +
 				"' title='" +
-				title.replace(/'/g, "&apos;") +
+				title?.replace(/'/g, "&apos;") +
 				"'>";
 			li +=
 				"<i class='fa " + icon + " fa-2x'></i><span class='navtab-pagename'>";
@@ -963,7 +963,6 @@ var melisHelper = (function () {
 					[5, 10, 25, 50],
 				],
 				pageLength: 10,
-				bSort: true,
 				searchDelay: 1500,
 				columnDefs: [
 					{ responsivePriority: 1, targets: 0 },
@@ -1010,9 +1009,11 @@ var melisHelper = (function () {
 				var tmpDefColumns = [];
 				if (Object.keys(requiredSettings.columns).length > 0) {
 					var ctr = 0;
-					var isColumnSortable = true;
+					var isColumnSortable;
 					// loop all columns
 					$.each(requiredSettings.columns, function (index, item) {
+						isColumnSortable = true;
+						
 						tmpColumns.push({
 							data: index,
 						});
@@ -1022,8 +1023,8 @@ var melisHelper = (function () {
 						settings.columnDefs.push({
 							width: item.css.width,
 							targets: ctr,
-							sClass: item.sClass,
-							bSortable: isColumnSortable,
+							className: item.className,
+							orderable: isColumnSortable,
 						});
 
 						ctr++;
@@ -1133,8 +1134,9 @@ var melisHelper = (function () {
 						targets: -1,
 						data: null,
 						width: "10%",
-						bSortable: false,
-						sClass: "dtActionCls all",
+						orderable: false,
+						// sClass: "dtActionCls all",
+						className: "dtActionCls all",
 						mRender: function () {
 							return actionButtons;
 						},

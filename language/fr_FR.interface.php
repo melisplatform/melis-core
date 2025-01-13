@@ -26,7 +26,7 @@ return [
     'tr_meliscore_dashboard_notify_steps_general_skip_text' => "Fermer l'aide",
     'tr_meliscore_dashboard_notify_step_2_next_text' => "J'ai compris, fermer",
     'tr_meliscore_dashboard_bubble_plugins' => 'Bubble plugins',
-    'tr_meliscore_dashboard_content' => 'Dashboard contents',
+    'tr_meliscore_dashboard_content' => 'Dashboard',
 
     // Rights
     'tr_meliscore_meliscore' => 'MelisCore',

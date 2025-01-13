@@ -256,7 +256,7 @@ class MelisCoreLostPasswordService extends MelisServiceManager implements MelisC
             
         $url = $cfg['platform_scheme'].'://'.$cfg['host'].'/melis/reset-password/'.$hash;
         
-        if($isActive){
+        // if($isActive){ // redundant checker, MelisCoreBOEmailService->sendBoEmailByCode already has a complete checker
             // Tags to be replace at email content with the corresponding value
             $tags = array(
                 'USER_Login' => $login,
@@ -280,9 +280,9 @@ class MelisCoreLostPasswordService extends MelisServiceManager implements MelisC
             }else{
                 return false;
             }
-        }else{
-            return false;
-        }
+        // }else{
+        //     return false;
+        // }
     }
     
     /**

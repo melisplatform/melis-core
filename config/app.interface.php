@@ -188,7 +188,7 @@ return array(
                     '/MelisCore/assets/components/modules/admin/forms/elements/bootstrap-timepicker/assets/lib/css/bootstrap-timepicker.css',
                     '/MelisCore/assets/components/modules/admin/forms/elements/colorpicker-farbtastic/assets/css/farbtastic.css',
 
-                    // Data Tables
+                    // DataTables
                     //'/MelisCore/assets/components/modules/admin/tables/datatables/assets/css/datatables.min.css',
                     '/MelisCore/assets/components/modules/admin/tables/datatables/assets/css/datatables-2.1.4.min.css',
 

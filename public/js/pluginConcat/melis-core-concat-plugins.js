@@ -7418,7 +7418,7 @@ if (!Function.prototype.bind) {
             props = {},
             reset_props = {},
             offset,
-            axis = this.options.axis.trim();
+            axis = String.prototype.trim(this.options.axis);
   
         // just call the original implementation of _rearrange()
         // if option `animation` is turned off
@@ -12892,7 +12892,8 @@ $(function() {
         startView: 0,
         todayBtn: false,
         todayHighlight: false,
-        weekStart: 0
+        weekStart: 0,
+        version: 2013 // based on the last change log
     };
     var locale_opts = $.fn.datepicker.locale_opts = [
         'format',
