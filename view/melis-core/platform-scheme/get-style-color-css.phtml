@@ -1147,25 +1147,45 @@ div.glyphicons-social.glyphicon-primary i:before {
     background: <?= $primaryColor; ?> !important;
 }
 
-/* Platform theme optioins */
-.navbar.main.navbar-primary .left-menu {
-    background-color: <?= $primaryColor; ?>;
-}
+/* Platform theme options */
+/* top logo */
 .navbar.main.navbar-primary .toggle-button i {
     color: <?= $secondaryColor; ?>;
+}
+.navbar.main.navbar-primary .toggle-button:hover i {
+    color: #fff;
+}
+.navbar.main.navbar-primary .left-menu {
+    background-color: <?= $primaryColor; ?>;
 }
 .navbar.main.navbar-primary .appbrand span {
     color: #fff;
 }
-
+/* user profile */
+#id_meliscore_leftmenu_identity {
+    background-color: #373737;
+}
 .sidebar.sidebar-inverse .user-profile .rounded-circle, 
 .sidebar.sidebar-inverse .user-profile .img-circle {
-    border-color: #4e4e4e;
+    border-color: #4e4e4e !important;
+    border-radius: 50% !important;
+}
+/* #user-name-link */
+.sidebar.sidebar-inverse .user-profile a {
+    color: #e1e1e1
+}
+.sidebar .user-profile .media-body p {
+    color: #72af46 !important;
 }
 .sidebar.sidebar-inverse .user-profile ul li.active a, 
 .sidebar.sidebar-inverse .user-profile ul li.active:hover a {
-    color: <?= $primaryColor; ?>;
+    background-color: <?= $primaryColor; ?>;
+    color: #fff;
 }
+.sidebar.sidebar-inverse .user-profile ul li a:hover {
+    color: #5a5a5a;
+}
+/* menu */
 .sidebar.sidebar-inverse>.sidebarMenuWrapper>ul li {
     border-bottom-color: #2c2c2c;
 }
@@ -1178,4 +1198,10 @@ div.glyphicons-social.glyphicon-primary i:before {
 .sidebar.sidebar-inverse>.sidebarMenuWrapper>ul li.active.hasSubmenu .hasSubmenu.active>a {
     background: #373737;
     color: #fff;
+}
+/* footer */
+
+/* common */
+.platform-theme-options-tools-info .ui-widget-content {
+    background: #e61c23;
 }

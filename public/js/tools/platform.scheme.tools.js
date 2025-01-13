@@ -114,6 +114,9 @@ $(function() {
                 $headerTitle.html(text);
         });
 
+        /**
+         * evo/platform-scheme
+         */
         $body.on("click", ".platform-theme-options-toggle", function() {
             $('.platform-theme-options').addClass("open-tools");
             $('.platform-theme-options-overlay').fadeIn();
@@ -127,14 +130,14 @@ $(function() {
         });
 
         // Add event listeners for shown and hidden events
-        $body.on("shown.bs.collapse", ".accordion", function (e) {
+        $body.on("shown.bs.collapse", ".platform-theme-options-tools-info .accordion", function (e) {
             // Highlight the header button of the active panel
             $(e.target)
             .prev('.accordion-header')
             .addClass('active-header');
         });
 
-        $body.on("hidden.bs.collapse", ".accordion", function (e) {
+        $body.on("hidden.bs.collapse", ".platform-theme-options-tools-info .accordion", function (e) {
             // Remove the highlight from the header button when the panel is hidden
             $(e.target)
             .prev('.accordion-header')
@@ -145,20 +148,41 @@ $(function() {
             $(".platform-theme-options-toggle").trigger("click");
         });
 
-        $body.on("click", ".platform-theme-options-toggle", function() {
-            console.log(`$("#range-slider-min").length: `, $("#range-slider-min").length);
+        function jqueryRangeSliderFontSize() {
+            var // logo text font size
+                $rangeLogoTextSliderMin     = $("#logo-font-size-range-slider-min"),
+                $rangeLogoTextSliderValue   = $(".logo-font-size-range-slider-value"),
+                // footer text font size
+                $rangeFooterTextSliderMin   = $("#footer-version-font-size-range-slider-min"),
+                $rangeFooterTextSliderValue = $(".footer-version-font-size-range-slider-value");
 
-            $("#range-slider-min").slider({
-                range: "min",
-                value: 37,
-                min: 1,
-                max: 700,
-                slide: function(event, ui) {
-                    $("#range-slider-value").val(ui.value);
-                }
-            });
+                $rangeLogoTextSliderMin.slider({
+                    range: "min",
+                    value: 18,
+                    min: 1,
+                    max: 30,
+                    slide: function(event, ui) {
+                        $rangeLogoTextSliderValue.val(ui.value);
+                    }
+                });
 
-            $("#range-slider-value").val( $("#range-slider-min").slider("value") );
+                $rangeLogoTextSliderValue.val( $rangeLogoTextSliderMin.slider("value") );
 
+                $rangeFooterTextSliderMin.slider({
+                    range: "min",
+                    value: 10,
+                    min: 1,
+                    max: 30,
+                    slide: function(event, ui) {
+                        $rangeFooterTextSliderValue.val(ui.value);
+                    }
+                });
+
+                $rangeFooterTextSliderValue.val( $rangeFooterTextSliderMin.slider("value") );
+        }
+
+        $body.on("click", ".platform-theme-options-toggle, .open-theme-options", function() {
+            jqueryRangeSliderFontSize();
         });
+        // end evo/platform-scheme
 });
