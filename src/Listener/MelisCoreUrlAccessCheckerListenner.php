@@ -11,6 +11,7 @@ namespace MelisCore\Listener;
 
 use Laminas\EventManager\EventManagerInterface;
 use Laminas\EventManager\ListenerAggregateInterface;
+use Laminas\Mvc\Controller\Plugin\Redirect;
 use Laminas\Mvc\MvcEvent;
 use Laminas\Mvc\Router\Http\Segment;
 
@@ -38,38 +39,49 @@ class MelisCoreUrlAccessCheckerListenner implements ListenerAggregateInterface
         		$routeMatch = $router->match($sm->get('request'));
                 $uri = $router->getRequestUri();
 
-
                 if ($routeMatch && $uri->getPath("/melis"))
         		{
-                    // Retrieving the router Details, This will return URL details in Object
-                    $config = $sm->get("MelisConfig");
-                    $configDefaultData = $config->getItem("meliscore/datas/default");
-                    $host = $configDefaultData['host'];
-                    $scheme = $configDefaultData['scheme'];
-                    $env = !empty(getenv('MELIS_PLATFORM')) ? getenv('MELIS_PLATFORM') : null;
-                    if($env)
-                    {
-                        $configEnvData = $config->getItem("meliscore/datas/".$env);
-                        $host  =  isset($configEnvData['host']) ? $configEnvData['host'] : $host;
-                        $scheme  =  isset($configEnvData['scheme']) ? $configEnvData['scheme'] : $scheme;
-                    }
+                    /**
+                     * Check if user is already logged in
+                     */
+                    if(in_array($uri->getPath(), ['/melis/lost-password', '/melis/login', '/melis/reset-password'])){
+                        $melisCoreAuth = $sm->get('MelisCoreAuth');
+                        $controllerPluginManager = $sm->get('ControllerPluginManager');
+                        // Get the Redirect plugin
+                        /** @var Redirect $redirectPlugin */
+                        $redirectPlugin = $controllerPluginManager->get('redirect');
 
-                    if($uri->getHost() != $host)
-                    {
-                        $url = $scheme."://".$host."/melis";
-                        if ($url) {
-                            // Redirection
-                            $response = $e->getResponse();
-                            $response->setHeaders($response->getHeaders()->addHeaderLine('Location', $url));
-                            $response->setHeaders($response->getHeaders()->addHeaderLine('Cache-Control', 'no-cache, no-store, must-revalidate'));
-                            $response->setHeaders($response->getHeaders()->addHeaderLine('Pragma', 'no-cache'));
-                            $response->setHeaders($response->getHeaders()->addHeaderLine('Expires', false));
-                            $response->setStatusCode(301);
-                            $response->sendHeaders();
-                            exit ();
+                        if ($melisCoreAuth->hasIdentity()) {
+                            $redirectPlugin->toUrl('/melis');
+                        }
+                    }else {
+                        // Retrieving the router Details, This will return URL details in Object
+                        $config = $sm->get("MelisConfig");
+                        $configDefaultData = $config->getItem("meliscore/datas/default");
+                        $host = $configDefaultData['host'];
+                        $scheme = $configDefaultData['scheme'];
+                        $env = !empty(getenv('MELIS_PLATFORM')) ? getenv('MELIS_PLATFORM') : null;
+                        if ($env) {
+                            $configEnvData = $config->getItem("meliscore/datas/" . $env);
+                            $host = isset($configEnvData['host']) ? $configEnvData['host'] : $host;
+                            $scheme = isset($configEnvData['scheme']) ? $configEnvData['scheme'] : $scheme;
+                        }
+
+                        if ($uri->getHost() != $host) {
+                            $url = $scheme . "://" . $host . "/melis";
+                            if ($url) {
+                                // Redirection
+                                $response = $e->getResponse();
+                                $response->setHeaders($response->getHeaders()->addHeaderLine('Location', $url));
+                                $response->setHeaders($response->getHeaders()->addHeaderLine('Cache-Control', 'no-cache, no-store, must-revalidate'));
+                                $response->setHeaders($response->getHeaders()->addHeaderLine('Pragma', 'no-cache'));
+                                $response->setHeaders($response->getHeaders()->addHeaderLine('Expires', false));
+                                $response->setStatusCode(301);
+                                $response->sendHeaders();
+                                exit ();
+                            }
                         }
                     }
-
         		}
         	},
         -1000);
