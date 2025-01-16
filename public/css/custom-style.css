@@ -2563,4 +2563,14 @@ table.dataTable.dtr-inline.collapsed>tbody>tr.dtr-expanded>th.dtr-control:before
 	border-color: #e61c23;
 	color: #fff;
 }
+.platform-theme-options-tools-info .accordion-collapse {
+    transition: height 0.5s ease-out, opacity 0.5s ease-out;
+}
+.platform-theme-options-tools-info .accordion-collapse.collapsing {
+    opacity: 0;
+}
+.platform-theme-options-tools-info .accordion-collapse.collapse.show {
+    opacity: 1;
+    transition: opacity 0.5s ease-in-out;
+}
 /* end platform theme options */
