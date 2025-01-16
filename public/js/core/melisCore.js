@@ -507,33 +507,35 @@ var melisCore = (function(window){
             } 
             else {
                 var zIndex = 1040 + (10 * $('.modal:visible').length);
-                $(this).css('z-index', zIndex);
-                setTimeout(function() {
-                    $('.modal-backdrop').not('.modal-stack').css('z-index', zIndex - 1).addClass('modal-stack');
-                }, 0);
+                    $(this).css('z-index', zIndex);
+                    setTimeout(function() {
+                        $('.modal-backdrop').not('.modal-stack').css('z-index', zIndex - 1).addClass('modal-stack');
+                    }, 0);
             }
     });
 
     // ---=[ MODAL BUGFIX ]=--- for showing 2 level modals
     $(document).on('hidden.bs.modal', '.modal', function (event) {
         var check = $body.find(".modal-backdrop").length; // .modal-backdrop
-        if(check){
-            $body.addClass("modal-open");
-        }
-        else{
-            if (document.documentMode || /Edge/.test(navigator.userAgent)) {
-                var scrollTop = $('html, body').scrollTop();
+            if ( check ) {
+                $body.addClass("modal-open");
+            }
+            else{
+                if (document.documentMode || /Edge/.test(navigator.userAgent)) {
+                    var scrollTop = $('html, body').scrollTop();
 
-                // remove flickering issue on edge
-                $('html').css({'height': '100%'});
-                $body.css('overflow', 'auto');
+                    // remove flickering issue on edge
+                    $('html').css({'height': '100%'});
+                    $body.css('overflow', 'auto');
+
                     setTimeout(function() {
                         $('html, body').scrollTop(scrollTop);
                     }, 300);
                 }
-            // clear melis modals container
-            $("#melis-modals-container").empty();
-        }
+
+                // clear melis modals container
+                $("#melis-modals-container").empty();
+            }
     });
 
     // ---=[ START ]=--- MULTI VALUE INPUT FILED JS --------------------------------------------------

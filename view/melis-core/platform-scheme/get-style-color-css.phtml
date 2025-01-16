@@ -1142,9 +1142,28 @@ div.glyphicons-social.glyphicon-primary i:before {
 .melis-primary-txt {
     color: <?= $secondaryColor; ?> !important;
 }
-
 .melis-primary-bg {
     background: <?= $primaryColor; ?> !important;
+}
+/* common */
+.platform-theme-options-tools-info .ui-widget-content {
+    background: <?= $primaryColor; ?>;
+}
+#dashboard-plugins .btn-group-font-style label {
+    color: #797979;
+    font-size: 25px;
+    font-weight: normal;
+    min-width: 4rem;
+    margin: 0 5px;
+}
+.platform-theme-options-tools-info .btn-check:checked+.btn, 
+.platform-theme-options-tools-info .btn.active, 
+.platform-theme-options-tools-info .btn.show, 
+.platform-theme-options-tools-info .btn:first-child:active, 
+.platform-theme-options-tools-info :not(.btn-check)+.btn:active,
+.platform-theme-options-tools-info .btn-check+.btn:hover {
+    background-color: <?= $primaryColor; ?> !important;
+    border-color: <?= $primaryColor; ?> !important;
 }
 
 /* Platform theme options */
@@ -1161,6 +1180,7 @@ div.glyphicons-social.glyphicon-primary i:before {
 .navbar.main.navbar-primary .appbrand span {
     color: #fff;
 }
+
 /* user profile */
 #id_meliscore_leftmenu_identity {
     background-color: #373737;
@@ -1170,6 +1190,7 @@ div.glyphicons-social.glyphicon-primary i:before {
     border-color: #4e4e4e !important;
     border-radius: 50% !important;
 }
+
 /* #user-name-link */
 .sidebar.sidebar-inverse .user-profile a {
     color: #e1e1e1
@@ -1185,6 +1206,7 @@ div.glyphicons-social.glyphicon-primary i:before {
 .sidebar.sidebar-inverse .user-profile ul li a:hover {
     color: #5a5a5a;
 }
+
 /* menu */
 .sidebar.sidebar-inverse>.sidebarMenuWrapper>ul li {
     border-bottom-color: #2c2c2c;
@@ -1199,9 +1221,224 @@ div.glyphicons-social.glyphicon-primary i:before {
     background: #373737;
     color: #fff;
 }
-/* footer */
 
-/* common */
-.platform-theme-options-tools-info .ui-widget-content {
-    background: #e61c23;
+/* footer */
+#id_meliscore_footer .footer {
+    font-size: 14px;
+}
+#id_meliscore_footer .footer a {
+    color: <?= $primaryColor; ?>;
+}
+#id_meliscore_footer .footer p {
+    color: #686868;
+}
+
+/* header navigation */
+.navbar.main.navbar-primary .dropdown-toggle {
+    background-color: <?= $primaryColor; ?>;
+    color: #fff;
+}
+.navbar.main.navbar-primary .nav > li.active > .dropdown-toggle {
+    background-color: #fff;
+    color: <?= $primaryColor; ?>;
+}
+/* logout */
+.navbar.main.navbar-primary .nav>li>a.menu-icon:hover {
+    background-color: #c52127;
+}
+/* close tab icon */
+.navbar #melis-id-nav-bar-tabs > li:hover > a {
+    color: <?= $primaryColor; ?> !important;
+}
+.navbar.main.navbar-primary .nav>li a.close:before {
+    color: #555;
+}
+.navbar #melis-id-nav-bar-tabs > li > a.close:hover:before {
+    color: <?= $primaryColor; ?>;
+}
+
+/* bubble plugins */
+#btn-hide-bubble-plugins .fa-arrow-up:before {
+    color: #ffffff;
+}
+#btn-hide-bubble-plugins {
+    background: #466baf;
+    border-color: #466baf;
+    color: #ffffff;
+    font-size: 10px;
+}
+#btn-hide-bubble-plugins:hover .fa-arrow-up:before {
+    color: #466baf;
+}
+#btn-hide-bubble-plugins:hover {
+    background: #fff;
+    color: #466baf;
+}
+.melis-dashboard-bubble-plugin .widget {
+    background-color: #ffffff;
+}
+.melis-dashboard-bubble-plugin .front .btn {
+    background-color: #ffffff;
+}
+.melis-dashboard-bubble-plugin .front .btn:hover {
+    color: #ffffff;
+}
+/* applicable only on news, notification and message widgets */
+.melis-dashboard-bubble-plugin .front .widget-body .lead .fa,
+.melis-dashboard-bubble-plugin .front .widget-body .lead {
+    color: #ffffff !important;
+    font-size: 25px;
+}
+.melis-dashboard-bubble-updates-plugin .front .widget-body .lead {
+    color: #686868 !important;
+}
+.melis-dashboard-bubble-news-melis-plugin .front .widget-body .innerAll.bg-inverse {
+    background-color: #424242 !important;
+}
+.melis-dashboard-bubble-updates-plugin .front .widget-body .innerAll.bg-default {
+    background-color: #e7e7e7 !important;
+}
+.melis-dashboard-bubble-notifications-plugin .front .widget-body .innerAll.bg-success {
+    background-color: #72af46 !important;
+}
+.melis-dashboard-bubble-chat-plugin .front .widget-body .innerAll.bg-info {
+    background-color: #466baf !important
+}
+.melis-dashboard-bubble-news-melis-plugin .front .widget-body .btn {
+    color: #424242 !important;
+    border-color: #424242 !important;
+}
+.melis-dashboard-bubble-news-melis-plugin .front .widget-body .btn:hover {
+    color: #ffffff !important;
+    background-color: #424242 !important;
+}
+.melis-dashboard-bubble-updates-plugin .front .widget-body .btn {
+    color: #797979 !important;
+    border-color: #797979 !important;
+}
+.melis-dashboard-bubble-updates-plugin .front .widget-body .btn:hover {
+    color: #797979 !important;
+    background-color: #e7e7e7 !important;
+    border-color: #e7e7e7 !important;
+}
+.melis-dashboard-bubble-notifications-plugin .front .widget-body .btn {
+    color: #72af46 !important;
+    border-color: #72af46 !important;
+}
+.melis-dashboard-bubble-notifications-plugin .front .widget-body .btn:hover {
+    color: #ffffff !important;
+    background-color: #72af46 !important;
+    border-color: #72af46 !important;
+}
+.melis-dashboard-bubble-chat-plugin .front .widget-body .btn {
+    color: #466baf !important;
+    border-color: #466baf !important;
+}
+.melis-dashboard-bubble-chat-plugin .front .widget-body .btn:hover {
+    color: #ffffff !important;
+    background-color: #466baf !important;
+    border-color: #466baf !important;
+}
+.melis-dashboard-bubble-plugin .front .widget-body .btn {
+    font-size: 14px;
+}
+.melis-dashboard-bubble-plugin .back .widget-head {
+    background-color: #424242 !important;
+    color: #ffffff !important;
+    font-size: 14px;
+}
+.melis-dashboard-bubble-plugin .back .widget-head .btn {
+    background-color: #fafafa !important;
+}
+.melis-dashboard-bubble-plugin .back .widget-head .btn .fa {
+    color: #797979 !important;
+}
+/* dashboard plugins */
+.melis-core-dashboard-msg .alert-warning.no-plugins {
+    color: #664d03 !important;
+    background-color: #fff3cd !important;
+    border-color: #ffe69c !important;
+}
+.melis-core-dashboard-msg .alert-info.no-plugins {
+    color: #055160 !important;
+    background-color: #cff4fc !important;
+    border-color: #9eeaf9 !important;
+}
+.melis-core-dashboard-msg .alert-info.no-plugins {
+    font-weight: bold;
+    font-style: italic;
+    text-transform: uppercase;
+    text-decoration: underline;
+}
+/* plugins */
+.grid-stack-item-content .widget-head {
+    background-color: #424242 !important;
+}
+.grid-stack-item-content .widget-head .heading {
+    color: #ffffff !important;
+    font-size: 14px !important;
+}
+.grid-stack-item-content .widget-head .btn-group .btn {
+    background-color: #fafafa !important;
+    border-color: #cecece !important;
+}
+.grid-stack-item-content .widget-head .btn-group .btn:hover {
+    background-color: #e7e7e7 !important;
+    border-color: #e7e7e7 !important;
+    color: #797979 !important;
+}
+.grid-stack-item-content .widget-head .btn-group .btn .fa {
+    color: #797979 !important;
+}
+.grid-stack-item-content .widget-body {
+    background-color: #ffffff !important;
+    color: #686868 !important;
+}
+.grid-stack-item-content {
+    border-color: #ebebeb !important;
+}
+/* dashboard plugins menu */
+.melis-core-dashboard-dnd-box {
+    border-bottom-width: 4px !important;
+    border-left-width: 4px !important;
+    border-color: #e61c23 !imporant;
+    background-color: #373737 !important;
+}
+.melis-core-dashboard-dnd-title {
+    background-color: #e61c23 !imporant;
+    color: #ffffff !important;
+    font-size: 14px !important;
+    text-transform: uppercase !important;
+    font-weight: 700 !important;
+    text-decoration: none !important;
+}
+.melis-core-dashboard-plugin-filter-box .melis-core-dashboard-ps-box:first-child {
+    border-top-color: #2c2c2c !important;
+}
+.melis-core-dashboard-ps-box .melis-core-dashboard-filter-btn {
+    background-color: #373737 !important;
+    border-bottom-color: #2c2c2c !important;
+    color: #ffffff !important;
+    font-size: 12px !important;
+}
+.melis-plugins-icon-new-child .melis-plugins-icon-new,
+.melis-plugins-icon-new-parent > .new-plugin-indicator,
+.melis-plugins-icon-new-parent {
+    color: #72af46 !important;
+}
+.melis-plugins-icon-new-child .melis-plugins-icon-new {
+    font-size: 7px !important;
+}
+.melis-core-dashboard-category-btn {
+    font-size: 11px !important;
+}
+.melis-core-dashboard-plugin-title {
+    color: #ffffff !important;
+    font-size: 12px !important;
+}
+#dashboard-plugin-delete-all {
+    background-color: #e61c23 !imporant;
+    border-color: #e61c23 !imporant;
+    color: #ffffff !important;
+    font-size: 14px !important;
 }

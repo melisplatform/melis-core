@@ -2546,4 +2546,21 @@ table.dataTable.dtr-inline.collapsed>tbody>tr.dtr-expanded>th.dtr-control:before
 .platform-theme-options-tools-info .range-slider-value {
 	text-align: center;
 }
+.platform-theme-options-tools-info .btn-group-font-style label {
+	color: #797979;
+	font-size: 25px;
+	font-weight: normal;
+    min-width: 4rem;
+    margin: 0 5px;
+}
+.platform-theme-options-tools-info .btn-check:checked+.btn, 
+.platform-theme-options-tools-info .btn.active, 
+.platform-theme-options-tools-info .btn.show, 
+.platform-theme-options-tools-info .btn:first-child:active, 
+.platform-theme-options-tools-info :not(.btn-check)+.btn:active,
+.platform-theme-options-tools-info .btn-check+.btn:hover {
+	background-color: #e61c23;
+	border-color: #e61c23;
+	color: #fff;
+}
 /* end platform theme options */
