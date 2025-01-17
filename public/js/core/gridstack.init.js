@@ -398,6 +398,9 @@ var melisDashBoardDragnDrop = {
                 $dbMsg.fadeOut();
             }
             else {
+                $pluginBox.addClass("shown");
+                $dbMsg.fadeIn();
+
                 // tab arrow top on mobile view, 767px and below
                 if ( $tabArrowTop.length && melisCore.screenSize <= 767 ) {
                     if ( $pluginBox.hasClass("shown") ) {
@@ -408,8 +411,6 @@ var melisDashBoardDragnDrop = {
                     }
                 }
             }
-
-            //melisCore.showToggleDashboardPluginMenu();
             
             // check plugin menu box
             if ( minWidth !== "undefined" && maxWidth !== "undefined" ) {
@@ -1130,17 +1131,6 @@ $(function() {
         // init
         melisDashBoardDragnDrop.init();
 
-        // check if any .grid-stack-item is found, hide $dbMsg
-        if ( gsi > 0 ) {
-            $dbMsg.hide();
-        }
-        else {
-            $dbMsg.show();
-        }
-
-        // .select2-container width 100% specific for latest comments plugin on document ready, added on init
-        //melisDashBoardDragnDrop.latestCommentsPluginUIRes();
-
         // animate to full width size of #grid1
         $body.on("click", "#dashboard-plugin-delete-all", function() {
             $gs.animate({
@@ -1159,22 +1149,26 @@ $(function() {
         });
 
         setTimeout(function() {
-            // check if plugins menu is open, adjust .grid-stack width accordingly
-            if ( $pluginBox.hasClass("shown") && gsi === 0 ) {
-                $gs.animate({
-                    width: minWidth
-                }, 3);
+            var dashboardResized = false;
+                // check if plugins menu is open, adjust .grid-stack width accordingly
+                if ( $pluginBox.hasClass("shown") && gsi === 0 ) {
+                    $gs.animate({
+                        width: minWidth
+                    }, 3);
 
-                $dbMsg.animate({
-                    width: minWidth
-                }, 3);
+                    $dbMsg.animate({
+                        width: minWidth
+                    }, 3);
 
-                if ( $bubblePlugin.length ) {
                     $bubblePlugin.animate({
                         width: minWidth // bubblePluginMinWidth
                     }, 3);
+
+                    dashboardResized = true;
+                    
+                    // resizing of dashboard / gridstack, dashboard.js
+                    dashboard.loadDashboardPluginsMenuContent( $pluginBtn, dashboardResized );
                 }
-            }
         }, 1000);
 
         /**

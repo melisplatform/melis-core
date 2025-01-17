@@ -2410,3 +2410,7 @@ table.dataTable.dtr-inline.collapsed>tbody>tr.dtr-expanded>th.dtr-control:before
 .tooltabmodal ul.ui-fancytree > li:not(:first-child) .parent-with-child-selected .fancytree-title {
 	color: #99c975 !important;
 }
+/* dashboard bubble plugin */
+.melis-dashboard-bubble-plugin .front .widget {
+	border: 1px solid #e6e6e6;
+}

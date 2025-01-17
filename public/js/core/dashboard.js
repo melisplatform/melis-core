@@ -242,37 +242,49 @@ var dashboard = (function() {
 				 */
 				if( $($el).closest(".melis-core-dashboard-dnd-box").hasClass("shown") ) {
 					if( !$($el).closest(".melis-core-dashboard-dnd-box").hasClass("hasCached") ) {
-						$.ajax({
-							type: 'GET',
-							url: '/melis/MelisCore/DashboardPlugins/dashboardMenuContent',
-							beforeSend: function () {
-								loader.addLoadingDashboardPluginMenu();
-							}
-						}).done(function (data) {
-							$("#dashboardMenuContent").html(data.view);
-
-							setTimeout(function () {
-								melisDashBoardDragnDrop.init();
-
-								// shown class added again as on top code it is using toggleClass()
-								$($el).closest(".melis-core-dashboard-dnd-box").addClass("hasCached shown");
-
-								if ( $lm.hasClass("shown") ) {
-									$gs.animate({ width: currentGsWidth - dbpmWidth }, animationDuration);
-									$dbMsg.animate({ width: currentGsWidth - dbpmWidth }, animationDuration);
-									$bp.animate({ width: currentGsWidth - dbpmWidth }, animationDuration);
-								}
-								else {
-									$gs.animate({ width: currentGsWidth + dbpmWidth }, animationDuration);
-									$dbMsg.animate({ width: currentGsWidth + dbpmWidth }, animationDuration);
-									$bp.animate({ width: currentGsWidth + dbpmWidth }, animationDuration);
-								}
-							}, 100);
-
-							loader.removeLoadingDashboardPluginMenu();
-						});
+						dashboard.loadDashboardPluginsMenuContent($el);
 					}
 				}
+		}
+
+		function loadDashboardPluginsMenuContent($el, dashboardResized) {
+			var currentGsWidth 	= $gs.outerWidth(),
+				$bpWrapper 		= $("#id_meliscore_dashboard_bubble_plugins"),
+				$bp 			= $bpWrapper.find(".tab-pane .bubble-plugin"),
+				$dbPluginMenu 	= $("#id_meliscore_center_dashboard_menu"),
+				dbpmWidth 		= $dbPluginMenu.outerWidth();
+
+				$.ajax({
+					type: 'GET',
+					url: '/melis/MelisCore/DashboardPlugins/dashboardMenuContent',
+					beforeSend: function () {
+						loader.addLoadingDashboardPluginMenu();
+					}
+				}).done(function (data) {
+					$("#dashboardMenuContent").html(data.view);
+
+					setTimeout(function () {
+						melisDashBoardDragnDrop.init();
+
+						// shown class added again as on top code it is using toggleClass()
+						$($el).closest(".melis-core-dashboard-dnd-box").addClass("hasCached shown");
+						
+						if ( ! dashboardResized ) {
+							if ( $lm.hasClass("shown") ) {
+								$gs.animate({ width: currentGsWidth - dbpmWidth }, animationDuration);
+								$dbMsg.animate({ width: currentGsWidth - dbpmWidth }, animationDuration);
+								$bp.animate({ width: currentGsWidth - dbpmWidth }, animationDuration);
+							}
+							else {
+								$gs.animate({ width: currentGsWidth + dbpmWidth }, animationDuration);
+								$dbMsg.animate({ width: currentGsWidth + dbpmWidth }, animationDuration);
+								$bp.animate({ width: currentGsWidth + dbpmWidth }, animationDuration);
+							}
+						}
+					}, 100);
+
+					loader.removeLoadingDashboardPluginMenu();
+				});
 		}
 
 		// BIND & DELEGATE EVENTS ===========================================================================
@@ -296,6 +308,7 @@ var dashboard = (function() {
     	 * sample syntax in calling it outside - dashboard.functionName()
 		 */
 		return {
-			toggleDashboardElements : toggleDashboardElements
+			toggleDashboardElements : toggleDashboardElements,
+			loadDashboardPluginsMenuContent : loadDashboardPluginsMenuContent
 		}
 })();
