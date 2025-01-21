@@ -2401,12 +2401,26 @@ table.dataTable.dtr-inline.collapsed>tbody>tr.dtr-expanded>th.dtr-control:before
 .platform-theme-options-block .accordion-item .accordion-button {
 	background-color: transparent;
 	color: #686868;
-	font-size: 1rem;
 	padding: 5px;
     margin-top: 10px;
 }
+.platform-theme-options-block .accordion-item h3.accordion-header .accordion-button {
+	font-size: 1rem;
+}
+.platform-theme-options-block .accordion-item h6.accordion-header .accordion-button {
+	font-size: 0.875rem;
+}
 .platform-theme-options-block .accordion-item .accordion-body {
-	padding: 1rem 0;
+	padding: 0 0 1rem;
+}
+.platform-theme-options-block .accordion-item .accordion-body > .accordion .accordion-item .accordion-body {
+	padding-top: 0.5rem;
+}
+.platform-theme-options-block .accordion-collapse .accordion-body .accordion .accordion-item .accordion-header {
+	padding-left: 0.5rem;
+}
+.platform-theme-options-block .accordion-collapse .accordion-body > .accordion .accordion-item .accordion-body .form-group {
+	padding-left: 0.5rem;
 }
 /* end accordion */
 
