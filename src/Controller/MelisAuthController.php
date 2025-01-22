@@ -276,15 +276,18 @@ class MelisAuthController extends MelisAbstractActionController
 
                                 if (file_exists($file)) {
                                     $config = $this->getServiceManager()->get('MelisCoreConfig')->getItem('meliscore/datas/login');
-
-                                    if (!empty($config['password_validity_status']) && !empty($config['password_validity_lifetime'])) {
-                                        $passwordValidityLifetime = $config['password_validity_lifetime'];
-                                        $passwordExpiryDate = date('Y-m-d H:i:s', strtotime($userLastPasswordUpdatedDate . '+' . $passwordValidityLifetime . ' days'));
-                                        $currentDate = date('Y-m-d H:i:s');
-                                        
-                                        if (strtotime($currentDate) > strtotime($passwordExpiryDate)) {
-                                            $isPassExpired = true;
-                                        }
+                                } else {
+                                    //get default
+                                    $config = $this->getServiceManager()->get('MelisCoreConfig')->getItem('meliscore/datas/otherconfig_default/login');
+                                }
+                                
+                                if (!empty($config['password_validity_status']) && !empty($config['password_validity_lifetime'])) {
+                                    $passwordValidityLifetime = $config['password_validity_lifetime'];
+                                    $passwordExpiryDate = date('Y-m-d H:i:s', strtotime($userLastPasswordUpdatedDate . '+' . $passwordValidityLifetime . ' days'));
+                                    $currentDate = date('Y-m-d H:i:s');
+                                    
+                                    if (strtotime($currentDate) > strtotime($passwordExpiryDate)) {
+                                        $isPassExpired = true;
                                     }
                                 }
                             }
@@ -293,46 +296,49 @@ class MelisAuthController extends MelisAbstractActionController
 
                     if (file_exists($_SERVER['DOCUMENT_ROOT'] . '/../vendor/melisplatform/melis-core/config/app.login.php')) {
                         $config = $this->getServiceManager()->get('MelisCoreConfig')->getItem('meliscore/datas/login');
+                    } else {
+                        //get default
+                        $config = $this->getServiceManager()->get('MelisCoreConfig')->getItem('meliscore/datas/otherconfig_default/login');
+                    }
 
-                        // check first if login account lock option is true and if user account has been deactivated and also if lock type selected is timer
-                        // if it is the case, check if duration for the login lock has lapsed, if it has then user account gets reactivated
-                        if (isset($config['login_account_lock_status']) 
-                            && !empty($config['login_account_lock_status']) 
-                            && $config['login_account_type_of_lock'] == 'timer'
-                            && $userData->usr_status == self::USER_INACTIVE) {
-                                $melisCoreTableLogType = $this->getServiceManager()->get('MelisCoreTableLogType');
-                                $melisCoreTableLog = $this->getServiceManager()->get('MelisCoreTableLog');
-                                $logTypeId = current($melisCoreTableLogType->getEntryByField('logt_code', self::ACCOUNT_LOCKED)->toArray())['logt_id'];
-                                $dateAccountWasLocked = $melisCoreTableLog->getDateAccountWasLocked($logTypeId, $userData->usr_id);
+                    // check first if login account lock option is true and if user account has been deactivated and also if lock type selected is timer
+                    // if it is the case, check if duration for the login lock has lapsed, if it has then user account gets reactivated
+                    if (isset($config['login_account_lock_status']) 
+                        && !empty($config['login_account_lock_status']) 
+                        && $config['login_account_type_of_lock'] == 'timer'
+                        && $userData->usr_status == self::USER_INACTIVE) {
+                            $melisCoreTableLogType = $this->getServiceManager()->get('MelisCoreTableLogType');
+                            $melisCoreTableLog = $this->getServiceManager()->get('MelisCoreTableLog');
+                            $logTypeId = current($melisCoreTableLogType->getEntryByField('logt_code', self::ACCOUNT_LOCKED)->toArray())['logt_id'];
+                            $dateAccountWasLocked = $melisCoreTableLog->getDateAccountWasLocked($logTypeId, $userData->usr_id);
 
-                                $days = (int) $config['login_account_duration_days']; 
-                                $hours = (int) $config['login_account_duration_hours']; 
-                                $minutes = (int) $config['login_account_duration_minutes'];
-                                $days += floor($hours / 24);
-                                $hours %= 24;
+                            $days = (int) $config['login_account_duration_days']; 
+                            $hours = (int) $config['login_account_duration_hours']; 
+                            $minutes = (int) $config['login_account_duration_minutes'];
+                            $days += floor($hours / 24);
+                            $hours %= 24;
 
-                                // Calculate the total seconds
-                                $totalInSeconds = ($days * 24 * 60 * 60) + ($hours * 60 * 60) + ($minutes * 60);
-                                $interval = new DateInterval('PT' . $totalInSeconds . 'S');
-                                $accountWillUnlockDateTime = (new DateTime($dateAccountWasLocked))->add($interval)->format('Y-m-d H:i:s');
-                                $currentDateTime = (new DateTime('now'))->format('Y-m-d H:i:s');
+                            // Calculate the total seconds
+                            $totalInSeconds = ($days * 24 * 60 * 60) + ($hours * 60 * 60) + ($minutes * 60);
+                            $interval = new DateInterval('PT' . $totalInSeconds . 'S');
+                            $accountWillUnlockDateTime = (new DateTime($dateAccountWasLocked))->add($interval)->format('Y-m-d H:i:s');
+                            $currentDateTime = (new DateTime('now'))->format('Y-m-d H:i:s');
 
-                                // if current date time is higher that means account is now unlocked 
-                                if ($currentDateTime > $accountWillUnlockDateTime) {
-                                    $melisUserTable = $this->getServiceManager()->get('MelisCore\Model\Tables\MelisUserTable');
-                                    // activate user's status
-                                    $userData->usr_status = self::USER_ACTIVE;
-                                    $melisUserTable->save(['usr_status' => $userData->usr_status], $userData->usr_id);
-                                    $result = [
-                                        'success' => false,
-                                        'errors' => ['empty' => $translator->translate('tr_meliscore_login_auth_failed_too_many_failed_attempts')],
-                                        'textTitle' => 'Account unlocked',
-                                        'textMessage' => 'Account unlocked',
-                                        'datas' => [],
-                                    ];
-                                    $this->getEventManager()->trigger('meliscore_login_attempt_end', $this, array_merge($result, ['typeCode' => self::ACCOUNT_UNLOCKED, 'itemId' => $userData->usr_id]));
-                                }
-                        }
+                            // if current date time is higher that means account is now unlocked 
+                            if ($currentDateTime > $accountWillUnlockDateTime) {
+                                $melisUserTable = $this->getServiceManager()->get('MelisCore\Model\Tables\MelisUserTable');
+                                // activate user's status
+                                $userData->usr_status = self::USER_ACTIVE;
+                                $melisUserTable->save(['usr_status' => $userData->usr_status], $userData->usr_id);
+                                $result = [
+                                    'success' => false,
+                                    'errors' => ['empty' => $translator->translate('tr_meliscore_login_auth_failed_too_many_failed_attempts')],
+                                    'textTitle' => 'Account unlocked',
+                                    'textMessage' => 'Account unlocked',
+                                    'datas' => [],
+                                ];
+                                $this->getEventManager()->trigger('meliscore_login_attempt_end', $this, array_merge($result, ['typeCode' => self::ACCOUNT_UNLOCKED, 'itemId' => $userData->usr_id]));
+                            }
                     }
 
                     // If user is active
@@ -416,6 +422,9 @@ class MelisAuthController extends MelisAbstractActionController
                                 } else {       
                                     if (file_exists($_SERVER['DOCUMENT_ROOT'] . '/../vendor/melisplatform/melis-core/config/app.login.php')) {
                                         $config = $this->getServiceManager()->get('MelisCoreConfig')->getItem('meliscore/datas/login');
+                                    } else {
+                                        //get default
+                                        $config = $this->getServiceManager()->get('MelisCoreConfig')->getItem('meliscore/datas/otherconfig_default/login');
                                     }
                                     
                                     // if login account lock is activated
@@ -509,6 +518,9 @@ class MelisAuthController extends MelisAbstractActionController
 
                         if (file_exists($_SERVER['DOCUMENT_ROOT'] . '/../vendor/melisplatform/melis-core/config/app.login.php')) {
                             $config = $this->getServiceManager()->get('MelisCoreConfig')->getItem('meliscore/datas/login');
+                        } else {
+                            //get default
+                            $config = $this->getServiceManager()->get('MelisCoreConfig')->getItem('meliscore/datas/otherconfig_default/login');
                         }
 
                         // if login account lock is activated
