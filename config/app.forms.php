@@ -1007,6 +1007,1593 @@ return array(
 
                     )
                 ),
+                
+                // Platform Theme Option form
+                'melis_core_platform_theme_option_form' => array(
+                    'attributes' => array(
+                        'name' => 'melis_core_platform_theme_option_form',
+                        'id' => 'melis_core_platform_theme_option_form',
+                        'class' => 'd-md-flex flex-row justify-content-between row',
+                        'method' => 'POST',
+                    ),
+                    'hydrator'  => 'Laminas\Hydrator\ArraySerializableHydrator',
+                    'elements' => array(
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_toggle_btn_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_toggle_btn_color',
+                                    'tooltip' => 'tr_meliscore_platform_theme_toggle_btn_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_toggle_btn_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_meliscore_platform_theme_toggle_btn_color',
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_toggle_btn_hover_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_toggle_btn_hover_color',
+                                    'tooltip' => 'tr_meliscore_platform_theme_toggle_btn_hover_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_toggle_btn_hover_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_meliscore_platform_theme_toggle_btn_hover_color',
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_logo_bg_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_logo_bg_color',
+                                    'tooltip' => 'tr_meliscore_platform_theme_logo_bg_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_logo_bg_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_meliscore_platform_theme_logo_bg_color',
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_logo_text_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_logo_text_color',
+                                    'tooltip' => 'tr_meliscore_platform_theme_logo_text_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_logo_text_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_meliscore_platform_theme_logo_text_color',
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_logo_text_font_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_logo_text_font_color',
+                                    'tooltip' => 'tr_meliscore_platform_theme_logo_text_font_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_logo_text_font_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_meliscore_platform_theme_logo_text_font_color',
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_user_profile_bg_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_user_profile_bg_color',
+                                    'tooltip' => 'tr_meliscore_platform_theme_user_profile_bg_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_user_profile_bg_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_meliscore_platform_theme_user_profile_bg_color',
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_user_profile_img_border_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_user_profile_img_border_color',
+                                    'tooltip' => 'tr_meliscore_platform_theme_user_profile_img_border_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_user_profile_img_border_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_meliscore_platform_theme_user_profile_img_border_color',
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_user_profile_img_border_radius',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_user_profile_img_border_radius',
+                                    'tooltip' => 'tr_meliscore_platform_theme_user_profile_img_border_radius_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_user_profile_img_border_radius',
+                                    'value' => '',
+                                    'class' => 'form-control',                                    
+                                    'placeholder' => 'tr_meliscore_platform_theme_user_profile_img_border_radius',
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_user_profile_name_text_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_user_profile_name_text_color',
+                                    'tooltip' => 'tr_meliscore_platform_theme_user_profile_name_text_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_user_profile_name_text_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_meliscore_platform_theme_user_profile_name_text_color',
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_user_profile_status_text_icon_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_user_profile_status_text_icon_color',
+                                    'tooltip' => 'tr_meliscore_platform_theme_user_profile_status_text_icon_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_user_profile_status_text_icon_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_meliscore_platform_theme_user_profile_status_text_icon_color',
+                                ),
+                            ),
+                        ),
+
+                        //Menu
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_menu_bg_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_menu_bg_color',
+                                    'tooltip' => 'tr_meliscore_platform_theme_menu_bg_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_menu_bg_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_meliscore_platform_theme_menu_bg_color',
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_menu_hover_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_menu_hover_color',
+                                    'tooltip' => 'tr_meliscore_platform_theme_menu_hover_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_menu_hover_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_meliscore_platform_theme_menu_hover_color',
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_menu_focus_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_menu_focus_color',
+                                    'tooltip' => 'tr_meliscore_platform_theme_menu_focus_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_menu_focus_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_meliscore_platform_theme_menu_focus_color',
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_menu_border_bottom_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_menu_border_bottom_color',
+                                    'tooltip' => 'tr_meliscore_platform_theme_menu_border_bottom_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_menu_border_bottom_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_meliscore_platform_theme_menu_border_bottom_color',
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_menu_text_icon_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_menu_text_icon_color',
+                                    'tooltip' => 'tr_meliscore_platform_theme_menu_text_icon_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_menu_text_icon_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_meliscore_platform_theme_menu_text_icon_color',
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_submenu_bg_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_submenu_bg_color',
+                                    'tooltip' => 'tr_meliscore_platform_theme_submenu_bg_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_submenu_bg_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_meliscore_platform_theme_submenu_bg_color',
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_submenu_text_icon_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_submenu_text_icon_color',
+                                    'tooltip' => 'tr_meliscore_platform_theme_submenu_text_icon_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_submenu_text_icon_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_meliscore_platform_theme_submenu_text_icon_color',
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_submenu_text_icon_hover_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_submenu_text_icon_hover_color',
+                                    'tooltip' => 'tr_meliscore_platform_theme_submenu_text_icon_hover_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_submenu_text_icon_hover_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_meliscore_platform_theme_submenu_text_icon_hover_color',
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_submenu_hover_active_bg_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_submenu_hover_active_bg_color',
+                                    'tooltip' => 'tr_meliscore_platform_theme_submenu_hover_active_bg_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_submenu_hover_active_bg_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_meliscore_platform_theme_submenu_hover_active_bg_color',
+                                ),
+                            ),
+                        ),
+
+                        //Footer
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_footer_text_fontsize',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_footer_text_fontsize',
+                                    'tooltip' => 'tr_meliscore_platform_theme_footer_text_fontsize_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_footer_text_fontsize',
+                                    'value' => '',
+                                    'class' => 'form-control',                                    
+                                    'placeholder' => 'tr_meliscore_platform_theme_footer_text_fontsize',
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_footer_link_text_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_footer_link_text_color',
+                                    'tooltip' => 'tr_meliscore_platform_theme_footer_link_text_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_footer_link_text_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_meliscore_platform_theme_footer_link_text_color',
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_footer_text_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_footer_text_color',
+                                    'tooltip' => 'tr_meliscore_platform_theme_footer_text_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_footer_text_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_meliscore_platform_theme_footer_text_color',
+                                ),
+                            ),
+                        ),
+
+                        //Header
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_header_text_icon_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_header_text_icon_color',
+                                    'tooltip' => 'tr_meliscore_platform_theme_header_text_icon_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_header_text_icon_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_meliscore_platform_theme_header_text_icon_color',
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_header_text_icon_active_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_header_text_icon_active_color',
+                                    'tooltip' => 'tr_meliscore_platform_theme_header_text_icon_active_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_header_text_icon_active_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_meliscore_platform_theme_header_text_icon_active_color',
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_header_bg_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_header_bg_color',
+                                    'tooltip' => 'tr_meliscore_platform_theme_header_bg_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_header_bg_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_meliscore_platform_theme_header_bg_color',
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_header_bg_active_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_header_bg_active_color',
+                                    'tooltip' => 'tr_meliscore_platform_theme_header_bg_active_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_header_bg_active_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_meliscore_platform_theme_header_bg_active_color',
+                                ),
+                            ),
+                        ),
+
+                        //Bubble plugins
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_bubble_plugin_hide_btn_text_icon_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_bubble_plugin_hide_btn_text_icon_color',
+                                    'tooltip' => 'tr_meliscore_platform_theme_bubble_plugin_hide_btn_text_icon_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_bubble_plugin_hide_btn_text_icon_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_meliscore_platform_theme_bubble_plugin_hide_btn_text_icon_color',
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_bubble_plugin_hide_btn_text_icon_hover_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_bubble_plugin_hide_btn_text_icon_hover_color',
+                                    'tooltip' => 'tr_meliscore_platform_theme_bubble_plugin_hide_btn_text_icon_hover_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_bubble_plugin_hide_btn_text_icon_hover_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_meliscore_platform_theme_bubble_plugin_hide_btn_text_icon_hover_color',
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_bubble_plugin_hide_btn_bg_border_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_bubble_plugin_hide_btn_bg_border_color',
+                                    'tooltip' => 'tr_meliscore_platform_theme_bubble_plugin_hide_btn_bg_border_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_bubble_plugin_hide_btn_bg_border_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_meliscore_platform_theme_bubble_plugin_hide_btn_bg_border_color',
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_bubble_plugin_hide_btn_bg_hover_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_bubble_plugin_hide_btn_bg_hover_color',
+                                    'tooltip' => 'tr_meliscore_platform_theme_bubble_plugin_hide_btn_bg_hover_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_bubble_plugin_hide_btn_bg_hover_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_meliscore_platform_theme_bubble_plugin_hide_btn_bg_hover_color',
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_bubble_plugin_hide_btn_text_font_size',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_bubble_plugin_hide_btn_text_font_size',
+                                    'tooltip' => 'tr_meliscore_platform_theme_bubble_plugin_hide_btn_text_font_size_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_bubble_plugin_hide_btn_text_font_size',
+                                    'value' => '',
+                                    'class' => 'form-control',                               
+                                    'placeholder' => 'tr_meliscore_platform_theme_bubble_plugin_hide_btn_text_font_size',
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_bubble_plugin_widget_bg_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_bubble_plugin_widget_bg_color',
+                                    'tooltip' => 'tr_meliscore_platform_theme_bubble_plugin_widget_bg_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_bubble_plugin_widget_bg_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_meliscore_platform_theme_bubble_plugin_widget_bg_color',
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_bubble_plugin_widget_btn_bg_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_bubble_plugin_widget_btn_bg_color',
+                                    'tooltip' => 'tr_meliscore_platform_theme_bubble_plugin_widget_btn_bg_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_bubble_plugin_widget_btn_bg_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_meliscore_platform_theme_bubble_plugin_widget_btn_bg_color',
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_bubble_plugin_widget_btn_text_hover_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_bubble_plugin_widget_btn_text_hover_color',
+                                    'tooltip' => 'tr_meliscore_platform_theme_bubble_plugin_widget_btn_text_hover_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_bubble_plugin_widget_btn_text_hover_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_meliscore_platform_theme_bubble_plugin_widget_btn_text_hover_color',
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_bubble_plugin_widget_header_text_icon_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_bubble_plugin_widget_header_text_icon_color',
+                                    'tooltip' => 'tr_meliscore_platform_theme_bubble_plugin_widget_header_text_icon_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_bubble_plugin_widget_header_text_icon_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_meliscore_platform_theme_bubble_plugin_widget_header_text_icon_color',
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_bubble_plugin_widget_header_text_icon_font_size',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_bubble_plugin_widget_header_text_icon_font_size',
+                                    'tooltip' => 'tr_meliscore_platform_theme_bubble_plugin_widget_header_text_icon_font_size_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_bubble_plugin_widget_header_text_icon_font_size',
+                                    'value' => '',
+                                    'class' => 'form-control',                                    
+                                    'placeholder' => 'tr_meliscore_platform_theme_bubble_plugin_widget_header_text_icon_font_size',
+                                ),
+                            ),
+                        ),
+
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_bubble_plugin_updates_header_text_icon_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_bubble_plugin_updates_header_text_icon_color',
+                                    'tooltip' => 'tr_meliscore_platform_theme_bubble_plugin_updates_header_text_icon_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_bubble_plugin_updates_header_text_icon_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_meliscore_platform_theme_bubble_plugin_updates_header_text_icon_color',
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_bubble_plugin_news_header_bg_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_bubble_plugin_news_header_bg_color',
+                                    'tooltip' => 'tr_meliscore_platform_theme_bubble_plugin_news_header_bg_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_bubble_plugin_news_header_bg_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_meliscore_platform_theme_bubble_plugin_news_header_bg_color',
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_bubble_plugin_updates_header_bg_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_bubble_plugin_updates_header_bg_color',
+                                    'tooltip' => 'tr_meliscore_platform_theme_bubble_plugin_updates_header_bg_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_bubble_plugin_updates_header_bg_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_meliscore_platform_theme_bubble_plugin_updates_header_bg_color',
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_bubble_plugin_notif_header_bg_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_bubble_plugin_notif_header_bg_color',
+                                    'tooltip' => 'tr_meliscore_platform_theme_bubble_plugin_notif_header_bg_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_bubble_plugin_notif_header_bg_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_meliscore_platform_theme_bubble_plugin_notif_header_bg_color',
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_bubble_plugin_msg_header_bg_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_bubble_plugin_msg_header_bg_color',
+                                    'tooltip' => 'tr_meliscore_platform_theme_bubble_plugin_msg_header_bg_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_bubble_plugin_msg_header_bg_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_meliscore_platform_theme_bubble_plugin_msg_header_bg_color',
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_bubble_plugin_news_btn_border_text_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_bubble_plugin_news_btn_border_text_color',
+                                    'tooltip' => 'tr_meliscore_platform_theme_bubble_plugin_news_btn_border_text_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_bubble_plugin_news_btn_border_text_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_meliscore_platform_theme_bubble_plugin_news_btn_border_text_color',
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_bubble_plugin_notif_btn_border_text_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_bubble_plugin_notif_btn_border_text_color',
+                                    'tooltip' => 'tr_meliscore_platform_theme_bubble_plugin_notif_btn_border_text_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_bubble_plugin_notif_btn_border_text_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_meliscore_platform_theme_bubble_plugin_notif_btn_border_text_color',
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_bubble_plugin_msg_btn_border_text_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_bubble_plugin_msg_btn_border_text_color',
+                                    'tooltip' => 'tr_meliscore_platform_theme_bubble_plugin_msg_btn_border_text_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_bubble_plugin_msg_btn_border_text_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_meliscore_platform_theme_bubble_plugin_msg_btn_border_text_color',
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_bubble_plugin_updates_btn_border_text_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_bubble_plugin_updates_btn_border_text_color',
+                                    'tooltip' => 'tr_meliscore_platform_theme_bubble_plugin_updates_btn_border_text_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_bubble_plugin_updates_btn_border_text_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_meliscore_platform_theme_bubble_plugin_updates_btn_border_text_color',
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_bubble_plugin_news_btn_border_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_bubble_plugin_news_btn_border_color',
+                                    'tooltip' => 'tr_meliscore_platform_theme_bubble_plugin_news_btn_border_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_bubble_plugin_news_btn_border_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_meliscore_platform_theme_bubble_plugin_news_btn_border_color',
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_bubble_plugin_news_btn_bg_hover_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_bubble_plugin_news_btn_bg_hover_color',
+                                    'tooltip' => 'tr_meliscore_platform_theme_bubble_plugin_news_btn_bg_hover_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_bubble_plugin_news_btn_bg_hover_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_meliscore_platform_theme_bubble_plugin_news_btn_bg_hover_color',
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_bubble_plugin_widget_header_btn_txt_font_size',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_bubble_plugin_widget_header_btn_txt_font_size',
+                                    'tooltip' => 'tr_meliscore_platform_theme_bubble_plugin_widget_header_btn_txt_font_size_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_bubble_plugin_widget_header_btn_txt_font_size',
+                                    'value' => '',
+                                    'class' => 'form-control',                           
+                                    'placeholder' => 'tr_meliscore_platform_theme_bubble_plugin_widget_header_btn_txt_font_size',
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_bubble_plugin_widget_back_header_bg_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_bubble_plugin_widget_back_header_bg_color',
+                                    'tooltip' => 'tr_meliscore_platform_theme_bubble_plugin_widget_back_header_bg_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_bubble_plugin_widget_back_header_bg_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_meliscore_platform_theme_bubble_plugin_widget_back_header_bg_color',
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_bubble_plugin_widget_back_header_text_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_bubble_plugin_widget_back_header_text_color',
+                                    'tooltip' => 'tr_meliscore_platform_theme_bubble_plugin_widget_back_header_text_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_bubble_plugin_widget_back_header_text_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_meliscore_platform_theme_bubble_plugin_widget_back_header_text_color',
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_bubble_plugin_widget_back_header_text_font_size',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_bubble_plugin_widget_back_header_text_font_size',
+                                    'tooltip' => 'tr_meliscore_platform_theme_bubble_plugin_widget_back_header_text_font_size_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_bubble_plugin_widget_back_header_text_font_size',
+                                    'value' => '',
+                                    'class' => 'form-control',
+                                    'placeholder' => 'tr_meliscore_platform_theme_bubble_plugin_widget_back_header_text_font_size',
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_bubble_plugin_widget_back_header_close_btn_bg_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_bubble_plugin_widget_back_header_close_btn_bg_color',
+                                    'tooltip' => 'tr_meliscore_platform_theme_bubble_plugin_widget_back_header_close_btn_bg_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_bubble_plugin_widget_back_header_close_btn_bg_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_meliscore_platform_theme_bubble_plugin_widget_back_header_close_btn_bg_color',
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_bubble_plugin_widget_back_header_close_btn_icon_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_bubble_plugin_widget_back_header_close_btn_icon_color',
+                                    'tooltip' => 'tr_meliscore_platform_theme_bubble_plugin_widget_back_header_close_btn_icon_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_bubble_plugin_widget_back_header_close_btn_icon_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_meliscore_platform_theme_bubble_plugin_widget_back_header_close_btn_icon_color',
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_bubble_plugin_widget_back_content_header_text_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_bubble_plugin_widget_back_content_header_text_color',
+                                    'tooltip' => 'tr_meliscore_platform_theme_bubble_plugin_widget_back_content_header_text_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_bubble_plugin_widget_back_content_header_text_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_meliscore_platform_theme_bubble_plugin_widget_back_content_header_text_color',
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_bubble_plugin_widget_back_content_details_text_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_bubble_plugin_widget_back_content_details_text_color',
+                                    'tooltip' => 'tr_meliscore_platform_theme_bubble_plugin_widget_back_content_details_text_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_bubble_plugin_widget_back_content_details_text_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_meliscore_platform_theme_bubble_plugin_widget_back_content_details_text_color',
+                                ),
+                            ),
+                        ),
+
+                        //Dashboard Plugins
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_dashboard_plugin_no_plugin_alert_bg_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_dashboard_plugin_no_plugin_alert_bg_color',
+                                    'tooltip' => 'tr_meliscore_platform_theme_dashboard_plugin_no_plugin_alert_bg_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_dashboard_plugin_no_plugin_alert_bg_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_meliscore_platform_theme_dashboard_plugin_no_plugin_alert_bg_color',
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_dashboard_plugin_no_plugin_alert_border_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_dashboard_plugin_no_plugin_alert_border_color',
+                                    'tooltip' => 'tr_meliscore_platform_theme_dashboard_plugin_no_plugin_alert_border_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_dashboard_plugin_no_plugin_alert_border_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_meliscore_platform_theme_dashboard_plugin_no_plugin_alert_border_color',
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_dashboard_plugin_no_plugin_alert_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_dashboard_plugin_no_plugin_alert_color',
+                                    'tooltip' => 'tr_meliscore_platform_theme_dashboard_plugin_no_plugin_alert_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_dashboard_plugin_no_plugin_alert_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_meliscore_platform_theme_dashboard_plugin_no_plugin_alert_color',
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_dashboard_plugin_no_plugin_alert_text_font_size',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_dashboard_plugin_no_plugin_alert_text_font_size',
+                                    'tooltip' => 'tr_meliscore_platform_theme_dashboard_plugin_no_plugin_alert_text_font_size_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_dashboard_plugin_no_plugin_alert_text_font_size',
+                                    'value' => '',
+                                    'class' => 'form-control',                                   
+                                    'placeholder' => 'tr_meliscore_platform_theme_dashboard_plugin_no_plugin_alert_text_font_size',
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_dashboard_plugin_no_plugin_alert_text_font_style',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_dashboard_plugin_no_plugin_alert_text_font_style',
+                                    'tooltip' => 'tr_meliscore_platform_theme_dashboard_plugin_no_plugin_alert_text_font_style_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_dashboard_plugin_no_plugin_alert_text_font_style',
+                                    'value' => '',
+                                    'class' => 'form-control',
+                                    'placeholder' => 'tr_meliscore_platform_theme_dashboard_plugin_no_plugin_alert_text_font_style',
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_dashboard_plugin_plugin_header_bg_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_dashboard_plugin_plugin_header_bg_color',
+                                    'tooltip' => 'tr_meliscore_platform_theme_dashboard_plugin_plugin_header_bg_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_dashboard_plugin_plugin_header_bg_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_meliscore_platform_theme_dashboard_plugin_plugin_header_bg_color',
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_dashboard_plugin_plugin_header_text_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_dashboard_plugin_plugin_header_text_color',
+                                    'tooltip' => 'tr_meliscore_platform_theme_dashboard_plugin_plugin_header_text_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_dashboard_plugin_plugin_header_text_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_meliscore_platform_theme_dashboard_plugin_plugin_header_text_color',
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_dashboard_plugin_plugin_header_text_font_size',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_dashboard_plugin_plugin_header_text_font_size',
+                                    'tooltip' => 'tr_meliscore_platform_theme_dashboard_plugin_plugin_header_text_font_size_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_dashboard_plugin_plugin_header_text_font_size',
+                                    'value' => '',
+                                    'class' => 'form-control',
+                                    'placeholder' => 'tr_meliscore_platform_theme_dashboard_plugin_plugin_header_text_font_size',
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_dashboard_plugin_plugin_header_btns_bg_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_dashboard_plugin_plugin_header_btns_bg_color',
+                                    'tooltip' => 'tr_meliscore_platform_theme_dashboard_plugin_plugin_header_btns_bg_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_dashboard_plugin_plugin_header_btns_bg_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_meliscore_platform_theme_dashboard_plugin_plugin_header_btns_bg_color',
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_dashboard_plugin_plugin_header_btns_border_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_dashboard_plugin_plugin_header_btns_border_color',
+                                    'tooltip' => 'tr_meliscore_platform_theme_dashboard_plugin_plugin_header_btns_border_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_dashboard_plugin_plugin_header_btns_border_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_meliscore_platform_theme_dashboard_plugin_plugin_header_btns_border_color',
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_dashboard_plugin_plugin_header_btns_icon_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_dashboard_plugin_plugin_header_btns_icon_color',
+                                    'tooltip' => 'tr_meliscore_platform_theme_dashboard_plugin_plugin_header_btns_icon_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_dashboard_plugin_plugin_header_btns_icon_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_meliscore_platform_theme_dashboard_plugin_plugin_header_btns_icon_color',
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_dashboard_plugin_plugin_header_btns_bg_hover_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_dashboard_plugin_plugin_header_btns_bg_hover_color',
+                                    'tooltip' => 'tr_meliscore_platform_theme_dashboard_plugin_plugin_header_btns_bg_hover_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_dashboard_plugin_plugin_header_btns_bg_hover_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_meliscore_platform_theme_dashboard_plugin_plugin_header_btns_bg_hover_color',
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_dashboard_plugin_plugin_header_btns_border_hover_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_dashboard_plugin_plugin_header_btns_border_hover_color',
+                                    'tooltip' => 'tr_meliscore_platform_theme_dashboard_plugin_plugin_header_btns_border_hover_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_dashboard_plugin_plugin_header_btns_border_hover_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_meliscore_platform_theme_dashboard_plugin_plugin_header_btns_border_hover_color',
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_dashboard_plugin_plugin_body_bg_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_dashboard_plugin_plugin_body_bg_color',
+                                    'tooltip' => 'tr_meliscore_platform_theme_dashboard_plugin_plugin_body_bg_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_dashboard_plugin_plugin_body_bg_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_meliscore_platform_theme_dashboard_plugin_plugin_body_bg_color',
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_dashboard_plugin_plugin_body_border_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_dashboard_plugin_plugin_body_border_color',
+                                    'tooltip' => 'tr_meliscore_platform_theme_dashboard_plugin_plugin_body_border_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_dashboard_plugin_plugin_body_border_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_meliscore_platform_theme_dashboard_plugin_plugin_body_border_color',
+                                ),
+                            ),
+                        ),
+
+                        //Dashboard Plugins menu
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_dashboard_plugin_menu_box_bg_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_dashboard_plugin_menu_box_bg_color',
+                                    'tooltip' => 'tr_meliscore_platform_theme_dashboard_plugin_menu_box_bg_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_dashboard_plugin_menu_box_bg_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_meliscore_platform_theme_dashboard_plugin_menu_box_bg_color',
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_dashboard_plugin_menu_box_border_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_dashboard_plugin_menu_box_border_color',
+                                    'tooltip' => 'tr_meliscore_platform_theme_dashboard_plugin_menu_box_border_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_dashboard_plugin_menu_box_border_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_meliscore_platform_theme_dashboard_plugin_menu_box_border_color',
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_dashboard_plugin_menu_box_border_width',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_dashboard_plugin_menu_box_border_width',
+                                    'tooltip' => 'tr_meliscore_platform_theme_dashboard_plugin_menu_box_border_width_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_dashboard_plugin_menu_box_border_width',
+                                    'value' => '',
+                                    'class' => 'form-control',                                   
+                                    'placeholder' => 'tr_meliscore_platform_theme_dashboard_plugin_menu_box_border_width',
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_dashboard_plugin_menu_box_title_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_dashboard_plugin_menu_box_title_color',
+                                    'tooltip' => 'tr_meliscore_platform_theme_dashboard_plugin_menu_box_title_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_dashboard_plugin_menu_box_title_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_meliscore_platform_theme_dashboard_plugin_menu_box_title_color',
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_dashboard_plugin_menu_box_title_font_size',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_dashboard_plugin_menu_box_title_font_size',
+                                    'tooltip' => 'tr_meliscore_platform_theme_dashboard_plugin_menu_box_title_font_size_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_dashboard_plugin_menu_box_title_font_size',
+                                    'value' => '',
+                                    'class' => 'form-control',                              
+                                    'placeholder' => 'tr_meliscore_platform_theme_dashboard_plugin_menu_box_title_font_size',
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_dashboard_plugin_menu_box_title_font_style',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_dashboard_plugin_menu_box_title_font_style',
+                                    'tooltip' => 'tr_meliscore_platform_theme_dashboard_plugin_menu_box_title_font_style_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_dashboard_plugin_menu_box_title_font_style',
+                                    'value' => '',
+                                    'class' => 'form-control',
+                                    'placeholder' => 'tr_meliscore_platform_theme_dashboard_plugin_menu_box_title_font_style',
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_dashboard_plugin_menu_box_filter_box_border_top_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_dashboard_plugin_menu_box_filter_box_border_top_color',
+                                    'tooltip' => 'tr_meliscore_platform_theme_dashboard_plugin_menu_box_filter_box_border_top_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_dashboard_plugin_menu_box_filter_box_border_top_color',
+                                    'value' => '',
+                                    'class' => 'form-control',
+                                    'placeholder' => 'tr_meliscore_platform_theme_dashboard_plugin_menu_box_filter_box_border_top_color',
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_dashboard_plugin_menu_box_filter_box_btn_bg_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_dashboard_plugin_menu_box_filter_box_btn_bg_color',
+                                    'tooltip' => 'tr_meliscore_platform_theme_dashboard_plugin_menu_box_filter_box_btn_bg_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_dashboard_plugin_menu_box_filter_box_btn_bg_color',
+                                    'value' => '',
+                                    'class' => 'form-control',
+                                    'placeholder' => 'tr_meliscore_platform_theme_dashboard_plugin_menu_box_filter_box_btn_bg_color',
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_dashboard_plugin_menu_box_filter_box_btn_border_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_dashboard_plugin_menu_box_filter_box_btn_border_color',
+                                    'tooltip' => 'tr_meliscore_platform_theme_dashboard_plugin_menu_box_filter_box_btn_border_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_dashboard_plugin_menu_box_filter_box_btn_border_color',
+                                    'value' => '',
+                                    'class' => 'form-control',
+                                    'placeholder' => 'tr_meliscore_platform_theme_dashboard_plugin_menu_box_filter_box_btn_border_color',
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_dashboard_plugin_menu_box_filter_box_btn_text_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_dashboard_plugin_menu_box_filter_box_btn_text_color',
+                                    'tooltip' => 'tr_meliscore_platform_theme_dashboard_plugin_menu_box_filter_box_btn_text_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_dashboard_plugin_menu_box_filter_box_btn_text_color',
+                                    'value' => '',
+                                    'class' => 'form-control',
+                                    'placeholder' => 'tr_meliscore_platform_theme_dashboard_plugin_menu_box_filter_box_btn_text_color',
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_dashboard_plugin_menu_box_filter_box_btn_text_font_size',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_dashboard_plugin_menu_box_filter_box_btn_text_font_size',
+                                    'tooltip' => 'tr_meliscore_platform_theme_dashboard_plugin_menu_box_filter_box_btn_text_font_size_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_dashboard_plugin_menu_box_filter_box_btn_text_font_size',
+                                    'value' => '',
+                                    'class' => 'form-control',
+                                    'placeholder' => 'tr_meliscore_platform_theme_dashboard_plugin_menu_box_filter_box_btn_text_font_size',
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_dashboard_plugin_new_plugin_indicator_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_dashboard_plugin_new_plugin_indicator_color',
+                                    'tooltip' => 'tr_meliscore_platform_theme_dashboard_plugin_new_plugin_indicator_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_dashboard_plugin_new_plugin_indicator_color',
+                                    'value' => '',
+                                    'class' => 'form-control',
+                                    'placeholder' => 'tr_meliscore_platform_theme_dashboard_plugin_new_plugin_indicator_color',
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_dashboard_plugin_new_plugin_indicator_text_font_size',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_dashboard_plugin_new_plugin_indicator_text_font_size',
+                                    'tooltip' => 'tr_meliscore_platform_theme_dashboard_plugin_new_plugin_indicator_text_font_size_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_dashboard_plugin_new_plugin_indicator_text_font_size',
+                                    'value' => '',
+                                    'class' => 'form-control',
+                                    'placeholder' => 'tr_meliscore_platform_theme_dashboard_plugin_new_plugin_indicator_text_font_size',
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_dashboard_plugin_category_btn_text_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_dashboard_plugin_category_btn_text_color',
+                                    'tooltip' => 'tr_meliscore_platform_theme_dashboard_plugin_category_btn_text_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_dashboard_plugin_category_btn_text_color',
+                                    'value' => '',
+                                    'class' => 'form-control',
+                                    'placeholder' => 'tr_meliscore_platform_theme_dashboard_plugin_category_btn_text_color',
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_dashboard_plugin_category_btn_text_font_size',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_dashboard_plugin_category_btn_text_font_size',
+                                    'tooltip' => 'tr_meliscore_platform_theme_dashboard_plugin_category_btn_text_font_size_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_dashboard_plugin_category_btn_text_font_size',
+                                    'value' => '',
+                                    'class' => 'form-control',
+                                    'placeholder' => 'tr_meliscore_platform_theme_dashboard_plugin_category_btn_text_font_size',
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_dashboard_plugin_plugin_title_text_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_dashboard_plugin_plugin_title_text_color',
+                                    'tooltip' => 'tr_meliscore_platform_theme_dashboard_plugin_plugin_title_text_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_dashboard_plugin_plugin_title_text_color',
+                                    'value' => '',
+                                    'class' => 'form-control',
+                                    'placeholder' => 'tr_meliscore_platform_theme_dashboard_plugin_plugin_title_text_color',
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_dashboard_plugin_new_plugin_indicator_text_font_size',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_dashboard_plugin_new_plugin_indicator_text_font_size',
+                                    'tooltip' => 'tr_meliscore_platform_theme_dashboard_plugin_new_plugin_indicator_text_font_size_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_dashboard_plugin_new_plugin_indicator_text_font_size',
+                                    'value' => '',
+                                    'class' => 'form-control',
+                                    'placeholder' => 'tr_meliscore_platform_theme_dashboard_plugin_new_plugin_indicator_text_font_size',
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_dashboard_plugin_delete_all_btn_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_dashboard_plugin_delete_all_btn_color',
+                                    'tooltip' => 'tr_meliscore_platform_theme_dashboard_plugin_delete_all_btn_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_dashboard_plugin_delete_all_btn_color',
+                                    'value' => '',
+                                    'class' => 'form-control',
+                                    'placeholder' => 'tr_meliscore_platform_theme_dashboard_plugin_delete_all_btn_color',
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_dashboard_plugin_delete_all_btn_border_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_dashboard_plugin_delete_all_btn_border_color',
+                                    'tooltip' => 'tr_meliscore_platform_theme_dashboard_plugin_delete_all_btn_border_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_dashboard_plugin_delete_all_btn_border_color',
+                                    'value' => '',
+                                    'class' => 'form-control',
+                                    'placeholder' => 'tr_meliscore_platform_theme_dashboard_plugin_delete_all_btn_border_color',
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_dashboard_plugin_delete_all_btn_text_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_dashboard_plugin_delete_all_btn_text_color',
+                                    'tooltip' => 'tr_meliscore_platform_theme_dashboard_plugin_delete_all_btn_text_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_dashboard_plugin_delete_all_btn_text_color',
+                                    'value' => '',
+                                    'class' => 'form-control',
+                                    'placeholder' => 'tr_meliscore_platform_theme_dashboard_plugin_delete_all_btn_text_color',
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_dashboard_plugin_delete_all_btn_text_font_size',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_dashboard_plugin_delete_all_btn_text_font_size',
+                                    'tooltip' => 'tr_meliscore_platform_theme_dashboard_plugin_delete_all_btn_text_font_size_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_dashboard_plugin_delete_all_btn_text_font_size',
+                                    'value' => '',
+                                    'class' => 'form-control',
+                                    'placeholder' => 'tr_meliscore_platform_theme_dashboard_plugin_delete_all_btn_text_font_size',
+                                ),
+                            ),
+                        ),                                          
+                    ),
+                    'input_filter' => array(
+                        'melis_core_platform_color_primary_color' => array(
+                            'name'     => 'melis_core_platform_color_primary_color',
+                            'required' => false,
+                            'validators' => array(
+                                array(
+                                    'name' => 'regex',
+                                    false,
+                                    'options' => array(
+                                        'pattern' => '/#?([\da-fA-F]{2})([\da-fA-F]{2})([\da-fA-F]{2})/',
+                                        'messages' => array(\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'),
+                                        'encoding' => 'UTF-8',
+                                    ),
+                                ),
+                            ),
+                            'filters'  => array(
+                                array('name' => 'StripTags'),
+                                array('name' => 'StringTrim'),
+                            ),
+                        ),
+                        'melis_core_platform_color_secondary_color' => array(
+                            'name'     => 'melis_core_platform_color_secondary_color',
+                            'required' => false,
+                            'validators' => array(
+                                array(
+                                    'name' => 'regex',
+                                    false,
+                                    'options' => array(
+                                        'pattern' => '/#?([\da-fA-F]{2})([\da-fA-F]{2})([\da-fA-F]{2})/',
+                                        'messages' => array(\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'),
+                                        'encoding' => 'UTF-8',
+                                    ),
+                                ),
+                            ),
+                            'filters'  => array(
+                                array('name' => 'StripTags'),
+                                array('name' => 'StringTrim'),
+                            ),
+                        ),
+                       
+                    )
+                ),
 			),
 		),
 	),
