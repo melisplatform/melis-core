@@ -149,106 +149,48 @@ $(function() {
         });
 
         $body.on("click", ".platform-theme-options-toggle, .open-theme-options", function() {
-            rangeSliderFontSize.setRangeSliderFontSize();
+            rangeSliderSize.setRangeSliderSize();
         });
         // end evo/platform-scheme
 });
 
-var rangeSliderFontSize = {
+/**
+ * Platform Scheme Evolution
+ * range slider size: fonts, border width, border radius etc..
+ */
+var rangeSliderSize = {
     /**
      * Set range slider for different element on theme options
      */
-    setRangeSliderFontSize: function() {
-        var // logo text
-            $rangeLogoTextSliderMin         = $(".logo-font-size-range-slider-min"),
-            $rangeLogoTextSliderValue       = $(".logo-font-size-range-slider-value"),
-            // footer text
-            $rangeFooterTextSliderMin       = $(".footer-version-font-size-range-slider-min"),
-            $rangeFooterTextSliderValue     = $(".footer-version-font-size-range-slider-value"),
-            // hide button text
-            $rangeHideBtnTextSliderMin      = $(".hide-btn-text-font-size-range-slider-min"),
-            $rangeHideBtnTextSliderValue    = $(".hide-btn-text-font-size-range-slider-value"),
-            // widget header text 
-            $rangeWidgetHeaderTextSliderMin      = $(".widget-header-text-font-size-range-slider-min"),
-            $rangeWidgetHeaderTextSliderValue    = $(".widget-header-text-font-size-range-slider-value"),
-            // widget button text 
-            $rangeWidgetButtonTextSliderMin      = $(".widget-button-text-font-size-range-slider-min"),
-            $rangeWidgetButtonTextSliderValue    = $(".widget-button-text-font-size-range-slider-value"),
-            // widget back header text
-            $rangeWidgetBackHeaderTextSliderMin      = $(".widget-back-header-text-font-size-range-slider-min"),
-            $rangeWidgetBackHeaderTextSliderValue    = $(".widget-back-header-text-font-size-range-slider-value"),
-            // dashboard plugin alert
-            $rangeDbPluginAlertTextSliderMin      = $(".dashboard-plugin-no-plugin-alert-font-size-range-slider-min"),
-            $rangeDbPluginAlertTextSliderValue    = $(".dashboard-plugin-no-plugin-alert-font-size-range-slider-value"),
-            // dashboard plugin widget
-            $rangeDbPluginTextSliderMin      = $(".plugin-header-text-font-size-range-slider-min"),
-            $rangeDbPluginTextSliderValue    = $(".plugin-header-text-font-size-range-slider-value"),
-            // dashboard plugins menu box border width
-            $rangeDbPluginsMenuBoxBorderWidthSliderMin      = $(".plugins-menu-box-border-width-range-slider-min"),
-            $rangeDbPluginsMenuBoxBorderWidthSliderValue    = $(".plugins-menu-box-border-width-range-slider-value"),
-            // dashboard plugins menu box title font size
-            $rangeDbPluginsMenuBoxTitleFontSizeSliderMin      = $(".plugins-menu-box-title-font-size-range-slider-min"),
-            $rangeDbPluginsMenuBoxTitleFontSizeSliderValue    = $(".plugins-menu-box-title-font-size-range-slider-value"),
-            // dashboard plugins menu box filter box text font size
-            $rangeFilterBoxBtnFontSizeSliderMin      = $(".filter-box-button-text-font-size-range-slider-min"),
-            $rangeFilterBoxBtnFontSizeSliderValue    = $(".filter-box-button-text-font-size-range-slider-value"),
-            // dashboard plugins new plugins indicator text font size
-            $rangeNewPluginIndicatorFontSizeSliderMin      = $(".new-plugin-indicator-text-font-size-range-slider-min"),
-            $rangeNewPluginIndicatorFontSizeSliderValue    = $(".new-plugin-indicator-text-font-size-range-slider-value"),
-            // dashboard plugins title text font size
-            $rangePluginTitleFontSizeSliderMin      = $(".plugin-title-text-font-size-range-slider-min"),
-            $rangePluginTitleFontSizeSliderValue    = $(".plugin-title-text-font-size-range-slider-value"),
-            // dashboard plugins category button text font size
-            $rangeCategoryButtonFontSizeSliderMin      = $(".category-btn-text-font-size-range-slider-min"),
-            $rangeCategoryButtonFontSizeSliderValue    = $(".category-btn-text-font-size-range-slider-value"),
-            // dashboard plugins delete all button text font size
-            $rangeDeleteAllButtonFontSizeSliderMin      = $(".delete-all-btn-text-font-size-range-slider-min"),
-            $rangeDeleteAllButtonFontSizeSliderValue    = $(".delete-all-btn-text-font-size-range-slider-value");
+    setRangeSliderSize: function() {
+        const sliders = [
+            { selectorMin: ".logo-font-size-range-slider-min", selectorValue: ".logo-font-size-range-slider-value", value: 18, min: 1, max: 30 }, // logo text, start general options
+            { selectorMin: ".footer-version-font-size-range-slider-min", selectorValue: ".footer-version-font-size-range-slider-value", value: 10, min: 1, max: 30 }, // footer text
+            { selectorMin: ".hide-btn-text-font-size-range-slider-min", selectorValue: ".hide-btn-text-font-size-range-slider-value", value: 10, min: 1, max: 25 }, // hide button text
+            { selectorMin: ".widget-header-text-font-size-range-slider-min", selectorValue: ".widget-header-text-font-size-range-slider-value", value: 25, min: 1, max: 35 }, // widget header text
+            { selectorMin: ".widget-button-text-font-size-range-slider-min", selectorValue: ".widget-button-text-font-size-range-slider-value", value: 14, min: 1, max: 30 }, // widget button text
+            { selectorMin: ".widget-back-header-text-font-size-range-slider-min", selectorValue: ".widget-back-header-text-font-size-range-slider-value", value: 14, min: 1, max: 35 }, // widget back header text
+            { selectorMin: ".dashboard-plugin-no-plugin-alert-font-size-range-slider-min", selectorValue: ".dashboard-plugin-no-plugin-alert-font-size-range-slider-value", value: 14, min: 1, max: 25 }, // dashboard plugin alert
+            { selectorMin: ".plugin-header-text-font-size-range-slider-min", selectorValue: ".plugin-header-text-font-size-range-slider-value", value: 14, min: 1, max: 25 }, // dashboard plugin widget
+            { selectorMin: ".plugins-menu-box-border-width-range-slider-min", selectorValue: ".plugins-menu-box-border-width-range-slider-value", value: 4, min: 1, max: 10 }, // dashboard plugins menu box border width
+            { selectorMin: ".plugins-menu-box-title-font-size-range-slider-min", selectorValue: ".plugins-menu-box-title-font-size-range-slider-value", value: 14, min: 1, max: 30 }, // dashboard plugins menu box title font size
+            { selectorMin: ".filter-box-button-text-font-size-range-slider-min", selectorValue: ".filter-box-button-text-font-size-range-slider-value", value: 12, min: 1, max: 20 }, // dashboard plugins menu box filter box text font size
+            { selectorMin: ".new-plugin-indicator-text-font-size-range-slider-min", selectorValue: ".new-plugin-indicator-text-font-size-range-slider-value", value: 7, min: 1, max: 18 }, // dashboard plugins new plugins indicator text font size
+            { selectorMin: ".plugin-title-text-font-size-range-slider-min", selectorValue: ".plugin-title-text-font-size-range-slider-value", value: 12, min: 1, max: 30 }, // dashboard plugins title text font size
+            { selectorMin: ".category-btn-text-font-size-range-slider-min", selectorValue: ".category-btn-text-font-size-range-slider-value", value: 11, min: 1, max: 30 }, // dashboard plugins category button text font size
+            { selectorMin: ".delete-all-btn-text-font-size-range-slider-min", selectorValue: ".delete-all-btn-text-font-size-range-slider-value", value: 14, min: 1, max: 30 }, // dashboard plugins delete all button text font size, end of general options
+            { selectorMin: ".modal-border-radius-size-range-slider-min", selectorValue: ".modal-border-radius-size-range-slider-value", value: 0, min: 0, max: 10 }, // modal nav tabs border radius size, start component options
+            { selectorMin: ".modal-border-right-width-range-slider-min", selectorValue: ".modal-border-right-width-range-slider-value", value: 1, min: 0, max: 10 }, // modal nav tabs border right width
+            { selectorMin: ".modal-tabs-font-size-range-slider-min", selectorValue: ".modal-tabs-font-size-range-slider-value", value: 14, min: 1, max: 20 }, // modal nav tabs text font size
+            { selectorMin: ".modal-content-text-font-size-range-slider-min", selectorValue: ".modal-content-text-font-size-range-slider-value", value: 14, min: 1, max: 25 }, // modal content text font size
+        ];
 
-            // logo text
-            this.rangeSliderInit($rangeLogoTextSliderMin, $rangeLogoTextSliderValue, "min", 18, 1, 30);
-            
-            // footer text
-            this.rangeSliderInit($rangeFooterTextSliderMin, $rangeFooterTextSliderValue, "min", 10, 1, 30);
-            
-            // hide button text
-            this.rangeSliderInit($rangeHideBtnTextSliderMin, $rangeHideBtnTextSliderValue, "min", 10, 1, 25);
-            
-            // widget header text
-            this.rangeSliderInit($rangeWidgetHeaderTextSliderMin, $rangeWidgetHeaderTextSliderValue, "min", 25, 1, 35);
+            sliders.forEach(slider => {
+                const $sliderMin = $(slider.selectorMin),
+                    $sliderValue = $(slider.selectorValue);
 
-            // widget button text
-            this.rangeSliderInit($rangeWidgetButtonTextSliderMin, $rangeWidgetButtonTextSliderValue, "min", 14, 1, 30);
-
-            // widget back header text
-            this.rangeSliderInit($rangeWidgetBackHeaderTextSliderMin, $rangeWidgetBackHeaderTextSliderValue, "min", 14, 1, 35);
-
-            // dashboard plugin alert text
-            this.rangeSliderInit($rangeDbPluginAlertTextSliderMin, $rangeDbPluginAlertTextSliderValue, "min", 14, 1, 25);
-
-            // dashboard plugin widget header text
-            this.rangeSliderInit($rangeDbPluginTextSliderMin, $rangeDbPluginTextSliderValue, "min", 14, 1, 25);
-
-            // dashboard plugins menu box border width
-            this.rangeSliderInit($rangeDbPluginsMenuBoxBorderWidthSliderMin, $rangeDbPluginsMenuBoxBorderWidthSliderValue, "min", 4, 1, 10);
-
-            // dashboard plugins menu box title font size
-            this.rangeSliderInit($rangeDbPluginsMenuBoxTitleFontSizeSliderMin, $rangeDbPluginsMenuBoxTitleFontSizeSliderValue, "min", 14, 1, 30);
-
-            // dashboard plugins menu box filter box text font size
-            this.rangeSliderInit($rangeFilterBoxBtnFontSizeSliderMin, $rangeFilterBoxBtnFontSizeSliderValue, "min", 12, 1, 20);
-
-            // dashboard plugins menu box filter box text font size
-            this.rangeSliderInit($rangeNewPluginIndicatorFontSizeSliderMin, $rangeNewPluginIndicatorFontSizeSliderValue, "min", 7, 1, 18);
-
-            // dashboard plugins title text font size
-            this.rangeSliderInit($rangePluginTitleFontSizeSliderMin, $rangePluginTitleFontSizeSliderValue, "min", 12, 1, 30);
-
-            // dashboard plugins category button text font size
-            this.rangeSliderInit($rangeCategoryButtonFontSizeSliderMin, $rangeCategoryButtonFontSizeSliderValue, "min", 11, 1, 30);
-
-            // dashboard plugins delete all button text font size
-            this.rangeSliderInit($rangeDeleteAllButtonFontSizeSliderMin, $rangeDeleteAllButtonFontSizeSliderValue, "min", 14, 1, 30);
+                    this.rangeSliderInit($sliderMin, $sliderValue, "min", slider.value, slider.min, slider.max);
+            });
     },
     /**
      * Initialize jQuery Slider Widget - range min
