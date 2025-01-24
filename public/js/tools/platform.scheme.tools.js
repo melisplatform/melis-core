@@ -151,6 +151,49 @@ $(function() {
         $body.on("click", ".platform-theme-options-toggle, .open-theme-options", function() {
             rangeSliderFontSize.setRangeSliderFontSize();
         });
+
+        $body.on("click", ".save-platform-theme-options", function(e) {
+            var formData = new FormData(),
+                topLogo = {},
+                topLogoData = $("form#melis_core_platform_theme_option_form").find('div.top-logo').find('input').serializeArray();
+               
+                $.each(topLogoData, function(i, v) {
+                    topLogo[v['name']] = v['value'];
+                });
+
+                formData.append('topLogo', JSON.stringify(topLogo));
+
+                console.log(JSON.stringify(topLogo));
+
+                melisCoreTool.pending(".button");
+                
+                melisCoreTool.addOverflowHidden();
+
+                $.ajax({
+                    type    : 'POST',
+                    url     : 'melis/MelisCore/PlatformScheme/savePlatformTheme',
+                    data    : formData,
+                    processData : false,
+                    cache       : false,
+                    contentType : false,
+                    dataType    : 'json'
+                }).done(function(data) {
+                    if(data.success) {
+                        melisCoreTool.removeOverflowHidden();
+
+                        melisCoreTool.processing();
+                        location.reload(true);
+                    }
+                    else {
+                        melisHelper.melisKoNotification(data.textTitle, data.textMessage, data.errors);
+                    }
+                    melisCoreTool.done(".button");
+                }).fail(function() {
+                    melisCoreTool.done(".button");
+                });
+
+                e.preventDefault();
+        });
         // end evo/platform-scheme
 });
 

@@ -22,6 +22,15 @@ class MelisCorePlatformScheme
     protected $favicon;
     protected $isActive;
 
+    protected $topLogo;
+    protected $userProfile;
+    protected $menu;
+    protected $footer;
+    protected $header;
+    protected $bubblePlugin;
+    protected $dashboardPlugin;
+    protected $dashboardPluginMenu;
+
     public function setId($id)
     {
         $this->id = $id;
@@ -112,9 +121,88 @@ class MelisCorePlatformScheme
         return $this->isActive;
     }
 
-
     public function getArrayCopy()
     {
         return get_object_vars($this);
+    }
+
+    public function setTopLogo($topLogo)
+    {
+        $this->topLogo = $topLogo;
+    }
+
+    public function getTopLogo()
+    {
+        return $this->topLogo;
+    }
+
+    public function setUserProfile($userProfile)
+    {
+        $this->userProfile = $userProfile;
+    }
+
+    public function getUserProfile()
+    {
+        return $this->userProfile;
+    }
+
+    public function setMenu($menu)
+    {
+        $this->menu = $menu;
+    }
+
+    public function getMenu()
+    {
+        return $this->menu;
+    }
+
+    public function setFooter($footer)
+    {
+        $this->footer = $footer;
+    }
+
+    public function getFooter()
+    {
+        return $this->footer;
+    }
+
+    public function setHeader($header)
+    {
+        $this->header = $header;
+    }
+
+    public function getHeader()
+    {
+        return $this->header;
+    }
+
+    public function setBubblePlugin($bubblePlugin)
+    {
+        $this->bubblePlugin = $bubblePlugin;
+    }
+
+    public function getBubblePlugin()
+    {
+        return $this->bubblePlugin;
+    }
+
+    public function setDashboardPlugin($dashboardPlugin)
+    {
+        $this->dashboardPlugin = $dashboardPlugin;
+    }
+
+    public function getDashboardPlugin()
+    {
+        return $this->dashboardPlugin;
+    }
+
+    public function setDashboardPluginMenu($dashboardPluginMenu)
+    {
+        $this->dashboardPluginMenu = $dashboardPluginMenu;
+    }
+
+    public function getDashboardPluginMenu()
+    {
+        return $this->dashboardPluginMenu;
     }
 }

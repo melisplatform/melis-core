@@ -66,6 +66,14 @@ class MelisCorePlatformSchemeService extends MelisGeneralService
                 $entScheme->setLoginLogo($schemeData->pscheme_login_logo);
                 $entScheme->setLoginBackground($schemeData->pscheme_login_background);
                 $entScheme->setFavicon($schemeData->pscheme_favicon);
+                $entScheme->setTopLogo($schemeData->pscheme_top_logo);
+                $entScheme->setUserProfile($schemeData->pscheme_user_profile);
+                $entScheme->setMenu($schemeData->pscheme_menu);
+                $entScheme->setFooter($schemeData->pscheme_footer);
+                $entScheme->setHeader($schemeData->pscheme_header_navigation);
+                $entScheme->setBubblePlugin($schemeData->pscheme_bubble_plugins);
+                $entScheme->setDashboardPlugin($schemeData->pscheme_dashboard_plugins);
+                $entScheme->setDashboardPluginMenu($schemeData->pscheme_dashboard_plugins_menu);
             }
 
             $entScheme->setIsActive($schemeData->pscheme_is_active);
