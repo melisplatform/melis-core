@@ -246,11 +246,11 @@ if ($headerTitleLen > 13) {
                                                                             </div>
                                                                         <?php  } elseif (strpos($element->getName(), 'size')) { ?>
                                                                             <div class="row">
-                                                                                <div class="col-9">
-                                                                                    <div id="footer-version-font-size-range-slider-min" class="footer-version-font-size-range-slider-min" style="border: 0; color: #f6931f; font-weight: bold;"></div>
+                                                                                <div class="col-9">                                                                                   
+                                                                                    <div id="<?= $element->getAttribute('sliderId') ?>" class="<?= $element->getAttribute('sliderClass') ?>" style="border: 0; color: #f6931f; font-weight: bold;"></div>
                                                                                 </div>
                                                                                 <div class="col-3">
-                                                                                    <?= $this->formRow($element->setLabel("")); ?>
+                                                                                    <?= $this->formRow($element->setLabel("")); ?>                                                                                  
                                                                                 </div>
                                                                             </div>
                                                                         <?php } ?>
@@ -364,7 +364,7 @@ if ($headerTitleLen > 13) {
                                                                         <?php  } elseif (strpos($element->getName(), 'size')) { ?>
                                                                             <div class="row">
                                                                                 <div class="col-9">
-                                                                                    <div id="footer-version-font-size-range-slider-min" class="footer-version-font-size-range-slider-min" style="border: 0; color: #f6931f; font-weight: bold;"></div>
+                                                                                    <div id="<?= $element->getAttribute('sliderId') ?>" class="<?= $element->getAttribute('sliderClass') ?>" style="border: 0; color: #f6931f; font-weight: bold;"></div>
                                                                                 </div>
                                                                                 <div class="col-3">
                                                                                     <?= $this->formRow($element->setLabel("")); ?>
@@ -443,7 +443,7 @@ if ($headerTitleLen > 13) {
                                                                         <?php  } elseif (strpos($element->getName(), 'size')) { ?>
                                                                             <div class="row">
                                                                                 <div class="col-9">
-                                                                                    <div id="footer-version-font-size-range-slider-min" class="footer-version-font-size-range-slider-min" style="border: 0; color: #f6931f; font-weight: bold;"></div>
+                                                                                    <div id="<?= $element->getAttribute('sliderId') ?>" class="<?= $element->getAttribute('sliderClass') ?>" style="border: 0; color: #f6931f; font-weight: bold;"></div>
                                                                                 </div>
                                                                                 <div class="col-3">
                                                                                     <?= $this->formRow($element->setLabel("")); ?>
@@ -487,7 +487,7 @@ if ($headerTitleLen > 13) {
                                                                         <?php  } elseif (strpos($element->getName(), 'size')) { ?>
                                                                             <div class="row">
                                                                                 <div class="col-9">
-                                                                                    <div id="footer-version-font-size-range-slider-min" class="footer-version-font-size-range-slider-min" style="border: 0; color: #f6931f; font-weight: bold;"></div>
+                                                                                    <div id="<?= $element->getAttribute('sliderId') ?>" class="<?= $element->getAttribute('sliderClass') ?>" style="border: 0; color: #f6931f; font-weight: bold;"></div>
                                                                                 </div>
                                                                                 <div class="col-3">
                                                                                     <?= $this->formRow($element->setLabel("")); ?>
@@ -543,10 +543,10 @@ if ($headerTitleLen > 13) {
                                                                                     <input type="hidden" class="minicolor" value="<?= $element->getValue(); ?>" />
                                                                                 </span>
                                                                             </div>
-                                                                        <?php  } elseif (strpos($element->getName(), 'size')) { ?>
+                                                                        <?php  } elseif (strpos($element->getName(), 'size') || strpos($element->getName(), 'width')) { ?>
                                                                             <div class="row">
                                                                                 <div class="col-9">
-                                                                                    <div id="footer-version-font-size-range-slider-min" class="footer-version-font-size-range-slider-min" style="border: 0; color: #f6931f; font-weight: bold;"></div>
+                                                                                    <div id="<?= $element->getAttribute('sliderId') ?>" class="<?= $element->getAttribute('sliderClass') ?>" style="border: 0; color: #f6931f; font-weight: bold;"></div>
                                                                                 </div>
                                                                                 <div class="col-3">
                                                                                     <?= $this->formRow($element->setLabel("")); ?>

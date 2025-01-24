@@ -7,6 +7,7 @@ ALTER TABLE `melis_core_platform_scheme` ADD `pscheme_bubble_plugins` TEXT NULL 
 ALTER TABLE `melis_core_platform_scheme` ADD `pscheme_dashboard_plugins` TEXT NULL AFTER `pscheme_bubble_plugins`; 
 ALTER TABLE `melis_core_platform_scheme` ADD `pscheme_dashboard_plugins_menu` TEXT NULL AFTER `pscheme_dashboard_plugins`; 
 
+
 UPDATE `melis_core_platform_scheme` SET `pscheme_top_logo` = '{"melis_core_platform_theme_toggle_btn_color": "#ce5459","melis_core_platform_theme_toggle_btn_hover_color":"#fff","melis_core_platform_theme_logo_bg_color":"#e61c23","melis_core_platform_theme_logo_text_color":"#fff","melis_core_platform_theme_logo_text_font_size":18}'
     WHERE `melis_core_platform_scheme`.`pscheme_id` IN (1,2);
 
@@ -30,8 +31,6 @@ UPDATE `melis_core_platform_scheme` SET `pscheme_header_navigation` = '{"melis_c
     "melis_core_platform_theme_header_bg_active_color": "#fff"}'
 WHERE `melis_core_platform_scheme`.`pscheme_id` IN (1,2);
 
-
-
 UPDATE `melis_core_platform_scheme` SET `pscheme_bubble_plugins` = '{"melis_core_platform_theme_bubble_plugin_hide_btn_text_icon_color": "#fff",
     "melis_core_platform_theme_bubble_plugin_hide_btn_text_icon_hover_color": "#466baf", "melis_core_platform_theme_bubble_plugin_hide_btn_bg_border_color": "#466baf", 
     "melis_core_platform_theme_bubble_plugin_hide_btn_bg_hover_color": "#fff", "melis_core_platform_theme_bubble_plugin_hide_btn_text_font_size": 10, 
@@ -49,7 +48,6 @@ UPDATE `melis_core_platform_scheme` SET `pscheme_bubble_plugins` = '{"melis_core
     "melis_core_platform_theme_bubble_plugin_widget_back_content_header_text_color": "#000", "melis_core_platform_theme_bubble_plugin_widget_back_content_details_text_color": "#000"}'
 WHERE `melis_core_platform_scheme`.`pscheme_id` IN (1,2);
 
-
 UPDATE `melis_core_platform_scheme` SET `pscheme_dashboard_plugins` = '{"melis_core_platform_theme_dashboard_plugin_no_plugin_alert_bg_color": "#cff4fc", 
     "melis_core_platform_theme_dashboard_plugin_no_plugin_alert_border_color": "#9eeaf9", "melis_core_platform_theme_dashboard_plugin_no_plugin_alert_color": "#055160", 
     "melis_core_platform_theme_dashboard_plugin_no_plugin_alert_text_font_size": 14, "melis_core_platform_theme_dashboard_plugin_no_plugin_alert_text_font_style": "normal", 
@@ -65,9 +63,10 @@ UPDATE `melis_core_platform_scheme` SET `pscheme_dashboard_plugins_menu` = '{"me
     "melis_core_platform_theme_dashboard_plugin_menu_box_title_color": "#fff", "melis_core_platform_theme_dashboard_plugin_menu_box_title_font_size": 14, 
     "melis_core_platform_theme_dashboard_plugin_menu_box_title_font_style": "normal", "melis_core_platform_theme_dashboard_plugin_menu_box_filter_box_border_top_color": "#2c2c2c", 
     "melis_core_platform_theme_dashboard_plugin_menu_box_filter_box_btn_bg_color": "#373737", "melis_core_platform_theme_dashboard_plugin_menu_box_filter_box_btn_border_color": "#373737", 
-    "melis_core_platform_theme_dashboard_plugin_menu_box_filter_box_btn_text_color": "#fff", "melis_core_platform_theme_dashboard_plugin_menu_box_filter_box_btn_text_font_size": 12, "melis_core_platform_theme_dashboard_plugin_new_plugin_indicator_color": "#72af46", 
-    "melis_core_platform_theme_dashboard_plugin_new_plugin_indicator_text_font_size": 7, "melis_core_platform_theme_dashboard_plugin_category_btn_text_color": "#fff", 
-    "melis_core_platform_theme_dashboard_plugin_category_btn_text_font_size": 11, "melis_core_platform_theme_dashboard_plugin_plugin_title_text_color": "#fff", 
-    "melis_core_platform_theme_dashboard_plugin_delete_all_btn_color": "#e61c23", "melis_core_platform_theme_dashboard_plugin_delete_all_btn_border_color": "#e61c23", 
-    "melis_core_platform_theme_dashboard_plugin_delete_all_btn_text_color": "#fff", "melis_core_platform_theme_dashboard_plugin_delete_all_btn_text_font_size": 14}'
+    "melis_core_platform_theme_dashboard_plugin_menu_box_filter_box_btn_text_color": "#fff", "melis_core_platform_theme_dashboard_plugin_menu_box_filter_box_btn_text_font_size": 12, 
+    "melis_core_platform_theme_dashboard_plugin_menu_new_plugin_indicator_color": "#72af46", "melis_core_platform_theme_dashboard_plugin_menu_new_plugin_indicator_text_font_size": 7, 
+    "melis_core_platform_theme_dashboard_plugin_menu_category_btn_text_color": "#fff","melis_core_platform_theme_dashboard_plugin_menu_category_btn_text_font_size": 11, 
+    "melis_core_platform_theme_dashboard_plugin_menu_plugin_title_text_color": "#fff", "melis_core_platform_theme_dashboard_plugin_menu_plugin_title_text_font_size": 12,
+    "melis_core_platform_theme_dashboard_plugin_menu_delete_all_btn_color": "#e61c23", "melis_core_platform_theme_dashboard_plugin_menu_delete_all_btn_border_color": "#e61c23", 
+    "melis_core_platform_theme_dashboard_plugin_menu_delete_all_btn_text_color": "#fff", "melis_core_platform_theme_dashboard_plugin_menu_delete_all_btn_text_font_size": 14}'
 WHERE `melis_core_platform_scheme`.`pscheme_id` IN (1,2);

@@ -95,8 +95,6 @@ class PlatformSchemeController extends MelisAbstractActionController
             $form->setData(json_decode($colors, 1));
 
             if ($form->isValid()) {
-
-
                 /**
                  * Flag holder for file input that has file(s) uploaded
                  */
@@ -295,10 +293,13 @@ class PlatformSchemeController extends MelisAbstractActionController
                                     ), $savableData);
                                 $success = $this->getPlatformSchemeSvc()->saveScheme($data, $schemeId, true);
 
+                                //saves the platform theme options
+                                list('success' => $successPlatformTheme, 'errors' => $errorsPlatformTheme) = $this->savePlatformTheme();
+
                                 /**
                                  * Return "1" if saving was successful
                                  */
-                                if($success) {
+                                if ($success && $successPlatformTheme) {
 
                                     // generate a new scheme.css file in public
                                     ini_set('memory_limit', '-1');
@@ -328,7 +329,11 @@ class PlatformSchemeController extends MelisAbstractActionController
 
                                     $success = 1;
                                     $textMessage = 'tr_meliscore_platform_scheme_save_ok';
-                                }
+
+                                } else {
+                                    $success = 0;
+                                    $errors = $errorsPlatformTheme;
+                                }   
                             }
 
                         }
@@ -649,295 +654,74 @@ class PlatformSchemeController extends MelisAbstractActionController
         return $form;
     }
 
-    public function savePlatformThemeAction()
+    public function savePlatformTheme()
     {
         $success      = 0;
-        $errors       = array();
-        $textTitle    = 'tr_meliscore_platform_scheme';
-        $textMessage  = 'tr_meliscore_platform_scheme_save_ko';
-        $request      = $this->getRequest();
-        $imgErrors    = array();
-        $folderErrors = array();
+        $errors       = array();       
+        $request      = $this->getRequest();      
         // for now directly modify the MELIS_SCHEME_1
         $schemeId = 2;
 
-        if ($request->isPost()) {
+        if ($request->isPost()) {          
+            $postData = $this->melisTool()->sanitizeRecursive($request->getPost()->toArray()); 
+            $platformData = json_decode($postData['platformTheme'], true);  
+            $form = $this->getPlatformThemeOptionForm();
+            $form->setData($platformData);
 
-            $invalidImageError = $this->melisTool()->getTranslation('tr_meliscore_platform_scheme_image_is_invalid');
-            $post              = $this->melisTool()->sanitizeRecursive($request->getPost()->toArray());
-            $topLogo            = isset($post['topLogo']) ? $post['topLogo'] : null;           
-            $form              = $this->getForm();
+            if ($form->isValid()) {   
+                $topLogo = [];
+                $userProfile = [];
+                $menu = [];
+                $footer = [];
+                $header = [];
+                $bubble = [];
+                $dashboardPlugin = [];
+                $dashboardPluginMenu = [];
+                foreach ($form->getElements() as $key => $elem) {
+                    if ($elem->getAttribute('category') == 'logo') {
+                        $topLogo[$key] = $platformData[$key];
+                    } elseif ($elem->getAttribute('category') == 'user_profile') {
+                        $userProfile[$key] = $platformData[$key];
+                    } elseif ($elem->getAttribute('category') == 'menu') {
+                        $menu[$key] = $platformData[$key];
+                    } elseif ($elem->getAttribute('category') == 'footer') {
+                        $footer[$key] = $platformData[$key];
+                    } elseif ($elem->getAttribute('category') == 'header') {
+                        $header[$key] = $platformData[$key];
+                    } elseif ($elem->getAttribute('category') == 'bubble') {
+                        $bubble[$key] = $platformData[$key];
+                    } elseif ($elem->getAttribute('category') == 'dashboard_plugin') {
+                        $dashboardPlugin[$key] = $platformData[$key] ?? '';
+                    } elseif ($elem->getAttribute('category') == 'dashboard_plugin_menu') {
+                        $dashboardPluginMenu[$key] = $platformData[$key] ?? '';
+                    }
+                }
 
-            $form->setData(json_decode($topLogo, 1));
+                /**
+                 * update database, for now directly modify MELIS_PLATFORM_SCHEME_1
+                 */
+                $data = array(
+                    'pscheme_top_logo' => json_encode($topLogo),
+                    'pscheme_user_profile' => json_encode($userProfile),
+                    'pscheme_menu' => json_encode($menu),
+                    'pscheme_footer' => json_encode($footer),
+                    'pscheme_header_navigation' => json_encode($header),
+                    'pscheme_bubble_plugins' => json_encode($bubble),
+                    'pscheme_dashboard_plugins' => json_encode($dashboardPlugin),
+                    'pscheme_dashboard_plugins_menu' => json_encode($dashboardPluginMenu),
+                );
 
-            // if ($form->isValid()) {
-
-
-            //     /**
-            //      * Flag holder for file input that has file(s) uploaded
-            //      */
-            //     $nonEmptyImages = array();
-
-            //     /**
-            //      * Validator for file image extension
-            //      */
-            //     $extension = new Extension(array(
-            //         'extension' => $this->getAllowedUploadableExtension(),
-            //         'messages' => array(
-            //             'fileExtensionFalse' => $this->melisTool()->getTranslation('tr_meliscore_platform_scheme_image_invalid_extension'),
-            //             'fileExtensionNotFound' => $this->melisTool()->getTranslation('tr_meliscore_platform_scheme_image_invalid_extension'),
-            //         )
-            //     ));
-
-            //     /**
-            //      * Validator which checks if the file is an image
-            //      */
-            //     $imgValidator = new IsImage();
-
-            //     /**
-            //      * check for uploaded images, if input file has uploaded an image then store
-            //      * it on a temporary array.
-            //      */
-            //     foreach ($images as $name => $image) {
-            //         if (isset($image['name']) && !empty($image['name'])) {
-            //             $nonEmptyImages[] = $name;
-            //         }
-            //     }
-
-
-            //     /**
-            //      * Apply validation before uploading
-            //      */
-            //     foreach ($nonEmptyImages as $idx => $name) {
-
-            //         /**
-            //          * this will check if the file ext of the uploaded file is valid
-            //          */
-            //         if (!$extension->isValid($images[$name])) {
-            //             $imgErrors[$name] = array(
-            //                 'fileExtensionFalse' => $this->melisTool()->getTranslation('tr_meliscore_platform_scheme_image_invalid_extension'),
-            //                 'label'              => $this->melisTool()->getTranslation('tr_meliscore_platform_scheme_form_' . $name)
-            //             );
-            //         } else {
-            //             /**
-            //              * if valid, then will check if it is a valid image, this is to avoid PHP eval exploitation
-            //              */
-            //             if (!$imgValidator->isValid($images[$name])) {
-            //                 $imgErrors[$name] = array(
-            //                     'invalidImage' => $invalidImageError,
-            //                     'label'        => $this->melisTool()->getTranslation('tr_meliscore_platform_scheme_form_' . $name)
-            //                 );
-            //             }
-            //         }
-            //     }
-
-            //     /**
-            //      * If there's no error on the first checking, then prepare it for uploading
-            //      */
-            //     if (empty($imgErrors)) {
-
-            //         /**
-            //          * This will get/create the platform-scheme folder inside media folder
-            //          */
-            //         $platformSchemeMediaPath = $this->getSchemeFolder();
-
-            //         /**
-            //          * Absolute and physical path where the file image should be uploaded
-            //          */
-            //         $absPath = $_SERVER['DOCUMENT_ROOT'] . $platformSchemeMediaPath;
-
-            //         /**
-            //          * Check if the physical directory exist
-            //          */
-            //         if (file_exists($absPath)) {
-
-            //             /**
-            //              * and if it is writable
-            //              */
-            //             if (is_writable($absPath)) {
-
-            //                 /**
-            //                  * image file size  validator
-            //                  */
-            //                 $imageMaxSize = $this->getMaxImageSize();
-            //                 $size         = new Size(array(
-            //                     'max' => $imageMaxSize,
-            //                     'messages' => array(
-            //                         'fileSizeTooBig'   => $this->melisTool()->getTranslation(
-            //                             'tr_meliscommerce_documents_upload_too_small',
-            //                             array($this->convertWithBytes($imageMaxSize))
-            //                         ),
-            //                         'fileSizeNotFound' => $this->melisTool()->getTranslation('tr_meliscore_platform_scheme_image_not_exist'),
-            //                     )
-            //                 ));
-
-
-            //                 /**
-            //                  * this will hold the data that will be used in saving into the table
-            //                  */
-            //                 $savableData = array();
-
-            //                 foreach ($nonEmptyImages as $idx => $name) {
-
-            //                     $fileName = $images[$name]['name'];
-
-            //                     /**
-            //                      * Create new instance for Http
-            //                      */
-            //                     $adapter = new Http();
-
-            //                     // re-apply validators for second checking
-            //                     $adapter->setValidators(array($size, $extension), $name);
-
-            //                     if ($adapter->isValid($name)) {
-
-            //                         /**
-            //                          * Set the path where the file(s) should be uploaded
-            //                          */
-            //                         $adapter->setDestination($absPath);
-
-            //                         /**
-            //                          * Forece override file if the file already exists
-            //                          */
-            //                         $adapter->addFilter('FileRename', array(
-            //                             'target'    => $fileName,
-            //                             'overwrite' => true,
-            //                         ));
-
-            //                         /**
-            //                          * upload images to platform-scheme directory
-            //                          */
-            //                         if ($adapter->receive($name)) {
-            //                             /**
-            //                              * Store to $savableData if file upload was successful
-            //                              */
-            //                             $savableData['pscheme_' . $name] = $platformSchemeMediaPath . $fileName;
-            //                         }
-            //                     } else {
-
-            //                         $adapterError = $adapter->getMessages();
-
-            //                         /**
-            //                          * this will display the errors from the adapter error messages
-            //                          */
-            //                         if ($adapterError && is_array($adapterError)) {
-            //                             foreach ($adapterError as $key => $message) {
-            //                                 $imgErrors[$name] = array(
-            //                                     $key     => $invalidImageError,
-            //                                     $message => $this->melisTool()->getTranslation('tr_meliscore_platform_scheme_form_' . $name)
-            //                                 );
-            //                             }
-            //                         }
-            //                     }
-            //                 }
-
-            //                 /**
-            //                  * Validation for Sidebar header title
-            //                  */
-            //                 $sidebarHeaderTitle = isset($post['sidebar_header_text']) ? $post['sidebar_header_text'] : $this->melisTool()->getTranslation('tr_meliscore_header Title');
-            //                 $validatorChain     = new Validator\ValidatorChain();
-
-            //                 $validatorChain->attach(
-            //                     new Validator\StringLength(array(
-            //                         'min' => 5,
-            //                         'max' => 45,
-            //                         'messages' => array(
-            //                             Validator\StringLength::TOO_LONG => $this->melisTool()->getTranslation('tr_meliscore_platform_scheme_sidebar_header_title_too_long'),
-            //                             Validator\StringLength::TOO_SHORT => $this->melisTool()->getTranslation('tr_meliscore_platform_scheme_sidebar_header_title_too_short')
-            //                         )
-            //                     ))
-            //                 );
-
-            //                 if (!$validatorChain->isValid($sidebarHeaderTitle)) {
-            //                     $chainErrors = $validatorChain->getMessages();
-            //                     foreach ($chainErrors as $errKey => $errVal) {
-            //                         $imgErrors['sidebar_header_text'] = array(
-            //                             $errKey => $errVal,
-            //                             'label' => $this->melisTool()->getTranslation('tr_meliscore_platform_scheme_form_sidebar_header_title')
-            //                         );
-            //                     }
-            //                 }
-
-            //                 /**
-            //                  * Check again whether the $imgErrors is cleared with errors
-            //                  */
-            //                 if (empty($imgErrors)) {
-            //                     /**
-            //                      * update database, for now directly modify MELIS_PLATFORM_SCHEME_1
-            //                      */
-            //                     $data = array_merge(array(
-            //                         'pscheme_colors' => $colors,
-            //                         'pscheme_sidebar_header_text' => $sidebarHeaderTitle
-            //                     ), $savableData);
-            //                     $success = $this->getPlatformSchemeSvc()->saveScheme($data, $schemeId, true);
-
-            //                     /**
-            //                      * Return "1" if saving was successful
-            //                      */
-            //                     if ($success) {
-
-            //                         // generate a new scheme.css file in public
-            //                         ini_set('memory_limit', '-1');
-            //                         set_time_limit(0);
-            //                         $content = $this->melisTool()->getViewContent([
-            //                             'module' => 'MelisCore',
-            //                             'controller' => 'PlatformScheme',
-            //                             'action' => 'getStyleColorCss'
-            //                         ]);
-            //                         $assetsFolder = $_SERVER['DOCUMENT_ROOT'] . '/assets/css/';
-
-            //                         if (file_exists($assetsFolder)) {
-
-            //                             file_put_contents($assetsFolder . 'schemes.css', $content);
-            //                         } else {
-            //                             mkdir($assetsFolder, 0777, true);
-            //                             file_put_contents($assetsFolder . 'schemes.css', $content);
-            //                         }
-
-            //                         //generate scheme file time
-            //                         $platformTable = $this->getServiceManager()->get('MelisCoreTablePlatform');
-            //                         $platformData = $platformTable->getEntryByField('plf_name', getenv('MELIS_PLATFORM'))->current();
-            //                         if (!empty($platformData)) {
-            //                             $platformTable->save(['plf_scheme_file_time' => time()], $platformData->plf_id);
-            //                         }
-
-            //                         $success = 1;
-            //                         $textMessage = 'tr_meliscore_platform_scheme_save_ok';
-            //                     }
-            //                 }
-            //             }
-            //             // <!-- end is_writable -->
-            //             else {
-            //                 $folderErrors['platform_scheme'] = array(
-            //                     'folderNotExists' => $this->melisTool()->getTranslation('tr_meliscore_platform_scheme_folder_no_permission'),
-            //                     'label'           => $this->melisTool()->getTranslation('tr_meliscore_platform_scheme')
-            //                 );
-            //             }
-            //         }
-            //         // <!-- end file_exists -->
-            //         else {
-
-            //             $folderErrors['platform_scheme_folder'] = array(
-            //                 'folderNotExists' => $this->melisTool()->getTranslation('tr_meliscore_platform_scheme_folder_not_exists'),
-            //                 'label'           => $this->melisTool()->getTranslation('tr_meliscore_platform_scheme')
-            //             );
-            //         }
-            //     }
-            // } else {
-            //     $errors = $this->formatErrorMessage($form->getMessages());
-            // }
+                $success = $this->getPlatformSchemeSvc()->saveScheme($data, $schemeId, true);
+                          
+            } else {
+                $errors = $this->formatErrorMessage($form->getMessages());
+            }
         }
 
-        $response = array(
+        return [
             'success' => $success,
-            'errors'  => array_merge($errors, $imgErrors, $folderErrors),
-            'textTitle'   => $this->melisTool()->getTranslation($textTitle),
-            'textMessage' => $this->melisTool()->getTranslation($textMessage)
-        );
-
-        $this->getEventManager()->trigger('melis_core_platform_scheme_save_end', $this, array_merge($response, array('typeCode' => 'CORE_PLATFORM_SCHEME_SAVE', 'itemId' => $schemeId, 'id' => $schemeId)));
-
-        return new JsonModel($response);
+            'errors' => $errors
+        ];
     }
 
 }

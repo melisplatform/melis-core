@@ -18,7 +18,7 @@ $(function() {
             });
         }
 
-        $body.on("click", "#savePlatformScheme", function() {
+        $body.on("click", "#savePlatformScheme, .save-platform-theme-options", function() {
             $("form#melis_core_platform_scheme_images").trigger("submit");
         });
 
@@ -59,13 +59,20 @@ $(function() {
         $body.on("submit", "form#melis_core_platform_scheme_images", function(e) {
             var formData        = new FormData(this),
                 colorFormData   = $("form#melis_core_platform_scheme_form").serializeArray(),
-                colors          = {};
+                colors          = {},
+                platformTheme    = {},
+                platformThemeData = $("form#melis_core_platform_theme_option_form").serializeArray();
 
                 $.each(colorFormData, function(i, v) {
                     colors[v['name']] = v['value'];
                 });
 
+                $.each(platformThemeData, function(i, v) {
+                    platformTheme[v['name']] = v['value'];
+                });
+
                 formData.append('colors', JSON.stringify(colors));
+                formData.append('platformTheme', JSON.stringify(platformTheme));
 
                 melisCoreTool.pending(".button");
                 
@@ -150,50 +157,12 @@ $(function() {
 
         $body.on("click", ".platform-theme-options-toggle, .open-theme-options", function() {
             rangeSliderSize.setRangeSliderSize();
-        });
 
-        $body.on("click", ".save-platform-theme-options", function(e) {
-            var formData = new FormData(),
-                topLogo = {},
-                topLogoData = $("form#melis_core_platform_theme_option_form").find('div.top-logo').find('input').serializeArray();
-               
-                $.each(topLogoData, function(i, v) {
-                    topLogo[v['name']] = v['value'];
-                });
+            // console.log('size: ' + $("#melis_core_platform_theme_logo_text_font_size").val());
+            // console.log('widget size: ' + $("#melis_core_platform_theme_bubble_plugin_widget_header_text_icon_font_size").val());
+            
 
-                formData.append('topLogo', JSON.stringify(topLogo));
-
-                console.log(JSON.stringify(topLogo));
-
-                melisCoreTool.pending(".button");
-                
-                melisCoreTool.addOverflowHidden();
-
-                $.ajax({
-                    type    : 'POST',
-                    url     : 'melis/MelisCore/PlatformScheme/savePlatformTheme',
-                    data    : formData,
-                    processData : false,
-                    cache       : false,
-                    contentType : false,
-                    dataType    : 'json'
-                }).done(function(data) {
-                    if(data.success) {
-                        melisCoreTool.removeOverflowHidden();
-
-                        melisCoreTool.processing();
-                        location.reload(true);
-                    }
-                    else {
-                        melisHelper.melisKoNotification(data.textTitle, data.textMessage, data.errors);
-                    }
-                    melisCoreTool.done(".button");
-                }).fail(function() {
-                    melisCoreTool.done(".button");
-                });
-
-                e.preventDefault();
-        });
+        });   
         // end evo/platform-scheme
 });
 
@@ -207,7 +176,7 @@ var rangeSliderSize = {
      */
     setRangeSliderSize: function() {
         const sliders = [
-            { selectorMin: ".logo-font-size-range-slider-min", selectorValue: ".logo-font-size-range-slider-value", value: 18, min: 1, max: 30 }, // logo text, start general options
+            { selectorMin: ".logo-font-size-range-slider-min", selectorValue: ".logo-font-size-range-slider-value", value: 10, min: 1, max: 30 }, // logo text, start general options
             { selectorMin: ".footer-version-font-size-range-slider-min", selectorValue: ".footer-version-font-size-range-slider-value", value: 10, min: 1, max: 30 }, // footer text
             { selectorMin: ".hide-btn-text-font-size-range-slider-min", selectorValue: ".hide-btn-text-font-size-range-slider-value", value: 10, min: 1, max: 25 }, // hide button text
             { selectorMin: ".widget-header-text-font-size-range-slider-min", selectorValue: ".widget-header-text-font-size-range-slider-value", value: 25, min: 1, max: 35 }, // widget header text

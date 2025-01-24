@@ -314,7 +314,7 @@ return array(
                     '/MelisCore/js/tools/logs.tool.js',
                     '/MelisCore/js/tools/user-profile.js',
                     '/MelisCore/js/tools/melisModalOpenTools.js',
-                    '/MelisCore/js/tools/platform.scheme.tools.js',
+                    '/MelisCore/js/tools/platform.scheme.tools.js?v='.date('YmdHis'),
                     '/MelisCore/js/tools/announcement.tools.js',
 
                     '/MelisCore/js/tools/melis-core-gdpr-tool.js',
