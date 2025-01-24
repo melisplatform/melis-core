@@ -238,6 +238,7 @@ body {
 }
 
 #id_meliscore_login_footer .copy.footer {
+	color: #fff;
 	font-size: 14px;
 }
 
@@ -3066,8 +3067,14 @@ div.dataTables_wrapper div.dataTables_length select.new_filter {
 	color: inherit;
 }
 
-div#modal-user-management div.widget {
+/* div#modal-user-management div.widget {
 	width: 680px;
+} */
+@media (min-width: 768px) {
+	#modal-user-management .modal-dialog {
+		width: 100%;
+		max-width: 680px;
+	}
 }
 
 .module-version-display {

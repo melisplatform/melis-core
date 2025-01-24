@@ -1145,26 +1145,6 @@ div.glyphicons-social.glyphicon-primary i:before {
 .melis-primary-bg {
     background: <?= $primaryColor; ?> !important;
 }
-/* common */
-.platform-theme-options-tools-info .ui-widget-content {
-    background: <?= $primaryColor; ?>;
-}
-#dashboard-plugins .btn-group-font-style label {
-    color: #797979;
-    font-size: 25px;
-    font-weight: normal;
-    min-width: 4rem;
-    margin: 0 5px;
-}
-.platform-theme-options-tools-info .btn-check:checked+.btn, 
-.platform-theme-options-tools-info .btn.active, 
-.platform-theme-options-tools-info .btn.show, 
-.platform-theme-options-tools-info .btn:first-child:active, 
-.platform-theme-options-tools-info :not(.btn-check)+.btn:active,
-.platform-theme-options-tools-info .btn-check+.btn:hover {
-    background-color: <?= $primaryColor; ?> !important;
-    border-color: <?= $primaryColor; ?> !important;
-}
 
 /* Platform theme options */
 /* top logo */
@@ -1180,7 +1160,6 @@ div.glyphicons-social.glyphicon-primary i:before {
 .navbar.main.navbar-primary .appbrand span {
     color: #fff;
 }
-
 /* user profile */
 #id_meliscore_leftmenu_identity {
     background-color: #373737;
@@ -1190,7 +1169,6 @@ div.glyphicons-social.glyphicon-primary i:before {
     border-color: #4e4e4e !important;
     border-radius: 50% !important;
 }
-
 /* #user-name-link */
 .sidebar.sidebar-inverse .user-profile a {
     color: #e1e1e1
@@ -1206,7 +1184,6 @@ div.glyphicons-social.glyphicon-primary i:before {
 .sidebar.sidebar-inverse .user-profile ul li a:hover {
     color: #5a5a5a;
 }
-
 /* menu */
 .sidebar.sidebar-inverse>.sidebarMenuWrapper>ul li {
     border-bottom-color: #2c2c2c;
@@ -1224,7 +1201,7 @@ div.glyphicons-social.glyphicon-primary i:before {
 
 /* footer */
 #id_meliscore_footer .footer {
-    font-size: 14px;
+    font-size: 10px;
 }
 #id_meliscore_footer .footer a {
     color: <?= $primaryColor; ?>;
@@ -1289,6 +1266,7 @@ div.glyphicons-social.glyphicon-primary i:before {
     color: #ffffff !important;
     font-size: 25px;
 }
+.melis-dashboard-bubble-updates-plugin .front .widget-body .lead .fa,
 .melis-dashboard-bubble-updates-plugin .front .widget-body .lead {
     color: #686868 !important;
 }
@@ -1365,10 +1343,10 @@ div.glyphicons-social.glyphicon-primary i:before {
     border-color: #9eeaf9 !important;
 }
 .melis-core-dashboard-msg .alert-info.no-plugins {
-    font-weight: bold;
-    font-style: italic;
-    text-transform: uppercase;
-    text-decoration: underline;
+    font-weight: normal;
+    font-style: normal;
+    text-transform: inherit;
+    text-decoration: inherit;
 }
 /* plugins */
 .grid-stack-item-content .widget-head {
@@ -1441,4 +1419,87 @@ div.glyphicons-social.glyphicon-primary i:before {
     border-color: #e61c23 !imporant;
     color: #ffffff !important;
     font-size: 14px !important;
+}
+
+/* Component options */
+/* modals */
+.modal .widget,
+.modal .modal-body,
+.modal .modal-content,
+.modal .modal-dialog {
+    background-color: #fff !important;
+}
+.modal .modal-content {
+    border-width: 0;
+    border-color: #fff;
+}
+/* affected classes for border-radius */
+.modal .modal-content,
+.modal .dialog,
+.modal {
+    border-radius: 0;
+}
+.modal-content .widget.widget-tabs.widget-tabs-responsive > .widget-head,
+.modal-body .melis-nav-tabs-box {
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+}
+/* end affected classes for broder-radius */
+/** options_modal_nav_tabs_color */
+.modal-content .widget .widget-head {
+    background-color: #e61c23;
+}
+/** options_modal_nav_tabs_active_bg_color */
+.modal-content .nav-tabs > li.active > a {
+    background-color: #fff;
+}
+/** options_modal_nav_tabs_border_right_color, options_modal_nav_tabs_border_right_width */
+.modal-content .widget.widget-tabs.widget-tabs-responsive > .widget-head ul li {
+    border-right-color: #ce5459;
+    border-right-width: 1px;
+}
+/** options_modal_nav_tabs_text_color */
+.modal-content .widget.widget-tabs-double > .widget-head ul li:not(.active) a.glyphicons i:before, 
+.modal-content .widget.widget-tabs-double .widget-head ul li a.glyphicons i:before,
+.modal-content .widget.widget-tabs-double > .widget-head ul li:not(.active) a.glyphicons,
+.modal-content .widget.widget-tabs-double .widget-head ul li a.glyphicons {
+    color: #fff;
+    font-size: 14px;
+}
+/** options_modal_content_text_color, options_modal_content_form_group_label */
+.modal-content .span,
+.modal-content .form-group span,
+.modal-content .form-group label,
+.modal-content p {
+    color: #686868;;
+}
+/** options_modal_content_text_font_size */
+.modal-content .span,
+.modal-content .form-group span,
+.modal-content p {
+    font-size: 14px;
+}
+/** options_modal_content_form_group_label_font_size */
+.modal-content .form-group label {
+    font-size: 13px;
+}
+/** options_modal_content_text_font_styles */
+.modal-content .span,
+.modal-content .form-group span,
+.modal-content p {
+    font-style: normal;
+    font-weight: normal;
+    text-transform: inherit;
+    text-decoration: inherit;
+}
+/** options_modal_content_close_btn_bg_color, options_modal_content_close_btn_border_color, options_modal_content_close_btn_text_color */
+.modal-content .btn-danger {
+    background-color: #fff;
+    border-color: #bd362f;
+    color: #bd362f;
+}
+/** options_modal_content_close_btn_active_bg_color, options_modal_content_close_btn_active_text_color */
+.modal-content .btn-danger:hover {
+    background-color: #bd362f;
+    color: #fff;
 }

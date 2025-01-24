@@ -283,6 +283,8 @@ return array(
     'tr_meliscore_platform_theme_dashboard_plugin_category_btn_text_font_size_tooltip' => 'Change the color by typing the hexadecimal color code or by using the color picker',
     'tr_meliscore_platform_theme_dashboard_plugin_plugin_title_text_color' => 'Plugin title text color',
     'tr_meliscore_platform_theme_dashboard_plugin_plugin_title_text_color_tooltip' => 'Change the color by typing the hexadecimal color code or by using the color picker',
+    'tr_meliscore_platform_theme_dashboard_plugin_plugin_title_text_font_size' => 'Plugin title text font size',
+    'tr_meliscore_platform_theme_dashboard_plugin_plugin_title_text_font_size_tooltip' => 'Change the font size',
     'tr_meliscore_platform_theme_dashboard_plugin_delete_all_btn_color' => 'Plugins delete all button color',
     'tr_meliscore_platform_theme_dashboard_plugin_delete_all_btn_color_tooltip' => 'Change the color by typing the hexadecimal color code or by using the color picker',
     'tr_meliscore_platform_theme_dashboard_plugin_delete_all_btn_border_color' => 'Plugins delete all button border color',

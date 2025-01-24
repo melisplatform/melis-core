@@ -2566,23 +2566,23 @@ return array(
                                 ),
                             ),
                         ),
-                        // array(
-                        //     'spec' => array(
-                        //         'name' => 'melis_core_platform_theme_dashboard_plugin_new_plugin_indicator_text_font_size',
-                        //         'type' => 'Text',
-                        //         'options' => array(
-                        //             'label' => 'tr_meliscore_platform_theme_dashboard_plugin_new_plugin_indicator_text_font_size',
-                        //             'tooltip' => 'tr_meliscore_platform_theme_dashboard_plugin_new_plugin_indicator_text_font_size_tooltip',
-                        //         ),
-                        //         'attributes' => array(
-                        //             'id' => 'melis_core_platform_theme_dashboard_plugin_new_plugin_indicator_text_font_size',
-                        //             'value' => '',
-                        //             'class' => 'form-control',
-                        //             'placeholder' => 'tr_meliscore_platform_theme_dashboard_plugin_new_plugin_indicator_text_font_size',
-                        //             'category' => 'dashboard_plugin_menu'
-                        //         ),
-                        //     ),
-                        // ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_dashboard_plugin_plugin_title_text_font_size',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_dashboard_plugin_plugin_title_text_font_size',
+                                    'tooltip' => 'tr_meliscore_platform_theme_dashboard_plugin_plugin_title_text_font_size_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_dashboard_plugin_plugin_title_text_font_size',
+                                    'value' => '',
+                                    'class' => 'form-control',
+                                    'placeholder' => 'tr_meliscore_platform_theme_dashboard_plugin_plugin_title_text_font_size',
+                                    'category' => 'dashboard_plugin_menu'
+                                ),
+                            ),
+                        ),
                         array(
                             'spec' => array(
                                 'name' => 'melis_core_platform_theme_dashboard_plugin_delete_all_btn_color',
