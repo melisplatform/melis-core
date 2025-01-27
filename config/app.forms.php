@@ -1033,7 +1033,8 @@ return array(
                                     'class' => 'form-control minicolor-hex',
                                     'data-control' => 'hue',
                                     'placeholder' => 'tr_meliscore_platform_theme_toggle_btn_color',
-                                    'category' => 'logo'
+                                    'category' => 'logo',
+                                    'default' => '#ce5459'
                                 ),
                             ),
                         ),
@@ -1051,7 +1052,8 @@ return array(
                                     'class' => 'form-control minicolor-hex',
                                     'data-control' => 'hue',
                                     'placeholder' => 'tr_meliscore_platform_theme_toggle_btn_hover_color',
-                                    'category' => 'logo'
+                                    'category' => 'logo',
+                                    'default' => '#fff'
                                 ),
                             ),
                         ),
@@ -1069,7 +1071,8 @@ return array(
                                     'class' => 'form-control minicolor-hex',
                                     'data-control' => 'hue',
                                     'placeholder' => 'tr_meliscore_platform_theme_logo_bg_color',
-                                    'category' => 'logo'
+                                    'category' => 'logo',
+                                    'default' => '#e61c23'
                                 ),
                             ),
                         ),
@@ -1087,7 +1090,8 @@ return array(
                                     'class' => 'form-control minicolor-hex',
                                     'data-control' => 'hue',
                                     'placeholder' => 'tr_meliscore_platform_theme_logo_text_color',
-                                    'category' => 'logo'
+                                    'category' => 'logo',
+                                    'default' => '#fff'
                                 ),
                             ),
                         ),
@@ -1106,7 +1110,8 @@ return array(
                                     'placeholder' => 'tr_meliscore_platform_theme_logo_text_font_size',
                                     'category' => 'logo',
                                     'sliderId' => 'logo-font-size-range-slider-min',
-                                    'sliderClass' => 'logo-font-size-range-slider-min'
+                                    'sliderClass' => 'logo-font-size-range-slider-min',
+                                    'default' => 18
                                 ),
                             ),
                         ),
@@ -1126,7 +1131,8 @@ return array(
                                     'class' => 'form-control minicolor-hex',
                                     'data-control' => 'hue',
                                     'placeholder' => 'tr_meliscore_platform_theme_user_profile_bg_color',
-                                    'category' => 'user_profile'
+                                    'category' => 'user_profile',
+                                    'default' => '#373737'
                                 ),
                             ),
                         ),
@@ -1144,7 +1150,8 @@ return array(
                                     'class' => 'form-control minicolor-hex',
                                     'data-control' => 'hue',
                                     'placeholder' => 'tr_meliscore_platform_theme_user_profile_img_border_color',
-                                    'category' => 'user_profile'
+                                    'category' => 'user_profile',
+                                    'default' => '#4e4e4e'
                                 ),
                             ),
                         ),
@@ -1161,7 +1168,8 @@ return array(
                                     'value' => '',
                                     'class' => 'form-control',                                    
                                     'placeholder' => 'tr_meliscore_platform_theme_user_profile_img_border_radius',
-                                    'category' => 'user_profile'
+                                    'category' => 'user_profile',
+                                    'default' => '50%'
                                 ),
                             ),
                         ),
@@ -1179,7 +1187,8 @@ return array(
                                     'class' => 'form-control minicolor-hex',
                                     'data-control' => 'hue',
                                     'placeholder' => 'tr_meliscore_platform_theme_user_profile_name_text_color',
-                                    'category' => 'user_profile'
+                                    'category' => 'user_profile',
+                                    'default' => '#fff'
                                 ),
                             ),
                         ),
@@ -1197,7 +1206,8 @@ return array(
                                     'class' => 'form-control minicolor-hex',
                                     'data-control' => 'hue',
                                     'placeholder' => 'tr_meliscore_platform_theme_user_profile_status_text_icon_color',
-                                    'category' => 'user_profile'
+                                    'category' => 'user_profile',
+                                    'default' => '#198754'
                                 ),
                             ),
                         ),
@@ -1217,7 +1227,8 @@ return array(
                                     'class' => 'form-control minicolor-hex',
                                     'data-control' => 'hue',
                                     'placeholder' => 'tr_meliscore_platform_theme_menu_bg_color',
-                                    'category' => 'menu'
+                                    'category' => 'menu',
+                                    'default' => '#373737'
                                 ),
                             ),
                         ),
@@ -1235,7 +1246,8 @@ return array(
                                     'class' => 'form-control minicolor-hex',
                                     'data-control' => 'hue',
                                     'placeholder' => 'tr_meliscore_platform_theme_menu_hover_color',
-                                    'category' => 'menu'
+                                    'category' => 'menu',
+                                    'default' => '#2c2c2c'
                                 ),
                             ),
                         ),
@@ -1253,7 +1265,8 @@ return array(
                                     'class' => 'form-control minicolor-hex',
                                     'data-control' => 'hue',
                                     'placeholder' => 'tr_meliscore_platform_theme_menu_focus_color',
-                                    'category' => 'menu'
+                                    'category' => 'menu',
+                                    'default' => '#e61c23'
                                 ),
                             ),
                         ),
@@ -1271,7 +1284,8 @@ return array(
                                     'class' => 'form-control minicolor-hex',
                                     'data-control' => 'hue',
                                     'placeholder' => 'tr_meliscore_platform_theme_menu_border_bottom_color',
-                                    'category' => 'menu'
+                                    'category' => 'menu',
+                                    'default' => '#2c2c2c'
                                 ),
                             ),
                         ),
@@ -1289,7 +1303,8 @@ return array(
                                     'class' => 'form-control minicolor-hex',
                                     'data-control' => 'hue',
                                     'placeholder' => 'tr_meliscore_platform_theme_menu_text_icon_color',
-                                    'category' => 'menu'
+                                    'category' => 'menu',
+                                    'default' => '#fff'
                                 ),
                             ),
                         ),
@@ -1307,7 +1322,8 @@ return array(
                                     'class' => 'form-control minicolor-hex',
                                     'data-control' => 'hue',
                                     'placeholder' => 'tr_meliscore_platform_theme_submenu_bg_color',
-                                    'category' => 'menu'
+                                    'category' => 'menu',
+                                    'default' => '#373737'
                                 ),
                             ),
                         ),
@@ -1325,7 +1341,8 @@ return array(
                                     'class' => 'form-control minicolor-hex',
                                     'data-control' => 'hue',
                                     'placeholder' => 'tr_meliscore_platform_theme_submenu_text_icon_color',
-                                    'category' => 'menu'
+                                    'category' => 'menu',
+                                    'default' => '#5a5a5a'
                                 ),
                             ),
                         ),
@@ -1343,7 +1360,8 @@ return array(
                                     'class' => 'form-control minicolor-hex',
                                     'data-control' => 'hue',
                                     'placeholder' => 'tr_meliscore_platform_theme_submenu_text_icon_hover_color',
-                                    'category' => 'menu'
+                                    'category' => 'menu',
+                                    'default' => '#fff'
                                 ),
                             ),
                         ),
@@ -1361,7 +1379,8 @@ return array(
                                     'class' => 'form-control minicolor-hex',
                                     'data-control' => 'hue',
                                     'placeholder' => 'tr_meliscore_platform_theme_submenu_hover_active_bg_color',
-                                    'category' => 'menu'
+                                    'category' => 'menu',
+                                    'default' => '#3a3a3a'
                                 ),
                             ),
                         ),
@@ -1382,7 +1401,8 @@ return array(
                                     'placeholder' => 'tr_meliscore_platform_theme_footer_text_fontsize',
                                     'category' => 'footer',
                                     'sliderId' => 'footer-version-font-size-range-slider-min',
-                                    'sliderClass' => 'footer-version-font-size-range-slider-min'
+                                    'sliderClass' => 'footer-version-font-size-range-slider-min',
+                                    'default' => 10
                                 ),
                             ),
                         ),
@@ -1400,7 +1420,8 @@ return array(
                                     'class' => 'form-control minicolor-hex',
                                     'data-control' => 'hue',
                                     'placeholder' => 'tr_meliscore_platform_theme_footer_link_text_color',
-                                    'category' => 'footer'
+                                    'category' => 'footer',
+                                    'default' => '#e61c23'
                                 ),
                             ),
                         ),
@@ -1418,7 +1439,8 @@ return array(
                                     'class' => 'form-control minicolor-hex',
                                     'data-control' => 'hue',
                                     'placeholder' => 'tr_meliscore_platform_theme_footer_text_color',
-                                    'category' => 'footer'
+                                    'category' => 'footer',
+                                    'default' => '#686868'
                                 ),
                             ),
                         ),
@@ -1438,7 +1460,8 @@ return array(
                                     'class' => 'form-control minicolor-hex',
                                     'data-control' => 'hue',
                                     'placeholder' => 'tr_meliscore_platform_theme_header_text_icon_color',
-                                    'category' => 'header'
+                                    'category' => 'header',
+                                    'default' => '#fff'
                                 ),
                             ),
                         ),
@@ -1456,7 +1479,8 @@ return array(
                                     'class' => 'form-control minicolor-hex',
                                     'data-control' => 'hue',
                                     'placeholder' => 'tr_meliscore_platform_theme_header_text_icon_active_color',
-                                    'category' => 'header'
+                                    'category' => 'header',
+                                    'default' => '#e61c23'
                                 ),
                             ),
                         ),
@@ -1474,7 +1498,8 @@ return array(
                                     'class' => 'form-control minicolor-hex',
                                     'data-control' => 'hue',
                                     'placeholder' => 'tr_meliscore_platform_theme_header_bg_color',
-                                    'category' => 'header'
+                                    'category' => 'header',
+                                    'default' => '#e61c23'
                                 ),
                             ),
                         ),
@@ -1492,7 +1517,8 @@ return array(
                                     'class' => 'form-control minicolor-hex',
                                     'data-control' => 'hue',
                                     'placeholder' => 'tr_meliscore_platform_theme_header_bg_active_color',
-                                    'category' => 'header'
+                                    'category' => 'header',
+                                    'default' => '#fff'
                                 ),
                             ),
                         ),
@@ -1512,7 +1538,8 @@ return array(
                                     'class' => 'form-control minicolor-hex',
                                     'data-control' => 'hue',
                                     'placeholder' => 'tr_meliscore_platform_theme_bubble_plugin_hide_btn_text_icon_color',
-                                    'category' => 'bubble'
+                                    'category' => 'bubble',
+                                    'default' => '#fff'
                                 ),
                             ),
                         ),
@@ -1530,7 +1557,8 @@ return array(
                                     'class' => 'form-control minicolor-hex',
                                     'data-control' => 'hue',
                                     'placeholder' => 'tr_meliscore_platform_theme_bubble_plugin_hide_btn_text_icon_hover_color',
-                                    'category' => 'bubble'
+                                    'category' => 'bubble',
+                                    'default' => '#466baf'
                                 ),
                             ),
                         ),
@@ -1548,7 +1576,8 @@ return array(
                                     'class' => 'form-control minicolor-hex',
                                     'data-control' => 'hue',
                                     'placeholder' => 'tr_meliscore_platform_theme_bubble_plugin_hide_btn_bg_border_color',
-                                    'category' => 'bubble'
+                                    'category' => 'bubble',
+                                    'default' => '#466baf'
                                 ),
                             ),
                         ),
@@ -1566,7 +1595,8 @@ return array(
                                     'class' => 'form-control minicolor-hex',
                                     'data-control' => 'hue',
                                     'placeholder' => 'tr_meliscore_platform_theme_bubble_plugin_hide_btn_bg_hover_color',
-                                    'category' => 'bubble'
+                                    'category' => 'bubble',
+                                    'default' => '#fff'
                                 ),
                             ),
                         ),
@@ -1585,7 +1615,8 @@ return array(
                                     'placeholder' => 'tr_meliscore_platform_theme_bubble_plugin_hide_btn_text_font_size',
                                     'category' => 'bubble',
                                     'sliderId' => 'hide-btn-text-font-size-range-slider-min',
-                                    'sliderClass' => 'hide-btn-text-font-size-range-slider-min'
+                                    'sliderClass' => 'hide-btn-text-font-size-range-slider-min',
+                                    'default' => '10'
                                 ),
                             ),
                         ),
@@ -1603,7 +1634,8 @@ return array(
                                     'class' => 'form-control minicolor-hex',
                                     'data-control' => 'hue',
                                     'placeholder' => 'tr_meliscore_platform_theme_bubble_plugin_widget_bg_color',
-                                    'category' => 'bubble'
+                                    'category' => 'bubble',
+                                    'default' => '#fff'
                                 ),
                             ),
                         ),
@@ -1621,7 +1653,8 @@ return array(
                                     'class' => 'form-control minicolor-hex',
                                     'data-control' => 'hue',
                                     'placeholder' => 'tr_meliscore_platform_theme_bubble_plugin_widget_btn_bg_color',
-                                    'category' => 'bubble'
+                                    'category' => 'bubble',
+                                    'default' => '#fff'
                                 ),
                             ),
                         ),
@@ -1639,7 +1672,8 @@ return array(
                                     'class' => 'form-control minicolor-hex',
                                     'data-control' => 'hue',
                                     'placeholder' => 'tr_meliscore_platform_theme_bubble_plugin_widget_btn_text_hover_color',
-                                    'category' => 'bubble'
+                                    'category' => 'bubble',
+                                    'default' => '#fff'
                                 ),
                             ),
                         ),
@@ -1657,7 +1691,8 @@ return array(
                                     'class' => 'form-control minicolor-hex',
                                     'data-control' => 'hue',
                                     'placeholder' => 'tr_meliscore_platform_theme_bubble_plugin_widget_header_text_icon_color',
-                                    'category' => 'bubble'
+                                    'category' => 'bubble',
+                                    'default' => '#fff'
                                 ),
                             ),
                         ),
@@ -1676,7 +1711,8 @@ return array(
                                     'placeholder' => 'tr_meliscore_platform_theme_bubble_plugin_widget_header_text_icon_font_size',
                                     'category' => 'bubble',
                                     'sliderId' => 'widget-header-text-font-size-range-slider-min',
-                                    'sliderClass' => 'widget-header-text-font-size-range-slider-min'
+                                    'sliderClass' => 'widget-header-text-font-size-range-slider-min',
+                                    'default' => 25
                                 ),
                             ),
                         ),
@@ -1695,7 +1731,8 @@ return array(
                                     'class' => 'form-control minicolor-hex',
                                     'data-control' => 'hue',
                                     'placeholder' => 'tr_meliscore_platform_theme_bubble_plugin_updates_header_text_icon_color',
-                                    'category' => 'bubble'
+                                    'category' => 'bubble',
+                                    'default' => '#686868'
                                 ),
                             ),
                         ),
@@ -1713,7 +1750,8 @@ return array(
                                     'class' => 'form-control minicolor-hex',
                                     'data-control' => 'hue',
                                     'placeholder' => 'tr_meliscore_platform_theme_bubble_plugin_news_header_bg_color',
-                                    'category' => 'bubble'
+                                    'category' => 'bubble',
+                                    'default' => '#424242'
                                 ),
                             ),
                         ),
@@ -1731,7 +1769,8 @@ return array(
                                     'class' => 'form-control minicolor-hex',
                                     'data-control' => 'hue',
                                     'placeholder' => 'tr_meliscore_platform_theme_bubble_plugin_updates_header_bg_color',
-                                    'category' => 'bubble'
+                                    'category' => 'bubble',
+                                    'default' => '#e7e7e7'
                                 ),
                             ),
                         ),
@@ -1749,7 +1788,8 @@ return array(
                                     'class' => 'form-control minicolor-hex',
                                     'data-control' => 'hue',
                                     'placeholder' => 'tr_meliscore_platform_theme_bubble_plugin_notif_header_bg_color',
-                                    'category' => 'bubble'
+                                    'category' => 'bubble',
+                                    'default' => '#72af46'
                                 ),
                             ),
                         ),
@@ -1767,7 +1807,8 @@ return array(
                                     'class' => 'form-control minicolor-hex',
                                     'data-control' => 'hue',
                                     'placeholder' => 'tr_meliscore_platform_theme_bubble_plugin_msg_header_bg_color',
-                                    'category' => 'bubble'
+                                    'category' => 'bubble',
+                                    'default' => '#466baf'
                                 ),
                             ),
                         ),
@@ -1785,7 +1826,8 @@ return array(
                                     'class' => 'form-control minicolor-hex',
                                     'data-control' => 'hue',
                                     'placeholder' => 'tr_meliscore_platform_theme_bubble_plugin_news_btn_border_text_color',
-                                    'category' => 'bubble'
+                                    'category' => 'bubble',
+                                    'default' => '#424242'
                                 ),
                             ),
                         ),
@@ -1803,7 +1845,8 @@ return array(
                                     'class' => 'form-control minicolor-hex',
                                     'data-control' => 'hue',
                                     'placeholder' => 'tr_meliscore_platform_theme_bubble_plugin_notif_btn_border_text_color',
-                                    'category' => 'bubble'
+                                    'category' => 'bubble',
+                                    'default' => '#72af46'
                                 ),
                             ),
                         ),
@@ -1821,7 +1864,8 @@ return array(
                                     'class' => 'form-control minicolor-hex',
                                     'data-control' => 'hue',
                                     'placeholder' => 'tr_meliscore_platform_theme_bubble_plugin_msg_btn_border_text_color',
-                                    'category' => 'bubble'
+                                    'category' => 'bubble',
+                                    'default' => '#466baf'
                                 ),
                             ),
                         ),
@@ -1839,7 +1883,8 @@ return array(
                                     'class' => 'form-control minicolor-hex',
                                     'data-control' => 'hue',
                                     'placeholder' => 'tr_meliscore_platform_theme_bubble_plugin_updates_btn_text_hover_color',
-                                    'category' => 'bubble'
+                                    'category' => 'bubble',
+                                    'default' => '#797979'
                                 ),
                             ),
                         ),
@@ -1857,7 +1902,8 @@ return array(
                                     'class' => 'form-control minicolor-hex',
                                     'data-control' => 'hue',
                                     'placeholder' => 'tr_meliscore_platform_theme_bubble_plugin_news_btn_border_color',
-                                    'category' => 'bubble'
+                                    'category' => 'bubble',
+                                    'default' => '#424242'
                                 ),
                             ),
                         ),
@@ -1875,7 +1921,8 @@ return array(
                                     'class' => 'form-control minicolor-hex',
                                     'data-control' => 'hue',
                                     'placeholder' => 'tr_meliscore_platform_theme_bubble_plugin_news_btn_bg_hover_color',
-                                    'category' => 'bubble'
+                                    'category' => 'bubble',
+                                    'default' => '#424242'
                                 ),
                             ),
                         ),
@@ -1890,11 +1937,12 @@ return array(
                                 'attributes' => array(
                                     'id' => 'melis_core_platform_theme_bubble_plugin_widget_header_btn_txt_font_size',
                                     'value' => '',
-                                    'class' => 'widget-header-text-font-size-range-slider-value range-slider-value form-control',                           
+                                    'class' => 'widget-button-text-font-size-range-slider-value range-slider-value form-control',                           
                                     'placeholder' => 'tr_meliscore_platform_theme_bubble_plugin_widget_header_btn_txt_font_size',
                                     'category' => 'bubble',
-                                    'sliderId' => 'widget-header-text-font-size-range-slider-min',
-                                    'sliderClass' => 'widget-header-text-font-size-range-slider-min'
+                                    'sliderId' => 'widget-button-text-font-size-range-slider-min',
+                                    'sliderClass' => 'widget-button-text-font-size-range-slider-min',
+                                    'default' => 14
                                 ),
                             ),
                         ),
@@ -1912,7 +1960,8 @@ return array(
                                     'class' => 'form-control minicolor-hex',
                                     'data-control' => 'hue',
                                     'placeholder' => 'tr_meliscore_platform_theme_bubble_plugin_widget_back_header_bg_color',
-                                    'category' => 'bubble'
+                                    'category' => 'bubble',
+                                    'default' => '#424242'
                                 ),
                             ),
                         ),
@@ -1930,7 +1979,8 @@ return array(
                                     'class' => 'form-control minicolor-hex',
                                     'data-control' => 'hue',
                                     'placeholder' => 'tr_meliscore_platform_theme_bubble_plugin_widget_back_header_text_color',
-                                    'category' => 'bubble'
+                                    'category' => 'bubble',
+                                    'default' => '#fff'
                                 ),
                             ),
                         ),
@@ -1949,7 +1999,8 @@ return array(
                                     'placeholder' => 'tr_meliscore_platform_theme_bubble_plugin_widget_back_header_text_font_size',
                                     'category' => 'bubble',
                                     'sliderId' => 'widget-back-header-text-font-size-range-slider-min',
-                                    'sliderClass' => 'widget-back-header-text-font-size-range-slider-min'
+                                    'sliderClass' => 'widget-back-header-text-font-size-range-slider-min',
+                                    'default' => 14
                                 ),
                             ),
                         ),
@@ -1967,7 +2018,8 @@ return array(
                                     'class' => 'form-control minicolor-hex',
                                     'data-control' => 'hue',
                                     'placeholder' => 'tr_meliscore_platform_theme_bubble_plugin_widget_back_header_close_btn_bg_color',
-                                    'category' => 'bubble'
+                                    'category' => 'bubble',
+                                    'default' => '#fafafa'
                                 ),
                             ),
                         ),
@@ -1985,7 +2037,8 @@ return array(
                                     'class' => 'form-control minicolor-hex',
                                     'data-control' => 'hue',
                                     'placeholder' => 'tr_meliscore_platform_theme_bubble_plugin_widget_back_header_close_btn_icon_color',
-                                    'category' => 'bubble'
+                                    'category' => 'bubble',
+                                    'default' => '#797979'
                                 ),
                             ),
                         ),
@@ -2003,7 +2056,8 @@ return array(
                                     'class' => 'form-control minicolor-hex',
                                     'data-control' => 'hue',
                                     'placeholder' => 'tr_meliscore_platform_theme_bubble_plugin_widget_back_content_header_text_color',
-                                    'category' => 'bubble'
+                                    'category' => 'bubble',
+                                    'default' => '#000'
                                 ),
                             ),
                         ),
@@ -2021,7 +2075,8 @@ return array(
                                     'class' => 'form-control minicolor-hex',
                                     'data-control' => 'hue',
                                     'placeholder' => 'tr_meliscore_platform_theme_bubble_plugin_widget_back_content_details_text_color',
-                                    'category' => 'bubble'
+                                    'category' => 'bubble',
+                                    'default' => '#000'
                                 ),
                             ),
                         ),
@@ -2041,7 +2096,8 @@ return array(
                                     'class' => 'form-control minicolor-hex',
                                     'data-control' => 'hue',
                                     'placeholder' => 'tr_meliscore_platform_theme_dashboard_plugin_no_plugin_alert_bg_color',
-                                    'category' => 'dashboard_plugin'
+                                    'category' => 'dashboard_plugin',
+                                    'default' => '#cff4fc'
                                 ),
                             ),
                         ),
@@ -2059,7 +2115,8 @@ return array(
                                     'class' => 'form-control minicolor-hex',
                                     'data-control' => 'hue',
                                     'placeholder' => 'tr_meliscore_platform_theme_dashboard_plugin_no_plugin_alert_border_color',
-                                    'category' => 'dashboard_plugin'
+                                    'category' => 'dashboard_plugin',
+                                    'default' => '#9eeaf9'
                                 ),
                             ),
                         ),
@@ -2077,7 +2134,8 @@ return array(
                                     'class' => 'form-control minicolor-hex',
                                     'data-control' => 'hue',
                                     'placeholder' => 'tr_meliscore_platform_theme_dashboard_plugin_no_plugin_alert_color',
-                                    'category' => 'dashboard_plugin'
+                                    'category' => 'dashboard_plugin',
+                                    'default' => '#055160'
                                 ),
                             ),
                         ),
@@ -2096,24 +2154,59 @@ return array(
                                     'placeholder' => 'tr_meliscore_platform_theme_dashboard_plugin_no_plugin_alert_text_font_size',
                                     'category' => 'dashboard_plugin',
                                     'sliderId' => 'dashboard-plugin-no-plugin-alert-font-size-range-slider-min',
-                                    'sliderClass' => 'dashboard-plugin-no-plugin-alert-font-size-range-slider-min'
+                                    'sliderClass' => 'dashboard-plugin-no-plugin-alert-font-size-range-slider-min',
+                                    'default' => 14
                                 ),
                             ),
-                        ),
+                        ),                      
                         array(
                             'spec' => array(
                                 'name' => 'melis_core_platform_theme_dashboard_plugin_no_plugin_alert_text_font_style',
-                                'type' => 'Text',
+                                'type' => Laminas\Form\Element\MultiCheckbox::class,
                                 'options' => array(
                                     'label' => 'tr_meliscore_platform_theme_dashboard_plugin_no_plugin_alert_text_font_style',
-                                    'tooltip' => 'tr_meliscore_platform_theme_dashboard_plugin_no_plugin_alert_text_font_style_tooltip',
+                                    'tooltip' => 'tr_meliscore_platform_theme_dashboard_plugin_no_plugin_alert_text_font_style_tooltip',                                  
+                                    'value_options' => [
+                                        'option1' => [
+                                            'value' => 'bold',
+                                            'label' => '<strong>B</strong>',
+                                            'label_attributes' => [
+                                                'class' => 'btn btn-default',
+                                            ],
+                                        ],
+                                        'option2' => [
+                                            'value' => 'italic',
+                                            'label' => '<em>I</em>',
+                                            'label_attributes' => [
+                                                'class' => 'btn btn-default',
+                                            ],
+                                        ],
+                                        'option3' => [
+                                            'value' => 'uppercase',
+                                            'label' => 'TT',
+                                            'label_attributes' => [
+                                                'class' => 'btn btn-default',
+                                                'style' => 'text-transform: uppercase;'
+                                            ],
+                                        ],
+                                        'option4' => [
+                                            'value' => 'underline',
+                                            'label' => 'U',
+                                            'label_attributes' => [
+                                                'class' => 'btn btn-default',
+                                                'style' => 'text-transform: underline;'
+                                            ],
+                                        ],
+                                    ]                                   
                                 ),
                                 'attributes' => array(
                                     'id' => 'melis_core_platform_theme_dashboard_plugin_no_plugin_alert_text_font_style',
                                     'value' => '',
                                     'class' => 'form-control',
                                     'placeholder' => 'tr_meliscore_platform_theme_dashboard_plugin_no_plugin_alert_text_font_style',
-                                    'category' => 'dashboard_plugin'
+                                    'category' => 'dashboard_plugin',
+                                    'required' => false,
+                                    'default' => ''
                                 ),
                             ),
                         ),
@@ -2131,7 +2224,8 @@ return array(
                                     'class' => 'form-control minicolor-hex',
                                     'data-control' => 'hue',
                                     'placeholder' => 'tr_meliscore_platform_theme_dashboard_plugin_plugin_header_bg_color',
-                                    'category' => 'dashboard_plugin'
+                                    'category' => 'dashboard_plugin',
+                                    'default' => '#424242'
                                 ),
                             ),
                         ),
@@ -2149,7 +2243,8 @@ return array(
                                     'class' => 'form-control minicolor-hex',
                                     'data-control' => 'hue',
                                     'placeholder' => 'tr_meliscore_platform_theme_dashboard_plugin_plugin_header_text_color',
-                                    'category' => 'dashboard_plugin'
+                                    'category' => 'dashboard_plugin',
+                                    'default' => '#424242'
                                 ),
                             ),
                         ),
@@ -2168,7 +2263,8 @@ return array(
                                     'placeholder' => 'tr_meliscore_platform_theme_dashboard_plugin_plugin_header_text_font_size',
                                     'category' => 'dashboard_plugin',
                                     'sliderId' => 'plugin-header-text-font-size-range-slider-min',
-                                    'sliderClass' => 'plugin-header-text-font-size-range-slider-min'
+                                    'sliderClass' => 'plugin-header-text-font-size-range-slider-min',
+                                    'default' => 14
                                 ),
                             ),
                         ),
@@ -2186,7 +2282,8 @@ return array(
                                     'class' => 'form-control minicolor-hex',
                                     'data-control' => 'hue',
                                     'placeholder' => 'tr_meliscore_platform_theme_dashboard_plugin_plugin_header_btns_bg_color',
-                                    'category' => 'dashboard_plugin'
+                                    'category' => 'dashboard_plugin',
+                                    'default' => '#fafafa'
                                 ),
                             ),
                         ),
@@ -2204,7 +2301,8 @@ return array(
                                     'class' => 'form-control minicolor-hex',
                                     'data-control' => 'hue',
                                     'placeholder' => 'tr_meliscore_platform_theme_dashboard_plugin_plugin_header_btns_border_color',
-                                    'category' => 'dashboard_plugin'
+                                    'category' => 'dashboard_plugin',
+                                    'default' => '#cecece'
                                 ),
                             ),
                         ),
@@ -2222,7 +2320,8 @@ return array(
                                     'class' => 'form-control minicolor-hex',
                                     'data-control' => 'hue',
                                     'placeholder' => 'tr_meliscore_platform_theme_dashboard_plugin_plugin_header_btns_icon_color',
-                                    'category' => 'dashboard_plugin'
+                                    'category' => 'dashboard_plugin',
+                                    'default' => '#797979'
                                 ),
                             ),
                         ),
@@ -2240,7 +2339,8 @@ return array(
                                     'class' => 'form-control minicolor-hex',
                                     'data-control' => 'hue',
                                     'placeholder' => 'tr_meliscore_platform_theme_dashboard_plugin_plugin_header_btns_bg_hover_color',
-                                    'category' => 'dashboard_plugin'
+                                    'category' => 'dashboard_plugin',
+                                    'default' => '#e7e7e7'
                                 ),
                             ),
                         ),
@@ -2258,7 +2358,8 @@ return array(
                                     'class' => 'form-control minicolor-hex',
                                     'data-control' => 'hue',
                                     'placeholder' => 'tr_meliscore_platform_theme_dashboard_plugin_plugin_header_btns_border_hover_color',
-                                    'category' => 'dashboard_plugin'
+                                    'category' => 'dashboard_plugin',
+                                    'default' => '#e7e7e7'
                                 ),
                             ),
                         ),
@@ -2276,7 +2377,8 @@ return array(
                                     'class' => 'form-control minicolor-hex',
                                     'data-control' => 'hue',
                                     'placeholder' => 'tr_meliscore_platform_theme_dashboard_plugin_plugin_body_bg_color',
-                                    'category' => 'dashboard_plugin'
+                                    'category' => 'dashboard_plugin',
+                                    'default' => '#ffffff'
                                 ),
                             ),
                         ),
@@ -2294,7 +2396,8 @@ return array(
                                     'class' => 'form-control minicolor-hex',
                                     'data-control' => 'hue',
                                     'placeholder' => 'tr_meliscore_platform_theme_dashboard_plugin_plugin_body_border_color',
-                                    'category' => 'dashboard_plugin'
+                                    'category' => 'dashboard_plugin',
+                                    'default' => '#ebebeb'
                                 ),
                             ),
                         ),
@@ -2314,7 +2417,8 @@ return array(
                                     'class' => 'form-control minicolor-hex',
                                     'data-control' => 'hue',
                                     'placeholder' => 'tr_meliscore_platform_theme_dashboard_plugin_menu_box_bg_color',
-                                    'category' => 'dashboard_plugin_menu'
+                                    'category' => 'dashboard_plugin_menu',
+                                    'default' => '#373737'
                                 ),
                             ),
                         ),
@@ -2332,7 +2436,8 @@ return array(
                                     'class' => 'form-control minicolor-hex',
                                     'data-control' => 'hue',
                                     'placeholder' => 'tr_meliscore_platform_theme_dashboard_plugin_menu_box_border_color',
-                                    'category' => 'dashboard_plugin_menu'
+                                    'category' => 'dashboard_plugin_menu',
+                                    'default' => '#e61c23'
                                 ),
                             ),
                         ),
@@ -2351,7 +2456,8 @@ return array(
                                     'placeholder' => 'tr_meliscore_platform_theme_dashboard_plugin_menu_box_border_width',
                                     'category' => 'dashboard_plugin_menu',
                                     'sliderId' => 'plugins-menu-box-border-width-range-slider-min',
-                                    'sliderClass' => 'plugins-menu-box-border-width-range-slider-min'
+                                    'sliderClass' => 'plugins-menu-box-border-width-range-slider-min',
+                                    'default' => 4
                                 ),
                             ),
                         ),
@@ -2369,7 +2475,8 @@ return array(
                                     'class' => 'form-control minicolor-hex',
                                     'data-control' => 'hue',
                                     'placeholder' => 'tr_meliscore_platform_theme_dashboard_plugin_menu_box_title_color',
-                                    'category' => 'dashboard_plugin_menu'
+                                    'category' => 'dashboard_plugin_menu',
+                                    'default' => '#fff'
                                 ),
                             ),
                         ),
@@ -2388,24 +2495,59 @@ return array(
                                     'placeholder' => 'tr_meliscore_platform_theme_dashboard_plugin_menu_box_title_font_size',
                                     'category' => 'dashboard_plugin_menu',
                                     'sliderId' => 'plugins-menu-box-title-font-size-range-slider-min',
-                                    'sliderClass' => 'plugins-menu-box-title-font-size-range-slider-min'
+                                    'sliderClass' => 'plugins-menu-box-title-font-size-range-slider-min',
+                                    'default' => 14
                                 ),
                             ),
                         ),
                         array(
                             'spec' => array(
-                                'name' => 'melis_core_platform_theme_dashboard_plugin_menu_box_title_font_style',
-                                'type' => 'Text',
+                                'name' => 'melis_core_platform_theme_dashboard_plugin_menu_box_title_font_style',                               
+                                'type' => Laminas\Form\Element\MultiCheckbox::class,                              
                                 'options' => array(
                                     'label' => 'tr_meliscore_platform_theme_dashboard_plugin_menu_box_title_font_style',
                                     'tooltip' => 'tr_meliscore_platform_theme_dashboard_plugin_menu_box_title_font_style_tooltip',
+                                    'value_options' => [
+                                        'option1' => [
+                                            'value' => 'bold',
+                                            'label' => '<strong>B</strong>',
+                                            'label_attributes' => [
+                                                'class' => 'btn btn-default',
+                                            ],
+                                        ],
+                                        'option2' => [
+                                            'value' => 'italic',
+                                            'label' => '<em>I</em>',
+                                            'label_attributes' => [
+                                                'class' => 'btn btn-default',
+                                            ],
+                                        ],
+                                        'option3' => [
+                                            'value' => 'uppercase',
+                                            'label' => 'TT',
+                                            'label_attributes' => [
+                                                'class' => 'btn btn-default',
+                                                'style' => 'text-transform: uppercase;'
+                                            ],
+                                        ],
+                                        'option4' => [
+                                            'value' => 'underline',
+                                            'label' => 'U',
+                                            'label_attributes' => [
+                                                'class' => 'btn btn-default',
+                                                'style' => 'text-transform: underline;'
+                                            ],
+                                        ],
+                                    ]
                                 ),
                                 'attributes' => array(
                                     'id' => 'melis_core_platform_theme_dashboard_plugin_menu_box_title_font_style',
                                     'value' => '',
                                     'class' => 'form-control',
                                     'placeholder' => 'tr_meliscore_platform_theme_dashboard_plugin_menu_box_title_font_style',
-                                    'category' => 'dashboard_plugin_menu'
+                                    'category' => 'dashboard_plugin_menu',
+                                    'required' => false,
+                                    'default' => ''
                                 ),
                             ),
                         ),
@@ -2423,7 +2565,8 @@ return array(
                                     'class' => 'form-control minicolor-hex',
                                     'data-control' => 'hue',
                                     'placeholder' => 'tr_meliscore_platform_theme_dashboard_plugin_menu_box_filter_box_border_top_color',
-                                    'category' => 'dashboard_plugin_menu'
+                                    'category' => 'dashboard_plugin_menu',
+                                    'default' => '#2c2c2c'
                                 ),
                             ),
                         ),
@@ -2441,7 +2584,8 @@ return array(
                                     'class' => 'form-control minicolor-hex',
                                     'data-control' => 'hue',
                                     'placeholder' => 'tr_meliscore_platform_theme_dashboard_plugin_menu_box_filter_box_btn_bg_color',
-                                    'category' => 'dashboard_plugin_menu'
+                                    'category' => 'dashboard_plugin_menu',
+                                    'default' => '#373737'
                                 ),
                             ),
                         ),
@@ -2459,7 +2603,8 @@ return array(
                                     'class' => 'form-control minicolor-hex',
                                     'data-control' => 'hue',
                                     'placeholder' => 'tr_meliscore_platform_theme_dashboard_plugin_menu_box_filter_box_btn_border_color',
-                                    'category' => 'dashboard_plugin_menu'
+                                    'category' => 'dashboard_plugin_menu',
+                                    'default' => '#373737'
                                 ),
                             ),
                         ),
@@ -2477,7 +2622,8 @@ return array(
                                     'class' => 'form-control minicolor-hex',
                                     'data-control' => 'hue',
                                     'placeholder' => 'tr_meliscore_platform_theme_dashboard_plugin_menu_box_filter_box_btn_text_color',
-                                    'category' => 'dashboard_plugin_menu'
+                                    'category' => 'dashboard_plugin_menu',
+                                    'default' => '#fff'
                                 ),
                             ),
                         ),
@@ -2496,7 +2642,8 @@ return array(
                                     'placeholder' => 'tr_meliscore_platform_theme_dashboard_plugin_menu_box_filter_box_btn_text_font_size',
                                     'category' => 'dashboard_plugin_menu',
                                     'sliderId' => 'filter-box-button-text-font-size-range-slider-min',
-                                    'sliderClass' => 'filter-box-button-text-font-size-range-slider-min'
+                                    'sliderClass' => 'filter-box-button-text-font-size-range-slider-min',
+                                    'default' => 12
                                 ),
                             ),
                         ),
@@ -2514,7 +2661,8 @@ return array(
                                     'class' => 'form-control minicolor-hex',
                                     'data-control' => 'hue',
                                     'placeholder' => 'tr_meliscore_platform_theme_dashboard_plugin_menu_new_plugin_indicator_color',
-                                    'category' => 'dashboard_plugin_menu'
+                                    'category' => 'dashboard_plugin_menu',
+                                    'default' => '#72af46'
                                 ),
                             ),
                         ),
@@ -2533,7 +2681,8 @@ return array(
                                     'placeholder' => 'tr_meliscore_platform_theme_dashboard_menu_plugin_new_plugin_indicator_text_font_size',
                                     'category' => 'dashboard_plugin_menu',
                                     'sliderId' => 'new-plugin-indicator-text-font-size-range-slider-min',
-                                    'sliderClass' => 'new-plugin-indicator-text-font-size-range-slider-min'
+                                    'sliderClass' => 'new-plugin-indicator-text-font-size-range-slider-min',
+                                    'default' => 7
                                 ),
                             ),
                         ),
@@ -2551,7 +2700,8 @@ return array(
                                     'class' => 'form-control minicolor-hex',
                                     'data-control' => 'hue',
                                     'placeholder' => 'tr_meliscore_platform_theme_dashboard_menu_plugin_category_btn_text_color',
-                                    'category' => 'dashboard_plugin_menu'
+                                    'category' => 'dashboard_plugin_menu',
+                                    'default' => '#fff'
                                 ),
                             ),
                         ),
@@ -2570,7 +2720,8 @@ return array(
                                     'placeholder' => 'tr_meliscore_platform_theme_dashboard_plugin_menu_category_btn_text_font_size',
                                     'category' => 'dashboard_plugin_menu',
                                     'sliderId' => 'category-btn-text-font-size-range-slider-min',
-                                    'sliderClass' => 'category-btn-text-font-size-range-slider-min'
+                                    'sliderClass' => 'category-btn-text-font-size-range-slider-min',
+                                    'default' => 11
                                 ),
                             ),
                         ),
@@ -2588,7 +2739,8 @@ return array(
                                     'class' => 'form-control minicolor-hex',
                                     'data-control' => 'hue',
                                     'placeholder' => 'tr_meliscore_platform_theme_dashboard_plugin_menu_plugin_title_text_color',
-                                    'category' => 'dashboard_plugin_menu'
+                                    'category' => 'dashboard_plugin_menu',
+                                    'default' => '#fff'
                                 ),
                             ),
                         ),
@@ -2607,7 +2759,8 @@ return array(
                                     'placeholder' => 'tr_meliscore_platform_theme_dashboard_plugin_menu_plugin_title_text_font_size',
                                     'category' => 'dashboard_plugin_menu',
                                     'sliderId' => 'plugin-title-text-font-size-range-slider-min',
-                                    'sliderClass' => 'plugin-title-text-font-size-range-slider-min'
+                                    'sliderClass' => 'plugin-title-text-font-size-range-slider-min',
+                                    'default' => 12
                                 ),
                             ),
                         ),
@@ -2625,7 +2778,8 @@ return array(
                                     'class' => 'form-control minicolor-hex',
                                     'data-control' => 'hue',
                                     'placeholder' => 'tr_meliscore_platform_theme_dashboard_plugin_menu_delete_all_btn_color',
-                                    'category' => 'dashboard_plugin_menu'
+                                    'category' => 'dashboard_plugin_menu',
+                                    'default' => '#e61c23'
                                 ),
                             ),
                         ),
@@ -2643,7 +2797,8 @@ return array(
                                     'class' => 'form-control minicolor-hex',
                                     'data-control' => 'hue',
                                     'placeholder' => 'tr_meliscore_platform_theme_dashboard_plugin_menu_delete_all_btn_border_color',
-                                    'category' => 'dashboard_plugin_menu'
+                                    'category' => 'dashboard_plugin_menu',
+                                    'default' => '#e61c23'
                                 ),
                             ),
                         ),
@@ -2661,7 +2816,8 @@ return array(
                                     'class' => 'form-control minicolor-hex',
                                     'data-control' => 'hue',
                                     'placeholder' => 'tr_meliscore_platform_theme_dashboard_plugin_menu_delete_all_btn_text_color',
-                                    'category' => 'dashboard_plugin_menu'
+                                    'category' => 'dashboard_plugin_menu',
+                                    'default' => '#fff'
                                 ),
                             ),
                         ),
@@ -2680,21 +2836,38 @@ return array(
                                     'placeholder' => 'tr_meliscore_platform_theme_dashboard_plugin_menu_delete_all_btn_text_font_size',
                                     'category' => 'dashboard_plugin_menu',
                                     'sliderId' => 'delete-all-btn-text-font-size-range-slider-min',
-                                    'sliderClass' => 'delete-all-btn-text-font-size-range-slider-min'
+                                    'sliderClass' => 'delete-all-btn-text-font-size-range-slider-min',
+                                    'default' => 14
                                 ),
                             ),
                         ),                                          
                     ),
                     'input_filter' => array(
-                        'melis_core_platform_color_primary_color' => array(
-                            'name'     => 'melis_core_platform_color_primary_color',
+                        'melis_core_platform_theme_dashboard_plugin_no_plugin_alert_text_font_style' => array(
+                            'name'     => 'melis_core_platform_theme_dashboard_plugin_no_plugin_alert_text_font_style',
+                            'required' => false,                            
+                            'filters'  => array(
+                                array('name' => 'StripTags'),
+                                array('name' => 'StringTrim'),
+                            ),
+                        ),
+                        'melis_core_platform_theme_dashboard_plugin_menu_box_title_font_style' => array(
+                            'name'     => 'melis_core_platform_theme_dashboard_plugin_menu_box_title_font_style',
+                            'required' => false,
+                            'filters'  => array(
+                                array('name' => 'StripTags'),
+                                array('name' => 'StringTrim'),
+                            ),
+                        ),
+                        'melis_core_platform_theme_toggle_btn_color' => array(
+                            'name'     => 'melis_core_platform_theme_toggle_btn_color',
                             'required' => false,
                             'validators' => array(
                                 array(
                                     'name' => 'regex',
                                     false,
                                     'options' => array(
-                                        'pattern' => '/#?([\da-fA-F]{2})([\da-fA-F]{2})([\da-fA-F]{2})/',
+                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
                                         'messages' => array(\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'),
                                         'encoding' => 'UTF-8',
                                     ),
@@ -2705,15 +2878,15 @@ return array(
                                 array('name' => 'StringTrim'),
                             ),
                         ),
-                        'melis_core_platform_color_secondary_color' => array(
-                            'name'     => 'melis_core_platform_color_secondary_color',
+                        'melis_core_platform_theme_toggle_btn_hover_color' => array(
+                            'name'     => 'melis_core_platform_theme_toggle_btn_hover_color',
                             'required' => false,
                             'validators' => array(
                                 array(
                                     'name' => 'regex',
                                     false,
                                     'options' => array(
-                                        'pattern' => '/#?([\da-fA-F]{2})([\da-fA-F]{2})([\da-fA-F]{2})/',
+                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
                                         'messages' => array(\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'),
                                         'encoding' => 'UTF-8',
                                     ),
@@ -2724,7 +2897,1341 @@ return array(
                                 array('name' => 'StringTrim'),
                             ),
                         ),
-                       
+                        'melis_core_platform_theme_logo_bg_color' => array(
+                            'name'     => 'melis_core_platform_theme_logo_bg_color',
+                            'required' => false,
+                            'validators' => array(
+                                array(
+                                    'name' => 'regex',
+                                    false,
+                                    'options' => array(
+                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'messages' => array(\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'),
+                                        'encoding' => 'UTF-8',
+                                    ),
+                                ),
+                            ),
+                            'filters'  => array(
+                                array('name' => 'StripTags'),
+                                array('name' => 'StringTrim'),
+                            ),
+                        ),
+                        'melis_core_platform_theme_logo_text_color' => array(
+                            'name'     => 'melis_core_platform_theme_logo_text_color',
+                            'required' => false,
+                            'validators' => array(
+                                array(
+                                    'name' => 'regex',
+                                    false,
+                                    'options' => array(
+                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'messages' => array(\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'),
+                                        'encoding' => 'UTF-8',
+                                    ),
+                                ),
+                            ),
+                            'filters'  => array(
+                                array('name' => 'StripTags'),
+                                array('name' => 'StringTrim'),
+                            ),
+                        ),
+                        'melis_core_platform_theme_user_profile_bg_color' => array(
+                            'name'     => 'melis_core_platform_theme_user_profile_bg_color',
+                            'required' => false,
+                            'validators' => array(
+                                array(
+                                    'name' => 'regex',
+                                    false,
+                                    'options' => array(
+                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'messages' => array(\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'),
+                                        'encoding' => 'UTF-8',
+                                    ),
+                                ),
+                            ),
+                            'filters'  => array(
+                                array('name' => 'StripTags'),
+                                array('name' => 'StringTrim'),
+                            ),
+                        ),
+                        'melis_core_platform_theme_user_profile_img_border_color' => array(
+                            'name'     => 'melis_core_platform_theme_user_profile_img_border_color',
+                            'required' => false,
+                            'validators' => array(
+                                array(
+                                    'name' => 'regex',
+                                    false,
+                                    'options' => array(
+                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'messages' => array(\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'),
+                                        'encoding' => 'UTF-8',
+                                    ),
+                                ),
+                            ),
+                            'filters'  => array(
+                                array('name' => 'StripTags'),
+                                array('name' => 'StringTrim'),
+                            ),
+                        ),
+                        'melis_core_platform_theme_user_profile_name_text_color' => array(
+                            'name'     => 'melis_core_platform_theme_user_profile_name_text_color',
+                            'required' => false,
+                            'validators' => array(
+                                array(
+                                    'name' => 'regex',
+                                    false,
+                                    'options' => array(
+                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'messages' => array(\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'),
+                                        'encoding' => 'UTF-8',
+                                    ),
+                                ),
+                            ),
+                            'filters'  => array(
+                                array('name' => 'StripTags'),
+                                array('name' => 'StringTrim'),
+                            ),
+                        ),
+                        'melis_core_platform_theme_user_profile_status_text_icon_color' => array(
+                            'name'     => 'melis_core_platform_theme_user_profile_status_text_icon_color',
+                            'required' => false,
+                            'validators' => array(
+                                array(
+                                    'name' => 'regex',
+                                    false,
+                                    'options' => array(
+                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'messages' => array(\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'),
+                                        'encoding' => 'UTF-8',
+                                    ),
+                                ),
+                            ),
+                            'filters'  => array(
+                                array('name' => 'StripTags'),
+                                array('name' => 'StringTrim'),
+                            ),
+                        ),
+                        'melis_core_platform_theme_menu_bg_color' => array(
+                            'name'     => 'melis_core_platform_theme_menu_bg_color',
+                            'required' => false,
+                            'validators' => array(
+                                array(
+                                    'name' => 'regex',
+                                    false,
+                                    'options' => array(
+                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'messages' => array(\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'),
+                                        'encoding' => 'UTF-8',
+                                    ),
+                                ),
+                            ),
+                            'filters'  => array(
+                                array('name' => 'StripTags'),
+                                array('name' => 'StringTrim'),
+                            ),
+                        ),
+                        'melis_core_platform_theme_menu_hover_color' => array(
+                            'name'     => 'melis_core_platform_theme_menu_hover_color',
+                            'required' => false,
+                            'validators' => array(
+                                array(
+                                    'name' => 'regex',
+                                    false,
+                                    'options' => array(
+                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'messages' => array(\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'),
+                                        'encoding' => 'UTF-8',
+                                    ),
+                                ),
+                            ),
+                            'filters'  => array(
+                                array('name' => 'StripTags'),
+                                array('name' => 'StringTrim'),
+                            ),
+                        ),
+                        'melis_core_platform_theme_menu_focus_color' => array(
+                            'name'     => 'melis_core_platform_theme_menu_focus_color',
+                            'required' => false,
+                            'validators' => array(
+                                array(
+                                    'name' => 'regex',
+                                    false,
+                                    'options' => array(
+                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'messages' => array(\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'),
+                                        'encoding' => 'UTF-8',
+                                    ),
+                                ),
+                            ),
+                            'filters'  => array(
+                                array('name' => 'StripTags'),
+                                array('name' => 'StringTrim'),
+                            ),
+                        ),
+                        'melis_core_platform_theme_menu_border_bottom_color' => array(
+                            'name'     => 'melis_core_platform_theme_menu_border_bottom_color',
+                            'required' => false,
+                            'validators' => array(
+                                array(
+                                    'name' => 'regex',
+                                    false,
+                                    'options' => array(
+                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'messages' => array(\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'),
+                                        'encoding' => 'UTF-8',
+                                    ),
+                                ),
+                            ),
+                            'filters'  => array(
+                                array('name' => 'StripTags'),
+                                array('name' => 'StringTrim'),
+                            ),
+                        ),
+                        'melis_core_platform_theme_menu_text_icon_color' => array(
+                            'name'     => 'melis_core_platform_theme_menu_text_icon_color',
+                            'required' => false,
+                            'validators' => array(
+                                array(
+                                    'name' => 'regex',
+                                    false,
+                                    'options' => array(
+                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'messages' => array(\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'),
+                                        'encoding' => 'UTF-8',
+                                    ),
+                                ),
+                            ),
+                            'filters'  => array(
+                                array('name' => 'StripTags'),
+                                array('name' => 'StringTrim'),
+                            ),
+                        ),
+                        'melis_core_platform_theme_submenu_bg_color' => array(
+                            'name'     => 'melis_core_platform_theme_submenu_bg_color',
+                            'required' => false,
+                            'validators' => array(
+                                array(
+                                    'name' => 'regex',
+                                    false,
+                                    'options' => array(
+                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'messages' => array(\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'),
+                                        'encoding' => 'UTF-8',
+                                    ),
+                                ),
+                            ),
+                            'filters'  => array(
+                                array('name' => 'StripTags'),
+                                array('name' => 'StringTrim'),
+                            ),
+                        ),
+                        'melis_core_platform_theme_submenu_text_icon_color' => array(
+                            'name'     => 'melis_core_platform_theme_submenu_text_icon_color',
+                            'required' => false,
+                            'validators' => array(
+                                array(
+                                    'name' => 'regex',
+                                    false,
+                                    'options' => array(
+                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'messages' => array(\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'),
+                                        'encoding' => 'UTF-8',
+                                    ),
+                                ),
+                            ),
+                            'filters'  => array(
+                                array('name' => 'StripTags'),
+                                array('name' => 'StringTrim'),
+                            ),
+                        ),
+                        'melis_core_platform_theme_submenu_text_icon_hover_color' => array(
+                            'name'     => 'melis_core_platform_theme_submenu_text_icon_hover_color',
+                            'required' => false,
+                            'validators' => array(
+                                array(
+                                    'name' => 'regex',
+                                    false,
+                                    'options' => array(
+                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'messages' => array(\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'),
+                                        'encoding' => 'UTF-8',
+                                    ),
+                                ),
+                            ),
+                            'filters'  => array(
+                                array('name' => 'StripTags'),
+                                array('name' => 'StringTrim'),
+                            ),
+                        ),
+                        'melis_core_platform_theme_submenu_hover_active_bg_color' => array(
+                            'name'     => 'melis_core_platform_theme_submenu_hover_active_bg_color',
+                            'required' => false,
+                            'validators' => array(
+                                array(
+                                    'name' => 'regex',
+                                    false,
+                                    'options' => array(
+                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'messages' => array(\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'),
+                                        'encoding' => 'UTF-8',
+                                    ),
+                                ),
+                            ),
+                            'filters'  => array(
+                                array('name' => 'StripTags'),
+                                array('name' => 'StringTrim'),
+                            ),
+                        ),
+
+                        //footer
+                        'melis_core_platform_theme_footer_link_text_color' => array(
+                            'name'     => 'melis_core_platform_theme_footer_link_text_color',
+                            'required' => false,
+                            'validators' => array(
+                                array(
+                                    'name' => 'regex',
+                                    'options' => array(
+                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'messages' => array(\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'),
+                                        'encoding' => 'UTF-8',
+                                    ),
+                                ),
+                            ),
+                            'filters'  => array(
+                                array('name' => 'StripTags'),
+                                array('name' => 'StringTrim'),
+                            ),
+                        ),
+
+                        'melis_core_platform_theme_footer_text_color' => array(
+                            'name'     => 'melis_core_platform_theme_footer_text_color',
+                            'required' => false,
+                            'validators' => array(
+                                array(
+                                    'name' => 'regex',
+                                    'options' => array(
+                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'messages' => array(\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'),
+                                        'encoding' => 'UTF-8',
+                                    ),
+                                ),
+                            ),
+                            'filters'  => array(
+                                array('name' => 'StripTags'),
+                                array('name' => 'StringTrim'),
+                            ),
+                        ),
+
+                        'melis_core_platform_theme_header_text_icon_color' => array(
+                            'name'     => 'melis_core_platform_theme_header_text_icon_color',
+                            'required' => false,
+                            'validators' => array(
+                                array(
+                                    'name' => 'regex',
+                                    'options' => array(
+                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'messages' => array(\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'),
+                                        'encoding' => 'UTF-8',
+                                    ),
+                                ),
+                            ),
+                            'filters'  => array(
+                                array('name' => 'StripTags'),
+                                array('name' => 'StringTrim'),
+                            ),
+                        ),
+
+                        'melis_core_platform_theme_header_text_icon_active_color' => array(
+                            'name'     => 'melis_core_platform_theme_header_text_icon_active_color',
+                            'required' => false,
+                            'validators' => array(
+                                array(
+                                    'name' => 'regex',
+                                    'options' => array(
+                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'messages' => array(\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'),
+                                        'encoding' => 'UTF-8',
+                                    ),
+                                ),
+                            ),
+                            'filters'  => array(
+                                array('name' => 'StripTags'),
+                                array('name' => 'StringTrim'),
+                            ),
+                        ),
+
+                        'melis_core_platform_theme_header_bg_color' => array(
+                            'name'     => 'melis_core_platform_theme_header_bg_color',
+                            'required' => false,
+                            'validators' => array(
+                                array(
+                                    'name' => 'regex',
+                                    'options' => array(
+                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'messages' => array(\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'),
+                                        'encoding' => 'UTF-8',
+                                    ),
+                                ),
+                            ),
+                            'filters'  => array(
+                                array('name' => 'StripTags'),
+                                array('name' => 'StringTrim'),
+                            ),
+                        ),
+
+                        'melis_core_platform_theme_header_bg_active_color' => array(
+                            'name'     => 'melis_core_platform_theme_header_bg_active_color',
+                            'required' => false,
+                            'validators' => array(
+                                array(
+                                    'name' => 'regex',
+                                    'options' => array(
+                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'messages' => array(\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'),
+                                        'encoding' => 'UTF-8',
+                                    ),
+                                ),
+                            ),
+                            'filters'  => array(
+                                array('name' => 'StripTags'),
+                                array('name' => 'StringTrim'),
+                            ),
+                        ),
+
+                        'melis_core_platform_theme_bubble_plugin_hide_btn_text_icon_color' => [
+                            'name'     => 'melis_core_platform_theme_bubble_plugin_hide_btn_text_icon_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',
+                                    'options' => [
+                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+                        'melis_core_platform_theme_bubble_plugin_hide_btn_text_icon_hover_color' => [
+                            'name'     => 'melis_core_platform_theme_bubble_plugin_hide_btn_text_icon_hover_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',
+                                    'options' => [
+                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+                        'melis_core_platform_theme_bubble_plugin_hide_btn_bg_border_color' => [
+                            'name'     => 'melis_core_platform_theme_bubble_plugin_hide_btn_bg_border_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',
+                                    'options' => [
+                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+                        'melis_core_platform_theme_bubble_plugin_hide_btn_bg_hover_color' => [
+                            'name'     => 'melis_core_platform_theme_bubble_plugin_hide_btn_bg_hover_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',
+                                    'options' => [
+                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+                        'melis_core_platform_theme_bubble_plugin_widget_bg_color' => [
+                            'name'     => 'melis_core_platform_theme_bubble_plugin_widget_bg_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',
+                                    'options' => [
+                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+                        'melis_core_platform_theme_bubble_plugin_widget_btn_bg_color' => [
+                            'name'     => 'melis_core_platform_theme_bubble_plugin_widget_btn_bg_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',
+                                    'options' => [
+                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+                        'melis_core_platform_theme_bubble_plugin_widget_btn_text_hover_color' => [
+                            'name'     => 'melis_core_platform_theme_bubble_plugin_widget_btn_text_hover_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',
+                                    'options' => [
+                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+                        'melis_core_platform_theme_bubble_plugin_widget_header_text_icon_color' => [
+                            'name'     => 'melis_core_platform_theme_bubble_plugin_widget_header_text_icon_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',
+                                    'options' => [
+                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+                        'melis_core_platform_theme_bubble_plugin_updates_header_text_icon_color' => [
+                            'name'     => 'melis_core_platform_theme_bubble_plugin_updates_header_text_icon_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',
+                                    'options' => [
+                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+                        'melis_core_platform_theme_bubble_plugin_news_header_bg_color' => [
+                            'name'     => 'melis_core_platform_theme_bubble_plugin_news_header_bg_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',
+                                    'options' => [
+                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+                        'melis_core_platform_theme_bubble_plugin_updates_header_bg_color' => [
+                            'name'     => 'melis_core_platform_theme_bubble_plugin_updates_header_bg_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',
+                                    'options' => [
+                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+                        'melis_core_platform_theme_bubble_plugin_notif_header_bg_color' => [
+                            'name'     => 'melis_core_platform_theme_bubble_plugin_notif_header_bg_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',
+                                    'options' => [
+                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+                        'melis_core_platform_theme_bubble_plugin_msg_header_bg_color' => [
+                            'name'     => 'melis_core_platform_theme_bubble_plugin_msg_header_bg_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',
+                                    'options' => [
+                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+
+                        'melis_core_platform_theme_bubble_plugin_news_btn_border_text_color' => [
+                            'name'     => 'melis_core_platform_theme_bubble_plugin_news_btn_border_text_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',
+                                    'options' => [
+                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+                        'melis_core_platform_theme_bubble_plugin_notif_btn_border_text_color' => [
+                            'name'     => 'melis_core_platform_theme_bubble_plugin_notif_btn_border_text_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',
+                                    'options' => [
+                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+                        'melis_core_platform_theme_bubble_plugin_msg_btn_border_text_color' => [
+                            'name'     => 'melis_core_platform_theme_bubble_plugin_msg_btn_border_text_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',
+                                    'options' => [
+                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+                        'melis_core_platform_theme_bubble_plugin_updates_btn_text_hover_color' => [
+                            'name'     => 'melis_core_platform_theme_bubble_plugin_updates_btn_text_hover_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',
+                                    'options' => [
+                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+                        'melis_core_platform_theme_bubble_plugin_news_btn_border_color' => [
+                            'name'     => 'melis_core_platform_theme_bubble_plugin_news_btn_border_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',
+                                    'options' => [
+                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+                        'melis_core_platform_theme_bubble_plugin_news_btn_bg_hover_color' => [
+                            'name'     => 'melis_core_platform_theme_bubble_plugin_news_btn_bg_hover_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',
+                                    'options' => [
+                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+                        'melis_core_platform_theme_bubble_plugin_widget_header_btn_txt_font_size' => [
+                            'name'     => 'melis_core_platform_theme_bubble_plugin_widget_header_btn_txt_font_size',
+                            'required' => false,
+                            'validators' => [],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+                        'melis_core_platform_theme_bubble_plugin_widget_back_header_bg_color' => [
+                            'name'     => 'melis_core_platform_theme_bubble_plugin_widget_back_header_bg_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',
+                                    'options' => [
+                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+                        'melis_core_platform_theme_bubble_plugin_widget_back_header_text_color' => [
+                            'name'     => 'melis_core_platform_theme_bubble_plugin_widget_back_header_text_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',
+                                    'options' => [
+                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+                        'melis_core_platform_theme_bubble_plugin_widget_back_header_text_font_size' => [
+                            'name'     => 'melis_core_platform_theme_bubble_plugin_widget_back_header_text_font_size',
+                            'required' => false,
+                            'validators' => [],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+                        'melis_core_platform_theme_bubble_plugin_widget_back_header_close_btn_bg_color' => [
+                            'name'     => 'melis_core_platform_theme_bubble_plugin_widget_back_header_close_btn_bg_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',
+                                    'options' => [
+                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+                        'melis_core_platform_theme_bubble_plugin_widget_back_header_close_btn_icon_color' => [
+                            'name'     => 'melis_core_platform_theme_bubble_plugin_widget_back_header_close_btn_icon_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',
+                                    'options' => [
+                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+                        'melis_core_platform_theme_bubble_plugin_widget_back_content_header_text_color' => [
+                            'name'     => 'melis_core_platform_theme_bubble_plugin_widget_back_content_header_text_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',
+                                    'options' => [
+                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+                        'melis_core_platform_theme_bubble_plugin_widget_back_content_details_text_color' => [
+                            'name'     => 'melis_core_platform_theme_bubble_plugin_widget_back_content_details_text_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',
+                                    'options' => [
+                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+                        'melis_core_platform_theme_dashboard_plugin_no_plugin_alert_bg_color' => [
+                            'name'     => 'melis_core_platform_theme_dashboard_plugin_no_plugin_alert_bg_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',
+                                    'options' => [
+                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+                        'melis_core_platform_theme_dashboard_plugin_no_plugin_alert_border_color' => [
+                            'name'     => 'melis_core_platform_theme_dashboard_plugin_no_plugin_alert_border_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',
+                                    'options' => [
+                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+                        'melis_core_platform_theme_dashboard_plugin_no_plugin_alert_color' => [
+                            'name'     => 'melis_core_platform_theme_dashboard_plugin_no_plugin_alert_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',
+                                    'options' => [
+                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+
+                        'melis_core_platform_theme_dashboard_plugin_plugin_header_bg_color' => [
+                            'name'     => 'melis_core_platform_theme_dashboard_plugin_plugin_header_bg_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',
+                                    'options' => [
+                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+                        'melis_core_platform_theme_dashboard_plugin_plugin_header_text_color' => [
+                            'name'     => 'melis_core_platform_theme_dashboard_plugin_plugin_header_text_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',
+                                    'options' => [
+                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+                        'melis_core_platform_theme_dashboard_plugin_plugin_header_btns_bg_color' => [
+                            'name'     => 'melis_core_platform_theme_dashboard_plugin_plugin_header_btns_bg_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',
+                                    'options' => [
+                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+                        'melis_core_platform_theme_dashboard_plugin_plugin_header_btns_border_color' => [
+                            'name'     => 'melis_core_platform_theme_dashboard_plugin_plugin_header_btns_border_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',
+                                    'options' => [
+                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+                        'melis_core_platform_theme_dashboard_plugin_plugin_header_btns_icon_color' => [
+                            'name'     => 'melis_core_platform_theme_dashboard_plugin_plugin_header_btns_icon_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',
+                                    'options' => [
+                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+                        'melis_core_platform_theme_dashboard_plugin_plugin_header_btns_bg_hover_color' => [
+                            'name'     => 'melis_core_platform_theme_dashboard_plugin_plugin_header_btns_bg_hover_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',
+                                    'options' => [
+                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+                        'melis_core_platform_theme_dashboard_plugin_plugin_header_btns_border_hover_color' => [
+                            'name'     => 'melis_core_platform_theme_dashboard_plugin_plugin_header_btns_border_hover_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',
+                                    'options' => [
+                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+                        'melis_core_platform_theme_dashboard_plugin_plugin_body_bg_color' => [
+                            'name'     => 'melis_core_platform_theme_dashboard_plugin_plugin_body_bg_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',
+                                    'options' => [
+                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+                        'melis_core_platform_theme_dashboard_plugin_plugin_body_border_color' => [
+                            'name'     => 'melis_core_platform_theme_dashboard_plugin_plugin_body_border_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',
+                                    'options' => [
+                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+
+                        'melis_core_platform_theme_dashboard_plugin_menu_box_bg_color' => [
+                            'name'     => 'melis_core_platform_theme_dashboard_plugin_menu_box_bg_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',
+                                    'options' => [
+                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+                        'melis_core_platform_theme_dashboard_plugin_menu_box_border_color' => [
+                            'name'     => 'melis_core_platform_theme_dashboard_plugin_menu_box_border_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',
+                                    'options' => [
+                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+
+                        'melis_core_platform_theme_dashboard_plugin_menu_box_title_color' => [
+                            'name'     => 'melis_core_platform_theme_dashboard_plugin_menu_box_title_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',
+                                    'options' => [
+                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+
+                        'melis_core_platform_theme_dashboard_plugin_menu_box_title_font_style' => [
+                            'name'     => 'melis_core_platform_theme_dashboard_plugin_menu_box_title_font_style',
+                            'required' => false,
+                            'validators' => [],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+                        'melis_core_platform_theme_dashboard_plugin_menu_box_filter_box_border_top_color' => [
+                            'name'     => 'melis_core_platform_theme_dashboard_plugin_menu_box_filter_box_border_top_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',
+                                    'options' => [
+                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+                        'melis_core_platform_theme_dashboard_plugin_menu_box_filter_box_btn_bg_color' => [
+                            'name'     => 'melis_core_platform_theme_dashboard_plugin_menu_box_filter_box_btn_bg_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',
+                                    'options' => [
+                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+                        'melis_core_platform_theme_dashboard_plugin_menu_box_filter_box_btn_border_color' => [
+                            'name'     => 'melis_core_platform_theme_dashboard_plugin_menu_box_filter_box_btn_border_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',
+                                    'options' => [
+                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+                        'melis_core_platform_theme_dashboard_plugin_menu_box_filter_box_btn_text_color' => [
+                            'name'     => 'melis_core_platform_theme_dashboard_plugin_menu_box_filter_box_btn_text_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',
+                                    'options' => [
+                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+                        'melis_core_platform_theme_dashboard_plugin_menu_new_plugin_indicator_color' => [
+                            'name'     => 'melis_core_platform_theme_dashboard_plugin_menu_new_plugin_indicator_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',
+                                    'options' => [
+                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+                        'melis_core_platform_theme_dashboard_plugin_menu_category_btn_text_color' => [
+                            'name'     => 'melis_core_platform_theme_dashboard_plugin_menu_category_btn_text_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',
+                                    'options' => [
+                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+
+                        'melis_core_platform_theme_dashboard_plugin_menu_plugin_title_text_color' => [
+                            'name'     => 'melis_core_platform_theme_dashboard_plugin_menu_plugin_title_text_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',
+                                    'options' => [
+                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+
+                        'melis_core_platform_theme_dashboard_plugin_menu_delete_all_btn_color' => [
+                            'name'     => 'melis_core_platform_theme_dashboard_plugin_menu_delete_all_btn_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',
+                                    'options' => [
+                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+                        'melis_core_platform_theme_dashboard_plugin_menu_delete_all_btn_border_color' => [
+                            'name'     => 'melis_core_platform_theme_dashboard_plugin_menu_delete_all_btn_border_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',
+                                    'options' => [
+                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+                        'melis_core_platform_theme_dashboard_plugin_menu_delete_all_btn_text_color' => [
+                            'name'     => 'melis_core_platform_theme_dashboard_plugin_menu_delete_all_btn_text_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',
+                                    'options' => [                                        
+                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],      
                     )
                 ),
 			),

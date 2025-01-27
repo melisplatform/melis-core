@@ -57,12 +57,38 @@ class PlatformSchemeController extends MelisAbstractActionController
             $bubblePlugin = json_decode($schemeData->getBubblePlugin(), true);
             $dashboardPlugin = json_decode($schemeData->getDashboardPlugin(), true);
             $dashboardPluginMenu = json_decode($schemeData->getDashboardPluginMenu(), true);
-            
-            $platformThemeOptionData = array_merge($topLogo, $userProfile , $menu, $footer, $header, $bubblePlugin, $dashboardPlugin, $dashboardPluginMenu);
+
+            //set the value as array for multicheckbox(they are imploded by ';' when saving)
+            $dashboardPlugin = array_map(function ($a) {
+                return strpos($a, ';') ? explode(';', $a) : $a;
+            }, $dashboardPlugin);
+
+            //set the value as array for multicheckbox(they are imploded by ';' when saving)
+            $dashboardPluginMenu = array_map(function ($a) {
+                return strpos($a, ';') ? explode(';', $a) : $a;
+            }, $dashboardPluginMenu);
+           
+            $platformThemeOptionData = array_merge($topLogo, $userProfile, $menu, $footer, $header, $bubblePlugin, $dashboardPlugin, $dashboardPluginMenu);
 
             if ($platformThemeOptionData) {
                 $platformThemeOptionForm->setData($platformThemeOptionData);
             }
+        }
+
+        foreach ($platformThemeOptionForm->getElements() as $key => $elem) {
+            // if ($elem->getAttribute('category') == 'bubble' || $elem->getAttribute('category') == 'dashboard_plugin' || $elem->getAttribute('category') == 'dashboard_plugin_menu') {
+            //     dump ($key);
+            //     echo "\n";
+            // }
+            // if ($elem->getAttribute('category') == 'logo' || $elem->getAttribute('category') == 'menu') {
+            //     dump($key);
+            //     echo "\n";
+            // }
+
+            // if ($elem->getAttribute('category') == 'footer' || $elem->getAttribute('category') == 'header') {
+            //     dump($key);
+            //     echo "\n";
+            // }
         }
    
         $view->setVariable('form', $form);
@@ -356,7 +382,8 @@ class PlatformSchemeController extends MelisAbstractActionController
                 }
 
             } else {
-                $errors = $this->formatErrorMessage($form->getMessages());
+                $melisCoreConfig = $this->getServiceManager()->get('MelisCoreConfig');
+                $errors = $this->formatErrorMessage($form->getMessages(), $melisCoreConfig->getItem('meliscore/forms/melis_core_platform_scheme_form'));
             }
 
         }
@@ -442,9 +469,10 @@ class PlatformSchemeController extends MelisAbstractActionController
             ->addHeaderLine('Pragma'       , 'no-cache')
             ->addHeaderLine('Content-Type' , 'text/css;charset=UTF-8');
 
-        $schemeData = $this->getPlatformSchemeSvc()->getCurrentScheme(true);
+        //$schemeData = $this->getPlatformSchemeSvc()->getCurrentScheme(true);
+        $schemeData = $this->getPlatformSchemeSvc()->getCurrentScheme();
 
-        if ($schemeData) {
+        if ($schemeData) {        
 
             $colors = json_decode($schemeData->getColors(), true);
 
@@ -453,8 +481,26 @@ class PlatformSchemeController extends MelisAbstractActionController
                     $view->$colorKey = $colorValue;
                 }
             }
-        }
 
+            //for the platform theme options
+            $topLogo = json_decode($schemeData->getTopLogo(), true);           
+            $userProfile = json_decode($schemeData->getUserProfile(), true);
+            $menu = json_decode($schemeData->getMenu(), true);
+            $footer = json_decode($schemeData->getFooter(), true);
+            $header = json_decode($schemeData->getHeader(), true);
+            $bubblePlugin = json_decode($schemeData->getBubblePlugin(), true);
+            $dashboardPlugin = json_decode($schemeData->getDashboardPlugin(), true);
+            $dashboardPluginMenu = json_decode($schemeData->getDashboardPluginMenu(), true);
+            $platformThemeData = array_merge($topLogo, $userProfile, $menu, $footer, $header, $bubblePlugin, $dashboardPlugin, $dashboardPluginMenu);
+
+            $platformThemeForm = $this->getPlatformThemeOptionForm();
+            if (!empty($platformThemeData)) {
+                foreach ($platformThemeData as $key => $val) {                  
+                    $view->$key = $val ?: $platformThemeForm->get($key)->getAttribute('default') ?? ''; 
+                }
+            }
+        }     
+        
         return $view;
     }
 
@@ -495,10 +541,10 @@ class PlatformSchemeController extends MelisAbstractActionController
      * @param array $errors
      * @return array
      */
-    private function formatErrorMessage($errors = array())
+    private function formatErrorMessage($errors = array(), $appConfigForm = array())
     {
         $melisMelisCoreConfig = $this->getServiceManager()->get('MelisCoreConfig');
-        $appConfigForm = $melisMelisCoreConfig->getItem('meliscore/forms/melis_core_platform_scheme_form');
+        //$appConfigForm = $melisMelisCoreConfig->getItem('meliscore/forms/melis_core_platform_scheme_form');
         $appConfigForm = $appConfigForm['elements'];
 
         foreach ($errors as $keyError => $valueError) {
@@ -678,22 +724,30 @@ class PlatformSchemeController extends MelisAbstractActionController
                 $dashboardPlugin = [];
                 $dashboardPluginMenu = [];
                 foreach ($form->getElements() as $key => $elem) {
+                    //add brackets to get the data
+                    if ($elem->getAttribute('type') == 'multi_checkbox') {                       
+                        $key = $key."[]";                        
+                    }
+                   
+                    $data = !empty($platformData[$key]) && is_array($platformData[$key]) ? implode(";", $platformData[$key]) : ($platformData[$key] ?? '');
+                    $key = str_replace(['[', ']'], '', $key);//remove brackets again
+
                     if ($elem->getAttribute('category') == 'logo') {
-                        $topLogo[$key] = $platformData[$key];
+                        $topLogo[$key] = $data;
                     } elseif ($elem->getAttribute('category') == 'user_profile') {
-                        $userProfile[$key] = $platformData[$key];
+                        $userProfile[$key] = $data;
                     } elseif ($elem->getAttribute('category') == 'menu') {
-                        $menu[$key] = $platformData[$key];
+                        $menu[$key] = $data;
                     } elseif ($elem->getAttribute('category') == 'footer') {
-                        $footer[$key] = $platformData[$key];
+                        $footer[$key] = $data;
                     } elseif ($elem->getAttribute('category') == 'header') {
-                        $header[$key] = $platformData[$key];
+                        $header[$key] = $data;
                     } elseif ($elem->getAttribute('category') == 'bubble') {
-                        $bubble[$key] = $platformData[$key];
+                        $bubble[$key] = $data;
                     } elseif ($elem->getAttribute('category') == 'dashboard_plugin') {
-                        $dashboardPlugin[$key] = $platformData[$key] ?? '';
+                        $dashboardPlugin[$key] = $data;
                     } elseif ($elem->getAttribute('category') == 'dashboard_plugin_menu') {
-                        $dashboardPluginMenu[$key] = $platformData[$key] ?? '';
+                        $dashboardPluginMenu[$key] = $data;
                     }
                 }
 
@@ -714,7 +768,8 @@ class PlatformSchemeController extends MelisAbstractActionController
                 $success = $this->getPlatformSchemeSvc()->saveScheme($data, $schemeId, true);
                           
             } else {
-                $errors = $this->formatErrorMessage($form->getMessages());
+                $melisCoreConfig = $this->getServiceManager()->get('MelisCoreConfig');
+                $errors = $this->formatErrorMessage($form->getMessages(), $melisCoreConfig->getItem('meliscore/forms/melis_core_platform_theme_option_form'));
             }
         }
 

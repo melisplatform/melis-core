@@ -244,13 +244,15 @@ if ($headerTitleLen > 13) {
                                                                                     <input type="hidden" class="minicolor" value="<?= $element->getValue(); ?>" />
                                                                                 </span>
                                                                             </div>
-                                                                        <?php  } elseif (strpos($element->getName(), 'size')) { ?>
+                                                                        <?php  } elseif (strpos($element->getName(), 'size')) {
+                                                                            $element->setAttribute('readonly', true);
+                                                                            ?>
                                                                             <div class="row">
-                                                                                <div class="col-9">                                                                                   
+                                                                                <div class="col-9">
                                                                                     <div id="<?= $element->getAttribute('sliderId') ?>" class="<?= $element->getAttribute('sliderClass') ?>" style="border: 0; color: #f6931f; font-weight: bold;"></div>
                                                                                 </div>
                                                                                 <div class="col-3">
-                                                                                    <?= $this->formRow($element->setLabel("")); ?>                                                                                  
+                                                                                    <?= $this->formRow($element->setLabel("")); ?>
                                                                                 </div>
                                                                             </div>
                                                                         <?php } ?>
@@ -361,7 +363,9 @@ if ($headerTitleLen > 13) {
                                                                                     <input type="hidden" class="minicolor" value="<?= $element->getValue(); ?>" />
                                                                                 </span>
                                                                             </div>
-                                                                        <?php  } elseif (strpos($element->getName(), 'size')) { ?>
+                                                                        <?php  } elseif (strpos($element->getName(), 'size')) {
+                                                                            $element->setAttribute('readonly', true);
+                                                                            ?>
                                                                             <div class="row">
                                                                                 <div class="col-9">
                                                                                     <div id="<?= $element->getAttribute('sliderId') ?>" class="<?= $element->getAttribute('sliderClass') ?>" style="border: 0; color: #f6931f; font-weight: bold;"></div>
@@ -440,7 +444,10 @@ if ($headerTitleLen > 13) {
                                                                                     <input type="hidden" class="minicolor" value="<?= $element->getValue(); ?>" />
                                                                                 </span>
                                                                             </div>
-                                                                        <?php  } elseif (strpos($element->getName(), 'size')) { ?>
+                                                                        <?php  } elseif (strpos($element->getName(), 'size')) { 
+                                                                            $element->setAttribute('readonly', true);
+
+                                                                            ?>
                                                                             <div class="row">
                                                                                 <div class="col-9">
                                                                                     <div id="<?= $element->getAttribute('sliderId') ?>" class="<?= $element->getAttribute('sliderClass') ?>" style="border: 0; color: #f6931f; font-weight: bold;"></div>
@@ -484,7 +491,9 @@ if ($headerTitleLen > 13) {
                                                                                     <input type="hidden" class="minicolor" value="<?= $element->getValue(); ?>" />
                                                                                 </span>
                                                                             </div>
-                                                                        <?php  } elseif (strpos($element->getName(), 'size')) { ?>
+                                                                        <?php  } elseif (strpos($element->getName(), 'size')) {
+                                                                            $element->setAttribute('readonly', true);
+                                                                            ?>
                                                                             <div class="row">
                                                                                 <div class="col-9">
                                                                                     <div id="<?= $element->getAttribute('sliderId') ?>" class="<?= $element->getAttribute('sliderClass') ?>" style="border: 0; color: #f6931f; font-weight: bold;"></div>
@@ -495,17 +504,14 @@ if ($headerTitleLen > 13) {
                                                                             </div>
                                                                         <?php } elseif (strpos($element->getName(), 'style')) { ?>
                                                                             <div class="btn-group btn-group-font-style" role="group" aria-label="Font style checkbox toggle button group">
-                                                                                <input type="checkbox" class="btn-check" id="plugins-menu-box-title-bold" autocomplete="off">
-                                                                                <label class="btn btn-default" for="plugins-menu-box-title-bold"><strong>B</strong></label>
-
-                                                                                <input type="checkbox" class="btn-check" id="plugins-menu-box-title-italic" autocomplete="off">
-                                                                                <label class="btn btn-default" for="plugins-menu-box-title-italic"><em>I</em></label>
-
-                                                                                <input type="checkbox" class="btn-check" id="plugins-menu-box-title-uppercase" autocomplete="off">
-                                                                                <label class="btn btn-default" for="plugins-menu-box-title-uppercase" style="text-transform: uppercase;">TT</label>
-
-                                                                                <input type="checkbox" class="btn-check" id="plugins-menu-box-title-underline" autocomplete="off">
-                                                                                <label class="btn btn-default" for="plugins-menu-box-title-underline" style="text-decoration: underline;">U</label>
+                                                                                <?php
+                                                                                $value = !is_array($element->getValue()) ? [$element->getValue()] : $element->getValue();
+                                                                                foreach ($element->getOptions()['value_options'] as $optKey => $option) {                                                                                    
+                                                                                ?>
+                                                                                    <input name="<?= $element->getName() ?>[]" type="checkbox" class="btn-check" id="<?= $element->getName() . $optKey ?>" autocomplete="off" value="<?= $option['value'] ?>" <?= in_array($option['value'], $value) ? "checked" : "" ?>>
+                                                                                    <label class="<?= $option['label_attributes']['class'] ?? 'btn btn-default' ?>" style="<?= $option['label_attributes']['style'] ?? '' ?>" for="<?= $element->getName() . $optKey ?>"><?= $option['label'] ?></label>
+                                                                                <?php    }
+                                                                                ?>
                                                                             </div>
                                                                         <?php   }
                                                                         ?>
@@ -543,7 +549,9 @@ if ($headerTitleLen > 13) {
                                                                                     <input type="hidden" class="minicolor" value="<?= $element->getValue(); ?>" />
                                                                                 </span>
                                                                             </div>
-                                                                        <?php  } elseif (strpos($element->getName(), 'size') || strpos($element->getName(), 'width')) { ?>
+                                                                        <?php  } elseif (strpos($element->getName(), 'size') || strpos($element->getName(), 'width')) {
+                                                                            $element->setAttribute('readonly', true);
+                                                                            ?>
                                                                             <div class="row">
                                                                                 <div class="col-9">
                                                                                     <div id="<?= $element->getAttribute('sliderId') ?>" class="<?= $element->getAttribute('sliderClass') ?>" style="border: 0; color: #f6931f; font-weight: bold;"></div>
@@ -554,17 +562,14 @@ if ($headerTitleLen > 13) {
                                                                             </div>
                                                                         <?php } elseif (strpos($element->getName(), 'style')) { ?>
                                                                             <div class="btn-group btn-group-font-style" role="group" aria-label="Font style checkbox toggle button group">
-                                                                                <input type="checkbox" class="btn-check" id="plugins-menu-box-title-bold" autocomplete="off">
-                                                                                <label class="btn btn-default" for="plugins-menu-box-title-bold"><strong>B</strong></label>
-
-                                                                                <input type="checkbox" class="btn-check" id="plugins-menu-box-title-italic" autocomplete="off">
-                                                                                <label class="btn btn-default" for="plugins-menu-box-title-italic"><em>I</em></label>
-
-                                                                                <input type="checkbox" class="btn-check" id="plugins-menu-box-title-uppercase" autocomplete="off">
-                                                                                <label class="btn btn-default" for="plugins-menu-box-title-uppercase" style="text-transform: uppercase;">TT</label>
-
-                                                                                <input type="checkbox" class="btn-check" id="plugins-menu-box-title-underline" autocomplete="off">
-                                                                                <label class="btn btn-default" for="plugins-menu-box-title-underline" style="text-decoration: underline;">U</label>
+                                                                                <?php
+                                                                                $value = !is_array($element->getValue()) ? [$element->getValue()] : $element->getValue();
+                                                                                foreach ($element->getOptions()['value_options'] as $optKey => $option) {                                                                                   
+                                                                                ?>
+                                                                                    <input name="<?= $element->getName() ?>[]" type="checkbox" class="btn-check" id="<?= $element->getName() . $optKey ?>" autocomplete="off" value="<?= $option['value'] ?>" <?= in_array($option['value'], $value) ? "checked" : "" ?>>
+                                                                                    <label class="<?= $option['label_attributes']['class'] ?? 'btn btn-default' ?>" style="<?= $option['label_attributes']['style'] ?? '' ?>" for="<?= $element->getName() . $optKey ?>"><?= $option['label'] ?></label>
+                                                                                <?php    }
+                                                                                ?>
                                                                             </div>
                                                                         <?php   } elseif (strpos($element->getName(), 'radius')) { ?>
                                                                             <div class="input-group">

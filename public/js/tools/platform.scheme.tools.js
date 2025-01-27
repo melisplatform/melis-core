@@ -63,12 +63,26 @@ $(function() {
                 platformTheme    = {},
                 platformThemeData = $("form#melis_core_platform_theme_option_form").serializeArray();
 
+                console.log(platformThemeData);
+
                 $.each(colorFormData, function(i, v) {
                     colors[v['name']] = v['value'];
                 });
 
                 $.each(platformThemeData, function(i, v) {
-                    platformTheme[v['name']] = v['value'];
+                    //check if is checkbox
+                    let elemCheckbox = $("form#melis_core_platform_theme_option_form").find("[name='"+v["name"]+"[]']");
+                    //let elemCheckbox = $("form#melis_core_platform_theme_option_form") .find("[name^='" + $.escapeSelector(v["name"]) + "']");
+                                       
+                    if (elemCheckbox.attr('type') == 'checkbox') {
+                        if (!platformTheme[v["name"]]) {
+                            platformTheme[v["name"]] = [];
+                        }                 
+                        platformTheme[v["name"]].push(v["value"]);
+
+                    } else {                
+                        platformTheme[v["name"]] = v["value"];
+                    }                    
                 });
 
                 formData.append('colors', JSON.stringify(colors));
@@ -156,12 +170,7 @@ $(function() {
         });
 
         $body.on("click", ".platform-theme-options-toggle, .open-theme-options", function() {
-            rangeSliderSize.setRangeSliderSize();
-
-            // console.log('size: ' + $("#melis_core_platform_theme_logo_text_font_size").val());
-            // console.log('widget size: ' + $("#melis_core_platform_theme_bubble_plugin_widget_header_text_icon_font_size").val());
-            
-
+            rangeSliderSize.setRangeSliderSize();      
         });   
         // end evo/platform-scheme
 });
@@ -176,25 +185,25 @@ var rangeSliderSize = {
      */
     setRangeSliderSize: function() {
         const sliders = [
-            { selectorMin: ".logo-font-size-range-slider-min", selectorValue: ".logo-font-size-range-slider-value", value: 10, min: 1, max: 30 }, // logo text, start general options
-            { selectorMin: ".footer-version-font-size-range-slider-min", selectorValue: ".footer-version-font-size-range-slider-value", value: 10, min: 1, max: 30 }, // footer text
-            { selectorMin: ".hide-btn-text-font-size-range-slider-min", selectorValue: ".hide-btn-text-font-size-range-slider-value", value: 10, min: 1, max: 25 }, // hide button text
-            { selectorMin: ".widget-header-text-font-size-range-slider-min", selectorValue: ".widget-header-text-font-size-range-slider-value", value: 25, min: 1, max: 35 }, // widget header text
-            { selectorMin: ".widget-button-text-font-size-range-slider-min", selectorValue: ".widget-button-text-font-size-range-slider-value", value: 14, min: 1, max: 30 }, // widget button text
-            { selectorMin: ".widget-back-header-text-font-size-range-slider-min", selectorValue: ".widget-back-header-text-font-size-range-slider-value", value: 14, min: 1, max: 35 }, // widget back header text
-            { selectorMin: ".dashboard-plugin-no-plugin-alert-font-size-range-slider-min", selectorValue: ".dashboard-plugin-no-plugin-alert-font-size-range-slider-value", value: 14, min: 1, max: 25 }, // dashboard plugin alert
-            { selectorMin: ".plugin-header-text-font-size-range-slider-min", selectorValue: ".plugin-header-text-font-size-range-slider-value", value: 14, min: 1, max: 25 }, // dashboard plugin widget
-            { selectorMin: ".plugins-menu-box-border-width-range-slider-min", selectorValue: ".plugins-menu-box-border-width-range-slider-value", value: 4, min: 1, max: 10 }, // dashboard plugins menu box border width
-            { selectorMin: ".plugins-menu-box-title-font-size-range-slider-min", selectorValue: ".plugins-menu-box-title-font-size-range-slider-value", value: 14, min: 1, max: 30 }, // dashboard plugins menu box title font size
-            { selectorMin: ".filter-box-button-text-font-size-range-slider-min", selectorValue: ".filter-box-button-text-font-size-range-slider-value", value: 12, min: 1, max: 20 }, // dashboard plugins menu box filter box text font size
-            { selectorMin: ".new-plugin-indicator-text-font-size-range-slider-min", selectorValue: ".new-plugin-indicator-text-font-size-range-slider-value", value: 7, min: 1, max: 18 }, // dashboard plugins new plugins indicator text font size
-            { selectorMin: ".plugin-title-text-font-size-range-slider-min", selectorValue: ".plugin-title-text-font-size-range-slider-value", value: 12, min: 1, max: 30 }, // dashboard plugins title text font size
-            { selectorMin: ".category-btn-text-font-size-range-slider-min", selectorValue: ".category-btn-text-font-size-range-slider-value", value: 11, min: 1, max: 30 }, // dashboard plugins category button text font size
-            { selectorMin: ".delete-all-btn-text-font-size-range-slider-min", selectorValue: ".delete-all-btn-text-font-size-range-slider-value", value: 14, min: 1, max: 30 }, // dashboard plugins delete all button text font size, end of general options
+            { selectorMin: ".logo-font-size-range-slider-min", selectorValue: ".logo-font-size-range-slider-value", value: $("#melis_core_platform_theme_logo_text_font_size").val(), min: 1, max: 30 }, // logo text, start general options
+            { selectorMin: ".footer-version-font-size-range-slider-min", selectorValue: ".footer-version-font-size-range-slider-value", value: $("#melis_core_platform_theme_footer_text_fontsize").val(), min: 1, max: 30 }, // footer text
+            { selectorMin: ".hide-btn-text-font-size-range-slider-min", selectorValue: ".hide-btn-text-font-size-range-slider-value", value: $("#melis_core_platform_theme_bubble_plugin_hide_btn_text_font_size").val(), min: 1, max: 25 }, // hide button text
+            { selectorMin: ".widget-header-text-font-size-range-slider-min", selectorValue: ".widget-header-text-font-size-range-slider-value", value: $("#melis_core_platform_theme_bubble_plugin_widget_header_text_icon_font_size").val(), min: 1, max: 35 }, // widget header text
+            { selectorMin: ".widget-button-text-font-size-range-slider-min", selectorValue: ".widget-button-text-font-size-range-slider-value", value: $("#melis_core_platform_theme_bubble_plugin_widget_header_btn_txt_font_size").val(), min: 1, max: 30 }, // widget button text
+            { selectorMin: ".widget-back-header-text-font-size-range-slider-min", selectorValue: ".widget-back-header-text-font-size-range-slider-value", value: $("#melis_core_platform_theme_bubble_plugin_widget_back_header_text_font_size").val(), min: 1, max: 35 }, // widget back header text
+            { selectorMin: ".dashboard-plugin-no-plugin-alert-font-size-range-slider-min", selectorValue: ".dashboard-plugin-no-plugin-alert-font-size-range-slider-value", value: $("#melis_core_platform_theme_dashboard_plugin_no_plugin_alert_text_font_size").val(), min: 1, max: 25 }, // dashboard plugin alert
+            { selectorMin: ".plugin-header-text-font-size-range-slider-min", selectorValue: ".plugin-header-text-font-size-range-slider-value", value: $("#melis_core_platform_theme_dashboard_plugin_plugin_header_text_font_size").val(), min: 1, max: 25 }, // dashboard plugin widget
+            { selectorMin: ".plugins-menu-box-border-width-range-slider-min", selectorValue: ".plugins-menu-box-border-width-range-slider-value", value: $("#melis_core_platform_theme_dashboard_plugin_menu_box_border_width").val(), min: 1, max: 10 }, // dashboard plugins menu box border width
+            { selectorMin: ".plugins-menu-box-title-font-size-range-slider-min", selectorValue: ".plugins-menu-box-title-font-size-range-slider-value", value: $("#melis_core_platform_theme_dashboard_plugin_menu_box_title_font_size").val(), min: 1, max: 30 }, // dashboard plugins menu box title font size
+            { selectorMin: ".filter-box-button-text-font-size-range-slider-min", selectorValue: ".filter-box-button-text-font-size-range-slider-value", value: $("#melis_core_platform_theme_dashboard_plugin_menu_box_filter_box_btn_text_font_size").val(), min: 1, max: 20 }, // dashboard plugins menu box filter box text font size
+            { selectorMin: ".new-plugin-indicator-text-font-size-range-slider-min", selectorValue: ".new-plugin-indicator-text-font-size-range-slider-value", value: $("#melis_core_platform_theme_dashboard_plugin_menu_new_plugin_indicator_text_font_size").val(), min: 1, max: 18 }, // dashboard plugins new plugins indicator text font size
+            { selectorMin: ".plugin-title-text-font-size-range-slider-min", selectorValue: ".plugin-title-text-font-size-range-slider-value", value: $("#melis_core_platform_theme_dashboard_plugin_menu_plugin_title_text_font_size").val(), min: 1, max: 30 }, // dashboard plugins title text font size
+            { selectorMin: ".category-btn-text-font-size-range-slider-min", selectorValue: ".category-btn-text-font-size-range-slider-value", value: $("#melis_core_platform_theme_dashboard_plugin_menu_category_btn_text_font_size").val(), min: 1, max: 30 }, // dashboard plugins category button text font size
+            { selectorMin: ".delete-all-btn-text-font-size-range-slider-min", selectorValue: ".delete-all-btn-text-font-size-range-slider-value", value: $("#melis_core_platform_theme_dashboard_plugin_menu_delete_all_btn_text_font_size").val(), min: 1, max: 30 }, // dashboard plugins delete all button text font size, end of general options
             { selectorMin: ".modal-border-radius-size-range-slider-min", selectorValue: ".modal-border-radius-size-range-slider-value", value: 0, min: 0, max: 10 }, // modal nav tabs border radius size, start component options
             { selectorMin: ".modal-border-right-width-range-slider-min", selectorValue: ".modal-border-right-width-range-slider-value", value: 1, min: 0, max: 10 }, // modal nav tabs border right width
             { selectorMin: ".modal-tabs-font-size-range-slider-min", selectorValue: ".modal-tabs-font-size-range-slider-value", value: 14, min: 1, max: 20 }, // modal nav tabs text font size
-            { selectorMin: ".modal-content-text-font-size-range-slider-min", selectorValue: ".modal-content-text-font-size-range-slider-value", value: 14, min: 1, max: 25 }, // modal content text font size
+            { selectorMin: ".modal-content-text-font-size-range-slider-min", selectorValue: ".modal-content-text-font-size-range-slider-value", value: 14, min: 1, max: 25 }, // modal content text font size 
         ];
 
             sliders.forEach(slider => {
