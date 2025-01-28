@@ -496,7 +496,7 @@ class PlatformSchemeController extends MelisAbstractActionController
             $platformThemeForm = $this->getPlatformThemeOptionForm();
             if (!empty($platformThemeData)) {
                 foreach ($platformThemeData as $key => $val) {                  
-                    $view->$key = $val ?: $platformThemeForm->get($key)->getAttribute('default') ?? ''; 
+                    $view->$key = $val ?: ($platformThemeForm->get($key)->getAttribute('default') ?? ''); 
                 }
             }
         }     
