@@ -473,7 +473,6 @@ class PlatformSchemeController extends MelisAbstractActionController
         $schemeData = $this->getPlatformSchemeSvc()->getCurrentScheme();
 
         if ($schemeData) {        
-
             $colors = json_decode($schemeData->getColors(), true);
 
             if (is_array($colors)) {
@@ -492,15 +491,15 @@ class PlatformSchemeController extends MelisAbstractActionController
             $dashboardPlugin = json_decode($schemeData->getDashboardPlugin(), true);
             $dashboardPluginMenu = json_decode($schemeData->getDashboardPluginMenu(), true);
             $platformThemeData = array_merge($topLogo, $userProfile, $menu, $footer, $header, $bubblePlugin, $dashboardPlugin, $dashboardPluginMenu);
-
+           
             $platformThemeForm = $this->getPlatformThemeOptionForm();
             if (!empty($platformThemeData)) {
                 foreach ($platformThemeData as $key => $val) {                  
                     $view->$key = $val ?: ($platformThemeForm->get($key)->getAttribute('default') ?? ''); 
                 }
             }
-        }     
-        
+        }    
+                
         return $view;
     }
 

@@ -71,7 +71,7 @@ $(function() {
 
                 $.each(platformThemeData, function(i, v) {
                     //check if is checkbox
-                    let elemCheckbox = $("form#melis_core_platform_theme_option_form").find("[name='"+v["name"]+"[]']");
+                    let elemCheckbox = $("form#melis_core_platform_theme_option_form").find("[name^='"+v["name"]+"']");
                     //let elemCheckbox = $("form#melis_core_platform_theme_option_form") .find("[name^='" + $.escapeSelector(v["name"]) + "']");
                                        
                     if (elemCheckbox.attr('type') == 'checkbox') {
