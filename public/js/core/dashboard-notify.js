@@ -193,7 +193,5 @@ $(function() {
             }
         }
         
-        if ( $noDbAccess.length > 0 ) {
-            dashboardNotify.removeEnjoyHintHtml();
-        }
+        dashboardNotify.init();
 });
