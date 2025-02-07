@@ -3071,7 +3071,7 @@ div.dataTables_wrapper div.dataTables_length select.new_filter {
 } */
 @media (min-width: 768px) {
 	#modal-user-management .modal-dialog {
-		width: 100%;
+		width: fit-content;
 		max-width: 680px;
 	}
 }
