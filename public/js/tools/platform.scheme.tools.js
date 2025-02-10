@@ -185,25 +185,405 @@ var rangeSliderSize = {
      */
     setRangeSliderSize: function() {
         const sliders = [
-            { selectorMin: ".logo-font-size-range-slider-min", selectorValue: ".logo-font-size-range-slider-value", value: $("#melis_core_platform_theme_logo_text_font_size").val(), min: 1, max: 30 }, // logo text, start general options
-            { selectorMin: ".footer-version-font-size-range-slider-min", selectorValue: ".footer-version-font-size-range-slider-value", value: $("#melis_core_platform_theme_footer_text_fontsize").val(), min: 1, max: 30 }, // footer text
-            { selectorMin: ".hide-btn-text-font-size-range-slider-min", selectorValue: ".hide-btn-text-font-size-range-slider-value", value: $("#melis_core_platform_theme_bubble_plugin_hide_btn_text_font_size").val(), min: 1, max: 25 }, // hide button text
-            { selectorMin: ".widget-header-text-font-size-range-slider-min", selectorValue: ".widget-header-text-font-size-range-slider-value", value: $("#melis_core_platform_theme_bubble_plugin_widget_header_text_icon_font_size").val(), min: 1, max: 35 }, // widget header text
-            { selectorMin: ".widget-button-text-font-size-range-slider-min", selectorValue: ".widget-button-text-font-size-range-slider-value", value: $("#melis_core_platform_theme_bubble_plugin_widget_header_btn_txt_font_size").val(), min: 1, max: 30 }, // widget button text
-            { selectorMin: ".widget-back-header-text-font-size-range-slider-min", selectorValue: ".widget-back-header-text-font-size-range-slider-value", value: $("#melis_core_platform_theme_bubble_plugin_widget_back_header_text_font_size").val(), min: 1, max: 35 }, // widget back header text
-            { selectorMin: ".dashboard-plugin-no-plugin-alert-font-size-range-slider-min", selectorValue: ".dashboard-plugin-no-plugin-alert-font-size-range-slider-value", value: $("#melis_core_platform_theme_dashboard_plugin_no_plugin_alert_text_font_size").val(), min: 1, max: 25 }, // dashboard plugin alert
-            { selectorMin: ".plugin-header-text-font-size-range-slider-min", selectorValue: ".plugin-header-text-font-size-range-slider-value", value: $("#melis_core_platform_theme_dashboard_plugin_plugin_header_text_font_size").val(), min: 1, max: 25 }, // dashboard plugin widget
-            { selectorMin: ".plugins-menu-box-border-width-range-slider-min", selectorValue: ".plugins-menu-box-border-width-range-slider-value", value: $("#melis_core_platform_theme_dashboard_plugin_menu_box_border_width").val(), min: 1, max: 10 }, // dashboard plugins menu box border width
-            { selectorMin: ".plugins-menu-box-title-font-size-range-slider-min", selectorValue: ".plugins-menu-box-title-font-size-range-slider-value", value: $("#melis_core_platform_theme_dashboard_plugin_menu_box_title_font_size").val(), min: 1, max: 30 }, // dashboard plugins menu box title font size
-            { selectorMin: ".filter-box-button-text-font-size-range-slider-min", selectorValue: ".filter-box-button-text-font-size-range-slider-value", value: $("#melis_core_platform_theme_dashboard_plugin_menu_box_filter_box_btn_text_font_size").val(), min: 1, max: 20 }, // dashboard plugins menu box filter box text font size
-            { selectorMin: ".new-plugin-indicator-text-font-size-range-slider-min", selectorValue: ".new-plugin-indicator-text-font-size-range-slider-value", value: $("#melis_core_platform_theme_dashboard_plugin_menu_new_plugin_indicator_text_font_size").val(), min: 1, max: 18 }, // dashboard plugins new plugins indicator text font size
-            { selectorMin: ".plugin-title-text-font-size-range-slider-min", selectorValue: ".plugin-title-text-font-size-range-slider-value", value: $("#melis_core_platform_theme_dashboard_plugin_menu_plugin_title_text_font_size").val(), min: 1, max: 30 }, // dashboard plugins title text font size
-            { selectorMin: ".category-btn-text-font-size-range-slider-min", selectorValue: ".category-btn-text-font-size-range-slider-value", value: $("#melis_core_platform_theme_dashboard_plugin_menu_category_btn_text_font_size").val(), min: 1, max: 30 }, // dashboard plugins category button text font size
-            { selectorMin: ".delete-all-btn-text-font-size-range-slider-min", selectorValue: ".delete-all-btn-text-font-size-range-slider-value", value: $("#melis_core_platform_theme_dashboard_plugin_menu_delete_all_btn_text_font_size").val(), min: 1, max: 30 }, // dashboard plugins delete all button text font size, end of general options
-            { selectorMin: ".modal-border-radius-size-range-slider-min", selectorValue: ".modal-border-radius-size-range-slider-value", value: 0, min: 0, max: 10 }, // modal nav tabs border radius size, start component options
-            { selectorMin: ".modal-border-right-width-range-slider-min", selectorValue: ".modal-border-right-width-range-slider-value", value: 1, min: 0, max: 10 }, // modal nav tabs border right width
-            { selectorMin: ".modal-tabs-font-size-range-slider-min", selectorValue: ".modal-tabs-font-size-range-slider-value", value: 14, min: 1, max: 20 }, // modal nav tabs text font size
-            { selectorMin: ".modal-content-text-font-size-range-slider-min", selectorValue: ".modal-content-text-font-size-range-slider-value", value: 14, min: 1, max: 25 }, // modal content text font size 
+            { 
+                selectorMin: ".logo-font-size-range-slider-min", 
+                selectorValue: ".logo-font-size-range-slider-value", 
+                value: $("#melis_core_platform_theme_logo_text_font_size").val(), 
+                min: 1, 
+                max: 30 
+            }, // logo text, start general options
+            { 
+                selectorMin: ".footer-version-font-size-range-slider-min", 
+                selectorValue: ".footer-version-font-size-range-slider-value", 
+                value: $("#melis_core_platform_theme_footer_text_fontsize").val(), 
+                min: 1, 
+                max: 30 
+            }, // footer text
+            { 
+                selectorMin: ".hide-btn-text-font-size-range-slider-min", 
+                selectorValue: ".hide-btn-text-font-size-range-slider-value", 
+                value: $("#melis_core_platform_theme_bubble_plugin_hide_btn_text_font_size").val(), 
+                min: 1, 
+                max: 25 
+            }, // hide button text
+            { 
+                selectorMin: ".widget-header-text-font-size-range-slider-min", 
+                selectorValue: ".widget-header-text-font-size-range-slider-value", 
+                value: $("#melis_core_platform_theme_bubble_plugin_widget_header_text_icon_font_size").val(), 
+                min: 1, 
+                max: 35 
+            }, // widget header text
+            { 
+                selectorMin: ".widget-button-text-font-size-range-slider-min", 
+                selectorValue: ".widget-button-text-font-size-range-slider-value", 
+                value: $("#melis_core_platform_theme_bubble_plugin_widget_header_btn_txt_font_size").val(), 
+                min: 1,
+                max: 30 
+            }, // widget button text
+            { 
+                selectorMin: ".widget-back-header-text-font-size-range-slider-min", 
+                selectorValue: ".widget-back-header-text-font-size-range-slider-value", 
+                value: $("#melis_core_platform_theme_bubble_plugin_widget_back_header_text_font_size").val(), 
+                min: 1, 
+                max: 35 
+            }, // widget back header text
+            { 
+                selectorMin: ".dashboard-plugin-no-plugin-alert-font-size-range-slider-min", 
+                selectorValue: ".dashboard-plugin-no-plugin-alert-font-size-range-slider-value", 
+                value: $("#melis_core_platform_theme_dashboard_plugin_no_plugin_alert_text_font_size").val(), 
+                min: 1, 
+                max: 25 
+            }, // dashboard plugin alert
+            { 
+                selectorMin: ".plugin-border-radius-width-range-slider-min", 
+                selectorValue: ".plugin-border-radius-width-range-slider-value", 
+                value: $("#melis_core_platform_theme_dashboard_plugin_border_radius").val(), 
+                min: 1, 
+                max: 25 
+            }, // dashboard plugin border radius
+            { 
+                selectorMin: ".plugin-header-text-font-size-range-slider-min", 
+                selectorValue: ".plugin-header-text-font-size-range-slider-value", 
+                value: $("#melis_core_platform_theme_dashboard_plugin_plugin_header_text_font_size").val(), 
+                min: 1, 
+                max: 25 
+            }, // dashboard plugin widget
+            { 
+                selectorMin: ".plugins-menu-box-border-width-range-slider-min", 
+                selectorValue: ".plugins-menu-box-border-width-range-slider-value", 
+                value: $("#melis_core_platform_theme_dashboard_plugin_menu_box_border_width").val(), 
+                min: 1, 
+                max: 10 
+            }, // dashboard plugins menu box border width
+            { 
+                selectorMin: ".plugins-menu-box-title-font-size-range-slider-min", 
+                selectorValue: ".plugins-menu-box-title-font-size-range-slider-value", 
+                value: $("#melis_core_platform_theme_dashboard_plugin_menu_box_title_font_size").val(), 
+                min: 1, 
+                max: 30 
+            }, // dashboard plugins menu box title font size
+            { 
+                selectorMin: ".filter-box-button-text-font-size-range-slider-min", 
+                selectorValue: ".filter-box-button-text-font-size-range-slider-value", 
+                value: $("#melis_core_platform_theme_dashboard_plugin_menu_box_filter_box_btn_text_font_size").val(), 
+                min: 1, 
+                max: 20 
+            }, // dashboard plugins menu box filter box text font size
+            { 
+                selectorMin: ".new-plugin-indicator-text-font-size-range-slider-min", 
+                selectorValue: ".new-plugin-indicator-text-font-size-range-slider-value", 
+                value: $("#melis_core_platform_theme_dashboard_plugin_menu_new_plugin_indicator_text_font_size").val(), 
+                min: 1, 
+                max: 18 
+            }, // dashboard plugins new plugins indicator text font size
+            { 
+                selectorMin: ".plugin-title-text-font-size-range-slider-min", 
+                selectorValue: ".plugin-title-text-font-size-range-slider-value", 
+                value: $("#melis_core_platform_theme_dashboard_plugin_menu_plugin_title_text_font_size").val(), 
+                min: 1, 
+                max: 30 
+            }, // dashboard plugins title text font size
+            { 
+                selectorMin: ".category-btn-text-font-size-range-slider-min", 
+                selectorValue: ".category-btn-text-font-size-range-slider-value", 
+                value: $("#melis_core_platform_theme_dashboard_plugin_menu_category_btn_text_font_size").val(), 
+                min: 1, 
+                max: 30 
+            }, // dashboard plugins category button text font size
+            { 
+                selectorMin: ".delete-all-btn-text-font-size-range-slider-min", 
+                selectorValue: ".delete-all-btn-text-font-size-range-slider-value", 
+                value: $("#melis_core_platform_theme_dashboard_plugin_menu_delete_all_btn_text_font_size").val(), 
+                min: 1, 
+                max: 30 
+            }, // dashboard plugins delete all button text font size, end of general options
+            { 
+                selectorMin: ".modal-border-radius-size-range-slider-min", 
+                selectorValue: ".modal-border-radius-size-range-slider-value", 
+                value: 0, 
+                min: 0, 
+                max: 10 
+            }, // modal nav tabs border radius size, start component options
+            { 
+                selectorMin: ".modal-border-right-width-range-slider-min", 
+                selectorValue: ".modal-border-right-width-range-slider-value", 
+                value: 1, 
+                min: 0, 
+                max: 10 
+            }, // modal nav tabs border right width
+            { 
+                selectorMin: ".modal-tabs-font-size-range-slider-min", 
+                selectorValue: ".modal-tabs-font-size-range-slider-value", 
+                value: 14, 
+                min: 1, 
+                max: 20 
+            }, // modal nav tabs text font size
+            { 
+                selectorMin: ".modal-content-text-font-size-range-slider-min", 
+                selectorValue: ".modal-content-text-font-size-range-slider-value", 
+                value: 14, 
+                min: 1, 
+                max: 25 
+            }, // modal content text font size
+            { 
+                selectorMin: ".form-inputs-element-border-radius-range-slider-min", 
+                selectorValue: ".form-inputs-element-border-radius-range-slider-value", 
+                value: 0, 
+                min: 0, 
+                max: 16 
+            }, // form input elements border radius
+            { 
+                selectorMin: ".form-inputs-element-border-width-range-slider-min", 
+                selectorValue: ".form-inputs-element-border-width-range-slider-value", 
+                value: 0, 
+                min: 0, 
+                max: 10 
+            }, // form input elements border width
+            { 
+                selectorMin: ".form-button-submit-border-radius-range-slider-min", 
+                selectorValue: ".form-button-submit-border-radius-range-slider-value", 
+                value: 0, 
+                min: 0, 
+                max: 16 
+            }, // form button/submit border radius
+            { 
+                selectorMin: ".form-button-submit-border-width-range-slider-min", 
+                selectorValue: ".form-button-submit-border-width-range-slider-value", 
+                value: 0, 
+                min: 0, 
+                max: 10 
+            }, // form button/submit border width
+            { 
+                selectorMin: ".dialog-title-font-size-range-slider-min", 
+                selectorValue: ".dialog-title-font-size-range-slider-value", 
+                value: 16, 
+                min: 1, 
+                max: 30 
+            }, // dialog header title font size
+            { 
+                selectorMin: ".dialog-close-btn-font-size-range-slider-min", 
+                selectorValue: ".dialog-close-btn-font-size-range-slider-value", 
+                value: 13, 
+                min: 1, 
+                max: 27
+            }, // dialog close button font size
+            { 
+                selectorMin: ".dialog-content-text-font-size-range-slider-min", 
+                selectorValue: ".dialog-content-text-font-size-range-slider-value", 
+                value: 14, 
+                min: 1, 
+                max: 28 
+            }, // dialog content text font size
+            { 
+                selectorMin: ".dialog-button-text-font-size-range-slider-min", 
+                selectorValue: ".dialog-button-text-font-size-range-slider-value", 
+                value: 14, 
+                min: 1, 
+                max: 28 
+            }, // dialog button text font size
+            { 
+                selectorMin: ".tab-widget-head-border-width-range-slider-min", 
+                selectorValue: ".tab-widget-head-border-width-range-slider-value", 
+                value: 0, 
+                min: 0, 
+                max: 10 
+            }, // tab widget head border width
+            { 
+                selectorMin: ".tab-widget-head-nav-item-and-link-width-range-slider-min", 
+                selectorValue: ".tab-widget-head-nav-item-and-link-width-range-slider-value", 
+                value: 70, 
+                min: 70, 
+                max: 100 
+            }, // tab widget head nav height
+            { 
+                selectorMin: ".tab-widget-head-nav-item-border-right-width-range-slider-min", 
+                selectorValue: ".tab-widget-head-nav-item-border-right-width-range-slider-value", 
+                value: 1, 
+                min: 1, 
+                max: 10 
+            }, // tab widget head nav border right width
+            { 
+                selectorMin: ".tab-widget-nav-link-text-font-size-range-slider-min", 
+                selectorValue: ".tab-widget-nav-link-text-font-size-range-slider-value", 
+                value: 14, 
+                min: 1, 
+                max: 30 
+            }, // tab widget nav link text font size
+            { 
+                selectorMin: ".tab-widget-nav-link-min-width-range-slider-min", 
+                selectorValue: ".tab-widget-nav-link-min-width-range-slider-value", 
+                value: 90, 
+                min: 70, 
+                max: 200 
+            }, // tab widget nav link text font size
+            { 
+                selectorMin: ".tab-widget-nav-link-height-range-slider-min", 
+                selectorValue: ".tab-widget-nav-link-height-range-slider-value", 
+                value: 37, 
+                min: 10, 
+                max: 60 
+            }, // tab widget nav link text icon height
+            { 
+                selectorMin: ".tab-widget-link-font-size-range-slider-min", 
+                selectorValue: ".tab-widget-link-font-size-range-slider-value", 
+                value: 24, 
+                min: 10, 
+                max: 50 
+            }, // tab widget nav link text icon font size
+            { 
+                selectorMin: ".datepicker-border-width-range-slider-min", 
+                selectorValue: ".datepicker-border-width-range-slider-value", 
+                value: 1, 
+                min: 0, 
+                max: 10 
+            }, // datepicker border width
+            { 
+                selectorMin: ".datepicker-border-radius-range-slider-min", 
+                selectorValue: ".datepicker-border-radius-range-slider-value", 
+                value: 4, 
+                min: 0, 
+                max: 10 
+            }, // datepicker border radius
+            { 
+                selectorMin: ".datepicker-btn-border-radius-range-slider-min", 
+                selectorValue: ".datepicker-btn-border-radius-range-slider-value", 
+                value: 4, 
+                min: 0, 
+                max: 10 
+            }, // datepicker timepicker previous, data action and next button border radius
+            { 
+                selectorMin: ".daterangepicker-button-text-font-size-range-slider-min", 
+                selectorValue: ".daterangepicker-button-text-font-size-range-slider-value", 
+                value: 13, 
+                min: 10, 
+                max: 20 
+            }, // daterangepicker button text font size
+            { 
+                selectorMin: ".daterangepicker-border-width-range-slider-min", 
+                selectorValue: ".daterangepicker-border-width-range-slider-value", 
+                value: 1, 
+                min: 0, 
+                max: 10 
+            }, // daterangepicker border width
+            { 
+                selectorMin: ".daterangepicker-border-radius-range-slider-min", 
+                selectorValue: ".daterangepicker-border-radius-range-slider-value", 
+                value: 4, 
+                min: 0, 
+                max: 10 
+            }, // daterangepicker border radius
+            { 
+                selectorMin: ".daterangepicker-button-border-radius-range-slider-min", 
+                selectorValue: ".daterangepicker-button-border-radius-range-slider-value", 
+                value: 4, 
+                min: 0, 
+                max: 10 
+            }, // daterangepicker ranges button border radius
+            { 
+                selectorMin: ".daterangepicker-button-border-width-range-slider-min", 
+                selectorValue: ".daterangepicker-button-border-width-range-slider-value", 
+                value: 1, 
+                min: 0, 
+                max: 10 
+            }, // daterangepicker ranges button border width
+            { 
+                selectorMin: ".daterangepicker-in-range-border-width-range-slider-min", 
+                selectorValue: ".daterangepicker-in-range-border-width-range-slider-value", 
+                value: 0, 
+                min: 0, 
+                max: 10 
+            }, // daterangepicker in range border width
+            { 
+                selectorMin: ".daterangepicker-in-range-start-date-border-top-left-radius-range-slider-min", 
+                selectorValue: ".daterangepicker-in-range-start-date-border-top-left-radius-range-slider-value", 
+                value: 4, 
+                min: 0,
+                max: 10 
+            }, // daterangepicker in range start date border top left radius, 
+            { 
+                selectorMin: ".daterangepicker-in-range-start-date-border-top-right-radius-range-slider-min", 
+                selectorValue: ".daterangepicker-in-range-start-date-border-top-right-radius-range-slider-value", 
+                value: 0, 
+                min: 0,
+                max: 10 
+            }, // daterangepicker in range start date border top right radius
+            { 
+                selectorMin: ".daterangepicker-in-range-start-date-border-bottom-left-radius-range-slider-min", 
+                selectorValue: ".daterangepicker-in-range-start-date-border-bottom-left-radius-range-slider-value", 
+                value: 4, 
+                min: 0,
+                max: 10 
+            }, // daterangepicker in range start date border bottom left radius
+            { 
+                selectorMin: ".daterangepicker-in-range-start-date-border-bottom-right-radius-range-slider-min", 
+                selectorValue: ".daterangepicker-in-range-start-date-border-bottom-right-radius-range-slider-value", 
+                value: 0, 
+                min: 0,
+                max: 10 
+            }, // daterangepicker in range start date border bottom right radius
+            { 
+                selectorMin: ".daterangepicker-in-range-end-date-border-top-left-radius-range-slider-min", 
+                selectorValue: ".daterangepicker-in-range-end-date-border-top-left-radius-range-slider-value", 
+                value: 0, 
+                min: 0,
+                max: 10 
+            }, // daterangepicker in range end date border top left radius,
+            { 
+                selectorMin: ".daterangepicker-in-range-end-date-border-top-right-radius-range-slider-min", 
+                selectorValue: ".daterangepicker-in-range-end-date-border-top-right-radius-range-slider-value", 
+                value: 4, 
+                min: 0,
+                max: 10 
+            }, // daterangepicker in range end date border top right radius
+            { 
+                selectorMin: ".daterangepicker-in-range-end-date-border-bottom-left-radius-range-slider-min", 
+                selectorValue: ".daterangepicker-in-range-end-date-border-bottom-left-radius-range-slider-value", 
+                value: 0, 
+                min: 0,
+                max: 10 
+            }, // daterangepicker in range end date border bottom left radius
+            { 
+                selectorMin: ".daterangepicker-in-range-end-date-border-bottom-right-radius-range-slider-min", 
+                selectorValue: ".daterangepicker-in-range-end-date-border-bottom-right-radius-range-slider-value", 
+                value: 4, 
+                min: 0,
+                max: 10 
+            }, // daterangepicker in range end date border bottom right radius
+            { 
+                selectorMin: ".daterangepicker-day-available-border-width-range-slider-min", 
+                selectorValue: ".daterangepicker-day-available-border-width-range-slider-value", 
+                value: 1, 
+                min: 0,
+                max: 10 
+            }, // daterangepicker day available border width
+            { 
+                selectorMin: ".daterangepicker-day-available-border-radius-range-slider-min", 
+                selectorValue: ".daterangepicker-day-available-border-radius-range-slider-value", 
+                value: 4, 
+                min: 0,
+                max: 10
+            }, // daterangepicker day available border radius
+            { 
+                selectorMin: ".daterangepicker-day-text-font-size-range-slider-min", 
+                selectorValue: ".daterangepicker-day-text-font-size-range-slider-value", 
+                value: 12, 
+                min: 10,
+                max: 30
+            }, // daterangepicker day text font size
+            { 
+                selectorMin: ".daterangepicker-footer-selected-date-text-font-size-range-slider-min", 
+                selectorValue: ".daterangepicker-footer-selected-date-text-font-size-range-slider-value", 
+                value: 12, 
+                min: 10,
+                max: 30
+            }, // daterangepicker footer selected date text font size
+            { 
+                selectorMin: ".daterangepicker-footer-buttons-text-font-size-range-slider-min", 
+                selectorValue: ".daterangepicker-footer-buttons-text-font-size-range-slider-value", 
+                value: 12, 
+                min: 10,
+                max: 30
+            }, // daterangepicker footer buttons text font size
         ];
 
             sliders.forEach(slider => {

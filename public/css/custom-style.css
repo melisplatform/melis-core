@@ -2358,6 +2358,13 @@ table.dataTable.dtr-inline.collapsed>tbody>tr.dtr-expanded>th.dtr-control:before
 .modal-content .widget .widget-head {
     border-radius: 0;
 }
+/* common */
+.has-switch span.switch-left {
+    color: #ffffff !important;
+}
+.has-switch label {
+    font-size: 10px !important;
+}
 /* datetimepicker - tempusDominus */
 .datepicker td,
 .datepicker th {
@@ -2375,6 +2382,9 @@ table.dataTable.dtr-inline.collapsed>tbody>tr.dtr-expanded>th.dtr-control:before
  * Need to add an entry on view/melis-core/platform-scheme/get-style-color-css.phtml
  * for primary, secondary color etc..
  */
+.content-login .card {
+	border-radius: 0;
+}
 .product-text-tab-container .product-text-tab li a,
 .nav-tabs .nav-link {
 	border-radius: 0 !important;
@@ -2401,6 +2411,9 @@ table.dataTable.dtr-inline.collapsed>tbody>tr.dtr-expanded>th.dtr-control:before
 	border: 0;
 	border-bottom: var(--bs-accordion-border-width) solid #eaecef;
 	padding-bottom: 0.5rem;
+}
+.platform-theme-options-block .accordion-item:last-child {
+	border-bottom: 0;
 }
 .platform-theme-options-block .accordion-item .accordion-button {
 	background-color: transparent;
@@ -2562,28 +2575,37 @@ table.dataTable.dtr-inline.collapsed>tbody>tr.dtr-expanded>th.dtr-control:before
 .platform-theme-options-tools-info .range-slider-value {
 	text-align: center;
 }
+.platform-theme-options-tools-info .btn-group-alignment label {
+	min-width: 4rem;
+}
+.platform-theme-options-tools-info .btn-group-font-style label {
+	min-width: 3.5rem;
+}
+.platform-theme-options-tools-info .btn-group-alignment label,
 .platform-theme-options-tools-info .btn-group-font-style label {
 	color: #797979;
 	font-size: 25px;
 	font-weight: normal;
-    min-width: 4rem;
     margin: 0 5px;
+}
+.platform-theme-options-tools-info .btn-group .btn-check:checked+.btn, 
+.platform-theme-options-tools-info .btn-group .btn.active, 
+.platform-theme-options-tools-info .btn-group .btn.show, 
+.platform-theme-options-tools-info .btn-group .btn:first-child:active, 
+.platform-theme-options-tools-info .btn-group :not(.btn-check)+.btn:active,
+.platform-theme-options-tools-info .btn-group .btn-check+.btn:hover {
+	background-color: #e61c23;
+	border-color: #e61c23;
+	color: #fff;
+}
+.platform-theme-options-tools-info .btn-group .btn-check:checked+.btn .bi::before {
+	color: #fff;
 }
 .platform-theme-options-tools-info .ui-widget-content {
     background-color: #e9e9e9;
 }
 .platform-theme-options-tools-info .ui-widget-header {
     background-color: #e61c23;
-}
-.platform-theme-options-tools-info .btn-check:checked+.btn, 
-.platform-theme-options-tools-info .btn.active, 
-.platform-theme-options-tools-info .btn.show, 
-.platform-theme-options-tools-info .btn:first-child:active, 
-.platform-theme-options-tools-info :not(.btn-check)+.btn:active,
-.platform-theme-options-tools-info .btn-check+.btn:hover {
-	background-color: #e61c23;
-	border-color: #e61c23;
-	color: #fff;
 }
 .platform-theme-options-tools-info .accordion-collapse {
     transition: height 0.5s ease-out, opacity 0.5s ease-out;
@@ -2594,5 +2616,21 @@ table.dataTable.dtr-inline.collapsed>tbody>tr.dtr-expanded>th.dtr-control:before
 .platform-theme-options-tools-info .accordion-collapse.collapse.show {
     opacity: 1;
     transition: opacity 0.5s ease-in-out;
+}
+.platform-theme-options-tools-info .minicolors-position-bottom .minicolors-panel {
+	left: -173px;
+}
+.platform-theme-options-tools-info .component-options .accordion-boy small {
+	color: #686868;
+}
+.platform-theme-options-title .close-tools {
+	position: relative;
+}
+.platform-theme-options-title .close-tools .fa-close {
+	position: absolute;
+	top: -0.6rem;
+	bottom: auto;
+	z-index: 1;
+	right: 0.5rem;
 }
 /* end platform theme options */
