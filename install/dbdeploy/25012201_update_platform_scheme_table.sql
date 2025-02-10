@@ -23,7 +23,7 @@ UPDATE `melis_core_platform_scheme` SET `pscheme_menu` = '{"melis_core_platform_
 WHERE `melis_core_platform_scheme`.`pscheme_id` IN (1,2);    
 
 UPDATE `melis_core_platform_scheme` SET `pscheme_footer` = '{"melis_core_platform_theme_footer_text_fontsize": 10, 
-    "melis_core_platform_theme_footer_link_text_color": "#e61c23", "melis_core_platform_theme_footer_text_color": "#686868"}'
+    "melis_core_platform_theme_footer_link_text_color": "#e61c23", "melis_core_platform_theme_footer_text_color": "#686868", "melis_core_platform_theme_login_page_footer_text_color": "#fff"}'
 WHERE `melis_core_platform_scheme`.`pscheme_id` IN (1,2);
 
 UPDATE `melis_core_platform_scheme` SET `pscheme_header_navigation` = '{"melis_core_platform_theme_header_text_icon_color": "#fff", 
@@ -55,7 +55,7 @@ UPDATE `melis_core_platform_scheme` SET `pscheme_dashboard_plugins` = '{"melis_c
     "melis_core_platform_theme_dashboard_plugin_plugin_header_text_font_size": 14, "melis_core_platform_theme_dashboard_plugin_plugin_header_btns_bg_color": "#fafafa", 
     "melis_core_platform_theme_dashboard_plugin_plugin_header_btns_border_color": "#cecece", "melis_core_platform_theme_dashboard_plugin_plugin_header_btns_icon_color": "#797979", 
     "melis_core_platform_theme_dashboard_plugin_plugin_header_btns_bg_hover_color": "#e7e7e7", "melis_core_platform_theme_dashboard_plugin_plugin_header_btns_border_hover_color": "#e7e7e7", 
-    "melis_core_platform_theme_dashboard_plugin_plugin_body_bg_color": "#ffffff", "melis_core_platform_theme_dashboard_plugin_plugin_body_border_color": "#ebebeb"}'
+    "melis_core_platform_theme_dashboard_plugin_plugin_body_bg_color": "#ffffff", "melis_core_platform_theme_dashboard_plugin_plugin_body_border_color": "#ebebeb", "melis_core_platform_theme_dashboard_plugin_border_radius":"0px"}'
 WHERE `melis_core_platform_scheme`.`pscheme_id` IN (1,2);
 
 UPDATE `melis_core_platform_scheme` SET `pscheme_dashboard_plugins_menu` = '{"melis_core_platform_theme_dashboard_plugin_menu_box_bg_color": "#373737", 

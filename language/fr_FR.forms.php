@@ -292,6 +292,10 @@ return array(
     'tr_meliscore_platform_theme_dashboard_plugin_menu_delete_all_btn_text_color_tooltip' => 'Change the color by typing the hexadecimal color code or by using the color picker',
     'tr_meliscore_platform_theme_dashboard_plugin_menu_delete_all_btn_text_font_size' => 'Plugins delete all button text font size',
     'tr_meliscore_platform_theme_dashboard_plugin_menu_delete_all_btn_text_font_size_tooltip' => 'Change the font size',
+    'tr_meliscore_platform_theme_login_page_footer_text_color' => 'Login page footer text color',
+    'tr_meliscore_platform_theme_login_page_footer_text_color_tooltip' => 'Change the color by typing the hexadecimal color code or by using the color picker',
+    'tr_meliscore_platform_theme_dashboard_plugin_border_radius' => 'Plugin border radius',
+    'tr_meliscore_platform_theme_dashboard_plugin_border_radius_tooltip' => 'Set the border radius',
 
 );
 ?>

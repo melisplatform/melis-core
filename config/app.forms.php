@@ -1388,6 +1388,25 @@ return array(
                         //Footer
                         array(
                             'spec' => array(
+                                'name' => 'melis_core_platform_theme_login_page_footer_text_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_login_page_footer_text_color',
+                                    'tooltip' => 'tr_meliscore_platform_theme_login_page_footer_text_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_login_page_footer_text_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_meliscore_platform_theme_footer_text_color',
+                                    'category' => 'footer',                                  
+                                    'default' => '#fff'
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
                                 'name' => 'melis_core_platform_theme_footer_text_fontsize',
                                 'type' => 'Text',
                                 'options' => array(
@@ -2082,6 +2101,24 @@ return array(
                         ),
 
                         //Dashboard Plugins
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_dashboard_plugin_border_radius',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_dashboard_plugin_border_radius',
+                                    'tooltip' => 'tr_meliscore_platform_theme_dashboard_plugin_border_radius_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_dashboard_plugin_border_radius',
+                                    'value' => '',
+                                    'class' => 'form-control',
+                                    'placeholder' => 'tr_meliscore_platform_theme_dashboard_plugin_border_radius',
+                                    'category' => 'dashboard_plugin',
+                                    'default' => '0px'
+                                ),
+                            ),
+                        ),
                         array(
                             'spec' => array(
                                 'name' => 'melis_core_platform_theme_dashboard_plugin_no_plugin_alert_bg_color',
