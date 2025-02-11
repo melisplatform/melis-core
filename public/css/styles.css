@@ -226,11 +226,11 @@ body {
 	height: 120px;
 	width: 120px;
 
-	/* transform: scale(1.1);
+	transform: scale(1.1);
 	-webkit-transform: scale(1.1);
 	-moz-transform: scale(1.1);
 	-o-transform: scale(1.1);
-	-ms-transform: scale(1.1); */ /* IE 9+ */
+	-ms-transform: scale(1.1); /* IE 9+ */
 }
 .login-page .login .placeholder i {
 	margin: 60px 0 60px;
