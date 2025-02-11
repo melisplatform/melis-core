@@ -57,6 +57,10 @@ class PlatformSchemeController extends MelisAbstractActionController
             $bubblePlugin = json_decode($schemeData->getBubblePlugin(), true);
             $dashboardPlugin = json_decode($schemeData->getDashboardPlugin(), true);
             $dashboardPluginMenu = json_decode($schemeData->getDashboardPluginMenu(), true);
+            $modal = json_decode($schemeData->getModal(), true);
+            $dialog = json_decode($schemeData->getDialog(), true);
+            $formElement = json_decode($schemeData->getFormElement(), true);
+            $tab = json_decode($schemeData->getTab(), true);
 
             //set the value as array for multicheckbox(they are imploded by ';' when saving)
             $dashboardPlugin = array_map(function ($a) {
@@ -68,7 +72,7 @@ class PlatformSchemeController extends MelisAbstractActionController
                 return strpos($a, ';') ? explode(';', $a) : $a;
             }, $dashboardPluginMenu);
            
-            $platformThemeOptionData = array_merge($topLogo, $userProfile, $menu, $footer, $header, $bubblePlugin, $dashboardPlugin, $dashboardPluginMenu);
+            $platformThemeOptionData = array_merge($topLogo, $userProfile, $menu, $footer, $header, $bubblePlugin, $dashboardPlugin, $dashboardPluginMenu, $modal, $dialog, $formElement, $tab);
 
             if ($platformThemeOptionData) {
                 $platformThemeOptionForm->setData($platformThemeOptionData);
@@ -89,6 +93,12 @@ class PlatformSchemeController extends MelisAbstractActionController
             //     dump($key);
             //     echo "\n";
             // }
+
+            if ($elem->getAttribute('category') == 'tab') {
+                //dump($key);
+                echo $key.":". $elem->getAttribute('default');
+                echo "\n";
+            }
         }
    
         $view->setVariable('form', $form);
@@ -722,6 +732,11 @@ class PlatformSchemeController extends MelisAbstractActionController
                 $bubble = [];
                 $dashboardPlugin = [];
                 $dashboardPluginMenu = [];
+                $modal = [];
+                $dialog = [];
+                $formElement = [];
+                $tab = [];
+
                 foreach ($form->getElements() as $key => $elem) {
                     //add brackets to get the data
                     if ($elem->getAttribute('type') == 'multi_checkbox') {                       
@@ -747,6 +762,14 @@ class PlatformSchemeController extends MelisAbstractActionController
                         $dashboardPlugin[$key] = $data;
                     } elseif ($elem->getAttribute('category') == 'dashboard_plugin_menu') {
                         $dashboardPluginMenu[$key] = $data;
+                    } elseif ($elem->getAttribute('category') == 'modal') {
+                        $modal[$key] = $data;
+                    } elseif ($elem->getAttribute('category') == 'dialog') {
+                        $dialog[$key] = $data;
+                    } elseif ($elem->getAttribute('category') == 'form_elements') {
+                        $formElement[$key] = $data;
+                    } elseif ($elem->getAttribute('category') == 'tab') {
+                        $tab[$key] = $data;
                     }
                 }
 
@@ -762,6 +785,10 @@ class PlatformSchemeController extends MelisAbstractActionController
                     'pscheme_bubble_plugins' => json_encode($bubble),
                     'pscheme_dashboard_plugins' => json_encode($dashboardPlugin),
                     'pscheme_dashboard_plugins_menu' => json_encode($dashboardPluginMenu),
+                    'pscheme_modal' => json_encode($modal),
+                    'pscheme_dialog' => json_encode($dialog),
+                    'pscheme_form_elements' => json_encode($formElement),
+                    'pscheme_tab' => json_encode($tab),
                 );
 
                 $success = $this->getPlatformSchemeSvc()->saveScheme($data, $schemeId, true);

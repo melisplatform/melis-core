@@ -30,6 +30,10 @@ class MelisCorePlatformScheme
     protected $bubblePlugin;
     protected $dashboardPlugin;
     protected $dashboardPluginMenu;
+    protected $modal;
+    protected $dialog;
+    protected $formElement;
+    protected $tab;
 
     public function setId($id)
     {
@@ -204,5 +208,45 @@ class MelisCorePlatformScheme
     public function getDashboardPluginMenu()
     {
         return $this->dashboardPluginMenu;
+    }
+
+    public function setModal($modal)
+    {
+        $this->modal = $modal;
+    }
+
+    public function getModal()
+    {
+        return $this->modal;
+    }
+
+    public function setDialog($dialog)
+    {
+        $this->dialog = $dialog;
+    }
+
+    public function getDialog()
+    {
+        return $this->dialog;
+    }
+
+    public function setFormElement($formElement)
+    {
+        $this->formElement = $formElement;
+    }
+
+    public function getFormElement()
+    {
+        return $this->formElement;
+    }
+
+    public function setTab($tab)
+    {
+        $this->tab = $tab;
+    }
+
+    public function getTab()
+    {
+        return $this->tab;
     }
 }

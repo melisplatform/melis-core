@@ -237,14 +237,14 @@ if ($headerTitleLen > 13) {
                                                                         </label>
 
                                                                         <?php
-                                                                        if (strpos($element->getName(), 'color')) { ?>
+                                                                        if (strpos($element->getName(), 'color') !== false) { ?>
                                                                             <div class="input-group platform-scheme osta_color_code">
                                                                                 <?= $this->formRow($element->setLabel("")); ?>
                                                                                 <span class="input-group-addon">
                                                                                     <input type="hidden" class="minicolor" value="<?= $element->getValue(); ?>" />
                                                                                 </span>
                                                                             </div>
-                                                                        <?php  } elseif (strpos($element->getName(), 'size')) {
+                                                                        <?php  } elseif (strpos($element->getName(), 'size') !== false) {
                                                                             $element->setAttribute('readonly', true);
                                                                         ?>
                                                                             <div class="row">
@@ -283,14 +283,14 @@ if ($headerTitleLen > 13) {
                                                                         </label>
 
                                                                         <?php
-                                                                        if (strpos($element->getName(), 'color')) { ?>
+                                                                        if (strpos($element->getName(), 'color') !== false) { ?>
                                                                             <div class="input-group platform-scheme osta_color_code">
                                                                                 <?= $this->formRow($element->setLabel("")); ?>
                                                                                 <span class="input-group-addon">
                                                                                     <input type="hidden" class="minicolor" value="<?= $element->getValue(); ?>" />
                                                                                 </span>
                                                                             </div>
-                                                                        <?php  } elseif (strpos($element->getName(), 'radius')) { ?>
+                                                                        <?php  } elseif (strpos($element->getName(), 'radius') !== false) { ?>
                                                                             <div class="input-group">
                                                                                 <?= $this->formRow($element->setLabel("")); ?>
                                                                                 <small>* Need to include the value and unit</small>
@@ -321,7 +321,7 @@ if ($headerTitleLen > 13) {
                                                                         </label>
 
                                                                         <?php
-                                                                        if (strpos($element->getName(), 'color')) { ?>
+                                                                        if (strpos($element->getName(), 'color') !== false) { ?>
                                                                             <div class="input-group platform-scheme osta_color_code">
                                                                                 <?= $this->formRow($element->setLabel("")); ?>
                                                                                 <span class="input-group-addon">
@@ -356,14 +356,14 @@ if ($headerTitleLen > 13) {
                                                                         </label>
 
                                                                         <?php
-                                                                        if (strpos($element->getName(), 'color')) { ?>
+                                                                        if (strpos($element->getName(), 'color') !== false) { ?>
                                                                             <div class="input-group platform-scheme osta_color_code">
                                                                                 <?= $this->formRow($element->setLabel("")); ?>
                                                                                 <span class="input-group-addon">
                                                                                     <input type="hidden" class="minicolor" value="<?= $element->getValue(); ?>" />
                                                                                 </span>
                                                                             </div>
-                                                                        <?php  } elseif (strpos($element->getName(), 'size')) {
+                                                                        <?php  } elseif (strpos($element->getName(), 'size') !== false) {
                                                                             $element->setAttribute('readonly', true);
                                                                         ?>
                                                                             <div class="row">
@@ -402,7 +402,7 @@ if ($headerTitleLen > 13) {
                                                                         </label>
 
                                                                         <?php
-                                                                        if (strpos($element->getName(), 'color')) { ?>
+                                                                        if (strpos($element->getName(), 'color') !== false) { ?>
                                                                             <div class="input-group platform-scheme osta_color_code">
                                                                                 <?= $this->formRow($element->setLabel("")); ?>
                                                                                 <span class="input-group-addon">
@@ -437,14 +437,14 @@ if ($headerTitleLen > 13) {
                                                                         </label>
 
                                                                         <?php
-                                                                        if (strpos($element->getName(), 'color')) { ?>
+                                                                        if (strpos($element->getName(), 'color') !== false) { ?>
                                                                             <div class="input-group platform-scheme osta_color_code">
                                                                                 <?= $this->formRow($element->setLabel("")); ?>
                                                                                 <span class="input-group-addon">
                                                                                     <input type="hidden" class="minicolor" value="<?= $element->getValue(); ?>" />
                                                                                 </span>
                                                                             </div>
-                                                                        <?php  } elseif (strpos($element->getName(), 'size')) {
+                                                                        <?php  } elseif (strpos($element->getName(), 'size') !== false) {
                                                                             $element->setAttribute('readonly', true);
 
                                                                         ?>
@@ -474,7 +474,7 @@ if ($headerTitleLen > 13) {
                                                         </button>
                                                     </h6>
                                                     <div id="dashboard-plugins" class="accordion-collapse collapse" data-bs-parent="#accordion-sidebar">
-                                                        <div class="accordion-body">    
+                                                        <div class="accordion-body">
                                                             <?php
                                                             foreach ($platformThemeOptionForm->getElements() as $elementKey => $element) {
                                                                 if ($element->getAttribute('category') == 'dashboard_plugin') { ?>
@@ -484,14 +484,14 @@ if ($headerTitleLen > 13) {
                                                                         </label>
 
                                                                         <?php
-                                                                        if (strpos($element->getName(), 'color')) { ?>
+                                                                        if (strpos($element->getName(), 'color') !== false) { ?>
                                                                             <div class="input-group platform-scheme osta_color_code">
                                                                                 <?= $this->formRow($element->setLabel("")); ?>
                                                                                 <span class="input-group-addon">
                                                                                     <input type="hidden" class="minicolor" value="<?= $element->getValue(); ?>" />
                                                                                 </span>
                                                                             </div>
-                                                                        <?php  } elseif (strpos($element->getName(), 'size')) {
+                                                                        <?php  } elseif (strpos($element->getName(), 'size') !== false) {
                                                                             $element->setAttribute('readonly', true);
                                                                         ?>
                                                                             <div class="row">
@@ -502,7 +502,7 @@ if ($headerTitleLen > 13) {
                                                                                     <?= $this->formRow($element->setLabel("")); ?>
                                                                                 </div>
                                                                             </div>
-                                                                        <?php } elseif (strpos($element->getName(), 'style')) { ?>
+                                                                        <?php } elseif (strpos($element->getName(), 'style') !== false) { ?>
                                                                             <div class="btn-group btn-group-font-style" role="group" aria-label="Font style checkbox toggle button group">
                                                                                 <?php
                                                                                 $value = !is_array($element->getValue()) ? [$element->getValue()] : $element->getValue();
@@ -513,7 +513,7 @@ if ($headerTitleLen > 13) {
                                                                                 <?php    }
                                                                                 ?>
                                                                             </div>
-                                                                        <?php   } elseif (strpos($element->getName(), 'radius')) { ?>
+                                                                        <?php   } elseif (strpos($element->getName(), 'radius') !== false) { ?>
                                                                             <div class="input-group">
                                                                                 <?= $this->formRow($element->setLabel("")); ?>
                                                                                 <small>* Need to include the value and unit</small>
@@ -547,14 +547,14 @@ if ($headerTitleLen > 13) {
                                                                         </label>
 
                                                                         <?php
-                                                                        if (strpos($element->getName(), 'color')) { ?>
+                                                                        if (strpos($element->getName(), 'color') !== false) { ?>
                                                                             <div class="input-group platform-scheme osta_color_code">
                                                                                 <?= $this->formRow($element->setLabel("")); ?>
                                                                                 <span class="input-group-addon">
                                                                                     <input type="hidden" class="minicolor" value="<?= $element->getValue(); ?>" />
                                                                                 </span>
                                                                             </div>
-                                                                        <?php  } elseif (strpos($element->getName(), 'size') || strpos($element->getName(), 'width')) {
+                                                                        <?php  } elseif (strpos($element->getName(), 'size') !== false || strpos($element->getName(), 'width') !== false) {
                                                                             $element->setAttribute('readonly', true);
                                                                         ?>
                                                                             <div class="row">
@@ -565,7 +565,7 @@ if ($headerTitleLen > 13) {
                                                                                     <?= $this->formRow($element->setLabel("")); ?>
                                                                                 </div>
                                                                             </div>
-                                                                        <?php } elseif (strpos($element->getName(), 'style')) { ?>
+                                                                        <?php } elseif (strpos($element->getName(), 'style') !== false) { ?>
                                                                             <div class="btn-group btn-group-font-style" role="group" aria-label="Font style checkbox toggle button group">
                                                                                 <?php
                                                                                 $value = !is_array($element->getValue()) ? [$element->getValue()] : $element->getValue();
@@ -576,7 +576,7 @@ if ($headerTitleLen > 13) {
                                                                                 <?php    }
                                                                                 ?>
                                                                             </div>
-                                                                        <?php   } elseif (strpos($element->getName(), 'radius')) { ?>
+                                                                        <?php   } elseif (strpos($element->getName(), 'radius') !== false) { ?>
                                                                             <div class="input-group">
                                                                                 <?= $this->formRow($element->setLabel("")); ?>
                                                                                 <small>* Need to include the value and unit</small>
@@ -614,319 +614,56 @@ if ($headerTitleLen > 13) {
                                                     </h6>
                                                     <div id="component-modal" class="accordion-collapse collapse" data-bs-parent="#components-accordion">
                                                         <div class="accordion-body">
-                                                            <!-- options_modal_bg_color -->
-                                                            <div class="form-group">
-                                                                <label for="options_modal_bg_color" class="d-flex flex-row justify-content-between">
-                                                                    <div class="label-text">Modal background color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the modal background color by typing the hexadecimal color code or by using the color picker"></i>
-                                                                </label>
-                                                                <div class="input-group platform-scheme osta_color_code">
-                                                                    <input type="text" name="options_modal_bg_color" id="options_modal_bg_color" class="form-control minicolor-hex" data-control="hue" placeholder="Modal background color" value="#fff">
-                                                                    <span class="input-group-addon">
-                                                                        <input type="hidden" class="minicolor" value="#fff" />
-                                                                    </span>
-                                                                </div>
-                                                            </div>
+                                                            <?php
+                                                            foreach ($platformThemeOptionForm->getElements() as $elementKey => $element) {
+                                                                if ($element->getAttribute('category') == 'modal') { ?>
+                                                                    <div class="form-group">
+                                                                        <label for="<?= $element->getAttribute('id') ?>" class="d-flex flex-row justify-content-between">
+                                                                            <div class="label-text"><?= $element->getLabel(); ?></div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="<?= $this->translate($element->getOptions()['tooltip']); ?>"></i>
+                                                                        </label>
 
-                                                            <!-- options_modal_border_color -->
-                                                            <div class="form-group">
-                                                                <label for="options_modal_border_color" class="d-flex flex-row justify-content-between">
-                                                                    <div class="label-text">Modal background color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the modal background color by typing the hexadecimal color code or by using the color picker"></i>
-                                                                </label>
-                                                                <div class="input-group platform-scheme osta_color_code">
-                                                                    <input type="text" name="options_modal_border_color" id="options_modal_border_color" class="form-control minicolor-hex" data-control="hue" placeholder="Modal background color" value="#fff">
-                                                                    <span class="input-group-addon">
-                                                                        <input type="hidden" class="minicolor" value="#fff" />
-                                                                    </span>
-                                                                </div>
-                                                            </div>
-
-                                                            <!-- options_modal_border_radius_size -->
-                                                            <div class="form-group">
-                                                                <label for="options_modal_border_radius_size" class="d-flex flex-row justify-content-between">
-                                                                    <div class="label-text">Modal border radius size</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the modal border radius size"></i>
-                                                                </label>
-                                                                <div class="row">
-                                                                    <div class="col-9">
-                                                                        <div id="modal-border-radius-size-range-slider-min" class="modal-border-radius-size-range-slider-min" style="border: 0; color: #f6931f; font-weight: bold;"></div>
+                                                                        <?php
+                                                                        if (strpos($element->getName(), 'color') !== false) { ?>
+                                                                            <div class="input-group platform-scheme osta_color_code">
+                                                                                <?= $this->formRow($element->setLabel("")); ?>
+                                                                                <span class="input-group-addon">
+                                                                                    <input type="hidden" class="minicolor" value="<?= $element->getValue(); ?>" />
+                                                                                </span>
+                                                                            </div>
+                                                                        <?php  } elseif (strpos($element->getName(), 'size') !== false || strpos($element->getName(), 'width') !== false) {
+                                                                            $element->setAttribute('readonly', true);
+                                                                        ?>
+                                                                            <div class="row">
+                                                                                <div class="col-9">
+                                                                                    <div id="<?= $element->getAttribute('sliderId') ?>" class="<?= $element->getAttribute('sliderClass') ?>" style="border: 0; color: #f6931f; font-weight: bold;"></div>
+                                                                                </div>
+                                                                                <div class="col-3 g-0">
+                                                                                    <?= $this->formRow($element->setLabel("")); ?>
+                                                                                </div>
+                                                                            </div>
+                                                                        <?php } elseif (strpos($element->getName(), 'style') !== false) { ?>
+                                                                            <div class="btn-group btn-group-font-style" role="group" aria-label="Font style checkbox toggle button group">
+                                                                                <?php
+                                                                                $value = !is_array($element->getValue()) ? [$element->getValue()] : $element->getValue();
+                                                                                foreach ($element->getOptions()['value_options'] as $optKey => $option) {
+                                                                                ?>
+                                                                                    <input name="<?= $element->getName() ?>[]" type="checkbox" class="btn-check" id="<?= $element->getName() . $optKey ?>" autocomplete="off" value="<?= $option['value'] ?>" <?= in_array($option['value'], $value) ? "checked" : "" ?>>
+                                                                                    <label class="<?= $option['label_attributes']['class'] ?? 'btn btn-default' ?>" style="<?= $option['label_attributes']['style'] ?? '' ?>" for="<?= $element->getName() . $optKey ?>"><?= $option['label'] ?></label>
+                                                                                <?php    }
+                                                                                ?>
+                                                                            </div>
+                                                                        <?php   } elseif (strpos($element->getName(), 'radius') !== false) { ?>
+                                                                            <div class="input-group">
+                                                                                <?= $this->formRow($element->setLabel("")); ?>
+                                                                                <small>* Need to include the value and unit</small>
+                                                                            </div>
+                                                                        <?php    } ?>
                                                                     </div>
-                                                                    <div class="col-3 g-0">
-                                                                        <input type="text" name="options_modal_border_radius_size" id="options_modal_border_radius_size" class="modal-border-radius-size-range-slider-value range-slider-value form-control" />
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-
-                                                            <!-- options_modal_nav_tabs_bg_color -->
-                                                            <div class="form-group">
-                                                                <label for="options_modal_nav_tabs_bg_color" class="d-flex flex-row justify-content-between">
-                                                                    <div class="label-text">Modal nav tabs background color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the modal nav tabs background color by typing the hexadecimal color code or by using the color picker"></i>
-                                                                </label>
-                                                                <div class="input-group platform-scheme osta_color_code">
-                                                                    <input type="text" name="options_modal_nav_tabs_bg_color" id="options_modal_nav_tabs_bg_color" class="form-control minicolor-hex" data-control="hue" placeholder="Modal nav tabs background color" value="#e61c23">
-                                                                    <span class="input-group-addon">
-                                                                        <input type="hidden" class="minicolor" value="#e61c23" />
-                                                                    </span>
-                                                                </div>
-                                                            </div>
-
-                                                            <!-- options_modal_nav_tabs_active_bg_color -->
-                                                            <div class="form-group">
-                                                                <label for="options_modal_nav_tabs_active_bg_color" class="d-flex flex-row justify-content-between">
-                                                                    <div class="label-text">Modal nav tabs active background color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the modal nav active tab background color by typing the hexadecimal color code or by using the color picker"></i>
-                                                                </label>
-                                                                <div class="input-group platform-scheme osta_color_code">
-                                                                    <input type="text" name="options_modal_nav_tabs_active_bg_color" id="options_modal_nav_tabs_active_bg_color" class="form-control minicolor-hex" data-control="hue" placeholder="Modal nav active tab background color" value="#fff">
-                                                                    <span class="input-group-addon">
-                                                                        <input type="hidden" class="minicolor" value="#fff" />
-                                                                    </span>
-                                                                </div>
-                                                            </div>
-
-                                                            <!-- options_modal_nav_tabs_text_icon_color -->
-                                                            <div class="form-group">
-                                                                <label for="options_modal_nav_tabs_text_icon_color" class="d-flex flex-row justify-content-between">
-                                                                    <div class="label-text">Modal nav tabs text color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the modal nav tabs text color by typing the hexadecimal color code or by using the color picker"></i>
-                                                                </label>
-                                                                <div class="input-group platform-scheme osta_color_code">
-                                                                    <input type="text" name="options_modal_nav_tabs_text_icon_color" id="options_modal_nav_tabs_text_icon_color" class="form-control minicolor-hex" data-control="hue" placeholder="Modal nav tabs text color" value="#fff">
-                                                                    <span class="input-group-addon">
-                                                                        <input type="hidden" class="minicolor" value="#fff" />
-                                                                    </span>
-                                                                </div>
-                                                            </div>
-
-                                                            <!-- options_modal_nav_tabs_text_icon_active_color -->
-                                                            <div class="form-group">
-                                                                <label for="options_modal_nav_tabs_text_icon_active_color" class="d-flex flex-row justify-content-between">
-                                                                    <div class="label-text">Modal nav tabs text hover color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the modal nav tabs text hover color by typing the hexadecimal color code or by using the color picker"></i>
-                                                                </label>
-                                                                <div class="input-group platform-scheme osta_color_code">
-                                                                    <input type="text" name="options_modal_nav_tabs_text_icon_active_color" id="options_modal_nav_tabs_text_icon_active_color" class="form-control minicolor-hex" data-control="hue" placeholder="Modal nav tabs text hover color" value="#e61c23">
-                                                                    <span class="input-group-addon">
-                                                                        <input type="hidden" class="minicolor" value="#e61c23" />
-                                                                    </span>
-                                                                </div>
-                                                            </div>
-
-                                                            <!-- options_modal_nav_tabs_text_icon_font_size -->
-                                                            <div class="form-group">
-                                                                <label for="options_modal_nav_tabs_text_icon_font_size" class="d-flex flex-row justify-content-between">
-                                                                    <div class="label-text">Modal nav tabs font size</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the modal nav tabs font size"></i>
-                                                                </label>
-                                                                <div class="row">
-                                                                    <div class="col-9">
-                                                                        <div id="modal-tabs-font-size-range-slider-min" class="modal-tabs-font-size-range-slider-min" style="border: 0; color: #f6931f; font-weight: bold;"></div>
-                                                                    </div>
-                                                                    <div class="col-3 g-0">
-                                                                        <input type="text" name="options_modal_nav_tabs_text_icon_font_size" id="options_modal_nav_tabs_text_icon_font_size" class="modal-tabs-font-size-range-slider-value range-slider-value form-control" />
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-
-                                                            <!-- options_modal_nav_tabs_border_right_color -->
-                                                            <div class="form-group">
-                                                                <label for="options_modal_nav_tabs_border_right_color" class="d-flex flex-row justify-content-between">
-                                                                    <div class="label-text">Modal nav tab border right color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the modal nav tab border right color by typing the hexadecimal color code or by using the color picker"></i>
-                                                                </label>
-                                                                <div class="input-group platform-scheme osta_color_code">
-                                                                    <input type="text" name="options_modal_nav_tabs_border_right_color" id="options_modal_nav_tabs_border_right_color" class="form-control minicolor-hex" data-control="hue" placeholder="Modal nav tab border right color" value="#ce5459">
-                                                                    <span class="input-group-addon">
-                                                                        <input type="hidden" class="minicolor" value="#ce5459" />
-                                                                    </span>
-                                                                </div>
-                                                            </div>
-
-                                                            <!-- options_modal_nav_tabs_border_right_width -->
-                                                            <div class="form-group">
-                                                                <label for="options_modal_nav_tabs_border_right_width" class="d-flex flex-row justify-content-between">
-                                                                    <div class="label-text">Modal nav tabs border right width</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the modal nav tabs border right width"></i>
-                                                                </label>
-                                                                <div class="row">
-                                                                    <div class="col-9">
-                                                                        <div id="modal-border-right-width-range-slider-min" class="modal-border-right-width-range-slider-min" style="border: 0; color: #f6931f; font-weight: bold;"></div>
-                                                                    </div>
-                                                                    <div class="col-3 g-0">
-                                                                        <input type="text" name="options_modal_nav_tabs_border_right_width" id="options_modal_nav_tabs_border_right_width" class="modal-border-right-width-range-slider-value range-slider-value form-control" />
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-
-                                                            <!-- options_modal_content_text_color -->
-                                                            <div class="form-group">
-                                                                <label for="options_modal_content_text_color" class="d-flex flex-row justify-content-between">
-                                                                    <div class="label-text">Modal content text color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the modal content text color by typing the hexadecimal color code or by using the color picker"></i>
-                                                                </label>
-                                                                <div class="input-group platform-scheme osta_color_code">
-                                                                    <input type="text" name="options_modal_content_text_color" id="options_modal_content_text_color" class="form-control minicolor-hex" data-control="hue" placeholder="Modal content text color" value="#686868">
-                                                                    <span class="input-group-addon">
-                                                                        <input type="hidden" class="minicolor" value="#686868" />
-                                                                    </span>
-                                                                </div>
-                                                            </div>
-
-                                                            <!-- options_modal_content_text_font_size -->
-                                                            <div class="form-group">
-                                                                <label for="options_modal_content_text_font_size" class="d-flex flex-row justify-content-between">
-                                                                    <div class="label-text">Modal content text font size</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the modal content text font size"></i>
-                                                                </label>
-                                                                <div class="row">
-                                                                    <div class="col-9">
-                                                                        <div id="modal-content-text-font-size-range-slider-min" class="modal-content-text-font-size-range-slider-min" style="border: 0; color: #f6931f; font-weight: bold;"></div>
-                                                                    </div>
-                                                                    <div class="col-3 g-0">
-                                                                        <input type="text" name="options_modal_content_text_font_size" id="options_modal_content_text_font_size" class="modal-content-text-font-size-range-slider-value range-slider-value form-control" />
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-
-                                                            <!-- options_modal_content_text_font_styles -->
-                                                            <div class="form-group">
-                                                                <label for="options_modal_content_text_font_styles" class="d-flex flex-row justify-content-between">
-                                                                    <div class="label-text">Modal content text font styles</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the modal content text font styles"></i>
-                                                                </label>
-                                                                <div class="btn-group btn-group-font-style" role="group" aria-label="Font style checkbox toggle button group">
-                                                                    <input type="checkbox" class="btn-check" id="options-modal-content-text-bold" autocomplete="off">
-                                                                    <label class="btn btn-default" for="options-modal-content-text-bold"><strong>B</strong></label>
-
-                                                                    <input type="checkbox" class="btn-check" id="options-modal-content-text-italic" autocomplete="off">
-                                                                    <label class="btn btn-default" for="options-modal-content-text-italic"><em>I</em></label>
-
-                                                                    <input type="checkbox" class="btn-check" id="options-modal-content-text-uppercase" autocomplete="off">
-                                                                    <label class="btn btn-default" for="options-modal-content-text-uppercase" style="text-transform: uppercase;">TT</label>
-
-                                                                    <input type="checkbox" class="btn-check" id="options-modal-content-text-underline" autocomplete="off">
-                                                                    <label class="btn btn-default" for="options-modal-content-text-underline" style="text-decoration: underline;">U</label>
-                                                                </div>
-                                                            </div>
-
-                                                            <!-- options_modal_content_close_btn_bg_color -->
-                                                            <div class="form-group">
-                                                                <label for="options_modal_content_close_btn_bg_color" class="d-flex flex-row justify-content-between">
-                                                                    <div class="label-text">Modal close button background color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the modal close button background color by typing the hexadecimal color code or by using the color picker"></i>
-                                                                </label>
-                                                                <div class="input-group platform-scheme osta_color_code">
-                                                                    <input type="text" name="options_modal_content_close_btn_bg_color" id="options_modal_content_close_btn_bg_color" class="form-control minicolor-hex" data-control="hue" placeholder="Modal close button background color" value="#fff">
-                                                                    <span class="input-group-addon">
-                                                                        <input type="hidden" class="minicolor" value="#fff" />
-                                                                    </span>
-                                                                </div>
-                                                            </div>
-
-                                                            <!-- options_modal_content_close_btn_active_bg_color -->
-                                                            <div class="form-group">
-                                                                <label for="options_modal_content_close_btn_active_bg_color" class="d-flex flex-row justify-content-between">
-                                                                    <div class="label-text">Modal close button hover background color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the modal close button hover background color by typing the hexadecimal color code or by using the color picker"></i>
-                                                                </label>
-                                                                <div class="input-group platform-scheme osta_color_code">
-                                                                    <input type="text" name="options_modal_content_close_btn_active_bg_color" id="options_modal_content_close_btn_active_bg_color" class="form-control minicolor-hex" data-control="hue" placeholder="Modal close button hover background color" value="#bd362f">
-                                                                    <span class="input-group-addon">
-                                                                        <input type="hidden" class="minicolor" value="#bd362f" />
-                                                                    </span>
-                                                                </div>
-                                                            </div>
-
-                                                            <!-- options_modal_content_close_btn_border_color -->
-                                                            <div class="form-group">
-                                                                <label for="options_modal_content_close_btn_border_color" class="d-flex flex-row justify-content-between">
-                                                                    <div class="label-text">Modal close button border color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the modal close button border color by typing the hexadecimal color code or by using the color picker"></i>
-                                                                </label>
-                                                                <div class="input-group platform-scheme osta_color_code">
-                                                                    <input type="text" name="options_modal_content_close_btn_border_color" id="options_modal_content_close_btn_border_color" class="form-control minicolor-hex" data-control="hue" placeholder="Modal close button border color" value="#bd362f">
-                                                                    <span class="input-group-addon">
-                                                                        <input type="hidden" class="minicolor" value="#bd362f" />
-                                                                    </span>
-                                                                </div>
-                                                            </div>
-
-                                                            <!-- options_modal_content_close_btn_text_color -->
-                                                            <div class="form-group">
-                                                                <label for="options_modal_content_close_btn_text_color" class="d-flex flex-row justify-content-between">
-                                                                    <div class="label-text">Modal close button border color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the modal close button text color by typing the hexadecimal color code or by using the color picker"></i>
-                                                                </label>
-                                                                <div class="input-group platform-scheme osta_color_code">
-                                                                    <input type="text" name="options_modal_content_close_btn_text_color" id="options_modal_content_close_btn_text_color" class="form-control minicolor-hex" data-control="hue" placeholder="Modal close button text color" value="#bd362f">
-                                                                    <span class="input-group-addon">
-                                                                        <input type="hidden" class="minicolor" value="#bd362f" />
-                                                                    </span>
-                                                                </div>
-                                                            </div>
-
-                                                            <!-- options_modal_content_close_btn_active_text_color -->
-                                                            <div class="form-group">
-                                                                <label for="options_modal_content_close_btn_active_text_color" class="d-flex flex-row justify-content-between">
-                                                                    <div class="label-text">Modal close button hover text color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the modal close button hover text color by typing the hexadecimal color code or by using the color picker"></i>
-                                                                </label>
-                                                                <div class="input-group platform-scheme osta_color_code">
-                                                                    <input type="text" name="options_modal_content_close_btn_active_text_color" id="options_modal_content_close_btn_active_text_color" class="form-control minicolor-hex" data-control="hue" placeholder="Modal close hover text color" value="#fff">
-                                                                    <span class="input-group-addon">
-                                                                        <input type="hidden" class="minicolor" value="#fff" />
-                                                                    </span>
-                                                                </div>
-                                                            </div>
-
-                                                            <!-- options_modal_content_save_btn_bg_color -->
-                                                            <div class="form-group">
-                                                                <label for="options_modal_content_save_btn_bg_color" class="d-flex flex-row justify-content-between">
-                                                                    <div class="label-text">Modal save button background color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the modal save button background color by typing the hexadecimal color code or by using the color picker"></i>
-                                                                </label>
-                                                                <div class="input-group platform-scheme osta_color_code">
-                                                                    <input type="text" name="options_modal_content_save_btn_bg_color" id="options_modal_content_save_btn_bg_color" class="form-control minicolor-hex" data-control="hue" placeholder="Modal save button background color" value="#fff">
-                                                                    <span class="input-group-addon">
-                                                                        <input type="hidden" class="minicolor" value="#fff" />
-                                                                    </span>
-                                                                </div>
-                                                            </div>
-
-                                                            <!-- options_modal_content_save_btn_active_bg_color -->
-                                                            <div class="form-group">
-                                                                <label for="options_modal_content_save_btn_active_bg_color" class="d-flex flex-row justify-content-between">
-                                                                    <div class="label-text">Modal save button hover background color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the modal save button hover background color by typing the hexadecimal color code or by using the color picker"></i>
-                                                                </label>
-                                                                <div class="input-group platform-scheme osta_color_code">
-                                                                    <input type="text" name="options_modal_content_save_btn_active_bg_color" id="options_modal_content_save_btn_active_bg_color" class="form-control minicolor-hex" data-control="hue" placeholder="Modal save button hover background color" value="#72af46">
-                                                                    <span class="input-group-addon">
-                                                                        <input type="hidden" class="minicolor" value="#72af46" />
-                                                                    </span>
-                                                                </div>
-                                                            </div>
-
-                                                            <!-- options_modal_content_save_btn_border_color -->
-                                                            <div class="form-group">
-                                                                <label for="options_modal_content_save_btn_border_color" class="d-flex flex-row justify-content-between">
-                                                                    <div class="label-text">Modal save button border color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the modal save button border color by typing the hexadecimal color code or by using the color picker"></i>
-                                                                </label>
-                                                                <div class="input-group platform-scheme osta_color_code">
-                                                                    <input type="text" name="options_modal_content_save_btn_border_color" id="options_modal_content_save_btn_border_color" class="form-control minicolor-hex" data-control="hue" placeholder="Modal save button border color" value="#72af46">
-                                                                    <span class="input-group-addon">
-                                                                        <input type="hidden" class="minicolor" value="#72af46" />
-                                                                    </span>
-                                                                </div>
-                                                            </div>
-
-                                                            <!-- options_modal_content_save_btn_text_color -->
-                                                            <div class="form-group">
-                                                                <label for="options_modal_content_save_btn_text_color" class="d-flex flex-row justify-content-between">
-                                                                    <div class="label-text">Modal save button border color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the modal save button text color by typing the hexadecimal color code or by using the color picker"></i>
-                                                                </label>
-                                                                <div class="input-group platform-scheme osta_color_code">
-                                                                    <input type="text" name="options_modal_content_save_btn_text_color" id="options_modal_content_save_btn_text_color" class="form-control minicolor-hex" data-control="hue" placeholder="Modal save button text color" value="#fff">
-                                                                    <span class="input-group-addon">
-                                                                        <input type="hidden" class="minicolor" value="#fff" />
-                                                                    </span>
-                                                                </div>
-                                                            </div>
-
-                                                            <!-- options_modal_content_save_btn_active_text_color -->
-                                                            <div class="form-group">
-                                                                <label for="options_modal_content_save_btn_active_text_color" class="d-flex flex-row justify-content-between">
-                                                                    <div class="label-text">Modal save button hover text color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the modal save button hover text color by typing the hexadecimal color code or by using the color picker"></i>
-                                                                </label>
-                                                                <div class="input-group platform-scheme osta_color_code">
-                                                                    <input type="text" name="options_modal_content_save_btn_active_text_color" id="options_modal_content_save_btn_active_text_color" class="form-control minicolor-hex" data-control="hue" placeholder="Modal save hover text color" value="#72af46">
-                                                                    <span class="input-group-addon">
-                                                                        <input type="hidden" class="minicolor" value="#72af46" />
-                                                                    </span>
-                                                                </div>
-                                                            </div>
+                                                                <?php    }
+                                                                ?>
+                                                            <?php
+                                                            }
+                                                            ?>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -939,299 +676,56 @@ if ($headerTitleLen > 13) {
                                                     </h6>
                                                     <div id="component-bs-dialogs" class="accordion-collapse collapse" data-bs-parent="#components-accordion">
                                                         <div class="accordion-body">
-                                                            <!-- options_dialog_content_header_bg_color -->
-                                                            <div class="form-group">
-                                                                <label for="options_dialog_content_header_bg_color" class="d-flex flex-row justify-content-between">
-                                                                    <div class="label-text">Dialog content header background color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the dialog content header background color by typing the hexadecimal color code or by using the color picker"></i>
-                                                                </label>
-                                                                <div class="input-group platform-scheme osta_color_code">
-                                                                    <input type="text" name="options_dialog_content_header_bg_color" id="options_dialog_content_header_bg_color" class="form-control minicolor-hex" data-control="hue" placeholder="Dialog content header background color" value="#f99319">
-                                                                    <span class="input-group-addon">
-                                                                        <input type="hidden" class="minicolor" value="#f99319" />
-                                                                    </span>
-                                                                </div>
-                                                            </div>
+                                                            <?php
+                                                            foreach ($platformThemeOptionForm->getElements() as $elementKey => $element) {
+                                                                if ($element->getAttribute('category') == 'dialog') { ?>
+                                                                    <div class="form-group">
+                                                                        <label for="<?= $element->getAttribute('id') ?>" class="d-flex flex-row justify-content-between">
+                                                                            <div class="label-text"><?= $element->getLabel(); ?></div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="<?= $this->translate($element->getOptions()['tooltip']); ?>"></i>
+                                                                        </label>
 
-                                                            <!-- options_dialog_content_header_title_color -->
-                                                            <div class="form-group">
-                                                                <label for="options_dialog_content_header_title_color" class="d-flex flex-row justify-content-between">
-                                                                    <div class="label-text">Dialog content header title color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the dialog content header title color by typing the hexadecimal color code or by using the color picker"></i>
-                                                                </label>
-                                                                <div class="input-group platform-scheme osta_color_code">
-                                                                    <input type="text" name="options_dialog_content_header_title_color" id="options_dialog_content_header_title_color" class="form-control minicolor-hex" data-control="hue" placeholder="Dialog content header title color" value="#fff">
-                                                                    <span class="input-group-addon">
-                                                                        <input type="hidden" class="minicolor" value="#fff" />
-                                                                    </span>
-                                                                </div>
-                                                            </div>
-
-                                                            <!-- options_dialog_content_header_title_font_size -->
-                                                            <div class="form-group">
-                                                                <label for="options_dialog_content_header_title_font_size" class="d-flex flex-row justify-content-between">
-                                                                    <div class="label-text">Dialog header title font size</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the dialog header title font size"></i>
-                                                                </label>
-                                                                <div class="row">
-                                                                    <div class="col-9">
-                                                                        <div id="dialog-title-font-size-range-slider-min" class="dialog-title-font-size-range-slider-min" style="border: 0; color: #f6931f; font-weight: bold;"></div>
+                                                                        <?php
+                                                                        if (strpos($element->getName(), 'color') !== false) { ?>
+                                                                            <div class="input-group platform-scheme osta_color_code">
+                                                                                <?= $this->formRow($element->setLabel("")); ?>
+                                                                                <span class="input-group-addon">
+                                                                                    <input type="hidden" class="minicolor" value="<?= $element->getValue(); ?>" />
+                                                                                </span>
+                                                                            </div>
+                                                                        <?php  } elseif (strpos($element->getName(), 'size') !== false || strpos($element->getName(), 'width') !== false) {
+                                                                            $element->setAttribute('readonly', true);
+                                                                        ?>
+                                                                            <div class="row">
+                                                                                <div class="col-9">
+                                                                                    <div id="<?= $element->getAttribute('sliderId') ?>" class="<?= $element->getAttribute('sliderClass') ?>" style="border: 0; color: #f6931f; font-weight: bold;"></div>
+                                                                                </div>
+                                                                                <div class="col-3 g-0">
+                                                                                    <?= $this->formRow($element->setLabel("")); ?>
+                                                                                </div>
+                                                                            </div>
+                                                                        <?php } elseif (strpos($element->getName(), 'style') !== false) { ?>
+                                                                            <div class="btn-group btn-group-font-style" role="group" aria-label="Font style checkbox toggle button group">
+                                                                                <?php
+                                                                                $value = !is_array($element->getValue()) ? [$element->getValue()] : $element->getValue();
+                                                                                foreach ($element->getOptions()['value_options'] as $optKey => $option) {
+                                                                                ?>
+                                                                                    <input name="<?= $element->getName() ?>[]" type="checkbox" class="btn-check" id="<?= $element->getName() . $optKey ?>" autocomplete="off" value="<?= $option['value'] ?>" <?= in_array($option['value'], $value) ? "checked" : "" ?>>
+                                                                                    <label class="<?= $option['label_attributes']['class'] ?? 'btn btn-default' ?>" style="<?= $option['label_attributes']['style'] ?? '' ?>" for="<?= $element->getName() . $optKey ?>"><?= $option['label'] ?></label>
+                                                                                <?php    }
+                                                                                ?>
+                                                                            </div>
+                                                                        <?php   } elseif (strpos($element->getName(), 'radius') !== false) { ?>
+                                                                            <div class="input-group">
+                                                                                <?= $this->formRow($element->setLabel("")); ?>
+                                                                                <small>* Need to include the value and unit</small>
+                                                                            </div>
+                                                                        <?php    } ?>
                                                                     </div>
-                                                                    <div class="col-3 g-0">
-                                                                        <input type="text" name="options_dialog_content_header_title_font_size" id="options_dialog_content_header_title_font_size" class="dialog-title-font-size-range-slider-value range-slider-value form-control" />
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-
-                                                            <!-- options_dialog_close_button_color -->
-                                                            <div class="form-group">
-                                                                <label for="options_dialog_close_button_color" class="d-flex flex-row justify-content-between">
-                                                                    <div class="label-text">Dialog close button color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the dialog close button color by typing the hexadecimal color code or by using the color picker"></i>
-                                                                </label>
-                                                                <div class="input-group platform-scheme osta_color_code">
-                                                                    <input type="text" name="options_dialog_close_button_color" id="options_dialog_close_button_color" class="form-control minicolor-hex" data-control="hue" placeholder="Dialog close button color" value="#fff">
-                                                                    <span class="input-group-addon">
-                                                                        <input type="hidden" class="minicolor" value="#fff" />
-                                                                    </span>
-                                                                </div>
-                                                            </div>
-
-                                                            <!-- options_dialog_close_button_font_size -->
-                                                            <div class="form-group">
-                                                                <label for="options_dialog_close_button_font_size" class="d-flex flex-row justify-content-between">
-                                                                    <div class="label-text">Dialog close button font size</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the dialog close button font size"></i>
-                                                                </label>
-                                                                <div class="row">
-                                                                    <div class="col-9">
-                                                                        <div id="dialog-close-btn-font-size-range-slider-min" class="dialog-close-btn-font-size-range-slider-min" style="border: 0; color: #f6931f; font-weight: bold;"></div>
-                                                                    </div>
-                                                                    <div class="col-3 g-0">
-                                                                        <input type="text" name="options_dialog_close_button_font_size" id="options_dialog_close_button_font_size" class="dialog-close-btn-font-size-range-slider-value range-slider-value form-control" />
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-
-                                                            <!-- options_dialog_content_bg_color -->
-                                                            <div class="form-group">
-                                                                <label for="options_dialog_content_bg_color" class="d-flex flex-row justify-content-between">
-                                                                    <div class="label-text">Dialog content background color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the dialog content background color by typing the hexadecimal color code or by using the color picker"></i>
-                                                                </label>
-                                                                <div class="input-group platform-scheme osta_color_code">
-                                                                    <input type="text" name="options_dialog_content_bg_color" id="options_dialog_content_bg_color" class="form-control minicolor-hex" data-control="hue" placeholder="Dialog content background color" value="#fff">
-                                                                    <span class="input-group-addon">
-                                                                        <input type="hidden" class="minicolor" value="#fff" />
-                                                                    </span>
-                                                                </div>
-                                                            </div>
-
-                                                            <!-- options_dialog_content_border_color -->
-                                                            <div class="form-group">
-                                                                <label for="options_dialog_content_border_color" class="d-flex flex-row justify-content-between">
-                                                                    <div class="label-text">Dialog content border color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the dialog content border color by typing the hexadecimal color code or by using the color picker"></i>
-                                                                </label>
-                                                                <div class="input-group platform-scheme osta_color_code">
-                                                                    <input type="text" name="options_dialog_content_border_color" id="options_dialog_content_border_color" class="form-control minicolor-hex" data-control="hue" placeholder="Dialog content border color" value="#fff">
-                                                                    <span class="input-group-addon">
-                                                                        <input type="hidden" class="minicolor" value="#fff" />
-                                                                    </span>
-                                                                </div>
-                                                            </div>
-
-                                                            <!-- options_dialog_content_text_color -->
-                                                            <div class="form-group">
-                                                                <label for="options_dialog_content_text_color" class="d-flex flex-row justify-content-between">
-                                                                    <div class="label-text">Dialog content text color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the dialog content text color by typing the hexadecimal color code or by using the color picker"></i>
-                                                                </label>
-                                                                <div class="input-group platform-scheme osta_color_code">
-                                                                    <input type="text" name="options_dialog_content_text_color" id="options_dialog_content_text_color" class="form-control minicolor-hex" data-control="hue" placeholder="Dialog content text color" value="#686868">
-                                                                    <span class="input-group-addon">
-                                                                        <input type="hidden" class="minicolor" value="#686868" />
-                                                                    </span>
-                                                                </div>
-                                                            </div>
-
-                                                            <!-- options_dialog_content_text_font_size, .bootstrap-dialog-message -->
-                                                            <div class="form-group">
-                                                                <label for="options_dialog_content_text_font_size" class="d-flex flex-row justify-content-between">
-                                                                    <div class="label-text">Dialog content text font size</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the dialog content text font size"></i>
-                                                                </label>
-                                                                <div class="row">
-                                                                    <div class="col-9">
-                                                                        <div id="dialog-content-text-font-size-range-slider-min" class="dialog-content-text-font-size-range-slider-min" style="border: 0; color: #f6931f; font-weight: bold;"></div>
-                                                                    </div>
-                                                                    <div class="col-3 g-0">
-                                                                        <input type="text" name="options_dialog_content_text_font_size" id="options_dialog_content_text_font_size" class="dialog-content-text-font-size-range-slider-value range-slider-value form-control" />
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-
-                                                            <!-- options_dialog_no_btn_bg_color -->
-                                                            <div class="form-group">
-                                                                <label for="options_dialog_no_btn_bg_color" class="d-flex flex-row justify-content-between">
-                                                                    <div class="label-text">Dialog no button background color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the dialog no button background color by typing the hexadecimal color code or by using the color picker"></i>
-                                                                </label>
-                                                                <div class="input-group platform-scheme osta_color_code">
-                                                                    <input type="text" name="options_dialog_no_btn_bg_color" id="options_dialog_no_btn_bg_color" class="form-control minicolor-hex" data-control="hue" placeholder="Dialog no button background color" value="#fff">
-                                                                    <span class="input-group-addon">
-                                                                        <input type="hidden" class="minicolor" value="#fff" />
-                                                                    </span>
-                                                                </div>
-                                                            </div>
-
-                                                            <!-- options_dialog_no_btn_bg_hover_color -->
-                                                            <div class="form-group">
-                                                                <label for="options_dialog_no_btn_bg_hover_color" class="d-flex flex-row justify-content-between">
-                                                                    <div class="label-text">Dialog no button background hover color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the dialog no button background hover color by typing the hexadecimal color code or by using the color picker"></i>
-                                                                </label>
-                                                                <div class="input-group platform-scheme osta_color_code">
-                                                                    <input type="text" name="options_dialog_no_btn_bg_hover_color" id="options_dialog_no_btn_bg_hover_color" class="form-control minicolor-hex" data-control="hue" placeholder="Dialog no button background hover color" value="#bd362f">
-                                                                    <span class="input-group-addon">
-                                                                        <input type="hidden" class="minicolor" value="#bd362f" />
-                                                                    </span>
-                                                                </div>
-                                                            </div>
-
-                                                            <!-- options_dialog_no_btn_border_color -->
-                                                            <div class="form-group">
-                                                                <label for="options_dialog_no_btn_border_color" class="d-flex flex-row justify-content-between">
-                                                                    <div class="label-text">Dialog no button border color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the dialog no button border color by typing the hexadecimal color code or by using the color picker"></i>
-                                                                </label>
-                                                                <div class="input-group platform-scheme osta_color_code">
-                                                                    <input type="text" name="options_dialog_no_btn_border_color" id="options_dialog_no_btn_border_color" class="form-control minicolor-hex" data-control="hue" placeholder="Dialog no button border color" value="#bd362f">
-                                                                    <span class="input-group-addon">
-                                                                        <input type="hidden" class="minicolor" value="#bd362f" />
-                                                                    </span>
-                                                                </div>
-                                                            </div>
-
-                                                            <!-- options_dialog_no_btn_border_hover_color -->
-                                                            <div class="form-group">
-                                                                <label for="options_dialog_no_btn_border_hover_color" class="d-flex flex-row justify-content-between">
-                                                                    <div class="label-text">Dialog no button border hover color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the dialog no button border hover color by typing the hexadecimal color code or by using the color picker"></i>
-                                                                </label>
-                                                                <div class="input-group platform-scheme osta_color_code">
-                                                                    <input type="text" name="options_dialog_no_btn_border_hover_color" id="options_dialog_no_btn_border_hover_color" class="form-control minicolor-hex" data-control="hue" placeholder="Dialog no button border hover color" value="#bd362f">
-                                                                    <span class="input-group-addon">
-                                                                        <input type="hidden" class="minicolor" value="#bd362f" />
-                                                                    </span>
-                                                                </div>
-                                                            </div>
-
-                                                            <!-- options_dialog_no_btn_text_color -->
-                                                            <div class="form-group">
-                                                                <label for="options_dialog_no_btn_text_color" class="d-flex flex-row justify-content-between">
-                                                                    <div class="label-text">Dialog no button text color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the dialog no button text color by typing the hexadecimal color code or by using the color picker"></i>
-                                                                </label>
-                                                                <div class="input-group platform-scheme osta_color_code">
-                                                                    <input type="text" name="options_dialog_no_btn_text_color" id="options_dialog_no_btn_text_color" class="form-control minicolor-hex" data-control="hue" placeholder="Dialog no button text color" value="#bd362f">
-                                                                    <span class="input-group-addon">
-                                                                        <input type="hidden" class="minicolor" value="#bd362f" />
-                                                                    </span>
-                                                                </div>
-                                                            </div>
-
-                                                            <!-- options_dialog_no_btn_text_hover_color -->
-                                                            <div class="form-group">
-                                                                <label for="options_dialog_no_btn_text_hover_color" class="d-flex flex-row justify-content-between">
-                                                                    <div class="label-text">Dialog no button text hover color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the dialog no button text hover color by typing the hexadecimal color code or by using the color picker"></i>
-                                                                </label>
-                                                                <div class="input-group platform-scheme osta_color_code">
-                                                                    <input type="text" name="options_dialog_no_btn_text_hover_color" id="options_dialog_no_btn_text_hover_color" class="form-control minicolor-hex" data-control="hue" placeholder="Dialog no button text hover color" value="#fff">
-                                                                    <span class="input-group-addon">
-                                                                        <input type="hidden" class="minicolor" value="#fff" />
-                                                                    </span>
-                                                                </div>
-                                                            </div>
-
-                                                            <!-- options_dialog_yes_btn_bg_color -->
-                                                            <div class="form-group">
-                                                                <label for="options_dialog_yes_btn_bg_color" class="d-flex flex-row justify-content-between">
-                                                                    <div class="label-text">Dialog yes button background color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the dialog yes button background color by typing the hexadecimal color code or by using the color picker"></i>
-                                                                </label>
-                                                                <div class="input-group platform-scheme osta_color_code">
-                                                                    <input type="text" name="options_dialog_yes_btn_bg_color" id="options_dialog_yes_btn_bg_color" class="form-control minicolor-hex" data-control="hue" placeholder="Dialog yes button background color" value="#fff">
-                                                                    <span class="input-group-addon">
-                                                                        <input type="hidden" class="minicolor" value="#fff" />
-                                                                    </span>
-                                                                </div>
-                                                            </div>
-
-                                                            <!-- options_dialog_yes_btn_bg_hover_color -->
-                                                            <div class="form-group">
-                                                                <label for="options_dialog_yes_btn_bg_hover_color" class="d-flex flex-row justify-content-between">
-                                                                    <div class="label-text">Dialog yes button background hover color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the dialog yes button background hover color by typing the hexadecimal color code or by using the color picker"></i>
-                                                                </label>
-                                                                <div class="input-group platform-scheme osta_color_code">
-                                                                    <input type="text" name="options_dialog_yes_btn_bg_hover_color" id="options_dialog_yes_btn_bg_hover_color" class="form-control minicolor-hex" data-control="hue" placeholder="Dialog yes button background hover color" value="#72af46">
-                                                                    <span class="input-group-addon">
-                                                                        <input type="hidden" class="minicolor" value="#72af46" />
-                                                                    </span>
-                                                                </div>
-                                                            </div>
-
-                                                            <!-- options_dialog_yes_btn_border_color -->
-                                                            <div class="form-group">
-                                                                <label for="options_dialog_yes_btn_border_color" class="d-flex flex-row justify-content-between">
-                                                                    <div class="label-text">Dialog yes button border color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the dialog yes button border color by typing the hexadecimal color code or by using the color picker"></i>
-                                                                </label>
-                                                                <div class="input-group platform-scheme osta_color_code">
-                                                                    <input type="text" name="options_dialog_yes_btn_border_color" id="options_dialog_yes_btn_border_color" class="form-control minicolor-hex" data-control="hue" placeholder="Dialog yes button border color" value="#72af46">
-                                                                    <span class="input-group-addon">
-                                                                        <input type="hidden" class="minicolor" value="#72af46" />
-                                                                    </span>
-                                                                </div>
-                                                            </div>
-
-                                                            <!-- options_dialog_yes_btn_border_hover_color -->
-                                                            <div class="form-group">
-                                                                <label for="options_dialog_yes_btn_border_hover_color" class="d-flex flex-row justify-content-between">
-                                                                    <div class="label-text">Dialog yes button border hover color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the dialog yes button border hover color by typing the hexadecimal color code or by using the color picker"></i>
-                                                                </label>
-                                                                <div class="input-group platform-scheme osta_color_code">
-                                                                    <input type="text" name="options_dialog_yes_btn_border_hover_color" id="options_dialog_yes_btn_border_hover_color" class="form-control minicolor-hex" data-control="hue" placeholder="Dialog yes button border hover color" value="#72af46">
-                                                                    <span class="input-group-addon">
-                                                                        <input type="hidden" class="minicolor" value="#72af46" />
-                                                                    </span>
-                                                                </div>
-                                                            </div>
-
-                                                            <!-- options_dialog_yes_btn_text_color -->
-                                                            <div class="form-group">
-                                                                <label for="options_dialog_yes_btn_text_color" class="d-flex flex-row justify-content-between">
-                                                                    <div class="label-text">Dialog yes button text color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the dialog yes button text color by typing the hexadecimal color code or by using the color picker"></i>
-                                                                </label>
-                                                                <div class="input-group platform-scheme osta_color_code">
-                                                                    <input type="text" name="options_dialog_yes_btn_text_color" id="options_dialog_yes_btn_text_color" class="form-control minicolor-hex" data-control="hue" placeholder="Dialog yes button text color" value="#72af46">
-                                                                    <span class="input-group-addon">
-                                                                        <input type="hidden" class="minicolor" value="#72af46" />
-                                                                    </span>
-                                                                </div>
-                                                            </div>
-
-                                                            <!-- options_dialog_yes_btn_text_hover_color -->
-                                                            <div class="form-group">
-                                                                <label for="options_dialog_yes_btn_text_hover_color" class="d-flex flex-row justify-content-between">
-                                                                    <div class="label-text">Dialog yes button text hover color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the dialog yes button text hover color by typing the hexadecimal color code or by using the color picker"></i>
-                                                                </label>
-                                                                <div class="input-group platform-scheme osta_color_code">
-                                                                    <input type="text" name="options_dialog_yes_btn_text_hover_color" id="options_dialog_yes_btn_text_hover_color" class="form-control minicolor-hex" data-control="hue" placeholder="Dialog yes button text hover color" value="#fff">
-                                                                    <span class="input-group-addon">
-                                                                        <input type="hidden" class="minicolor" value="#fff" />
-                                                                    </span>
-                                                                </div>
-                                                            </div>
-
-                                                            <!-- options_dialog_btn_text_font_size -->
-                                                            <div class="form-group">
-                                                                <label for="options_dialog_btn_text_font_size" class="d-flex flex-row justify-content-between">
-                                                                    <div class="label-text">Dialog content text font size</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the dialog content text font size"></i>
-                                                                </label>
-                                                                <div class="row">
-                                                                    <div class="col-9">
-                                                                        <div id="dialog-button-text-font-size-range-slider-min" class="dialog-button-text-font-size-range-slider-min" style="border: 0; color: #f6931f; font-weight: bold;"></div>
-                                                                    </div>
-                                                                    <div class="col-3 g-0">
-                                                                        <input type="text" name="options_dialog_btn_text_font_size" id="options_dialog_btn_text_font_size" class="dialog-button-text-font-size-range-slider-value range-slider-value form-control" />
-                                                                    </div>
-                                                                </div>
-                                                            </div>
+                                                                <?php    }
+                                                                ?>
+                                                            <?php
+                                                            }
+                                                            ?>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -1244,234 +738,40 @@ if ($headerTitleLen > 13) {
                                                     </h6>
                                                     <div id="component-form-elements" class="accordion-collapse collapse" data-bs-parent="#components-accordion">
                                                         <div class="accordion-body">
-                                                            <!-- options_form_bg_color -->
-                                                            <div class="form-group">
-                                                                <label for="options_form_bg_color" class="d-flex flex-row justify-content-between">
-                                                                    <div class="label-text">Form background color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the form background color by typing the hexadecimal color code or by using the color picker"></i>
-                                                                </label>
-                                                                <div class="input-group platform-scheme osta_color_code">
-                                                                    <input type="text" name="options_form_bg_color" id="options_form_bg_color" class="form-control minicolor-hex" data-control="hue" placeholder="Form background color" value="#fff">
-                                                                    <span class="input-group-addon">
-                                                                        <input type="hidden" class="minicolor" value="#fff" />
-                                                                    </span>
-                                                                </div>
-                                                            </div>
+                                                            <?php
+                                                            foreach ($platformThemeOptionForm->getElements() as $elementKey => $element) {
+                                                                if ($element->getAttribute('category') == 'form_elements') { ?>
+                                                                    <div class="form-group">
+                                                                        <label for="<?= $element->getAttribute('id') ?>" class="d-flex flex-row justify-content-between">
+                                                                            <div class="label-text"><?= $element->getLabel(); ?></div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="<?= $this->translate($element->getOptions()['tooltip']); ?>"></i>
+                                                                        </label>
 
-                                                            <!-- options_form_text_color -->
-                                                            <div class="form-group">
-                                                                <label for="options_form_text_color" class="d-flex flex-row justify-content-between">
-                                                                    <div class="label-text">Form text color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the form text color by typing the hexadecimal color code or by using the color picker"></i>
-                                                                </label>
-                                                                <div class="input-group platform-scheme osta_color_code">
-                                                                    <input type="text" name="options_form_text_color" id="options_form_text_color" class="form-control minicolor-hex" data-control="hue" placeholder="Form text color" value="#686868">
-                                                                    <span class="input-group-addon">
-                                                                        <input type="hidden" class="minicolor" value="#686868" />
-                                                                    </span>
-                                                                </div>
-                                                            </div>
-
-                                                            <!-- options_form_select_option_bg_color -->
-                                                            <div class="form-group">
-                                                                <label for="options_form_select_option_bg_color" class="d-flex flex-row justify-content-between">
-                                                                    <div class="label-text">Form select option color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the form select option background color by typing the hexadecimal color code or by using the color picker"></i>
-                                                                </label>
-                                                                <div class="input-group platform-scheme osta_color_code">
-                                                                    <input type="text" name="options_form_select_option_bg_color" id="options_form_select_option_bg_color" class="form-control minicolor-hex" data-control="hue" placeholder="Form select option background color" value="#fff">
-                                                                    <span class="input-group-addon">
-                                                                        <input type="hidden" class="minicolor" value="#fff" />
-                                                                    </span>
-                                                                </div>
-                                                            </div>
-
-                                                            <!-- options_form_select_option_text_color -->
-                                                            <div class="form-group">
-                                                                <label for="options_form_select_option_text_color" class="d-flex flex-row justify-content-between">
-                                                                    <div class="label-text">Form select option text color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the form select option text color by typing the hexadecimal color code or by using the color picker"></i>
-                                                                </label>
-                                                                <div class="input-group platform-scheme osta_color_code">
-                                                                    <input type="text" name="options_form_select_option_text_color" id="options_form_select_option_text_color" class="form-control minicolor-hex" data-control="hue" placeholder="Form select option text color" value="#686868">
-                                                                    <span class="input-group-addon">
-                                                                        <input type="hidden" class="minicolor" value="#686868" />
-                                                                    </span>
-                                                                </div>
-                                                            </div>
-
-                                                            <!-- options_form_input_elements_border_radius -->
-                                                            <div class="form-group">
-                                                                <label for="options_form_input_elements_border_radius" class="d-flex flex-row justify-content-between">
-                                                                    <div class="label-text">Form input elements border radius</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the form input elements border radius"></i>
-                                                                </label>
-                                                                <div class="row">
-                                                                    <div class="col-9">
-                                                                        <div id="form-inputs-element-border-radius-range-slider-min" class="form-inputs-element-border-radius-range-slider-min" style="border: 0; color: #f6931f; font-weight: bold;"></div>
+                                                                        <?php
+                                                                        if (strpos($element->getName(), 'color') !== false) { ?>
+                                                                            <div class="input-group platform-scheme osta_color_code">
+                                                                                <?= $this->formRow($element->setLabel("")); ?>
+                                                                                <span class="input-group-addon">
+                                                                                    <input type="hidden" class="minicolor" value="<?= $element->getValue(); ?>" />
+                                                                                </span>
+                                                                            </div>
+                                                                        <?php  } elseif (strpos($element->getName(), 'size') !== false || strpos($element->getName(), 'width') !== false || strpos($element->getName(), 'radius') !== false) {
+                                                                            $element->setAttribute('readonly', true);
+                                                                        ?>
+                                                                            <div class="row">
+                                                                                <div class="col-9">
+                                                                                    <div id="<?= $element->getAttribute('sliderId') ?>" class="<?= $element->getAttribute('sliderClass') ?>" style="border: 0; color: #f6931f; font-weight: bold;"></div>
+                                                                                </div>
+                                                                                <div class="col-3 g-0">
+                                                                                    <?= $this->formRow($element->setLabel("")); ?>
+                                                                                </div>
+                                                                            </div>
+                                                                        <?php } ?>
                                                                     </div>
-                                                                    <div class="col-3 g-0">
-                                                                        <input type="text" name="options_form_input_elements_border_radius" id="options_form_input_elements_border_radius" class="form-inputs-element-border-radius-range-slider-value range-slider-value form-control" />
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-
-                                                            <!-- options_form_input_elements_text_color -->
-                                                            <div class="form-group">
-                                                                <label for="options_form_input_elements_text_color" class="d-flex flex-row justify-content-between">
-                                                                    <div class="label-text">Form input elements text color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the form input elements text color by typing the hexadecimal color code or by using the color picker"></i>
-                                                                </label>
-                                                                <div class="input-group platform-scheme osta_color_code">
-                                                                    <input type="text" name="options_form_input_elements_text_color" id="options_form_input_elements_text_color" class="form-control minicolor-hex" data-control="hue" placeholder="Form input elements text color" value="#444">
-                                                                    <span class="input-group-addon">
-                                                                        <input type="hidden" class="minicolor" value="#444" />
-                                                                    </span>
-                                                                </div>
-                                                            </div>
-
-                                                            <!-- options_form_input_elements_border_width -->
-                                                            <div class="form-group">
-                                                                <label for="options_form_input_elements_border_width" class="d-flex flex-row justify-content-between">
-                                                                    <div class="label-text">Form input elements border width</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the form input elements border width"></i>
-                                                                </label>
-                                                                <div class="row">
-                                                                    <div class="col-9">
-                                                                        <div id="form-inputs-element-border-width-range-slider-min" class="form-inputs-element-border-width-range-slider-min" style="border: 0; color: #f6931f; font-weight: bold;"></div>
-                                                                    </div>
-                                                                    <div class="col-3 g-0">
-                                                                        <input type="text" name="options_form_input_elements_border_width" id="options_form_input_elements_border_width" class="form-inputs-element-border-width-range-slider-value range-slider-value form-control" />
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-
-                                                            <!-- options_form_input_elements_border_color -->
-                                                            <div class="form-group">
-                                                                <label for="options_form_input_elements_border_color" class="d-flex flex-row justify-content-between">
-                                                                    <div class="label-text">Form input elements border color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the form input elements border color by typing the hexadecimal color code or by using the color picker"></i>
-                                                                </label>
-                                                                <div class="input-group platform-scheme osta_color_code">
-                                                                    <input type="text" name="options_form_input_elements_border_color" id="options_form_input_elements_border_color" class="form-control minicolor-hex" data-control="hue" placeholder="Form input elements border color" value="#dee2e6">
-                                                                    <span class="input-group-addon">
-                                                                        <input type="hidden" class="minicolor" value="#dee2e6" />
-                                                                    </span>
-                                                                </div>
-                                                            </div>
-
-                                                            <!-- options_form_input_elements_bg_color -->
-                                                            <div class="form-group">
-                                                                <label for="options_form_input_elements_bg_color" class="d-flex flex-row justify-content-between">
-                                                                    <div class="label-text">Form input elements background color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the form input elements background color by typing the hexadecimal color code or by using the color picker"></i>
-                                                                </label>
-                                                                <div class="input-group platform-scheme osta_color_code">
-                                                                    <input type="text" name="options_form_input_elements_bg_color" id="options_form_input_elements_bg_color" class="form-control minicolor-hex" data-control="hue" placeholder="Form input elements background color" value="#fff">
-                                                                    <span class="input-group-addon">
-                                                                        <input type="hidden" class="minicolor" value="#fff" />
-                                                                    </span>
-                                                                </div>
-                                                            </div>
-
-                                                            <!-- options_form_input_text_disable_readonly_bg_color -->
-                                                            <div class="form-group">
-                                                                <label for="options_form_input_text_disable_readonly_bg_color" class="d-flex flex-row justify-content-between">
-                                                                    <div class="label-text">Form input text disable/readonly background color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the form input text disable/readonly background color by typing the hexadecimal color code or by using the color picker"></i>
-                                                                </label>
-                                                                <div class="input-group platform-scheme osta_color_code">
-                                                                    <input type="text" name="options_form_input_text_disable_readonly_bg_color" id="options_form_input_text_disable_readonly_bg_color" class="form-control minicolor-hex" data-control="hue" placeholder="Form input text disable/readonly background color" value="#e9ecef">
-                                                                    <span class="input-group-addon">
-                                                                        <input type="hidden" class="minicolor" value="#e9ecef" />
-                                                                    </span>
-                                                                </div>
-                                                            </div>
-
-                                                            <!-- options_form_input_text_disable_readonly_border_color -->
-                                                            <div class="form-group">
-                                                                <label for="options_form_input_text_disable_readonly_border_color" class="d-flex flex-row justify-content-between">
-                                                                    <div class="label-text">Form input text disable/readonly border color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the form input text disable/readonly border color by typing the hexadecimal color code or by using the color picker"></i>
-                                                                </label>
-                                                                <div class="input-group platform-scheme osta_color_code">
-                                                                    <input type="text" name="options_form_input_text_disable_readonly_border_color" id="options_form_input_text_disable_readonly_border_color" class="form-control minicolor-hex" data-control="hue" placeholder="Form input text disable/readonly border color" value="#dee2e6">
-                                                                    <span class="input-group-addon">
-                                                                        <input type="hidden" class="minicolor" value="#dee2e6" />
-                                                                    </span>
-                                                                </div>
-                                                            </div>
-
-                                                            <!-- options_form_input_text_disable_readonly_text_color -->
-                                                            <div class="form-group">
-                                                                <label for="options_form_input_text_disable_readonly_text_color" class="d-flex flex-row justify-content-between">
-                                                                    <div class="label-text">Form input text disable/readonly text color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the form input text disable/readonly text color by typing the hexadecimal color code or by using the color picker"></i>
-                                                                </label>
-                                                                <div class="input-group platform-scheme osta_color_code">
-                                                                    <input type="text" name="options_form_input_text_disable_readonly_text_color" id="options_form_input_text_disable_readonly_text_color" class="form-control minicolor-hex" data-control="hue" placeholder="Form input text disable/readonly text color" value="#dee2e6">
-                                                                    <span class="input-group-addon">
-                                                                        <input type="hidden" class="minicolor" value="#dee2e6" />
-                                                                    </span>
-                                                                </div>
-                                                            </div>
-
-                                                            <!-- options_form_button_submit_bg_color -->
-                                                            <div class="form-group">
-                                                                <label for="options_form_button_submit_bg_color" class="d-flex flex-row justify-content-between">
-                                                                    <div class="label-text">Form button/submit background color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the form button/submit background color by typing the hexadecimal color code or by using the color picker"></i>
-                                                                </label>
-                                                                <div class="input-group platform-scheme osta_color_code">
-                                                                    <input type="text" name="options_form_button_submit_bg_color" id="options_form_button_submit_bg_color" class="form-control minicolor-hex" data-control="hue" placeholder="Form button/submit background color" value="#fff">
-                                                                    <span class="input-group-addon">
-                                                                        <input type="hidden" class="minicolor" value="#fff" />
-                                                                    </span>
-                                                                </div>
-                                                            </div>
-
-                                                            <!-- options_form_button_submit_text_color -->
-                                                            <div class="form-group">
-                                                                <label for="options_form_button_submit_text_color" class="d-flex flex-row justify-content-between">
-                                                                    <div class="label-text">Form button/submit text color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the form button/submit text color by typing the hexadecimal color code or by using the color picker"></i>
-                                                                </label>
-                                                                <div class="input-group platform-scheme osta_color_code">
-                                                                    <input type="text" name="options_form_button_submit_text_color" id="options_form_button_submit_text_color" class="form-control minicolor-hex" data-control="hue" placeholder="Form button/submit text color" value="#444">
-                                                                    <span class="input-group-addon">
-                                                                        <input type="hidden" class="minicolor" value="#444" />
-                                                                    </span>
-                                                                </div>
-                                                            </div>
-
-                                                            <!-- options_form_button_submit_border_radius -->
-                                                            <div class="form-group">
-                                                                <label for="options_form_button_submit_border_radius" class="d-flex flex-row justify-content-between">
-                                                                    <div class="label-text">Form button/submit border radius</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the form button/submit border radius"></i>
-                                                                </label>
-                                                                <div class="row">
-                                                                    <div class="col-9">
-                                                                        <div id="form-button-submit-border-radius-range-slider-min" class="form-button-submit-border-radius-range-slider-min" style="border: 0; color: #f6931f; font-weight: bold;"></div>
-                                                                    </div>
-                                                                    <div class="col-3 g-0">
-                                                                        <input type="text" name="options_form_button_submit_border_radius" id="options_form_button_submit_border_radius" class="form-button-submit-border-radius-range-slider-value range-slider-value form-control" />
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-
-                                                            <!-- options_form_button_submit_border_width -->
-                                                            <div class="form-group">
-                                                                <label for="options_form_button_submit_border_width" class="d-flex flex-row justify-content-between">
-                                                                    <div class="label-text">Form button/submit border width</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the form button/submit border width"></i>
-                                                                </label>
-                                                                <div class="row">
-                                                                    <div class="col-9">
-                                                                        <div id="form-button-submit-border-width-range-slider-min" class="form-button-submit-border-width-range-slider-min" style="border: 0; color: #f6931f; font-weight: bold;"></div>
-                                                                    </div>
-                                                                    <div class="col-3 g-0">
-                                                                        <input type="text" name="options_form_button_submit_border_width" id="options_form_button_submit_border_width" class="form-button-submit-border-width-range-slider-value range-slider-value form-control" />
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-
-                                                            <!-- options_form_button_submit_border_color -->
-                                                            <div class="form-group">
-                                                                <label for="options_form_button_submit_border_color" class="d-flex flex-row justify-content-between">
-                                                                    <div class="label-text">Form input elements border color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the form input elements border color by typing the hexadecimal color code or by using the color picker"></i>
-                                                                </label>
-                                                                <div class="input-group platform-scheme osta_color_code">
-                                                                    <input type="text" name="options_form_button_submit_border_color" id="options_form_button_submit_border_color" class="form-control minicolor-hex" data-control="hue" placeholder="Form input elements border color" value="#444">
-                                                                    <span class="input-group-addon">
-                                                                        <input type="hidden" class="minicolor" value="#444" />
-                                                                    </span>
-                                                                </div>
-                                                            </div>
+                                                                <?php    }
+                                                                ?>
+                                                            <?php
+                                                            }
+                                                            ?>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -1484,192 +784,51 @@ if ($headerTitleLen > 13) {
                                                     </h6>
                                                     <div id="component-tabs" class="accordion-collapse collapse" data-bs-parent="#components-accordion">
                                                         <div class="accordion-body">
-                                                            <!-- options_tab_widget_head_bg_color -->
-                                                            <div class="form-group">
-                                                                <label for="options_tab_widget_head_bg_color" class="d-flex flex-row justify-content-between">
-                                                                    <div class="label-text">Tab widget head background color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the tab widget head background color by typing the hexadecimal color code or by using the color picker"></i>
-                                                                </label>
-                                                                <div class="input-group platform-scheme osta_color_code">
-                                                                    <input type="text" name="options_tab_widget_head_bg_color" id="options_tab_widget_head_bg_color" class="form-control minicolor-hex" data-control="hue" placeholder="Tab widget head background color" value="#fff">
-                                                                    <span class="input-group-addon">
-                                                                        <input type="hidden" class="minicolor" value="#fff" />
-                                                                    </span>
-                                                                </div>
-                                                            </div>
+                                                            <?php
+                                                            foreach ($platformThemeOptionForm->getElements() as $elementKey => $element) {
+                                                                if ($element->getAttribute('category') == 'tab') { ?>
+                                                                    <div class="form-group">
+                                                                        <label for="<?= $element->getAttribute('id') ?>" class="d-flex flex-row justify-content-between">
+                                                                            <div class="label-text"><?= $element->getLabel(); ?></div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="<?= $this->translate($element->getOptions()['tooltip']); ?>"></i>
+                                                                        </label>
 
-                                                            <!-- options_tab_widget_head_border_width -->
-                                                            <div class="form-group">
-                                                                <label for="options_tab_widget_head_border_width" class="d-flex flex-row justify-content-between">
-                                                                    <div class="label-text">Tab widget head border width</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the form input elements border width"></i>
-                                                                </label>
-                                                                <div class="row">
-                                                                    <div class="col-9">
-                                                                        <div id="tab-widget-head-border-width-range-slider-min" class="tab-widget-head-border-width-range-slider-min" style="border: 0; color: #f6931f; font-weight: bold;"></div>
+                                                                        <?php
+                                                                        if (strpos($element->getName(), 'color') !== false) { ?>
+                                                                            <div class="input-group platform-scheme osta_color_code">
+                                                                                <?= $this->formRow($element->setLabel("")); ?>
+                                                                                <span class="input-group-addon">
+                                                                                    <input type="hidden" class="minicolor" value="<?= $element->getValue(); ?>" />
+                                                                                </span>
+                                                                            </div>
+                                                                        <?php  } elseif (strpos($element->getName(), 'size') !== false || strpos($element->getName(), 'width') !== false  || strpos($element->getName(), 'radius') !== false || strpos($element->getName(), 'height') !== false ) {
+                                                                            $element->setAttribute('readonly', true);
+                                                                        ?>
+                                                                            <div class="row">
+                                                                                <div class="col-9">
+                                                                                    <div id="<?= $element->getAttribute('sliderId') ?>" class="<?= $element->getAttribute('sliderClass') ?>" style="border: 0; color: #f6931f; font-weight: bold;"></div>
+                                                                                </div>
+                                                                                <div class="col-3 g-0">
+                                                                                    <?= $this->formRow($element->setLabel("")); ?>
+                                                                                </div>
+                                                                            </div>
+                                                                        <?php } elseif (strpos($element->getName(), 'align') !== false) { ?>
+                                                                            <div class="btn-group btn-group-alignment" role="group" aria-label="Text align radio toggle button group">
+                                                                                <?php
+                                                                                $value = !is_array($element->getValue()) ? [$element->getValue()] : $element->getValue();
+                                                                                foreach ($element->getOptions()['value_options'] as $optKey => $option) {
+                                                                                ?>
+                                                                                    <input name="<?= $element->getName() ?>" type="radio" class="btn-check" id="<?= $element->getName() . '_'. $optKey ?>" autocomplete="off" value="<?= $optKey ?>" <?= $optKey == $value ? "checked" : "" ?>>
+                                                                                    <?= $option?>
+                                                                                <?php    }
+                                                                                ?>
+                                                                            </div>
+                                                                        <?php   }  ?>
                                                                     </div>
-                                                                    <div class="col-3 g-0">
-                                                                        <input type="text" name="options_tab_widget_head_border_width" id="options_tab_widget_head_border_width" class="tab-widget-head-border-width-range-slider-value range-slider-value form-control" />
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-
-                                                            <!-- options_tab_widget_head_border_color -->
-                                                            <div class="form-group">
-                                                                <label for="options_tab_widget_head_border_color" class="d-flex flex-row justify-content-between">
-                                                                    <div class="label-text">Tab widget header border color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the tab widget header border color by typing the hexadecimal color code or by using the color picker"></i>
-                                                                </label>
-                                                                <div class="input-group platform-scheme osta_color_code">
-                                                                    <input type="text" name="options_tab_widget_head_border_color" id="options_tab_widget_head_border_color" class="form-control minicolor-hex" data-control="hue" placeholder="Tab widget head border color" value="#e5e5e5">
-                                                                    <span class="input-group-addon">
-                                                                        <input type="hidden" class="minicolor" value="#e5e5e5" />
-                                                                    </span>
-                                                                </div>
-                                                            </div>
-
-                                                            <!-- options_tab_widget_head_nav_item_and_link_height -->
-                                                            <div class="form-group">
-                                                                <label for="options_tab_widget_head_nav_item_and_link_height" class="d-flex flex-row justify-content-between">
-                                                                    <div class="label-text">Tab widget head navigation height</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the tab widget head navigation height"></i>
-                                                                </label>
-                                                                <div class="row">
-                                                                    <div class="col-9">
-                                                                        <div id="tab-widget-head-nav-item-and-link-width-range-slider-min" class="tab-widget-head-nav-item-and-link-width-range-slider-min" style="border: 0; color: #f6931f; font-weight: bold;"></div>
-                                                                    </div>
-                                                                    <div class="col-3 g-0">
-                                                                        <input type="text" name="options_tab_widget_head_nav_item_and_link_height" id="options_tab_widget_head_nav_item_and_link_height" class="tab-widget-head-nav-item-and-link-width-range-slider-value range-slider-value form-control" />
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-
-                                                            <!-- options_tab_widget_nav_item_border_right_width -->
-                                                            <div class="form-group">
-                                                                <label for="options_tab_widget_nav_item_border_right_width" class="d-flex flex-row justify-content-between">
-                                                                    <div class="label-text">Tab widget navigation item border right width</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the tab widget head navigation item right width"></i>
-                                                                </label>
-                                                                <div class="row">
-                                                                    <div class="col-9">
-                                                                        <div id="tab-widget-head-nav-item-border-right-width-range-slider-min" class="tab-widget-head-nav-item-border-right-width-range-slider-min" style="border: 0; color: #f6931f; font-weight: bold;"></div>
-                                                                    </div>
-                                                                    <div class="col-3 g-0">
-                                                                        <input type="text" name="options_tab_widget_nav_item_border_right_width" id="options_tab_widget_nav_item_border_right_width" class="tab-widget-head-nav-item-border-right-width-range-slider-value range-slider-value form-control" />
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-
-                                                            <!-- options_tab_widget_nav_item_border_right_color -->
-                                                            <div class="form-group">
-                                                                <label for="options_tab_widget_nav_item_border_right_color" class="d-flex flex-row justify-content-between">
-                                                                    <div class="label-text">Tab widget navigation item border right color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the tab widget navigation border right color by typing the hexadecimal color code or by using the color picker"></i>
-                                                                </label>
-                                                                <div class="input-group platform-scheme osta_color_code">
-                                                                    <input type="text" name="options_tab_widget_nav_item_border_right_color" id="options_tab_widget_nav_item_border_right_color" class="form-control minicolor-hex" data-control="hue" placeholder="Tab widget navigation border right color" value="#e5e5e5">
-                                                                    <span class="input-group-addon">
-                                                                        <input type="hidden" class="minicolor" value="#e5e5e5" />
-                                                                    </span>
-                                                                </div>
-                                                            </div>
-
-                                                            <!-- options_tab_widget_nav_link_text_color -->
-                                                            <div class="form-group">
-                                                                <label for="options_tab_widget_nav_link_text_color" class="d-flex flex-row justify-content-between">
-                                                                    <div class="label-text">Tab widget navigation link text color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the tab widget navigation text color by typing the hexadecimal color code or by using the color picker"></i>
-                                                                </label>
-                                                                <div class="input-group platform-scheme osta_color_code">
-                                                                    <input type="text" name="options_tab_widget_nav_link_text_color" id="options_tab_widget_nav_link_text_color" class="form-control minicolor-hex" data-control="hue" placeholder="Tab widget navigation link text color" value="#7c7c7c">
-                                                                    <span class="input-group-addon">
-                                                                        <input type="hidden" class="minicolor" value="#7c7c7c" />
-                                                                    </span>
-                                                                </div>
-                                                            </div>
-
-                                                            <!-- options_tab_widget_nav_link_text_font_size -->
-                                                            <div class="form-group">
-                                                                <label for="options_tab_widget_nav_link_text_font_size" class="d-flex flex-row justify-content-between">
-                                                                    <div class="label-text">Tab widget navigation item border right width</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the tab widget head navigation item right width"></i>
-                                                                </label>
-                                                                <div class="row">
-                                                                    <div class="col-9">
-                                                                        <div id="tab-widget-nav-link-text-font-size-range-slider-min" class="tab-widget-nav-link-text-font-size-range-slider-min" style="border: 0; color: #f6931f; font-weight: bold;"></div>
-                                                                    </div>
-                                                                    <div class="col-3 g-0">
-                                                                        <input type="text" name="options_tab_widget_nav_link_text_font_size" id="options_tab_widget_nav_link_text_font_size" class="tab-widget-nav-link-text-font-size-range-slider-value range-slider-value form-control" />
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-
-                                                            <!-- options_tab_widget_nav_link_min_width -->
-                                                            <div class="form-group">
-                                                                <label for="options_tab_widget_nav_link_min_width" class="d-flex flex-row justify-content-between">
-                                                                    <div class="label-text">Tab widget navigation item border right width</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the tab widget head navigation item right width"></i>
-                                                                </label>
-                                                                <div class="row">
-                                                                    <div class="col-9">
-                                                                        <div id="tab-widget-nav-link-min-width-range-slider-min" class="tab-widget-nav-link-min-width-range-slider-min" style="border: 0; color: #f6931f; font-weight: bold;"></div>
-                                                                    </div>
-                                                                    <div class="col-3 g-0">
-                                                                        <input type="text" name="options_tab_widget_nav_link_min_width" id="options_tab_widget_nav_link_min_width" class="tab-widget-nav-link-min-width-range-slider-value range-slider-value form-control" />
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-
-                                                            <!-- options_tab_widget_nav_link_text_align -->
-                                                            <div class="form-group">
-                                                                <label for="options_tab_widget_nav_link_text_align" class="d-flex flex-row justify-content-between">
-                                                                    <div class="label-text">Tab widget navigation link text/icon alignment</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Tab widget navigation link text/icon alignment"></i>
-                                                                </label>
-                                                                <div class="btn-group btn-group-alignment" role="group" aria-label="Text align radio toggle button group">
-                                                                    <input type="radio" class="btn-check" name="tab-widget-nav-link-text-align-btn-radio" id="btn-nav-link-left" autocomplete="off">
-                                                                    <label class="btn btn-default" for="btn-nav-link-left"><i class="bi bi-text-left"></i></label>
-
-                                                                    <input type="radio" class="btn-check" name="tab-widget-nav-link-text-align-btn-radio" id="btn-nav-link-center" autocomplete="off" checked>
-                                                                    <label class="btn btn-default" for="btn-nav-link-center"><i class="bi bi-text-center"></i></label>
-
-                                                                    <input type="radio" class="btn-check" name="tab-widget-nav-link-text-align-btn-radio" id="btn-nav-link-right" autocomplete="off">
-                                                                    <label class="btn btn-default" for="btn-nav-link-right"><i class="bi bi-text-right"></i></label>
-                                                                </div>
-                                                            </div>
-
-                                                            <!-- options_tab_widget_nav_link_icon_height -->
-                                                            <div class="form-group">
-                                                                <label for="options_tab_widget_nav_link_icon_height" class="d-flex flex-row justify-content-between">
-                                                                    <div class="label-text">Tab widget navigation item border right width</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the tab widget head navigation item right width"></i>
-                                                                </label>
-                                                                <div class="row">
-                                                                    <div class="col-9">
-                                                                        <div id="tab-widget-nav-link-height-range-slider-min" class="tab-widget-nav-link-height-range-slider-min" style="border: 0; color: #f6931f; font-weight: bold;"></div>
-                                                                    </div>
-                                                                    <div class="col-3 g-0">
-                                                                        <input type="text" name="options_tab_widget_nav_link_icon_height" id="options_tab_widget_nav_link_icon_height" class="tab-widget-nav-link-height-range-slider-value range-slider-value form-control" />
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-
-                                                            <!-- options_tab_widget_link_icon_color -->
-                                                            <div class="form-group">
-                                                                <label for="options_tab_widget_link_icon_color" class="d-flex flex-row justify-content-between">
-                                                                    <div class="label-text">Tab widget link icon color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the tab widget link icon color by typing the hexadecimal color code or by using the color picker"></i>
-                                                                </label>
-                                                                <div class="input-group platform-scheme osta_color_code">
-                                                                    <input type="text" name="options_tab_widget_link_icon_color" id="options_tab_widget_link_icon_color" class="form-control minicolor-hex" data-control="hue" placeholder="Tab widget link icon color" value="#9d9d9d">
-                                                                    <span class="input-group-addon">
-                                                                        <input type="hidden" class="minicolor" value="#9d9d9d" />
-                                                                    </span>
-                                                                </div>
-                                                            </div>
-
-                                                            <!-- options_tab_widget_link_icon_font_size -->
-                                                            <div class="form-group">
-                                                                <label for="options_tab_widget_link_icon_font_size" class="d-flex flex-row justify-content-between">
-                                                                    <div class="label-text">Tab widget navigation item border right width</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the tab widget head navigation item right width"></i>
-                                                                </label>
-                                                                <div class="row">
-                                                                    <div class="col-9">
-                                                                        <div id="tab-widget-link-font-size-range-slider-min" class="tab-widget-link-font-size-range-slider-min" style="border: 0; color: #f6931f; font-weight: bold;"></div>
-                                                                    </div>
-                                                                    <div class="col-3 g-0">
-                                                                        <input type="text" name="options_tab_widget_link_icon_font_size" id="options_tab_widget_link_icon_font_size" class="tab-widget-link-font-size-range-slider-value range-slider-value form-control" />
-                                                                    </div>
-                                                                </div>
-                                                            </div>
+                                                                <?php    }
+                                                                ?>
+                                                            <?php
+                                                            }
+                                                            ?>
                                                         </div>
                                                     </div>
                                                 </div>

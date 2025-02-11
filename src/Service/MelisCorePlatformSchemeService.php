@@ -74,6 +74,11 @@ class MelisCorePlatformSchemeService extends MelisGeneralService
                 $entScheme->setBubblePlugin($schemeData->pscheme_bubble_plugins);
                 $entScheme->setDashboardPlugin($schemeData->pscheme_dashboard_plugins);
                 $entScheme->setDashboardPluginMenu($schemeData->pscheme_dashboard_plugins_menu);
+                $entScheme->setModal($schemeData->pscheme_modal);
+                $entScheme->setDialog($schemeData->pscheme_dialog);
+                $entScheme->setFormElement($schemeData->pscheme_form_elements);
+                $entScheme->setTab($schemeData->pscheme_tab);
+                
             }
 
             $entScheme->setIsActive($schemeData->pscheme_is_active);

@@ -2877,7 +2877,1502 @@ return array(
                                     'default' => 14
                                 ),
                             ),
-                        ),                                          
+                        ),
+
+                        //Start for the Components Options
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_modal_bg_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_modal_bg_color',
+                                    'tooltip' => 'tr_meliscore_platform_theme_modal_bg_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_modal_bg_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_meliscore_platform_theme_modal_bg_color',
+                                    'category' => 'modal',
+                                    'default' => '#fff'
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_modal_border_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_modal_border_color',
+                                    'tooltip' => 'tr_meliscore_platform_theme_modal_border_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_modal_border_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_meliscore_platform_theme_modal_border_color',
+                                    'category' => 'modal',
+                                    'default' => '#fff'
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_modal_border_radius_size',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_modal_border_radius_size',
+                                    'tooltip' => 'tr_meliscore_platform_theme_modal_border_radius_size_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_modal_border_radius_size',
+                                    'value' => '',
+                                    'class' => 'modal-border-radius-size-range-slider-value range-slider-value form-control',
+                                    'placeholder' => 'melis_core_platform_theme_modal_border_radius_size',
+                                    'category' => 'modal',
+                                    'sliderId' => 'modal-border-radius-size-range-slider-min',
+                                    'sliderClass' => 'modal-border-radius-size-range-slider-min',
+                                    'default' => 0
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_modal_nav_tabs_bg_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_modal_nav_tabs_bg_color',
+                                    'tooltip' => 'tr_meliscore_platform_theme_modal_nav_tabs_bg_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_modal_nav_tabs_bg_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_meliscore_platform_theme_modal_nav_tabs_bg_color',
+                                    'category' => 'modal',
+                                    'default' => '#fff'
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_modal_nav_tabs_active_bg_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_modal_nav_tabs_active_bg_color',
+                                    'tooltip' => 'tr_meliscore_platform_theme_modal_nav_tabs_active_bg_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_modal_nav_tabs_active_bg_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_meliscore_platform_theme_modal_nav_tabs_active_bg_color',
+                                    'category' => 'modal',
+                                    'default' => '#fff'
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_modal_nav_tabs_text_icon_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_modal_nav_tabs_text_icon_color',
+                                    'tooltip' => 'tr_meliscore_platform_theme_modal_nav_tabs_text_icon_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_modal_nav_tabs_text_icon_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_meliscore_platform_theme_modal_nav_tabs_text_icon_color',
+                                    'category' => 'modal',
+                                    'default' => '#fff'
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_modal_nav_tabs_text_icon_hover_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_modal_nav_tabs_text_icon_hover_color',
+                                    'tooltip' => 'tr_meliscore_platform_theme_modal_nav_tabs_text_icon_hover_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_modal_nav_tabs_text_icon_hover_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_meliscore_platform_theme_modal_nav_tabs_text_icon_hover_color',
+                                    'category' => 'modal',
+                                    'default' => '#e61c23'
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_modal_nav_tabs_text_icon_font_size',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_modal_nav_tabs_text_icon_font_size',
+                                    'tooltip' => 'tr_meliscore_platform_theme_modal_nav_tabs_text_icon_font_size_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_modal_nav_tabs_text_icon_font_size',
+                                    'value' => '',
+                                    'class' => 'modal-tabs-font-size-range-slider-value range-slider-value form-control',
+                                    'placeholder' => 'melis_core_platform_theme_modal_nav_tabs_text_icon_font_size',
+                                    'category' => 'modal',
+                                    'sliderId' => 'modal-tabs-font-size-range-slider-min',
+                                    'sliderClass' => 'modal-tabs-font-size-range-slider-min',
+                                    'default' => 14
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_modal_nav_tabs_border_right_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_modal_nav_tabs_border_right_color',
+                                    'tooltip' => 'tr_meliscore_platform_theme_modal_nav_tabs_border_right_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_modal_nav_tabs_border_right_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_meliscore_platform_theme_modal_nav_tabs_border_right_color',
+                                    'category' => 'modal',
+                                    'default' => '#ce5459'
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_modal_nav_tabs_border_right_width',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_modal_nav_tabs_border_right_width',
+                                    'tooltip' => 'tr_meliscore_platform_theme_modal_nav_tabs_border_right_width_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_modal_nav_tabs_border_right_width',
+                                    'value' => '',
+                                    'class' => 'modal-border-right-width-range-slider-value range-slider-value form-control',
+                                    'placeholder' => 'melis_core_platform_theme_modal_nav_tabs_border_right_width',
+                                    'category' => 'modal',
+                                    'sliderId' => 'modal-border-right-width-range-slider-min',
+                                    'sliderClass' => 'modal-border-right-width-range-slider-min',
+                                    'default' => 1
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_modal_content_text_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_modal_content_text_color',
+                                    'tooltip' => 'tr_meliscore_platform_theme_modal_content_text_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_modal_content_text_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_meliscore_platform_theme_modal_content_text_color',
+                                    'category' => 'modal',
+                                    'default' => '#686868'
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_modal_content_text_font_size',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_modal_content_text_font_size',
+                                    'tooltip' => 'tr_meliscore_platform_theme_modal_content_text_font_size_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_modal_content_text_font_size',
+                                    'value' => '',
+                                    'class' => 'modal-content-text-font-size-range-slider-value range-slider-value form-control',
+                                    'placeholder' => 'melis_core_platform_theme_modal_content_text_font_size',
+                                    'category' => 'modal',
+                                    'sliderId' => 'modal-content-text-font-size-range-slider-min',
+                                    'sliderClass' => 'modal-content-text-font-size-range-slider-min',
+                                    'default' => 14
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_modal_content_text_font_styles',
+                                'type' => Laminas\Form\Element\MultiCheckbox::class,
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_modal_content_text_font_styles',
+                                    'tooltip' => 'tr_meliscore_platform_theme_modal_content_text_font_styles_tooltip',
+                                    'value_options' => [
+                                        'option1' => [
+                                            'value' => 'bold',
+                                            'label' => '<strong>B</strong>',
+                                            'label_attributes' => [
+                                                'class' => 'btn btn-default',
+                                            ],
+                                        ],
+                                        'option2' => [
+                                            'value' => 'italic',
+                                            'label' => '<em>I</em>',
+                                            'label_attributes' => [
+                                                'class' => 'btn btn-default',
+                                            ],
+                                        ],
+                                        'option3' => [
+                                            'value' => 'uppercase',
+                                            'label' => 'TT',
+                                            'label_attributes' => [
+                                                'class' => 'btn btn-default',
+                                                'style' => 'text-transform: uppercase;'
+                                            ],
+                                        ],
+                                        'option4' => [
+                                            'value' => 'underline',
+                                            'label' => 'U',
+                                            'label_attributes' => [
+                                                'class' => 'btn btn-default',
+                                                'style' => 'text-transform: underline;'
+                                            ],
+                                        ],
+                                    ]
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_modal_content_text_font_styles',
+                                    'value' => '',
+                                    'class' => 'form-control',
+                                    'placeholder' => 'tr_meliscore_platform_theme_modal_content_text_font_styles',
+                                    'category' => 'modal',
+                                    'required' => false,
+                                    'default' => ''
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_modal_content_close_btn_bg_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_modal_content_close_btn_bg_color',
+                                    'tooltip' => 'tr_meliscore_platform_theme_modal_content_close_btn_bg_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_modal_content_close_btn_bg_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_meliscore_platform_theme_modal_content_close_btn_bg_color',
+                                    'category' => 'modal',
+                                    'default' => '#fff'
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_modal_content_close_btn_hover_bg_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_modal_content_close_btn_hover_bg_color',
+                                    'tooltip' => 'tr_meliscore_platform_theme_modal_content_close_btn_hover_bg_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_modal_content_close_btn_hover_bg_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_meliscore_platform_theme_modal_content_close_btn_hover_bg_color',
+                                    'category' => 'modal',
+                                    'default' => '#bd362f'
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_modal_content_close_btn_border_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_modal_content_close_btn_border_color',
+                                    'tooltip' => 'tr_meliscore_platform_theme_modal_content_close_btn_border_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_modal_content_close_btn_border_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_meliscore_platform_theme_modal_content_close_btn_border_color',
+                                    'category' => 'modal',
+                                    'default' => '#bd362f'
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_modal_content_close_btn_text_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_modal_content_close_btn_text_color',
+                                    'tooltip' => 'tr_meliscore_platform_theme_modal_content_close_btn_text_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_modal_content_close_btn_text_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_meliscore_platform_theme_modal_content_close_btn_text_color',
+                                    'category' => 'modal',
+                                    'default' => '#bd362f'
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_modal_content_close_btn_hover_text_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_modal_content_close_btn_hover_text_color',
+                                    'tooltip' => 'tr_meliscore_platform_theme_modal_content_close_btn_hover_text_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_modal_content_close_btn_hover_text_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_meliscore_platform_theme_modal_content_close_btn_hover_text_color',
+                                    'category' => 'modal',
+                                    'default' => '#fff'
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_modal_content_save_btn_bg_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_modal_content_save_btn_bg_color',
+                                    'tooltip' => 'tr_meliscore_platform_theme_modal_content_save_btn_bg_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_modal_content_save_btn_bg_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_meliscore_platform_theme_modal_content_save_btn_bg_color',
+                                    'category' => 'modal',
+                                    'default' => '#fff'
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_modal_content_save_btn_hover_bg_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_modal_content_save_btn_hover_bg_color',
+                                    'tooltip' => 'tr_meliscore_platform_theme_modal_content_save_btn_hover_bg_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_modal_content_save_btn_hover_bg_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_meliscore_platform_theme_modal_content_save_btn_hover_bg_color',
+                                    'category' => 'modal',
+                                    'default' => '#72af46'
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_modal_content_save_btn_border_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_modal_content_save_btn_border_color',
+                                    'tooltip' => 'tr_meliscore_platform_theme_modal_content_save_btn_border_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_modal_content_save_btn_border_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_meliscore_platform_theme_modal_content_save_btn_border_color',
+                                    'category' => 'modal',
+                                    'default' => '#72af46'
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_modal_content_save_btn_text_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_modal_content_save_btn_text_color',
+                                    'tooltip' => 'tr_meliscore_platform_theme_modal_content_save_btn_text_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_modal_content_save_btn_text_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_meliscore_platform_theme_modal_content_save_btn_text_color',
+                                    'category' => 'modal',
+                                    'default' => '#fff'
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_modal_content_save_btn_hover_text_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_modal_content_save_btn_hover_text_color',
+                                    'tooltip' => 'tr_meliscore_platform_theme_modal_content_save_btn_hover_text_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_modal_content_save_btn_hover_text_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_meliscore_platform_theme_modal_content_save_btn_hover_text_color',
+                                    'category' => 'modal',
+                                    'default' => '#72af46'
+                                ),
+                            ),
+                        ),
+
+                        //Start Dialog
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_dialog_content_header_bg_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_dialog_content_header_bg_color',
+                                    'tooltip' => 'tr_meliscore_platform_theme_dialog_content_header_bg_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_dialog_content_header_bg_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_meliscore_platform_theme_dialog_content_header_bg_color',
+                                    'category' => 'dialog',
+                                    'default' => '#f99319'
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_dialog_content_header_title_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_dialog_content_header_title_color',
+                                    'tooltip' => 'tr_meliscore_platform_theme_dialog_content_header_title_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_dialog_content_header_title_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_meliscore_platform_theme_dialog_content_header_title_color',
+                                    'category' => 'dialog',
+                                    'default' => '#fff'
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_dialog_content_header_title_font_size',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_dialog_content_header_title_font_size',
+                                    'tooltip' => 'tr_meliscore_platform_theme_dialog_content_header_title_font_size_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_dialog_content_header_title_font_size',
+                                    'value' => '',
+                                    'class' => 'dialog-title-font-size-range-slider-value range-slider-value form-control',
+                                    'placeholder' => 'tr_meliscore_platform_theme_dialog_content_header_title_font_size',
+                                    'category' => 'dialog',
+                                    'sliderId' => 'dialog-title-font-size-range-slider-min',
+                                    'sliderClass' => 'dialog-title-font-size-range-slider-min',
+                                    'default' => 14
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_dialog_close_button_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_dialog_close_button_color',
+                                    'tooltip' => 'tr_meliscore_platform_theme_dialog_close_button_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_dialog_close_button_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_meliscore_platform_theme_dialog_close_button_color',
+                                    'category' => 'dialog',
+                                    'default' => '#fff'
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_dialog_close_button_font_size',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_dialog_close_button_font_size',
+                                    'tooltip' => 'tr_meliscore_platform_theme_dialog_close_button_font_size_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_dialog_close_button_font_size',
+                                    'value' => '',
+                                    'class' => 'dialog-close-btn-font-size-range-slider-value range-slider-value form-control',
+                                    'placeholder' => 'tr_meliscore_platform_theme_dialog_close_button_font_size',
+                                    'category' => 'dialog',
+                                    'sliderId' => 'dialog-close-btn-font-size-range-slider-min',
+                                    'sliderClass' => 'dialog-close-btn-font-size-range-slider-min',
+                                    'default' => 13
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_dialog_content_bg_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_dialog_content_bg_color',
+                                    'tooltip' => 'tr_meliscore_platform_theme_dialog_content_bg_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_dialog_content_bg_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_meliscore_platform_theme_dialog_content_bg_color',
+                                    'category' => 'dialog',
+                                    'default' => '#fff'
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_dialog_content_border_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_dialog_content_border_color',
+                                    'tooltip' => 'tr_meliscore_platform_theme_dialog_content_border_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_dialog_content_border_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_meliscore_platform_theme_dialog_content_border_color',
+                                    'category' => 'dialog',
+                                    'default' => '#fff'
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_dialog_content_text_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_dialog_content_text_color',
+                                    'tooltip' => 'tr_meliscore_platform_theme_dialog_content_text_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_dialog_content_text_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_meliscore_platform_theme_dialog_content_text_color',
+                                    'category' => 'dialog',
+                                    'default' => '#686868'
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_dialog_content_text_font_size',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_dialog_content_text_font_size',
+                                    'tooltip' => 'tr_meliscore_platform_theme_dialog_content_text_font_size_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_dialog_content_text_font_size',
+                                    'value' => '',
+                                    'class' => 'dialog-content-text-font-size-range-slider-value range-slider-value form-control',
+                                    'placeholder' => 'tr_meliscore_platform_theme_dialog_content_text_font_size',
+                                    'category' => 'dialog',
+                                    'sliderId' => 'dialog-content-text-font-size-range-slider-min',
+                                    'sliderClass' => 'dialog-content-text-font-size-range-slider-min',
+                                    'default' => 14
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_dialog_no_btn_bg_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_dialog_no_btn_bg_color',
+                                    'tooltip' => 'tr_meliscore_platform_theme_dialog_no_btn_bg_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_dialog_no_btn_bg_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_meliscore_platform_theme_dialog_no_btn_bg_color',
+                                    'category' => 'dialog',
+                                    'default' => '#fff'
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_dialog_no_btn_bg_hover_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_dialog_no_btn_bg_hover_color',
+                                    'tooltip' => 'tr_meliscore_platform_theme_dialog_no_btn_bg_hover_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_dialog_no_btn_bg_hover_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_meliscore_platform_theme_dialog_no_btn_bg_hover_color',
+                                    'category' => 'dialog',
+                                    'default' => '#bd362f'
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_dialog_no_btn_border_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_dialog_no_btn_border_color',
+                                    'tooltip' => 'tr_meliscore_platform_theme_dialog_no_btn_border_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_dialog_no_btn_border_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_meliscore_platform_theme_dialog_no_btn_border_color',
+                                    'category' => 'dialog',
+                                    'default' => '#bd362f'
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_dialog_no_btn_border_hover_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_dialog_no_btn_border_hover_color',
+                                    'tooltip' => 'tr_meliscore_platform_theme_dialog_no_btn_border_hover_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_dialog_no_btn_border_hover_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_meliscore_platform_theme_dialog_no_btn_border_hover_color',
+                                    'category' => 'dialog',
+                                    'default' => '#bd362f'
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_dialog_no_btn_text_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_dialog_no_btn_text_color',
+                                    'tooltip' => 'tr_meliscore_platform_theme_dialog_no_btn_text_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_dialog_no_btn_text_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_meliscore_platform_theme_dialog_no_btn_text_color',
+                                    'category' => 'dialog',
+                                    'default' => '#bd362f'
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_dialog_no_btn_text_hover_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_dialog_no_btn_text_hover_color',
+                                    'tooltip' => 'tr_meliscore_platform_theme_dialog_no_btn_text_hover_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_dialog_no_btn_text_hover_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_meliscore_platform_theme_dialog_no_btn_text_hover_color',
+                                    'category' => 'dialog',
+                                    'default' => '#fff'
+                                ),
+                            ),
+                        ),
+
+
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_dialog_yes_btn_bg_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_dialog_yes_btn_bg_color',
+                                    'tooltip' => 'tr_meliscore_platform_theme_dialog_yes_btn_bg_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_dialog_yes_btn_bg_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_meliscore_platform_theme_dialog_yes_btn_bg_color',
+                                    'category' => 'dialog',
+                                    'default' => '#fff'
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_dialog_yes_btn_bg_hover_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_dialog_yes_btn_bg_hover_color',
+                                    'tooltip' => 'tr_meliscore_platform_theme_dialog_yes_btn_bg_hover_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_dialog_yes_btn_bg_hover_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_meliscore_platform_theme_dialog_yes_btn_bg_hover_color',
+                                    'category' => 'dialog',
+                                    'default' => '#72af46'
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_dialog_yes_btn_border_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_dialog_yes_btn_border_color',
+                                    'tooltip' => 'tr_meliscore_platform_theme_dialog_yes_btn_border_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_dialog_yes_btn_border_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_meliscore_platform_theme_dialog_yes_btn_border_color',
+                                    'category' => 'dialog',
+                                    'default' => '#72af46'
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_dialog_yes_btn_border_hover_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_dialog_yes_btn_border_hover_color',
+                                    'tooltip' => 'tr_meliscore_platform_theme_dialog_yes_btn_border_hover_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_dialog_yes_btn_border_hover_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_meliscore_platform_theme_dialog_yes_btn_border_hover_color',
+                                    'category' => 'dialog',
+                                    'default' => '#72af46'
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_dialog_yes_btn_text_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_dialog_yes_btn_text_color',
+                                    'tooltip' => 'tr_meliscore_platform_theme_dialog_yes_btn_text_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_dialog_yes_btn_text_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_meliscore_platform_theme_dialog_yes_btn_text_color',
+                                    'category' => 'dialog',
+                                    'default' => '#72af46'
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_dialog_yes_btn_text_hover_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_dialog_yes_btn_text_hover_color',
+                                    'tooltip' => 'tr_meliscore_platform_theme_dialog_yes_btn_text_hover_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_dialog_yes_btn_text_hover_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_meliscore_platform_theme_dialog_yes_btn_text_hover_color',
+                                    'category' => 'dialog',
+                                    'default' => '#fff'
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_dialog_btn_text_font_size',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_dialog_btn_text_font_size',
+                                    'tooltip' => 'tr_meliscore_platform_theme_dialog_btn_text_font_size_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_dialog_btn_text_font_size',
+                                    'value' => '',
+                                    'class' => 'dialog-button-text-font-size-range-slider-value range-slider-value form-control',
+                                    'placeholder' => 'tr_meliscore_platform_theme_dialog_btn_text_font_size',
+                                    'category' => 'dialog',
+                                    'sliderId' => 'dialog-button-text-font-size-range-slider-min',
+                                    'sliderClass' => 'dialog-button-text-font-size-range-slider-min',
+                                    'default' => 14
+                                ),
+                            ),
+                        ),
+
+                        //Form Elements
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_form_bg_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_form_bg_color',
+                                    'tooltip' => 'tr_meliscore_platform_theme_form_bg_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_form_bg_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_meliscore_platform_theme_form_bg_color',
+                                    'category' => 'form_elements',
+                                    'default' => '#fff'
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_form_text_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_form_text_color',
+                                    'tooltip' => 'tr_meliscore_platform_theme_form_text_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_form_text_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_meliscore_platform_theme_form_text_color',
+                                    'category' => 'form_elements',
+                                    'default' => '#686868'
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_form_select_option_bg_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_form_select_option_bg_color',
+                                    'tooltip' => 'tr_meliscore_platform_theme_form_select_option_bg_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_form_select_option_bg_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_meliscore_platform_theme_form_select_option_bg_color',
+                                    'category' => 'form_elements',
+                                    'default' => '#fff'
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_form_select_option_text_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_form_select_option_text_color',
+                                    'tooltip' => 'tr_meliscore_platform_theme_form_select_option_text_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_form_select_option_text_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_meliscore_platform_theme_form_select_option_text_color',
+                                    'category' => 'form_elements',
+                                    'default' => '#686868'
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_form_input_elements_border_radius',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_form_input_elements_border_radius',
+                                    'tooltip' => 'tr_meliscore_platform_theme_form_input_elements_border_radius_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_form_input_elements_border_radius',
+                                    'value' => '',
+                                    'class' => 'form-inputs-element-border-radius-range-slider-value range-slider-value form-control',
+                                    'placeholder' => 'tr_meliscore_platform_theme_form_input_elements_border_radius',
+                                    'category' => 'form_elements',
+                                    'sliderId' => 'form-inputs-element-border-radius-range-slider-min',
+                                    'sliderClass' => 'form-inputs-element-border-radius-range-slider-min',
+                                    'default' => 0
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_form_input_elements_text_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_form_input_elements_text_color',
+                                    'tooltip' => 'tr_meliscore_platform_theme_form_input_elements_text_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_form_input_elements_text_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_meliscore_platform_theme_form_input_elements_text_color',
+                                    'category' => 'form_elements',
+                                    'default' => '#444'
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_form_input_elements_border_width',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_form_input_elements_border_width',
+                                    'tooltip' => 'tr_meliscore_platform_theme_form_input_elements_border_width_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_form_input_elements_border_width',
+                                    'value' => '',
+                                    'class' => 'form-inputs-element-border-width-range-slider-value range-slider-value form-control',
+                                    'placeholder' => 'tr_meliscore_platform_theme_form_input_elements_border_width',
+                                    'category' => 'form_elements',
+                                    'sliderId' => 'form-inputs-element-border-width-range-slider-min',
+                                    'sliderClass' => 'form-inputs-element-border-width-range-slider-min',
+                                    'default' => 0
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_form_input_elements_border_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_form_input_elements_border_color',
+                                    'tooltip' => 'tr_meliscore_platform_theme_form_input_elements_border_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_form_input_elements_border_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_meliscore_platform_theme_form_input_elements_border_color',
+                                    'category' => 'form_elements',
+                                    'default' => '#dee2e6'
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_form_input_elements_bg_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_form_input_elements_bg_color',
+                                    'tooltip' => 'tr_meliscore_platform_theme_form_input_elements_bg_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_form_input_elements_bg_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_meliscore_platform_theme_form_input_elements_bg_color',
+                                    'category' => 'form_elements',
+                                    'default' => '#fff'
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_form_input_text_disable_readonly_bg_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_form_input_text_disable_readonly_bg_color',
+                                    'tooltip' => 'tr_meliscore_platform_theme_form_input_text_disable_readonly_bg_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_form_input_text_disable_readonly_bg_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_meliscore_platform_theme_form_input_text_disable_readonly_bg_color',
+                                    'category' => 'form_elements',
+                                    'default' => '#e9ecef'
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_form_input_text_disable_readonly_border_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_form_input_text_disable_readonly_border_color',
+                                    'tooltip' => 'tr_meliscore_platform_theme_form_input_text_disable_readonly_border_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_form_input_text_disable_readonly_border_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_meliscore_platform_theme_form_input_text_disable_readonly_border_color',
+                                    'category' => 'form_elements',
+                                    'default' => '#dee2e6'
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_form_input_text_disable_readonly_text_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_form_input_text_disable_readonly_text_color',
+                                    'tooltip' => 'tr_meliscore_platform_theme_form_input_text_disable_readonly_text_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_form_input_text_disable_readonly_text_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_meliscore_platform_theme_form_input_text_disable_readonly_text_color',
+                                    'category' => 'form_elements',
+                                    'default' => '#dee2e6'
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_form_button_submit_bg_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_form_button_submit_bg_color',
+                                    'tooltip' => 'tr_meliscore_platform_theme_form_button_submit_bg_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_form_button_submit_bg_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_meliscore_platform_theme_form_button_submit_bg_color',
+                                    'category' => 'form_elements',
+                                    'default' => '#fff'
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_form_button_submit_text_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_form_button_submit_text_color',
+                                    'tooltip' => 'tr_meliscore_platform_theme_form_button_submit_text_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_form_button_submit_text_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_meliscore_platform_theme_form_button_submit_text_color',
+                                    'category' => 'form_elements',
+                                    'default' => '#444'
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_form_button_submit_border_radius',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_form_button_submit_border_radius',
+                                    'tooltip' => 'tr_meliscore_platform_theme_form_button_submit_border_radius_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_form_button_submit_border_radius',
+                                    'value' => '',
+                                    'class' => 'form-inputs-element-border-width-range-slider-value range-slider-value form-control',
+                                    'placeholder' => 'tr_meliscore_platform_theme_form_button_submit_border_radius',
+                                    'category' => 'form_elements',
+                                    'sliderId' => 'form-button-submit-border-radius-range-slider-min',
+                                    'sliderClass' => 'form-button-submit-border-radius-range-slider-min',
+                                    'default' => 0
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_form_button_submit_border_width',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_form_button_submit_border_width',
+                                    'tooltip' => 'tr_meliscore_platform_theme_form_button_submit_border_width_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_form_button_submit_border_width',
+                                    'value' => '',
+                                    'class' => 'form-button-submit-border-width-range-slider-value range-slider-value form-control',
+                                    'placeholder' => 'tr_meliscore_platform_theme_form_button_submit_border_width',
+                                    'category' => 'form_elements',
+                                    'sliderId' => 'form-button-submit-border-width-range-slider-min',
+                                    'sliderClass' => 'form-button-submit-border-width-range-slider-min',
+                                    'default' => 0
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_form_button_submit_border_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_form_button_submit_border_color',
+                                    'tooltip' => 'tr_meliscore_platform_theme_form_button_submit_border_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_form_button_submit_border_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_meliscore_platform_theme_form_button_submit_border_color',
+                                    'category' => 'form_elements',
+                                    'default' => '#444'
+                                ),
+                            ),
+                        ),
+
+                        //Tabs
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_tab_widget_head_bg_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_tab_widget_head_bg_color',
+                                    'tooltip' => 'tr_meliscore_platform_theme_tab_widget_head_bg_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_tab_widget_head_bg_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_meliscore_platform_theme_tab_widget_head_bg_color',
+                                    'category' => 'tab',
+                                    'default' => '#fff'
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_tab_widget_head_border_width',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_tab_widget_head_border_width',
+                                    'tooltip' => 'tr_meliscore_platform_theme_tab_widget_head_border_width_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_tab_widget_head_border_width',
+                                    'value' => '',
+                                    'class' => 'tab-widget-head-border-width-range-slider-value range-slider-value form-control',
+                                    'placeholder' => 'tr_meliscore_platform_theme_tab_widget_head_border_width',
+                                    'category' => 'tab',
+                                    'sliderId' => 'tab-widget-head-border-width-range-slider-min',
+                                    'sliderClass' => 'tab-widget-head-border-width-range-slider-min',
+                                    'default' => 0
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_tab_widget_head_border_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_tab_widget_head_border_color',
+                                    'tooltip' => 'tr_meliscore_platform_theme_tab_widget_head_border_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_tab_widget_head_border_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_meliscore_platform_theme_tab_widget_head_border_color',
+                                    'category' => 'tab',
+                                    'default' => '#e5e5e5'
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_tab_widget_head_nav_item_and_link_height',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_tab_widget_head_nav_item_and_link_height',
+                                    'tooltip' => 'tr_meliscore_platform_theme_tab_widget_head_nav_item_and_link_height_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_tab_widget_head_nav_item_and_link_height',
+                                    'value' => '',
+                                    'class' => 'tab-widget-head-nav-item-and-link-width-range-slider-value range-slider-value form-control',
+                                    'placeholder' => 'tr_meliscore_platform_theme_tab_widget_head_border_width',
+                                    'category' => 'tab',
+                                    'sliderId' => 'tab-widget-head-nav-item-and-link-width-range-slider-min',
+                                    'sliderClass' => 'tab-widget-head-nav-item-and-link-width-range-slider-min',
+                                    'default' => 0
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_tab_widget_nav_item_border_right_width',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_tab_widget_nav_item_border_right_width',
+                                    'tooltip' => 'tr_meliscore_platform_theme_tab_widget_nav_item_border_right_width_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_tab_widget_nav_item_border_right_width',
+                                    'value' => '',
+                                    'class' => 'tab-widget-head-nav-item-border-right-width-range-slider-value range-slider-value form-control',
+                                    'placeholder' => 'tr_meliscore_platform_theme_tab_widget_head_border_width',
+                                    'category' => 'tab',
+                                    'sliderId' => 'tab-widget-head-nav-item-border-right-width-range-slider-min',
+                                    'sliderClass' => 'tab-widget-head-nav-item-border-right-width-range-slider-min',
+                                    'default' => 0
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_tab_widget_nav_item_border_right_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_tab_widget_nav_item_border_right_color',
+                                    'tooltip' => 'tr_meliscore_platform_theme_tab_widget_nav_item_border_right_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_tab_widget_nav_item_border_right_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_meliscore_platform_theme_tab_widget_nav_item_border_right_color',
+                                    'category' => 'tab',
+                                    'default' => '#e5e5e5'
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_tab_widget_nav_link_text_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_tab_widget_nav_link_text_color',
+                                    'tooltip' => 'tr_meliscore_platform_theme_tab_widget_nav_link_text_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_tab_widget_nav_link_text_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_meliscore_platform_theme_tab_widget_nav_link_text_color',
+                                    'category' => 'tab',
+                                    'default' => '#7c7c7c'
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_tab_widget_nav_link_text_font_size',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_tab_widget_nav_link_text_font_size',
+                                    'tooltip' => 'tr_meliscore_platform_theme_tab_widget_nav_link_text_font_size_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_tab_widget_nav_link_text_font_size',
+                                    'value' => '',
+                                    'class' => 'tab-widget-nav-link-text-font-size-range-slider-value range-slider-value form-control',
+                                    'placeholder' => 'tr_meliscore_platform_theme_tab_widget_nav_link_text_font_size',
+                                    'category' => 'tab',
+                                    'sliderId' => 'tab-widget-nav-link-text-font-size-range-slider-min',
+                                    'sliderClass' => 'tab-widget-nav-link-text-font-size-range-slider-min',
+                                    'default' => 0
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_tab_widget_nav_link_min_width',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_tab_widget_nav_link_min_width',
+                                    'tooltip' => 'tr_meliscore_platform_theme_tab_widget_nav_link_min_width_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_tab_widget_nav_link_min_width',
+                                    'value' => '',
+                                    'class' => 'tab-widget-nav-link-min-width-range-slider-value range-slider-value form-control',
+                                    'placeholder' => 'tr_meliscore_platform_theme_tab_widget_nav_link_min_width',
+                                    'category' => 'tab',
+                                    'sliderId' => 'tab-widget-nav-link-min-width-range-slider-min',
+                                    'sliderClass' => 'tab-widget-nav-link-min-width-range-slider-min',
+                                    'default' => 0
+                                ),
+                            ),
+                        ),                       
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_tab_widget_nav_link_text_align',
+                                'type' => 'Laminas\Form\Element\Radio',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_tab_widget_nav_link_text_align',
+                                    'tooltip' => 'tr_meliscore_platform_theme_tab_widget_nav_link_text_align_tooltip',
+                                    'value_options' => array(
+                                        'left' => '<label class="btn btn-default" for="melis_core_platform_theme_tab_widget_nav_link_text_align_left"><i class="bi bi-text-left"></i></label>',
+                                        'center' => '<label class="btn btn-default" for="melis_core_platform_theme_tab_widget_nav_link_text_align_center"><i class="bi bi-text-center"></i></label>',
+                                        'right' => '<label class="btn btn-default" for="melis_core_platform_theme_tab_widget_nav_link_text_align_right"><i class="bi bi-text-right"></i></label>',
+                                    ),
+                                    'label_attributes' => array(
+                                        'class' => 'melis-radio-box',
+                                    ),
+                                    'disable_inarray_validator' => true,
+                                ),
+                                'attributes' => array(
+                                    'value' => '',
+                                    'placeholder' => '',
+                                    'class' => 'form-control',
+                                    'id' => 'melis_core_platform_theme_tab_widget_nav_link_text_align',
+                                    'category' => 'tab',
+                                    'default' => ''
+                                ),
+                            ),
+                        ), 
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_tab_widget_nav_link_icon_height',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_tab_widget_nav_link_icon_height',
+                                    'tooltip' => 'tr_meliscore_platform_theme_tab_widget_nav_link_icon_height_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_tab_widget_nav_link_icon_height',
+                                    'value' => '',
+                                    'class' => 'tab-widget-nav-link-height-range-slider-value range-slider-value form-control',
+                                    'placeholder' => 'tr_meliscore_platform_theme_tab_widget_nav_link_icon_height',
+                                    'category' => 'tab',
+                                    'sliderId' => 'tab-widget-nav-link-height-range-slider-min',
+                                    'sliderClass' => 'tab-widget-nav-link-height-range-slider-min',
+                                    'default' => 0
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_tab_widget_link_icon_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_tab_widget_link_icon_color',
+                                    'tooltip' => 'tr_meliscore_platform_theme_tab_widget_link_icon_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_tab_widget_link_icon_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_meliscore_platform_theme_tab_widget_link_icon_color',
+                                    'category' => 'tab',
+                                    'default' => '#9d9d9d'
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_tab_widget_link_icon_font_size',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_tab_widget_link_icon_font_size',
+                                    'tooltip' => 'tr_meliscore_platform_theme_tab_widget_link_icon_font_size_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_tab_widget_link_icon_font_size',
+                                    'value' => '',
+                                    'class' => 'tab-widget-link-font-size-range-slider-value range-slider-value form-control',
+                                    'placeholder' => 'tr_meliscore_platform_theme_tab_widget_link_icon_font_size',
+                                    'category' => 'tab',
+                                    'sliderId' => 'tab-widget-link-font-size-range-slider-min',
+                                    'sliderClass' => 'tab-widget-link-font-size-range-slider-min',
+                                    'default' => 0
+                                ),
+                            ),
+                        ),
+
                     ),
                     'input_filter' => array(
                         'melis_core_platform_theme_dashboard_plugin_no_plugin_alert_text_font_style' => array(
@@ -2920,8 +4415,7 @@ return array(
                             'required' => false,
                             'validators' => array(
                                 array(
-                                    'name' => 'regex',
-                                    false,
+                                    'name' => 'regex',                                    
                                     'options' => array(
                                         'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
                                         'messages' => array(\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'),
@@ -2939,8 +4433,7 @@ return array(
                             'required' => false,
                             'validators' => array(
                                 array(
-                                    'name' => 'regex',
-                                    false,
+                                    'name' => 'regex',                                   
                                     'options' => array(
                                         'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
                                         'messages' => array(\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'),
@@ -2958,8 +4451,7 @@ return array(
                             'required' => false,
                             'validators' => array(
                                 array(
-                                    'name' => 'regex',
-                                    false,
+                                    'name' => 'regex',                                    
                                     'options' => array(
                                         'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
                                         'messages' => array(\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'),
@@ -2977,8 +4469,7 @@ return array(
                             'required' => false,
                             'validators' => array(
                                 array(
-                                    'name' => 'regex',
-                                    false,
+                                    'name' => 'regex',                                   
                                     'options' => array(
                                         'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
                                         'messages' => array(\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'),
@@ -2996,8 +4487,7 @@ return array(
                             'required' => false,
                             'validators' => array(
                                 array(
-                                    'name' => 'regex',
-                                    false,
+                                    'name' => 'regex',                                   
                                     'options' => array(
                                         'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
                                         'messages' => array(\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'),
@@ -3015,8 +4505,7 @@ return array(
                             'required' => false,
                             'validators' => array(
                                 array(
-                                    'name' => 'regex',
-                                    false,
+                                    'name' => 'regex',                                    
                                     'options' => array(
                                         'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
                                         'messages' => array(\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'),
@@ -3034,8 +4523,7 @@ return array(
                             'required' => false,
                             'validators' => array(
                                 array(
-                                    'name' => 'regex',
-                                    false,
+                                    'name' => 'regex',                                  
                                     'options' => array(
                                         'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
                                         'messages' => array(\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'),
@@ -3053,8 +4541,7 @@ return array(
                             'required' => false,
                             'validators' => array(
                                 array(
-                                    'name' => 'regex',
-                                    false,
+                                    'name' => 'regex',                                   
                                     'options' => array(
                                         'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
                                         'messages' => array(\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'),
@@ -3072,8 +4559,7 @@ return array(
                             'required' => false,
                             'validators' => array(
                                 array(
-                                    'name' => 'regex',
-                                    false,
+                                    'name' => 'regex',                                   
                                     'options' => array(
                                         'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
                                         'messages' => array(\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'),
@@ -3091,8 +4577,7 @@ return array(
                             'required' => false,
                             'validators' => array(
                                 array(
-                                    'name' => 'regex',
-                                    false,
+                                    'name' => 'regex',                                 
                                     'options' => array(
                                         'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
                                         'messages' => array(\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'),
@@ -3110,8 +4595,7 @@ return array(
                             'required' => false,
                             'validators' => array(
                                 array(
-                                    'name' => 'regex',
-                                    false,
+                                    'name' => 'regex',                                    
                                     'options' => array(
                                         'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
                                         'messages' => array(\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'),
@@ -3129,8 +4613,7 @@ return array(
                             'required' => false,
                             'validators' => array(
                                 array(
-                                    'name' => 'regex',
-                                    false,
+                                    'name' => 'regex',                                   
                                     'options' => array(
                                         'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
                                         'messages' => array(\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'),
@@ -3148,8 +4631,7 @@ return array(
                             'required' => false,
                             'validators' => array(
                                 array(
-                                    'name' => 'regex',
-                                    false,
+                                    'name' => 'regex',                                   
                                     'options' => array(
                                         'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
                                         'messages' => array(\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'),
@@ -3167,8 +4649,7 @@ return array(
                             'required' => false,
                             'validators' => array(
                                 array(
-                                    'name' => 'regex',
-                                    false,
+                                    'name' => 'regex',                                  
                                     'options' => array(
                                         'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
                                         'messages' => array(\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'),
@@ -3186,8 +4667,7 @@ return array(
                             'required' => false,
                             'validators' => array(
                                 array(
-                                    'name' => 'regex',
-                                    false,
+                                    'name' => 'regex',                                  
                                     'options' => array(
                                         'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
                                         'messages' => array(\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'),
@@ -3205,8 +4685,7 @@ return array(
                             'required' => false,
                             'validators' => array(
                                 array(
-                                    'name' => 'regex',
-                                    false,
+                                    'name' => 'regex',                                  
                                     'options' => array(
                                         'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
                                         'messages' => array(\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'),
@@ -4269,6 +5748,999 @@ return array(
                                 ['name' => 'StringTrim'],
                             ],
                         ],      
+
+                        //modal    
+                        'melis_core_platform_theme_modal_bg_color' => [
+                            'name'     => 'melis_core_platform_theme_modal_bg_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',                                  
+                                    'options' => [
+                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+                        'melis_core_platform_theme_modal_border_color' => [
+                            'name'     => 'melis_core_platform_theme_modal_border_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',                                  
+                                    'options' => [
+                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+                        'melis_core_platform_theme_modal_nav_tabs_bg_color' => [
+                            'name'     => 'melis_core_platform_theme_modal_nav_tabs_bg_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',                                   
+                                    'options' => [
+                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+                        'melis_core_platform_theme_modal_nav_tabs_active_bg_color' => [
+                            'name'     => 'melis_core_platform_theme_modal_nav_tabs_active_bg_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',                                  
+                                    'options' => [
+                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+                        'melis_core_platform_theme_modal_nav_tabs_text_icon_color' => [
+                            'name'     => 'melis_core_platform_theme_modal_nav_tabs_text_icon_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',                              
+                                    'options' => [
+                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],      
+                    
+                        'melis_core_platform_theme_modal_nav_tabs_text_icon_hover_color' => [
+                            'name'     => 'melis_core_platform_theme_modal_nav_tabs_text_icon_hover_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',                                   
+                                    'options' => [
+                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+                        'melis_core_platform_theme_modal_nav_tabs_border_right_color' => [
+                            'name'     => 'melis_core_platform_theme_modal_nav_tabs_border_right_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',                                    
+                                    'options' => [
+                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+                        'melis_core_platform_theme_modal_content_text_color' => [
+                            'name'     => 'melis_core_platform_theme_modal_content_text_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',                                  
+                                    'options' => [
+                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+                        'melis_core_platform_theme_modal_content_close_btn_bg_color' => [
+                            'name'     => 'melis_core_platform_theme_modal_content_close_btn_bg_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',                                   
+                                    'options' => [
+                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+                        'melis_core_platform_theme_modal_content_close_btn_hover_bg_color' => [
+                            'name'     => 'melis_core_platform_theme_modal_content_close_btn_hover_bg_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',                                   
+                                    'options' => [
+                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],                          
+                        'melis_core_platform_theme_modal_content_close_btn_border_color' => [
+                            'name'     => 'melis_core_platform_theme_modal_content_close_btn_border_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',                                   
+                                    'options' => [
+                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+                        'melis_core_platform_theme_modal_content_close_btn_text_color' => [
+                            'name'     => 'melis_core_platform_theme_modal_content_close_btn_text_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',                                   
+                                    'options' => [
+                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+                        'melis_core_platform_theme_modal_content_close_btn_hover_text_color' => [
+                            'name'     => 'melis_core_platform_theme_modal_content_close_btn_hover_text_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',                                  
+                                    'options' => [
+                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+                        'melis_core_platform_theme_modal_content_save_btn_bg_color' => [
+                            'name'     => 'melis_core_platform_theme_modal_content_save_btn_bg_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',                                    
+                                    'options' => [
+                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+                        'melis_core_platform_theme_modal_content_save_btn_hover_bg_color' => [
+                            'name'     => 'melis_core_platform_theme_modal_content_save_btn_hover_bg_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',                                 
+                                    'options' => [
+                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+                        'melis_core_platform_theme_modal_content_save_btn_border_color' => [
+                            'name'     => 'melis_core_platform_theme_modal_content_save_btn_border_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',
+                                    'options' => [
+                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+
+                        'melis_core_platform_theme_modal_content_save_btn_text_color' => [
+                            'name'     => 'melis_core_platform_theme_modal_content_save_btn_text_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',
+                                    'options' => [
+                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+
+                        'melis_core_platform_theme_modal_content_save_btn_hover_text_color' => [
+                            'name'     => 'melis_core_platform_theme_modal_content_save_btn_hover_text_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',
+                                    'options' => [
+                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+                        'melis_core_platform_theme_modal_content_text_font_styles' => [
+                            'name'     => 'melis_core_platform_theme_modal_content_text_font_styles',
+                            'required' => false,                            
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+                        //Dialog
+                        'melis_core_platform_theme_dialog_content_header_bg_color' => [
+                            'name'     => 'melis_core_platform_theme_dialog_content_header_bg_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',
+                                    'options' => [
+                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+
+                        'melis_core_platform_theme_dialog_content_header_title_color' => [
+                            'name'     => 'melis_core_platform_theme_dialog_content_header_title_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',
+                                    'options' => [
+                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+
+                        'melis_core_platform_theme_dialog_close_button_color' => [
+                            'name'     => 'melis_core_platform_theme_dialog_close_button_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',
+                                    'options' => [
+                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+
+                        'melis_core_platform_theme_dialog_content_bg_color' => [
+                            'name'     => 'melis_core_platform_theme_dialog_content_bg_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',
+                                    'options' => [
+                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+
+                        'melis_core_platform_theme_dialog_content_border_color' => [
+                            'name'     => 'melis_core_platform_theme_dialog_content_border_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',
+                                    'options' => [
+                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+
+                        'melis_core_platform_theme_dialog_content_text_color' => [
+                            'name'     => 'melis_core_platform_theme_dialog_content_text_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',
+                                    'options' => [
+                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+                        'melis_core_platform_theme_dialog_no_btn_bg_color' => [
+                            'name'     => 'melis_core_platform_theme_dialog_no_btn_bg_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',
+                                    'options' => [
+                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+                        'melis_core_platform_theme_dialog_no_btn_bg_hover_color' => [
+                            'name'     => 'melis_core_platform_theme_dialog_no_btn_bg_hover_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',
+                                    'options' => [
+                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+                        'melis_core_platform_theme_dialog_no_btn_border_color' => [
+                            'name'     => 'melis_core_platform_theme_dialog_no_btn_border_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',
+                                    'options' => [
+                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+                        'melis_core_platform_theme_dialog_no_btn_border_hover_color' => [
+                            'name'     => 'melis_core_platform_theme_dialog_no_btn_border_hover_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',
+                                    'options' => [
+                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+                        'melis_core_platform_theme_dialog_no_btn_text_color' => [
+                            'name'     => 'melis_core_platform_theme_dialog_no_btn_text_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',
+                                    'options' => [
+                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+                        'melis_core_platform_theme_dialog_no_btn_text_hover_color' => [
+                            'name'     => 'melis_core_platform_theme_dialog_no_btn_text_hover_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',
+                                    'options' => [
+                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+                        'melis_core_platform_theme_dialog_yes_btn_bg_color' => [
+                            'name'     => 'melis_core_platform_theme_dialog_yes_btn_bg_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',
+                                    'options' => [
+                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+                        'melis_core_platform_theme_dialog_yes_btn_bg_hover_color' => [
+                            'name'     => 'melis_core_platform_theme_dialog_yes_btn_bg_hover_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',
+                                    'options' => [
+                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+                        'melis_core_platform_theme_dialog_yes_btn_border_color' => [
+                            'name'     => 'melis_core_platform_theme_dialog_yes_btn_border_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',
+                                    'options' => [
+                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+                        'melis_core_platform_theme_dialog_yes_btn_border_hover_color' => [
+                            'name'     => 'melis_core_platform_theme_dialog_yes_btn_border_hover_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',
+                                    'options' => [
+                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+                        'melis_core_platform_theme_dialog_yes_btn_text_color' => [
+                            'name'     => 'melis_core_platform_theme_dialog_yes_btn_text_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',
+                                    'options' => [
+                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+                        'melis_core_platform_theme_dialog_yes_btn_text_hover_color' => [
+                            'name'     => 'melis_core_platform_theme_dialog_yes_btn_text_hover_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',
+                                    'options' => [
+                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+
+                        //Form Elements
+                        'melis_core_platform_theme_form_bg_color' => [
+                            'name'     => 'melis_core_platform_theme_form_bg_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',
+                                    'options' => [
+                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+                        'melis_core_platform_theme_form_text_color' => [
+                            'name'     => 'melis_core_platform_theme_form_text_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',
+                                    'options' => [
+                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+                        'melis_core_platform_theme_form_select_option_bg_color' => [
+                            'name'     => 'melis_core_platform_theme_form_select_option_bg_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',
+                                    'options' => [
+                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+                        'melis_core_platform_theme_form_select_option_text_color' => [
+                            'name'     => 'melis_core_platform_theme_form_select_option_text_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',
+                                    'options' => [
+                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],                        
+                        'melis_core_platform_theme_form_input_elements_text_color' => [
+                            'name'     => 'melis_core_platform_theme_form_input_elements_text_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',
+                                    'options' => [
+                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],                     
+                        'melis_core_platform_theme_form_input_elements_border_color' => [
+                            'name'     => 'melis_core_platform_theme_form_input_elements_border_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',
+                                    'options' => [
+                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+                        'melis_core_platform_theme_form_input_elements_bg_color' => [
+                            'name'     => 'melis_core_platform_theme_form_input_elements_bg_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',
+                                    'options' => [
+                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+                        'melis_core_platform_theme_form_input_text_disable_readonly_bg_color' => [
+                            'name'     => 'melis_core_platform_theme_form_input_text_disable_readonly_bg_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',
+                                    'options' => [
+                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+                        'melis_core_platform_theme_form_input_text_disable_readonly_border_color' => [
+                            'name'     => 'melis_core_platform_theme_form_input_text_disable_readonly_border_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',
+                                    'options' => [
+                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+                        'melis_core_platform_theme_form_input_text_disable_readonly_text_color' => [
+                            'name'     => 'melis_core_platform_theme_form_input_text_disable_readonly_text_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',
+                                    'options' => [
+                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+                        'melis_core_platform_theme_form_button_submit_bg_color' => [
+                            'name'     => 'melis_core_platform_theme_form_button_submit_bg_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',
+                                    'options' => [
+                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+                        'melis_core_platform_theme_form_button_submit_text_color' => [
+                            'name'     => 'melis_core_platform_theme_form_button_submit_text_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',
+                                    'options' => [
+                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+                        'melis_core_platform_theme_form_button_submit_border_color' => [
+                            'name'     => 'melis_core_platform_theme_form_button_submit_border_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',
+                                    'options' => [
+                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+                        'melis_core_platform_theme_tab_widget_head_bg_color' => [
+                            'name'     => 'melis_core_platform_theme_tab_widget_head_bg_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',
+                                    'options' => [
+                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+                        'melis_core_platform_theme_tab_widget_head_border_color' => [
+                            'name'     => 'melis_core_platform_theme_tab_widget_head_border_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',
+                                    'options' => [
+                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+                        'melis_core_platform_theme_tab_widget_nav_item_border_right_color' => [
+                            'name'     => 'melis_core_platform_theme_tab_widget_nav_item_border_right_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',
+                                    'options' => [
+                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+                        'melis_core_platform_theme_tab_widget_nav_link_text_color' => [
+                            'name'     => 'melis_core_platform_theme_tab_widget_nav_link_text_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',
+                                    'options' => [
+                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+                        'melis_core_platform_theme_tab_widget_link_icon_color' => [
+                            'name'     => 'melis_core_platform_theme_tab_widget_link_icon_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',
+                                    'options' => [
+                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
                     )
                 ),
 			),
