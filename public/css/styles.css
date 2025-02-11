@@ -244,8 +244,9 @@ body {
 	font-size: 21px;
 }
 
+.login-page .card,
 .login-page .card-body {
-	border-radius: 4px;
+	border-radius: 0;
 }
 
 #id_meliscore_login_footer .copy.footer {
