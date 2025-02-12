@@ -300,133 +300,133 @@ var rangeSliderSize = {
             { 
                 selectorMin: ".modal-border-radius-size-range-slider-min", 
                 selectorValue: ".modal-border-radius-size-range-slider-value", 
-                value: 0, 
+                value: $("#melis_core_platform_theme_modal_border_radius_size").val(), 
                 min: 0, 
                 max: 10 
-            }, // modal nav tabs border radius size, start component options
-            { 
-                selectorMin: ".modal-border-right-width-range-slider-min", 
-                selectorValue: ".modal-border-right-width-range-slider-value", 
-                value: 1, 
-                min: 0, 
-                max: 10 
-            }, // modal nav tabs border right width
+            }, // modal nav tabs border radius size, start component options           
             { 
                 selectorMin: ".modal-tabs-font-size-range-slider-min", 
                 selectorValue: ".modal-tabs-font-size-range-slider-value", 
-                value: 14, 
+                value: $("#melis_core_platform_theme_modal_nav_tabs_text_icon_font_size").val(), 
                 min: 1, 
                 max: 20 
             }, // modal nav tabs text font size
             { 
+                selectorMin: ".modal-border-right-width-range-slider-min", 
+                selectorValue: ".modal-border-right-width-range-slider-value", 
+                value: $("#melis_core_platform_theme_modal_nav_tabs_border_right_width").val(), 
+                min: 1, 
+                max: 20 
+            }, // modal nav tabs border right width
+            { 
                 selectorMin: ".modal-content-text-font-size-range-slider-min", 
                 selectorValue: ".modal-content-text-font-size-range-slider-value", 
-                value: 14, 
+                value: $("#melis_core_platform_theme_modal_content_text_font_size").val(), 
                 min: 1, 
                 max: 25 
             }, // modal content text font size
             { 
                 selectorMin: ".form-inputs-element-border-radius-range-slider-min", 
                 selectorValue: ".form-inputs-element-border-radius-range-slider-value", 
-                value: 0, 
+                value: $("#melis_core_platform_theme_form_input_elements_border_radius").val(), 
                 min: 0, 
                 max: 16 
             }, // form input elements border radius
             { 
                 selectorMin: ".form-inputs-element-border-width-range-slider-min", 
                 selectorValue: ".form-inputs-element-border-width-range-slider-value", 
-                value: 0, 
+                value: $("#melis_core_platform_theme_form_input_elements_border_width").val(), 
                 min: 0, 
                 max: 10 
             }, // form input elements border width
             { 
                 selectorMin: ".form-button-submit-border-radius-range-slider-min", 
                 selectorValue: ".form-button-submit-border-radius-range-slider-value", 
-                value: 0, 
+                value: $("#melis_core_platform_theme_form_button_submit_border_radius").val(), 
                 min: 0, 
                 max: 16 
             }, // form button/submit border radius
             { 
                 selectorMin: ".form-button-submit-border-width-range-slider-min", 
                 selectorValue: ".form-button-submit-border-width-range-slider-value", 
-                value: 0, 
+                value: $("#melis_core_platform_theme_form_button_submit_border_width").val(), 
                 min: 0, 
                 max: 10 
             }, // form button/submit border width
             { 
                 selectorMin: ".dialog-title-font-size-range-slider-min", 
                 selectorValue: ".dialog-title-font-size-range-slider-value", 
-                value: 16, 
+                value: $("#melis_core_platform_theme_dialog_content_header_title_font_size").val(), 
                 min: 1, 
                 max: 30 
             }, // dialog header title font size
             { 
                 selectorMin: ".dialog-close-btn-font-size-range-slider-min", 
                 selectorValue: ".dialog-close-btn-font-size-range-slider-value", 
-                value: 13, 
+                value: $("#melis_core_platform_theme_dialog_close_button_font_size").val(), 
                 min: 1, 
                 max: 27
             }, // dialog close button font size
             { 
                 selectorMin: ".dialog-content-text-font-size-range-slider-min", 
                 selectorValue: ".dialog-content-text-font-size-range-slider-value", 
-                value: 14, 
+                value: $("#melis_core_platform_theme_dialog_content_text_font_size").val(), 
                 min: 1, 
                 max: 28 
             }, // dialog content text font size
             { 
                 selectorMin: ".dialog-button-text-font-size-range-slider-min", 
                 selectorValue: ".dialog-button-text-font-size-range-slider-value", 
-                value: 14, 
+                value: $("#melis_core_platform_theme_dialog_btn_text_font_size").val(), 
                 min: 1, 
                 max: 28 
             }, // dialog button text font size
             { 
                 selectorMin: ".tab-widget-head-border-width-range-slider-min", 
                 selectorValue: ".tab-widget-head-border-width-range-slider-value", 
-                value: 0, 
+                value: $("#melis_core_platform_theme_tab_widget_head_border_width").val(), 
                 min: 0, 
                 max: 10 
             }, // tab widget head border width
             { 
                 selectorMin: ".tab-widget-head-nav-item-and-link-width-range-slider-min", 
                 selectorValue: ".tab-widget-head-nav-item-and-link-width-range-slider-value", 
-                value: 70, 
+                value: $("#melis_core_platform_theme_tab_widget_head_nav_item_and_link_height").val(), 
                 min: 70, 
                 max: 100 
             }, // tab widget head nav height
             { 
                 selectorMin: ".tab-widget-head-nav-item-border-right-width-range-slider-min", 
                 selectorValue: ".tab-widget-head-nav-item-border-right-width-range-slider-value", 
-                value: 1, 
+                value: $("#melis_core_platform_theme_tab_widget_nav_item_border_right_width").val(), 
                 min: 1, 
                 max: 10 
             }, // tab widget head nav border right width
             { 
                 selectorMin: ".tab-widget-nav-link-text-font-size-range-slider-min", 
                 selectorValue: ".tab-widget-nav-link-text-font-size-range-slider-value", 
-                value: 14, 
+                value: $("#melis_core_platform_theme_tab_widget_nav_link_text_font_size").val(), 
                 min: 1, 
                 max: 30 
             }, // tab widget nav link text font size
             { 
                 selectorMin: ".tab-widget-nav-link-min-width-range-slider-min", 
                 selectorValue: ".tab-widget-nav-link-min-width-range-slider-value", 
-                value: 90, 
+                value: $("#melis_core_platform_theme_tab_widget_nav_link_min_width").val(), 
                 min: 70, 
                 max: 200 
             }, // tab widget nav link text font size
             { 
                 selectorMin: ".tab-widget-nav-link-height-range-slider-min", 
                 selectorValue: ".tab-widget-nav-link-height-range-slider-value", 
-                value: 37, 
+                value: $("#melis_core_platform_theme_tab_widget_nav_link_icon_height").val(), 
                 min: 10, 
                 max: 60 
             }, // tab widget nav link text icon height
             { 
                 selectorMin: ".tab-widget-link-font-size-range-slider-min", 
                 selectorValue: ".tab-widget-link-font-size-range-slider-value", 
-                value: 24, 
+                value: $("#melis_core_platform_theme_tab_widget_link_icon_font_size").val(), 
                 min: 10, 
                 max: 50 
             }, // tab widget nav link text icon font size

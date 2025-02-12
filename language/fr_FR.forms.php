@@ -386,7 +386,7 @@ return array(
     'tr_meliscore_platform_theme_dialog_yes_btn_text_color_tooltip' => '',
     'tr_meliscore_platform_theme_dialog_yes_btn_text_hover_color' => 'Dialog yes button text hover color',
     'tr_meliscore_platform_theme_dialog_yes_btn_text_hover_color_tooltip' => '',
-    'tr_meliscore_platform_theme_dialog_btn_text_font_size' => 'Dialog content text font size',
+    'tr_meliscore_platform_theme_dialog_btn_text_font_size' => 'Dialog button text font size',
     'tr_meliscore_platform_theme_dialog_btn_text_font_size_tooltip' => '',
 
 );

@@ -94,11 +94,11 @@ class PlatformSchemeController extends MelisAbstractActionController
             //     echo "\n";
             // }
 
-            if ($elem->getAttribute('category') == 'tab') {
-                //dump($key);
-                echo $key.":". $elem->getAttribute('default');
-                echo "\n";
-            }
+            // if ($elem->getAttribute('category') == 'tab') {
+            //     //dump($key);
+            //     echo $key.":". $elem->getAttribute('default');
+            //     echo "\n";
+            // }
         }
    
         $view->setVariable('form', $form);

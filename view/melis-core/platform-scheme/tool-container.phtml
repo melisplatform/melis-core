@@ -813,11 +813,10 @@ if ($headerTitleLen > 13) {
                                                                             </div>
                                                                         <?php } elseif (strpos($element->getName(), 'align') !== false) { ?>
                                                                             <div class="btn-group btn-group-alignment" role="group" aria-label="Text align radio toggle button group">
-                                                                                <?php
-                                                                                $value = !is_array($element->getValue()) ? [$element->getValue()] : $element->getValue();
+                                                                                <?php                                                                       
                                                                                 foreach ($element->getOptions()['value_options'] as $optKey => $option) {
                                                                                 ?>
-                                                                                    <input name="<?= $element->getName() ?>" type="radio" class="btn-check" id="<?= $element->getName() . '_'. $optKey ?>" autocomplete="off" value="<?= $optKey ?>" <?= $optKey == $value ? "checked" : "" ?>>
+                                                                                    <input name="<?= $element->getName() ?>" type="radio" class="btn-check" id="<?= $element->getName() . '_'. $optKey ?>" autocomplete="off" value="<?= $optKey ?>" <?= $optKey == $element->getValue() ? "checked" : "" ?>>
                                                                                     <?= $option?>
                                                                                 <?php    }
                                                                                 ?>

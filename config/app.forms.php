@@ -4060,7 +4060,7 @@ return array(
                                 'attributes' => array(
                                     'id' => 'melis_core_platform_theme_form_button_submit_border_radius',
                                     'value' => '',
-                                    'class' => 'form-inputs-element-border-width-range-slider-value range-slider-value form-control',
+                                    'class' => 'form-button-submit-border-radius-range-slider-value range-slider-value form-control',
                                     'placeholder' => 'tr_meliscore_platform_theme_form_button_submit_border_radius',
                                     'category' => 'form_elements',
                                     'sliderId' => 'form-button-submit-border-radius-range-slider-min',
@@ -6736,6 +6736,14 @@ return array(
                                     ],
                                 ],
                             ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+                        'melis_core_platform_theme_tab_widget_nav_link_text_align' => [
+                            'name'     => 'melis_core_platform_theme_tab_widget_nav_link_text_align',
+                            'required' => false,                           
                             'filters'  => [
                                 ['name' => 'StripTags'],
                                 ['name' => 'StringTrim'],
