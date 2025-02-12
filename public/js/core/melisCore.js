@@ -422,9 +422,9 @@ var melisCore = (function(window){
             }
 
             // scroll top every time we click a tab to RESET the scrollbars and return page actions to original position
-            $("#"+ activeTabId + " .page-head-container").prop("style", null);
+            $("#"+ activeTabId + " .page-head-container").removeAttr("style");
             $("#"+ activeTabId + " .page-head-container > .innerAll").removeClass('sticky-pageactions');
-            $("#"+ activeTabId + " .page-head-container > .innerAll").prop("style", null);
+            $("#"+ activeTabId + " .page-head-container > .innerAll").removeAttr("style");
             $('html, body').animate({scrollTop:0},0);
 
             // dataTable responsive plugin ----=[ PLUGIN BUG FIX ]=-----

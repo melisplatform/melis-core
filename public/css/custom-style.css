@@ -2291,6 +2291,10 @@ table.dataTable.dtr-inline.collapsed>tbody>tr.dtr-expanded>th.dtr-control:before
 }
 /* #modal-user-management .widget.widget-tabs-double > .widget-head ul li:not(.active) a:not(.active).glyphicons, 
 #modal-user-management .widget.widget-tabs-double > .widget-head ul li:not(.active) a:not(.active).glyphicons i:before */
+.widget.widget-tabs-double .widget-head ul li a.glyphicons, 
+.widget.widget-tabs-double .widget-head ul li a.glyphicons i:before,
+.widget.widget-tabs-double > .widget-head ul li:not(.active) a.glyphicons, 
+.widget.widget-tabs-double > .widget-head ul li:not(.active) a.glyphicons i:before,
 .tooltabmodal .widget.widget-tabs-double > .widget-head ul li:not(.active) a.glyphicons, 
 .tooltabmodal .widget.widget-tabs-double > .widget-head ul li:not(.active) a.glyphicons i:before {
     color: #fff;
@@ -2409,4 +2413,8 @@ table.dataTable.dtr-inline.collapsed>tbody>tr.dtr-expanded>th.dtr-control:before
 .tooltabmodal ul.ui-fancytree > li:not(:first-child) .fancytree-parent-has-child-selected,
 .tooltabmodal ul.ui-fancytree > li:not(:first-child) .parent-with-child-selected .fancytree-title {
 	color: #99c975 !important;
+}
+/* dashboard bubble plugin */
+.melis-dashboard-bubble-plugin .front .widget {
+	border: 1px solid #e6e6e6;
 }
