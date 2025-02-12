@@ -4373,6 +4373,1575 @@ return array(
                             ),
                         ),
 
+                        //Start Datepicker
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_datepicker_bg_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_datepicker_bg_color',
+                                    'tooltip' => 'tr_meliscore_platform_theme_datepicker_bg_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_datepicker_bg_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_meliscore_platform_theme_datepicker_bg_color',
+                                    'category' => 'datepicker',
+                                    'default' => '#fff'
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_datepicker_text_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_datepicker_text_color',
+                                    'tooltip' => 'tr_meliscore_platform_theme_datepicker_text_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_datepicker_text_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_meliscore_platform_theme_datepicker_text_color',
+                                    'category' => 'datepicker',
+                                    'default' => '#686868'
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_datepicker_border_width',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_datepicker_border_width',
+                                    'tooltip' => 'tr_meliscore_platform_theme_datepicker_border_width_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_datepicker_border_width',
+                                    'value' => '',
+                                    'class' => 'tab-widget-link-font-size-range-slider-value range-slider-value form-control',
+                                    'placeholder' => 'tr_meliscore_platform_theme_datepicker_border_width',
+                                    'category' => 'datepicker',
+                                    'sliderId' => 'datepicker-border-width-range-slider-min',
+                                    'sliderClass' => 'datepicker-border-width-range-slider-min',
+                                    'default' => 1
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_datepicker_border_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_datepicker_border_color',
+                                    'tooltip' => 'tr_meliscore_platform_theme_datepicker_border_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_datepicker_border_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_meliscore_platform_theme_datepicker_border_color',
+                                    'category' => 'datepicker',
+                                    'default' => '#ddd'
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_datepicker_border_radius',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_datepicker_border_radius',
+                                    'tooltip' => 'tr_meliscore_platform_theme_datepicker_border_radius_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_datepicker_border_radius',
+                                    'value' => '',
+                                    'class' => 'tab-widget-link-font-size-range-slider-value range-slider-value form-control',
+                                    'placeholder' => 'tr_meliscore_platform_theme_datepicker_border_radius',
+                                    'category' => 'datepicker',
+                                    'sliderId' => 'datepicker-border-radius-range-slider-min',
+                                    'sliderClass' => 'datepicker-border-radius-range-slider-min',
+                                    'default' => 4
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_datepicker_prev_next_data_action_button_text_align',
+                                'type' => 'Laminas\Form\Element\Radio',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_datepicker_prev_next_data_action_button_text_align',
+                                    'tooltip' => 'tr_meliscore_platform_theme_datepicker_prev_next_data_action_button_text_align_tooltip',
+                                    'value_options' => array(
+                                        'left' => '<label class="btn btn-default" for="melis_core_platform_theme_datepicker_prev_next_data_action_button_text_align_left"><i class="bi bi-text-left"></i></label>',
+                                        'center' => '<label class="btn btn-default" for="melis_core_platform_theme_datepicker_prev_next_data_action_button_text_align_center"><i class="bi bi-text-center"></i></label>',
+                                        'right' => '<label class="btn btn-default" for="melis_core_platform_theme_datepicker_prev_next_data_action_button_text_align_right"><i class="bi bi-text-right"></i></label>',
+                                    ),
+                                    'label_attributes' => array(
+                                        'class' => 'melis-radio-box',
+                                    ),
+                                    'disable_inarray_validator' => true,
+                                ),
+                                'attributes' => array(
+                                    'value' => '',
+                                    'placeholder' => '',
+                                    'class' => 'form-control',
+                                    'id' => 'melis_core_platform_theme_datepicker_prev_next_data_action_button_text_align',
+                                    'category' => 'datepicker',
+                                    'default' => ''
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_datepicker_prev_next_data_action_btn_border_radius',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_datepicker_prev_next_data_action_btn_border_radius',
+                                    'tooltip' => 'tr_meliscore_platform_theme_datepicker_prev_next_data_action_btn_border_radius_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_datepicker_prev_next_data_action_btn_border_radius',
+                                    'value' => '',
+                                    'class' => 'tab-widget-link-font-size-range-slider-value range-slider-value form-control',
+                                    'placeholder' => 'tr_meliscore_platform_theme_datepicker_prev_next_data_action_btn_border_radius',
+                                    'category' => 'datepicker',
+                                    'sliderId' => 'datepicker-border-radius-range-slider-min',
+                                    'sliderClass' => 'datepicker-border-radius-range-slider-min',
+                                    'default' => 4
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_datepicker_prev_next_data_action_button_text_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_datepicker_prev_next_data_action_button_text_color',
+                                    'tooltip' => 'tr_meliscore_platform_theme_datepicker_prev_next_data_action_button_text_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_datepicker_prev_next_data_action_button_text_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_meliscore_platform_theme_datepicker_prev_next_data_action_button_text_color',
+                                    'category' => 'datepicker',
+                                    'default' => '#212529'
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_datepicker_prev_next_data_action_button_hover_bg_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_datepicker_prev_next_data_action_button_hover_bg_color',
+                                    'tooltip' => 'tr_meliscore_platform_theme_datepicker_prev_next_data_action_button_hover_bg_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_datepicker_prev_next_data_action_button_hover_bg_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_meliscore_platform_theme_datepicker_prev_next_data_action_button_hover_bg_color',
+                                    'category' => 'datepicker',
+                                    'default' => '#f8f9fa'
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_datepicker_dow_bg_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_datepicker_dow_bg_color',
+                                    'tooltip' => 'tr_meliscore_platform_theme_datepicker_dow_bg_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_datepicker_dow_bg_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_meliscore_platform_theme_datepicker_dow_bg_color',
+                                    'category' => 'datepicker',
+                                    'default' => '#e61c23'
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_datepicker_dow_text_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_datepicker_dow_text_color',
+                                    'tooltip' => 'tr_meliscore_platform_theme_datepicker_dow_text_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_datepicker_dow_text_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_meliscore_platform_theme_datepicker_dow_text_color',
+                                    'category' => 'datepicker',
+                                    'default' => '#fff'
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_datepicker_table_th_td_text_align',
+                                'type' => 'Laminas\Form\Element\Radio',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_datepickertable_th_td_text_align',
+                                    'tooltip' => 'tr_meliscore_platform_theme_datepicker_table_th_td_text_align_tooltip',
+                                    'value_options' => array(
+                                        'left' => '<label class="btn btn-default" for="melis_core_platform_theme_datepicker_table_th_td_text_align_left"><i class="bi bi-text-left"></i></label>',
+                                        'center' => '<label class="btn btn-default" for="melis_core_platform_theme_datepicker_table_th_td_text_align_center"><i class="bi bi-text-center"></i></label>',
+                                        'right' => '<label class="btn btn-default" for="melis_core_platform_theme_datepicker_table_th_td_text_align_right"><i class="bi bi-text-right"></i></label>',
+                                    ),
+                                    'label_attributes' => array(
+                                        'class' => 'melis-radio-box',
+                                    ),
+                                    'disable_inarray_validator' => true,
+                                ),
+                                'attributes' => array(
+                                    'value' => 'center',
+                                    'placeholder' => '',
+                                    'class' => 'form-control',
+                                    'id' => 'melis_core_platform_theme_datepicker_table_th_td_text_align',
+                                    'category' => 'datepicker',
+                                    'default' => 'center'
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_datepicker_day_text_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_datepicker_day_text_color',
+                                    'tooltip' => 'tr_meliscore_platform_theme_datepicker_day_text_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_datepicker_day_text_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_meliscore_platform_theme_datepicker_day_text_color',
+                                    'category' => 'datepicker',
+                                    'default' => '#212529'
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_datepicker_day_text_hover_bg_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_datepicker_day_text_hover_bg_color',
+                                    'tooltip' => 'tr_meliscore_platform_theme_datepicker_day_text_hover_bg_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_datepicker_day_text_hover_bg_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_meliscore_platform_theme_datepicker_day_text_hover_bg_color',
+                                    'category' => 'datepicker',
+                                    'default' => '#eee'
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_datepicker_day_old_weekend_text_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_datepicker_day_old_weekend_text_color',
+                                    'tooltip' => 'tr_meliscore_platform_theme_datepicker_day_old_weekend_text_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_datepicker_day_old_weekend_text_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_meliscore_platform_theme_datepicker_day_old_weekend_text_color',
+                                    'category' => 'datepicker',
+                                    'default' => '#999'
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_datepicker_day_active_bg_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_datepicker_day_active_bg_color',
+                                    'tooltip' => 'tr_meliscore_platform_theme_datepicker_day_active_bg_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_datepicker_day_active_bg_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_meliscore_platform_theme_datepicker_day_active_bg_color',
+                                    'category' => 'datepicker',
+                                    'default' => '#e61c23'
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_datepicker_day_active_text_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_datepicker_day_active_text_color',
+                                    'tooltip' => 'tr_meliscore_platform_theme_datepicker_day_active_text_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_datepicker_day_active_text_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_meliscore_platform_theme_datepicker_day_active_text_color',
+                                    'category' => 'datepicker',
+                                    'default' => '#fff'
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_datepicker_timepicker_btn_bg_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_datepicker_timepicker_btn_bg_color',
+                                    'tooltip' => 'tr_meliscore_platform_theme_datepicker_timepicker_btn_bg_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_datepicker_timepicker_btn_bg_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_meliscore_platform_theme_datepicker_timepicker_btn_bg_color',
+                                    'category' => 'datepicker',
+                                    'default' => '#fff'
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_datepicker_timepicker_btn_icon_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_datepicker_timepicker_btn_icon_color',
+                                    'tooltip' => 'tr_meliscore_platform_theme_datepicker_timepicker_btn_icon_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_datepicker_timepicker_btn_icon_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_meliscore_platform_theme_datepicker_timepicker_btn_icon_color',
+                                    'category' => 'datepicker',
+                                    'default' => '#e61c23'
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_datepicker_timepicker_btn_hover_bg_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_datepicker_timepicker_btn_hover_bg_color',
+                                    'tooltip' => 'tr_meliscore_platform_theme_datepicker_timepicker_btn_hover_bg_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_datepicker_timepicker_btn_hover_bg_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_meliscore_platform_theme_datepicker_timepicker_btn_hover_bg_color',
+                                    'category' => 'datepicker',
+                                    'default' => '#fff'
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_datepicker_timepicker_arrow_btn_bg_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_datepicker_timepicker_arrow_btn_bg_color',
+                                    'tooltip' => 'tr_meliscore_platform_theme_datepicker_timepicker_arrow_btn_bg_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_datepicker_timepicker_arrow_btn_bg_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_meliscore_platform_theme_datepicker_timepicker_arrow_btn_bg_color',
+                                    'category' => 'datepicker',
+                                    'default' => '#fff'
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_datepicker_timepicker_arrow_btn_hover_bg_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_datepicker_timepicker_arrow_btn_hover_bg_color',
+                                    'tooltip' => 'tr_meliscore_platform_theme_datepicker_timepicker_arrow_btn_hover_bg_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_datepicker_timepicker_arrow_btn_hover_bg_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_meliscore_platform_theme_datepicker_timepicker_arrow_btn_hover_bg_color',
+                                    'category' => 'datepicker',
+                                    'default' => '#f8f9fa'
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_datepicker_timepicker_time_bg_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_datepicker_timepicker_time_bg_color',
+                                    'tooltip' => 'tr_meliscore_platform_theme_datepicker_timepicker_time_bg_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_datepicker_timepicker_time_bg_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_meliscore_platform_theme_datepicker_timepicker_time_bg_color',
+                                    'category' => 'datepicker',
+                                    'default' => '#fff'
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_datepicker_timepicker_time_text_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_datepicker_timepicker_time_text_color',
+                                    'tooltip' => 'tr_meliscore_platform_theme_datepicker_timepicker_time_text_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_datepicker_timepicker_time_text_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_meliscore_platform_theme_datepicker_timepicker_time_text_color',
+                                    'category' => 'datepicker',
+                                    'default' => '#212529'
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_daterangepicker_bg_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_daterangepicker_bg_color',
+                                    'tooltip' => 'tr_meliscore_platform_theme_daterangepicker_bg_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_daterangepicker_bg_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_meliscore_platform_theme_daterangepicker_bg_color',
+                                    'category' => 'datepicker',
+                                    'default' => '#fff'
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_daterangepicker_text_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_daterangepicker_text_color',
+                                    'tooltip' => 'tr_meliscore_platform_theme_daterangepicker_text_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_daterangepicker_text_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_meliscore_platform_theme_daterangepicker_text_color',
+                                    'category' => 'datepicker',
+                                    'default' => '#686868'
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_daterangepicker_border_width',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_daterangepicker_border_width',
+                                    'tooltip' => 'tr_meliscore_platform_theme_daterangepicker_border_width_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_daterangepicker_border_width',
+                                    'value' => '',
+                                    'class' => 'daterangepicker-border-width-range-slider-value range-slider-value form-control',
+                                    'placeholder' => 'tr_meliscore_platform_theme_daterangepicker_border_width',
+                                    'category' => 'datepicker',
+                                    'sliderId' => 'daterangepicker-border-width-range-slider-min',
+                                    'sliderClass' => 'daterangepicker-border-width-range-slider-min',
+                                    'default' => 1
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_daterangepicker_border_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_daterangepicker_border_color',
+                                    'tooltip' => 'tr_meliscore_platform_theme_daterangepicker_border_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_daterangepicker_border_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_meliscore_platform_theme_daterangepicker_border_color',
+                                    'category' => 'datepicker',
+                                    'default' => '#ddd'
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_daterangepicker_border_radius',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_daterangepicker_border_radius',
+                                    'tooltip' => 'tr_meliscore_platform_theme_daterangepicker_border_radius_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_daterangepicker_border_radius',
+                                    'value' => '',
+                                    'class' => 'daterangepicker-border-radius-range-slider-value range-slider-value form-control',
+                                    'placeholder' => 'tr_meliscore_platform_theme_daterangepicker_border_radius',
+                                    'category' => 'datepicker',
+                                    'sliderId' => 'daterangepicker-border-radius-range-slider-min',
+                                    'sliderClass' => 'daterangepicker-border-radius-range-slider-min',
+                                    'default' => 4
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_daterangepicker_button_bg_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_daterangepicker_button_bg_color',
+                                    'tooltip' => 'tr_meliscore_platform_theme_daterangepicker_button_bg_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_daterangepicker_button_bg_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_meliscore_platform_theme_daterangepicker_button_bg_color',
+                                    'category' => 'datepicker',
+                                    'default' => '#f5f5f5'
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_daterangepicker_button_text_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_daterangepicker_button_text_color',
+                                    'tooltip' => 'tr_meliscore_platform_theme_daterangepicker_button_text_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_daterangepicker_button_text_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_meliscore_platform_theme_daterangepicker_button_text_color',
+                                    'category' => 'datepicker',
+                                    'default' => '#686868'
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_daterangepicker_button_text_font_size',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_daterangepicker_button_text_font_size',
+                                    'tooltip' => 'tr_meliscore_platform_theme_daterangepicker_button_text_font_size_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_daterangepicker_button_text_font_size',
+                                    'value' => '',
+                                    'class' => 'daterangepicker-button-text-font-size-range-slider-value range-slider-value form-control',
+                                    'placeholder' => 'tr_meliscore_platform_theme_daterangepicker_button_text_font_size',
+                                    'category' => 'datepicker',
+                                    'sliderId' => 'daterangepicker-button-text-font-size-range-slider-min',
+                                    'sliderClass' => 'daterangepicker-button-text-font-size-range-slider-min',
+                                    'default' => 13
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_daterangepicker_button_border_radius',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_daterangepicker_button_border_radius',
+                                    'tooltip' => 'tr_meliscore_platform_theme_daterangepicker_button_border_radius_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_daterangepicker_button_border_radius',
+                                    'value' => '',
+                                    'class' => 'daterangepicker-button-border-radius-range-slider-value range-slider-value form-control',
+                                    'placeholder' => 'tr_meliscore_platform_theme_daterangepicker_button_border_radius',
+                                    'category' => 'datepicker',
+                                    'sliderId' => 'daterangepicker-button-border-radius-range-slider-min',
+                                    'sliderClass' => 'daterangepicker-button-border-radius-range-slider-min',
+                                    'default' => 4
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_daterangepicker_button_border_width',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_daterangepicker_button_border_width',
+                                    'tooltip' => 'tr_meliscore_platform_theme_daterangepicker_button_border_width_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_daterangepicker_button_border_width',
+                                    'value' => '',
+                                    'class' => 'daterangepicker-button-border-width-range-slider-value range-slider-value form-control',
+                                    'placeholder' => 'tr_meliscore_platform_theme_daterangepicker_button_border_width',
+                                    'category' => 'datepicker',
+                                    'sliderId' => 'daterangepicker-button-border-width-range-slider-min',
+                                    'sliderClass' => 'daterangepicker-button-border-width-range-slider-min',
+                                    'default' => 1
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_daterangepicker_button_border_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_daterangepicker_button_border_color',
+                                    'tooltip' => 'tr_meliscore_platform_theme_daterangepicker_button_border_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_daterangepicker_button_border_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_meliscore_platform_theme_daterangepicker_button_border_color',
+                                    'category' => 'datepicker',
+                                    'default' => '#f5f5f5'
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_daterangepicker_button_border_bottom_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_daterangepicker_button_border_bottom_color',
+                                    'tooltip' => 'tr_meliscore_platform_theme_daterangepicker_button_border_bottom_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_daterangepicker_button_border_bottom_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_meliscore_platform_theme_daterangepicker_button_border_bottom_color',
+                                    'category' => 'datepicker',
+                                    'default' => '#e5e5e5'
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_daterangepicker_button_bg_hover_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_daterangepicker_button_bg_hover_color',
+                                    'tooltip' => 'tr_meliscore_platform_theme_daterangepicker_button_bg_hover_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_daterangepicker_button_bg_hover_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_meliscore_platform_theme_daterangepicker_button_bg_hover_color',
+                                    'category' => 'datepicker',
+                                    'default' => '#e61c23'
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_daterangepicker_button_text_hover_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_daterangepicker_button_text_hover_color',
+                                    'tooltip' => 'tr_meliscore_platform_theme_daterangepicker_button_text_hover_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_daterangepicker_button_text_hover_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_meliscore_platform_theme_daterangepicker_button_text_hover_color',
+                                    'category' => 'datepicker',
+                                    'default' => '#fff'
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_daterangepicker_button_hover_border_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_daterangepicker_button_hover_border_color',
+                                    'tooltip' => 'tr_meliscore_platform_theme_daterangepicker_button_hover_border_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_daterangepicker_button_hover_border_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_meliscore_platform_theme_daterangepicker_button_hover_border_color',
+                                    'category' => 'datepicker',
+                                    'default' => '#e61c23'
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_daterangepicker_day_active_bg_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_daterangepicker_day_active_bg_color',
+                                    'tooltip' => 'tr_meliscore_platform_theme_daterangepicker_day_active_bg_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_daterangepicker_day_active_bg_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_meliscore_platform_theme_daterangepicker_day_active_bg_color',
+                                    'category' => 'datepicker',
+                                    'default' => '#357ebd'
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_daterangepicker_day_active_text_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_daterangepicker_day_active_text_color',
+                                    'tooltip' => 'tr_meliscore_platform_theme_daterangepicker_day_active_text_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_daterangepicker_day_active_text_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_meliscore_platform_theme_daterangepicker_day_active_text_color',
+                                    'category' => 'datepicker',
+                                    'default' => '#fff'
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_daterangepicker_day_active_border_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_daterangepicker_day_active_border_color',
+                                    'tooltip' => 'tr_meliscore_platform_theme_daterangepicker_day_active_border_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_daterangepicker_day_active_border_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_meliscore_platform_theme_daterangepicker_day_active_border_color',
+                                    'category' => 'datepicker',
+                                    'default' => '#eee'
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_daterangepicker_day_active_in_range_bg_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_daterangepicker_day_active_in_range_bg_color',
+                                    'tooltip' => 'tr_meliscore_platform_theme_daterangepicker_day_active_in_range_bg_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_daterangepicker_day_active_in_range_bg_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_meliscore_platform_theme_daterangepicker_day_active_in_range_bg_color',
+                                    'category' => 'datepicker',
+                                    'default' => '#ebf4f8'
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_daterangepicker_day_active_in_range_border_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_daterangepicker_day_active_in_range_border_color',
+                                    'tooltip' => 'tr_meliscore_platform_theme_daterangepicker_day_active_in_range_border_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_daterangepicker_day_active_in_range_border_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_meliscore_platform_theme_daterangepicker_day_active_in_range_border_color',
+                                    'category' => 'datepicker',
+                                    'default' => '#eee'
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_daterangepicker_day_active_in_range_text_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_daterangepicker_day_active_in_range_text_color',
+                                    'tooltip' => 'tr_meliscore_platform_theme_daterangepicker_day_active_in_range_text_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_daterangepicker_day_active_in_range_text_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_meliscore_platform_theme_daterangepicker_day_active_in_range_text_color',
+                                    'category' => 'datepicker',
+                                    'default' => '#000'
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_daterangepicker_day_active_in_range_border_width',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_daterangepicker_day_active_in_range_border_width',
+                                    'tooltip' => 'tr_meliscore_platform_theme_daterangepicker_day_active_in_range_border_width_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_daterangepicker_day_active_in_range_border_width',
+                                    'value' => '',
+                                    'class' => 'daterangepicker-in-range-border-width-range-slider-value range-slider-value form-control',
+                                    'placeholder' => 'tr_meliscore_platform_theme_daterangepicker_day_active_in_range_border_width',
+                                    'category' => 'datepicker',
+                                    'sliderId' => 'daterangepicker-in-range-border-width-range-slider-min',
+                                    'sliderClass' => 'daterangepicker-in-range-border-width-range-slider-min',
+                                    'default' => 0
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_daterangepicker_in_range_start_date_border_top_left_radius',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_daterangepicker_in_range_start_date_border_top_left_radius',
+                                    'tooltip' => 'tr_meliscore_platform_theme_daterangepicker_in_range_start_date_border_top_left_radius_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_daterangepicker_in_range_start_date_border_top_left_radius',
+                                    'value' => '',
+                                    'class' => 'daterangepicker-in-range-start-date-border-top-left-radius-range-slider-value range-slider-value form-control',
+                                    'placeholder' => 'tr_meliscore_platform_theme_daterangepicker_in_range_start_date_border_top_left_radius',
+                                    'category' => 'datepicker',
+                                    'sliderId' => 'daterangepicker-in-range-start-date-border-top-left-radius-range-slider-min',
+                                    'sliderClass' => 'daterangepicker-in-range-start-date-border-top-left-radius-range-slider-min',
+                                    'default' => 4
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_daterangepicker_in_range_start_date_border_top_right_radius',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_daterangepicker_in_range_start_date_border_top_right_radius',
+                                    'tooltip' => 'tr_meliscore_platform_theme_daterangepicker_in_range_start_date_border_top_right_radius_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_daterangepicker_in_range_start_date_border_top_right_radius',
+                                    'value' => '',
+                                    'class' => 'daterangepicker-in-range-start-date-border-top-left-radius-range-slider-value range-slider-value form-control',
+                                    'placeholder' => 'tr_meliscore_platform_theme_daterangepicker_in_range_start_date_border_top_right_radius',
+                                    'category' => 'datepicker',
+                                    'sliderId' => 'daterangepicker-in-range-start-date-border-top-right-radius-range-slider-min',
+                                    'sliderClass' => 'daterangepicker-in-range-start-date-border-top-right-radius-range-slider-min',
+                                    'default' => 0
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_daterangepicker_in_range_start_date_border_bottom_left_radius',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_daterangepicker_in_range_start_date_border_bottom_left_radius',
+                                    'tooltip' => 'tr_meliscore_platform_theme_daterangepicker_in_range_start_date_border_bottom_left_radius_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_daterangepicker_in_range_start_date_border_bottom_left_radius',
+                                    'value' => '',
+                                    'class' => 'daterangepicker-in-range-start-date-border-bottom-left-radius-range-slider-value range-slider-value form-control',
+                                    'placeholder' => 'tr_meliscore_platform_theme_daterangepicker_in_range_start_date_border_bottom_left_radius',
+                                    'category' => 'datepicker',
+                                    'sliderId' => 'daterangepicker-in-range-start-date-border-bottom-left-radius-range-slider-min',
+                                    'sliderClass' => 'daterangepicker-in-range-start-date-border-bottom-left-radius-range-slider-min',
+                                    'default' => 4
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_daterangepicker_in_range_start_date_border_bottom_right_radius',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_daterangepicker_in_range_start_date_border_bottom_right_radius',
+                                    'tooltip' => 'tr_meliscore_platform_theme_daterangepicker_in_range_start_date_border_bottom_right_radius_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_daterangepicker_in_range_start_date_border_bottom_right_radius',
+                                    'value' => '',
+                                    'class' => 'daterangepicker-in-range-start-date-border-bottom-right-radius-range-slider-value range-slider-value form-control',
+                                    'placeholder' => 'tr_meliscore_platform_theme_daterangepicker_in_range_start_date_border_bottom_right_radius',
+                                    'category' => 'datepicker',
+                                    'sliderId' => 'daterangepicker-in-range-start-date-border-bottom-right-radius-range-slider-min',
+                                    'sliderClass' => 'daterangepicker-in-range-start-date-border-bottom-right-radius-range-slider-min',
+                                    'default' => 0
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_daterangepicker_in_range_end_date_border_top_left_radius',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_daterangepicker_in_range_end_date_border_top_left_radius',
+                                    'tooltip' => 'tr_meliscore_platform_theme_daterangepicker_in_range_end_date_border_top_left_radius_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_daterangepicker_in_range_end_date_border_top_left_radius',
+                                    'value' => '',
+                                    'class' => 'daterangepicker-in-range-end-date-border-top-left-radius-range-slider-value range-slider-value form-control',
+                                    'placeholder' => 'tr_meliscore_platform_theme_daterangepicker_in_range_end_date_border_top_left_radius',
+                                    'category' => 'datepicker',
+                                    'sliderId' => 'daterangepicker-in-range-end-date-border-top-left-radius-range-slider-min',
+                                    'sliderClass' => 'daterangepicker-in-range-end-date-border-top-left-radius-range-slider-min',
+                                    'default' => 0
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_daterangepicker_in_range_end_date_border_top_right_radius',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_daterangepicker_in_range_end_date_border_top_right_radius',
+                                    'tooltip' => 'tr_meliscore_platform_theme_daterangepicker_in_range_end_date_border_top_right_radius_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_daterangepicker_in_range_end_date_border_top_right_radius',
+                                    'value' => '',
+                                    'class' => 'daterangepicker-in-range-end-date-border-top-right-radius-range-slider-value range-slider-value form-control',
+                                    'placeholder' => 'tr_meliscore_platform_theme_daterangepicker_in_range_end_date_border_top_right_radius',
+                                    'category' => 'datepicker',
+                                    'sliderId' => 'daterangepicker-in-range-end-date-border-top-right-radius-range-slider-min',
+                                    'sliderClass' => 'daterangepicker-in-range-end-date-border-top-right-radius-range-slider-min',
+                                    'default' => 4
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_daterangepicker_in_range_end_date_border_bottom_left_radius',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_daterangepicker_in_range_end_date_border_bottom_left_radius',
+                                    'tooltip' => 'tr_meliscore_platform_theme_daterangepicker_in_range_end_date_border_bottom_left_radius_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_daterangepicker_in_range_end_date_border_bottom_left_radius',
+                                    'value' => '',
+                                    'class' => 'daterangepicker-in-range-end-date-border-bottom-left-radius-range-slider-value range-slider-value form-control',
+                                    'placeholder' => 'tr_meliscore_platform_theme_daterangepicker_in_range_end_date_border_bottom_left_radius',
+                                    'category' => 'datepicker',
+                                    'sliderId' => 'daterangepicker-in-range-end-date-border-bottom-left-radius-range-slider-min',
+                                    'sliderClass' => 'daterangepicker-in-range-end-date-border-bottom-left-radius-range-slider-min',
+                                    'default' => 0
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_daterangepicker_in_range_end_date_border_bottom_right_radius',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_daterangepicker_in_range_end_date_border_bottom_right_radius',
+                                    'tooltip' => 'tr_meliscore_platform_theme_daterangepicker_in_range_end_date_border_bottom_right_radius_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_daterangepicker_in_range_end_date_border_bottom_right_radius',
+                                    'value' => '',
+                                    'class' => 'daterangepicker-in-range-end-date-border-bottom-right-radius-range-slider-value range-slider-value form-control',
+                                    'placeholder' => 'tr_meliscore_platform_theme_daterangepicker_in_range_end_date_border_bottom_right_radius',
+                                    'category' => 'datepicker',
+                                    'sliderId' => 'daterangepicker-in-range-end-date-border-bottom-right-radius-range-slider-min',
+                                    'sliderClass' => 'daterangepicker-in-range-end-date-border-bottom-right-radius-range-slider-min',
+                                    'default' => 4
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_daterangepicker_day_available_text_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_daterangepicker_day_available_text_color',
+                                    'tooltip' => 'tr_meliscore_platform_theme_daterangepicker_day_available_text_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_daterangepicker_day_available_text_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_meliscore_platform_theme_daterangepicker_day_available_text_color',
+                                    'category' => 'datepicker',
+                                    'default' => '#686868'
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_daterangepicker_day_available_hover_bg_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_daterangepicker_day_available_hover_bg_color',
+                                    'tooltip' => 'tr_meliscore_platform_theme_daterangepicker_day_available_hover_bg_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_daterangepicker_day_available_hover_bg_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_meliscore_platform_theme_daterangepicker_day_available_hover_bg_color',
+                                    'category' => 'datepicker',
+                                    'default' => '#eee'
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_daterangepicker_day_available_hover_border_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_daterangepicker_day_available_hover_border_color',
+                                    'tooltip' => 'tr_meliscore_platform_theme_daterangepicker_day_available_hover_border_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_daterangepicker_day_available_hover_border_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_meliscore_platform_theme_daterangepicker_day_available_hover_border_color',
+                                    'category' => 'datepicker',
+                                    'default' => '#eee'
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_daterangepicker_day_available_border_width',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_daterangepicker_day_available_border_width',
+                                    'tooltip' => 'tr_meliscore_platform_theme_daterangepicker_day_available_border_width_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_daterangepicker_day_available_border_width',
+                                    'value' => '',
+                                    'class' => 'daterangepicker-day-available-border-width-range-slider-value range-slider-value form-control',
+                                    'placeholder' => 'tr_meliscore_platform_theme_daterangepicker_day_available_border_width',
+                                    'category' => 'datepicker',
+                                    'sliderId' => 'daterangepicker-day-available-border-width-range-slider-min',
+                                    'sliderClass' => 'daterangepicker-day-available-border-width-range-slider-min',
+                                    'default' => 1
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_daterangepicker_day_available_border_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_daterangepicker_day_available_border_color',
+                                    'tooltip' => 'tr_meliscore_platform_theme_daterangepicker_day_available_border_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_daterangepicker_day_available_border_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_meliscore_platform_theme_daterangepicker_day_available_border_color',
+                                    'category' => 'datepicker',
+                                    'default' => '#eee'
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_daterangepicker_day_available_border_radius',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_daterangepicker_day_available_border_radius',
+                                    'tooltip' => 'tr_meliscore_platform_theme_daterangepicker_day_available_border_radius_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_daterangepicker_day_available_border_radius',
+                                    'value' => '',
+                                    'class' => 'daterangepicker-day-available-border-radius-range-slider-value range-slider-value form-control',
+                                    'placeholder' => 'tr_meliscore_platform_theme_daterangepicker_day_available_border_radius',
+                                    'category' => 'datepicker',
+                                    'sliderId' => 'daterangepicker-day-available-border-radius-range-slider-min',
+                                    'sliderClass' => 'daterangepicker-day-available-border-radius-range-slider-min',
+                                    'default' => 4
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_daterangepicker_day_text_font_size',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_daterangepicker_day_text_font_size',
+                                    'tooltip' => 'tr_meliscore_platform_theme_daterangepicker_day_text_font_size_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_daterangepicker_day_text_font_size',
+                                    'value' => '',
+                                    'class' => 'daterangepicker-day-text-font-size-range-slider-value range-slider-value form-control',
+                                    'placeholder' => 'tr_meliscore_platform_theme_daterangepicker_day_text_font_size',
+                                    'category' => 'datepicker',
+                                    'sliderId' => 'daterangepicker-day-text-font-size-range-slider-min',
+                                    'sliderClass' => 'daterangepicker-day-text-font-size-range-slider-min',
+                                    'default' => 12
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_daterangepicker_day_text_align',
+                                'type' => 'Laminas\Form\Element\Radio',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_daterangepicker_day_text_align',
+                                    'tooltip' => 'tr_meliscore_platform_theme_daterangepicker_day_text_align_tooltip',
+                                    'value_options' => array(
+                                        'left' => '<label class="btn btn-default" for="melis_core_platform_theme_daterangepicker_day_text_align_left"><i class="bi bi-text-left"></i></label>',
+                                        'center' => '<label class="btn btn-default" for="melis_core_platform_theme_daterangepicker_day_text_align_center"><i class="bi bi-text-center"></i></label>',
+                                        'right' => '<label class="btn btn-default" for="melis_core_platform_theme_daterangepicker_day_text_align_right"><i class="bi bi-text-right"></i></label>',
+                                    ),
+                                    'label_attributes' => array(
+                                        'class' => 'melis-radio-box',
+                                    ),
+                                    'disable_inarray_validator' => true,
+                                ),
+                                'attributes' => array(
+                                    'value' => 'center',
+                                    'placeholder' => '',
+                                    'class' => 'form-control',
+                                    'id' => 'melis_core_platform_theme_daterangepicker_day_text_align',
+                                    'category' => 'tab',
+                                    'default' => 'center'
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_daterangepicker_day_off_bg_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_daterangepicker_day_off_bg_color',
+                                    'tooltip' => 'tr_meliscore_platform_theme_daterangepicker_day_off_bg_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_daterangepicker_day_off_bg_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_meliscore_platform_theme_daterangepicker_day_off_bg_color',
+                                    'category' => 'datepicker',
+                                    'default' => '#fff'
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_daterangepicker_day_off_border_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_daterangepicker_day_off_border_color',
+                                    'tooltip' => 'tr_meliscore_platform_theme_daterangepicker_day_off_border_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_daterangepicker_day_off_border_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_meliscore_platform_theme_daterangepicker_day_off_border_color',
+                                    'category' => 'datepicker',
+                                    'default' => '#eee'
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_daterangepicker_day_off_text_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_daterangepicker_day_off_text_color',
+                                    'tooltip' => 'tr_meliscore_platform_theme_daterangepicker_day_off_text_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_daterangepicker_day_off_text_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_meliscore_platform_theme_daterangepicker_day_off_text_color',
+                                    'category' => 'datepicker',
+                                    'default' => '#999'
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_daterangepicker_footer_selected_date_text_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_daterangepicker_footer_selected_date_text_color',
+                                    'tooltip' => 'tr_meliscore_platform_theme_daterangepicker_footer_selected_date_text_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_daterangepicker_footer_selected_date_text_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_meliscore_platform_theme_daterangepicker_footer_selected_date_text_color',
+                                    'category' => 'datepicker',
+                                    'default' => '#686868'
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_daterangepicker_footer_selected_date_text_font_size',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_daterangepicker_footer_selected_date_text_font_size',
+                                    'tooltip' => 'tr_meliscore_platform_theme_daterangepicker_footer_selected_date_text_font_size_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_daterangepicker_footer_selected_date_text_font_size',
+                                    'value' => '',
+                                    'class' => 'daterangepicker-footer-selected-date-text-font-size-range-slider-value range-slider-value form-control',
+                                    'placeholder' => 'tr_meliscore_platform_theme_daterangepicker_footer_selected_date_text_font_size',
+                                    'category' => 'datepicker',
+                                    'sliderId' => 'daterangepicker-footer-selected-date-text-font-size-range-slider-min',
+                                    'sliderClass' => 'daterangepicker-footer-selected-date-text-font-size-range-slider-min',
+                                    'default' => 12
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_daterangepicker_footer_buttons_text_font_size',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_daterangepicker_footer_buttons_text_font_size',
+                                    'tooltip' => 'tr_meliscore_platform_theme_daterangepicker_footer_buttons_text_font_size_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_daterangepicker_footer_buttons_text_font_size',
+                                    'value' => '',
+                                    'class' => 'daterangepicker-footer-buttons-text-font-size-range-slider-value range-slider-value form-control',
+                                    'placeholder' => 'tr_meliscore_platform_theme_daterangepicker_footer_buttons_text_font_size',
+                                    'category' => 'datepicker',
+                                    'sliderId' => 'daterangepicker-footer-buttons-text-font-size-range-slider-min',
+                                    'sliderClass' => 'daterangepicker-footer-buttons-text-font-size-range-slider-min',
+                                    'default' => 12
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_daterangepicker_footer_cancel_btn_bg_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_daterangepicker_footer_cancel_btn_bg_color',
+                                    'tooltip' => 'tr_meliscore_platform_theme_daterangepicker_footer_cancel_btn_bg_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_daterangepicker_footer_cancel_btn_bg_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_meliscore_platform_theme_daterangepicker_footer_cancel_btn_bg_color',
+                                    'category' => 'datepicker',
+                                    'default' => '#fff'
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_daterangepicker_footer_cancel_btn_hover_bg_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_daterangepicker_footer_cancel_btn_hover_bg_color',
+                                    'tooltip' => 'tr_meliscore_platform_theme_daterangepicker_footer_cancel_btn_hover_bg_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_daterangepicker_footer_cancel_btn_hover_bg_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_meliscore_platform_theme_daterangepicker_footer_cancel_btn_hover_bg_color',
+                                    'category' => 'datepicker',
+                                    'default' => '#bd362f'
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_daterangepicker_footer_cancel_btn_border_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_daterangepicker_footer_cancel_btn_border_color',
+                                    'tooltip' => 'tr_meliscore_platform_theme_daterangepicker_footer_cancel_btn_border_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_daterangepicker_footer_cancel_btn_border_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_meliscore_platform_theme_daterangepicker_footer_cancel_btn_border_color',
+                                    'category' => 'datepicker',
+                                    'default' => '#bd362f'
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_daterangepicker_footer_cancel_btn_hover_border_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_daterangepicker_footer_cancel_btn_hover_border_color',
+                                    'tooltip' => 'tr_meliscore_platform_theme_daterangepicker_footer_cancel_btn_hover_border_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_daterangepicker_footer_cancel_btn_hover_border_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_meliscore_platform_theme_daterangepicker_footer_cancel_btn_hover_border_color',
+                                    'category' => 'datepicker',
+                                    'default' => '#bd362f'
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_daterangepicker_footer_cancel_btn_text_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_daterangepicker_footer_cancel_btn_text_color',
+                                    'tooltip' => 'tr_meliscore_platform_theme_daterangepicker_footer_cancel_btn_text_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_daterangepicker_footer_cancel_btn_text_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_meliscore_platform_theme_daterangepicker_footer_cancel_btn_text_color',
+                                    'category' => 'datepicker',
+                                    'default' => '#bd362f'
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_daterangepicker_footer_cancel_btn_hover_text_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_daterangepicker_footer_cancel_btn_hover_text_color',
+                                    'tooltip' => 'tr_meliscore_platform_theme_daterangepicker_footer_cancel_btn_hover_text_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_daterangepicker_footer_cancel_btn_hover_text_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_meliscore_platform_theme_daterangepicker_footer_cancel_btn_hover_text_color',
+                                    'category' => 'datepicker',
+                                    'default' => '#fff'
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_daterangepicker_footer_apply_btn_bg_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_daterangepicker_footer_apply_btn_bg_color',
+                                    'tooltip' => 'tr_meliscore_platform_theme_daterangepicker_footer_apply_btn_bg_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_daterangepicker_footer_apply_btn_bg_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_meliscore_platform_theme_daterangepicker_footer_apply_btn_bg_color',
+                                    'category' => 'datepicker',
+                                    'default' => '#fff'
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_daterangepicker_footer_apply_btn_hover_bg_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_daterangepicker_footer_apply_btn_hover_bg_color',
+                                    'tooltip' => 'tr_meliscore_platform_theme_daterangepicker_footer_apply_btn_hover_bg_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_daterangepicker_footer_apply_btn_hover_bg_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_meliscore_platform_theme_daterangepicker_footer_apply_btn_hover_bg_color',
+                                    'category' => 'datepicker',
+                                    'default' => '#72af46'
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_daterangepicker_footer_apply_btn_border_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_daterangepicker_footer_apply_btn_border_color',
+                                    'tooltip' => 'tr_meliscore_platform_theme_daterangepicker_footer_apply_btn_border_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_daterangepicker_footer_apply_btn_border_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_meliscore_platform_theme_daterangepicker_footer_apply_btn_border_color',
+                                    'category' => 'datepicker',
+                                    'default' => '#72af46'
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_daterangepicker_footer_apply_btn_hover_border_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_daterangepicker_footer_apply_btn_hover_border_color',
+                                    'tooltip' => 'tr_meliscore_platform_theme_daterangepicker_footer_apply_btn_hover_border_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_daterangepicker_footer_apply_btn_hover_border_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_meliscore_platform_theme_daterangepicker_footer_apply_btn_hover_border_color',
+                                    'category' => 'datepicker',
+                                    'default' => '#72af46'
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_daterangepicker_footer_apply_btn_text_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_daterangepicker_footer_apply_btn_text_color',
+                                    'tooltip' => 'tr_meliscore_platform_theme_daterangepicker_footer_apply_btn_text_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_daterangepicker_footer_apply_btn_text_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_meliscore_platform_theme_daterangepicker_footer_apply_btn_text_color',
+                                    'category' => 'datepicker',
+                                    'default' => '#fff'
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_daterangepicker_footer_apply_btn_hover_text_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_daterangepicker_footer_apply_btn_hover_text_color',
+                                    'tooltip' => 'tr_meliscore_platform_theme_daterangepicker_footer_apply_btn_hover_text_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_daterangepicker_footer_apply_btn_hover_text_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_meliscore_platform_theme_daterangepicker_footer_apply_btn_hover_text_color',
+                                    'category' => 'datepicker',
+                                    'default' => '#72af46'
+                                ),
+                            ),
+                        ),
+
+
                     ),
                     'input_filter' => array(
                         'melis_core_platform_theme_dashboard_plugin_no_plugin_alert_text_font_style' => array(

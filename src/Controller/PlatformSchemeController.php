@@ -71,6 +71,11 @@ class PlatformSchemeController extends MelisAbstractActionController
             $dashboardPluginMenu = array_map(function ($a) {
                 return strpos($a, ';') ? explode(';', $a) : $a;
             }, $dashboardPluginMenu);
+
+            //set the value as array for multicheckbox(they are imploded by ';' when saving)
+            $modal = array_map(function ($a) {
+                return strpos($a, ';') ? explode(';', $a) : $a;
+            }, $modal);
            
             $platformThemeOptionData = array_merge($topLogo, $userProfile, $menu, $footer, $header, $bubblePlugin, $dashboardPlugin, $dashboardPluginMenu, $modal, $dialog, $formElement, $tab);
 
