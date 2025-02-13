@@ -3643,8 +3643,6 @@ return array(
                                 ),
                             ),
                         ),
-
-
                         array(
                             'spec' => array(
                                 'name' => 'melis_core_platform_theme_dialog_yes_btn_bg_color',
@@ -4423,7 +4421,7 @@ return array(
                                 'attributes' => array(
                                     'id' => 'melis_core_platform_theme_datepicker_border_width',
                                     'value' => '',
-                                    'class' => 'tab-widget-link-font-size-range-slider-value range-slider-value form-control',
+                                    'class' => 'datepicker-border-width-range-slider-value range-slider-value form-control',
                                     'placeholder' => 'tr_meliscore_platform_theme_datepicker_border_width',
                                     'category' => 'datepicker',
                                     'sliderId' => 'datepicker-border-width-range-slider-min',
@@ -4462,7 +4460,7 @@ return array(
                                 'attributes' => array(
                                     'id' => 'melis_core_platform_theme_datepicker_border_radius',
                                     'value' => '',
-                                    'class' => 'tab-widget-link-font-size-range-slider-value range-slider-value form-control',
+                                    'class' => 'datepicker-border-radius-range-slider-value range-slider-value form-control',
                                     'placeholder' => 'tr_meliscore_platform_theme_datepicker_border_radius',
                                     'category' => 'datepicker',
                                     'sliderId' => 'datepicker-border-radius-range-slider-min',
@@ -4509,11 +4507,11 @@ return array(
                                 'attributes' => array(
                                     'id' => 'melis_core_platform_theme_datepicker_prev_next_data_action_btn_border_radius',
                                     'value' => '',
-                                    'class' => 'tab-widget-link-font-size-range-slider-value range-slider-value form-control',
+                                    'class' => 'datepicker-btn-border-radius-range-slider-value range-slider-value form-control',
                                     'placeholder' => 'tr_meliscore_platform_theme_datepicker_prev_next_data_action_btn_border_radius',
                                     'category' => 'datepicker',
-                                    'sliderId' => 'datepicker-border-radius-range-slider-min',
-                                    'sliderClass' => 'datepicker-border-radius-range-slider-min',
+                                    'sliderId' => 'datepicker-btn-border-radius-range-slider-min',
+                                    'sliderClass' => 'datepicker-btn-border-radius-range-slider-min',
                                     'default' => 4
                                 ),
                             ),
@@ -4599,7 +4597,7 @@ return array(
                                 'name' => 'melis_core_platform_theme_datepicker_table_th_td_text_align',
                                 'type' => 'Laminas\Form\Element\Radio',
                                 'options' => array(
-                                    'label' => 'tr_meliscore_platform_theme_datepickertable_th_td_text_align',
+                                    'label' => 'tr_meliscore_platform_theme_datepicker_table_th_td_text_align',
                                     'tooltip' => 'tr_meliscore_platform_theme_datepicker_table_th_td_text_align_tooltip',
                                     'value_options' => array(
                                         'left' => '<label class="btn btn-default" for="melis_core_platform_theme_datepicker_table_th_td_text_align_left"><i class="bi bi-text-left"></i></label>',
@@ -5289,7 +5287,8 @@ return array(
                                     'category' => 'datepicker',
                                     'sliderId' => 'daterangepicker-in-range-start-date-border-top-left-radius-range-slider-min',
                                     'sliderClass' => 'daterangepicker-in-range-start-date-border-top-left-radius-range-slider-min',
-                                    'default' => 4
+                                    'default' => 4,
+                                    'group' => 'start_date'
                                 ),
                             ),
                         ),
@@ -5304,12 +5303,13 @@ return array(
                                 'attributes' => array(
                                     'id' => 'melis_core_platform_theme_daterangepicker_in_range_start_date_border_top_right_radius',
                                     'value' => '',
-                                    'class' => 'daterangepicker-in-range-start-date-border-top-left-radius-range-slider-value range-slider-value form-control',
+                                    'class' => 'daterangepicker-in-range-start-date-border-top-right-radius-range-slider-value range-slider-value form-control',
                                     'placeholder' => 'tr_meliscore_platform_theme_daterangepicker_in_range_start_date_border_top_right_radius',
                                     'category' => 'datepicker',
                                     'sliderId' => 'daterangepicker-in-range-start-date-border-top-right-radius-range-slider-min',
                                     'sliderClass' => 'daterangepicker-in-range-start-date-border-top-right-radius-range-slider-min',
-                                    'default' => 0
+                                    'default' => 0,
+                                    'group' => 'start_date'
                                 ),
                             ),
                         ),
@@ -5329,7 +5329,8 @@ return array(
                                     'category' => 'datepicker',
                                     'sliderId' => 'daterangepicker-in-range-start-date-border-bottom-left-radius-range-slider-min',
                                     'sliderClass' => 'daterangepicker-in-range-start-date-border-bottom-left-radius-range-slider-min',
-                                    'default' => 4
+                                    'default' => 4,
+                                    'group' => 'start_date'
                                 ),
                             ),
                         ),
@@ -5349,7 +5350,8 @@ return array(
                                     'category' => 'datepicker',
                                     'sliderId' => 'daterangepicker-in-range-start-date-border-bottom-right-radius-range-slider-min',
                                     'sliderClass' => 'daterangepicker-in-range-start-date-border-bottom-right-radius-range-slider-min',
-                                    'default' => 0
+                                    'default' => 0,
+                                    'group' => 'start_date'
                                 ),
                             ),
                         ),
@@ -5369,7 +5371,8 @@ return array(
                                     'category' => 'datepicker',
                                     'sliderId' => 'daterangepicker-in-range-end-date-border-top-left-radius-range-slider-min',
                                     'sliderClass' => 'daterangepicker-in-range-end-date-border-top-left-radius-range-slider-min',
-                                    'default' => 0
+                                    'default' => 0,
+                                    'group' => 'end_date'
                                 ),
                             ),
                         ),
@@ -5389,7 +5392,8 @@ return array(
                                     'category' => 'datepicker',
                                     'sliderId' => 'daterangepicker-in-range-end-date-border-top-right-radius-range-slider-min',
                                     'sliderClass' => 'daterangepicker-in-range-end-date-border-top-right-radius-range-slider-min',
-                                    'default' => 4
+                                    'default' => 4,
+                                    'group' => 'end_date'
                                 ),
                             ),
                         ),
@@ -5409,7 +5413,8 @@ return array(
                                     'category' => 'datepicker',
                                     'sliderId' => 'daterangepicker-in-range-end-date-border-bottom-left-radius-range-slider-min',
                                     'sliderClass' => 'daterangepicker-in-range-end-date-border-bottom-left-radius-range-slider-min',
-                                    'default' => 0
+                                    'default' => 0,
+                                    'group' => 'end_date'
                                 ),
                             ),
                         ),
@@ -5429,7 +5434,8 @@ return array(
                                     'category' => 'datepicker',
                                     'sliderId' => 'daterangepicker-in-range-end-date-border-bottom-right-radius-range-slider-min',
                                     'sliderClass' => 'daterangepicker-in-range-end-date-border-bottom-right-radius-range-slider-min',
-                                    'default' => 4
+                                    'default' => 4,
+                                    'group' => 'end_date'
                                 ),
                             ),
                         ),
@@ -5591,7 +5597,7 @@ return array(
                                     'placeholder' => '',
                                     'class' => 'form-control',
                                     'id' => 'melis_core_platform_theme_daterangepicker_day_text_align',
-                                    'category' => 'tab',
+                                    'category' => 'datepicker',
                                     'default' => 'center'
                                 ),
                             ),
@@ -5940,8 +5946,6 @@ return array(
                                 ),
                             ),
                         ),
-
-
                     ),
                     'input_filter' => array(
                         'melis_core_platform_theme_dashboard_plugin_no_plugin_alert_text_font_style' => array(
@@ -5965,10 +5969,9 @@ return array(
                             'required' => false,
                             'validators' => array(
                                 array(
-                                    'name' => 'regex',
-                                    false,
+                                    'name' => 'regex',                                    
                                     'options' => array(
-                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
                                         'messages' => array(\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'),
                                         'encoding' => 'UTF-8',
                                     ),
@@ -5986,7 +5989,7 @@ return array(
                                 array(
                                     'name' => 'regex',                                    
                                     'options' => array(
-                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
                                         'messages' => array(\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'),
                                         'encoding' => 'UTF-8',
                                     ),
@@ -6004,7 +6007,7 @@ return array(
                                 array(
                                     'name' => 'regex',                                   
                                     'options' => array(
-                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
                                         'messages' => array(\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'),
                                         'encoding' => 'UTF-8',
                                     ),
@@ -6022,7 +6025,7 @@ return array(
                                 array(
                                     'name' => 'regex',                                    
                                     'options' => array(
-                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
                                         'messages' => array(\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'),
                                         'encoding' => 'UTF-8',
                                     ),
@@ -6040,7 +6043,7 @@ return array(
                                 array(
                                     'name' => 'regex',                                   
                                     'options' => array(
-                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
                                         'messages' => array(\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'),
                                         'encoding' => 'UTF-8',
                                     ),
@@ -6058,7 +6061,7 @@ return array(
                                 array(
                                     'name' => 'regex',                                   
                                     'options' => array(
-                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
                                         'messages' => array(\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'),
                                         'encoding' => 'UTF-8',
                                     ),
@@ -6076,7 +6079,7 @@ return array(
                                 array(
                                     'name' => 'regex',                                    
                                     'options' => array(
-                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
                                         'messages' => array(\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'),
                                         'encoding' => 'UTF-8',
                                     ),
@@ -6094,7 +6097,7 @@ return array(
                                 array(
                                     'name' => 'regex',                                  
                                     'options' => array(
-                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
                                         'messages' => array(\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'),
                                         'encoding' => 'UTF-8',
                                     ),
@@ -6112,7 +6115,7 @@ return array(
                                 array(
                                     'name' => 'regex',                                   
                                     'options' => array(
-                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
                                         'messages' => array(\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'),
                                         'encoding' => 'UTF-8',
                                     ),
@@ -6130,7 +6133,7 @@ return array(
                                 array(
                                     'name' => 'regex',                                   
                                     'options' => array(
-                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
                                         'messages' => array(\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'),
                                         'encoding' => 'UTF-8',
                                     ),
@@ -6148,7 +6151,7 @@ return array(
                                 array(
                                     'name' => 'regex',                                 
                                     'options' => array(
-                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
                                         'messages' => array(\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'),
                                         'encoding' => 'UTF-8',
                                     ),
@@ -6166,7 +6169,7 @@ return array(
                                 array(
                                     'name' => 'regex',                                    
                                     'options' => array(
-                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
                                         'messages' => array(\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'),
                                         'encoding' => 'UTF-8',
                                     ),
@@ -6184,7 +6187,7 @@ return array(
                                 array(
                                     'name' => 'regex',                                   
                                     'options' => array(
-                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
                                         'messages' => array(\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'),
                                         'encoding' => 'UTF-8',
                                     ),
@@ -6202,7 +6205,7 @@ return array(
                                 array(
                                     'name' => 'regex',                                   
                                     'options' => array(
-                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
                                         'messages' => array(\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'),
                                         'encoding' => 'UTF-8',
                                     ),
@@ -6220,7 +6223,7 @@ return array(
                                 array(
                                     'name' => 'regex',                                  
                                     'options' => array(
-                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
                                         'messages' => array(\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'),
                                         'encoding' => 'UTF-8',
                                     ),
@@ -6238,7 +6241,7 @@ return array(
                                 array(
                                     'name' => 'regex',                                  
                                     'options' => array(
-                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
                                         'messages' => array(\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'),
                                         'encoding' => 'UTF-8',
                                     ),
@@ -6256,7 +6259,7 @@ return array(
                                 array(
                                     'name' => 'regex',                                  
                                     'options' => array(
-                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
                                         'messages' => array(\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'),
                                         'encoding' => 'UTF-8',
                                     ),
@@ -6276,7 +6279,7 @@ return array(
                                 array(
                                     'name' => 'regex',
                                     'options' => array(
-                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
                                         'messages' => array(\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'),
                                         'encoding' => 'UTF-8',
                                     ),
@@ -6295,7 +6298,7 @@ return array(
                                 array(
                                     'name' => 'regex',
                                     'options' => array(
-                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
                                         'messages' => array(\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'),
                                         'encoding' => 'UTF-8',
                                     ),
@@ -6314,7 +6317,7 @@ return array(
                                 array(
                                     'name' => 'regex',
                                     'options' => array(
-                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
                                         'messages' => array(\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'),
                                         'encoding' => 'UTF-8',
                                     ),
@@ -6333,7 +6336,7 @@ return array(
                                 array(
                                     'name' => 'regex',
                                     'options' => array(
-                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
                                         'messages' => array(\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'),
                                         'encoding' => 'UTF-8',
                                     ),
@@ -6352,7 +6355,7 @@ return array(
                                 array(
                                     'name' => 'regex',
                                     'options' => array(
-                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
                                         'messages' => array(\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'),
                                         'encoding' => 'UTF-8',
                                     ),
@@ -6371,7 +6374,7 @@ return array(
                                 array(
                                     'name' => 'regex',
                                     'options' => array(
-                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
                                         'messages' => array(\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'),
                                         'encoding' => 'UTF-8',
                                     ),
@@ -6390,7 +6393,7 @@ return array(
                                 [
                                     'name' => 'regex',
                                     'options' => [
-                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
                                         'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
                                         'encoding' => 'UTF-8',
                                     ],
@@ -6408,7 +6411,7 @@ return array(
                                 [
                                     'name' => 'regex',
                                     'options' => [
-                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
                                         'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
                                         'encoding' => 'UTF-8',
                                     ],
@@ -6426,7 +6429,7 @@ return array(
                                 [
                                     'name' => 'regex',
                                     'options' => [
-                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
                                         'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
                                         'encoding' => 'UTF-8',
                                     ],
@@ -6444,7 +6447,7 @@ return array(
                                 [
                                     'name' => 'regex',
                                     'options' => [
-                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
                                         'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
                                         'encoding' => 'UTF-8',
                                     ],
@@ -6462,7 +6465,7 @@ return array(
                                 [
                                     'name' => 'regex',
                                     'options' => [
-                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
                                         'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
                                         'encoding' => 'UTF-8',
                                     ],
@@ -6480,7 +6483,7 @@ return array(
                                 [
                                     'name' => 'regex',
                                     'options' => [
-                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
                                         'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
                                         'encoding' => 'UTF-8',
                                     ],
@@ -6498,7 +6501,7 @@ return array(
                                 [
                                     'name' => 'regex',
                                     'options' => [
-                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
                                         'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
                                         'encoding' => 'UTF-8',
                                     ],
@@ -6516,7 +6519,7 @@ return array(
                                 [
                                     'name' => 'regex',
                                     'options' => [
-                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
                                         'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
                                         'encoding' => 'UTF-8',
                                     ],
@@ -6534,7 +6537,7 @@ return array(
                                 [
                                     'name' => 'regex',
                                     'options' => [
-                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
                                         'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
                                         'encoding' => 'UTF-8',
                                     ],
@@ -6552,7 +6555,7 @@ return array(
                                 [
                                     'name' => 'regex',
                                     'options' => [
-                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
                                         'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
                                         'encoding' => 'UTF-8',
                                     ],
@@ -6570,7 +6573,7 @@ return array(
                                 [
                                     'name' => 'regex',
                                     'options' => [
-                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
                                         'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
                                         'encoding' => 'UTF-8',
                                     ],
@@ -6588,7 +6591,7 @@ return array(
                                 [
                                     'name' => 'regex',
                                     'options' => [
-                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
                                         'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
                                         'encoding' => 'UTF-8',
                                     ],
@@ -6606,7 +6609,7 @@ return array(
                                 [
                                     'name' => 'regex',
                                     'options' => [
-                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
                                         'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
                                         'encoding' => 'UTF-8',
                                     ],
@@ -6625,7 +6628,7 @@ return array(
                                 [
                                     'name' => 'regex',
                                     'options' => [
-                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
                                         'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
                                         'encoding' => 'UTF-8',
                                     ],
@@ -6643,7 +6646,7 @@ return array(
                                 [
                                     'name' => 'regex',
                                     'options' => [
-                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
                                         'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
                                         'encoding' => 'UTF-8',
                                     ],
@@ -6661,7 +6664,7 @@ return array(
                                 [
                                     'name' => 'regex',
                                     'options' => [
-                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
                                         'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
                                         'encoding' => 'UTF-8',
                                     ],
@@ -6679,7 +6682,7 @@ return array(
                                 [
                                     'name' => 'regex',
                                     'options' => [
-                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
                                         'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
                                         'encoding' => 'UTF-8',
                                     ],
@@ -6697,7 +6700,7 @@ return array(
                                 [
                                     'name' => 'regex',
                                     'options' => [
-                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
                                         'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
                                         'encoding' => 'UTF-8',
                                     ],
@@ -6715,7 +6718,7 @@ return array(
                                 [
                                     'name' => 'regex',
                                     'options' => [
-                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
                                         'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
                                         'encoding' => 'UTF-8',
                                     ],
@@ -6742,7 +6745,7 @@ return array(
                                 [
                                     'name' => 'regex',
                                     'options' => [
-                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
                                         'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
                                         'encoding' => 'UTF-8',
                                     ],
@@ -6760,7 +6763,7 @@ return array(
                                 [
                                     'name' => 'regex',
                                     'options' => [
-                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
                                         'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
                                         'encoding' => 'UTF-8',
                                     ],
@@ -6787,7 +6790,7 @@ return array(
                                 [
                                     'name' => 'regex',
                                     'options' => [
-                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
                                         'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
                                         'encoding' => 'UTF-8',
                                     ],
@@ -6805,7 +6808,7 @@ return array(
                                 [
                                     'name' => 'regex',
                                     'options' => [
-                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
                                         'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
                                         'encoding' => 'UTF-8',
                                     ],
@@ -6823,7 +6826,7 @@ return array(
                                 [
                                     'name' => 'regex',
                                     'options' => [
-                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
                                         'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
                                         'encoding' => 'UTF-8',
                                     ],
@@ -6841,7 +6844,7 @@ return array(
                                 [
                                     'name' => 'regex',
                                     'options' => [
-                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
                                         'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
                                         'encoding' => 'UTF-8',
                                     ],
@@ -6859,7 +6862,7 @@ return array(
                                 [
                                     'name' => 'regex',
                                     'options' => [
-                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
                                         'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
                                         'encoding' => 'UTF-8',
                                     ],
@@ -6877,7 +6880,7 @@ return array(
                                 [
                                     'name' => 'regex',
                                     'options' => [
-                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
                                         'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
                                         'encoding' => 'UTF-8',
                                     ],
@@ -6895,7 +6898,7 @@ return array(
                                 [
                                     'name' => 'regex',
                                     'options' => [
-                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
                                         'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
                                         'encoding' => 'UTF-8',
                                     ],
@@ -6914,7 +6917,7 @@ return array(
                                 [
                                     'name' => 'regex',
                                     'options' => [
-                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
                                         'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
                                         'encoding' => 'UTF-8',
                                     ],
@@ -6932,7 +6935,7 @@ return array(
                                 [
                                     'name' => 'regex',
                                     'options' => [
-                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
                                         'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
                                         'encoding' => 'UTF-8',
                                     ],
@@ -6950,7 +6953,7 @@ return array(
                                 [
                                     'name' => 'regex',
                                     'options' => [
-                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
                                         'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
                                         'encoding' => 'UTF-8',
                                     ],
@@ -6968,7 +6971,7 @@ return array(
                                 [
                                     'name' => 'regex',
                                     'options' => [
-                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
                                         'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
                                         'encoding' => 'UTF-8',
                                     ],
@@ -6986,7 +6989,7 @@ return array(
                                 [
                                     'name' => 'regex',
                                     'options' => [
-                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
                                         'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
                                         'encoding' => 'UTF-8',
                                     ],
@@ -7004,7 +7007,7 @@ return array(
                                 [
                                     'name' => 'regex',
                                     'options' => [
-                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
                                         'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
                                         'encoding' => 'UTF-8',
                                     ],
@@ -7022,7 +7025,7 @@ return array(
                                 [
                                     'name' => 'regex',
                                     'options' => [
-                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
                                         'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
                                         'encoding' => 'UTF-8',
                                     ],
@@ -7040,7 +7043,7 @@ return array(
                                 [
                                     'name' => 'regex',
                                     'options' => [
-                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
                                         'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
                                         'encoding' => 'UTF-8',
                                     ],
@@ -7058,7 +7061,7 @@ return array(
                                 [
                                     'name' => 'regex',
                                     'options' => [
-                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
                                         'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
                                         'encoding' => 'UTF-8',
                                     ],
@@ -7077,7 +7080,7 @@ return array(
                                 [
                                     'name' => 'regex',
                                     'options' => [
-                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
                                         'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
                                         'encoding' => 'UTF-8',
                                     ],
@@ -7095,7 +7098,7 @@ return array(
                                 [
                                     'name' => 'regex',
                                     'options' => [
-                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
                                         'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
                                         'encoding' => 'UTF-8',
                                     ],
@@ -7114,7 +7117,7 @@ return array(
                                 [
                                     'name' => 'regex',
                                     'options' => [
-                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
                                         'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
                                         'encoding' => 'UTF-8',
                                     ],
@@ -7142,7 +7145,7 @@ return array(
                                 [
                                     'name' => 'regex',
                                     'options' => [
-                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
                                         'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
                                         'encoding' => 'UTF-8',
                                     ],
@@ -7160,7 +7163,7 @@ return array(
                                 [
                                     'name' => 'regex',
                                     'options' => [
-                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
                                         'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
                                         'encoding' => 'UTF-8',
                                     ],
@@ -7178,7 +7181,7 @@ return array(
                                 [
                                     'name' => 'regex',
                                     'options' => [
-                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
                                         'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
                                         'encoding' => 'UTF-8',
                                     ],
@@ -7196,7 +7199,7 @@ return array(
                                 [
                                     'name' => 'regex',
                                     'options' => [
-                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
                                         'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
                                         'encoding' => 'UTF-8',
                                     ],
@@ -7214,7 +7217,7 @@ return array(
                                 [
                                     'name' => 'regex',
                                     'options' => [
-                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
                                         'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
                                         'encoding' => 'UTF-8',
                                     ],
@@ -7232,7 +7235,7 @@ return array(
                                 [
                                     'name' => 'regex',
                                     'options' => [
-                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
                                         'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
                                         'encoding' => 'UTF-8',
                                     ],
@@ -7251,7 +7254,7 @@ return array(
                                 [
                                     'name' => 'regex',
                                     'options' => [
-                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
                                         'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
                                         'encoding' => 'UTF-8',
                                     ],
@@ -7270,7 +7273,7 @@ return array(
                                 [
                                     'name' => 'regex',
                                     'options' => [
-                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
                                         'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
                                         'encoding' => 'UTF-8',
                                     ],
@@ -7288,7 +7291,7 @@ return array(
                                 [
                                     'name' => 'regex',
                                     'options' => [
-                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
                                         'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
                                         'encoding' => 'UTF-8',
                                     ],
@@ -7306,7 +7309,7 @@ return array(
                                 [
                                     'name' => 'regex',
                                     'options' => [                                        
-                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
                                         'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
                                         'encoding' => 'UTF-8',
                                     ],
@@ -7316,9 +7319,9 @@ return array(
                                 ['name' => 'StripTags'],
                                 ['name' => 'StringTrim'],
                             ],
-                        ],      
+                        ],
 
-                        //modal    
+                        //modal                        
                         'melis_core_platform_theme_modal_bg_color' => [
                             'name'     => 'melis_core_platform_theme_modal_bg_color',
                             'required' => false,
@@ -7326,7 +7329,7 @@ return array(
                                 [
                                     'name' => 'regex',                                  
                                     'options' => [
-                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
                                         'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
                                         'encoding' => 'UTF-8',
                                     ],
@@ -7344,7 +7347,7 @@ return array(
                                 [
                                     'name' => 'regex',                                  
                                     'options' => [
-                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
                                         'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
                                         'encoding' => 'UTF-8',
                                     ],
@@ -7362,7 +7365,7 @@ return array(
                                 [
                                     'name' => 'regex',                                   
                                     'options' => [
-                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
                                         'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
                                         'encoding' => 'UTF-8',
                                     ],
@@ -7380,7 +7383,7 @@ return array(
                                 [
                                     'name' => 'regex',                                  
                                     'options' => [
-                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
                                         'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
                                         'encoding' => 'UTF-8',
                                     ],
@@ -7398,7 +7401,7 @@ return array(
                                 [
                                     'name' => 'regex',                              
                                     'options' => [
-                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
                                         'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
                                         'encoding' => 'UTF-8',
                                     ],
@@ -7417,7 +7420,7 @@ return array(
                                 [
                                     'name' => 'regex',                                   
                                     'options' => [
-                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
                                         'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
                                         'encoding' => 'UTF-8',
                                     ],
@@ -7435,7 +7438,7 @@ return array(
                                 [
                                     'name' => 'regex',                                    
                                     'options' => [
-                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
                                         'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
                                         'encoding' => 'UTF-8',
                                     ],
@@ -7453,7 +7456,7 @@ return array(
                                 [
                                     'name' => 'regex',                                  
                                     'options' => [
-                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
                                         'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
                                         'encoding' => 'UTF-8',
                                     ],
@@ -7471,7 +7474,7 @@ return array(
                                 [
                                     'name' => 'regex',                                   
                                     'options' => [
-                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
                                         'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
                                         'encoding' => 'UTF-8',
                                     ],
@@ -7489,7 +7492,7 @@ return array(
                                 [
                                     'name' => 'regex',                                   
                                     'options' => [
-                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
                                         'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
                                         'encoding' => 'UTF-8',
                                     ],
@@ -7507,7 +7510,7 @@ return array(
                                 [
                                     'name' => 'regex',                                   
                                     'options' => [
-                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
                                         'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
                                         'encoding' => 'UTF-8',
                                     ],
@@ -7525,7 +7528,7 @@ return array(
                                 [
                                     'name' => 'regex',                                   
                                     'options' => [
-                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
                                         'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
                                         'encoding' => 'UTF-8',
                                     ],
@@ -7543,7 +7546,7 @@ return array(
                                 [
                                     'name' => 'regex',                                  
                                     'options' => [
-                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
                                         'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
                                         'encoding' => 'UTF-8',
                                     ],
@@ -7561,7 +7564,7 @@ return array(
                                 [
                                     'name' => 'regex',                                    
                                     'options' => [
-                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
                                         'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
                                         'encoding' => 'UTF-8',
                                     ],
@@ -7579,7 +7582,7 @@ return array(
                                 [
                                     'name' => 'regex',                                 
                                     'options' => [
-                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
                                         'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
                                         'encoding' => 'UTF-8',
                                     ],
@@ -7597,7 +7600,7 @@ return array(
                                 [
                                     'name' => 'regex',
                                     'options' => [
-                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
                                         'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
                                         'encoding' => 'UTF-8',
                                     ],
@@ -7616,7 +7619,7 @@ return array(
                                 [
                                     'name' => 'regex',
                                     'options' => [
-                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
                                         'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
                                         'encoding' => 'UTF-8',
                                     ],
@@ -7635,7 +7638,7 @@ return array(
                                 [
                                     'name' => 'regex',
                                     'options' => [
-                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
                                         'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
                                         'encoding' => 'UTF-8',
                                     ],
@@ -7662,7 +7665,7 @@ return array(
                                 [
                                     'name' => 'regex',
                                     'options' => [
-                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
                                         'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
                                         'encoding' => 'UTF-8',
                                     ],
@@ -7681,7 +7684,7 @@ return array(
                                 [
                                     'name' => 'regex',
                                     'options' => [
-                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
                                         'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
                                         'encoding' => 'UTF-8',
                                     ],
@@ -7700,7 +7703,7 @@ return array(
                                 [
                                     'name' => 'regex',
                                     'options' => [
-                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
                                         'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
                                         'encoding' => 'UTF-8',
                                     ],
@@ -7719,7 +7722,7 @@ return array(
                                 [
                                     'name' => 'regex',
                                     'options' => [
-                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
                                         'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
                                         'encoding' => 'UTF-8',
                                     ],
@@ -7738,7 +7741,7 @@ return array(
                                 [
                                     'name' => 'regex',
                                     'options' => [
-                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
                                         'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
                                         'encoding' => 'UTF-8',
                                     ],
@@ -7757,7 +7760,7 @@ return array(
                                 [
                                     'name' => 'regex',
                                     'options' => [
-                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
                                         'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
                                         'encoding' => 'UTF-8',
                                     ],
@@ -7775,7 +7778,7 @@ return array(
                                 [
                                     'name' => 'regex',
                                     'options' => [
-                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
                                         'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
                                         'encoding' => 'UTF-8',
                                     ],
@@ -7793,7 +7796,7 @@ return array(
                                 [
                                     'name' => 'regex',
                                     'options' => [
-                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
                                         'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
                                         'encoding' => 'UTF-8',
                                     ],
@@ -7811,7 +7814,7 @@ return array(
                                 [
                                     'name' => 'regex',
                                     'options' => [
-                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
                                         'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
                                         'encoding' => 'UTF-8',
                                     ],
@@ -7829,7 +7832,7 @@ return array(
                                 [
                                     'name' => 'regex',
                                     'options' => [
-                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
                                         'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
                                         'encoding' => 'UTF-8',
                                     ],
@@ -7847,7 +7850,7 @@ return array(
                                 [
                                     'name' => 'regex',
                                     'options' => [
-                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
                                         'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
                                         'encoding' => 'UTF-8',
                                     ],
@@ -7865,7 +7868,7 @@ return array(
                                 [
                                     'name' => 'regex',
                                     'options' => [
-                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
                                         'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
                                         'encoding' => 'UTF-8',
                                     ],
@@ -7883,7 +7886,7 @@ return array(
                                 [
                                     'name' => 'regex',
                                     'options' => [
-                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
                                         'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
                                         'encoding' => 'UTF-8',
                                     ],
@@ -7901,7 +7904,7 @@ return array(
                                 [
                                     'name' => 'regex',
                                     'options' => [
-                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
                                         'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
                                         'encoding' => 'UTF-8',
                                     ],
@@ -7919,7 +7922,7 @@ return array(
                                 [
                                     'name' => 'regex',
                                     'options' => [
-                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
                                         'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
                                         'encoding' => 'UTF-8',
                                     ],
@@ -7937,7 +7940,7 @@ return array(
                                 [
                                     'name' => 'regex',
                                     'options' => [
-                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
                                         'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
                                         'encoding' => 'UTF-8',
                                     ],
@@ -7955,7 +7958,7 @@ return array(
                                 [
                                     'name' => 'regex',
                                     'options' => [
-                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
                                         'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
                                         'encoding' => 'UTF-8',
                                     ],
@@ -7973,7 +7976,7 @@ return array(
                                 [
                                     'name' => 'regex',
                                     'options' => [
-                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
                                         'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
                                         'encoding' => 'UTF-8',
                                     ],
@@ -7993,7 +7996,7 @@ return array(
                                 [
                                     'name' => 'regex',
                                     'options' => [
-                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
                                         'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
                                         'encoding' => 'UTF-8',
                                     ],
@@ -8011,7 +8014,7 @@ return array(
                                 [
                                     'name' => 'regex',
                                     'options' => [
-                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
                                         'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
                                         'encoding' => 'UTF-8',
                                     ],
@@ -8029,7 +8032,7 @@ return array(
                                 [
                                     'name' => 'regex',
                                     'options' => [
-                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
                                         'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
                                         'encoding' => 'UTF-8',
                                     ],
@@ -8047,7 +8050,7 @@ return array(
                                 [
                                     'name' => 'regex',
                                     'options' => [
-                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
                                         'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
                                         'encoding' => 'UTF-8',
                                     ],
@@ -8065,7 +8068,7 @@ return array(
                                 [
                                     'name' => 'regex',
                                     'options' => [
-                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
                                         'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
                                         'encoding' => 'UTF-8',
                                     ],
@@ -8083,7 +8086,7 @@ return array(
                                 [
                                     'name' => 'regex',
                                     'options' => [
-                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
                                         'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
                                         'encoding' => 'UTF-8',
                                     ],
@@ -8101,7 +8104,7 @@ return array(
                                 [
                                     'name' => 'regex',
                                     'options' => [
-                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
                                         'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
                                         'encoding' => 'UTF-8',
                                     ],
@@ -8119,7 +8122,7 @@ return array(
                                 [
                                     'name' => 'regex',
                                     'options' => [
-                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
                                         'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
                                         'encoding' => 'UTF-8',
                                     ],
@@ -8137,7 +8140,7 @@ return array(
                                 [
                                     'name' => 'regex',
                                     'options' => [
-                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
                                         'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
                                         'encoding' => 'UTF-8',
                                     ],
@@ -8155,7 +8158,7 @@ return array(
                                 [
                                     'name' => 'regex',
                                     'options' => [
-                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
                                         'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
                                         'encoding' => 'UTF-8',
                                     ],
@@ -8173,7 +8176,7 @@ return array(
                                 [
                                     'name' => 'regex',
                                     'options' => [
-                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
                                         'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
                                         'encoding' => 'UTF-8',
                                     ],
@@ -8191,7 +8194,7 @@ return array(
                                 [
                                     'name' => 'regex',
                                     'options' => [
-                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
                                         'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
                                         'encoding' => 'UTF-8',
                                     ],
@@ -8209,7 +8212,7 @@ return array(
                                 [
                                     'name' => 'regex',
                                     'options' => [
-                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
                                         'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
                                         'encoding' => 'UTF-8',
                                     ],
@@ -8227,7 +8230,7 @@ return array(
                                 [
                                     'name' => 'regex',
                                     'options' => [
-                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
                                         'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
                                         'encoding' => 'UTF-8',
                                     ],
@@ -8245,7 +8248,7 @@ return array(
                                 [
                                     'name' => 'regex',
                                     'options' => [
-                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
                                         'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
                                         'encoding' => 'UTF-8',
                                     ],
@@ -8263,7 +8266,7 @@ return array(
                                 [
                                     'name' => 'regex',
                                     'options' => [
-                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
                                         'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
                                         'encoding' => 'UTF-8',
                                     ],
@@ -8281,7 +8284,7 @@ return array(
                                 [
                                     'name' => 'regex',
                                     'options' => [
-                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
                                         'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
                                         'encoding' => 'UTF-8',
                                     ],
@@ -8299,7 +8302,7 @@ return array(
                                 [
                                     'name' => 'regex',
                                     'options' => [
-                                        'pattern' => '/#?([\da-fA-F]{3}|[\da-fA-F]{6})/',
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
                                         'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
                                         'encoding' => 'UTF-8',
                                     ],
@@ -8318,6 +8321,1005 @@ return array(
                                 ['name' => 'StringTrim'],
                             ],
                         ],
+                        'melis_core_platform_theme_datepicker_bg_color' => [
+                            'name'     => 'melis_core_platform_theme_datepicker_bg_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',
+                                    'options' => [
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+                        'melis_core_platform_theme_datepicker_text_color' => [
+                            'name'     => 'melis_core_platform_theme_datepicker_text_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',
+                                    'options' => [
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+                        'melis_core_platform_theme_datepicker_border_color' => [
+                            'name'     => 'melis_core_platform_theme_datepicker_border_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',
+                                    'options' => [
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+                        'melis_core_platform_theme_datepicker_prev_next_data_action_button_text_color' => [
+                            'name'     => 'melis_core_platform_theme_datepicker_prev_next_data_action_button_text_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',
+                                    'options' => [
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+                        'melis_core_platform_theme_datepicker_prev_next_data_action_button_hover_bg_color' => [
+                            'name'     => 'melis_core_platform_theme_datepicker_prev_next_data_action_button_hover_bg_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',
+                                    'options' => [
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+                        'melis_core_platform_theme_datepicker_dow_bg_color' => [
+                            'name'     => 'melis_core_platform_theme_datepicker_dow_bg_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',
+                                    'options' => [
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+                        'melis_core_platform_theme_datepicker_dow_text_color' => [
+                            'name'     => 'melis_core_platform_theme_datepicker_dow_text_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',
+                                    'options' => [
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+                        'melis_core_platform_theme_datepicker_day_text_color' => [
+                            'name'     => 'melis_core_platform_theme_datepicker_day_text_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',
+                                    'options' => [
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+                        'melis_core_platform_theme_datepicker_day_text_hover_bg_color' => [
+                            'name'     => 'melis_core_platform_theme_datepicker_day_text_hover_bg_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',
+                                    'options' => [
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+                        'melis_core_platform_theme_datepicker_day_old_weekend_text_color' => [
+                            'name'     => 'melis_core_platform_theme_datepicker_day_old_weekend_text_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',
+                                    'options' => [
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+                        'melis_core_platform_theme_datepicker_day_active_bg_color' => [
+                            'name'     => 'melis_core_platform_theme_datepicker_day_active_bg_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',
+                                    'options' => [
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+                        'melis_core_platform_theme_datepicker_day_active_text_color' => [
+                            'name'     => 'melis_core_platform_theme_datepicker_day_active_text_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',
+                                    'options' => [
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+                        'melis_core_platform_theme_datepicker_timepicker_btn_bg_color' => [
+                            'name'     => 'melis_core_platform_theme_datepicker_timepicker_btn_bg_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',
+                                    'options' => [
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+                        'melis_core_platform_theme_datepicker_timepicker_btn_icon_color' => [
+                            'name'     => 'melis_core_platform_theme_datepicker_timepicker_btn_icon_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',
+                                    'options' => [
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+                        'melis_core_platform_theme_datepicker_timepicker_btn_hover_bg_color' => [
+                            'name'     => 'melis_core_platform_theme_datepicker_timepicker_btn_hover_bg_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',
+                                    'options' => [
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+                        'melis_core_platform_theme_datepicker_timepicker_arrow_btn_bg_color' => [
+                            'name'     => 'melis_core_platform_theme_datepicker_timepicker_arrow_btn_bg_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',
+                                    'options' => [
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+                        'melis_core_platform_theme_datepicker_timepicker_arrow_btn_hover_bg_color' => [
+                            'name'     => 'melis_core_platform_theme_datepicker_timepicker_arrow_btn_hover_bg_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',
+                                    'options' => [
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+                        'melis_core_platform_theme_datepicker_timepicker_time_bg_color' => [
+                            'name'     => 'melis_core_platform_theme_datepicker_timepicker_time_bg_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',
+                                    'options' => [
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+                        'melis_core_platform_theme_datepicker_timepicker_time_text_color' => [
+                            'name'     => 'melis_core_platform_theme_datepicker_timepicker_time_text_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',
+                                    'options' => [
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+                        'melis_core_platform_theme_daterangepicker_bg_color' => [
+                            'name'     => 'melis_core_platform_theme_daterangepicker_bg_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',
+                                    'options' => [
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+                        'melis_core_platform_theme_daterangepicker_text_color' => [
+                            'name'     => 'melis_core_platform_theme_daterangepicker_text_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',
+                                    'options' => [
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+                        'melis_core_platform_theme_daterangepicker_border_color' => [
+                            'name'     => 'melis_core_platform_theme_daterangepicker_border_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',
+                                    'options' => [
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+                        'melis_core_platform_theme_daterangepicker_button_bg_color' => [
+                            'name'     => 'melis_core_platform_theme_daterangepicker_button_bg_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',
+                                    'options' => [
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+                        'melis_core_platform_theme_daterangepicker_button_text_color' => [
+                            'name'     => 'melis_core_platform_theme_daterangepicker_button_text_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',
+                                    'options' => [
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+                        'melis_core_platform_theme_daterangepicker_button_border_color' => [
+                            'name'     => 'melis_core_platform_theme_daterangepicker_button_border_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',
+                                    'options' => [
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+                        'melis_core_platform_theme_daterangepicker_button_border_bottom_color' => [
+                            'name'     => 'melis_core_platform_theme_daterangepicker_button_border_bottom_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',
+                                    'options' => [
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+                        'melis_core_platform_theme_daterangepicker_button_bg_hover_color' => [
+                            'name'     => 'melis_core_platform_theme_daterangepicker_button_bg_hover_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',
+                                    'options' => [
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+                        'melis_core_platform_theme_daterangepicker_button_text_hover_color' => [
+                            'name'     => 'melis_core_platform_theme_daterangepicker_button_text_hover_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',
+                                    'options' => [
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+                        'melis_core_platform_theme_daterangepicker_button_hover_border_color' => [
+                            'name'     => 'melis_core_platform_theme_daterangepicker_button_hover_border_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',
+                                    'options' => [
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+                        'melis_core_platform_theme_daterangepicker_day_active_bg_color' => [
+                            'name'     => 'melis_core_platform_theme_daterangepicker_day_active_bg_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',
+                                    'options' => [
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+                        'melis_core_platform_theme_daterangepicker_day_active_text_color' => [
+                            'name'     => 'melis_core_platform_theme_daterangepicker_day_active_text_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',
+                                    'options' => [
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+                        'melis_core_platform_theme_daterangepicker_day_active_border_color' => [
+                            'name'     => 'melis_core_platform_theme_daterangepicker_day_active_border_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',
+                                    'options' => [
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+                        'melis_core_platform_theme_daterangepicker_day_active_in_range_bg_color' => [
+                            'name'     => 'melis_core_platform_theme_daterangepicker_day_active_in_range_bg_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',
+                                    'options' => [
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+                        'melis_core_platform_theme_daterangepicker_day_active_in_range_border_color' => [
+                            'name'     => 'melis_core_platform_theme_daterangepicker_day_active_in_range_border_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',
+                                    'options' => [
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+
+                        'melis_core_platform_theme_daterangepicker_day_active_in_range_text_color' => [
+                            'name'     => 'melis_core_platform_theme_daterangepicker_day_active_in_range_text_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',
+                                    'options' => [
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+                        'melis_core_platform_theme_daterangepicker_day_available_text_color' => [
+                            'name'     => 'melis_core_platform_theme_daterangepicker_day_available_text_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',
+                                    'options' => [
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+                        'melis_core_platform_theme_daterangepicker_day_available_hover_bg_color' => [
+                            'name'     => 'melis_core_platform_theme_daterangepicker_day_available_hover_bg_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',
+                                    'options' => [
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+                        'melis_core_platform_theme_daterangepicker_day_available_hover_border_color' => [
+                            'name'     => 'melis_core_platform_theme_daterangepicker_day_available_hover_border_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',
+                                    'options' => [
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+                        'melis_core_platform_theme_daterangepicker_day_available_border_color' => [
+                            'name'     => 'melis_core_platform_theme_daterangepicker_day_available_border_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',
+                                    'options' => [
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+                        'melis_core_platform_theme_daterangepicker_day_off_bg_color' => [
+                            'name'     => 'melis_core_platform_theme_daterangepicker_day_off_bg_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',
+                                    'options' => [
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+                        'melis_core_platform_theme_daterangepicker_day_off_border_color' => [
+                            'name'     => 'melis_core_platform_theme_daterangepicker_day_off_border_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',
+                                    'options' => [
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+                        'melis_core_platform_theme_daterangepicker_day_off_text_color' => [
+                            'name'     => 'melis_core_platform_theme_daterangepicker_day_off_text_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',
+                                    'options' => [
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+                        'melis_core_platform_theme_daterangepicker_footer_selected_date_text_color' => [
+                            'name'     => 'melis_core_platform_theme_daterangepicker_footer_selected_date_text_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',
+                                    'options' => [
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+                        'melis_core_platform_theme_daterangepicker_footer_cancel_btn_bg_color' => [
+                            'name'     => 'melis_core_platform_theme_daterangepicker_footer_cancel_btn_bg_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',
+                                    'options' => [
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+                        'melis_core_platform_theme_daterangepicker_footer_cancel_btn_hover_bg_color' => [
+                            'name'     => 'melis_core_platform_theme_daterangepicker_footer_cancel_btn_hover_bg_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',
+                                    'options' => [
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+                        'melis_core_platform_theme_daterangepicker_footer_cancel_btn_border_color' => [
+                            'name'     => 'melis_core_platform_theme_daterangepicker_footer_cancel_btn_border_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',
+                                    'options' => [
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+                        'melis_core_platform_theme_daterangepicker_footer_cancel_btn_hover_border_color' => [
+                            'name'     => 'melis_core_platform_theme_daterangepicker_footer_cancel_btn_hover_border_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',
+                                    'options' => [
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+                        'melis_core_platform_theme_daterangepicker_footer_cancel_btn_text_color' => [
+                            'name'     => 'melis_core_platform_theme_daterangepicker_footer_cancel_btn_text_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',
+                                    'options' => [
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+                        'melis_core_platform_theme_daterangepicker_footer_cancel_btn_hover_text_color' => [
+                            'name'     => 'melis_core_platform_theme_daterangepicker_footer_cancel_btn_hover_text_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',
+                                    'options' => [
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+                        'melis_core_platform_theme_daterangepicker_footer_apply_btn_bg_color' => [
+                            'name'     => 'melis_core_platform_theme_daterangepicker_footer_apply_btn_bg_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',
+                                    'options' => [
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+                        'melis_core_platform_theme_daterangepicker_footer_apply_btn_hover_bg_color' => [
+                            'name'     => 'melis_core_platform_theme_daterangepicker_footer_apply_btn_hover_bg_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',
+                                    'options' => [
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+                        'melis_core_platform_theme_daterangepicker_footer_apply_btn_border_color' => [
+                            'name'     => 'melis_core_platform_theme_daterangepicker_footer_apply_btn_border_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',
+                                    'options' => [
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+                        'melis_core_platform_theme_daterangepicker_footer_apply_btn_hover_border_color' => [
+                            'name'     => 'melis_core_platform_theme_daterangepicker_footer_apply_btn_hover_border_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',
+                                    'options' => [
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+                        'melis_core_platform_theme_daterangepicker_footer_apply_btn_text_color' => [
+                            'name'     => 'melis_core_platform_theme_daterangepicker_footer_apply_btn_text_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',
+                                    'options' => [
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+                        'melis_core_platform_theme_daterangepicker_footer_apply_btn_hover_text_color' => [
+                            'name'     => 'melis_core_platform_theme_daterangepicker_footer_apply_btn_hover_text_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',
+                                    'options' => [
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+                        'melis_core_platform_theme_datepicker_prev_next_data_action_button_text_align' => [
+                            'name'     => 'melis_core_platform_theme_datepicker_prev_next_data_action_button_text_align',
+                            'required' => false,
+                        ],
+                        'melis_core_platform_theme_datepicker_table_th_td_text_align' => [
+                            'name'     => 'melis_core_platform_theme_datepicker_table_th_td_text_align',
+                            'required' => false,
+                        ]
                     )
                 ),
 			),

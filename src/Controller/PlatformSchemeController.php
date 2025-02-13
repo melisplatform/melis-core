@@ -61,6 +61,7 @@ class PlatformSchemeController extends MelisAbstractActionController
             $dialog = json_decode($schemeData->getDialog(), true);
             $formElement = json_decode($schemeData->getFormElement(), true);
             $tab = json_decode($schemeData->getTab(), true);
+            $datepicker = json_decode($schemeData->getDatepicker(), true);
 
             //set the value as array for multicheckbox(they are imploded by ';' when saving)
             $dashboardPlugin = array_map(function ($a) {
@@ -77,7 +78,7 @@ class PlatformSchemeController extends MelisAbstractActionController
                 return strpos($a, ';') ? explode(';', $a) : $a;
             }, $modal);
            
-            $platformThemeOptionData = array_merge($topLogo, $userProfile, $menu, $footer, $header, $bubblePlugin, $dashboardPlugin, $dashboardPluginMenu, $modal, $dialog, $formElement, $tab);
+            $platformThemeOptionData = array_merge($topLogo, $userProfile, $menu, $footer, $header, $bubblePlugin, $dashboardPlugin, $dashboardPluginMenu, $modal, $dialog, $formElement, $tab, $datepicker);
 
             if ($platformThemeOptionData) {
                 $platformThemeOptionForm->setData($platformThemeOptionData);
@@ -99,9 +100,11 @@ class PlatformSchemeController extends MelisAbstractActionController
             //     echo "\n";
             // }
 
-            // if ($elem->getAttribute('category') == 'tab') {
+            // if ($elem->getAttribute('category') == 'user_profile') {
             //     //dump($key);
-            //     echo $key.":". $elem->getAttribute('default');
+            //     //echo $key.":". $elem->getAttribute('default');
+            //     //melis_core_platform_theme_modal_bg_color
+            //     echo "$".lcfirst(str_replace(" ", "", ucwords(str_replace('_', ' ', str_replace('melis_core_platform_theme_', '', $key)))))." = \$this->".$key.";";
             //     echo "\n";
             // }
         }
@@ -505,7 +508,13 @@ class PlatformSchemeController extends MelisAbstractActionController
             $bubblePlugin = json_decode($schemeData->getBubblePlugin(), true);
             $dashboardPlugin = json_decode($schemeData->getDashboardPlugin(), true);
             $dashboardPluginMenu = json_decode($schemeData->getDashboardPluginMenu(), true);
-            $platformThemeData = array_merge($topLogo, $userProfile, $menu, $footer, $header, $bubblePlugin, $dashboardPlugin, $dashboardPluginMenu);
+            $modal = json_decode($schemeData->getModal(), true);
+            $dialog = json_decode($schemeData->getDialog(), true);
+            $formElement = json_decode($schemeData->getFormElement(), true);
+            $tab = json_decode($schemeData->getTab(), true);
+            $datepicker = json_decode($schemeData->getDatepicker(), true);
+
+            $platformThemeData = array_merge($topLogo, $userProfile, $menu, $footer, $header, $bubblePlugin, $dashboardPlugin, $dashboardPluginMenu, $modal, $dialog, $formElement, $tab, $datepicker);
            
             $platformThemeForm = $this->getPlatformThemeOptionForm();
             if (!empty($platformThemeData)) {
@@ -728,6 +737,8 @@ class PlatformSchemeController extends MelisAbstractActionController
             $form = $this->getPlatformThemeOptionForm();
             $form->setData($platformData);
 
+            //dump($platformData);
+
             if ($form->isValid()) {   
                 $topLogo = [];
                 $userProfile = [];
@@ -741,6 +752,7 @@ class PlatformSchemeController extends MelisAbstractActionController
                 $dialog = [];
                 $formElement = [];
                 $tab = [];
+                $datepicker = [];
 
                 foreach ($form->getElements() as $key => $elem) {
                     //add brackets to get the data
@@ -775,6 +787,8 @@ class PlatformSchemeController extends MelisAbstractActionController
                         $formElement[$key] = $data;
                     } elseif ($elem->getAttribute('category') == 'tab') {
                         $tab[$key] = $data;
+                    } elseif ($elem->getAttribute('category') == 'datepicker') {
+                        $datepicker[$key] = $data;
                     }
                 }
 
@@ -794,6 +808,7 @@ class PlatformSchemeController extends MelisAbstractActionController
                     'pscheme_dialog' => json_encode($dialog),
                     'pscheme_form_elements' => json_encode($formElement),
                     'pscheme_tab' => json_encode($tab),
+                    'pscheme_datepicker' => json_encode($datepicker)
                 );
 
                 $success = $this->getPlatformSchemeSvc()->saveScheme($data, $schemeId, true);

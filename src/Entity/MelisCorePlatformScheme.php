@@ -22,6 +22,7 @@ class MelisCorePlatformScheme
     protected $favicon;
     protected $isActive;
 
+    // platform theme options
     protected $topLogo;
     protected $userProfile;
     protected $menu;
@@ -34,6 +35,7 @@ class MelisCorePlatformScheme
     protected $dialog;
     protected $formElement;
     protected $tab;
+    protected $datepicker;
 
     public function setId($id)
     {
@@ -248,5 +250,15 @@ class MelisCorePlatformScheme
     public function getTab()
     {
         return $this->tab;
+    }
+
+    public function setDatepicker($datepicker)
+    {
+        $this->datepicker = $datepicker;
+    }
+
+    public function getDatepicker()
+    {
+        return $this->datepicker;
     }
 }

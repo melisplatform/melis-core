@@ -800,7 +800,7 @@ if ($headerTitleLen > 13) {
                                                                                     <input type="hidden" class="minicolor" value="<?= $element->getValue(); ?>" />
                                                                                 </span>
                                                                             </div>
-                                                                        <?php  } elseif (strpos($element->getName(), 'size') !== false || strpos($element->getName(), 'width') !== false  || strpos($element->getName(), 'radius') !== false || strpos($element->getName(), 'height') !== false ) {
+                                                                        <?php  } elseif (strpos($element->getName(), 'size') !== false || strpos($element->getName(), 'width') !== false  || strpos($element->getName(), 'radius') !== false || strpos($element->getName(), 'height') !== false) {
                                                                             $element->setAttribute('readonly', true);
                                                                         ?>
                                                                             <div class="row">
@@ -813,11 +813,11 @@ if ($headerTitleLen > 13) {
                                                                             </div>
                                                                         <?php } elseif (strpos($element->getName(), 'align') !== false) { ?>
                                                                             <div class="btn-group btn-group-alignment" role="group" aria-label="Text align radio toggle button group">
-                                                                                <?php                                                                       
+                                                                                <?php
                                                                                 foreach ($element->getOptions()['value_options'] as $optKey => $option) {
                                                                                 ?>
-                                                                                    <input name="<?= $element->getName() ?>" type="radio" class="btn-check" id="<?= $element->getName() . '_'. $optKey ?>" autocomplete="off" value="<?= $optKey ?>" <?= $optKey == $element->getValue() ? "checked" : "" ?>>
-                                                                                    <?= $option?>
+                                                                                    <input name="<?= $element->getName() ?>" type="radio" class="btn-check" id="<?= $element->getName() . '_' . $optKey ?>" autocomplete="off" value="<?= $optKey ?>" <?= $optKey == $element->getValue() ? "checked" : "" ?>>
+                                                                                    <?= $option ?>
                                                                                 <?php    }
                                                                                 ?>
                                                                             </div>
@@ -841,1086 +841,110 @@ if ($headerTitleLen > 13) {
                                                     <div id="component-datepickers" class="accordion-collapse collapse" data-bs-parent="#components-accordion">
                                                         <div class="accordion-body">
                                                             <small class="ml-2 mb-2"><i>* Datepicker and datetimepicker has the same css</i></small>
+                                                            <?php
+                                                            foreach ($platformThemeOptionForm->getElements() as $elementKey => $element) {
+                                                                if ($element->getAttribute('category') == 'datepicker' && empty($element->getAttribute('group'))) { ?>
+                                                                    <div class="form-group">
+                                                                        <label for="<?= $element->getAttribute('id') ?>" class="d-flex flex-row justify-content-between">
+                                                                            <div class="label-text"><?= $element->getLabel(); ?></div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="<?= $this->translate($element->getOptions()['tooltip']); ?>"></i>
+                                                                        </label>
 
-                                                            <!-- options_datepicker_bg_color -->
-                                                            <div class="form-group">
-                                                                <label for="options_datepicker_bg_color" class="d-flex flex-row justify-content-between">
-                                                                    <div class="label-text">Datepicker background color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the datepicker background color by typing the hexadecimal color code or by using the color picker"></i>
-                                                                </label>
-                                                                <div class="input-group platform-scheme osta_color_code">
-                                                                    <input type="text" name="options_datepicker_bg_color" id="options_datepicker_bg_color" class="form-control minicolor-hex" data-control="hue" placeholder="Datepicker background color" value="#fff">
-                                                                    <span class="input-group-addon">
-                                                                        <input type="hidden" class="minicolor" value="#fff" />
-                                                                    </span>
-                                                                </div>
-                                                            </div>
-
-                                                            <!-- options_datepicker_text_color -->
-                                                            <div class="form-group">
-                                                                <label for="options_datepicker_text_color" class="d-flex flex-row justify-content-between">
-                                                                    <div class="label-text">Datepicker text color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the datepicker text color by typing the hexadecimal color code or by using the color picker"></i>
-                                                                </label>
-                                                                <div class="input-group platform-scheme osta_color_code">
-                                                                    <input type="text" name="options_datepicker_text_color" id="options_datepicker_text_color" class="form-control minicolor-hex" data-control="hue" placeholder="Datepicker text color" value="#686868">
-                                                                    <span class="input-group-addon">
-                                                                        <input type="hidden" class="minicolor" value="#686868" />
-                                                                    </span>
-                                                                </div>
-                                                            </div>
-
-                                                            <!-- options_datepicker_border_width -->
-                                                            <div class="form-group">
-                                                                <label for="options_datepicker_border_width" class="d-flex flex-row justify-content-between">
-                                                                    <div class="label-text">Datepicker border width</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the datepicker border width"></i>
-                                                                </label>
-                                                                <div class="row">
-                                                                    <div class="col-9">
-                                                                        <div id="datepicker-border-width-range-slider-min" class="datepicker-border-width-range-slider-min" style="border: 0; color: #f6931f; font-weight: bold;"></div>
+                                                                        <?php
+                                                                        if (strpos($element->getName(), 'color') !== false) { ?>
+                                                                            <div class="input-group platform-scheme osta_color_code">
+                                                                                <?= $this->formRow($element->setLabel("")); ?>
+                                                                                <span class="input-group-addon">
+                                                                                    <input type="hidden" class="minicolor" value="<?= $element->getValue(); ?>" />
+                                                                                </span>
+                                                                            </div>
+                                                                        <?php  } elseif (strpos($element->getName(), 'size') !== false || strpos($element->getName(), 'width') !== false  || strpos($element->getName(), 'radius') !== false || strpos($element->getName(), 'height') !== false) {
+                                                                            $element->setAttribute('readonly', true);
+                                                                        ?>
+                                                                            <div class="row">
+                                                                                <div class="col-9">
+                                                                                    <div id="<?= $element->getAttribute('sliderId') ?>" class="<?= $element->getAttribute('sliderClass') ?>" style="border: 0; color: #f6931f; font-weight: bold;"></div>
+                                                                                </div>
+                                                                                <div class="col-3 g-0">
+                                                                                    <?= $this->formRow($element->setLabel("")); ?>
+                                                                                </div>
+                                                                            </div>
+                                                                        <?php } elseif (strpos($element->getName(), 'align') !== false) { ?>
+                                                                            <div class="btn-group btn-group-alignment" role="group" aria-label="Text align radio toggle button group">
+                                                                                <?php
+                                                                                foreach ($element->getOptions()['value_options'] as $optKey => $option) {
+                                                                                ?>
+                                                                                    <input name="<?= $element->getName() ?>" type="radio" class="btn-check" id="<?= $element->getName() . '_' . $optKey ?>" autocomplete="off" value="<?= $optKey ?>" <?= $optKey == $element->getValue() ? "checked" : "" ?>>
+                                                                                    <?= $option ?>
+                                                                                <?php    }
+                                                                                ?>
+                                                                            </div>
+                                                                        <?php   }  ?>
                                                                     </div>
-                                                                    <div class="col-3 g-0">
-                                                                        <input type="text" name="options_datepicker_border_width" id="options_datepicker_border_width" class="datepicker-border-width-range-slider-value range-slider-value form-control" />
-                                                                    </div>
-                                                                </div>
-                                                            </div>
+                                                                <?php    }
+                                                                ?>
+                                                            <?php
+                                                            }
+                                                            ?>
 
-                                                            <!-- options_datepicker_border_color -->
-                                                            <div class="form-group">
-                                                                <label for="options_datepicker_border_color" class="d-flex flex-row justify-content-between">
-                                                                    <div class="label-text">Datepicker border color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the datepicker border color by typing the hexadecimal color code or by using the color picker"></i>
-                                                                </label>
-                                                                <div class="input-group platform-scheme osta_color_code">
-                                                                    <input type="text" name="options_datepicker_border_color" id="options_datepicker_border_color" class="form-control minicolor-hex" data-control="hue" placeholder="Datepicker border color" value="#ddd">
-                                                                    <span class="input-group-addon">
-                                                                        <input type="hidden" class="minicolor" value="#ddd" />
-                                                                    </span>
-                                                                </div>
-                                                            </div>
-
-                                                            <!-- options_datepicker_border_radius -->
-                                                            <div class="form-group">
-                                                                <label for="options_datepicker_border_radius" class="d-flex flex-row justify-content-between">
-                                                                    <div class="label-text">Datepicker border radius</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the datepicker border radius"></i>
-                                                                </label>
-                                                                <div class="row">
-                                                                    <div class="col-9">
-                                                                        <div id="datepicker-border-radius-range-slider-min" class="datepicker-border-radius-range-slider-min" style="border: 0; color: #f6931f; font-weight: bold;"></div>
-                                                                    </div>
-                                                                    <div class="col-3 g-0">
-                                                                        <input type="text" name="options_datepicker_border_radius" id="options_datepicker_border_radius" class="datepicker-border-radius-range-slider-value range-slider-value form-control" />
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-
-                                                            <!-- options_datepicker_prev_next_data_action_button_text_align -->
-                                                            <div class="form-group">
-                                                                <label for="options_datepicker_prev_next_data_action_button_text_align" class="d-flex flex-row justify-content-between">
-                                                                    <div class="label-text">Daterpicker previous, data action and next button text align</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Daterpicker previous, data action and next button"></i>
-                                                                </label>
-                                                                <div class="btn-group btn-group-alignment" role="group" aria-label="Text align radio toggle button group">
-                                                                    <input type="radio" class="btn-check" name="dp-btn-text-align-radio" id="dp-btn-text-align-left" autocomplete="off">
-                                                                    <label class="btn btn-default" for="dp-btn-text-align-left"><i class="bi bi-text-left"></i></label>
-
-                                                                    <input type="radio" class="btn-check" name="dp-btn-text-align-radio" id="dp-btn-text-align-center" autocomplete="off" checked>
-                                                                    <label class="btn btn-default" for="dp-btn-text-align-center"><i class="bi bi-text-center"></i></label>
-
-                                                                    <input type="radio" class="btn-check" name="dp-btn-text-align-radio" id="dp-btn-text-align-right" autocomplete="off">
-                                                                    <label class="btn btn-default" for="dp-btn-text-align-right"><i class="bi bi-text-right"></i></label>
-                                                                </div>
-                                                            </div>
-
-                                                            <!-- options_datepicker_prev_next_data_action_btn_border_radius -->
-                                                            <div class="form-group">
-                                                                <label for="options_datepicker_prev_next_data_action_btn_border_radius" class="d-flex flex-row justify-content-between">
-                                                                    <div class="label-text">Datepicker previous, data action and next button border radius</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the datepicker previous, data action and next button border radius"></i>
-                                                                </label>
-                                                                <div class="row">
-                                                                    <div class="col-9">
-                                                                        <div id="datepicker-btn-border-radius-range-slider-min" class="datepicker-btn-border-radius-range-slider-min" style="border: 0; color: #f6931f; font-weight: bold;"></div>
-                                                                    </div>
-                                                                    <div class="col-3 g-0">
-                                                                        <input type="text" name="options_datepicker_prev_next_data_action_btn_border_radius" id="options_datepicker_prev_next_data_action_btn_border_radius" class="datepicker-btn-border-radius-range-slider-value range-slider-value form-control" />
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-
-                                                            <!-- options_datepicker_prev_next_data_action_button_text_color -->
-                                                            <div class="form-group">
-                                                                <label for="options_datepicker_prev_next_data_action_button_text_color" class="d-flex flex-row justify-content-between">
-                                                                    <div class="label-text">Datepicker previous, data action and next button text color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the datepicker previous, data action and next button text color by typing the hexadecimal color code or by using the color picker"></i>
-                                                                </label>
-                                                                <div class="input-group platform-scheme osta_color_code">
-                                                                    <input type="text" name="options_datepicker_prev_next_data_action_button_text_color" id="options_datepicker_prev_next_data_action_button_text_color" class="form-control minicolor-hex" data-control="hue" placeholder="Datepicker previous, data action and next button text color" value="#212529">
-                                                                    <span class="input-group-addon">
-                                                                        <input type="hidden" class="minicolor" value="#212529" />
-                                                                    </span>
-                                                                </div>
-                                                            </div>
-
-                                                            <!-- options_datepicker_prev_next_data_action_button_hover_bg_color -->
-                                                            <div class="form-group">
-                                                                <label for="options_datepicker_prev_next_data_action_button_hover_bg_color" class="d-flex flex-row justify-content-between">
-                                                                    <div class="label-text">Datepicker previous, data action and next button hover background color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the datepicker previous, data action and next button hover background color by typing the hexadecimal color code or by using the color picker"></i>
-                                                                </label>
-                                                                <div class="input-group platform-scheme osta_color_code">
-                                                                    <input type="text" name="options_datepicker_prev_next_data_action_button_hover_bg_color" id="options_datepicker_prev_next_data_action_button_hover_bg_color" class="form-control minicolor-hex" data-control="hue" placeholder="Datepicker previous, data action and next button hover background color" value="#f8f9fa">
-                                                                    <span class="input-group-addon">
-                                                                        <input type="hidden" class="minicolor" value="#f8f9fa" />
-                                                                    </span>
-                                                                </div>
-                                                            </div>
-
-                                                            <!-- options_datepicker_dow_bg_color, day of week -->
-                                                            <div class="form-group">
-                                                                <label for="options_datepicker_dow_bg_color" class="d-flex flex-row justify-content-between">
-                                                                    <div class="label-text">Datepicker day of week background color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the datepicker day of week background color by typing the hexadecimal color code or by using the color picker"></i>
-                                                                </label>
-                                                                <div class="input-group platform-scheme osta_color_code">
-                                                                    <input type="text" name="options_datepicker_dow_bg_color" id="options_datepicker_dow_bg_color" class="form-control minicolor-hex" data-control="hue" placeholder="Datepicker day of week background color" value="#e61c23">
-                                                                    <span class="input-group-addon">
-                                                                        <input type="hidden" class="minicolor" value="#e61c23" />
-                                                                    </span>
-                                                                </div>
-                                                            </div>
-
-                                                            <!-- options_datepicker_dow_text_color -->
-                                                            <div class="form-group">
-                                                                <label for="options_datepicker_dow_text_color" class="d-flex flex-row justify-content-between">
-                                                                    <div class="label-text">Datepicker day of week background color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the datepicker day of week background color by typing the hexadecimal color code or by using the color picker"></i>
-                                                                </label>
-                                                                <div class="input-group platform-scheme osta_color_code">
-                                                                    <input type="text" name="options_datepicker_dow_text_color" id="options_datepicker_dow_text_color" class="form-control minicolor-hex" data-control="hue" placeholder="Datepicker day of week background color" value="#fff">
-                                                                    <span class="input-group-addon">
-                                                                        <input type="hidden" class="minicolor" value="#fff" />
-                                                                    </span>
-                                                                </div>
-                                                            </div>
-
-                                                            <!-- options_datepicker_table_th_td_text_align  -->
-                                                            <div class="form-group">
-                                                                <label for="options_datepicker_table_th_td_text_align" class="d-flex flex-row justify-content-between">
-                                                                    <div class="label-text">Daterpicker table head and data text align</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Daterpicker table head and data text align"></i>
-                                                                </label>
-                                                                <div class="btn-group btn-group-alignment" role="group" aria-label="Text align radio toggle button group">
-                                                                    <input type="radio" class="btn-check" name="dp-th-td-text-align-radio" id="dp-th-td-text-align-left" autocomplete="off">
-                                                                    <label class="btn btn-default" for="dp-th-td-text-align-left"><i class="bi bi-text-left"></i></label>
-
-                                                                    <input type="radio" class="btn-check" name="dp-th-td-text-align-radio" id="dp-th-td-text-align-center" autocomplete="off" checked>
-                                                                    <label class="btn btn-default" for="dp-btn-text-align-center"><i class="bi bi-text-center"></i></label>
-
-                                                                    <input type="radio" class="btn-check" name="dp-th-td-text-align-radio" id="dp-th-td-text-align-right" autocomplete="off">
-                                                                    <label class="btn btn-default" for="dp-th-td-text-align-right"><i class="bi bi-text-right"></i></label>
-                                                                </div>
-                                                            </div>
-
-                                                            <!-- options_datepicker_day_text_color -->
-                                                            <div class="form-group">
-                                                                <label for="options_datepicker_day_text_color" class="d-flex flex-row justify-content-between">
-                                                                    <div class="label-text">Datepicker day text color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the datepicker day text color by typing the hexadecimal color code or by using the color picker"></i>
-                                                                </label>
-                                                                <div class="input-group platform-scheme osta_color_code">
-                                                                    <input type="text" name="options_datepicker_day_text_color" id="options_datepicker_day_text_color" class="form-control minicolor-hex" data-control="hue" placeholder="Datepicker day text color" value="#212529">
-                                                                    <span class="input-group-addon">
-                                                                        <input type="hidden" class="minicolor" value="#212529" />
-                                                                    </span>
-                                                                </div>
-                                                            </div>
-
-                                                            <!-- options_datepicker_day_text_hover_bg_color -->
-                                                            <div class="form-group">
-                                                                <label for="options_datepicker_day_text_hover_bg_color" class="d-flex flex-row justify-content-between">
-                                                                    <div class="label-text">Datepicker day text hover background color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the datepicker day text hover background color by typing the hexadecimal color code or by using the color picker"></i>
-                                                                </label>
-                                                                <div class="input-group platform-scheme osta_color_code">
-                                                                    <input type="text" name="options_datepicker_day_text_hover_bg_color" id="options_datepicker_day_text_hover_bg_color" class="form-control minicolor-hex" data-control="hue" placeholder="Datepicker day text hover background color" value="#eee">
-                                                                    <span class="input-group-addon">
-                                                                        <input type="hidden" class="minicolor" value="#eee" />
-                                                                    </span>
-                                                                </div>
-                                                            </div>
-
-                                                            <!-- options_datepicker_day_old_weekend_text_color -->
-                                                            <div class="form-group">
-                                                                <label for="options_datepicker_day_old_weekend_text_color" class="d-flex flex-row justify-content-between">
-                                                                    <div class="label-text">Datepicker day old and weekend text color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the datepicker day old and weekend text color by typing the hexadecimal color code or by using the color picker"></i>
-                                                                </label>
-                                                                <div class="input-group platform-scheme osta_color_code">
-                                                                    <input type="text" name="options_datepicker_day_old_weekend_text_color" id="options_datepicker_day_old_weekend_text_color" class="form-control minicolor-hex" data-control="hue" placeholder="Datepicker day old and weekend text color" value="#999">
-                                                                    <span class="input-group-addon">
-                                                                        <input type="hidden" class="minicolor" value="#999" />
-                                                                    </span>
-                                                                </div>
-                                                            </div>
-
-                                                            <!-- options_datepicker_day_active_bg_color -->
-                                                            <div class="form-group">
-                                                                <label for="options_datepicker_day_active_bg_color" class="d-flex flex-row justify-content-between">
-                                                                    <div class="label-text">Datepicker day active background color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the datepicker day active background color by typing the hexadecimal color code or by using the color picker"></i>
-                                                                </label>
-                                                                <div class="input-group platform-scheme osta_color_code">
-                                                                    <input type="text" name="options_datepicker_day_active_bg_color" id="options_datepicker_day_active_bg_color" class="form-control minicolor-hex" data-control="hue" placeholder="Datepicker day active background color" value="#e61c23">
-                                                                    <span class="input-group-addon">
-                                                                        <input type="hidden" class="minicolor" value="#e61c23" />
-                                                                    </span>
-                                                                </div>
-                                                            </div>
-
-                                                            <!-- options_datepicker_day_active_text_icon_color -->
-                                                            <div class="form-group">
-                                                                <label for="options_datepicker_day_active_text_icon_color" class="d-flex flex-row justify-content-between">
-                                                                    <div class="label-text">Datepicker day active text color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the datepicker day active text color by typing the hexadecimal color code or by using the color picker"></i>
-                                                                </label>
-                                                                <div class="input-group platform-scheme osta_color_code">
-                                                                    <input type="text" name="options_datepicker_day_active_text_icon_color" id="options_datepicker_day_active_text_icon_color" class="form-control minicolor-hex" data-control="hue" placeholder="Datepicker day active text color" value="#fff">
-                                                                    <span class="input-group-addon">
-                                                                        <input type="hidden" class="minicolor" value="#fff" />
-                                                                    </span>
-                                                                </div>
-                                                            </div>
-
-                                                            <!-- options_datepicker_timepicker_btn_bg_color -->
-                                                            <div class="form-group">
-                                                                <label for="options_datepicker_timepicker_btn_bg_color" class="d-flex flex-row justify-content-between">
-                                                                    <div class="label-text">Datepicker timepicker button background color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the datepicker timepicker button background color by typing the hexadecimal color code or by using the color picker"></i>
-                                                                </label>
-                                                                <div class="input-group platform-scheme osta_color_code">
-                                                                    <input type="text" name="options_datepicker_timepicker_btn_bg_color" id="options_datepicker_timepicker_btn_bg_color" class="form-control minicolor-hex" data-control="hue" placeholder="Datepicker timepicker button background color" value="#fff">
-                                                                    <span class="input-group-addon">
-                                                                        <input type="hidden" class="minicolor" value="#fff" />
-                                                                    </span>
-                                                                </div>
-                                                            </div>
-
-                                                            <!-- options_datepicker_timepicker_btn_icon_color -->
-                                                            <div class="form-group">
-                                                                <label for="options_datepicker_timepicker_btn_icon_color" class="d-flex flex-row justify-content-between">
-                                                                    <div class="label-text">Datepicker timepicker button icon color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the datepicker timepicker button icon color by typing the hexadecimal color code or by using the color picker"></i>
-                                                                </label>
-                                                                <div class="input-group platform-scheme osta_color_code">
-                                                                    <input type="text" name="options_datepicker_timepicker_btn_icon_color" id="options_datepicker_timepicker_btn_icon_color" class="form-control minicolor-hex" data-control="hue" placeholder="Datepicker timepicker button icon color" value="#e61c23">
-                                                                    <span class="input-group-addon">
-                                                                        <input type="hidden" class="minicolor" value="#e61c23" />
-                                                                    </span>
-                                                                </div>
-                                                            </div>
-
-                                                            <!-- options_datepicker_timepicker_btn_hover_bg_color -->
-                                                            <div class="form-group">
-                                                                <label for="options_datepicker_timepicker_btn_hover_bg_color" class="d-flex flex-row justify-content-between">
-                                                                    <div class="label-text">Datepicker timepicker button hover background color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the datepicker timepicker button hover background color by typing the hexadecimal color code or by using the color picker"></i>
-                                                                </label>
-                                                                <div class="input-group platform-scheme osta_color_code">
-                                                                    <input type="text" name="options_datepicker_timepicker_btn_hover_bg_color" id="options_datepicker_timepicker_btn_hover_bg_color" class="form-control minicolor-hex" data-control="hue" placeholder="Datepicker timepicker button hover background color" value="#fff">
-                                                                    <span class="input-group-addon">
-                                                                        <input type="hidden" class="minicolor" value="#fff" />
-                                                                    </span>
-                                                                </div>
-                                                            </div>
-
-                                                            <!-- options_datepicker_timepicker_arrow_btn_bg_color -->
-                                                            <div class="form-group">
-                                                                <label for="options_datepicker_timepicker_arrow_btn_bg_color" class="d-flex flex-row justify-content-between">
-                                                                    <div class="label-text">Datepicker timepicker arrow button background color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the datepicker timepicker button background color by typing the hexadecimal color code or by using the color picker"></i>
-                                                                </label>
-                                                                <div class="input-group platform-scheme osta_color_code">
-                                                                    <input type="text" name="options_datepicker_timepicker_arrow_btn_bg_color" id="options_datepicker_timepicker_arrow_btn_bg_color" class="form-control minicolor-hex" data-control="hue" placeholder="Datepicker timepicker button background color" value="#fff">
-                                                                    <span class="input-group-addon">
-                                                                        <input type="hidden" class="minicolor" value="#fff" />
-                                                                    </span>
-                                                                </div>
-                                                            </div>
-
-                                                            <!-- options_datepicker_timepicker_arrow_btn_hover_bg_color -->
-                                                            <div class="form-group">
-                                                                <label for="options_datepicker_timepicker_arrow_btn_hover_bg_color" class="d-flex flex-row justify-content-between">
-                                                                    <div class="label-text">Datepicker timepicker arrow button hover background color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the datepicker timepicker button hover background color by typing the hexadecimal color code or by using the color picker"></i>
-                                                                </label>
-                                                                <div class="input-group platform-scheme osta_color_code">
-                                                                    <input type="text" name="options_datepicker_timepicker_arrow_btn_hover_bg_color" id="options_datepicker_timepicker_arrow_btn_hover_bg_color" class="form-control minicolor-hex" data-control="hue" placeholder="Datepicker timepicker button hover background color" value="#f8f9fa">
-                                                                    <span class="input-group-addon">
-                                                                        <input type="hidden" class="minicolor" value="#f8f9fa" />
-                                                                    </span>
-                                                                </div>
-                                                            </div>
-
-                                                            <!-- options_datepicker_timepicker_time_bg_color -->
-                                                            <div class="form-group">
-                                                                <label for="options_datepicker_timepicker_time_bg_color" class="d-flex flex-row justify-content-between">
-                                                                    <div class="label-text">Datepicker timepicker time background color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the datepicker timepicker time background color by typing the hexadecimal color code or by using the color picker"></i>
-                                                                </label>
-                                                                <div class="input-group platform-scheme osta_color_code">
-                                                                    <input type="text" name="options_datepicker_timepicker_time_bg_color" id="options_datepicker_timepicker_time_bg_color" class="form-control minicolor-hex" data-control="hue" placeholder="Datepicker timepicker time background color" value="#fff">
-                                                                    <span class="input-group-addon">
-                                                                        <input type="hidden" class="minicolor" value="#fff" />
-                                                                    </span>
-                                                                </div>
-                                                            </div>
-
-                                                            <!-- options_datepicker_timepicker_time_text_color -->
-                                                            <div class="form-group">
-                                                                <label for="options_datepicker_timepicker_time_bg_color" class="d-flex flex-row justify-content-between">
-                                                                    <div class="label-text">Datepicker timepicker time text color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the datepicker timepicker time text color by typing the hexadecimal color code or by using the color picker"></i>
-                                                                </label>
-                                                                <div class="input-group platform-scheme osta_color_code">
-                                                                    <input type="text" name="options_datepicker_timepicker_time_bg_color" id="options_datepicker_timepicker_time_bg_color" class="form-control minicolor-hex" data-control="hue" placeholder="Datepicker timepicker time text color" value="#212529">
-                                                                    <span class="input-group-addon">
-                                                                        <input type="hidden" class="minicolor" value="#212529" />
-                                                                    </span>
-                                                                </div>
-                                                            </div>
-                                                            <!-- end of datepicker / datetimepicker -->
-
-                                                            <!-- options_daterangepicker_bg_color -->
-                                                            <div class="form-group">
-                                                                <label for="options_daterangepicker_bg_color" class="d-flex flex-row justify-content-between">
-                                                                    <div class="label-text">Daterangepicker background color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the daterangepicker background color by typing the hexadecimal color code or by using the color picker"></i>
-                                                                </label>
-                                                                <div class="input-group platform-scheme osta_color_code">
-                                                                    <input type="text" name="options_daterangepicker_bg_color" id="options_daterangepicker_bg_color" class="form-control minicolor-hex" data-control="hue" placeholder="Daterangepicker background color" value="#fff">
-                                                                    <span class="input-group-addon">
-                                                                        <input type="hidden" class="minicolor" value="#fff" />
-                                                                    </span>
-                                                                </div>
-                                                            </div>
-
-                                                            <!-- options_daterangepicker_text_color -->
-                                                            <div class="form-group">
-                                                                <label for="options_daterangepicker_text_color" class="d-flex flex-row justify-content-between">
-                                                                    <div class="label-text">Daterangepicker text color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the daterangepicker text color by typing the hexadecimal color code or by using the color picker"></i>
-                                                                </label>
-                                                                <div class="input-group platform-scheme osta_color_code">
-                                                                    <input type="text" name="options_daterangepicker_text_color" id="options_daterangepicker_text_color" class="form-control minicolor-hex" data-control="hue" placeholder="Datepicker text color" value="#686868">
-                                                                    <span class="input-group-addon">
-                                                                        <input type="hidden" class="minicolor" value="#686868" />
-                                                                    </span>
-                                                                </div>
-                                                            </div>
-
-                                                            <!-- options_daterangepicker_border_width -->
-                                                            <div class="form-group">
-                                                                <label for="options_daterangepicker_border_width" class="d-flex flex-row justify-content-between">
-                                                                    <div class="label-text">Daterangepicker border width</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the daterangepicker border width"></i>
-                                                                </label>
-                                                                <div class="row">
-                                                                    <div class="col-9">
-                                                                        <div id="daterangepicker-border-width-range-slider-min" class="daterangepicker-border-width-range-slider-min" style="border: 0; color: #f6931f; font-weight: bold;"></div>
-                                                                    </div>
-                                                                    <div class="col-3 g-0">
-                                                                        <input type="text" name="options_daterangepicker_border_width" id="options_daterangepicker_border_width" class="daterangepicker-border-width-range-slider-value range-slider-value form-control" />
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-
-                                                            <!-- options_daterangepicker_border_color -->
-                                                            <div class="form-group">
-                                                                <label for="options_daterangepicker_border_color" class="d-flex flex-row justify-content-between">
-                                                                    <div class="label-text">Daterangepicker border color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the daterangepicker border color by typing the hexadecimal color code or by using the color picker"></i>
-                                                                </label>
-                                                                <div class="input-group platform-scheme osta_color_code">
-                                                                    <input type="text" name="options_daterangepicker_border_color" id="options_daterangepicker_border_color" class="form-control minicolor-hex" data-control="hue" placeholder="Daterangepicker border color" value="#ddd">
-                                                                    <span class="input-group-addon">
-                                                                        <input type="hidden" class="minicolor" value="#ddd" />
-                                                                    </span>
-                                                                </div>
-                                                            </div>
-
-                                                            <!-- options_daterangepicker_border_radius -->
-                                                            <div class="form-group">
-                                                                <label for="options_daterangepicker_border_radius" class="d-flex flex-row justify-content-between">
-                                                                    <div class="label-text">Datepicker border radius</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the daterangepicker border radius"></i>
-                                                                </label>
-                                                                <div class="row">
-                                                                    <div class="col-9">
-                                                                        <div id="daterangepicker-border-radius-range-slider-min" class="daterangepicker-border-radius-range-slider-min" style="border: 0; color: #f6931f; font-weight: bold;"></div>
-                                                                    </div>
-                                                                    <div class="col-3 g-0">
-                                                                        <input type="text" name="options_daterangepicker_border_radius" id="options_daterangepicker_border_radius" class="daterangepicker-border-radius-range-slider-value range-slider-value form-control" />
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-
-                                                            <!-- options_daterangepicker_button_bg_color -->
-                                                            <div class="form-group">
-                                                                <label for="options_daterangepicker_button_bg_color" class="d-flex flex-row justify-content-between">
-                                                                    <div class="label-text">Daterangepicker button background color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the daterangepicker button background color by typing the hexadecimal color code or by using the color picker"></i>
-                                                                </label>
-                                                                <div class="input-group platform-scheme osta_color_code">
-                                                                    <input type="text" name="options_daterangepicker_button_bg_color" id="options_daterangepicker_button_bg_color" class="form-control minicolor-hex" data-control="hue" placeholder="Daterangepicker button background color" value="#f5f5f5">
-                                                                    <span class="input-group-addon">
-                                                                        <input type="hidden" class="minicolor" value="#f5f5f5" />
-                                                                    </span>
-                                                                </div>
-                                                            </div>
-
-                                                            <!-- options_daterangepicker_button_text_color -->
-                                                            <div class="form-group">
-                                                                <label for="options_daterangepicker_button_text_color" class="d-flex flex-row justify-content-between">
-                                                                    <div class="label-text">Daterangepicker button text color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the daterangepicker button text color by typing the hexadecimal color code or by using the color picker"></i>
-                                                                </label>
-                                                                <div class="input-group platform-scheme osta_color_code">
-                                                                    <input type="text" name="options_daterangepicker_button_text_color" id="options_daterangepicker_button_text_color" class="form-control minicolor-hex" data-control="hue" placeholder="Daterangepicker button text color" value="#686868">
-                                                                    <span class="input-group-addon">
-                                                                        <input type="hidden" class="minicolor" value="#686868" />
-                                                                    </span>
-                                                                </div>
-                                                            </div>
-
-                                                            <!-- options_daterangepicker_button_text_font_size -->
-                                                            <div class="form-group">
-                                                                <label for="options_daterangepicker_button_text_font_size" class="d-flex flex-row justify-content-between">
-                                                                    <div class="label-text">Daterangepicker button text font size</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the daterangepicker button text font size"></i>
-                                                                </label>
-                                                                <div class="row">
-                                                                    <div class="col-9">
-                                                                        <div id="daterangepicker-button-text-font-size-range-slider-min" class="daterangepicker-button-text-font-size-range-slider-min" style="border: 0; color: #f6931f; font-weight: bold;"></div>
-                                                                    </div>
-                                                                    <div class="col-3 g-0">
-                                                                        <input type="text" name="options_daterangepicker_button_text_font_size" id="options_daterangepicker_button_text_font_size" class="daterangepicker-button-text-font-size-range-slider-value range-slider-value form-control" />
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-
-                                                            <!-- options_daterangepicker_button_border_radius -->
-                                                            <div class="form-group">
-                                                                <label for="options_daterangepicker_button_border_radius" class="d-flex flex-row justify-content-between">
-                                                                    <div class="label-text">Daterangepicker button border radius</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the daterangepicker button border radius"></i>
-                                                                </label>
-                                                                <div class="row">
-                                                                    <div class="col-9">
-                                                                        <div id="daterangepicker-button-border-radius-range-slider-min" class="daterangepicker-button-border-radius-range-slider-min" style="border: 0; color: #f6931f; font-weight: bold;"></div>
-                                                                    </div>
-                                                                    <div class="col-3 g-0">
-                                                                        <input type="text" name="options_daterangepicker_button_border_radius" id="options_daterangepicker_button_border_radius" class="daterangepicker-button-border-radius-range-slider-value range-slider-value form-control" />
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-
-                                                            <!-- options_daterangepicker_button_border_width -->
-                                                            <div class="form-group">
-                                                                <label for="options_daterangepicker_button_border_width" class="d-flex flex-row justify-content-between">
-                                                                    <div class="label-text">Daterangepicker button border width</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the daterangepicker button border width"></i>
-                                                                </label>
-                                                                <div class="row">
-                                                                    <div class="col-9">
-                                                                        <div id="daterangepicker-button-border-width-range-slider-min" class="daterangepicker-button-border-width-range-slider-min" style="border: 0; color: #f6931f; font-weight: bold;"></div>
-                                                                    </div>
-                                                                    <div class="col-3 g-0">
-                                                                        <input type="text" name="options_daterangepicker_button_border_width" id="options_daterangepicker_button_border_width" class="daterangepicker-button-border-width-range-slider-value range-slider-value form-control" />
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-
-                                                            <!-- options_daterangepicker_button_border_color -->
-                                                            <div class="form-group">
-                                                                <label for="options_daterangepicker_button_border_color" class="d-flex flex-row justify-content-between">
-                                                                    <div class="label-text">Daterangepicker button border color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the daterangepicker button border color by typing the hexadecimal color code or by using the color picker"></i>
-                                                                </label>
-                                                                <div class="input-group platform-scheme osta_color_code">
-                                                                    <input type="text" name="options_daterangepicker_button_border_color" id="options_daterangepicker_button_border_color" class="form-control minicolor-hex" data-control="hue" placeholder="Daterangepicker button border color" value="#f5f5f5">
-                                                                    <span class="input-group-addon">
-                                                                        <input type="hidden" class="minicolor" value="#f5f5f5" />
-                                                                    </span>
-                                                                </div>
-                                                            </div>
-
-                                                            <!-- options_daterangepicker_button_border_bottom_color -->
-                                                            <div class="form-group">
-                                                                <label for="options_daterangepicker_button_border_bottom_color" class="d-flex flex-row justify-content-between">
-                                                                    <div class="label-text">Daterangepicker button border bottom color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the daterangepicker button border bottom color by typing the hexadecimal color code or by using the color picker"></i>
-                                                                </label>
-                                                                <div class="input-group platform-scheme osta_color_code">
-                                                                    <input type="text" name="options_daterangepicker_button_border_bottom_color" id="options_daterangepicker_button_border_bottom_color" class="form-control minicolor-hex" data-control="hue" placeholder="Daterangepicker button border bottom color" value="#e5e5e5">
-                                                                    <span class="input-group-addon">
-                                                                        <input type="hidden" class="minicolor" value="#e5e5e5" />
-                                                                    </span>
-                                                                </div>
-                                                            </div>
-
-                                                            <!-- options_daterangepicker_button_bg_hover_color, hovers -->
-                                                            <div class="form-group">
-                                                                <label for="options_daterangepicker_button_bg_hover_color" class="d-flex flex-row justify-content-between">
-                                                                    <div class="label-text">Daterangepicker button background hover color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the daterangepicker button background hover color by typing the hexadecimal color code or by using the color picker"></i>
-                                                                </label>
-                                                                <div class="input-group platform-scheme osta_color_code">
-                                                                    <input type="text" name="options_daterangepicker_button_bg_hover_color" id="options_daterangepicker_button_bg_hover_color" class="form-control minicolor-hex" data-control="hue" placeholder="Daterangepicker button background hover color" value="#e61c23">
-                                                                    <span class="input-group-addon">
-                                                                        <input type="hidden" class="minicolor" value="#e61c23" />
-                                                                    </span>
-                                                                </div>
-                                                            </div>
-
-                                                            <!-- options_daterangepicker_button_text_hover_color -->
-                                                            <div class="form-group">
-                                                                <label for="options_daterangepicker_button_text_hover_color" class="d-flex flex-row justify-content-between">
-                                                                    <div class="label-text">Daterangepicker button text hover color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the daterangepicker button text hover color by typing the hexadecimal color code or by using the color picker"></i>
-                                                                </label>
-                                                                <div class="input-group platform-scheme osta_color_code">
-                                                                    <input type="text" name="options_daterangepicker_button_text_hover_color" id="options_daterangepicker_button_text_hover_color" class="form-control minicolor-hex" data-control="hue" placeholder="Daterangepicker button text hover color" value="#fff">
-                                                                    <span class="input-group-addon">
-                                                                        <input type="hidden" class="minicolor" value="#fff" />
-                                                                    </span>
-                                                                </div>
-                                                            </div>
-
-                                                            <!-- options_daterangepicker_button_hover_border_color -->
-                                                            <div class="form-group">
-                                                                <label for="options_daterangepicker_button_hover_border_color" class="d-flex flex-row justify-content-between">
-                                                                    <div class="label-text">Daterangepicker button hover border color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the daterangepicker button hover border color by typing the hexadecimal color code or by using the color picker"></i>
-                                                                </label>
-                                                                <div class="input-group platform-scheme osta_color_code">
-                                                                    <input type="text" name="options_daterangepicker_button_hover_border_color" id="options_daterangepicker_button_hover_border_color" class="form-control minicolor-hex" data-control="hue" placeholder="Daterangepicker button hover border color" value="#e61c23">
-                                                                    <span class="input-group-addon">
-                                                                        <input type="hidden" class="minicolor" value="#e61c23" />
-                                                                    </span>
-                                                                </div>
-                                                            </div>
-
-                                                            <!-- options_daterangepicker_day_active_bg_color -->
-                                                            <div class="form-group">
-                                                                <label for="options_daterangepicker_day_active_bg_color" class="d-flex flex-row justify-content-between">
-                                                                    <div class="label-text">Daterangepicker day active background color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the daterangepicker day active background border color by typing the hexadecimal color code or by using the color picker"></i>
-                                                                </label>
-                                                                <div class="input-group platform-scheme osta_color_code">
-                                                                    <input type="text" name="options_daterangepicker_day_active_bg_color" id="options_daterangepicker_day_active_bg_color" class="form-control minicolor-hex" data-control="hue" placeholder="Daterangepicker day active background color" value="#357ebd">
-                                                                    <span class="input-group-addon">
-                                                                        <input type="hidden" class="minicolor" value="#357ebd" />
-                                                                    </span>
-                                                                </div>
-                                                            </div>
-
-                                                            <!-- options_daterangepicker_day_active_text_color -->
-                                                            <div class="form-group">
-                                                                <label for="options_daterangepicker_day_active_text_color" class="d-flex flex-row justify-content-between">
-                                                                    <div class="label-text">Daterangepicker day active text color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the daterangepicker day active text color by typing the hexadecimal color code or by using the color picker"></i>
-                                                                </label>
-                                                                <div class="input-group platform-scheme osta_color_code">
-                                                                    <input type="text" name="options_daterangepicker_day_active_text_color" id="options_daterangepicker_day_active_text_color" class="form-control minicolor-hex" data-control="hue" placeholder="Daterangepicker day active text color" value="#fff">
-                                                                    <span class="input-group-addon">
-                                                                        <input type="hidden" class="minicolor" value="#fff" />
-                                                                    </span>
-                                                                </div>
-                                                            </div>
-
-                                                            <!-- options_daterangepicker_day_active_border_color -->
-                                                            <div class="form-group">
-                                                                <label for="options_daterangepicker_day_active_border_color" class="d-flex flex-row justify-content-between">
-                                                                    <div class="label-text">Daterangepicker day active border color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the daterangepicker day active border color by typing the hexadecimal color code or by using the color picker"></i>
-                                                                </label>
-                                                                <div class="input-group platform-scheme osta_color_code">
-                                                                    <input type="text" name="options_daterangepicker_day_active_border_color" id="options_daterangepicker_day_active_border_color" class="form-control minicolor-hex" data-control="hue" placeholder="Daterangepicker day active border color" value="#eee">
-                                                                    <span class="input-group-addon">
-                                                                        <input type="hidden" class="minicolor" value="#eee" />
-                                                                    </span>
-                                                                </div>
-                                                            </div>
-
-                                                            <!-- options_daterangepicker_day_active_in_range_bg_color -->
-                                                            <div class="form-group">
-                                                                <label for="options_daterangepicker_day_active_in_range_bg_color" class="d-flex flex-row justify-content-between">
-                                                                    <div class="label-text">Daterangepicker day active in range background color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the daterangepicker day active in range background color by typing the hexadecimal color code or by using the color picker"></i>
-                                                                </label>
-                                                                <div class="input-group platform-scheme osta_color_code">
-                                                                    <input type="text" name="options_daterangepicker_day_active_in_range_bg_color" id="options_daterangepicker_day_active_in_range_bg_color" class="form-control minicolor-hex" data-control="hue" placeholder="Daterangepicker day active in range background color" value="#ebf4f8">
-                                                                    <span class="input-group-addon">
-                                                                        <input type="hidden" class="minicolor" value="#ebf4f8" />
-                                                                    </span>
-                                                                </div>
-                                                            </div>
-
-                                                            <!-- options_daterangepicker_day_active_in_range_border_color -->
-                                                            <div class="form-group">
-                                                                <label for="options_daterangepicker_day_active_in_range_border_color" class="d-flex flex-row justify-content-between">
-                                                                    <div class="label-text">Daterangepicker day active in range border color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the daterangepicker day active in range border color by typing the hexadecimal color code or by using the color picker"></i>
-                                                                </label>
-                                                                <div class="input-group platform-scheme osta_color_code">
-                                                                    <input type="text" name="options_daterangepicker_day_active_in_range_border_color" id="options_daterangepicker_day_active_in_range_border_color" class="form-control minicolor-hex" data-control="hue" placeholder="Daterangepicker day active in range border color" value="#eee">
-                                                                    <span class="input-group-addon">
-                                                                        <input type="hidden" class="minicolor" value="#eee" />
-                                                                    </span>
-                                                                </div>
-                                                            </div>
-
-                                                            <!-- options_daterangepicker_day_active_in_range_text_color -->
-                                                            <div class="form-group">
-                                                                <label for="options_daterangepicker_day_active_in_range_text_color" class="d-flex flex-row justify-content-between">
-                                                                    <div class="label-text">Daterangepicker day active in range text color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the daterangepicker day active in range text color by typing the hexadecimal color code or by using the color picker"></i>
-                                                                </label>
-                                                                <div class="input-group platform-scheme osta_color_code">
-                                                                    <input type="text" name="options_daterangepicker_day_active_in_range_text_color" id="options_daterangepicker_day_active_in_range_text_color" class="form-control minicolor-hex" data-control="hue" placeholder="Daterangepicker day active in range text color" value="#000">
-                                                                    <span class="input-group-addon">
-                                                                        <input type="hidden" class="minicolor" value="#000" />
-                                                                    </span>
-                                                                </div>
-                                                            </div>
-
-                                                            <!-- options_daterangepicker_day_active_in_range_border_width -->
-                                                            <div class="form-group">
-                                                                <label for="options_daterangepicker_day_active_in_range_border_width" class="d-flex flex-row justify-content-between">
-                                                                    <div class="label-text">Daterangepicker button border width</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the daterangepicker button border width"></i>
-                                                                </label>
-                                                                <div class="row">
-                                                                    <div class="col-9">
-                                                                        <div id="daterangepicker-in-range-border-width-range-slider-min" class="daterangepicker-in-range-border-width-range-slider-min" style="border: 0; color: #f6931f; font-weight: bold;"></div>
-                                                                    </div>
-                                                                    <div class="col-3 g-0">
-                                                                        <input type="text" name="options_daterangepicker_day_active_in_range_border_width" id="options_daterangepicker_day_active_in_range_border_width" class="daterangepicker-in-range-border-width-range-slider-value range-slider-value form-control" />
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-
-                                                            <!-- daterangepicker_start_date_label, border radius -->
                                                             <div class="form-group">
                                                                 <label for="daterangepicker_start_date_label" class="d-flex flex-row justify-content-between">
                                                                     <div class="label-text">Daterangepicker in range start date border radius</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the daterangepicker in range start date border radius"></i>
                                                                 </label>
                                                                 <div class="drp-border-radius-wrapper ms-3">
-                                                                    <label for="options_daterangepicker_in_range_start_date_border_top_left_radius">
-                                                                        <div class="label-text">Border top left radius</div>
-                                                                    </label>
-                                                                    <div class="row">
-                                                                        <div class="col-9">
-                                                                            <div id="daterangepicker-in-range-start-date-border-top-left-radius-range-slider-min" class="daterangepicker-in-range-start-date-border-top-left-radius-range-slider-min" style="border: 0; color: #f6931f; font-weight: bold;"></div>
-                                                                        </div>
-                                                                        <div class="col-3 g-0">
-                                                                            <input type="text" name="options_daterangepicker_in_range_start_date_border_top_left_radius" id="options_daterangepicker_in_range_start_date_border_top_left_radius" class="daterangepicker-in-range-start-date-border-top-left-radius-range-slider-value range-slider-value form-control" />
-                                                                        </div>
-                                                                    </div>
-                                                                    <label for="options_daterangepicker_in_range_start_date_border_top_right_radius">
-                                                                        <div class="label-text">Border top right radius</div>
-                                                                    </label>
-                                                                    <div class="row">
-                                                                        <div class="col-9">
-                                                                            <div id="daterangepicker-in-range-start-date-border-top-right-radius-range-slider-min" class="daterangepicker-in-range-start-date-border-top-right-radius-range-slider-min" style="border: 0; color: #f6931f; font-weight: bold;"></div>
-                                                                        </div>
-                                                                        <div class="col-3 g-0">
-                                                                            <input type="text" name="options_daterangepicker_in_range_start_date_border_top_right_radius" id="options_daterangepicker_in_range_start_date_border_top_right_radius" class="daterangepicker-in-range-start-date-border-top-right-radius-range-slider-value range-slider-value form-control" />
-                                                                        </div>
-                                                                    </div>
-                                                                    <label for="options_daterangepicker_in_range_start_date_border_bottom_left_radius">
-                                                                        <div class="label-text">Border bottom left radius</div>
-                                                                    </label>
-                                                                    <div class="row">
-                                                                        <div class="col-9">
-                                                                            <div id="daterangepicker-in-range-start-date-border-bottom-left-radius-range-slider-min" class="daterangepicker-in-range-start-date-border-bottom-left-radius-range-slider-min" style="border: 0; color: #f6931f; font-weight: bold;"></div>
-                                                                        </div>
-                                                                        <div class="col-3 g-0">
-                                                                            <input type="text" name="options_daterangepicker_in_range_start_date_border_bottom_left_radius" id="options_daterangepicker_in_range_start_date_border_bottom_left_radius" class="daterangepicker-in-range-start-date-border-bottom-left-radius-range-slider-value range-slider-value form-control" />
-                                                                        </div>
-                                                                    </div>
-                                                                    <label for="options_daterangepicker_in_range_start_date_border_bottom_right_radius">
-                                                                        <div class="label-text">Border bottom right radius</div>
-                                                                    </label>
-                                                                    <div class="row">
-                                                                        <div class="col-9">
-                                                                            <div id="daterangepicker-in-range-start-date-border-bottom-right-radius-range-slider-min" class="daterangepicker-in-range-start-date-border-bottom-right-radius-range-slider-min" style="border: 0; color: #f6931f; font-weight: bold;"></div>
-                                                                        </div>
-                                                                        <div class="col-3 g-0">
-                                                                            <input type="text" name="options_daterangepicker_in_range_start_date_border_bottom_right_radius" id="options_daterangepicker_in_range_start_date_border_bottom_right_radius" class="daterangepicker-in-range-start-date-border-bottom-right-radius-range-slider-value range-slider-value form-control" />
-                                                                        </div>
-                                                                    </div>
+                                                                    <?php
+                                                                    foreach ($platformThemeOptionForm->getElements() as $elementKey => $element) {
+                                                                        if ($element->getAttribute('category') == 'datepicker' && $element->getAttribute('group') == 'start_date') { ?>
+                                                                            <label for="<?= $element->getAttribute('id') ?>" class="d-flex flex-row justify-content-between">
+                                                                                <div class="label-text"><?= $element->getLabel(); ?></div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="<?= $this->translate($element->getOptions()['tooltip']); ?>"></i>
+                                                                            </label>
+
+                                                                            <?php
+                                                                            if (strpos($element->getName(), 'size') !== false || strpos($element->getName(), 'width') !== false  || strpos($element->getName(), 'radius') !== false || strpos($element->getName(), 'height') !== false) {
+                                                                                $element->setAttribute('readonly', true);
+                                                                            ?>
+                                                                                <div class="row">
+                                                                                    <div class="col-9">
+                                                                                        <div id="<?= $element->getAttribute('sliderId') ?>" class="<?= $element->getAttribute('sliderClass') ?>" style="border: 0; color: #f6931f; font-weight: bold;"></div>
+                                                                                    </div>
+                                                                                    <div class="col-3 g-0">
+                                                                                        <?= $this->formRow($element->setLabel("")); ?>
+                                                                                    </div>
+                                                                                </div>
+                                                                      <?php } 
+                                                                        }        
+                                                                    }
+                                                                    ?>
                                                                 </div>
-                                                            </div>
-                                                            <!-- daterangepicker_end_date_label, border radius -->
+                                                            </div>                                                           
+
                                                             <div class="form-group">
                                                                 <label for="daterangepicker_end_date_label" class="d-flex flex-row justify-content-between">
                                                                     <div class="label-text">Daterangepicker in range end date border radius</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the daterangepicker in range end date border radius"></i>
                                                                 </label>
                                                                 <div class="drp-border-radius-wrapper ms-3">
-                                                                    <label for="options_daterangepicker_in_range_end_date_border_top_left_radius">
-                                                                        <div class="label-text">Border top left radius</div>
-                                                                    </label>
-                                                                    <div class="row">
-                                                                        <div class="col-9">
-                                                                            <div id="daterangepicker-in-range-end-date-border-top-left-radius-range-slider-min" class="daterangepicker-in-range-end-date-border-top-left-radius-range-slider-min" style="border: 0; color: #f6931f; font-weight: bold;"></div>
-                                                                        </div>
-                                                                        <div class="col-3 g-0">
-                                                                            <input type="text" name="options_daterangepicker_in_range_end_date_border_top_left_radius" id="options_daterangepicker_in_range_end_date_border_top_left_radius" class="daterangepicker-in-range-end-date-border-top-left-radius-range-slider-value range-slider-value form-control" />
-                                                                        </div>
-                                                                    </div>
-                                                                    <label for="options_daterangepicker_in_range_end_date_border_top_right_radius">
-                                                                        <div class="label-text">Border top right radius</div>
-                                                                    </label>
-                                                                    <div class="row">
-                                                                        <div class="col-9">
-                                                                            <div id="daterangepicker-in-range-end-date-border-top-right-radius-range-slider-min" class="daterangepicker-in-range-end-date-border-top-right-radius-range-slider-min" style="border: 0; color: #f6931f; font-weight: bold;"></div>
-                                                                        </div>
-                                                                        <div class="col-3 g-0">
-                                                                            <input type="text" name="options_daterangepicker_in_range_end_date_border_top_right_radius" id="options_daterangepicker_in_range_end_date_border_top_right_radius" class="daterangepicker-in-range-end-date-border-top-right-radius-range-slider-value range-slider-value form-control" />
-                                                                        </div>
-                                                                    </div>
-                                                                    <label for="options_daterangepicker_in_range_end_date_border_bottom_left_radius">
-                                                                        <div class="label-text">Border bottom left radius</div>
-                                                                    </label>
-                                                                    <div class="row">
-                                                                        <div class="col-9">
-                                                                            <div id="daterangepicker-in-range-end-date-border-bottom-left-radius-range-slider-min" class="daterangepicker-in-range-end-date-border-bottom-left-radius-range-slider-min" style="border: 0; color: #f6931f; font-weight: bold;"></div>
-                                                                        </div>
-                                                                        <div class="col-3 g-0">
-                                                                            <input type="text" name="options_daterangepicker_in_range_end_date_border_bottom_left_radius" id="options_daterangepicker_in_range_end_date_border_bottom_left_radius" class="daterangepicker-in-range-end-date-border-bottom-left-radius-range-slider-value range-slider-value form-control" />
-                                                                        </div>
-                                                                    </div>
-                                                                    <label for="options_daterangepicker_in_range_end_date_border_bottom_right_radius">
-                                                                        <div class="label-text">Border bottom right radius</div>
-                                                                    </label>
-                                                                    <div class="row">
-                                                                        <div class="col-9">
-                                                                            <div id="daterangepicker-in-range-end-date-border-bottom-right-radius-range-slider-min" class="daterangepicker-in-range-end-date-border-bottom-right-radius-range-slider-min" style="border: 0; color: #f6931f; font-weight: bold;"></div>
-                                                                        </div>
-                                                                        <div class="col-3 g-0">
-                                                                            <input type="text" name="options_daterangepicker_in_range_end_date_border_bottom_right_radius" id="options_daterangepicker_in_range_end_date_border_bottom_right_radius" class="daterangepicker-in-range-end-date-border-bottom-right-radius-range-slider-value range-slider-value form-control" />
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
+                                                                    <?php
+                                                                    foreach ($platformThemeOptionForm->getElements() as $elementKey => $element) {
+                                                                        if ($element->getAttribute('category') == 'datepicker' && $element->getAttribute('group') == 'end_date') { ?>
+                                                                            <label for="<?= $element->getAttribute('id') ?>" class="d-flex flex-row justify-content-between">
+                                                                                <div class="label-text"><?= $element->getLabel(); ?></div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="<?= $this->translate($element->getOptions()['tooltip']); ?>"></i>
+                                                                            </label>
 
-                                                            <!-- options_daterangepicker_day_available_text_color -->
-                                                            <div class="form-group">
-                                                                <label for="options_daterangepicker_day_available_text_color" class="d-flex flex-row justify-content-between">
-                                                                    <div class="label-text">Daterangepicker day available text color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the daterangepicker day active text color by typing the hexadecimal color code or by using the color picker"></i>
-                                                                </label>
-                                                                <div class="input-group platform-scheme osta_color_code">
-                                                                    <input type="text" name="options_daterangepicker_day_available_text_color" id="options_daterangepicker_day_available_text_color" class="form-control minicolor-hex" data-control="hue" placeholder="Daterangepicker day active text color" value="#686868">
-                                                                    <span class="input-group-addon">
-                                                                        <input type="hidden" class="minicolor" value="#686868" />
-                                                                    </span>
-                                                                </div>
-                                                            </div>
-
-                                                            <!-- options_daterangepicker_day_available_hover_bg_color -->
-                                                            <div class="form-group">
-                                                                <label for="options_daterangepicker_day_available_hover_bg_color" class="d-flex flex-row justify-content-between">
-                                                                    <div class="label-text">Daterangepicker day available background hover color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the daterangepicker day available background hover color by typing the hexadecimal color code or by using the color picker"></i>
-                                                                </label>
-                                                                <div class="input-group platform-scheme osta_color_code">
-                                                                    <input type="text" name="options_daterangepicker_day_available_hover_bg_color" id="options_daterangepicker_day_available_hover_bg_color" class="form-control minicolor-hex" data-control="hue" placeholder="Daterangepicker day available background hover color" value="#eee">
-                                                                    <span class="input-group-addon">
-                                                                        <input type="hidden" class="minicolor" value="#eee" />
-                                                                    </span>
-                                                                </div>
-                                                            </div>
-
-                                                            <!-- options_daterangepicker_day_available_hover_border_color -->
-                                                            <div class="form-group">
-                                                                <label for="options_daterangepicker_day_available_hover_border_color" class="d-flex flex-row justify-content-between">
-                                                                    <div class="label-text">Daterangepicker day available background hover color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the daterangepicker day available background hover color by typing the hexadecimal color code or by using the color picker"></i>
-                                                                </label>
-                                                                <div class="input-group platform-scheme osta_color_code">
-                                                                    <input type="text" name="options_daterangepicker_day_available_hover_border_color" id="options_daterangepicker_day_available_hover_border_color" class="form-control minicolor-hex" data-control="hue" placeholder="Daterangepicker day available background hover color" value="#eee">
-                                                                    <span class="input-group-addon">
-                                                                        <input type="hidden" class="minicolor" value="#eee" />
-                                                                    </span>
-                                                                </div>
-                                                            </div>
-
-                                                            <!-- options_daterangepicker_day_available_border_width -->
-                                                            <div class="form-group">
-                                                                <label for="options_daterangepicker_day_available_border_width" class="d-flex flex-row justify-content-between">
-                                                                    <div class="label-text">Daterangepicker day available border width</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the daterangepicker day available border width"></i>
-                                                                </label>
-                                                                <div class="row">
-                                                                    <div class="col-9">
-                                                                        <div id="daterangepicker-day-available-border-width-range-slider-min" class="daterangepicker-day-available-border-width-range-slider-min" style="border: 0; color: #f6931f; font-weight: bold;"></div>
-                                                                    </div>
-                                                                    <div class="col-3 g-0">
-                                                                        <input type="text" name="options_daterangepicker_day_available_border_width" id="options_daterangepicker_day_available_border_width" class="daterangepicker-day-available-border-width-range-slider-value range-slider-value form-control" />
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-
-                                                            <!-- options_daterangepicker_day_available_border_color -->
-                                                            <div class="form-group">
-                                                                <label for="options_daterangepicker_day_available_border_color" class="d-flex flex-row justify-content-between">
-                                                                    <div class="label-text">Daterangepicker day available border color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the daterangepicker day available border color by typing the hexadecimal color code or by using the color picker"></i>
-                                                                </label>
-                                                                <div class="input-group platform-scheme osta_color_code">
-                                                                    <input type="text" name="options_daterangepicker_day_available_border_color" id="options_daterangepicker_day_available_border_color" class="form-control minicolor-hex" data-control="hue" placeholder="Daterangepicker day available border color" value="#eee">
-                                                                    <span class="input-group-addon">
-                                                                        <input type="hidden" class="minicolor" value="#eee" />
-                                                                    </span>
-                                                                </div>
-                                                            </div>
-
-                                                            <!-- options_daterangepicker_day_available_border_radius -->
-                                                            <div class="form-group">
-                                                                <label for="options_daterangepicker_day_available_border_radius" class="d-flex flex-row justify-content-between">
-                                                                    <div class="label-text">Daterangepicker day available border radius</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the daterangepicker day available border radius"></i>
-                                                                </label>
-                                                                <div class="row">
-                                                                    <div class="col-9">
-                                                                        <div id="daterangepicker-day-available-border-radius-range-slider-min" class="daterangepicker-day-available-border-radius-range-slider-min" style="border: 0; color: #f6931f; font-weight: bold;"></div>
-                                                                    </div>
-                                                                    <div class="col-3 g-0">
-                                                                        <input type="text" name="options_daterangepicker_day_available_border_radius" id="options_daterangepicker_day_available_border_radius" class="daterangepicker-day-available-border-radius-range-slider-value range-slider-value form-control" />
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-
-                                                            <!-- options_daterangepicker_day_text_font_size -->
-                                                            <div class="form-group">
-                                                                <label for="options_daterangepicker_day_text_font_size" class="d-flex flex-row justify-content-between">
-                                                                    <div class="label-text">Daterangepicker day text font size</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the daterangepicker day text font size"></i>
-                                                                </label>
-                                                                <div class="row">
-                                                                    <div class="col-9">
-                                                                        <div id="daterangepicker-day-text-font-size-range-slider-min" class="daterangepicker-day-text-font-size-range-slider-min" style="border: 0; color: #f6931f; font-weight: bold;"></div>
-                                                                    </div>
-                                                                    <div class="col-3 g-0">
-                                                                        <input type="text" name="options_daterangepicker_day_text_font_size" id="options_daterangepicker_day_text_font_size" class="daterangepicker-day-text-font-size-range-slider-value range-slider-value form-control" />
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-
-                                                            <!-- options_daterangepicker_day_text_align -->
-                                                            <div class="form-group">
-                                                                <label for="options_daterangepicker_day_text_align" class="d-flex flex-row justify-content-between">
-                                                                    <div class="label-text">Daterangepicker day text align</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Daterangepicker day text align"></i>
-                                                                </label>
-                                                                <div class="btn-group btn-group-alignment" role="group" aria-label="Text align radio toggle button group">
-                                                                    <input type="radio" class="btn-check" name="drp-day-text-align-btn-radio" id="btn-drp-day-left" autocomplete="off">
-                                                                    <label class="btn btn-default" for="btn-drp-day-left"><i class="bi bi-text-left"></i></label>
-
-                                                                    <input type="radio" class="btn-check" name="drp-day-text-align-btn-radio" id="btn-drp-day-center" autocomplete="off" checked>
-                                                                    <label class="btn btn-default" for="btn-drp-day-center"><i class="bi bi-text-center"></i></label>
-
-                                                                    <input type="radio" class="btn-check" name="drp-day-text-align-btn-radio" id="btn-drp-day-right" autocomplete="off">
-                                                                    <label class="btn btn-default" for="btn-drp-day-right"><i class="bi bi-text-right"></i></label>
-                                                                </div>
-                                                            </div>
-
-                                                            <!-- options_daterangepicker_day_off_bg_color -->
-                                                            <div class="form-group">
-                                                                <label for="options_daterangepicker_day_off_bg_color" class="d-flex flex-row justify-content-between">
-                                                                    <div class="label-text">Daterangepicker day off background color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the daterangepicker day off background color by typing the hexadecimal color code or by using the color picker"></i>
-                                                                </label>
-                                                                <div class="input-group platform-scheme osta_color_code">
-                                                                    <input type="text" name="options_daterangepicker_day_off_bg_color" id="options_daterangepicker_day_off_bg_color" class="form-control minicolor-hex" data-control="hue" placeholder="Daterangepicker day off background color" value="#fff">
-                                                                    <span class="input-group-addon">
-                                                                        <input type="hidden" class="minicolor" value="#fff" />
-                                                                    </span>
-                                                                </div>
-                                                            </div>
-
-                                                            <!-- options_daterangepicker_day_off_border_color -->
-                                                            <div class="form-group">
-                                                                <label for="options_daterangepicker_day_off_border_color" class="d-flex flex-row justify-content-between">
-                                                                    <div class="label-text">Daterangepicker day off border color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the daterangepicker day off border color by typing the hexadecimal color code or by using the color picker"></i>
-                                                                </label>
-                                                                <div class="input-group platform-scheme osta_color_code">
-                                                                    <input type="text" name="options_daterangepicker_day_off_border_color" id="options_daterangepicker_day_off_border_color" class="form-control minicolor-hex" data-control="hue" placeholder="Daterangepicker day off border color" value="#eee">
-                                                                    <span class="input-group-addon">
-                                                                        <input type="hidden" class="minicolor" value="#eee" />
-                                                                    </span>
-                                                                </div>
-                                                            </div>
-
-                                                            <!-- options_daterangepicker_day_off_text_color -->
-                                                            <div class="form-group">
-                                                                <label for="options_daterangepicker_day_off_text_color" class="d-flex flex-row justify-content-between">
-                                                                    <div class="label-text">Daterangepicker day off text color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the daterangepicker day off text color by typing the hexadecimal color code or by using the color picker"></i>
-                                                                </label>
-                                                                <div class="input-group platform-scheme osta_color_code">
-                                                                    <input type="text" name="options_daterangepicker_day_off_text_color" id="options_daterangepicker_day_off_text_color" class="form-control minicolor-hex" data-control="hue" placeholder="Daterangepicker day off text color" value="#999">
-                                                                    <span class="input-group-addon">
-                                                                        <input type="hidden" class="minicolor" value="#999" />
-                                                                    </span>
-                                                                </div>
-                                                            </div>
-
-                                                            <!-- options_daterangepicker_footer_selected_date_text_color -->
-                                                            <div class="form-group">
-                                                                <label for="options_daterangepicker_footer_selected_date_text_color" class="d-flex flex-row justify-content-between">
-                                                                    <div class="label-text">Daterangepicker footer selected date text color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the daterangepicker footer selected date text color by typing the hexadecimal color code or by using the color picker"></i>
-                                                                </label>
-                                                                <div class="input-group platform-scheme osta_color_code">
-                                                                    <input type="text" name="options_daterangepicker_footer_selected_date_text_color" id="options_daterangepicker_footer_selected_date_text_color" class="form-control minicolor-hex" data-control="hue" placeholder="Daterangepicker footer selected date text color" value="#686868">
-                                                                    <span class="input-group-addon">
-                                                                        <input type="hidden" class="minicolor" value="#686868" />
-                                                                    </span>
-                                                                </div>
-                                                            </div>
-
-                                                            <!-- options_daterangepicker_footer_selected_date_text_font_size -->
-                                                            <div class="form-group">
-                                                                <label for="options_daterangepicker_footer_selected_date_text_font_size" class="d-flex flex-row justify-content-between">
-                                                                    <div class="label-text">Daterangepicker day text font size</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the daterangepicker day text font size"></i>
-                                                                </label>
-                                                                <div class="row">
-                                                                    <div class="col-9">
-                                                                        <div id="daterangepicker-footer-selected-date-text-font-size-range-slider-min" class="daterangepicker-footer-selected-date-text-font-size-range-slider-min" style="border: 0; color: #f6931f; font-weight: bold;"></div>
-                                                                    </div>
-                                                                    <div class="col-3 g-0">
-                                                                        <input type="text" name="options_daterangepicker_footer_selected_date_text_font_size" id="options_daterangepicker_footer_selected_date_text_font_size" class="daterangepicker-footer-selected-date-text-font-size-range-slider-value range-slider-value form-control" />
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-
-                                                            <!-- options_daterangepicker_footer_buttons_text_font_size -->
-                                                            <div class="form-group">
-                                                                <label for="options_daterangepicker_footer_buttons_text_font_size" class="d-flex flex-row justify-content-between">
-                                                                    <div class="label-text">Daterangepicker footer buttons text font size</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the daterangepicker day text font size"></i>
-                                                                </label>
-                                                                <div class="row">
-                                                                    <div class="col-9">
-                                                                        <div id="daterangepicker-footer-buttons-text-font-size-range-slider-min" class="daterangepicker-footer-buttons-text-font-size-range-slider-min" style="border: 0; color: #f6931f; font-weight: bold;"></div>
-                                                                    </div>
-                                                                    <div class="col-3 g-0">
-                                                                        <input type="text" name="options_daterangepicker_footer_buttons_text_font_size" id="options_daterangepicker_footer_buttons_text_font_size" class="daterangepicker-footer-buttons-text-font-size-range-slider-value range-slider-value form-control" />
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-
-                                                            <!-- options_daterangepicker_footer_cancel_btn_bg_color -->
-                                                            <div class="form-group">
-                                                                <label for="options_daterangepicker_footer_cancel_btn_bg_color" class="d-flex flex-row justify-content-between">
-                                                                    <div class="label-text">Daterangepicker footer cancel button background color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the daterangepicker footer cancel button background color by typing the hexadecimal color code or by using the color picker"></i>
-                                                                </label>
-                                                                <div class="input-group platform-scheme osta_color_code">
-                                                                    <input type="text" name="options_daterangepicker_footer_cancel_btn_bg_color" id="options_daterangepicker_footer_cancel_btn_bg_color" class="form-control minicolor-hex" data-control="hue" placeholder="Daterangepicker footer cancel button background color" value="#fff">
-                                                                    <span class="input-group-addon">
-                                                                        <input type="hidden" class="minicolor" value="#fff" />
-                                                                    </span>
-                                                                </div>
-                                                            </div>
-
-                                                            <!-- options_daterangepicker_footer_cancel_btn_hover_bg_color -->
-                                                            <div class="form-group">
-                                                                <label for="options_daterangepicker_footer_cancel_btn_hover_bg_color" class="d-flex flex-row justify-content-between">
-                                                                    <div class="label-text">Daterangepicker footer cancel button hover background color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the daterangepicker footer cancel button hover background color by typing the hexadecimal color code or by using the color picker"></i>
-                                                                </label>
-                                                                <div class="input-group platform-scheme osta_color_code">
-                                                                    <input type="text" name="options_daterangepicker_footer_cancel_btn_hover_bg_color" id="options_daterangepicker_footer_cancel_btn_hover_bg_color" class="form-control minicolor-hex" data-control="hue" placeholder="Daterangepicker footer cancel button hover background color" value="#bd362f">
-                                                                    <span class="input-group-addon">
-                                                                        <input type="hidden" class="minicolor" value="#bd362f" />
-                                                                    </span>
-                                                                </div>
-                                                            </div>
-
-                                                            <!-- options_daterangepicker_footer_cancel_btn_border_color -->
-                                                            <div class="form-group">
-                                                                <label for="options_daterangepicker_footer_cancel_btn_border_color" class="d-flex flex-row justify-content-between">
-                                                                    <div class="label-text">Daterangepicker footer cancel button border color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the daterangepicker footer cancel button border color by typing the hexadecimal color code or by using the color picker"></i>
-                                                                </label>
-                                                                <div class="input-group platform-scheme osta_color_code">
-                                                                    <input type="text" name="options_daterangepicker_footer_cancel_btn_border_color" id="options_daterangepicker_footer_cancel_btn_border_color" class="form-control minicolor-hex" data-control="hue" placeholder="Daterangepicker footer cancel button border color" value="#bd362f">
-                                                                    <span class="input-group-addon">
-                                                                        <input type="hidden" class="minicolor" value="#bd362f" />
-                                                                    </span>
-                                                                </div>
-                                                            </div>
-
-                                                            <!-- options_daterangepicker_footer_cancel_btn_hover_border_color -->
-                                                            <div class="form-group">
-                                                                <label for="options_daterangepicker_footer_cancel_btn_hover_border_color" class="d-flex flex-row justify-content-between">
-                                                                    <div class="label-text">Daterangepicker footer cancel button hover border color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the daterangepicker footer cancel button hover border color by typing the hexadecimal color code or by using the color picker"></i>
-                                                                </label>
-                                                                <div class="input-group platform-scheme osta_color_code">
-                                                                    <input type="text" name="options_daterangepicker_footer_cancel_btn_hover_border_color" id="options_daterangepicker_footer_cancel_btn_hover_border_color" class="form-control minicolor-hex" data-control="hue" placeholder="Daterangepicker footer cancel button hover border color" value="#bd362f">
-                                                                    <span class="input-group-addon">
-                                                                        <input type="hidden" class="minicolor" value="#bd362f" />
-                                                                    </span>
-                                                                </div>
-                                                            </div>
-
-                                                            <!-- options_daterangepicker_footer_cancel_btn_text_color -->
-                                                            <div class="form-group">
-                                                                <label for="options_daterangepicker_footer_cancel_btn_text_color" class="d-flex flex-row justify-content-between">
-                                                                    <div class="label-text">Daterangepicker footer cancel button text color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the daterangepicker footer cancel button text color by typing the hexadecimal color code or by using the color picker"></i>
-                                                                </label>
-                                                                <div class="input-group platform-scheme osta_color_code">
-                                                                    <input type="text" name="options_daterangepicker_footer_cancel_btn_text_color" id="options_daterangepicker_footer_cancel_btn_text_color" class="form-control minicolor-hex" data-control="hue" placeholder="Daterangepicker footer cancel button text color" value="#bd362f">
-                                                                    <span class="input-group-addon">
-                                                                        <input type="hidden" class="minicolor" value="#bd362f" />
-                                                                    </span>
-                                                                </div>
-                                                            </div>
-
-                                                            <!-- options_daterangepicker_footer_cancel_btn_hover_text_color -->
-                                                            <div class="form-group">
-                                                                <label for="options_daterangepicker_footer_cancel_btn_hover_text_color" class="d-flex flex-row justify-content-between">
-                                                                    <div class="label-text">Daterangepicker footer cancel button hover text color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the daterangepicker footer cancel button hover text color by typing the hexadecimal color code or by using the color picker"></i>
-                                                                </label>
-                                                                <div class="input-group platform-scheme osta_color_code">
-                                                                    <input type="text" name="options_daterangepicker_footer_cancel_btn_hover_text_color" id="options_daterangepicker_footer_cancel_btn_hover_text_color" class="form-control minicolor-hex" data-control="hue" placeholder="Daterangepicker footer cancel button hover text color" value="#fff">
-                                                                    <span class="input-group-addon">
-                                                                        <input type="hidden" class="minicolor" value="#fff" />
-                                                                    </span>
-                                                                </div>
-                                                            </div>
-
-                                                            <!-- options_daterangepicker_footer_apply_btn_bg_color -->
-                                                            <div class="form-group">
-                                                                <label for="options_daterangepicker_footer_apply_btn_bg_color" class="d-flex flex-row justify-content-between">
-                                                                    <div class="label-text">Daterangepicker footer apply button background color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the daterangepicker footer apply button background color by typing the hexadecimal color code or by using the color picker"></i>
-                                                                </label>
-                                                                <div class="input-group platform-scheme osta_color_code">
-                                                                    <input type="text" name="options_daterangepicker_footer_apply_btn_bg_color" id="options_daterangepicker_footer_apply_btn_bg_color" class="form-control minicolor-hex" data-control="hue" placeholder="Daterangepicker footer apply button background color" value="#fff">
-                                                                    <span class="input-group-addon">
-                                                                        <input type="hidden" class="minicolor" value="#fff" />
-                                                                    </span>
-                                                                </div>
-                                                            </div>
-
-                                                            <!-- options_daterangepicker_footer_apply_btn_hover_bg_color -->
-                                                            <div class="form-group">
-                                                                <label for="options_daterangepicker_footer_apply_btn_hover_bg_color" class="d-flex flex-row justify-content-between">
-                                                                    <div class="label-text">Daterangepicker footer apply button hover background color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the daterangepicker footer apply button hover background color by typing the hexadecimal color code or by using the color picker"></i>
-                                                                </label>
-                                                                <div class="input-group platform-scheme osta_color_code">
-                                                                    <input type="text" name="options_daterangepicker_footer_apply_btn_hover_bg_color" id="options_daterangepicker_footer_apply_btn_hover_bg_color" class="form-control minicolor-hex" data-control="hue" placeholder="Daterangepicker footer apply button hover background color" value="#72af46">
-                                                                    <span class="input-group-addon">
-                                                                        <input type="hidden" class="minicolor" value="#72af46" />
-                                                                    </span>
-                                                                </div>
-                                                            </div>
-
-                                                            <!-- options_daterangepicker_footer_apply_btn_border_color -->
-                                                            <div class="form-group">
-                                                                <label for="options_daterangepicker_footer_apply_btn_border_color" class="d-flex flex-row justify-content-between">
-                                                                    <div class="label-text">Daterangepicker footer apply button border color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the daterangepicker footer apply button border color by typing the hexadecimal color code or by using the color picker"></i>
-                                                                </label>
-                                                                <div class="input-group platform-scheme osta_color_code">
-                                                                    <input type="text" name="options_daterangepicker_footer_apply_btn_border_color" id="options_daterangepicker_footer_apply_btn_border_color" class="form-control minicolor-hex" data-control="hue" placeholder="Daterangepicker footer apply button border color" value="#72af46">
-                                                                    <span class="input-group-addon">
-                                                                        <input type="hidden" class="minicolor" value="#72af46" />
-                                                                    </span>
-                                                                </div>
-                                                            </div>
-
-                                                            <!-- options_daterangepicker_footer_apply_btn_hover_border_color -->
-                                                            <div class="form-group">
-                                                                <label for="options_daterangepicker_footer_apply_btn_hover_border_color" class="d-flex flex-row justify-content-between">
-                                                                    <div class="label-text">Daterangepicker footer apply button hover border color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the daterangepicker footer apply button hover border color by typing the hexadecimal color code or by using the color picker"></i>
-                                                                </label>
-                                                                <div class="input-group platform-scheme osta_color_code">
-                                                                    <input type="text" name="options_daterangepicker_footer_apply_btn_hover_border_color" id="options_daterangepicker_footer_apply_btn_hover_border_color" class="form-control minicolor-hex" data-control="hue" placeholder="Daterangepicker footer apply button hover border color" value="#72af46">
-                                                                    <span class="input-group-addon">
-                                                                        <input type="hidden" class="minicolor" value="#72af46" />
-                                                                    </span>
-                                                                </div>
-                                                            </div>
-
-                                                            <!-- options_daterangepicker_footer_apply_btn_text_color -->
-                                                            <div class="form-group">
-                                                                <label for="options_daterangepicker_footer_apply_btn_text_color" class="d-flex flex-row justify-content-between">
-                                                                    <div class="label-text">Daterangepicker footer apply button text color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the daterangepicker footer apply button text color by typing the hexadecimal color code or by using the color picker"></i>
-                                                                </label>
-                                                                <div class="input-group platform-scheme osta_color_code">
-                                                                    <input type="text" name="options_daterangepicker_footer_apply_btn_text_color" id="options_daterangepicker_footer_apply_btn_text_color" class="form-control minicolor-hex" data-control="hue" placeholder="Daterangepicker footer apply button text color" value="#72af46">
-                                                                    <span class="input-group-addon">
-                                                                        <input type="hidden" class="minicolor" value="#72af46" />
-                                                                    </span>
-                                                                </div>
-                                                            </div>
-
-                                                            <!-- options_daterangepicker_footer_apply_btn_hover_text_color -->
-                                                            <div class="form-group">
-                                                                <label for="options_daterangepicker_footer_apply_btn_hover_text_color" class="d-flex flex-row justify-content-between">
-                                                                    <div class="label-text">Daterangepicker footer apply button hover text color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the daterangepicker footer apply button hover text color by typing the hexadecimal color code or by using the color picker"></i>
-                                                                </label>
-                                                                <div class="input-group platform-scheme osta_color_code">
-                                                                    <input type="text" name="options_daterangepicker_footer_apply_btn_hover_text_color" id="options_daterangepicker_footer_apply_btn_hover_text_color" class="form-control minicolor-hex" data-control="hue" placeholder="Daterangepicker footer apply button hover text color" value="#fff">
-                                                                    <span class="input-group-addon">
-                                                                        <input type="hidden" class="minicolor" value="#fff" />
-                                                                    </span>
+                                                                            <?php
+                                                                            if (strpos($element->getName(), 'size') !== false || strpos($element->getName(), 'width') !== false  || strpos($element->getName(), 'radius') !== false || strpos($element->getName(), 'height') !== false) {
+                                                                                $element->setAttribute('readonly', true);
+                                                                            ?>
+                                                                                <div class="row">
+                                                                                    <div class="col-9">
+                                                                                        <div id="<?= $element->getAttribute('sliderId') ?>" class="<?= $element->getAttribute('sliderClass') ?>" style="border: 0; color: #f6931f; font-weight: bold;"></div>
+                                                                                    </div>
+                                                                                    <div class="col-3 g-0">
+                                                                                        <?= $this->formRow($element->setLabel("")); ?>
+                                                                                    </div>
+                                                                                </div>
+                                                                    <?php   } 
+                                                                        }                                                                        
+                                                                    }
+                                                                    ?>
                                                                 </div>
                                                             </div>
                                                         </div>

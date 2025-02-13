@@ -78,7 +78,7 @@ class MelisCorePlatformSchemeService extends MelisGeneralService
                 $entScheme->setDialog($schemeData->pscheme_dialog);
                 $entScheme->setFormElement($schemeData->pscheme_form_elements);
                 $entScheme->setTab($schemeData->pscheme_tab);
-                
+                $entScheme->setDatepicker($schemeData->pscheme_datepicker);                
             }
 
             $entScheme->setIsActive($schemeData->pscheme_is_active);
@@ -145,14 +145,26 @@ class MelisCorePlatformSchemeService extends MelisGeneralService
 
         if($defaultSchemeData) {
             $data = array(
-                'pscheme_colors' =>  $defaultSchemeData->pscheme_colors,
-                'pscheme_sidebar_header_logo' =>  $defaultSchemeData->pscheme_sidebar_header_logo,
-                'pscheme_sidebar_header_text' =>  $defaultSchemeData->pscheme_sidebar_header_text,
+                'pscheme_colors' => $defaultSchemeData->pscheme_colors,
+                'pscheme_sidebar_header_logo' => $defaultSchemeData->pscheme_sidebar_header_logo,
+                'pscheme_sidebar_header_text' => $defaultSchemeData->pscheme_sidebar_header_text,
                 'pscheme_login_logo' =>  $defaultSchemeData->pscheme_login_logo,
-                'pscheme_login_background' =>  $defaultSchemeData->pscheme_login_background,
-                'pscheme_favicon' =>  $defaultSchemeData->pscheme_favicon,
-                'pscheme_is_active' =>  1,
-
+                'pscheme_login_background' => $defaultSchemeData->pscheme_login_background,
+                'pscheme_favicon' => $defaultSchemeData->pscheme_favicon,
+                'pscheme_is_active' => 1,
+                'pscheme_top_logo' =>  $defaultSchemeData->pscheme_top_logo,
+                'pscheme_user_profile' => $defaultSchemeData->pscheme_user_profile,
+                'pscheme_menu' => $defaultSchemeData->pscheme_menu,
+                'pscheme_footer' => $defaultSchemeData->pscheme_footer,
+                'pscheme_header_navigation' => $defaultSchemeData->pscheme_header_navigation,
+                'pscheme_bubble_plugins' =>  $defaultSchemeData->pscheme_bubble_plugins,
+                'pscheme_dashboard_plugins' => $defaultSchemeData->pscheme_dashboard_plugins,
+                'pscheme_dashboard_plugins_menu' => $defaultSchemeData->pscheme_dashboard_plugins_menu,
+                'pscheme_modal' => $defaultSchemeData->pscheme_modal,
+                'pscheme_dialog' => $defaultSchemeData->pscheme_dialog,
+                'pscheme_form_elements' => $defaultSchemeData->pscheme_form_elements,
+                'pscheme_tab' => $defaultSchemeData->pscheme_tab,
+                'pscheme_datepicker' => $defaultSchemeData->pscheme_datepicker,
             );
 
             $success = $this->schemeTable()->save($data, $id);
