@@ -242,44 +242,49 @@ var dashboard = (function() {
 				 */			
 				if( $($el).closest(".melis-core-dashboard-dnd-box").hasClass("shown") ) {
 					if( !$($el).closest(".melis-core-dashboard-dnd-box").hasClass("hasCached") ) {
-						/* var $aTabId						= $("#"+activeTabId),
-							$gridstack 					= $aTabId.find(".grid-stack"),
-							$leftMenu					= $("#id_meliscore_leftmenu"),
-							$bubblePluginWrapper 		= $("#id_meliscore_dashboard_bubble_plugins"),
-							$bubblePlugin 				= $bubblePluginWrapper.find(".tab-pane .bubble-plugin"),
-							$dashboardMsg 				= $aTabId.find(".melis-core-dashboard-msg"),
-							$dashboardPluginMenu 		= $("#id_meliscore_center_dashboard_menu"),
-							dashboardPluginMenuWidth 	= $dashboardPluginMenu.outerWidth(),
-							gsWidth 					= $gridstack.outerWidth(),
-							duration 					= 50; */
-
-							loadDashboardPluginContent();						
-							
-							/* console.log(`hasCached, $leftMenu.hasClass("shown"): `, $leftMenu.hasClass("shown"));
-							if ( $leftMenu.hasClass("shown") ) {
-								setTimeout(() => {
-									console.log(`true setTimeout 100 $gridstack: `, $gridstack);
-									console.log({gsWidth});
-									console.log({dashboardPluginMenuWidth});
-									
-									$gridstack.animate({ width: gsWidth - dashboardPluginMenuWidth }, duration);
-									$dashboardMsg.animate({ width: gsWidth - dashboardPluginMenuWidth }, duration);
-									$bubblePlugin.animate({ width: gsWidth - dashboardPluginMenuWidth }, duration);
-
-									console.log(`true setTimeout 100 after animate, $bubblePlugin.outerWidth(): `, $bubblePlugin.outerWidth() );
-								}, 100);
-							}
-							else {
-								setTimeout(() => {
-									$gridstack.animate({ width: gsWidth + dashboardPluginMenuWidth }, duration);
-									$dashboardMsg.animate({ width: gsWidth + dashboardPluginMenuWidth }, duration);
-									$bubblePlugin.animate({ width: gsWidth + dashboardPluginMenuWidth }, duration);
-
-									console.log(`false setTimeout 100 after animate, $bubblePlugin.outerWidth(): `, $bubblePlugin.outerWidth() );
-								}, 100);
-							} */
+						dashboard.loadDashboardPluginsMenuContent($el);
 					}
 				}
+		}
+
+		function loadDashboardPluginsMenuContent($el, dashboardResized) {
+			var currentGsWidth 	= $gs.outerWidth(),
+				$bpWrapper 		= $("#id_meliscore_dashboard_bubble_plugins"),
+				$bp 			= $bpWrapper.find(".tab-pane .bubble-plugin"),
+				$dbPluginMenu 	= $("#id_meliscore_center_dashboard_menu"),
+				dbpmWidth 		= $dbPluginMenu.outerWidth();
+
+				$.ajax({
+					type: 'GET',
+					url: '/melis/MelisCore/DashboardPlugins/dashboardMenuContent',
+					beforeSend: function () {
+						loader.addLoadingDashboardPluginMenu();
+					}
+				}).done(function (data) {
+					$("#dashboardMenuContent").html(data.view);
+
+					setTimeout(function () {
+						melisDashBoardDragnDrop.init();
+
+						// shown class added again as on top code it is using toggleClass()
+						$($el).closest(".melis-core-dashboard-dnd-box").addClass("hasCached shown");
+						
+						if ( ! dashboardResized ) {
+							if ( $lm.hasClass("shown") ) {
+								$gs.animate({ width: currentGsWidth - dbpmWidth }, animationDuration);
+								$dbMsg.animate({ width: currentGsWidth - dbpmWidth }, animationDuration);
+								$bp.animate({ width: currentGsWidth - dbpmWidth }, animationDuration);
+							}
+							else {
+								$gs.animate({ width: currentGsWidth + dbpmWidth }, animationDuration);
+								$dbMsg.animate({ width: currentGsWidth + dbpmWidth }, animationDuration);
+								$bp.animate({ width: currentGsWidth + dbpmWidth }, animationDuration);
+							}
+						}
+					}, 100);
+
+					loader.removeLoadingDashboardPluginMenu();
+				});
 		}
 
 		// BIND & DELEGATE EVENTS ===========================================================================
@@ -294,57 +299,6 @@ var dashboard = (function() {
 
 			toggleDashboardElements( $(this) );
 		});
-		
-		function loadDashboardPluginContent() {
-			/**
-			 * This will request a plugin menu content
-			 */
-			$.ajax({
-				type: 'GET',
-				url: '/melis/MelisCore/DashboardPlugins/dashboardMenuContent',
-				beforeSend: function () {
-					loader.addLoadingDashboardPluginMenu();
-				}
-			}).done(function (data) {
-				var $dmc = $("#dashboardMenuContent");
-
-					$dmc.html(data.view);
-
-					setTimeout(() => {
-						var $pluginBtn 			= $("#melisDashBoardPluginBtn");
-							/* $activeTabId		= $("#"+activeTabId),
-							$gs 				= $activeTabId.find(".grid-stack"),
-							currentGsWidth 		= $gs.outerWidth(),
-							$lm 				= $("#id_meliscore_leftmenu"),
-							$bpWrapper 			= $("#id_meliscore_dashboard_bubble_plugins"),
-							$bp 				= $bpWrapper.find(".tab-pane .bubble-plugin"),
-							$dbMsg 				= $activeTabId.find(".melis-core-dashboard-msg"),
-							$dbPluginMenu 		= $("#id_meliscore_center_dashboard_menu"),
-							dbpmWidth 			= $dbPluginMenu.outerWidth(),
-							animationDuration   = 50; */
-
-							melisDashBoardDragnDrop.init();
-
-							// shown class added again as on top code it is using toggleClass()
-							$pluginBtn.closest(".melis-core-dashboard-dnd-box").addClass("hasCached shown");
-
-							/* if ( $lm.hasClass("shown") ) {
-								$gs.animate({ width: currentGsWidth - dbpmWidth }, animationDuration);
-								$dbMsg.animate({ width: currentGsWidth - dbpmWidth }, animationDuration);
-								$bp.animate({ width: currentGsWidth - dbpmWidth }, animationDuration);
-							}
-							else {
-								$gs.animate({ width: currentGsWidth + dbpmWidth }, animationDuration);
-								$dbMsg.animate({ width: currentGsWidth + dbpmWidth }, animationDuration);
-								$bp.animate({ width: currentGsWidth + dbpmWidth }, animationDuration);
-							} */
-					}, 100);
-
-					setTimeout(() => {
-						loader.removeLoadingDashboardPluginMenu();
-					}, 500);
-			});
-		}
 
 		// FUNCTION CALLS ===================================================================================
 
@@ -355,6 +309,6 @@ var dashboard = (function() {
 		 */
 		return {
 			toggleDashboardElements : toggleDashboardElements,
-			loadDashboardPluginContent : loadDashboardPluginContent
+			loadDashboardPluginsMenuContent : loadDashboardPluginsMenuContent
 		}
 })();

@@ -280,32 +280,41 @@ class MelisPasswordSettingsService extends MelisGeneralService
             } else {
                 $file = $_SERVER['DOCUMENT_ROOT'] . '/../vendor/melisplatform/melis-core/config/app.login.php';
 
-                if(PHP_OS_FAMILY === 'Linux' && DIRECTORY_SEPARATOR == '/') {
-                    shell_exec('sudo chmod 0777 '.$file);
-                } else {
-                    chmod($file, 0777);
-                }
+                try {
 
-                $configFactory = new \Laminas\Config\Factory();
+                    if (!file_exists($file)) {
+                        touch($file);
+                    }
 
-                $config = [
-                    'plugins' => [
-                        'meliscore' => [
-                            'datas' => [
-                                'login' => $arrayParameters['passwordSettingsData']
+                    if (PHP_OS_FAMILY === 'Linux' && DIRECTORY_SEPARATOR == '/') {
+                        shell_exec('sudo chmod 0777 '.$file);
+                    } else {
+                        chmod($file, 0777);
+                    }
+
+                    $configFactory = new \Laminas\Config\Factory();
+
+                    $config = [
+                        'plugins' => [
+                            'meliscore' => [
+                                'datas' => [
+                                    'login' => $arrayParameters['passwordSettingsData']
+                                ]
                             ]
                         ]
-                    ]
-                ];
+                    ];
 
-                $configFactory->toFile($file, $config);
+                    $configFactory->toFile($file, $config);
 
-                // check if opcache zend_extension is installed/enabled in server
-                if (function_exists('opcache_reset')) {
-                    opcache_reset();
-                }
+                    // check if opcache zend_extension is installed/enabled in server
+                    if (function_exists('opcache_reset')) {
+                        opcache_reset();
+                    }
 
-                $arrayParameters['success'] = 1;
+                    $arrayParameters['success'] = 1;
+                } catch (\Exception $e) {
+                    echo $e->getMessage();
+                }                     
             }
         }
         

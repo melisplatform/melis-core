@@ -707,7 +707,7 @@ return array(
                 'askaccount_email' => 'askaccount@test.com',
                 'lostpassword_email' => 'lostpassword@test.com',
                 'login_background' => '/MelisCore/images/login/melis-blackboard.jpg',
-                'login_logo' => '/MelisCore/images/login/melis-box.png',
+                'login_logo' => '/MelisCore/images/login/melis-logo.svg',
             ),
             'interface' => array(
                 'meliscore_login_header' => array(
@@ -780,7 +780,7 @@ return array(
             ),
             'datas' => array(
                 'login_background' => 'MelisCore/images/login/melis-blackboard.jpg',
-                'lost_password_logo' => '/MelisCore/images/login/melis-box.png',
+                'lost_password_logo' => '/MelisCore/images/login/melis-logo.svg',
             ),
             'interface' => array(
                 'meliscore_lost_password_header' => array(
@@ -856,7 +856,7 @@ return array(
             ),
             'datas' => array(
                 'login_background' => 'MelisCore/images/login/melis-blackboard.jpg',
-                'reset_password_logo' => '/MelisCore/images/login/melis-box.png',
+                'reset_password_logo' => '/MelisCore/images/login/melis-logo.svg',
             ),
             'interface' => array(
                 'meliscore_reset_password_header' => array(
@@ -930,7 +930,7 @@ return array(
             ),
             'datas' => array(
                 'login_background' => 'MelisCore/images/login/melis-blackboard.jpg',
-                'generate_password_logo' => '/MelisCore/images/login/melis-box.png',
+                'generate_password_logo' => '/MelisCore/images/login/melis-logo.svg',
             ),
             'interface' => array(
                 'meliscore_generate_password_header' => array(
@@ -1004,7 +1004,7 @@ return array(
             ),
             'datas' => array(
                 'login_background' => 'MelisCore/images/login/melis-blackboard.jpg',
-                'renew_password_logo' => '/MelisCore/images/login/melis-box.png',
+                'renew_password_logo' => '/MelisCore/images/login/melis-logo.svg',
             ),
             'interface' => array(
                 'meliscore_renew_password_header' => array(

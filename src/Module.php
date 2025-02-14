@@ -373,7 +373,7 @@ class Module
             include __DIR__ . '/../config/app.interface.php',
             include __DIR__ . '/../config/app.toolstree.php',
             include __DIR__ . '/../config/app.forms.php',
-            include __DIR__ . '/../config/app.login.php',
+            include __DIR__ . '/../config/otherconfig.php',
             include __DIR__ . '/../config/app.tools.php',
             include __DIR__ . '/../config/app.emails.php',
             include __DIR__ . '/../config/diagnostic.config.php',
@@ -401,6 +401,10 @@ class Module
             include __DIR__ . '/../config/excluded.routes.php'
 
         ];
+
+        // include login config if it exists
+        $loginConfigPath = __DIR__ . '/../config/app.login.php';
+        $configFiles[] = file_exists($loginConfigPath) ? include $loginConfigPath : [];
 
         foreach ($configFiles as $file) {
             $config = ArrayUtils::merge($config, $file);
