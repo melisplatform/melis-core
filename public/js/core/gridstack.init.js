@@ -1112,39 +1112,16 @@ var melisDashBoardDragnDrop = {
 
 $(function() {
     var $body                   = $("body"),
-        $melisLeftMenu          = $("#id_meliscore_leftmenu"),      
         gsi                     = $("#"+activeTabId + " .grid-stack").find(".grid-stack-item").length,
         $pluginBtn              = $body.find("#melisDashBoardPluginBtn"),
         $pluginBox              = $pluginBtn.closest(".melis-core-dashboard-dnd-box"),
         $gs                     = $body.find("#"+activeTabId + " .grid-stack"),      
         $dbMsg                  = $body.find("#"+activeTabId + " .melis-core-dashboard-msg"),
-        dbMsgMinWidth           = $dbMsg.data("min-width"),
-        dbMsgMaxWidth           = $dbMsg.data("max-width"),
         minWidth                = $gs.data("min-width"),
-        //minWidth                = $gs.data().minWidth,
-        maxWidth                = $gs.data("max-width"),
-        $bubblePlugin           = $("#bubble-plugin"),
-        bubblePluginWidth       = $bubblePlugin.outerWidth(),
-        bubblePluginMinWidth    = $bubblePlugin.data("min-width"),
-        bubblePluginMaxWidth    = $bubblePlugin.data("max-width");
+        $bubblePlugin           = $("#bubble-plugin");
 
         // init
         melisDashBoardDragnDrop.init();
-
-        // check if any .grid-stack-item is found, hide $dbMsg
-        if ( gsi > 0 ) {
-            $dbMsg.hide();
-        }
-        else {
-            $dbMsg.show();
-            // load dashboard plugin content
-            if ($pluginBox.hasClass("shown") && typeof dashboard !== "undefined") {
-                dashboard.loadDashboardPluginContent();
-            }
-        }
-
-        // .select2-container width 100% specific for latest comments plugin on document ready, added on init
-        //melisDashBoardDragnDrop.latestCommentsPluginUIRes();
 
         // animate to full width size of #grid1
         $body.on("click", "#dashboard-plugin-delete-all", function() {

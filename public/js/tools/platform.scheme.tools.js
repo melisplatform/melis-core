@@ -228,6 +228,13 @@ var rangeSliderSize = {
                 max: 35 
             }, // widget back header text
             { 
+                selectorMin: ".widget-front-button-text-font-size-range-slider-min", 
+                selectorValue: ".widget-front-button-text-font-size-range-slider-value", 
+                value: $("#melis_core_platform_theme_bubble_plugin_widget_front_btn_txt_font_size").val(), 
+                min: 14, 
+                max: 25 
+            }, // widget front button text font size
+            { 
                 selectorMin: ".dashboard-plugin-no-plugin-alert-font-size-range-slider-min", 
                 selectorValue: ".dashboard-plugin-no-plugin-alert-font-size-range-slider-value", 
                 value: $("#melis_core_platform_theme_dashboard_plugin_no_plugin_alert_text_font_size").val(), 

@@ -178,6 +178,8 @@ return array(
     'tr_meliscore_platform_theme_bubble_plugin_widget_header_text_icon_color_tooltip' => 'Change the color by typing the hexadecimal color code or by using the color picker',
     'tr_meliscore_platform_theme_bubble_plugin_widget_header_text_icon_font_size' => 'Widget header text and icon font size',
     'tr_meliscore_platform_theme_bubble_plugin_widget_header_text_icon_font_size_tooltip' => 'Change the font size',
+    'tr_melis_core_platform_theme_bubble_plugin_widget_front_btn_txt_font_size' => 'Widget front button text font size',
+    'tr_melis_core_platform_theme_bubble_plugin_widget_front_btn_txt_font_size_tooltip' => 'Change the font size', 
 
     'tr_meliscore_platform_theme_bubble_plugin_updates_header_text_icon_color' => 'Updates header text and icon color',
     'tr_meliscore_platform_theme_bubble_plugin_updates_header_text_icon_color_tooltip' => 'Change the color by typing the hexadecimal color code or by using the color picker',
@@ -258,6 +260,8 @@ return array(
     'tr_meliscore_platform_theme_dashboard_plugin_menu_box_border_width_tooltip' => 'Change the color by typing the hexadecimal color code or by using the color picker',
     'tr_meliscore_platform_theme_dashboard_plugin_menu_box_title_color' => 'Plugins menu box title color',
     'tr_meliscore_platform_theme_dashboard_plugin_menu_box_title_color_tooltip' => 'Change the color by typing the hexadecimal color code or by using the color picker',
+    'tr_meliscore_platform_theme_dashboard_plugin_menu_box_title_bg_color' => 'Plugins menu box title background color',
+    'tr_meliscore_platform_theme_dashboard_plugin_menu_box_title_bg_color_tooltip' => 'Change the color by typing the hexadecimal color code or by using the color picker',
     'tr_meliscore_platform_theme_dashboard_plugin_menu_box_title_font_size' => 'Plugins menu box title font size',
     'tr_meliscore_platform_theme_dashboard_plugin_menu_box_title_font_size_tooltip' => 'Change the font size',
     'tr_meliscore_platform_theme_dashboard_plugin_menu_box_title_font_style' => 'Plugins menu box title font style',
