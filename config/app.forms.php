@@ -1735,7 +1735,27 @@ return array(
                                 ),
                             ),
                         ),
-
+                        // added by junry 02/18/2025, for all cards front button text font size
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_bubble_plugin_widget_front_btn_txt_font_size',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_melis_core_platform_theme_bubble_plugin_widget_front_btn_txt_font_size',
+                                    'tooltip' => 'tr_melis_core_platform_theme_bubble_plugin_widget_front_btn_txt_font_size_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_bubble_plugin_widget_front_btn_txt_font_size',
+                                    'value' => '',
+                                    'class' => 'widget-front-button-text-font-size-range-slider-value range-slider-value form-control',                           
+                                    'placeholder' => 'tr_melis_core_platform_theme_bubble_plugin_widget_front_btn_txt_font_size',
+                                    'category' => 'bubble',
+                                    'sliderId' => 'widget-front-button-text-font-size-range-slider-min',
+                                    'sliderClass' => 'widget-front-button-text-font-size-range-slider-min',
+                                    'default' => 14
+                                ),
+                            ),
+                        ),
                         array(
                             'spec' => array(
                                 'name' => 'melis_core_platform_theme_bubble_plugin_updates_header_text_icon_color',
@@ -2495,6 +2515,26 @@ return array(
                                     'sliderId' => 'plugins-menu-box-border-width-range-slider-min',
                                     'sliderClass' => 'plugins-menu-box-border-width-range-slider-min',
                                     'default' => 4
+                                ),
+                            ),
+                        ),
+                        // added by junry 02/19/2025
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_dashboard_plugin_menu_box_title_bg_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_melis_core_platform_theme_dashboard_plugin_menu_box_title_bg_color',
+                                    'tooltip' => 'tr_melis_core_platform_theme_dashboard_plugin_menu_box_title_bg_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_dashboard_plugin_menu_box_title_bg_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_melis_core_platform_theme_dashboard_plugin_menu_box_title_bg_color',
+                                    'category' => 'dashboard_plugin_menu',
+                                    'default' => '#e61c23'
                                 ),
                             ),
                         ),
@@ -6738,6 +6778,15 @@ return array(
                                 ['name' => 'StringTrim'],
                             ],
                         ],
+                        'melis_core_platform_theme_bubble_plugin_widget_front_btn_txt_font_size' => [
+                            'name'     => 'melis_core_platform_theme_bubble_plugin_widget_front_btn_txt_font_size',
+                            'required' => false,
+                            'validators' => [],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
                         'melis_core_platform_theme_bubble_plugin_widget_back_header_bg_color' => [
                             'name'     => 'melis_core_platform_theme_bubble_plugin_widget_back_header_bg_color',
                             'required' => false,
@@ -7112,6 +7161,25 @@ return array(
 
                         'melis_core_platform_theme_dashboard_plugin_menu_box_title_color' => [
                             'name'     => 'melis_core_platform_theme_dashboard_plugin_menu_box_title_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',
+                                    'options' => [
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+
+                        'melis_core_platform_theme_dashboard_plugin_menu_box_title_bg_color' => [
+                            'name'     => 'melis_core_platform_theme_dashboard_plugin_menu_box_title_bg_color',
                             'required' => false,
                             'validators' => [
                                 [
