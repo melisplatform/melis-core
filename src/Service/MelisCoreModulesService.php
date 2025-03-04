@@ -958,6 +958,21 @@ class MelisCoreModulesService extends MelisServiceManager
         // Prepend the path to lines that do not have a "//" anywhere
 //        $content = preg_replace('/(url\((?!.*\/\/))/i', '$1'.$path, $content);
 
+
+        /**
+         * This will fixed the problem on not getting the image/icon since the file /melis as folder,
+         * so we just need to add / in front of path
+         */
+        // Regular expression to match url('something') where:
+        // - "something" does NOT start with `/`
+        // - "something" does NOT start with "data:"
+        $pattern = "/url\(['\"]((?!data:|\/)[^'\")]+)['\"]\)/i";
+
+        // Replace with `/something` (adding a `/` in front)
+        $content = preg_replace_callback($pattern, function ($matches) {
+            return "url('/" . $matches[1] . "')";
+        }, $content);
+
         return $content;
     }
 
