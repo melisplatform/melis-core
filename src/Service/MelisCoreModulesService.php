@@ -958,6 +958,21 @@ class MelisCoreModulesService extends MelisServiceManager
         // Prepend the path to lines that do not have a "//" anywhere
 //        $content = preg_replace('/(url\((?!.*\/\/))/i', '$1'.$path, $content);
 
+
+        /**
+         * This will fixed the problem on not getting the image/icon since the file /melis as folder,
+         * so we just need to add / in front of path
+         */
+        // Regular expression to match url('something') where:
+        // - "something" does NOT start with `/`
+        // - "something" does NOT start with "data:"
+        $pattern = "/url\(['\"]((?!data:|\/)[^'\")]+)['\"]\)/i";
+
+        // Replace with `/something` (adding a `/` in front)
+        $content = preg_replace_callback($pattern, function ($matches) {
+            return "url('/" . $matches[1] . "')";
+        }, $content);
+
         return $content;
     }
 
@@ -968,16 +983,24 @@ class MelisCoreModulesService extends MelisServiceManager
     {
         $moduleService = $this->getServiceManager()->get('MelisAssetManagerModulesService');
         $activeModules = $moduleService->getMelisActiveModules();
+        $userModules = $this->getUserModules();
 
         $config = $this->getServiceManager()->get('config');
+        $isFromVendor = true;
         foreach ($activeModules as $moduleName) {
+            $currentModuleName = $this->convertToPackageName($moduleName);
+            //check if its a user module(not in vendor)
+            if(in_array($moduleName, $userModules)){
+                $currentModuleName = $moduleName;
+                $isFromVendor = false;
+            }
+
             $loweredModuleName = strtolower($moduleName);
-            $camelCaseModuleName = $this->camelToDash($moduleName);
 
             $neededFiles = $config['plugins'][$loweredModuleName]['datas']['bundle_all_needed_files'] ?? [];
             if (!empty($neededFiles)) {
                 foreach ($neededFiles as $type => $file) {
-                    $this->copyFile($file, $type, $camelCaseModuleName);
+                    $this->copyFile($file, $type, $currentModuleName, $isFromVendor);
                 }
             }
         }
@@ -987,8 +1010,9 @@ class MelisCoreModulesService extends MelisServiceManager
      * @param $fileNeeded
      * @param $type
      * @param $moduleName
+     * @param $isFromVendor
      */
-    private function copyFile($fileNeeded, $type, $moduleName)
+    private function copyFile($fileNeeded, $type, $moduleName, $isFromVendor)
     {
         $docroot = $_SERVER['DOCUMENT_ROOT'];
 //        $bundleFolder = $docroot.'/../etc';
@@ -996,6 +1020,9 @@ class MelisCoreModulesService extends MelisServiceManager
 
         $path = $bundleFolder;// . '/' . ModulesController::BUNDLE_FOLDER_NAME . '/'.$type;
         $dir = $_SERVER['DOCUMENT_ROOT'] . '/../vendor/melisplatform/';
+        if(!$isFromVendor) {
+            $dir = $_SERVER['DOCUMENT_ROOT'] . '/../module/';
+        }
 
         foreach($fileNeeded as $key => $file){
             $files = explode('/', $file);
