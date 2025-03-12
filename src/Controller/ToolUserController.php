@@ -989,6 +989,12 @@ class ToolUserController extends MelisAbstractActionController
             }
         }
 
+        /**
+         * Event in case we need to update user info
+         */
+        $coreSrv = $this->getServiceManager()->get('MelisGeneralService');
+        $tableData = $coreSrv->sendEvent('meliscore_get_user_end', $tableData);
+
         return new JsonModel(array(
             'draw' => (int) $draw,
             'recordsTotal' => $dataCount,
