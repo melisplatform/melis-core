@@ -176,7 +176,7 @@ var melisTinyMCE = (function() {
 						}, 10);
 
 						// scroll to view dialog box, add styles to position near the cursor or selection
-						setTimeout(() => openDialogNearCursor('.tox-tinymce-aux .tox-dialog', rect, editorContainer), 10);
+						setTimeout(() => openDialogNearCursor('.tox-tinymce-aux .tox-dialog', rect, editorContainer), 100);
 					} 
 					else if (e.command === "mceInsertFile") {
 						// scroll to view moxman container
@@ -184,20 +184,20 @@ var melisTinyMCE = (function() {
 					}
 					else if (e.command === "mceMedia" || e.command === "mceCodeEditor") {
 						// scroll to view dialog box, add styles to position near the cursor or selection
-						setTimeout(() => openDialogNearCursor('.tox-tinymce-aux .tox-dialog', rect, editorContainer), 10);
+						setTimeout(() => openDialogNearCursor('.tox-tinymce-aux .tox-dialog', rect, editorContainer), 100);
 					}
 
 					if (btnImage) {
 						btnImage.addEventListener("click", function() {
 							// scroll to view dialog box, add styles to position near the cursor or selection
-							setTimeout(() => openDialogNearCursor('.tox-tinymce-aux .tox-dialog', rect, editorContainer), 10);
+							setTimeout(() => openDialogNearCursor('.tox-tinymce-aux .tox-dialog', rect, editorContainer), 100);
 						});
 					}
 	
 					if (btnMinitemplate) {
 						btnMinitemplate.addEventListener("click", function() {
 							// scroll to view dialog box, add styles to position near the cursor or selection
-							setTimeout(() => openDialogNearCursor('.tox-tinymce-aux .tox-dialog', rect, editorContainer), 10);
+							setTimeout(() => openDialogNearCursor('.tox-tinymce-aux .tox-dialog', rect, editorContainer), 100);
 						});
 					}
 			});
@@ -214,8 +214,8 @@ var melisTinyMCE = (function() {
 		var dialogEl = document.querySelector(selector);
 
 			// prevent scrolling into view when setting position
-			dialogEl.style.visibility = 'hidden';
-			dialogEl.style.opacity = 0;
+			//dialogEl.style.visibility = 'hidden';
+			//dialogEl.style.opacity = 0;
 
 			// within .melis-iframe
 			if (window.self !== window.top && dialogEl && editorContainer) {
@@ -244,8 +244,8 @@ var melisTinyMCE = (function() {
 				dialogEl.style.left = `${left}px`;
 
 				// apply position
-				dialogEl.style.visibility = 'visible';
-				dialogEl.style.opacity = 1;
+				//dialogEl.style.visibility = 'visible';
+				//dialogEl.style.opacity = 1;
 
 				dialogEl.scrollIntoView({ behavior: "smooth", block: "center" });
 			}
