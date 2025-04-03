@@ -228,14 +228,15 @@ var melisCoreTool = (function (window) {
             // show an overlay and disable the button
             var div = "<div class='melis-modal-overlay'></div>";
                 $("body").append(div);
-                $(targetButton).attr('disabled', 'disabled');
+                // $(targetButton).attr('disabled', 'disabled');
+                $(targetButton).prop('disabled', true);
         }
 
         function done(targetButton) {
             // hide the overlay and enable the button
             $("body div.melis-modal-overlay").remove();
-            //$(targetButton).prop('disabled', false);
-            $(targetButton).attr('disabled', false);
+            //$(targetButton).attr('disabled', false);
+            $(targetButton).prop('disabled', false);
         }
 
         // date
