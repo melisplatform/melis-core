@@ -171,7 +171,7 @@ var melisTinyMCE = (function() {
 								};
 
 								// scroll to view dialog box, add styles to position near the cursor or selection
-								setTimeout(() => openDialogNearCursor('.tox-tinymce-aux .tox-dialog', rect, editorContainer), 100);
+								setTimeout(() => openDialogNearCursor('body .tox-dialog', rect, editorContainer), 100);
 								
 								// .tox-browser-url button click
 								toxBrowserUrl(rect, editorContainer);
@@ -179,11 +179,11 @@ var melisTinyMCE = (function() {
 					} 
 					else if (e.command === "mceInsertFile") {
 						// scroll to view moxman container
-						setTimeout(() => openDialogNearCursor('.moxman-container', rect, editorContainer), 1500);
+						setTimeout(() => openDialogNearCursor('body .moxman-container', rect, editorContainer), 1500);
 					}
 					else if (e.command === "mceMedia" || e.command === "mceCodeEditor") {
 						// scroll to view dialog box, add styles to position near the cursor or selection
-						setTimeout(() => openDialogNearCursor('.tox-tinymce-aux .tox-dialog', rect, editorContainer), 100);
+						setTimeout(() => openDialogNearCursor('body .tox-dialog', rect, editorContainer), 100);
 
 						// .tox-browser-url button click
 						toxBrowserUrl(rect, editorContainer);
@@ -201,7 +201,7 @@ var melisTinyMCE = (function() {
 						const button = editor.editorContainer.querySelector(selector) ?? document.querySelector(selector);
 							if (button) {
 								button.addEventListener("click", () => {
-									setTimeout(() => openDialogNearCursor('.tox-tinymce-aux .tox-dialog', rect, editorContainer), 100);
+									setTimeout(() => openDialogNearCursor('body .tox-dialog', rect, editorContainer), 100);
 
 									// .tox-browser-url button click
 									toxBrowserUrl(rect, editorContainer);
@@ -217,13 +217,13 @@ var melisTinyMCE = (function() {
 
 	// check on dialog if .tox-browse-url
 	function toxBrowserUrl(rect, editorContainer) {
-		console.log(`setTimeout() 0, toxBrowserUrl() openDialogNearCursor(), 1500`);
+		console.log(`body .tox-dialog, body .moxman-container openDialogNearCursor(), 1500`);
 		setTimeout(() => {
 			const toxBrowserUrl = document.querySelector(".tox-browse-url");
 				if (toxBrowserUrl) {
 					toxBrowserUrl.addEventListener("click", () => {
 						// scroll to view moxman container
-						setTimeout(() => openDialogNearCursor('.moxman-container', rect, editorContainer), 1500);
+						setTimeout(() => openDialogNearCursor('body .moxman-container', rect, editorContainer), 1500);
 					});
 				}
 		}, 0);
