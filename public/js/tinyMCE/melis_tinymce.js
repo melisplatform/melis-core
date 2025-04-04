@@ -232,7 +232,9 @@ var melisTinyMCE = (function() {
 	// add styles to position near the cursor or selection
 	function openDialogNearCursor(selector, rect = null, editorContainer = null) {
 		var dialogEl = document.querySelector(selector);
-
+			console.log(`window.self !== window.top: `, window.self !== window.top);
+			console.log(`dialogEl: `, dialogEl);
+			console.log(`editorContainer: `, editorContainer);
 			// within .melis-iframe
 			if (window.self !== window.top && dialogEl && editorContainer) {
 				// inside an .melis-iframe
