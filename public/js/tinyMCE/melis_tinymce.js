@@ -217,6 +217,7 @@ var melisTinyMCE = (function() {
 
 	// check on dialog if .tox-browse-url
 	function toxBrowserUrl(rect, editorContainer) {
+		//console.log(`setTimeout() 0, toxBrowserUrl() openDialogNearCursor(), 1500`);
 		setTimeout(() => {
 			const toxBrowserUrl = document.querySelector(".tox-browse-url");
 				if (toxBrowserUrl) {
@@ -225,7 +226,7 @@ var melisTinyMCE = (function() {
 						setTimeout(() => openDialogNearCursor('.moxman-container', rect, editorContainer), 1500);
 					});
 				}
-		}, 500);
+		}, 0);
 	}
 
 	// add styles to position near the cursor or selection
