@@ -217,7 +217,7 @@ var melisTinyMCE = (function() {
 
 	// check on dialog if .tox-browse-url
 	function toxBrowserUrl(rect, editorContainer) {
-		//console.log(`setTimeout() 0, toxBrowserUrl() openDialogNearCursor(), 1500`);
+		console.log(`setTimeout() 50, toxBrowserUrl() openDialogNearCursor(), 1500`);
 		setTimeout(() => {
 			const toxBrowserUrl = document.querySelector(".tox-browse-url");
 				if (toxBrowserUrl) {
