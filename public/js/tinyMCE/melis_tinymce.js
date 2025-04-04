@@ -179,7 +179,7 @@ var melisTinyMCE = (function() {
 					} 
 					else if (e.command === "mceInsertFile") {
 						// scroll to view moxman container
-						setTimeout(() => openDialogNearCursor('body .moxman-container', rect, editorContainer), 1500);
+						setTimeout(() => openDialogNearCursor('body .moxman-container', rect, editorContainer), 100);
 					}
 					else if (e.command === "mceMedia" || e.command === "mceCodeEditor") {
 						// scroll to view dialog box, add styles to position near the cursor or selection
@@ -223,7 +223,7 @@ var melisTinyMCE = (function() {
 				if (toxBrowserUrl) {
 					toxBrowserUrl.addEventListener("click", () => {
 						// scroll to view moxman container
-						setTimeout(() => openDialogNearCursor('body .moxman-container', rect, editorContainer), 1500);
+						setTimeout(() => openDialogNearCursor('body .moxman-container', rect, editorContainer), 100);
 					});
 				}
 		}, 0);
@@ -232,6 +232,7 @@ var melisTinyMCE = (function() {
 	// add styles to position near the cursor or selection
 	function openDialogNearCursor(selector, rect = null, editorContainer = null) {
 		setTimeout(() => {
+			console.log({selector});
 			var dialogEl = document.querySelector(selector);
 				console.log(`setTimeout() 500 window.self !== window.top: `, window.self !== window.top);
 				console.log(`setTimeout() 500 dialogEl: `, dialogEl);
@@ -271,7 +272,7 @@ var melisTinyMCE = (function() {
 						modalPopUp();
 					}
 				}
-		}, 500);
+		}, 1000);
 	}
 
 	// opening of tinymce dialog
