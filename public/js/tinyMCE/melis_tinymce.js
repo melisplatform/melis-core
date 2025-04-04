@@ -217,16 +217,16 @@ var melisTinyMCE = (function() {
 
 	// check on dialog if .tox-browse-url
 	function toxBrowserUrl(rect, editorContainer) {
-		console.log(`setTimeout() 50, toxBrowserUrl() openDialogNearCursor(), 1500`);
+		console.log(`setTimeout() 0, toxBrowserUrl() openDialogNearCursor(), 2000`);
 		setTimeout(() => {
 			const toxBrowserUrl = document.querySelector(".tox-browse-url");
 				if (toxBrowserUrl) {
 					toxBrowserUrl.addEventListener("click", () => {
 						// scroll to view moxman container
-						setTimeout(() => openDialogNearCursor('.moxman-container', rect, editorContainer), 1500);
+						setTimeout(() => openDialogNearCursor('.moxman-container', rect, editorContainer), 2000);
 					});
 				}
-		}, 50);
+		}, 0);
 	}
 
 	// add styles to position near the cursor or selection
