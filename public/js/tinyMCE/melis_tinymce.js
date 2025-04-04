@@ -171,7 +171,7 @@ var melisTinyMCE = (function() {
 								};
 
 								// scroll to view dialog box, add styles to position near the cursor or selection
-								setTimeout(() => openDialogNearCursor('body .tox-dialog', rect, editorContainer), 100);
+								setTimeout(() => openDialogNearCursor('.tox-dialog', rect, editorContainer), 100);
 								
 								// .tox-browser-url button click
 								toxBrowserUrl(rect, editorContainer);
@@ -179,11 +179,11 @@ var melisTinyMCE = (function() {
 					} 
 					else if (e.command === "mceInsertFile") {
 						// scroll to view moxman container
-						setTimeout(() => openDialogNearCursor('body .moxman-container', rect, editorContainer), 2000);
+						setTimeout(() => openDialogNearCursor('.moxman-container', rect, editorContainer), 2000);
 					}
 					else if (e.command === "mceMedia" || e.command === "mceCodeEditor") {
 						// scroll to view dialog box, add styles to position near the cursor or selection
-						setTimeout(() => openDialogNearCursor('body .tox-dialog', rect, editorContainer), 100);
+						setTimeout(() => openDialogNearCursor('.tox-dialog', rect, editorContainer), 100);
 
 						// .tox-browser-url button click
 						toxBrowserUrl(rect, editorContainer);
@@ -201,7 +201,7 @@ var melisTinyMCE = (function() {
 						const button = editor.editorContainer.querySelector(selector) ?? document.querySelector(selector);
 							if (button) {
 								button.addEventListener("click", () => {
-									setTimeout(() => openDialogNearCursor('body .tox-dialog', rect, editorContainer), 100);
+									setTimeout(() => openDialogNearCursor('.tox-dialog', rect, editorContainer), 100);
 
 									// .tox-browser-url button click
 									toxBrowserUrl(rect, editorContainer);
@@ -217,13 +217,13 @@ var melisTinyMCE = (function() {
 
 	// check on dialog if .tox-browse-url
 	function toxBrowserUrl(rect, editorContainer) {
-		console.log(`body .tox-dialog, body .moxman-container openDialogNearCursor(), 2000`);
+		console.log(`.tox-dialog, .moxman-container openDialogNearCursor(), 2000`);
 		setTimeout(() => {
 			const toxBrowserUrl = document.querySelector(".tox-browse-url");
 				if (toxBrowserUrl) {
 					toxBrowserUrl.addEventListener("click", () => {
 						// scroll to view moxman container
-						setTimeout(() => openDialogNearCursor('body .moxman-container', rect, editorContainer), 2000);
+						setTimeout(() => openDialogNearCursor('.moxman-container', rect, editorContainer), 2000);
 					});
 				}
 		}, 0);
@@ -234,10 +234,10 @@ var melisTinyMCE = (function() {
 		//setTimeout(() => {
 			console.log({selector});
 			var dialogEl = document.querySelector(selector);
-
-				console.log(`setTimeout() 2000 window.self !== window.top: `, window.self !== window.top);
+				console.log(`inside iframe window.$("body").find(selector): `, window.$("body").find(selector));
 				console.log(`setTimeout() 2000 dialogEl: `, dialogEl);
-				console.log(`setTimeout() 2000 editorContainer: `, editorContainer);
+				//console.log(`setTimeout() 2000 window.self !== window.top: `, window.self !== window.top);
+				//console.log(`setTimeout() 2000 editorContainer: `, editorContainer);
 				// within .melis-iframe
 				if (window.self !== window.top && dialogEl && editorContainer) {
 					// inside an .melis-iframe
