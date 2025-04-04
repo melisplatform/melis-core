@@ -226,7 +226,7 @@ var melisTinyMCE = (function() {
 						setTimeout(() => openDialogNearCursor('.moxman-container', rect, editorContainer), 1500);
 					});
 				}
-		}, 0);
+		}, 50);
 	}
 
 	// add styles to position near the cursor or selection
