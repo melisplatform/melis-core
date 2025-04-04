@@ -217,13 +217,13 @@ var melisTinyMCE = (function() {
 
 	// check on dialog if .tox-browse-url
 	function toxBrowserUrl(rect, editorContainer) {
-		console.log(`.tox-dialog, .moxman-container openDialogNearCursor(), 2000`);
+		console.log(`.tox-dialog, .moxman-container openDialogNearCursor(), 5000`);
 		setTimeout(() => {
 			const toxBrowserUrl = document.querySelector(".tox-browse-url");
 				if (toxBrowserUrl) {
 					toxBrowserUrl.addEventListener("click", () => {
 						// scroll to view moxman container
-						setTimeout(() => openDialogNearCursor('.moxman-container', rect, editorContainer), 2000);
+						setTimeout(() => openDialogNearCursor('.moxman-container', rect, editorContainer), 5000);
 					});
 				}
 		}, 0);
@@ -235,7 +235,7 @@ var melisTinyMCE = (function() {
 			console.log({selector});
 			var dialogEl = document.querySelector(selector);
 				console.log(`inside iframe window.$("body").find(selector): `, window.$("body").find(selector));
-				console.log(`setTimeout() 2000 dialogEl: `, dialogEl);
+				console.log(`setTimeout() 5000 dialogEl: `, dialogEl);
 				//console.log(`setTimeout() 2000 window.self !== window.top: `, window.self !== window.top);
 				//console.log(`setTimeout() 2000 editorContainer: `, editorContainer);
 				// within .melis-iframe
