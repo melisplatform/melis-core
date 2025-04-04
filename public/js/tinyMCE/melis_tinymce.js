@@ -179,7 +179,7 @@ var melisTinyMCE = (function() {
 					} 
 					else if (e.command === "mceInsertFile") {
 						// scroll to view moxman container
-						setTimeout(() => openDialogNearCursor('.moxman-container', rect, editorContainer), 2000);
+						setTimeout(() => openDialogNearCursor('.moxman-container', rect, editorContainer), 1500);
 					}
 					else if (e.command === "mceMedia" || e.command === "mceCodeEditor") {
 						// scroll to view dialog box, add styles to position near the cursor or selection
@@ -217,13 +217,18 @@ var melisTinyMCE = (function() {
 
 	// check on dialog if .tox-browse-url
 	function toxBrowserUrl(rect, editorContainer) {
-		console.log(`.tox-dialog, .moxman-container openDialogNearCursor(), 5000`);
+		console.log(`.tox-dialog, .moxman-container openDialogNearCursor(), 1500`);
 		setTimeout(() => {
 			const toxBrowserUrl = document.querySelector(".tox-browse-url");
 				if (toxBrowserUrl) {
 					toxBrowserUrl.addEventListener("click", () => {
-						// scroll to view moxman container
-						setTimeout(() => openDialogNearCursor('.moxman-container', rect, editorContainer), 5000);
+						setTimeout(() => {
+							const moxmanContainer = document.querySelector(".moxman-container");
+								if (moxmanContainer) {
+									// scroll to view moxman container
+									setTimeout(() => openDialogNearCursor('.moxman-container', rect, editorContainer), 0);
+								}
+						}, 1500);
 					});
 				}
 		}, 0);
@@ -231,48 +236,48 @@ var melisTinyMCE = (function() {
 
 	// add styles to position near the cursor or selection
 	function openDialogNearCursor(selector, rect = null, editorContainer = null) {
+		console.log({selector});
+		var dialogEl = document.querySelector(selector);
 		//setTimeout(() => {
-			console.log({selector});
-			var dialogEl = document.querySelector(selector);
-				console.log(`inside iframe window.$("body").find(selector): `, window.$("body").find(selector));
-				console.log(`setTimeout() 5000 dialogEl: `, dialogEl);
-				//console.log(`setTimeout() 2000 window.self !== window.top: `, window.self !== window.top);
-				//console.log(`setTimeout() 2000 editorContainer: `, editorContainer);
-				// within .melis-iframe
-				if (window.self !== window.top && dialogEl && editorContainer) {
-					// inside an .melis-iframe
-					const editorTop = editorContainer.top + window.scrollY,
-						editorLeft = editorContainer.left + window.scrollX,
-						editorWidth = editorContainer.width,
-						editorHeight = editorContainer.height;
+			console.log(`inside iframe window.$("body").find(selector): `, window.$("body").find(selector));
+			console.log(`setTimeout() 1500 dialogEl: `, dialogEl);
+			//console.log(`setTimeout() 2000 window.self !== window.top: `, window.self !== window.top);
+			//console.log(`setTimeout() 2000 editorContainer: `, editorContainer);
+			// within .melis-iframe
+			if (window.self !== window.top && dialogEl && editorContainer) {
+				// inside an .melis-iframe
+				const editorTop = editorContainer.top + window.scrollY,
+					editorLeft = editorContainer.left + window.scrollX,
+					editorWidth = editorContainer.width,
+					editorHeight = editorContainer.height;
 
-					const dialogWidth = dialogEl.offsetWidth,
-						dialogHeight = dialogEl.offsetHeight;
+				const dialogWidth = dialogEl.offsetWidth,
+					dialogHeight = dialogEl.offsetHeight;
 
-						if (!rect) {
-							rect = { top: editorTop + editorHeight / 2, left: editorLeft + editorWidth / 2, width: 0 };
-						}
-					
-					// calculate centered position within the editor
-					let top = rect.top + window.scrollY - (dialogHeight / 2);
-					let left = rect.left + window.scrollX - (dialogWidth / 2) + (rect.width / 2);
-									
-					// ensure the dialog stays inside the editor's viewport
-					top = Math.max(editorTop + 10, Math.min(top, editorTop + editorHeight - dialogHeight - 10));
-					left = Math.max(editorLeft + 10, Math.min(left, editorLeft + editorWidth - dialogWidth - 10));
-
-					dialogEl.style.position = 'absolute';
-					dialogEl.style.top = `${top}px`;
-					dialogEl.style.left = `${left}px`;
-
-					dialogEl.scrollIntoView({ behavior: "smooth", block: "center" });
-				}
-				else {
-					// outside an iframe
-					if(dialogEl) {
-						modalPopUp();
+					if (!rect) {
+						rect = { top: editorTop + editorHeight / 2, left: editorLeft + editorWidth / 2, width: 0 };
 					}
+				
+				// calculate centered position within the editor
+				let top = rect.top + window.scrollY - (dialogHeight / 2);
+				let left = rect.left + window.scrollX - (dialogWidth / 2) + (rect.width / 2);
+								
+				// ensure the dialog stays inside the editor's viewport
+				top = Math.max(editorTop + 10, Math.min(top, editorTop + editorHeight - dialogHeight - 10));
+				left = Math.max(editorLeft + 10, Math.min(left, editorLeft + editorWidth - dialogWidth - 10));
+
+				dialogEl.style.position = 'absolute';
+				dialogEl.style.top = `${top}px`;
+				dialogEl.style.left = `${left}px`;
+
+				dialogEl.scrollIntoView({ behavior: "smooth", block: "center" });
+			}
+			else {
+				// outside an iframe
+				if(dialogEl) {
+					modalPopUp();
 				}
+			}
 		//}, 2000);
 	}
 
