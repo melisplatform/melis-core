@@ -179,7 +179,7 @@ var melisTinyMCE = (function() {
 					} 
 					else if (e.command === "mceInsertFile") {
 						// scroll to view moxman container
-						setTimeout(() => openDialogNearCursor('body .moxman-container', rect, editorContainer), 100);
+						setTimeout(() => openDialogNearCursor('body .moxman-container', rect, editorContainer), 2000);
 					}
 					else if (e.command === "mceMedia" || e.command === "mceCodeEditor") {
 						// scroll to view dialog box, add styles to position near the cursor or selection
@@ -217,13 +217,13 @@ var melisTinyMCE = (function() {
 
 	// check on dialog if .tox-browse-url
 	function toxBrowserUrl(rect, editorContainer) {
-		console.log(`body .tox-dialog, body .moxman-container openDialogNearCursor(), 1500`);
+		console.log(`body .tox-dialog, body .moxman-container openDialogNearCursor(), 2000`);
 		setTimeout(() => {
 			const toxBrowserUrl = document.querySelector(".tox-browse-url");
 				if (toxBrowserUrl) {
 					toxBrowserUrl.addEventListener("click", () => {
 						// scroll to view moxman container
-						setTimeout(() => openDialogNearCursor('body .moxman-container', rect, editorContainer), 100);
+						setTimeout(() => openDialogNearCursor('body .moxman-container', rect, editorContainer), 2000);
 					});
 				}
 		}, 0);
@@ -231,12 +231,13 @@ var melisTinyMCE = (function() {
 
 	// add styles to position near the cursor or selection
 	function openDialogNearCursor(selector, rect = null, editorContainer = null) {
-		setTimeout(() => {
+		//setTimeout(() => {
 			console.log({selector});
 			var dialogEl = document.querySelector(selector);
-				console.log(`setTimeout() 500 window.self !== window.top: `, window.self !== window.top);
-				console.log(`setTimeout() 500 dialogEl: `, dialogEl);
-				console.log(`setTimeout() 500 editorContainer: `, editorContainer);
+
+				console.log(`setTimeout() 2000 window.self !== window.top: `, window.self !== window.top);
+				console.log(`setTimeout() 2000 dialogEl: `, dialogEl);
+				console.log(`setTimeout() 2000 editorContainer: `, editorContainer);
 				// within .melis-iframe
 				if (window.self !== window.top && dialogEl && editorContainer) {
 					// inside an .melis-iframe
@@ -272,7 +273,7 @@ var melisTinyMCE = (function() {
 						modalPopUp();
 					}
 				}
-		}, 1000);
+		//}, 2000);
 	}
 
 	// opening of tinymce dialog
