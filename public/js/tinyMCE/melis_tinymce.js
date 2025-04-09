@@ -217,32 +217,36 @@ var melisTinyMCE = (function() {
 
 	// check on dialog if .tox-browse-url
 	function toxBrowserUrl(rect, editorContainer) {
-		console.log(`.tox-dialog, .moxman-container openDialogNearCursor(), 1500`);
-		setTimeout(() => {
-			const toxBrowserUrl = document.querySelector(".tox-browse-url");
-				if (toxBrowserUrl) {
-					toxBrowserUrl.addEventListener("click", () => {
-						setTimeout(() => {
-							const moxmanContainer = document.querySelector(".moxman-container");
-								if (moxmanContainer) {
-									// scroll to view moxman container
-									setTimeout(() => openDialogNearCursor('.moxman-container', rect, editorContainer), 0);
-								}
-						}, 1500);
-					});
-				}
-		}, 0);
+		const moxie = window.moxman,
+			$toxBrowserUrl = window.$("body").find(".tox-browse-url");
+
+			console.log({moxie});
+			console.log({$toxBrowserUrl});
+			if ($toxBrowserUrl) {
+				$toxBrowserUrl.on("click", () => {
+					console.log(`setTimeout 1500 after click !!!`);
+					setTimeout(() => {
+						const $moxmanContainer 	= window.$("body").find(".moxman-container"),
+							$toxDialog 			= window.$("body").find(".tox-dialog");
+
+							console.log({$moxmanContainer});
+							console.log({$toxDialog});
+							if ($moxmanContainer.length && $toxDialog.length) {
+								// scroll to view moxman container
+								setTimeout(() => openDialogNearCursor('.moxman-container', rect, editorContainer), 0);
+
+								// style attribute with css on .tox-dialog will also be added on .moxman-container
+								// $moxmanContainer.attr("style", $toxDialog.attr("style"));
+							}
+					}, 1500);
+				});
+			}
 	}
 
 	// add styles to position near the cursor or selection
 	function openDialogNearCursor(selector, rect = null, editorContainer = null) {
-		console.log({selector});
 		var dialogEl = document.querySelector(selector);
 		//setTimeout(() => {
-			console.log(`inside iframe window.$("body").find(selector): `, window.$("body").find(selector));
-			console.log(`setTimeout() 1500 dialogEl: `, dialogEl);
-			//console.log(`setTimeout() 2000 window.self !== window.top: `, window.self !== window.top);
-			//console.log(`setTimeout() 2000 editorContainer: `, editorContainer);
 			// within .melis-iframe
 			if (window.self !== window.top && dialogEl && editorContainer) {
 				// inside an .melis-iframe
