@@ -310,7 +310,13 @@ class UserController extends MelisAbstractActionController
                 $user = $userTable->getEntryByField('usr_login', $login)->current();
                 $userId = $user->usr_id;
 
-                $config = $this->getServiceManager()->get('MelisCoreConfig')->getItem('meliscore/datas/login');
+                $file = $_SERVER['DOCUMENT_ROOT'] . '/../vendor/melisplatform/melis-core/config/app.login.php';
+                if (file_exists($file)) {
+                    $config = $this->getServiceManager()->get('MelisCoreConfig')->getItem('meliscore/datas/login');
+                } else {
+                    //get default
+                    $config = $this->getServiceManager()->get('MelisCoreConfig')->getItem('meliscore/datas/otherconfig_default/login');
+                }
 
                 $passwordDuplicateCheckSuccessful = true;
 
@@ -599,7 +605,14 @@ class UserController extends MelisAbstractActionController
             }// end confirm if link is valid
         }
 
-        $config = $this->getServiceManager()->get('MelisCoreConfig')->getItem('meliscore/datas/login');
+        //$config = $this->getServiceManager()->get('MelisCoreConfig')->getItem('meliscore/datas/login');
+        $file = $_SERVER['DOCUMENT_ROOT'] . '/../vendor/melisplatform/melis-core/config/app.login.php';
+        if (file_exists($file)) {
+            $config = $this->getServiceManager()->get('MelisCoreConfig')->getItem('meliscore/datas/login');
+        } else {
+            //get default
+            $config = $this->getServiceManager()->get('MelisCoreConfig')->getItem('meliscore/datas/otherconfig_default/login');
+        }
 
         $view->setVariable('meliscore_renewpass', $forgotForm);
         $view->setVariable('formFactory', $factory);
@@ -670,7 +683,13 @@ class UserController extends MelisAbstractActionController
                     $user = $userTable->getEntryByField('usr_login', $login)->current();
                     $userId = $user->usr_id;
 
-                    $config = $this->getServiceManager()->get('MelisCoreConfig')->getItem('meliscore/datas/login');
+                    $file = $_SERVER['DOCUMENT_ROOT'] . '/../vendor/melisplatform/melis-core/config/app.login.php';
+                    if (file_exists($file)) {
+                    	$config = $this->getServiceManager()->get('MelisCoreConfig')->getItem('meliscore/datas/login');
+                    } else {
+                        //get default
+                        $config = $this->getServiceManager()->get('MelisCoreConfig')->getItem('meliscore/datas/otherconfig_default/login');
+                    }
 
                     $passwordDuplicateCheckSuccessful = true;
 
