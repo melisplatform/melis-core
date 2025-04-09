@@ -225,26 +225,29 @@ var melisTinyMCE = (function() {
 			if ($toxBrowserUrl) {
 				$toxBrowserUrl.on("click", () => {
 					console.log(`setTimeout 1500 after click !!!`);
-					setTimeout(() => {
+					const moxieInterval = setInterval(() => {
+					//setTimeout(() => {
 						const $moxmanContainer 	= window.$("body").find(".moxman-container"),
 							$toxDialog 			= window.$("body").find(".tox-dialog");
 
 							console.log({$moxmanContainer});
-							console.log({$toxDialog});
-							if ($moxmanContainer.length && $toxDialog.length) {
+							if ($moxmanContainer.length) {
 								// scroll to view moxman container
 								setTimeout(() => openDialogNearCursor('.moxman-container', rect, editorContainer), 0);
 
 								// style attribute with css on .tox-dialog will also be added on .moxman-container
 								// $moxmanContainer.attr("style", $toxDialog.attr("style"));
+
+								clearInterval(moxieInterval);
 							}
-					}, 1500);
+					//}, 1500);
+					}, 500);
 				});
 			}
 	}
 
 	// add styles to position near the cursor or selection
-	function openDialogNearCursor(selector, rect = null, editorContainer = null) {
+	function openDialogNearCursor(selector, rect = null, editorContainer = null) { 
 		var dialogEl = document.querySelector(selector);
 		//setTimeout(() => {
 			// within .melis-iframe
