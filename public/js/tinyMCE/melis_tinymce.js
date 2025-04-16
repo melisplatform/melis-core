@@ -139,7 +139,8 @@ var melisTinyMCE = (function() {
 				var selection 		 = editor.selection.getRng(),
 					rect 			 = selection.getBoundingClientRect(),
 					//editorContainer = editor.iframeElement.getBoundingClientRect();
-					editorContainer  = editor.getContainer().getBoundingClientRect();
+					editorContainer  = editor.getContainer().getBoundingClientRect(),
+					moxieLabel		 = `[aria-label="Media Library"]`;
 
 					if (e.command === "mceLink") {
 						// wait for DOM to update
@@ -174,19 +175,25 @@ var melisTinyMCE = (function() {
 								setTimeout(() => openDialogNearCursor('.tox-dialog', rect, editorContainer), 100);
 								
 								// .tox-browser-url button click
-								toxBrowserUrl(rect, editorContainer);
+								toxBrowseUrl(rect, editorContainer, moxieLabel);
 						}, 10);
 					} 
 					else if (e.command === "mceInsertFile") {
-						// scroll to view moxman container
-						setTimeout(() => openDialogNearCursor('.moxman-container', rect, editorContainer), 1500);
+						// media library, scroll to view moxman container
+						moveMoxieDialogNear(rect, editorContainer, moxieLabel);
+
+						// media library, create new folder
+						moxieCreateNewFolder(rect, editorContainer);
+
+						// media library, create new folder, create button
+						moxieCreateButton(rect, editorContainer);
 					}
 					else if (e.command === "mceMedia" || e.command === "mceCodeEditor") {
 						// scroll to view dialog box, add styles to position near the cursor or selection
 						setTimeout(() => openDialogNearCursor('.tox-dialog', rect, editorContainer), 100);
 
 						// .tox-browser-url button click
-						toxBrowserUrl(rect, editorContainer);
+						toxBrowseUrl(rect, editorContainer, moxieLabel);
 					}
 
 				const buttons = [
@@ -204,7 +211,7 @@ var melisTinyMCE = (function() {
 									setTimeout(() => openDialogNearCursor('.tox-dialog', rect, editorContainer), 100);
 
 									// .tox-browser-url button click
-									toxBrowserUrl(rect, editorContainer);
+									toxBrowseUrl(rect, editorContainer, moxieLabel);
 								});
 							}
 					});
@@ -216,77 +223,150 @@ var melisTinyMCE = (function() {
 	// .melis-iframe, window.$("body")
 
 	// check on dialog if .tox-browse-url
-	function toxBrowserUrl(rect, editorContainer) {
-		const moxie = window.moxman,
-			$toxBrowserUrl = window.$("body").find(".tox-browse-url");
+	function toxBrowseUrl(rect, editorContainer, moxieLabel) {
+		const browseUrlInterval = setInterval(() => {
+			const moxie = window.moxman,
+				toxBrowserUrl = document.querySelector(".tox-browse-url");
+				//console.log({moxie});
+				//console.log({toxBrowserUrl});
+				if (toxBrowserUrl) {
+					toxBrowserUrl.addEventListener("click", () => {
+						const moxieInterval = setInterval(() => {
+							const moxmanContainer = document.querySelector(".moxman-container"+moxieLabel);
+								//console.log({moxmanContainer});
+								//console.log(`toxBrowse() moxieLabel: `, moxieLabel);
+								//console.log(`moxmanContainer: `, moxmanContainer);
+								if (moxmanContainer) {
+									// scroll to view moxman container
+									moveMoxieDialogNear(rect, editorContainer, moxieLabel);
 
-			console.log({moxie});
-			console.log({$toxBrowserUrl});
-			if ($toxBrowserUrl) {
-				$toxBrowserUrl.on("click", () => {
-					console.log(`setTimeout 1500 after click !!!`);
-					const moxieInterval = setInterval(() => {
-					//setTimeout(() => {
-						const $moxmanContainer 	= window.$("body").find(".moxman-container"),
-							$toxDialog 			= window.$("body").find(".tox-dialog");
+									clearInterval(moxieInterval);
+								}
+						}, 100);
+					});
 
-							console.log({$moxmanContainer});
-							if ($moxmanContainer.length) {
-								// scroll to view moxman container
-								setTimeout(() => openDialogNearCursor('.moxman-container', rect, editorContainer), 0);
+					clearInterval(browseUrlInterval);
+				}
+		}, 100);
 
-								// style attribute with css on .tox-dialog will also be added on .moxman-container
-								// $moxmanContainer.attr("style", $toxDialog.attr("style"));
+		// create new folder dialog
+		moxieCreateNewFolder(rect, editorContainer);
 
-								clearInterval(moxieInterval);
+		// create new folder dialog button
+		moxieCreateButton(rect, editorContainer);
+	}
+
+	function moxieCreateNewFolder(rect, editorContainer) {
+		const moxmanFolderInterval = setInterval(() => {
+			const moxmanFolder = document.querySelector(".moxman-menu-item");
+				if(moxmanFolder) {
+					moxmanFolder.addEventListener("click", () => {
+						const moxmanContainerNewFolder = `[aria-label="Create new folder"]`;
+							console.log(`moxmanFolder is clicked!!!`);
+							// scroll to view moxman container
+							moveMoxieDialogNear(rect, editorContainer, moxmanContainerNewFolder);
+					});
+
+					clearInterval(moxmanFolderInterval);
+				}
+		}, 100);
+	}
+
+	function moxieCreateButton(rect, editorContainer) {
+		const moxmanCreateButtonInterval = setInterval(() => {
+			const moxmanCreateButton = document.querySelector(`.moxman-container[aria-label="Create new folder"] .moxman-primary button`),
+				moxmanCreateNewFolderTextBox = document.querySelector(`.moxman-container[aria-label="Create new folder"] .moxman-textbox`);
+				console.log({moxmanCreateButton});
+				if(moxmanCreateButton) {
+					moxmanCreateButton.addEventListener("click", () => {
+						console.log(`moxmanCreateButton is clicked with empty input box !!!`);
+						const moxmanCreateButtonAlertDialog = `[aria-label="Error"]`,
+							isEmtpy = moxmanCreateNewFolderTextBox.value.trim() === "";
+							if(isEmtpy) {
+								moveMoxieDialogNear(rect, editorContainer, moxmanCreateButtonAlertDialog);
 							}
-					//}, 1500);
-					}, 500);
-				});
-			}
+					});
+
+					clearInterval(moxmanCreateButtonInterval);
+				}
+		}, 100);
+	}
+
+	function moveMoxieDialogNear(rect, editorContainer, label) {
+		console.log(`moveMoxieDialogNear() label: `, label);
+		const dialogInterval = setInterval(() => {
+			const dialog = document.querySelector('.moxman-container'+label);
+				console.log({dialog});
+				if (dialog) {
+					// dialog repositioning
+					handleDialogReposition(dialog, rect, editorContainer);
+					
+					// lock moxie dialog position
+					//observeAndLockMoxieDialogPosition(dialog, rect, editorContainer);
+
+					clearInterval(dialogInterval);
+				}
+		}, 100);
 	}
 
 	// add styles to position near the cursor or selection
-	function openDialogNearCursor(selector, rect = null, editorContainer = null) { 
-		var dialogEl = document.querySelector(selector);
-		//setTimeout(() => {
-			// within .melis-iframe
-			if (window.self !== window.top && dialogEl && editorContainer) {
-				// inside an .melis-iframe
-				const editorTop = editorContainer.top + window.scrollY,
-					editorLeft = editorContainer.left + window.scrollX,
-					editorWidth = editorContainer.width,
-					editorHeight = editorContainer.height;
-
-				const dialogWidth = dialogEl.offsetWidth,
-					dialogHeight = dialogEl.offsetHeight;
-
-					if (!rect) {
-						rect = { top: editorTop + editorHeight / 2, left: editorLeft + editorWidth / 2, width: 0 };
-					}
-				
-				// calculate centered position within the editor
-				let top = rect.top + window.scrollY - (dialogHeight / 2);
-				let left = rect.left + window.scrollX - (dialogWidth / 2) + (rect.width / 2);
-								
-				// ensure the dialog stays inside the editor's viewport
-				top = Math.max(editorTop + 10, Math.min(top, editorTop + editorHeight - dialogHeight - 10));
-				left = Math.max(editorLeft + 10, Math.min(left, editorLeft + editorWidth - dialogWidth - 10));
-
-				dialogEl.style.position = 'absolute';
-				dialogEl.style.top = `${top}px`;
-				dialogEl.style.left = `${left}px`;
-
-				dialogEl.scrollIntoView({ behavior: "smooth", block: "center" });
-			}
-			else {
-				// outside an iframe
-				if(dialogEl) {
+	function openDialogNearCursor(selector, rect = null, editorContainer = null) {
+		const dialogEl = document.querySelector(selector);
+			// dialogEl && editorContainer
+			if (dialogEl) {
+				// within .melis-iframe
+				if (window.self !== window.top) {
+					// inside an .melis-iframe, dialog repositioning
+					handleDialogReposition(dialogEl, rect, editorContainer);
+				}
+				else {
+					// outside an iframe
 					modalPopUp();
 				}
 			}
-		//}, 2000);
 	}
+
+	function handleDialogReposition(dialog, rect, editorContainer) {
+		const editorTop = editorContainer.top + window.scrollY,
+			editorLeft = editorContainer.left + window.scrollX,
+			editorWidth = editorContainer.width,
+			editorHeight = editorContainer.height;
+
+		const dialogWidth = dialog.offsetWidth,
+			dialogHeight = dialog.offsetHeight;
+
+			if (!rect) {
+				rect = { top: editorTop + editorHeight / 2, left: editorLeft + editorWidth / 2, width: 0 };
+			}
+		
+		// calculate centered position within the editor
+		let top = rect.top + window.scrollY - (dialogHeight / 2);
+		let left = rect.left + window.scrollX - (dialogWidth / 2) + (rect.width / 2);
+						
+		// ensure the dialog stays inside the editor's viewport
+		top = Math.max(editorTop + 10, Math.min(top, editorTop + editorHeight - dialogHeight - 10));
+		left = Math.max(editorLeft + 10, Math.min(left, editorLeft + editorWidth - dialogWidth - 10));
+	
+		dialog.style.position = 'absolute';
+		dialog.style.top = `${top}px`;
+		dialog.style.left = `${left}px`;
+
+		dialog.scrollIntoView({ behavior: "smooth", block: "center" });
+	}
+
+	function observeAndLockMoxieDialogPosition(rect, editorContainer) {
+		const dialog = document.querySelector(`.moxman-container`);
+			if (!dialog) return;
+		
+			const observer = new MutationObserver(() => {
+				handleDialogReposition(dialog, rect, editorContainer); // re-apply your position
+			});
+		
+			observer.observe(dialog, {
+				attributes: true,
+				attributeFilter: ['style', 'class']
+			});
+	  }
 
 	// opening of tinymce dialog
 	function tinyMceOpenDialog(editor) {
