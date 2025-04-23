@@ -138,7 +138,6 @@ var melisTinyMCE = (function() {
 			editor.on("ExecCommand", function(e) {
 				var selection 		 = editor.selection.getRng(),
 					rect 			 = selection.getBoundingClientRect(),
-					//editorContainer = editor.iframeElement.getBoundingClientRect();
 					editorContainer  = editor.getContainer().getBoundingClientRect(),
 					moxieLabel		 = `[aria-label="Media Library"]`;
 
@@ -227,15 +226,10 @@ var melisTinyMCE = (function() {
 		const browseUrlInterval = setInterval(() => {
 			const moxie = window.moxman,
 				toxBrowserUrl = document.querySelector(".tox-browse-url");
-				//console.log({moxie});
-				//console.log({toxBrowserUrl});
 				if (toxBrowserUrl) {
 					toxBrowserUrl.addEventListener("click", () => {
 						const moxieInterval = setInterval(() => {
 							const moxmanContainer = document.querySelector(".moxman-container"+moxieLabel);
-								//console.log({moxmanContainer});
-								//console.log(`toxBrowse() moxieLabel: `, moxieLabel);
-								//console.log(`moxmanContainer: `, moxmanContainer);
 								if (moxmanContainer) {
 									// scroll to view moxman container
 									moveMoxieDialogNear(rect, editorContainer, moxieLabel);
@@ -262,7 +256,6 @@ var melisTinyMCE = (function() {
 				if(moxmanFolder) {
 					moxmanFolder.addEventListener("click", () => {
 						const moxmanContainerNewFolder = `[aria-label="Create new folder"]`;
-							console.log(`moxmanFolder is clicked!!!`);
 							// scroll to view moxman container
 							moveMoxieDialogNear(rect, editorContainer, moxmanContainerNewFolder);
 					});
@@ -276,10 +269,8 @@ var melisTinyMCE = (function() {
 		const moxmanCreateButtonInterval = setInterval(() => {
 			const moxmanCreateButton = document.querySelector(`.moxman-container[aria-label="Create new folder"] .moxman-primary button`),
 				moxmanCreateNewFolderTextBox = document.querySelector(`.moxman-container[aria-label="Create new folder"] .moxman-textbox`);
-				console.log({moxmanCreateButton});
 				if(moxmanCreateButton) {
 					moxmanCreateButton.addEventListener("click", () => {
-						console.log(`moxmanCreateButton is clicked with empty input box !!!`);
 						const moxmanCreateButtonAlertDialog = `[aria-label="Error"]`,
 							isEmtpy = moxmanCreateNewFolderTextBox.value.trim() === "";
 							if(isEmtpy) {
@@ -293,10 +284,8 @@ var melisTinyMCE = (function() {
 	}
 
 	function moveMoxieDialogNear(rect, editorContainer, label) {
-		console.log(`moveMoxieDialogNear() label: `, label);
 		const dialogInterval = setInterval(() => {
 			const dialog = document.querySelector('.moxman-container'+label);
-				console.log({dialog});
 				if (dialog) {
 					// dialog repositioning
 					handleDialogReposition(dialog, rect, editorContainer);
