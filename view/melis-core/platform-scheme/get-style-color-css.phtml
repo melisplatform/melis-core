@@ -269,6 +269,7 @@
     $daterangepickerBorderWidth                             = $this->melis_core_platform_theme_daterangepicker_border_width;
     $daterangepickerBorderColor                             = $this->melis_core_platform_theme_daterangepicker_border_color;
     $daterangepickerBorderRadius                            = $this->melis_core_platform_theme_daterangepicker_border_radius;
+
     $daterangepickerButtonBgColor                           = $this->melis_core_platform_theme_daterangepicker_button_bg_color;
     $daterangepickerButtonTextColor                         = $this->melis_core_platform_theme_daterangepicker_button_text_color;
     $daterangepickerButtonTextFontSize                      = $this->melis_core_platform_theme_daterangepicker_button_text_font_size;
@@ -279,6 +280,7 @@
     $daterangepickerButtonBgHoverColor                      = $this->melis_core_platform_theme_daterangepicker_button_bg_hover_color;
     $daterangepickerButtonTextHoverColor                    = $this->melis_core_platform_theme_daterangepicker_button_text_hover_color;
     $daterangepickerButtonHoverBorderColor                  = $this->melis_core_platform_theme_daterangepicker_button_hover_border_color;
+
     $daterangepickerDayActiveBgColor                        = $this->melis_core_platform_theme_daterangepicker_day_active_bg_color;
     $daterangepickerDayActiveTextColor                      = $this->melis_core_platform_theme_daterangepicker_day_active_text_color;
     $daterangepickerDayActiveBorderColor                    = $this->melis_core_platform_theme_daterangepicker_day_active_border_color;
@@ -286,6 +288,7 @@
     $daterangepickerDayActiveInRangeBorderColor             = $this->melis_core_platform_theme_daterangepicker_day_active_in_range_border_color;
     $daterangepickerDayActiveInRangeTextColor               = $this->melis_core_platform_theme_daterangepicker_day_active_in_range_text_color;
     $daterangepickerDayActiveInRangeBorderWidth             = $this->melis_core_platform_theme_daterangepicker_day_active_in_range_border_width;
+
     $daterangepickerInRangeStartDateBorderTopLeftRadius     = $this->melis_core_platform_theme_daterangepicker_in_range_start_date_border_top_left_radius;
     $daterangepickerInRangeStartDateBorderTopRightRadius    = $this->melis_core_platform_theme_daterangepicker_in_range_start_date_border_top_right_radius;
     $daterangepickerInRangeStartDateBorderBottomLeftRadius  = $this->melis_core_platform_theme_daterangepicker_in_range_start_date_border_bottom_left_radius;
@@ -294,6 +297,7 @@
     $daterangepickerInRangeEndDateBorderTopRightRadius      = $this->melis_core_platform_theme_daterangepicker_in_range_end_date_border_top_right_radius;
     $daterangepickerInRangeEndDateBorderBottomLeftRadius    = $this->melis_core_platform_theme_daterangepicker_in_range_end_date_border_bottom_left_radius;
     $daterangepickerInRangeEndDateBorderBottomRightRadius   = $this->melis_core_platform_theme_daterangepicker_in_range_end_date_border_bottom_right_radius;
+
     $daterangepickerDayAvailableTextColor                   = $this->melis_core_platform_theme_daterangepicker_day_available_text_color;
     $daterangepickerDayAvailableHoverBgColor                = $this->melis_core_platform_theme_daterangepicker_day_available_hover_bg_color;
     $daterangepickerDayAvailableHoverBorderColor            = $this->melis_core_platform_theme_daterangepicker_day_available_hover_border_color;
@@ -305,6 +309,7 @@
     $daterangepickerDayOffBgColor                           = $this->melis_core_platform_theme_daterangepicker_day_off_bg_color;
     $daterangepickerDayOffBorderColor                       = $this->melis_core_platform_theme_daterangepicker_day_off_border_color;
     $daterangepickerDayOffTextColor                         = $this->melis_core_platform_theme_daterangepicker_day_off_text_color;
+
     $daterangepickerFooterSelectedDateTextColor             = $this->melis_core_platform_theme_daterangepicker_footer_selected_date_text_color;
     $daterangepickerFooterSelectedDateTextFontSize          = $this->melis_core_platform_theme_daterangepicker_footer_selected_date_text_font_size;
     $daterangepickerFooterButtonsTextFontSize               = $this->melis_core_platform_theme_daterangepicker_footer_buttons_text_font_size;
@@ -2097,236 +2102,184 @@ form .form-group .tip-info {
 .widget.widget-tabs>.widget-head ul li.active a.glyphicons {
     border-color: #ffffff;
 }
-/* date picker, date range picker and bootstrap date time picker */
-.daterangepicker {
-    color: #686868;
-    background-color: #ffffff;
-    border-radius: 4px;
-    border-width: 1px;
+/* dp-dtp date picker and bootstrap date time picker */
+.bootstrap-datetimepicker-widget,
+.datepicker {
+    background-color: <?= $datepickerBgColor; ?>;
+    color: <?= $datepickerTextColor; ?>;
+    border-radius: <?= $datepickerBorderRadius; ?>px;
+
+    border-width: <?= $datepickerBorderWidth; ?>px;
     border-style: solid;
-    border-color: #dddddd;
+    border-color: <?= $datepickerBorderColor; ?>;
 }
+/** end dp-dtp */
+/** datepicker / datetimepicker */
+.datepicker .picker-switch,
+.datepicker .next,
+.datepicker .prev {
+    text-align: <?= $datepickerPrevNextDataActionButtonTextAlign; ?>;
+    border-radius: <?= $datepickerPrevNextDataActionBtnBorderRadius; ?>px;
+    color: <?= $datepickerPrevNextDataActionButtonTextColor; ?>;
+}
+.datepicker table thead tr:first-child th:hover {
+    background: <?= $datepickerPrevNextDataActionButtonHoverBgColor; ?>;
+}
+.datepicker thead th.dow {
+    backgkround-color: <?= $datepickerDowBgColor; ?> !important;
+    color: <?= $datepickerDowTextColor; ?>;
+}
+.datepicker table td,
+.datepicker table th {
+    border-radius: <?= $datepickerBorderRadius; ?>px;
+    text-align: <?= $datepickerTableThTdTextAlign; ?>;
+}
+.datepicker table tr td.day {
+    color: <?= $datepickerDayTextColor; ?>;
+}
+.datepicker table tr td.day:hover {
+    background-color: <?= $datepickerDayTextHoverBgColor; ?>;
+}
+.datepicker table tr td.day.old.weekend {
+    color: <?= $datepickerDayOldWeekendTextColor; ?>;
+}
+.datepicker .table-condensed tr td.day.active {
+    backgkround-color: <?= $datepickerDayActiveBgColor; ?> !important;
+    color: <?= $datepickerDayActiveTextColor; ?>;
+}
+/** same with text color */
+.datepicker table td.day.active.today:before {
+    border-bottom-color: <?= $datepickerDayActiveTextColor; ?>;
+}
+/** datetimepicker specific css */
+.datepicker .picker-switch [data-action="togglePicker"] {
+    background-color: <?= $datepickerTimepickerBtnBgColor; ?>;
+    color: <?= $datepickerTimepickerBtnIconColor; ?> !important;
+}
+.datepicker .picker-switch [data-action="togglePicker"]:hover {
+    background-color: <?= $datepickerTimepickerBtnHoverBgColor; ?>;
+}
+.bootstrap-datetimepicker-widget .timepicker .btn {
+    background-color: <?= $datepickerTimepickerArrowBtnBgColor; ?>;
+    color: <?= $datepickerTimepickerBtnIconColor; ?> !important;
+}
+.bootstrap-datetimepicker-widget .timepicker .btn:hover {
+    background-color: <?= $datepickerTimepickerArrowBtnHoverBgColor; ?>;
+}
+.bootstrap-datetimepicker-widget .timepicker table tr:nth-child(2) .timepicker-hour,
+.bootstrap-datetimepicker-widget .timepicker table tr:nth-child(2) .timepicker-minute,
+.bootstrap-datetimepicker-widget .timepicker table tr:nth-child(2) .timepicker-second,
+.bootstrap-datetimepicker-widget .timepicker table tr:nth-child(2) .separator {
+    background-color: <?= $datepickerTimepickerTimeBgColor; ?>;
+    color: <?= $datepickerTimepickerTimeTextColor; ?>;
+}
+
 /** daterangepicker ranges button */
-.daterangepicker .ranges li {
-    background-color: #f5f5f5;
-    color: #686868;
-    font-size: 13px !important;
-    border-radius: 4px;
+.daterangepicker {
+    background-color: <?= $daterangepickerBgColor; ?>;
+    color: <?= $daterangepickerTextColor; ?>;
+    border-radius: <?= $daterangepickerBorderRadius; ?>px;
 
-    border-width: 1px;
+    border-width: <?= $daterangepickerBorderWidth; ?>px;
     border-style: solid;
-    border-color: #f5f5f5;
+    border-color: <?= $daterangepickerBorderColor; ?>;
+}
+.daterangepicker .ranges li {
+    background-color: <?= $daterangepickerButtonBgColor; ?>;
+    color: <?= $daterangepickerButtonTextColor; ?>;
+    font-size: <?= $daterangepickerButtonTextFontSize; ?>px !important;
+    border-radius: <?= $daterangepickerButtonBorderRadius; ?>px;
 
-    border-bottom-color: #e5e5e5 !important;
+    border-width: <?= $daterangepickerButtonBorderWidth; ?>px;
+    border-style: solid;
+    border-color: <?= $daterangepickerButtonBorderColor; ?>;
+
+    border-bottom-color: <?= $daterangepickerButtonBorderBottomColor; ?> !important;
 }
 .daterangepicker .ranges li.active, 
 .daterangepicker .ranges li:hover {
-    background: #e61c23;
-    border-color:  #e61c23;
-    color: #ffffff;
+    background: <?= $daterangepickerButtonBgHoverColor; ?>;
+    border-color:  <?= $daterangepickerButtonHoverBorderColor; ?>;
+    color: <?= $daterangepickerButtonTextHoverColor; ?>;
 }
 .daterangepicker td.active, 
 .daterangepicker td.active:hover {
-    background-color: #357ebd;
-    border-color: transparent;
-    color: #ffffff;
+    background-color: <?= $daterangepickerDayActiveBgColor; ?>;
+    border-color: <?= $daterangepickerDayActiveBorderColor; ?>;
+    color: <?= $daterangepickerDayActiveTextColor; ?>;
 }
 .daterangepicker td.in-range {
-    background-color: #ebf4f8;
-    border-color: transparent;
-    color: #000000;
-    border-radius: 0;
+    background-color: <?= $daterangepickerDayActiveInRangeBgColor; ?>;
+    border-color: <?= $daterangepickerDayActiveInRangeBorderColor; ?>;
+    color: <?= $daterangepickerDayActiveInRangeTextColor; ?>;
+    border-radius: <?= $daterangepickerDayActiveInRangeBorderWidth; ?>;
 }
 .daterangepicker td.start-date {
-    border-radius: 4px 0 0 4px;
+    border-top-left-radius: <?= $daterangepickerInRangeStartDateBorderTopLeftRadius; ?>
+    border-top-right-radius: <?= $daterangepickerInRangeStartDateBorderTopRightRadius; ?>
+    border-bottom-left-radius: <?= $daterangepickerInRangeStartDateBorderBottomLeftRadius; ?>
+    border-bottom-right-radius: <?= $daterangepickerInRangeStartDateBorderBottomRightRadius; ?>
 }
 .daterangepicker td.end-date {
-    border-radius: 0 4px 4px 0;
+    border-top-left-radius: <?= $daterangepickerInRangeEndDateBorderTopLeftRadius; ?>
+    border-top-right-radius: <?= $daterangepickerInRangeEndDateBorderTopRightRadius; ?>
+    border-bottom-left-radius: <?= $daterangepickerInRangeEndDateBorderBottomLeftRadius; ?>
+    border-bottom-right-radius: <?= $daterangepickerInRangeEndDateBorderBottomRightRadius; ?>
 }
 /* .available */
 .daterangepicker .calendar-table td, 
 .daterangepicker .calendar-table th {
-    border-width: 1px;
+    border-width: <?= $daterangepickerDayAvailableBorderWidth; ?>px;
     border-style: solid;
-    border-color: transparent;
+    border-color: <?= $daterangepickerDayAvailableBorderColor; ?>;
 
-    border-radius: 4px;
-    color: #686868;
+    border-radius: <?= $daterangepickerDayAvailableBorderRadius; ?>px;
+    color: <?= $daterangepickerDayAvailableTextColor; ?>;
 
-    font-size: 12px;
-    text-align: center;
+    font-size: <?= $daterangepickerDayTextFontSize; ?>px;
+    text-align: <?= $daterangepickerDayTextAlign; ?>;
 }
 .daterangepicker td.available:hover, 
 .daterangepicker th.available:hover {
-    background-color: #eeeeee;
-    border-color: transparent;
+    background-color: <?= $daterangepickerDayAvailableHoverBgColor; ?>;
+    border-color: <?= $daterangepickerDayAvailableHoverBorderColor; ?>;
 }
 .daterangepicker td.off, 
 .daterangepicker td.off.end-date,
 .daterangepicker td.off.in-range, 
 .daterangepicker td.off.start-date {
-    background-color: #ffffff;
-    border-color: transparent;
-    color: #999999;
+    background-color: <?= $daterangepickerDayOffBgColor; ?>;
+    border-color: <?= $daterangepickerDayOffBorderColor; ?>;
+    color: <?= $daterangepickerDayOffTextColor; ?>;
 }
 .daterangepicker .drp-selected {
-    color: #686868;
-    font-size: 12px;
+    color: <?= $daterangepickerFooterSelectedDateTextColor; ?>;
+    font-size: <?= $daterangepickerFooterSelectedDateTextFontSize; ?>px;
 }
 .daterangepicker .drp-buttons .btn {
-    font-size: 12px;
+    font-size: <?= $daterangepickerFooterButtonsTextFontSize; ?>px;
 }
 .daterangepicker .btn-danger,
 .daterangepicker .cancelBtn {
-    background-color: #ffffff !important;
-    border-color: #bd362f !important;
-    color: #bd362f !important;
+    background-color: <?= $daterangepickerFooterCancelBtnBgColor; ?>;
+    border-color: <?= $daterangepickerFooterCancelBtnBorderColor; ?>;
+    color: <?= $daterangepickerFooterCancelBtnTextColor; ?>;
 }
 .daterangepicker .btn-danger:hover,
 .daterangepicker .cancelBtn:hover {
-    background-color: #bd362f !important;
-    border-color: #bd362f !important;
-    color: #ffffff !important;
+    background-color: <?= $daterangepickerFooterCancelBtnHoverBgColor; ?>;
+    border-color: <?= $daterangepickerFooterCancelBtnHoverBorderColor; ?>;
+    color: <?= $daterangepickerFooterCancelBtnHoverTextColor; ?>;
 }
 .daterangepicker .btn-success,
 .daterangepicker .applyBtn {
-    background-color: #ffffff !important;
-    border-color: #72af46 !important;
-    color: #72af46 !important;
+    background-color: <?= $daterangepickerFooterApplyBtnBgColor; ?>;
+    border-color: <?= $daterangepickerFooterApplyBtnBorderColor; ?>;
+    color: <?= $daterangepickerFooterApplyBtnTextColor; ?>;
 }
 .daterangepicker .btn-success:hover,
 .daterangepicker .applyBtn:hover {
-    background-color: #72af46 !important;
-    border-color: #72af46 !important;
-    color: #ffffff !important;
-}
-/** datepicker / datetimepicker */
-.datepicker {
-    color: #686868;
-    background-color: #ffffff;
-    border-radius: 4px;
-    border-width: 1px;
-    border-style: solid;
-    border-color: #dddddd;
-}
-.datepicker .picker-switch,
-.datepicker .next,
-.datepicker .prev {
-    text-align: center;
-    border-radius: 4px;
-    color: #212529;
-}
-.datepicker table thead tr th:hover {
-    background: #f8f9fa;
-}
-.datepicker thead th.dow {
-    backgkround-color: #e61c23 !important;
-    color: #ffffff;
-}
-.datepicker table td,
-.datepicker table th {
-    border-radius: 4px;
-    text-align: center;
-}
-.datepicker table tr td.day {
-    color: #212529;
-}
-.datepicker table tr td.day:hover {
-    background-color: #eeeeee;
-}
-.datepicker table tr td.day.old.weekend {
-    color: #999999;
-}
-.datepicker .table-condensed tr td.day.active {
-    backgkround-color: #e61c23 !important;
-    color: #ffffff;
-}
-.datepicker table td.day.active.today:before {
-    border-bottom-color: #ffffff;
-}
-/** timepicker specific css */
-.datepicker .picker-switch [data-action="togglePicker"] {
-    background-color: #fff;
-    color: #e61c23 !important;
-}
-.datepicker .picker-switch [data-action="togglePicker"]:hover {
-    background-color: #f8f9fa;
-}
-.datepicker .timepicker .btn {
-    background-color: #fff;
-    color: #e61c23 !important;
-}
-.datepicker .timepicker .btn:hover {
-    background-color: #f8f9fa;
-}
-.datepicker .timepicker table tr:nth-child(2) .timepicker-hour,
-.datepicker .timepicker table tr:nth-child(2) .timepicker-minute,
-.datepicker .timepicker table tr:nth-child(2) .timepicker-second,
-.datepicker .timepicker table tr:nth-child(2) .separator {
-    background-color: #fff;
-    color: #212529;
-}
-/** boostrap-datetimepicker4 */
-.bootstrap-datetimepicker-widget {
-    color: #686868;
-    background-color: #ffffff;
-    border-radius: 4px;
-    border-width: 1px;
-    border-style: solid;
-    border-color: #dddddd;
-}
-.bootstrap-datetimepicker-widget.dropdown-menu {
-    background-color: #ffffff;
-    font-size: 14px;
-    text-align: left;
-
-    border-width: 1px;
-    border-style: solid;
-    border-color: #cccccc;
-
-    border-radius: 4px;
-}
-.bootstrap-datetimepicker-widget li {
-    border-bottom-width: 1px;
-    border-bottom-style: solid;
-    border-bottom-color: #e5e5e5;
-}
-.bootstrap-datetimepicker-widget li .datepicker {
-    border-radius: 4px;
-}
-.bootstrap-datetimepicker-widget li .datepicker .next,
-.bootstrap-datetimepicker-widget li .datepicker .prev {
-    text-align: center;
-    border-radius: 4px;
-    color: #212529;
-}
-.bootstrap-datetimepicker-widget table thead tr th:hover {
-    background: #f8f9fa;
-}
-.bootstrap-datetimepicker-widget .datepicker thead th.dow {
-    backgkround-color: #e61c23 !important;
-    color: #ffffff;
-}
-.bootstrap-datetimepicker-widget table td, 
-.bootstrap-datetimepicker-widget table th {
-    border-radius: 4px;
-    text-align: center;
-}
-.bootstrap-datetimepicker-widget table td.old, 
-.bootstrap-datetimepicker-widget table td.new {
-    color: #dee2e6;
-    text-align: center;
-}
-.bootstrap-datetimepicker-widget .datepicker .table-condensed tr td.active {
-    backgkround-color: #e61c23 !important;
-    color: #ffffff;
-}
-.bootstrap-datetimepicker-widget table td.active.today:before {
-    border-bottom-color: #ffffff;
-}
-.bootstrap-datetimepicker-widget .datepicker table tr td.day:hover {
-    background-color: #eeeeee;
-}
-.bootstrap-datetimepicker-widget a[data-action] {
-    color: #e61c23;
+    background-color: <?= $daterangepickerFooterApplyBtnHoverBgColor; ?>;
+    border-color: <?= $daterangepickerFooterApplyBtnHoverBorderColor; ?>;
+    color: <?= $daterangepickerFooterApplyBtnHoverTextColor; ?>;
 }

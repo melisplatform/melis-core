@@ -63,8 +63,6 @@ $(function() {
                 platformTheme    = {},
                 platformThemeData = $("form#melis_core_platform_theme_option_form").serializeArray();
 
-                console.log(platformThemeData);
-
                 $.each(colorFormData, function(i, v) {
                     colors[v['name']] = v['value'];
                 });
@@ -343,7 +341,7 @@ var rangeSliderSize = {
                 selectorMin: ".form-inputs-element-border-width-range-slider-min", 
                 selectorValue: ".form-inputs-element-border-width-range-slider-value", 
                 value: $("#melis_core_platform_theme_form_input_elements_border_width").val(), 
-                min: 0, 
+                min: 1, 
                 max: 10 
             }, // form input elements border width
             { 
@@ -504,7 +502,7 @@ var rangeSliderSize = {
                 selectorMin: ".daterangepicker-in-range-start-date-border-top-left-radius-range-slider-min", 
                 selectorValue: ".daterangepicker-in-range-start-date-border-top-left-radius-range-slider-value", 
                 value: $("#melis_core_platform_theme_daterangepicker_in_range_start_date_border_top_left_radius").val(), 
-                min: 0,
+                min: 4,
                 max: 10 
             }, // daterangepicker in range start date border top left radius, 
             { 
@@ -525,7 +523,7 @@ var rangeSliderSize = {
                 selectorMin: ".daterangepicker-in-range-start-date-border-bottom-right-radius-range-slider-min", 
                 selectorValue: ".daterangepicker-in-range-start-date-border-bottom-right-radius-range-slider-value", 
                 value: $("#melis_core_platform_theme_daterangepicker_in_range_start_date_border_bottom_right_radius").val(),
-                min: 0,
+                min: 4,
                 max: 10 
             }, // daterangepicker in range start date border bottom right radius
             { 
@@ -539,14 +537,14 @@ var rangeSliderSize = {
                 selectorMin: ".daterangepicker-in-range-end-date-border-top-right-radius-range-slider-min", 
                 selectorValue: ".daterangepicker-in-range-end-date-border-top-right-radius-range-slider-value", 
                 value: $("#melis_core_platform_theme_daterangepicker_in_range_end_date_border_top_right_radius").val(), 
-                min: 0,
+                min: 4,
                 max: 10 
             }, // daterangepicker in range end date border top right radius
             { 
                 selectorMin: ".daterangepicker-in-range-end-date-border-bottom-left-radius-range-slider-min", 
                 selectorValue: ".daterangepicker-in-range-end-date-border-bottom-left-radius-range-slider-value", 
                 value: $("#melis_core_platform_theme_daterangepicker_in_range_end_date_border_bottom_left_radius").val(),
-                min: 0,
+                min: 4,
                 max: 10 
             }, // daterangepicker in range end date border bottom left radius
             { 
