@@ -299,7 +299,7 @@ var rangeSliderSize = {
                 selectorMin: ".delete-all-btn-text-font-size-range-slider-min", 
                 selectorValue: ".delete-all-btn-text-font-size-range-slider-value", 
                 value: $("#melis_core_platform_theme_dashboard_plugin_menu_delete_all_btn_text_font_size").val(), 
-                min: 1, 
+                min: 14, // 14 default for font-size, #dashboard-plugin-delete-all 
                 max: 30 
             }, // dashboard plugins delete all button text font size, end of general options
             { 
@@ -390,7 +390,7 @@ var rangeSliderSize = {
                 selectorMin: ".tab-widget-head-border-width-range-slider-min", 
                 selectorValue: ".tab-widget-head-border-width-range-slider-value", 
                 value: $("#melis_core_platform_theme_tab_widget_head_border_width").val(), 
-                min: 0, 
+                min: 1, // 1 for default on .widget.widget-tabs-double-2>.widget-head
                 max: 10 
             }, // tab widget head border width
             { 
@@ -411,7 +411,7 @@ var rangeSliderSize = {
                 selectorMin: ".tab-widget-nav-link-text-font-size-range-slider-min", 
                 selectorValue: ".tab-widget-nav-link-text-font-size-range-slider-value", 
                 value: $("#melis_core_platform_theme_tab_widget_nav_link_text_font_size").val(), 
-                min: 1, 
+                min: 14, // 14 default for .widget.widget-tabs-double-2>.widget-head ul li a.glyphicons
                 max: 30 
             }, // tab widget nav link text font size
             { 
@@ -425,7 +425,7 @@ var rangeSliderSize = {
                 selectorMin: ".tab-widget-nav-link-height-range-slider-min", 
                 selectorValue: ".tab-widget-nav-link-height-range-slider-value", 
                 value: $("#melis_core_platform_theme_tab_widget_nav_link_icon_height").val(), 
-                min: 10, 
+                min: 37, // 37 default for .widget.widget-tabs-double-2>.widget-head ul li a.glyphicons i
                 max: 60 
             }, // tab widget nav link text icon height
             { 
