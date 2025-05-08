@@ -666,6 +666,13 @@ class MelisCoreToolService extends MelisServiceManager implements MelisCoreToolS
                         ' . $ajaxCallBack . '
                     },
                     columns: ' . $jsonColumns . ',
+                    rowCallback: function(row, data) {
+                        if (data.DT_RowData) {
+                            $.each(data.DT_RowData, function(key, value) {
+                                $(row).attr(`${key}`, value);
+                            });
+                        }
+                    },
                     language: ' . $language . ',
                     dom: \'' . $sDomStructure . '\',
                     searchDelay: 1500,

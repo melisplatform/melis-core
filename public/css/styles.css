@@ -3083,12 +3083,10 @@ div.dataTables_wrapper div.dataTables_length select.new_filter {
 	color: inherit;
 }
 
-/* div#modal-user-management div.widget {
-	width: 680px;
-} */
 @media (min-width: 768px) {
 	#modal-user-management .modal-dialog {
-		width: fit-content;
+		/* width: fit-content; */
+		width: 680px;
 		max-width: 680px;
 	}
 }

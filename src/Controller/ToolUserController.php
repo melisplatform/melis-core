@@ -989,6 +989,12 @@ class ToolUserController extends MelisAbstractActionController
             }
         }
 
+        /**
+         * Event in case we need to update user info
+         */
+        $coreSrv = $this->getServiceManager()->get('MelisGeneralService');
+        $tableData = $coreSrv->sendEvent('meliscore_get_user_end', $tableData);
+
         return new JsonModel(array(
             'draw' => (int) $draw,
             'recordsTotal' => $dataCount,
@@ -1277,8 +1283,13 @@ class ToolUserController extends MelisAbstractActionController
                                 $user = $userTable->getEntryByField('usr_login', $userInfo['usr_login'])->current();
                                 $userId = $user->usr_id;
 
-                                $config = $this->getServiceManager()->get('MelisCoreConfig')->getItem('meliscore/datas/login');
-
+                                $file = $_SERVER['DOCUMENT_ROOT'] . '/../vendor/melisplatform/melis-core/config/app.login.php';
+                                if (file_exists($file)) {                                   
+                                    $config = $this->getServiceManager()->get('MelisCoreConfig')->getItem('meliscore/datas/login');
+                                } else {                                   
+                                    //get default
+                                    $config = $this->getServiceManager()->get('MelisCoreConfig')->getItem('meliscore/datas/otherconfig_default/login');                                    
+                                }
                                 $passwordDuplicateCheckSuccessful = true;
 
                                 if ($config['password_duplicate_status'] == 1) {

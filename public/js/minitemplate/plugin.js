@@ -29,12 +29,6 @@
           setTimeout(function() {
             dialogApi.unblock();
           }, 2000);
-
-          var $body = $("body"),
-              $dialog = $body.find(".tox-dialog");
-              if ( $dialog.length ) {
-                melisTinyMCE.modalPopUp();
-              }
         }
       });
 
@@ -52,11 +46,6 @@
           setTimeout(function() {
             dialogApi.unblock();
           }, 2000);
-
-          var $body = $("body"),
-              $dialog = $body.find(".tox-dialog");
-
-              melisTinyMCE.modalPopUp( $dialog);
         }
       });
 
