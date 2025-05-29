@@ -61,7 +61,7 @@
     $bubblePluginWidgetBgColor                      = $this->melis_core_platform_theme_bubble_plugin_widget_bg_color;
     $bubblePluginWidgetBtnBgColor                   = $this->melis_core_platform_theme_bubble_plugin_widget_btn_bg_color;
     $bubblePluginWidgetBtnTextHoverColor            = $this->melis_core_platform_theme_bubble_plugin_widget_btn_text_hover_color; // themed hover for all cards
-    $bubblePluginWidgetHeaderTextIconColor          = $this->melis_core_platform_theme_bubble_plugin_widget_header_text_icon_color;
+    $bubblePluginWidgetheaderTextIconColor          = $this->melis_core_platform_theme_bubble_plugin_widget_header_text_icon_color;
     $bubblePluginWidgetHeaderTextIconFontSize       = $this->melis_core_platform_theme_bubble_plugin_widget_header_text_icon_font_size;
     $bubblePluginWidgetFrontTextFontSize            = $this->melis_core_platform_theme_bubble_plugin_widget_front_text_font_size; // added by junry 02/18/2025
 
@@ -1608,9 +1608,12 @@ div.glyphicons-social.glyphicon-primary i:before {
 }
 
 /* header navigation */
+.navbar.main.navbar-primary .dropdown-toggle,
+.navbar.main.navbar-primary .dropdown-toggle i {
+    color: <?= $headerTextIconColor; ?> !important;
+}
 .navbar.main.navbar-primary .dropdown-toggle {
     background-color: <?= $headerBgColor; ?>;
-    color: <?= $headerTextIconColor; ?>;
 }
 .navbar.main.navbar-primary .nav > li.active > .dropdown-toggle {
     background-color: <?= $headerBgActiveColor; ?>;
