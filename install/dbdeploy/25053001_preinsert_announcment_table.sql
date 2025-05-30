@@ -1,0 +1,1 @@
+INSERT INTO `melis_core_announcement` (`mca_id`, `mca_user_id`, `mca_status`, `mca_title`, `mca_text`, `mca_date`) VALUES (NULL, '1', '1', 'Welcome to Melis Platform', '<p>We wish you a great experience!</p>', current_timestamp());
