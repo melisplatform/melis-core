@@ -119,11 +119,14 @@ $(function() {
                 }
                 $headerTitle.html(text);
         });
-
-        function reloadMelisIframe() {
-            const $melisIframe = $(`[data-meliskey="meliscms_page"]`).find(".meliscms-page-tab-edition .melis-iframe");
-                if ($melisIframe) {
-                        $melisIframe[0].contentWindow.location.reload();
-                }
-        }
 });
+
+window.reloadMelisIframe = function() {
+    const $melisIframe = $(`[data-meliskey="meliscms_page"]`).find(".meliscms-page-tab-edition .melis-iframe");
+        console.log({$melisIframe});
+        if ($melisIframe) {
+            $melisIframe[0]?.contentWindow.location.reload();
+        }
+
+        console.log(`platform.scheme.tools.js reloadMelisIframe() !!!`);
+};
