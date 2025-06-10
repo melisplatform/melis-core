@@ -22,7 +22,7 @@ $(function() {
             $("form#melis_core_platform_scheme_images").trigger("submit");
 
             // dynamic dnd, issue: https://mantis2.uat.melistechnology.fr/view.php?id=8466
-            reloadMelisIframe();
+            // reloadMelisIframe();
         });
 
         $body.on("click", "#resetPlatformScheme", function() {
@@ -47,10 +47,8 @@ $(function() {
                             melisCoreTool.processing();
                             window.location.reload();
 
-                            console.log(`cache: 'no-store', headers: { 'Pragma' : 'no-cache' } window.location.reload() !!!`);
-
                             // dynamic dnd, issue: https://mantis2.uat.melistechnology.fr/view.php?id=8466
-                            reloadMelisIframe();
+                            // reloadMelisIframe();
                         }
                         else {
                             melisHelper.melisKoNotification(data.title, data.message, data.errors);
