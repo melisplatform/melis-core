@@ -26,6 +26,7 @@ $(function() {
         });
 
         $body.on("click", "#resetPlatformScheme", function() {
+            console.log(`#resetPlatformScheme !!!`);
             melisCoreTool.confirm(
                 translations.tr_meliscore_common_yes,
                 translations.tr_meliscore_tool_emails_mngt_generic_from_header_cancel,
@@ -38,13 +39,15 @@ $(function() {
                         type    : 'GET',
                         url     : 'melis/MelisCore/PlatformScheme/resetToDefault',
                         processData : false,
-                        cache       : false,
+                        cache       : 'reload', // false
                         contentType : false,
                         dataType    : 'json'
                     }).done(function(data) {
                         if(data.success) {
                             melisCoreTool.processing();
                             location.reload(true);
+
+                            console.log(`cache: 'reload', location.reload(true) !!!`);
 
                             // dynamic dnd, issue: https://mantis2.uat.melistechnology.fr/view.php?id=8466
                             reloadMelisIframe();
@@ -127,3 +130,59 @@ window.reloadMelisIframe = function() {
             $melisIframe[0]?.contentWindow.location.reload();
         }
 };
+
+/* window.reloadMelisIframe = function() {
+    const $melisIframe = $(`[data-meliskey="meliscms_page"]`).find(".meliscms-page-tab-edition .melis-iframe");
+        if ($melisIframe) {
+            //console.log({$melisIframe});
+            $melisIframe.each((i, v) => {
+                //setTimeout(() => {
+                    // reload iframe content with timestamp
+                    let $this       = $(v),
+                        iframeId    = $this.attr("id"),
+                        src         = $("#"+iframeId).attr("src");
+
+                        console.log({src});
+                        if (src) {
+                            let newSrc = src + "?v=" + new Date().getTime();
+
+                                $this.attr("src", newSrc);
+                        }
+                        else {
+                            console.error('Iframe src is undefined');
+                        }
+
+                        $this.on("load", () => {
+                            //console.log(`$this.on load !!!`);
+                            let $iframe     = $this,
+                                iframeDoc   = $iframe[0]?.contentDocument || $iframe[0]?.contentWindow?.document,
+                                timestamp   = new Date().getTime();
+                                // $iframe[0]?.contentWindow.location.reload();
+
+                                console.log({iframeDoc});
+                                //console.log({$iframe});
+
+                                if (!iframeDoc) {
+                                    console.error("Cannot access iframe document. Is it same-origin?");
+                                    return;
+                                }
+
+                                console.log(`$(iframeDoc).find('link[rel="stylesheet"]').length: `, $(iframeDoc).find('link[rel="stylesheet"]').length);
+
+                                // update all <link href="stylesheet">
+                                $(iframeDoc).find(`link[rel="stylesheet"]`).each(() => {
+                                    let href = $(this).attr("href").split("?")[0];
+                                        $(this).attr("href", href + "?v=" + timestamp);
+                                });
+
+                                // update all <script src="">
+                                $(iframeDoc).find(`script[src]`).each(() => {
+                                    let src = $(this).attr("src").split("?")[0];
+                                        $(this).attr("src", src + "?v=" + timestamp);
+                                });
+                        });
+                    //console.log(`setTimeout 2000 !!!`);
+                //}, 2000);
+            });
+        }
+}; */
