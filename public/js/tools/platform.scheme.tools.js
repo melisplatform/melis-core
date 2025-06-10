@@ -26,7 +26,6 @@ $(function() {
         });
 
         $body.on("click", "#resetPlatformScheme", function() {
-            console.log(`#resetPlatformScheme !!!`);
             melisCoreTool.confirm(
                 translations.tr_meliscore_common_yes,
                 translations.tr_meliscore_tool_emails_mngt_generic_from_header_cancel,
@@ -39,15 +38,16 @@ $(function() {
                         type    : 'GET',
                         url     : 'melis/MelisCore/PlatformScheme/resetToDefault',
                         processData : false,
-                        cache       : 'reload', // false
+                        cache       : 'no-store', // false
                         contentType : false,
-                        dataType    : 'json'
+                        dataType    : 'json',
+                        headers : { 'Pragma' : 'no-cache' } // trying for no cache
                     }).done(function(data) {
                         if(data.success) {
                             melisCoreTool.processing();
-                            location.reload(true);
+                            window.location.reload();
 
-                            console.log(`cache: 'reload', location.reload(true) !!!`);
+                            console.log(`cache: 'no-store', headers: { 'Pragma' : 'no-cache' } window.location.reload() !!!`);
 
                             // dynamic dnd, issue: https://mantis2.uat.melistechnology.fr/view.php?id=8466
                             reloadMelisIframe();
