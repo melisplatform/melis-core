@@ -34,17 +34,14 @@ $(function() {
                 translations.tr_meliscore_platform_scheme_reset_confirm,
                 function() {
                     melisCoreTool.pending(".button");
-                    
-                    let timestamp = new Date().getTime();
 
                     $.ajax({
                         type    : 'GET',
-                        url     : 'melis/MelisCore/PlatformScheme/resetToDefault?v='+timestamp,
+                        url     : 'melis/MelisCore/PlatformScheme/resetToDefault',
                         processData : false,
-                        cache       : 'no-store', // false
+                        cache       : false,
                         contentType : false,
                         dataType    : 'json',
-                        headers : { 'Pragma' : 'no-cache' } // trying for no cache
                     }).done(function(data) {
                         if(data.success) {
                             melisCoreTool.processing();
