@@ -22,7 +22,7 @@ $(function() {
             $("form#melis_core_platform_scheme_images").trigger("submit");
 
             // dynamic dnd, issue: https://mantis2.uat.melistechnology.fr/view.php?id=8466
-            reloadMelisIframe();
+            //reloadMelisIframe();
         });
 
         $body.on("click", "#resetPlatformScheme", function() {
@@ -45,10 +45,10 @@ $(function() {
                     }).done(function(data) {
                         if(data.success) {
                             melisCoreTool.processing();
-                            window.location.reload();
+                            window.location.reload(true);
 
                             // dynamic dnd, issue: https://mantis2.uat.melistechnology.fr/view.php?id=8466
-                            reloadMelisIframe();
+                            //reloadMelisIframe();
                         }
                         else {
                             melisHelper.melisKoNotification(data.title, data.message, data.errors);
@@ -121,6 +121,15 @@ $(function() {
                 $headerTitle.html(text);
         });
 });
+
+window.forceReload = function() {
+    // Preserve current path, query, and hash
+    const url = window.location.href.split('#')[0];
+    const separator = url.includes('?') ? '&' : '?';
+    const reloadedUrl = url + separator + 'cb=' + Date.now();
+
+    window.location.replace(reloadedUrl); // no redirect to a different route
+};
 
 window.reloadMelisIframe = function() {
     const $melisIframe = $(`[data-meliskey="meliscms_page"]`).find(".meliscms-page-tab-edition .melis-iframe");
