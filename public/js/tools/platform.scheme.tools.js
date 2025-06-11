@@ -34,9 +34,12 @@ $(function() {
                 translations.tr_meliscore_platform_scheme_reset_confirm,
                 function() {
                     melisCoreTool.pending(".button");
+                    
+                    let timestamp = new Date().getTime();
+
                     $.ajax({
                         type    : 'GET',
-                        url     : 'melis/MelisCore/PlatformScheme/resetToDefault',
+                        url     : 'melis/MelisCore/PlatformScheme/resetToDefault?v='+timestamp,
                         processData : false,
                         cache       : 'no-store', // false
                         contentType : false,
