@@ -1569,14 +1569,26 @@ div.glyphicons-social.glyphicon-primary i:before {
 .sidebar.sidebar-inverse>.sidebarMenuWrapper>ul li:hover>a {
     background: <?= $menuHoverColor; ?> !important;
 }
-.sidebar.sidebar-inverse > .sidebarMenuWrapper > ul li.active-menu.hasSubmenu > a[data-bs-toggle="collapse"] {
+.sidebar.sidebar-inverse > .sidebarMenuWrapper > ul li.active-menu.hasSubmenu > a[data-bs-toggle="collapse"],
+.sidebar.sidebar-inverse > .sidebarMenuWrapper > ul li.active.hasSubmenu > a[data-bs-toggle="collapse"] {
     background-color: <?= $menuFocusColor; ?> !important;
+    color: <?= $menuTextIconColor; ?> !important;
+}
+.sidebar.sidebar-inverse > .sidebarMenuWrapper > ul li.active.hasSubmenu > a[data-bs-toggle="collapse"] {
+    color: <?= $menuTextIconColor; ?> !important;
 }
 /** submenu */
-.sidebar.sidebar-inverse>.sidebarMenuWrapper>ul li.active-menu.hasSubmenu {
+#id-mod-menu-dynatree .fancytree-node .fancytree-icon:before, 
+#id-mod-menu-dynatree .fancytree-node .fancytree-expander:before,
+#id-mod-menu-dynatree .fancytree-node .fancytree-title,
+#id-mod-menu-dynatree .fancytree-node span.fa {
+    color: <?= $submenuTextIconColor; ?> !important;
+}
+.sidebar.sidebar-inverse>.sidebarMenuWrapper>ul li.active-menu.hasSubmenu a {
     background-color: <?= $submenuBgColor; ?> !important;
     color: <?= $submenuTextIconColor; ?> !important;
 }
+#id-mod-menu-dynatree .fancytree-node.fancytree-active,
 .sidebar.sidebar-inverse>.sidebarMenuWrapper>ul li.active.hasSubmenu .hasSubmenu.active>a {
     background: <?= $submenuHoverActiveBgColor; ?> !important;
     color: <?= $submenuTextIconHoverColor; ?> !important;
