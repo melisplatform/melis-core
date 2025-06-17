@@ -1526,22 +1526,22 @@ div.glyphicons-social.glyphicon-primary i:before {
 /* Platform theme options */
 /* top logo */
 .navbar.main.navbar-primary .toggle-button i {
-    color: <?= $toggleBtnColor; ?>;
+    color: <?= $toggleBtnColor; ?> !important;
 }
 .navbar.main.navbar-primary .toggle-button:hover i {
-    color: <?= $toggleBtnHoverColor; ?>;
+    color: <?= $toggleBtnHoverColor; ?> !important;
 }
 .navbar.main.navbar-primary .left-menu .navbar-brand {
     background-color: <?= $logoBgColor; ?> !important;
 }
 .navbar.main.navbar-primary .appbrand span {
-    color: <?= $logoTxtColor; ?>;
-    font-size: <?= $logoTxtFontSize; ?>px;
+    color: <?= $logoTxtColor; ?> !important;
+    font-size: <?= $logoTxtFontSize; ?>px !important;
 }
 
 /* user profile */
 #id_meliscore_leftmenu_identity {
-    background-color: <?= $userProfileBgColor; ?>;
+    background-color: <?= $userProfileBgColor; ?> !important;
 }
 .sidebar.sidebar-inverse .user-profile .rounded-circle, 
 .sidebar.sidebar-inverse .user-profile .img-circle {
@@ -1551,60 +1551,51 @@ div.glyphicons-social.glyphicon-primary i:before {
 
 /* #user-name-link */
 .sidebar.sidebar-inverse .user-profile a {
-    color: <?= $userProfileNameTextColor; ?>;
+    color: <?= $userProfileNameTextColor; ?> !important;
 }
 .sidebar .user-profile .media-body p {
     color: <?= $userProfileStatusTextIconColor; ?> !important;
 }
-/** profile edit and logout buttons */
-/* .sidebar.sidebar-inverse .user-profile ul li.active a, 
-.sidebar.sidebar-inverse .user-profile ul li.active:hover a {
-    background-color: #e61c23;
-    color: #fff;
-}
-.sidebar.sidebar-inverse .user-profile ul li a:hover {
-    color: #5a5a5a;
-} */
 /* menu */
 .sidebar>.sidebarMenuWrapper {
-    background-color: <?= $menuBgColor; ?>;
+    background-color: <?= $menuBgColor; ?> !important;
 }
 .sidebar.sidebar-inverse>.sidebarMenuWrapper>ul li {
-    border-bottom-color: <?= $menuBorderBottomColor; ?>;
+    border-bottom-color: <?= $menuBorderBottomColor; ?> !important;
 }
 .sidebar.sidebar-inverse>.sidebarMenuWrapper>ul li a {
-    color: <?= $menuTextIconColor; ?>;
+    color: <?= $menuTextIconColor; ?> !important;
 }
 .sidebar.sidebar-inverse>.sidebarMenuWrapper>ul li:hover>a {
-    background: <?= $menuHoverColor; ?>;
+    background: <?= $menuHoverColor; ?> !important;
 }
 .sidebar.sidebar-inverse > .sidebarMenuWrapper > ul li.active-menu.hasSubmenu > a[data-bs-toggle="collapse"] {
-    background-color: <?= $menuFocusColor; ?>;
+    background-color: <?= $menuFocusColor; ?> !important;
 }
 /** submenu */
 .sidebar.sidebar-inverse>.sidebarMenuWrapper>ul li.active-menu.hasSubmenu {
-    background-color: <?= $submenuBgColor; ?>;
-    color: <?= $submenuTextIconColor; ?>;
+    background-color: <?= $submenuBgColor; ?> !important;
+    color: <?= $submenuTextIconColor; ?> !important;
 }
 .sidebar.sidebar-inverse>.sidebarMenuWrapper>ul li.active.hasSubmenu .hasSubmenu.active>a {
-    background: <?= $submenuHoverActiveBgColor; ?>;
-    color: <?= $submenuTextIconHoverColor; ?>;
+    background: <?= $submenuHoverActiveBgColor; ?> !important;
+    color: <?= $submenuTextIconHoverColor; ?> !important;
 }
 
 /* footer */
 #id_meliscore_footer .footer {
-    font-size: <?= $footerTextFontSize; ?>px;
+    font-size: <?= $footerTextFontSize; ?>px !important;
 }
 #id_meliscore_footer .footer a {
-    color: <?= $footerLinkTextColor; ?>;
+    color: <?= $footerLinkTextColor; ?> !important;
 }
 #id_meliscore_footer .footer p {
-    color: <?= $footerTextColor; ?>;
+    color: <?= $footerTextColor; ?> !important;
 }
 
 /** login footer */
 #id_meliscore_login_footer .footer {
-    color: <?= $loginPagefooterTextColor; ?>;
+    color: <?= $loginPagefooterTextColor; ?> !important;
 }
 
 /* header navigation */
@@ -1613,47 +1604,50 @@ div.glyphicons-social.glyphicon-primary i:before {
     color: <?= $headerTextIconColor; ?> !important;
 }
 .navbar.main.navbar-primary .dropdown-toggle {
-    background-color: <?= $headerBgColor; ?>;
+    background-color: <?= $headerBgColor; ?> !important;
+}
+.navbar.main.navbar-primary .nav > li.active > .dropdown-toggle .fa {
+    color: <?= $headerTextIconActiveColor; ?> !important;
 }
 .navbar.main.navbar-primary .nav > li.active > .dropdown-toggle {
-    background-color: <?= $headerBgActiveColor; ?>;
-    color: <?= $headerTextIconActiveColor; ?>;
+    background-color: <?= $headerBgActiveColor; ?> !important;
+    color: <?= $headerTextIconActiveColor; ?> !important;
 }
 
 /* bubble plugins */
 #btn-hide-bubble-plugins {
-    background: <?= $bubblePluginHideBtnBgBorderColor; ?>;
-    border-color: <?= $bubblePluginHideBtnBgBorderColor; ?>;
+    background: <?= $bubblePluginHideBtnBgBorderColor; ?> !important;
+    border-color: <?= $bubblePluginHideBtnBgBorderColor; ?> !important;
     color: <?= $bubblePluginHideBtnTextIconColor; ?>;
-    font-size: <?= $bubblePluginHideBtnFontSize; ?>px;
+    font-size: <?= $bubblePluginHideBtnFontSize; ?>px !important;
 }
 #btn-hide-bubble-plugins .fa-arrow-up:before {
-    color: <?= $bubblePluginHideBtnTextIconColor; ?>;
+    color: <?= $bubblePluginHideBtnTextIconColor; ?> !important;
 }
 #btn-hide-bubble-plugins:hover .fa-arrow-up:before {
-    color: <?= $bubblePluginHideBtnTextIconHoverColor; ?>;
+    color: <?= $bubblePluginHideBtnTextIconHoverColor; ?> !important;
 }
 #btn-hide-bubble-plugins:hover {
-    background: <?= $bubblePluginHideBtnBgHoverColor; ?>;
-    color: <?= $bubblePluginHideBtnTextIconHoverColor; ?>;
+    background: <?= $bubblePluginHideBtnBgHoverColor; ?> !important;
+    color: <?= $bubblePluginHideBtnTextIconHoverColor; ?> !important;
 }
 
 .melis-dashboard-bubble-plugin .widget {
-    background-color: <?= $bubblePluginWidgetBgColor; ?>;
+    background-color: <?= $bubblePluginWidgetBgColor; ?> !important;
 }
 
 .melis-dashboard-bubble-plugin .front .btn {
-    background-color: <?= $bubblePluginWidgetBtnBgColor; ?>;
+    background-color: <?= $bubblePluginWidgetBtnBgColor; ?> !important;
 }
 .melis-dashboard-bubble-plugin .front .btn:hover {
-    color: <?= $bubblePluginWidgetBtnTextHoverColor; ?>;
+    color: <?= $bubblePluginWidgetBtnTextHoverColor; ?> !important;
 }
 
 /* applicable only on news, notification and message widgets */
 .melis-dashboard-bubble-plugin .front .widget-body .lead .fa,
 .melis-dashboard-bubble-plugin .front .widget-body .lead {
     color: <?= $bubblePluginWidgetHeaderTextIconColor; ?> !important;
-    font-size: <?= $bubblePluginWidgetHeaderTextIconFontSize; ?>px;
+    font-size: <?= $bubblePluginWidgetHeaderTextIconFontSize; ?>px !important;
 }
 
 /** updates, header, button and border has the same color */
@@ -1712,43 +1706,38 @@ div.glyphicons-social.glyphicon-primary i:before {
 }
 
 .melis-dashboard-bubble-plugin .front .widget-body .btn {
-    font-size: <?= $bubblePluginWidgetFrontTextFontSize; ?>px;
+    font-size: <?= $bubblePluginWidgetFrontTextFontSize; ?>px !!important;
 }
 .melis-dashboard-bubble-plugin .back .widget-head {
-    background-color: <?= $bubblePluginWidgetBackHeaderBgColor; ?>;
-    color: <?= $bubblePluginWidgetBackHeaderTextColor; ?>;
-    font-size: <?= $bubblePluginWidgetBackHeaderTextFontSize; ?>px;
+    background-color: <?= $bubblePluginWidgetBackHeaderBgColor; ?> !important;
+    color: <?= $bubblePluginWidgetBackHeaderTextColor; ?> !important;
+    font-size: <?= $bubblePluginWidgetBackHeaderTextFontSize; ?>px !important;
 }
 .melis-dashboard-bubble-plugin .back .widget-head .btn {
     background-color: <?= $bubblePluginWidgetBackHeaderCloseBtnBgColor; ?>;
-    font-size: <?= $bubblePluginWidgetBackHeaderBtnTextFontSize; ?>px;
+    font-size: <?= $bubblePluginWidgetBackHeaderBtnTextFontSize; ?>px !important;
 }
 .melis-dashboard-bubble-plugin .back .widget-head .btn,
 .melis-dashboard-bubble-plugin .back .widget-head .btn .fa {
-    color: <?= $bubblePluginWidgetBackHeaderCloseBtnIconColor; ?>;
+    color: <?= $bubblePluginWidgetBackHeaderCloseBtnIconColor; ?> !important;
 }
 /** tabled contents */
 .melis-dashboard-bubble-plugin .back .widget-body {
     color: #686868;
 }
 .melis-dashboard-bubble-plugin .back .widget-body table tr td {
-    color: <?= $bubblePluginWidgetBackContentHeaderTextColor; ?>;
+    color: <?= $bubblePluginWidgetBackContentHeaderTextColor; ?> !important;
 }
 .melis-dashboard-bubble-plugin .back .widget-body table tr:not(:first-child) td {
-    color: <?= $bubblePluginWidgetBackContentDetailsTextColor; ?>;
+    color: <?= $bubblePluginWidgetBackContentDetailsTextColor; ?> !important;
 }
 
 /* dashboard plugins msg */
-/* .melis-core-dashboard-msg .alert-warning.no-plugins {
-    color: #664d03;
-    background-color: #fff3cd;
-    border-color: #ffe69c;
-} */
 .melis-core-dashboard-msg .alert-info.no-plugins {
-    background-color: <?= $dashboardPluginNoPluginAlertBgColor; ?>;
-    border-color: <?= $dashboardPluginNoPluginAlertBorderColor; ?>;
-    color: <?= $dashboardPluginNoPluginAlertColor; ?>;
-    font-size: <?= $dashboardPluginNoPluginAlertTextFontSize; ?>px;
+    background-color: <?= $dashboardPluginNoPluginAlertBgColor; ?> !important;
+    border-color: <?= $dashboardPluginNoPluginAlertBorderColor; ?> !important;
+    color: <?= $dashboardPluginNoPluginAlertColor; ?> !important;
+    font-size: <?= $dashboardPluginNoPluginAlertTextFontSize; ?>px !important;
     <?php
         $fontStyle              = explode(';', $dashboardPluginNoPluginAlertTextFontStyle);
 
@@ -1757,51 +1746,51 @@ div.glyphicons-social.glyphicon-primary i:before {
         $noPluginsTextTransform = $fontStyle[2] ?? 'inherit';
         $noPluginsTextDecoraton = $fontStyle[3] ?? 'inherit';
     ?>
-    font-weight: <?= $noPluginsFontWeight; ?>;
-    font-style: <?= $noPluginsFontStyle; ?>;
-    text-transform: <?= $noPluginsTextTransform; ?>;
-    text-decoration: <?= $noPluginsTextDecoraton; ?>;
+    font-weight: <?= $noPluginsFontWeight; ?> !important;
+    font-style: <?= $noPluginsFontStyle; ?> !important;
+    text-transform: <?= $noPluginsTextTransform; ?> !important;
+    text-decoration: <?= $noPluginsTextDecoraton; ?> !important;
 }
 
 /* plugins */
 .grid-stack>.grid-stack-item>.grid-stack-item-content {
-    border-radius: <?= $dashboardPluginBorderRadius; ?>;
+    border-radius: <?= $dashboardPluginBorderRadius; ?> !important;
 }
 .grid-stack-item-content .widget-head {
-    background-color: <?= $dashboardPluginPluginHeaderBgColor; ?>;
+    background-color: <?= $dashboardPluginPluginHeaderBgColor; ?> !important;
 }
 .grid-stack-item-content .widget-head .heading {
-    color: <?= $dashboardPluginPluginHeaderTextColor; ?>;
-    font-size: <?= $dashboardPluginPluginHeaderTextFontSize; ?>px;
+    color: <?= $dashboardPluginPluginHeaderTextColor; ?> !important;
+    font-size: <?= $dashboardPluginPluginHeaderTextFontSize; ?>px !important;
 }
 .grid-stack-item-content .widget-head .btn-group .btn {
-    background-color: <?= $dashboardPluginPluginHeaderBtnsBgColor; ?>;
-    border-color: <?= $dashboardPluginPluginHeaderBtnsBorderColor; ?>;
-    color: <?= $dashboardPluginPluginHeaderBtnsIconColor; ?>;
+    background-color: <?= $dashboardPluginPluginHeaderBtnsBgColor; ?> !important;
+    border-color: <?= $dashboardPluginPluginHeaderBtnsBorderColor; ?> !important;
+    color: <?= $dashboardPluginPluginHeaderBtnsIconColor; ?> !important;
 }
 .grid-stack-item-content .widget-head .btn-group .btn:hover {
-    background-color: <?= $dashboardPluginPluginHeaderBtnsBgHoverColor; ?>;
-    border-color: <?= $dashboardPluginPluginHeaderBtnsBorderHoverColor; ?>;
-    color: <?= $dashboardPluginPluginHeaderBtnsIconColor; ?>;
+    background-color: <?= $dashboardPluginPluginHeaderBtnsBgHoverColor; ?> !important;
+    border-color: <?= $dashboardPluginPluginHeaderBtnsBorderHoverColor; ?> !important;
+    color: <?= $dashboardPluginPluginHeaderBtnsIconColor; ?> !important;
 }
 .grid-stack-item-content .widget-body {
-    background-color: <?= $dashboardPluginPluginBodyBgColor; ?>;
+    background-color: <?= $dashboardPluginPluginBodyBgColor; ?> !important;
 }
 .grid-stack-item-content {
-    border-color: <?= $dashboardPluginPluginBodyBorderColor; ?>;
+    border-color: <?= $dashboardPluginPluginBodyBorderColor; ?> !important;
 }
 
 /* dashboard plugins menu */
 .melis-core-dashboard-dnd-box {
-    border-bottom-width: <?= $dashboardPluginMenuBoxBorderWidth; ?>px;
-    border-left-width: <?= $dashboardPluginMenuBoxBorderWidth; ?>px;
-    border-color: <?= $dashboardPluginMenuBoxBorderColor; ?>;
-    background-color: <?= $dashboardPluginMenuBoxBgColor; ?>;
+    border-bottom-width: <?= $dashboardPluginMenuBoxBorderWidth; ?>px !important;
+    border-left-width: <?= $dashboardPluginMenuBoxBorderWidth; ?>px !important;
+    border-color: <?= $dashboardPluginMenuBoxBorderColor; ?> !important;
+    background-color: <?= $dashboardPluginMenuBoxBgColor; ?> !important;
 }
 .melis-core-dashboard-dnd-title {
-    background-color: <?= $dashboardPluginMenuBoxTitleBgColor; ?>;
-    color: <?= $dashboardPluginMenuBoxTitleColor; ?>;
-    font-size: <?= $dashboardPluginMenuBoxTitleFontSize; ?>px;
+    background-color: <?= $dashboardPluginMenuBoxTitleBgColor; ?> !important;
+    color: <?= $dashboardPluginMenuBoxTitleColor; ?> !important;
+    font-size: <?= $dashboardPluginMenuBoxTitleFontSize; ?>px !important;
     <?php
         $dashboardPluginBoxTitleFontStyle = explode(';', $dashboardPluginMenuBoxTitleFontStyle);
 
@@ -1809,41 +1798,41 @@ div.glyphicons-social.glyphicon-primary i:before {
         $dashboardPluginsMenuBoxTitleTextTransform = $dashboardPluginBoxTitleFontStyle[1] ?? 'inherit';
         $dashboardPluginsMenuBoxTitleTextDecoraton = $dashboardPluginBoxTitleFontStyle[2] ?? 'inherit';
     ?>
-    text-transform: <?= $dashboardPluginsMenuBoxTitleTextTransform; ?>;
-    font-weight: <?= $dashboardPluginsMenuBoxTitleFontWeight; ?>;
-    text-decoration: <?= $dashboardPluginsMenuBoxTitleTextDecoraton; ?>;
+    text-transform: <?= $dashboardPluginsMenuBoxTitleTextTransform; ?> !important;
+    font-weight: <?= $dashboardPluginsMenuBoxTitleFontWeight; ?> !important;
+    text-decoration: <?= $dashboardPluginsMenuBoxTitleTextDecoraton; ?> !important;
 }
 .melis-core-dashboard-plugin-filter-box .melis-core-dashboard-ps-box:first-child {
-    border-top-color: <?= $dashboardPluginMenuBoxFilterBoxBorderTopColor; ?>;
+    border-top-color: <?= $dashboardPluginMenuBoxFilterBoxBorderTopColor; ?> !important;
 }
 .melis-core-dashboard-category-btn.active,
 .melis-core-dashboard-ps-box .melis-core-dashboard-filter-btn {
-    background-color: <?= $dashboardPluginMenuBoxFilterBoxBtnBgColor; ?>;
-    border-bottom-color: <?= $dashboardPluginMenuBoxFilterBoxBtnBorderColor; ?>;
-    color: <?= $dashboardPluginMenuBoxFilterBoxBtnTextColor; ?>;
-    font-size: <?= $dashboardPluginMenuBoxFilterBoxBtnTextFontSize; ?>px;
+    background-color: <?= $dashboardPluginMenuBoxFilterBoxBtnBgColor; ?> !important;
+    border-bottom-color: <?= $dashboardPluginMenuBoxFilterBoxBtnBorderColor; ?> !important;
+    color: <?= $dashboardPluginMenuBoxFilterBoxBtnTextColor; ?> !important;
+    font-size: <?= $dashboardPluginMenuBoxFilterBoxBtnTextFontSize; ?>px !important;
 }
 .melis-plugins-icon-new-child .melis-plugins-icon-new,
 .melis-plugins-icon-new-parent > .new-plugin-indicator,
 .melis-plugins-icon-new-parent {
-    color: <?= $dashboardPluginMenuNewPluginIndicatorColor; ?>;
+    color: <?= $dashboardPluginMenuNewPluginIndicatorColor; ?> !important;
 }
 .melis-plugins-icon-new-child .melis-plugins-icon-new {
-    font-size: <?= $dashboardPluginMenuNewPluginIndicatorTextFontSize; ?>px;
+    font-size: <?= $dashboardPluginMenuNewPluginIndicatorTextFontSize; ?>px !important;
 }
 .melis-core-dashboard-category-btn {
-    color: <?= $dashboardPluginMenuCategoryBtnTextColor; ?>;
-    font-size: <?= $dashboardPluginMenuCategoryBtnTextFontSize; ?>px;
+    color: <?= $dashboardPluginMenuCategoryBtnTextColor; ?> !important;
+    font-size: <?= $dashboardPluginMenuCategoryBtnTextFontSize; ?>px !important;
 }
 .melis-core-dashboard-plugin-title {
-    color: <?= $dashboardPluginMenuPluginTitleTextColor; ?>;
-    font-size: <?= $dashboardPluginMenuPluginTitleTextFontSize; ?>px;
+    color: <?= $dashboardPluginMenuPluginTitleTextColor; ?> !important;
+    font-size: <?= $dashboardPluginMenuPluginTitleTextFontSize; ?>px !important;
 }
 #dashboard-plugin-delete-all {
-    background-color: <?= $dashboardPluginMenuDeleteAllBtnColor; ?>;
-    border-color: <?= $dashboardPluginMenuDeleteAllBtnBorderColor; ?>;
-    color: <?= $dashboardPluginMenuDeleteAllBtnTextColor; ?>;
-    font-size: <?= $dashboardPluginMenuDeleteAllBtnTextFontSize; ?>px;
+    background-color: <?= $dashboardPluginMenuDeleteAllBtnColor; ?> !important;
+    border-color: <?= $dashboardPluginMenuDeleteAllBtnBorderColor; ?> !important;
+    color: <?= $dashboardPluginMenuDeleteAllBtnTextColor; ?> !important;
+    font-size: <?= $dashboardPluginMenuDeleteAllBtnTextFontSize; ?>px !important;
 }
 
 /* Component options */
@@ -1856,68 +1845,68 @@ div.glyphicons-social.glyphicon-primary i:before {
 }
 .modal .modal-content {
     border-width: 0;
-    border-color: <?= $modalBorderColor; ?>;
+    border-color: <?= $modalBorderColor; ?> !important;
 }
 /* affected classes for border-radius */
 .modal .modal-content,
 .modal .dialog,
 .modal {
-    border-radius: <?= $modalBorderRadiusSize; ?>;
+    border-radius: <?= $modalBorderRadiusSize; ?> !important;
 }
 .modal-content .widget.widget-tabs.widget-tabs-responsive > .widget-head,
 .modal-body .melis-nav-tabs-box {
-    border-top-left-radius: <?= $modalBorderRadiusSize; ?>;;
-    border-top-right-radius: <?= $modalBorderRadiusSize; ?>;;
+    border-top-left-radius: <?= $modalBorderRadiusSize; ?> !important;
+    border-top-right-radius: <?= $modalBorderRadiusSize; ?> !important;
 }
 /* end affected classes for border-radius */
 
 /** options_modal_nav_tabs_color */
 .modal-content .widget .widget-head {
-    background-color: <?= $modalNavTabsBgColor; ?>;
+    background-color: <?= $modalNavTabsBgColor; ?> !important;
 }
 /** options_modal_nav_tabs_active_bg_color */
 .modal-content .nav-tabs > li.active > a {
-    background-color: <?= $modalNavTabsActiveBgColor; ?>;
+    background-color: <?= $modalNavTabsActiveBgColor; ?> !important;
 }
 .modal-content .nav-tabs.product-text-tab > li.active > a {
-    background-color: <?= $modalNavTabsActiveBgColor; ?>;
+    background-color: <?= $modalNavTabsActiveBgColor; ?> !important;
 }
 /** options_modal_nav_tabs_border_right_color, options_modal_nav_tabs_border_right_width */
 .modal-content .widget.widget-tabs.widget-tabs-responsive > .widget-head ul li,
 .widget.widget-tabs.widget-tabs-responsive > .widget-head ul li {
-    border-right-width: <?= $modalNavTabsBorderRightWidth; ?>px;
+    border-right-width: <?= $modalNavTabsBorderRightWidth; ?>px !important;
 }
 .widget.widget-tabs.widget-tabs-responsive > .widget-head ul li {
-    border-right-color: <?= $modalNavTabsBorderRightColor; ?>;
+    border-right-color: <?= $modalNavTabsBorderRightColor; ?> !important;
 }
 .modal-content .widget.widget-tabs.widget-tabs-responsive > .widget-head ul li {
-    border-right-color: <?= $modalNavTabsBorderRightColor; ?>;
+    border-right-color: <?= $modalNavTabsBorderRightColor; ?> !important;
 }
 /** options_modal_nav_tabs_text_color */
 .modal-content .widget.widget-tabs-double > .widget-head ul li:not(.active) a.glyphicons i:before, 
 .modal-content .widget.widget-tabs-double .widget-head ul li a.glyphicons i:before,
 .modal-content .widget.widget-tabs-double > .widget-head ul li:not(.active) a.glyphicons,
 .modal-content .widget.widget-tabs-double .widget-head ul li a.glyphicons {
-    color: <?= $modalNavTabsTextIconColor; ?>;
-    font-size: <?= $modalNavTabsTextIconFontSize; ?>px;
+    color: <?= $modalNavTabsTextIconColor; ?> !important;
+    font-size: <?= $modalNavTabsTextIconFontSize; ?>px !important;
 }
 .modal-content .widget.widget-tabs-double > .widget-head ul li a.glyphicons:hover {
-    background-color: <?= $modalNavTabsActiveBgColor; ?>;
-    color: <?= $modalNavTabsTextIconHoverColor; ?>;
+    background-color: <?= $modalNavTabsActiveBgColor; ?> !important;
+    color: <?= $modalNavTabsTextIconHoverColor; ?> !important;
 }
 /** options_modal_content_text_color, options_modal_content_form_group_label */
 .modal-content .span,
 .modal-content .form-group span,
 .modal-content .form-group label,
 .modal-content p {
-    color: <?= $modalContentTextColor; ?>;
+    color: <?= $modalContentTextColor; ?> !important;
 }
 /** options_modal_content_text_font_size */
 .modal-content .span,
 .modal-content .form-group span,
 .modal-content .form-group label,
 .modal-content p {
-    font-size: <?= $modalContentTextFontSize; ?>px;
+    font-size: <?= $modalContentTextFontSize; ?>px !important;
 }
 /** options_modal_content_text_font_styles */
 .modal-content .span,
@@ -1931,31 +1920,31 @@ div.glyphicons-social.glyphicon-primary i:before {
         $modalContentTextTransform = $modalContntFontStyle[2] ?? 'inherit';
         $modalContentTextDecoraton = $modalContntFontStyle[3] ?? 'inherit';
     ?>
-    font-style: <?= $modalContentFontStyle; ?>;
-    font-weight: <?= $modalContentFontWeight; ?>;
-    text-transform: <?= $modalContentTextTransform; ?>;
-    text-decoration: <?= $modalContentTextDecoraton; ?>;
+    font-style: <?= $modalContentFontStyle; ?> !important;
+    font-weight: <?= $modalContentFontWeight; ?> !important;
+    text-transform: <?= $modalContentTextTransform; ?> !important;
+    text-decoration: <?= $modalContentTextDecoraton; ?> !important;
 }
 /** options_modal_content_close_btn_bg_color, options_modal_content_close_btn_border_color, options_modal_content_close_btn_text_color */
 .modal-content .btn-danger {
-    background-color: <?= $modalContentCloseBtnBgColor; ?>;
-    border-color: <?= $modalContentCloseBtnBorderColor; ?>;
-    color: <?= $modalContentCloseBtnTextColor; ?>;
+    background-color: <?= $modalContentCloseBtnBgColor; ?> !important;
+    border-color: <?= $modalContentCloseBtnBorderColor; ?> !important;
+    color: <?= $modalContentCloseBtnTextColor; ?> !important;
 }
 /** options_modal_content_close_btn_active_bg_color, options_modal_content_close_btn_active_text_color */
 .modal-content .btn-danger:hover {
-    background-color: <?= $modalContentCloseBtnHoverBgColor; ?>;
-    color: <?= $modalContentCloseBtnHoverTextColor; ?>;
+    background-color: <?= $modalContentCloseBtnHoverBgColor; ?> !important;
+    color: <?= $modalContentCloseBtnHoverTextColor; ?> !important;
 }
 .modal-content .btn-success {
-    background-color: <?= $modalContentSaveBtnBgColor; ?>;
-    border-color: <?= $modalContentSaveBtnBorderColor; ?>;
-    color: <?= $modalContentSaveBtnTextColor; ?>;
+    background-color: <?= $modalContentSaveBtnBgColor; ?> !important;
+    border-color: <?= $modalContentSaveBtnBorderColor; ?> !important;
+    color: <?= $modalContentSaveBtnTextColor; ?> !important;
 }
 .modal-content .btn-success:hover {
-    background: <?= $modalContentSaveBtnHoverBgColor; ?>;
-    border-color: <?= $modalContentSaveBtnBorderColor; ?>;
-    color: <?= $modalContentSaveBtnHoverTextColor; ?>;
+    background: <?= $modalContentSaveBtnHoverBgColor; ?> !important;
+    border-color: <?= $modalContentSaveBtnBorderColor; ?> !important;
+    color: <?= $modalContentSaveBtnHoverTextColor; ?> !important;
 }
 
 /* bootstrap dialog */
@@ -1963,82 +1952,82 @@ div.glyphicons-social.glyphicon-primary i:before {
     background-color: <?= $dialogContentHeaderBgColor; ?> !important;
 }
 .bootstrap-dialog-header .bootstrap-dialog-title {
-    color: <?= $dialogContentHeaderTitleColor; ?>;
-    font-size: <?= $dialogContentHeaderTitleFontSize; ?>px;
+    color: <?= $dialogContentHeaderTitleColor; ?> !important;
+    font-size: <?= $dialogContentHeaderTitleFontSize; ?>px !important;
 }
 .bootstrap-dialog-close-button .btn-close {
-    --bs-btn-close-color: <?= $dialogCloseButtonColor; ?>;
-    font-size: <?= $dialogCloseButtonFontSize; ?>px;
+    --bs-btn-close-color: <?= $dialogCloseButtonColor; ?> !important;
+    font-size: <?= $dialogCloseButtonFontSize; ?>px !important;
 }
 .bootstrap-dialog.confirm-modal-header.type-warning .modal-content {
-    background-color: <?= $dialogContentBgColor; ?>;
-    border-color: <?= $dialogContentBorderColor; ?>;
+    background-color: <?= $dialogContentBgColor; ?> !important;
+    border-color: <?= $dialogContentBorderColor; ?> !important;
 }
 .bootstrap-dialog-message {
-    color: <?= $dialogContentTextColor; ?>;
-    font-size: <?= $dialogContentTextFontSize; ?>px;
+    color: <?= $dialogContentTextColor; ?> !important;
+    font-size: <?= $dialogContentTextFontSize; ?>px !important;
 }
 .btn-danger.bootstrap4-dialog-button {
-    backgroun-color: <?= $dialogNoBtnBgColor; ?>;
-    border-color: <?= $dialogNoBtnBorderColor; ?>;
-    color: <?= $dialogNoBtnTextColor; ?>;
+    backgroun-color: <?= $dialogNoBtnBgColor; ?> !important;
+    border-color: <?= $dialogNoBtnBorderColor; ?> !important;
+    color: <?= $dialogNoBtnTextColor; ?> !important;
 }
 .btn-danger.bootstrap4-dialog-button:hover {
-    background-color: <?= $dialogNoBtnBgHoverColor; ?>;
-    border-color: <?= $dialogNoBtnBorderHoverColor; ?>;
-    color: <?= $dialogNoBtnTextHoverColor; ?>;
+    background-color: <?= $dialogNoBtnBgHoverColor; ?> !important;
+    border-color: <?= $dialogNoBtnBorderHoverColor; ?> !important;
+    color: <?= $dialogNoBtnTextHoverColor; ?> !important;
 }
 .btn-success.bootstrap4-dialog-button {
-    background-color: <?= $dialogYesBtnBgColor; ?>;
-    border-color: <?= $dialogYesBtnBorderColor; ?>;
-    color: <?= $dialogYesBtnTextColor; ?>;
+    background-color: <?= $dialogYesBtnBgColor; ?> !important;
+    border-color: <?= $dialogYesBtnBorderColor; ?> !important;
+    color: <?= $dialogYesBtnTextColor; ?> !important;
 }
 .btn-success.bootstrap4-dialog-button:hover {
-    background-color: <?= $dialogYesBtnBgHoverColor; ?>;
-    border-color: <?= $dialogYesBtnBorderHoverColor; ?>;
-    color: <?= $dialogYesBtnTextHoverColor; ?>;
+    background-color: <?= $dialogYesBtnBgHoverColor; ?> !important;
+    border-color: <?= $dialogYesBtnBorderHoverColor; ?> !important;
+    color: <?= $dialogYesBtnTextHoverColor; ?> !important;
 }
 .bootstrap4-dialog-button {
-    font-size: <?= $dialogBtnTextFontSize; ?>px;
+    font-size: <?= $dialogBtnTextFontSize; ?>px !important;
 }
 /* form elements */
 /** options_form_bg_color, options_form_text_color */
 form {
-    background-color: <?= $formBgColor; ?>;
-    color: <?= $formTextColor; ?>;
+    background-color: <?= $formBgColor; ?> !important;
+    color: <?= $formTextColor; ?> !important;
 }
 form .form-group select option {
-    background-color: <?= $formSelectOptionBgColor; ?>;
-    color: <?= $formSelectOptionTextColor; ?>
+    background-color: <?= $formSelectOptionBgColor; ?> !important;
+    color: <?= $formSelectOptionTextColor; ?> !important;
 }
 form .form-group textarea,
 form .form-group select,
 form .form-group input[type="text"]:not(.tt-input),
 form .form-group input[type="submit"],
 form .form-group input[type="button"] {
-    background-color: <?= $formInputElementsBgColor; ?>;
-    border-width: <?= $formInputElementsBorderWidth; ?>px;
+    background-color: <?= $formInputElementsBgColor; ?> !important;
+    border-width: <?= $formInputElementsBorderWidth; ?>px !important;
     border-style: solid;
-    border-color: <?= $formInputElementsBorderColor; ?>;
-    border-radius: <?= $formInputElementsBorderRadius; ?>;
-    color: <?= $formInputElementsTextColor; ?>;
+    border-color: <?= $formInputElementsBorderColor; ?> !important;
+    border-radius: <?= $formInputElementsBorderRadius; ?> !important;
+    color: <?= $formInputElementsTextColor; ?> !important;
 }
 form .form-group input[type="text"]:disable,
 form .form-group input[type="text"]:readonly {
-    background-color: <?= $formInputTextDisableReadonlyBgColor; ?>;
-    border-width: <?= $formInputElementsBorderWidth; ?>px;
+    background-color: <?= $formInputTextDisableReadonlyBgColor; ?> !important;
+    border-width: <?= $formInputElementsBorderWidth; ?>px !important;
     border-solid: solid;
-    border-color: <?= $formInputTextDisableReadonlyBorderColor; ?>;
-    color: <?= $formInputTextDisableReadonlyTextColor; ?>;
+    border-color: <?= $formInputTextDisableReadonlyBorderColor; ?> !important;
+    color: <?= $formInputTextDisableReadonlyTextColor; ?> !important;
 }
 form .form-group input[type="button"],
 form .form-group input[type="submit"] {
-    background-color: <?= $formButtonSubmitBgColor; ?>;
-    border-width: <?= $formButtonSubmitBorderWidth; ?>px;
+    background-color: <?= $formButtonSubmitBgColor; ?> !important;
+    border-width: <?= $formButtonSubmitBorderWidth; ?>px !important;
     border-style: solid;
-    border-color: <?= $formButtonSubmitBorderColor; ?>;
-    border-radius: <?= $formButtonSubmitBorderRadius; ?>;
-    color: <?= $formButtonSubmitTextColor; ?>;
+    border-color: <?= $formButtonSubmitBorderColor; ?> !important;
+    border-radius: <?= $formButtonSubmitBorderRadius; ?> !important;
+    color: <?= $formButtonSubmitTextColor; ?> !important;
 }
 form .form-group input[type="button"]:hover,
 form .form-group input[type="submit"]:hover {
@@ -2068,33 +2057,33 @@ form .form-group .tip-info {
 }
 /* tabs */
 .widget.widget-tabs-double-2>.widget-head {
-    background-color: <?= $tabWidgetHeadBgColor; ?>;
-    border-width: <?= $tabWidgetHeadBorderWidth; ?>px;
+    background-color: <?= $tabWidgetHeadBgColor; ?> !important;
+    border-width: <?= $tabWidgetHeadBorderWidth; ?>px !important;
     border-style: solid;
-    border-color: <?= $tabWidgetHeadBorderColor; ?>;
+    border-color: <?= $tabWidgetHeadBorderColor; ?> !important;
 }
 .widget.widget-tabs-double-2>.widget-head ul {
-    height: <?= $tabWidgetHeadNavItemAndLinkHeight; ?>px;
+    height: <?= $tabWidgetHeadNavItemAndLinkHeight; ?>px !important;
 }
 .widget.widget-tabs-double-2>.widget-head ul li {
-    border-right-width: <?= $tabWidgetNavItemBorderRightWidth; ?>px;
+    border-right-width: <?= $tabWidgetNavItemBorderRightWidth; ?>px !important;
     border-right-style: solid;
-    border-right-color: <?= $tabWidgetNavItemBorderRightColor; ?>;
-    height: <?= $tabWidgetHeadNavItemAndLinkHeight; ?>px;
+    border-right-color: <?= $tabWidgetNavItemBorderRightColor; ?> !important;
+    height: <?= $tabWidgetHeadNavItemAndLinkHeight; ?>px !important;
 }
 .widget.widget-tabs-double-2>.widget-head ul li a.glyphicons {
-    color: <?= $tabWidgetNavLinkTextColor; ?>;
-    font-size: <?= $tabWidgetNavLinkTextFontSize; ?>px;
-    min-width: <?= $tabWidgetNavLinkMinWidth; ?>px;
-    height: <?= $tabWidgetHeadNavItemAndLinkHeight; ?>px;
-    text-align: <?= $tabWidgetNavLinkTextAlign; ?>;
+    color: <?= $tabWidgetNavLinkTextColor; ?> !important;
+    font-size: <?= $tabWidgetNavLinkTextFontSize; ?>px !important;
+    min-width: <?= $tabWidgetNavLinkMinWidth; ?>px !important;
+    height: <?= $tabWidgetHeadNavItemAndLinkHeight; ?>px !important;
+    text-align: <?= $tabWidgetNavLinkTextAlign; ?> !important;
 }
 .widget.widget-tabs-double-2>.widget-head ul li a.glyphicons i {
-    height: <?= $tabWidgetNavLinkIconHeight; ?>px;
+    height: <?= $tabWidgetNavLinkIconHeight; ?>px !important;
 }
 .widget.widget-tabs>.widget-head ul li a i:before {
-    color: <?= $tabWidgetLinkIconColor; ?>;
-    font-size: <?= $tabWidgetLinkIconFontSize; ?>px;
+    color: <?= $tabWidgetLinkIconColor; ?> !important;
+    font-size: <?= $tabWidgetLinkIconFontSize; ?>px !important;
 }
 .widget.widget-tabs>.widget-head ul li a.glyphicons:hover,
 .widget.widget-tabs>.widget-head ul li.active a.active.glyphicons, 
@@ -2113,181 +2102,181 @@ form .form-group .tip-info {
 /* dp-dtp date picker and bootstrap date time picker */
 .bootstrap-datetimepicker-widget,
 .datepicker {
-    background-color: <?= $datepickerBgColor; ?>;
-    color: <?= $datepickerTextColor; ?>;
-    border-radius: <?= $datepickerBorderRadius; ?>px;
+    background-color: <?= $datepickerBgColor; ?> !important;
+    color: <?= $datepickerTextColor; ?> !important;
+    border-radius: <?= $datepickerBorderRadius; ?>px !important;
 
-    border-width: <?= $datepickerBorderWidth; ?>px;
+    border-width: <?= $datepickerBorderWidth; ?>px !important;
     border-style: solid;
-    border-color: <?= $datepickerBorderColor; ?>;
+    border-color: <?= $datepickerBorderColor; ?> !important;
 }
 /** end dp-dtp */
 /** datepicker / datetimepicker */
 .datepicker .picker-switch,
 .datepicker .next,
 .datepicker .prev {
-    text-align: <?= $datepickerPrevNextDataActionButtonTextAlign; ?>;
-    border-radius: <?= $datepickerPrevNextDataActionBtnBorderRadius; ?>px;
-    color: <?= $datepickerPrevNextDataActionButtonTextColor; ?>;
+    text-align: <?= $datepickerPrevNextDataActionButtonTextAlign; ?> !important;
+    border-radius: <?= $datepickerPrevNextDataActionBtnBorderRadius; ?>px !important;
+    color: <?= $datepickerPrevNextDataActionButtonTextColor; ?> !important;
 }
 .datepicker table thead tr:first-child th:hover {
-    background: <?= $datepickerPrevNextDataActionButtonHoverBgColor; ?>;
+    background: <?= $datepickerPrevNextDataActionButtonHoverBgColor; ?> !important;
 }
 .datepicker thead th.dow {
     backgkround-color: <?= $datepickerDowBgColor; ?> !important;
-    color: <?= $datepickerDowTextColor; ?>;
+    color: <?= $datepickerDowTextColor; ?> !important;
 }
 .datepicker table td,
 .datepicker table th {
-    border-radius: <?= $datepickerBorderRadius; ?>px;
-    text-align: <?= $datepickerTableThTdTextAlign; ?>;
+    border-radius: <?= $datepickerBorderRadius; ?>px !important;
+    text-align: <?= $datepickerTableThTdTextAlign; ?> !important;
 }
 .datepicker table tr td.day {
-    color: <?= $datepickerDayTextColor; ?>;
+    color: <?= $datepickerDayTextColor; ?> !important;
 }
 .datepicker table tr td.day:hover {
-    background-color: <?= $datepickerDayTextHoverBgColor; ?>;
+    background-color: <?= $datepickerDayTextHoverBgColor; ?> !important;
 }
 .datepicker table tr td.day.old.weekend {
-    color: <?= $datepickerDayOldWeekendTextColor; ?>;
+    color: <?= $datepickerDayOldWeekendTextColor; ?> !important;
 }
 .datepicker .table-condensed tr td.day.active {
     backgkround-color: <?= $datepickerDayActiveBgColor; ?> !important;
-    color: <?= $datepickerDayActiveTextColor; ?>;
+    color: <?= $datepickerDayActiveTextColor; ?> !important;
 }
 /** same with text color */
 .datepicker table td.day.active.today:before {
-    border-bottom-color: <?= $datepickerDayActiveTextColor; ?>;
+    border-bottom-color: <?= $datepickerDayActiveTextColor; ?> !important;
 }
 /** datetimepicker specific css */
 .datepicker .picker-switch [data-action="togglePicker"] {
-    background-color: <?= $datepickerTimepickerBtnBgColor; ?>;
+    background-color: <?= $datepickerTimepickerBtnBgColor; ?> !important;
     color: <?= $datepickerTimepickerBtnIconColor; ?> !important;
 }
 .datepicker .picker-switch [data-action="togglePicker"]:hover {
-    background-color: <?= $datepickerTimepickerBtnHoverBgColor; ?>;
+    background-color: <?= $datepickerTimepickerBtnHoverBgColor; ?> !important;
 }
 .bootstrap-datetimepicker-widget .timepicker .btn {
-    background-color: <?= $datepickerTimepickerArrowBtnBgColor; ?>;
+    background-color: <?= $datepickerTimepickerArrowBtnBgColor; ?> !important;
     color: <?= $datepickerTimepickerBtnIconColor; ?> !important;
 }
 .bootstrap-datetimepicker-widget .timepicker .btn:hover {
-    background-color: <?= $datepickerTimepickerArrowBtnHoverBgColor; ?>;
+    background-color: <?= $datepickerTimepickerArrowBtnHoverBgColor; ?> !important;
 }
 .bootstrap-datetimepicker-widget .timepicker table tr:nth-child(2) .timepicker-hour,
 .bootstrap-datetimepicker-widget .timepicker table tr:nth-child(2) .timepicker-minute,
 .bootstrap-datetimepicker-widget .timepicker table tr:nth-child(2) .timepicker-second,
 .bootstrap-datetimepicker-widget .timepicker table tr:nth-child(2) .separator {
-    background-color: <?= $datepickerTimepickerTimeBgColor; ?>;
-    color: <?= $datepickerTimepickerTimeTextColor; ?>;
+    background-color: <?= $datepickerTimepickerTimeBgColor; ?> !important;
+    color: <?= $datepickerTimepickerTimeTextColor; ?> !important;
 }
 
 /** daterangepicker ranges button */
 .daterangepicker {
-    background-color: <?= $daterangepickerBgColor; ?>;
-    color: <?= $daterangepickerTextColor; ?>;
-    border-radius: <?= $daterangepickerBorderRadius; ?>px;
+    background-color: <?= $daterangepickerBgColor; ?> !important;
+    color: <?= $daterangepickerTextColor; ?> !important;
+    border-radius: <?= $daterangepickerBorderRadius; ?>px !important;
 
-    border-width: <?= $daterangepickerBorderWidth; ?>px;
+    border-width: <?= $daterangepickerBorderWidth; ?>px !important;
     border-style: solid;
-    border-color: <?= $daterangepickerBorderColor; ?>;
+    border-color: <?= $daterangepickerBorderColor; ?> !important;
 }
 .daterangepicker .ranges li {
-    background-color: <?= $daterangepickerButtonBgColor; ?>;
-    color: <?= $daterangepickerButtonTextColor; ?>;
+    background-color: <?= $daterangepickerButtonBgColor; ?> !important;
+    color: <?= $daterangepickerButtonTextColor; ?> !important;
     font-size: <?= $daterangepickerButtonTextFontSize; ?>px !important;
-    border-radius: <?= $daterangepickerButtonBorderRadius; ?>px;
+    border-radius: <?= $daterangepickerButtonBorderRadius; ?>px !important;
 
-    border-width: <?= $daterangepickerButtonBorderWidth; ?>px;
+    border-width: <?= $daterangepickerButtonBorderWidth; ?>px !important;
     border-style: solid;
-    border-color: <?= $daterangepickerButtonBorderColor; ?>;
+    border-color: <?= $daterangepickerButtonBorderColor; ?> !important;
 
     border-bottom-color: <?= $daterangepickerButtonBorderBottomColor; ?> !important;
 }
 .daterangepicker .ranges li.active, 
 .daterangepicker .ranges li:hover {
-    background: <?= $daterangepickerButtonBgHoverColor; ?>;
-    border-color:  <?= $daterangepickerButtonHoverBorderColor; ?>;
-    color: <?= $daterangepickerButtonTextHoverColor; ?>;
+    background: <?= $daterangepickerButtonBgHoverColor; ?> !important;
+    border-color:  <?= $daterangepickerButtonHoverBorderColor; ?> !important;
+    color: <?= $daterangepickerButtonTextHoverColor; ?> !important;
 }
 .daterangepicker td.active, 
 .daterangepicker td.active:hover {
-    background-color: <?= $daterangepickerDayActiveBgColor; ?>;
-    border-color: <?= $daterangepickerDayActiveBorderColor; ?>;
-    color: <?= $daterangepickerDayActiveTextColor; ?>;
+    background-color: <?= $daterangepickerDayActiveBgColor; ?> !important;
+    border-color: <?= $daterangepickerDayActiveBorderColor; ?> !important;
+    color: <?= $daterangepickerDayActiveTextColor; ?> !important;
 }
 .daterangepicker td.in-range {
-    background-color: <?= $daterangepickerDayActiveInRangeBgColor; ?>;
-    border-color: <?= $daterangepickerDayActiveInRangeBorderColor; ?>;
-    color: <?= $daterangepickerDayActiveInRangeTextColor; ?>;
-    border-radius: <?= $daterangepickerDayActiveInRangeBorderWidth; ?>;
+    background-color: <?= $daterangepickerDayActiveInRangeBgColor; ?> !important;
+    border-color: <?= $daterangepickerDayActiveInRangeBorderColor; ?> !important;
+    color: <?= $daterangepickerDayActiveInRangeTextColor; ?> !important;
+    border-radius: <?= $daterangepickerDayActiveInRangeBorderWidth; ?> !important;
 }
 .daterangepicker td.start-date {
-    border-top-left-radius: <?= $daterangepickerInRangeStartDateBorderTopLeftRadius; ?>
-    border-top-right-radius: <?= $daterangepickerInRangeStartDateBorderTopRightRadius; ?>
-    border-bottom-left-radius: <?= $daterangepickerInRangeStartDateBorderBottomLeftRadius; ?>
-    border-bottom-right-radius: <?= $daterangepickerInRangeStartDateBorderBottomRightRadius; ?>
+    border-top-left-radius: <?= $daterangepickerInRangeStartDateBorderTopLeftRadius; ?> !important;
+    border-top-right-radius: <?= $daterangepickerInRangeStartDateBorderTopRightRadius; ?> !important;
+    border-bottom-left-radius: <?= $daterangepickerInRangeStartDateBorderBottomLeftRadius; ?> !important;
+    border-bottom-right-radius: <?= $daterangepickerInRangeStartDateBorderBottomRightRadius; ?> !important;
 }
 .daterangepicker td.end-date {
-    border-top-left-radius: <?= $daterangepickerInRangeEndDateBorderTopLeftRadius; ?>
-    border-top-right-radius: <?= $daterangepickerInRangeEndDateBorderTopRightRadius; ?>
-    border-bottom-left-radius: <?= $daterangepickerInRangeEndDateBorderBottomLeftRadius; ?>
-    border-bottom-right-radius: <?= $daterangepickerInRangeEndDateBorderBottomRightRadius; ?>
+    border-top-left-radius: <?= $daterangepickerInRangeEndDateBorderTopLeftRadius; ?> !important;
+    border-top-right-radius: <?= $daterangepickerInRangeEndDateBorderTopRightRadius; ?> !important;
+    border-bottom-left-radius: <?= $daterangepickerInRangeEndDateBorderBottomLeftRadius; ?> !important;
+    border-bottom-right-radius: <?= $daterangepickerInRangeEndDateBorderBottomRightRadius; ?> !important;
 }
 /* .available */
 .daterangepicker .calendar-table td, 
 .daterangepicker .calendar-table th {
-    border-width: <?= $daterangepickerDayAvailableBorderWidth; ?>px;
+    border-width: <?= $daterangepickerDayAvailableBorderWidth; ?>px !important;
     border-style: solid;
-    border-color: <?= $daterangepickerDayAvailableBorderColor; ?>;
+    border-color: <?= $daterangepickerDayAvailableBorderColor; ?> !important;
 
-    border-radius: <?= $daterangepickerDayAvailableBorderRadius; ?>px;
-    color: <?= $daterangepickerDayAvailableTextColor; ?>;
+    border-radius: <?= $daterangepickerDayAvailableBorderRadius; ?>px !important;
+    color: <?= $daterangepickerDayAvailableTextColor; ?> !important;
 
-    font-size: <?= $daterangepickerDayTextFontSize; ?>px;
-    text-align: <?= $daterangepickerDayTextAlign; ?>;
+    font-size: <?= $daterangepickerDayTextFontSize; ?>px !important;
+    text-align: <?= $daterangepickerDayTextAlign; ?> !important;
 }
 .daterangepicker td.available:hover, 
 .daterangepicker th.available:hover {
-    background-color: <?= $daterangepickerDayAvailableHoverBgColor; ?>;
-    border-color: <?= $daterangepickerDayAvailableHoverBorderColor; ?>;
+    background-color: <?= $daterangepickerDayAvailableHoverBgColor; ?> !important;
+    border-color: <?= $daterangepickerDayAvailableHoverBorderColor; ?> !important;
 }
 .daterangepicker td.off, 
 .daterangepicker td.off.end-date,
 .daterangepicker td.off.in-range, 
 .daterangepicker td.off.start-date {
-    background-color: <?= $daterangepickerDayOffBgColor; ?>;
-    border-color: <?= $daterangepickerDayOffBorderColor; ?>;
-    color: <?= $daterangepickerDayOffTextColor; ?>;
+    background-color: <?= $daterangepickerDayOffBgColor; ?> !important;
+    border-color: <?= $daterangepickerDayOffBorderColor; ?> !important;
+    color: <?= $daterangepickerDayOffTextColor; ?> !important;
 }
 .daterangepicker .drp-selected {
-    color: <?= $daterangepickerFooterSelectedDateTextColor; ?>;
-    font-size: <?= $daterangepickerFooterSelectedDateTextFontSize; ?>px;
+    color: <?= $daterangepickerFooterSelectedDateTextColor; ?> !important;
+    font-size: <?= $daterangepickerFooterSelectedDateTextFontSize; ?>px !important;
 }
 .daterangepicker .drp-buttons .btn {
-    font-size: <?= $daterangepickerFooterButtonsTextFontSize; ?>px;
+    font-size: <?= $daterangepickerFooterButtonsTextFontSize; ?>px !important;
 }
 .daterangepicker .btn-danger,
 .daterangepicker .cancelBtn {
-    background-color: <?= $daterangepickerFooterCancelBtnBgColor; ?>;
-    border-color: <?= $daterangepickerFooterCancelBtnBorderColor; ?>;
-    color: <?= $daterangepickerFooterCancelBtnTextColor; ?>;
+    background-color: <?= $daterangepickerFooterCancelBtnBgColor; ?> !important;
+    border-color: <?= $daterangepickerFooterCancelBtnBorderColor; ?> !important;
+    color: <?= $daterangepickerFooterCancelBtnTextColor; ?> !important;
 }
 .daterangepicker .btn-danger:hover,
 .daterangepicker .cancelBtn:hover {
-    background-color: <?= $daterangepickerFooterCancelBtnHoverBgColor; ?>;
-    border-color: <?= $daterangepickerFooterCancelBtnHoverBorderColor; ?>;
-    color: <?= $daterangepickerFooterCancelBtnHoverTextColor; ?>;
+    background-color: <?= $daterangepickerFooterCancelBtnHoverBgColor; ?> !important;
+    border-color: <?= $daterangepickerFooterCancelBtnHoverBorderColor; ?> !important;
+    color: <?= $daterangepickerFooterCancelBtnHoverTextColor; ?> !important;
 }
 .daterangepicker .btn-success,
 .daterangepicker .applyBtn {
-    background-color: <?= $daterangepickerFooterApplyBtnBgColor; ?>;
-    border-color: <?= $daterangepickerFooterApplyBtnBorderColor; ?>;
-    color: <?= $daterangepickerFooterApplyBtnTextColor; ?>;
+    background-color: <?= $daterangepickerFooterApplyBtnBgColor; ?> !important;
+    border-color: <?= $daterangepickerFooterApplyBtnBorderColor; ?> !important;
+    color: <?= $daterangepickerFooterApplyBtnTextColor; ?> !important;
 }
 .daterangepicker .btn-success:hover,
 .daterangepicker .applyBtn:hover {
-    background-color: <?= $daterangepickerFooterApplyBtnHoverBgColor; ?>;
-    border-color: <?= $daterangepickerFooterApplyBtnHoverBorderColor; ?>;
-    color: <?= $daterangepickerFooterApplyBtnHoverTextColor; ?>;
+    background-color: <?= $daterangepickerFooterApplyBtnHoverBgColor; ?> !important;
+    border-color: <?= $daterangepickerFooterApplyBtnHoverBorderColor; ?> !important;
+    color: <?= $daterangepickerFooterApplyBtnHoverTextColor; ?> !important;
 }
