@@ -1399,7 +1399,7 @@ return array(
                                     'value' => '',
                                     'class' => 'form-control minicolor-hex',
                                     'data-control' => 'hue',
-                                    'placeholder' => 'tr_meliscore_platform_theme_footer_text_color',
+                                    //'placeholder' => 'tr_meliscore_platform_theme_footer_text_color',
                                     'category' => 'footer',                                  
                                     'default' => '#fff'
                                 ),
