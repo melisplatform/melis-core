@@ -216,6 +216,34 @@ var melisTinyMCE = (function() {
 					});
 			});
 		});
+
+		editor.on("focus", function() {
+			const $thisFocus 	= $(this)[0],
+				targetElmFocus	= $thisFocus.targetElm,
+				$toolsBoxFocus	= $(targetElmFocus).closest(".melis-ui-outlined").find(".melis-plugin-tools-box"),
+				$toxAux 		= $('.tox-tinymce-aux');
+
+				// lower all toobars z-index
+				$toxAux.css("z-index", 0);
+
+				// raise current toolbar after a short delay to ensure its visible
+				setTimeout(function() {
+					$toxAux.last().css("z-index", 1300);
+
+					$toolsBoxFocus.css("opacity", 0);
+					$toolsBoxFocus.css("visibility", "hidden");
+				}, 100);
+		});
+
+		editor.on("blur", function() {
+			const $thisBlur 	= $(this)[0],
+				targetElmBlur 	= $thisBlur.targetElm,
+				$toolBoxBlur 	= $(targetElmBlur).closest(".melis-ui-outlined").find(".melis-plugin-tools-box");
+
+				setTimeout(function() {
+					$toolBoxBlur.removeAttr("style");
+				}, 100);
+		});
 	}
 
 	// top, window.parent.$("body")
