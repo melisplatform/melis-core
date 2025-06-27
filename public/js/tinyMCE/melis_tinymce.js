@@ -225,8 +225,8 @@ var melisTinyMCE = (function() {
 				$toolbarFocus 	= $(editor.getContainer()).find(".tox-editor-header"),
 				$toolsBoxFocus	= $(targetElmFocus).closest(".melis-ui-outlined").find(".melis-plugin-tools-box");
 
-				// toolbar's z-index bring to front
-				$toolbarFocus.css("z-index", 9999);
+				// toolbar's z-index bring to front, 999 to compensate for the tinymce modal
+				$toolbarFocus.css("z-index", 999);
 				
 				// raise current toolbar after a short delay to ensure its visible
 				setTimeout(function() {				
