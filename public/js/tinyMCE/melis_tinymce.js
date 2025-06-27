@@ -226,7 +226,7 @@ var melisTinyMCE = (function() {
 				$toolsBoxFocus	= $(targetElmFocus).closest(".melis-ui-outlined").find(".melis-plugin-tools-box");
 
 				// toolbar's z-index bring to front, 999 to compensate for the tinymce modal
-				$toolbarFocus.css("z-index", 999);
+				//$toolbarFocus.css("z-index", 999);
 				
 				// raise current toolbar after a short delay to ensure its visible
 				setTimeout(function() {				
@@ -243,7 +243,7 @@ var melisTinyMCE = (function() {
 				$toolBoxBlur 	= $(targetElmBlur).closest(".melis-ui-outlined").find(".melis-plugin-tools-box");
 
 				// reset toolbar's z-index
-				$toolbarBlur.css("z-index", "");
+				//$toolbarBlur.css("z-index", "auto");
 
 				// reset .melis-plugin-tools-box inline css
 				setTimeout(function() {
