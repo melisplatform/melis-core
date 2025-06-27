@@ -217,29 +217,35 @@ var melisTinyMCE = (function() {
 			});
 		});
 
+		// don't show .melis-plugin-tools-box on focus
 		editor.on("focus", function() {
-			const $thisFocus 	= $(this)[0],
+			const $this 		= $(this),
+				$thisFocus 		= $this[0],
 				targetElmFocus	= $thisFocus.targetElm,
-				$toolsBoxFocus	= $(targetElmFocus).closest(".melis-ui-outlined").find(".melis-plugin-tools-box"),
-				$toxAux 		= $('.tox-tinymce-aux');
+				$toolbarFocus 	= $(editor.getContainer()).find(".tox-editor-header"),
+				$toolsBoxFocus	= $(targetElmFocus).closest(".melis-ui-outlined").find(".melis-plugin-tools-box");
 
-				// lower all toobars z-index
-				$toxAux.css("z-index", 0);
-
+				// toolbar's z-index bring to front
+				$toolbarFocus.css("z-index", 9999);
+				
 				// raise current toolbar after a short delay to ensure its visible
-				setTimeout(function() {
-					$toxAux.last().css("z-index", 1300);
-
+				setTimeout(function() {				
 					$toolsBoxFocus.css("opacity", 0);
 					$toolsBoxFocus.css("visibility", "hidden");
 				}, 100);
 		});
 
+		// don't show .melis-plugin-tools-box on blur
 		editor.on("blur", function() {
 			const $thisBlur 	= $(this)[0],
 				targetElmBlur 	= $thisBlur.targetElm,
+				$toolbarBlur 	= $(editor.getContainer()).find(".tox-editor-header"),
 				$toolBoxBlur 	= $(targetElmBlur).closest(".melis-ui-outlined").find(".melis-plugin-tools-box");
 
+				// reset toolbar's z-index
+				$toolbarBlur.css("z-index", "");
+
+				// reset .melis-plugin-tools-box inline css
 				setTimeout(function() {
 					$toolBoxBlur.removeAttr("style");
 				}, 100);
