@@ -224,7 +224,6 @@ var melisTinyMCE = (function() {
 				targetElmFocus	= $thisFocus.targetElm,
 				//$toolbarFocus 	= $(editor.getContainer()).find(".tox-editor-header"),
 				$toolsBoxFocus	= $(targetElmFocus).closest(".melis-ui-outlined").find(".melis-plugin-tools-box");
-				//$dndWrapFocus 	= $(targetElmFocus).closest(".dnd-layout-wrapper")
 				
 				// raise current toolbar after a short delay to ensure its visible
 				setTimeout(() => {				
