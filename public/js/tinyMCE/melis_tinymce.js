@@ -222,14 +222,12 @@ var melisTinyMCE = (function() {
 			const $this 		= $(this),
 				$thisFocus 		= $this[0],
 				targetElmFocus	= $thisFocus.targetElm,
-				$toolbarFocus 	= $(editor.getContainer()).find(".tox-editor-header"),
+				//$toolbarFocus 	= $(editor.getContainer()).find(".tox-editor-header"),
 				$toolsBoxFocus	= $(targetElmFocus).closest(".melis-ui-outlined").find(".melis-plugin-tools-box");
-
-				// toolbar's z-index bring to front, 999 to compensate for the tinymce modal
-				//$toolbarFocus.css("z-index", 999);
+				//$dndWrapFocus 	= $(targetElmFocus).closest(".dnd-layout-wrapper")
 				
 				// raise current toolbar after a short delay to ensure its visible
-				setTimeout(function() {				
+				setTimeout(() => {				
 					$toolsBoxFocus.css("opacity", 0);
 					$toolsBoxFocus.css("visibility", "hidden");
 				}, 100);
@@ -239,14 +237,12 @@ var melisTinyMCE = (function() {
 		editor.on("blur", function() {
 			const $thisBlur 	= $(this)[0],
 				targetElmBlur 	= $thisBlur.targetElm,
-				$toolbarBlur 	= $(editor.getContainer()).find(".tox-editor-header"),
+				//$toolbarBlur 	= $(editor.getContainer()).find(".tox-editor-header"),
 				$toolBoxBlur 	= $(targetElmBlur).closest(".melis-ui-outlined").find(".melis-plugin-tools-box");
-
-				// reset toolbar's z-index
-				//$toolbarBlur.css("z-index", "auto");
+				//$dndWrapBlur 	= $(targetElmBlur).closest(".dnd-layout-wrapper")
 
 				// reset .melis-plugin-tools-box inline css
-				setTimeout(function() {
+				setTimeout(() => {
 					$toolBoxBlur.removeAttr("style");
 				}, 100);
 		});
