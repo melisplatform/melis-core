@@ -113,7 +113,7 @@
     $dashboardPluginMenuBoxBgColor                      = $this->melis_core_platform_theme_dashboard_plugin_menu_box_bg_color;
     $dashboardPluginMenuBoxBorderColor                  = $this->melis_core_platform_theme_dashboard_plugin_menu_box_border_color;
     $dashboardPluginMenuBoxBorderWidth                  = $this->melis_core_platform_theme_dashboard_plugin_menu_box_border_width;
-    $dashboardPluginMenuBoxTitleBgColor                   = $this->melis_core_platform_theme_dashboard_plugin_menu_box_title_bg_color; // added by junry 02/19/2025
+    $dashboardPluginMenuBoxTitleBgColor                 = $this->melis_core_platform_theme_dashboard_plugin_menu_box_title_bg_color; // added by junry 02/19/2025
     $dashboardPluginMenuBoxTitleColor                   = $this->melis_core_platform_theme_dashboard_plugin_menu_box_title_color;
     $dashboardPluginMenuBoxTitleFontSize                = $this->melis_core_platform_theme_dashboard_plugin_menu_box_title_font_size;
     $dashboardPluginMenuBoxTitleFontStyle               = $this->melis_core_platform_theme_dashboard_plugin_menu_box_title_font_style;
@@ -141,7 +141,7 @@
     $modalBgColor                       = $this->melis_core_platform_theme_modal_bg_color;
     $modalBorderColor                   = $this->melis_core_platform_theme_modal_border_color;
     $modalBorderRadiusSize              = $this->melis_core_platform_theme_modal_border_radius_size;
-    // $modalBorderWidth                   = $this->melis_core_platform_theme_modal_border_width; // to be added later
+    //$modalBorderWidth                = $this->melis_core_platform_theme_modal_border_width; // to be added later
 
     $modalNavTabsBgColor                = $this->melis_core_platform_theme_modal_nav_tabs_bg_color;
     $modalNavTabsActiveBgColor          = $this->melis_core_platform_theme_modal_nav_tabs_active_bg_color;
@@ -325,6 +325,10 @@
     $daterangepickerFooterApplyBtnHoverBorderColor          = $this->melis_core_platform_theme_daterangepicker_footer_apply_btn_hover_border_color;
     $daterangepickerFooterApplyBtnTextColor                 = $this->melis_core_platform_theme_daterangepicker_footer_apply_btn_text_color;
     $daterangepickerFooterApplyBtnHoverTextColor            = $this->melis_core_platform_theme_daterangepicker_footer_apply_btn_hover_text_color;
+
+    // Drag and drop elements
+
+
 ?>
 /* =============== Primary Color =============== */
 .table-primary thead th {
@@ -958,37 +962,6 @@ input[type="color"]:focus,
     background: <?= $primaryColor; ?>;
 }
 
-/* DragnDrop */
-.melis-cms-dnd-box {
-    border-bottom: 4px solid <?= $primaryColor;?>!important;
-    border-left: 4px solid <?= $primaryColor;?>!important;
-}
-.melis-cms-dnd-title {
-    background: <?= $primaryColor; ?>!important;
-}
-.m-plugin-sub-tools {
-    background: <?= $primaryColor; ?>!important;
-}
-.module-display-heading .ms-heading {
-    background: <?= $primaryColor; ?>!important;
-}
-.melis-cms-filter-btn-sub-category.active,
-.melis-cms-ps-box .melis-cms-filter-btn.active, .melis-cms-category-btn.active {
-    background: <?= $primaryColor; ?>!important;
-    border-color: <?= $primaryColor; ?>!important;
-}
-.melis-ui-outlined:hover {
-    outline: 1px solid <?= $primaryColor; ?>!important;
-    box-shadow: 0 0 0 1px <?= $primaryColor; ?>!important;
-    -webkit-box-shadow: 0 0 0 1px <?= $primaryColor; ?>!important;
-    -moz-box-shadow: 0 0 0 1px <?= $primaryColor; ?>!important;
-    -ms-box-shadow: 0 0 0 1px <?= $primaryColor; ?>!important;
-    z-index: 9999996 !important;
-}
-.melis-cms-category-plugins-box {
-    border-bottom-color: <?= $secondaryColor; ?> !important;
-}
-
 /* Commerce */
 .red-box-panel h3 {
     border-bottom: 1px solid <?= $primaryColor; ?>;
@@ -1557,6 +1530,7 @@ div.glyphicons-social.glyphicon-primary i:before {
     color: <?= $userProfileStatusTextIconColor; ?> !important;
 }
 /* menu */
+#id_meliscore_leftmenu,
 .sidebar>.sidebarMenuWrapper {
     background-color: <?= $menuBgColor; ?> !important;
 }
@@ -1564,7 +1538,7 @@ div.glyphicons-social.glyphicon-primary i:before {
     border-bottom-color: <?= $menuBorderBottomColor; ?> !important;
 }
 .sidebar.sidebar-inverse>.sidebarMenuWrapper>ul li a {
-    color: <?= $menuTextIconColor; ?> !important;
+    color: <?= $menuTextIconColor; ?>;
 }
 .sidebar.sidebar-inverse>.sidebarMenuWrapper>ul li:hover>a {
     background: <?= $menuHoverColor; ?> !important;
@@ -1584,13 +1558,20 @@ div.glyphicons-social.glyphicon-primary i:before {
 #id-mod-menu-dynatree .fancytree-node span.fa {
     color: <?= $submenuTextIconColor; ?> !important;
 }
-.sidebar.sidebar-inverse>.sidebarMenuWrapper>ul li.active-menu.hasSubmenu a {
+.sidebar.sidebar-inverse>.sidebarMenuWrapper>ul li.active-menu.hasSubmenu ul li a {
     background-color: <?= $submenuBgColor; ?> !important;
-    color: <?= $submenuTextIconColor; ?> !important;
+    color: <?= $submenuTextIconColor; ?>;
 }
+
 #id-mod-menu-dynatree .fancytree-node.fancytree-active,
+.sidebar.sidebar-inverse>.sidebarMenuWrapper>ul li.active-menu.hasSubmenu ul li a:hover,
+.sidebar.sidebar-inverse>.sidebarMenuWrapper>ul li.active.hasSubmenu .hasSubmenu.active>a i.fa,
 .sidebar.sidebar-inverse>.sidebarMenuWrapper>ul li.active.hasSubmenu .hasSubmenu.active>a {
     background: <?= $submenuHoverActiveBgColor; ?> !important;
+    color: <?= $submenuTextIconHoverColor; ?> !important;
+}
+.sidebar.sidebar-inverse>.sidebarMenuWrapper>ul li.active.hasSubmenu .hasSubmenu.active>a:hover i.fa,
+.sidebar.sidebar-inverse>.sidebarMenuWrapper>ul li.active-menu.hasSubmenu ul li a:hover i.fa {
     color: <?= $submenuTextIconHoverColor; ?> !important;
 }
 #id-mod-menu-dynatree span.fancytree-active .fancytree-title {
@@ -2306,4 +2287,101 @@ form .form-group .tip-info {
     background-color: <?= $daterangepickerFooterApplyBtnHoverBgColor; ?> !important;
     border-color: <?= $daterangepickerFooterApplyBtnHoverBorderColor; ?> !important;
     color: <?= $daterangepickerFooterApplyBtnHoverTextColor; ?> !important;
+}
+/**
+ * Drag and drop elements
+ */
+.module-display-heading .ms-heading {
+    background: <?= $primaryColor; ?>!important;
+}
+.melis-cms-dnd-box {
+    background-color: #373737;
+    border-width: 4px;
+    border-style: solid;
+
+    border-bottom-color: <?= $primaryColor;?>!important;
+    
+    border-left-color: <?= $primaryColor;?>!important;
+
+    border-top: 0;
+}
+.melis-cms-dnd-title {
+    background: <?= $primaryColor; ?>!important;
+
+    color: #fff;
+    line-height: 47px;
+
+    text-transform: uppercase;
+    font-weight: 700;
+
+    letter-spacing: 4px;
+    text-align: center;
+}
+.melis-cms-filter-btn-sub-category.active,
+.melis-cms-ps-box .melis-cms-filter-btn.active, 
+.melis-cms-category-btn.active {
+    background: <?= $primaryColor; ?>!important;
+    border-color: <?= $primaryColor; ?>!important;
+}
+.melis-cms-category-plugins-box {
+    border-bottom-color: <?= $secondaryColor; ?> !important;
+}
+.melis-ui-outlined:hover {
+    outline: 1px solid <?= $primaryColor; ?>!important;
+    box-shadow: 0 0 0 1px <?= $primaryColor; ?>!important;
+    -webkit-box-shadow: 0 0 0 1px <?= $primaryColor; ?>!important;
+    -moz-box-shadow: 0 0 0 1px <?= $primaryColor; ?>!important;
+    -ms-box-shadow: 0 0 0 1px <?= $primaryColor; ?>!important;
+}
+.m-plugin-sub-tools {
+    background: <?= $primaryColor; ?>!important;
+}
+/**
+ * Dynamic dnd
+ */
+.dnd-layout-buttons .column-icon {
+    background-color: <?= $primaryColor; ?>;
+    border-color: <?= $primaryColor; ?>;
+}
+.dnd-layout-buttons .icon-row {
+    border-top-color: <?= $primaryColor; ?>; /** same on border-color in .column-icon */
+}
+.dnd-layout-buttons .column-icon:hover .icon-col-bg {
+    background-color: <?= $secondaryColor; ?>;
+    opacity: 0.8;
+}
+.melis-dragdropzone-container > .dnd-layout-wrapper {
+    outline-color: <?= $secondaryColor; ?>;
+}
+.melis-dragdropzone-container > .dnd-layout-wrapper > .dnd-layout-indicator {
+    background-color: <?= $secondaryColor; ?>;
+}
+.dnd-layout-wrapper > .dnd-layout-buttons {
+    background-color: <?= $primaryColor; ?>;
+}
+.dnd-layout-buttons .column-icon .bg-red {
+    background-color: <?= $primaryColor; ?>;
+    border-color: <?= $primaryColor; ?>;
+}
+.melis-plugin-title-box .melis-module-title,
+.melis-plugin-title-box .melis-plugin-title {
+    color: #fff !important;
+}
+.melis-plugin-title-box .melis-module-title {   
+    opacity: 0.5;
+}
+.melis-dragdropzone.no-content:before,
+.melis-dragdropzone.no-content:after {
+    color: <?= $secondaryColor; ?>;
+}
+.melis-dragdropzone {
+    border-color: <?= $secondaryColor; ?>;
+}
+.melis-dragdropzone:hover {
+    outline-color: <?= $secondaryColor; ?>;
+
+    box-shadow: 0 0 0 1px <?= $secondaryColor; ?>;
+    -webkit-box-shadow: 0 0 0 1px <?= $secondaryColor; ?>;
+    -moz-box-shadow: 0 0 0 1px <?= $secondaryColor; ?>;
+    -ms-box-shadow: 0 0 0 1px <?= $secondaryColor; ?>;
 }

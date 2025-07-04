@@ -168,8 +168,12 @@ $(function() {
         });
 
         $body.on("click", ".platform-theme-options-toggle, .open-theme-options", function() {
-            rangeSliderSize.setRangeSliderSize();      
-        });   
+            // range number slider
+            rangeSliderSize.setRangeSliderSize();
+
+            // range decimal step
+            //rangeDecimalSlider.setRangeDecimalSlider();
+        });
         // end evo/platform-scheme
 });
 
@@ -589,13 +593,50 @@ var rangeSliderSize = {
                 min: 10,
                 max: 30
             }, // daterangepicker footer buttons text font size
+            { 
+                selectorMin: ".plugins-box-border-width-range-slider-min", 
+                selectorValue: ".plugins-box-border-width-range-slider-value", 
+                value: $("#melis_core_platform_theme_dnd_plugins_box_border_width").val(),
+                min: 4,
+                max: 10 
+            }, // dnd plugins box border width
+            { 
+                selectorMin: ".plugins-box-title-line-height-range-slider-min", 
+                selectorValue: ".plugins-box-line-height-range-slider-value", 
+                value: $("#melis_core_platform_theme_dnd_plugins_box_title_line_height").val(),
+                min: 20,
+                max: 70 
+            }, // dnd plugins box title line height
+            { 
+                selectorMin: ".plugins-box-title-letter-spacing-range-slider-min", 
+                selectorValue: ".plugins-box-letter-spacing-range-slider-value", 
+                value: $("#melis_core_platform_theme_dnd_plugins_box_title_letter_spacing").val(),
+                min: 4,
+                max: 15 
+            }, // dnd plugins box title letter spacing
+            { 
+                selectorMin: '.layout-column-button-decimal-range-slider-min',
+                selectorValue: '.layout-column-button-decimal-input-range-slider-value',
+                min: 0.8,
+                max: 1,
+                step: 0.01,
+                value: $("#melis_core_platform_theme_dnd_layout_column_button_hover_opacity").val()
+            }, // dnd layout column button hover opacity
+            { 
+                selectorMin: '.plugin-box-module-title-decimal-range-slider-min',
+                selectorValue: '.plugin-box-module-title-decimal-input-range-slider-value',
+                min: 0.5,
+                max: 1,
+                step: 0.01,
+                value: $("#melis_core_platform_theme_dnd_plugin_box_module_title_opacity").val()
+            }, // dnd layout column button hover opacity
         ];
 
             sliders.forEach(slider => {
                 const $sliderMin = $(slider.selectorMin),
                     $sliderValue = $(slider.selectorValue);
 
-                    this.rangeSliderInit($sliderMin, $sliderValue, "min", slider.value, slider.min, slider.max);
+                    this.rangeSliderInit($sliderMin, $sliderValue, "min", slider.step ?? 1, slider.value, slider.min, slider.max);
             });
     },
     /**
@@ -607,12 +648,74 @@ var rangeSliderSize = {
      * @param {Number} min 
      * @param {Number} max 
      */
-    rangeSliderInit: function($elMin, $elValue, range, value, min, max) {
+    rangeSliderInit: function($elMin, $elValue, range, step, value, min, max) {
         $elMin.slider({
             range: range,
-            value: value,
             min: min,
             max: max,
+            step: step,
+            value: value,
+            slide: function(event, ui) {
+                const stepValue = $elMin.slider("option", "step");
+                let valueNum;
+
+                    if (typeof stepValue === 'number' && !isNaN(stepValue)) {
+                        const decimalPlaces = rangeSliderSize.getDecimalPlaces(stepValue);
+                            valueNum = ui.value.toFixed(decimalPlaces);
+                    } 
+                    else {
+                        valueNum = ui.value;
+                    }
+
+                    $elValue.val(valueNum);
+            }
+        });
+
+        $elValue.val($elMin.slider("value"));
+    },
+    getDecimalPlaces: function (num) {
+        if (typeof num !== 'number' || isNaN(num)) return 0;
+
+        const match = num.toString().match(/(?:\.(\d+))?$/);
+        return match && match[1] ? match[1].length : 0;
+    }
+};
+
+// slider for decimal
+var rangeDecimalSlider = {
+    setRangeDecimalSlider: function() {
+        const decimal_sliders = [
+            {
+                selectMin: '.layout-column-button-decimal-range-slider-min',
+                selectValue: '.layout-column-button-decimal-input-range-slider-value',
+                min: 0,
+                max: 1,
+                step: 0.01,
+                value: $("#melis_core_platform_theme_dnd_layout_column_button_hover_opacity").val()
+            },
+            {
+                selectMin: '.plugin-box-module-title-decimal-range-slider-min',
+                selectValue: '.plugin-box-module-title-decimal-input-range-slider-value',
+                min: 0,
+                max: 1,
+                step: 0.01,
+                value: $("#melis_core_platform_theme_dnd_plugin_box_module_title_opacity").val()
+            }
+        ];
+            decimal_sliders.forEach(slider => {
+                const $sliderMin = $(slider.selectMin),
+                    $sliderValue = $(slider.selectValue);
+
+                    this.rangeDecimalInit($sliderMin, $sliderValue, "min", slider.step, slider.value, slider.min, slider.max);
+            });
+    },
+    rangeDecimalInit: function($elMin, $elValue, range, step, value, min, max) {
+        $elMin.slider({
+            range: range,
+            min: min,
+            max: max,
+            step: step,
+            value: value,
             slide: function(event, ui) {
                 $elValue.val(ui.value);
             }
