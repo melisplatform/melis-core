@@ -13,19 +13,22 @@
     $logoTxtFontSize        = $this->melis_core_platform_theme_logo_text_font_size;
 
     //User profile
-    $userProfileBgColor             = $this->melis_core_platform_theme_user_profile_bg_color;
-    $userProfileImgBorderColor      = $this->melis_core_platform_theme_user_profile_img_border_color;
-    $userProfileImgBorderRadius     = $this->melis_core_platform_theme_user_profile_img_border_radius;
-    $userProfileNameTextColor       = $this->melis_core_platform_theme_user_profile_name_text_color;
-    $userProfileStatusTextIconColor = $this->melis_core_platform_theme_user_profile_status_text_icon_color;
-    //$userProfEditBtnBgColor
-    //$userProfEditBtnHoverBgColor
-    //$userProfEditBtnTextColor
-    //$userProfEditBtnHoverTextColor
-    //$userProfLogoutBtnBgColor
-    //$userProfLogoutBtnHoverBgColor
-    //$userProfLogoutBtnTextColor
-    //$userProfLogoutBtnHoverTextColor
+    $userProfileBgColor                     = $this->melis_core_platform_theme_user_profile_bg_color;
+    $userProfileImgBorderColor              = $this->melis_core_platform_theme_user_profile_img_border_color;
+    $userProfileImgBorderRadius             = $this->melis_core_platform_theme_user_profile_img_border_radius;
+    $userProfileNameTextColor               = $this->melis_core_platform_theme_user_profile_name_text_color;
+    $userProfileStatusTextIconColor         = $this->melis_core_platform_theme_user_profile_status_text_icon_color;
+    //$userProfileEditBtnBgColor            
+    //$userProfileEditBtnHoverBgColor       
+    //$userProfileEditBtnIconColor
+    //$userProfileEditBtnHoverIconColor
+    //$userProfileEditBtnBorderColor
+    //$userProfileEditBtnHoverBorderColor
+
+    //$userProfileLogoutBtnBgColor
+    //$userProfileLogoutBtnHoverBgColor
+    //$userProfileLogoutBtnIconColor
+    //$userProfileLogoutBtnHoverIconColor
 
     //Menu
     $menuBgColor                = $this->melis_core_platform_theme_menu_bg_color;
@@ -1520,6 +1523,22 @@ div.glyphicons-social.glyphicon-primary i:before {
 .sidebar.sidebar-inverse .user-profile .img-circle {
     border-color: <?= $userProfileImgBorderColor; ?> !important;
     border-radius: <?= $userProfileImgBorderRadius; ?> !important;
+}
+#btnUserInfoEdit {
+    background-color: <?= $primaryColor; ?> !important;
+}
+#btnUserInfoEdit .fa {
+    color: #fff;
+}
+#btnUserInfoEdit:hover {
+    background-color: #fff;
+}
+#bntUserInfoEdit:hover .fa {
+    color: <?= $primaryColor; ?> !important;
+}
+.sidebar.sidebar-inverse .user-profile ul li.active, 
+.sidebar.sidebar-inverse .user-profile ul li.active:hover {
+    border-color: #2c2c2c;
 }
 
 /* #user-name-link */

@@ -3950,7 +3950,7 @@ return array(
                                     'category' => 'form_elements',
                                     'sliderId' => 'form-inputs-element-border-width-range-slider-min',
                                     'sliderClass' => 'form-inputs-element-border-width-range-slider-min',
-                                    'default' => 0
+                                    'default' => 1
                                 ),
                             ),
                         ),

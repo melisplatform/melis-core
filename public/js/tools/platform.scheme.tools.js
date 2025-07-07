@@ -307,6 +307,13 @@ var rangeSliderSize = {
                 max: 30 
             }, // dashboard plugins delete all button text font size, end of general options
             { 
+                selectorMin: ".modal-border-right-width-range-slider-min", 
+                selectorValue: ".modal-border-right-width-range-slider-value", 
+                value: $("#melis_core_platform_theme_modal_border_right_width").val(), 
+                min: 0,
+                max: 10
+            }, // modal border right width
+            { 
                 selectorMin: ".modal-border-radius-size-range-slider-min", 
                 selectorValue: ".modal-border-radius-size-range-slider-value", 
                 value: $("#melis_core_platform_theme_modal_border_radius_size").val(), 
