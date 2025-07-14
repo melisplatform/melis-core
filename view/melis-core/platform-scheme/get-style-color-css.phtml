@@ -1152,7 +1152,7 @@ div.glyphicons-social.glyphicon-primary i:before {
  * dynamic dnd
  */
 .dnd-layout-buttons .column-icon {
-    background-color: #fff;
+    background-color: <?= $primaryColor; ?>;
     border-color: <?= $primaryColor; ?>;
 }
 .dnd-layout-buttons .icon-row {
@@ -1201,4 +1201,7 @@ div.glyphicons-social.glyphicon-primary i:before {
     -webkit-box-shadow: 0 0 0 1px <?= $secondaryColor; ?>;
     -moz-box-shadow: 0 0 0 1px <?= $secondaryColor; ?>;
     -ms-box-shadow: 0 0 0 1px <?= $secondaryColor; ?>;
+}
+button.column-icon .icon-col-bg {
+    background-color: #fff;
 }
