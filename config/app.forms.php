@@ -2518,7 +2518,7 @@ return array(
                                 ),
                             ),
                         ),
-                        // added by junry 02/19/2025
+                        // to be added on database
                         array(
                             'spec' => array(
                                 'name' => 'melis_core_platform_theme_dashboard_plugin_menu_box_title_bg_color',
@@ -2993,7 +2993,7 @@ return array(
                                     'data-control' => 'hue',
                                     'placeholder' => 'tr_meliscore_platform_theme_modal_nav_tabs_bg_color',
                                     'category' => 'modal',
-                                    'default' => '#fff'
+                                    'default' => '#e61c23'
                                 ),
                             ),
                         ),
@@ -3089,7 +3089,7 @@ return array(
                                     'data-control' => 'hue',
                                     'placeholder' => 'tr_meliscore_platform_theme_modal_nav_tabs_border_right_color',
                                     'category' => 'modal',
-                                    'default' => '#ce5459'
+                                    'default' => '#e5e5e5'
                                 ),
                             ),
                         ),
@@ -4183,7 +4183,7 @@ return array(
                                     'category' => 'tab',
                                     'sliderId' => 'tab-widget-head-border-width-range-slider-min',
                                     'sliderClass' => 'tab-widget-head-border-width-range-slider-min',
-                                    'default' => 0
+                                    'default' => 1
                                 ),
                             ),
                         ),
@@ -4222,7 +4222,7 @@ return array(
                                     'category' => 'tab',
                                     'sliderId' => 'tab-widget-head-nav-item-and-link-width-range-slider-min',
                                     'sliderClass' => 'tab-widget-head-nav-item-and-link-width-range-slider-min',
-                                    'default' => 0
+                                    'default' => 70
                                 ),
                             ),
                         ),
@@ -4300,7 +4300,7 @@ return array(
                                     'category' => 'tab',
                                     'sliderId' => 'tab-widget-nav-link-text-font-size-range-slider-min',
                                     'sliderClass' => 'tab-widget-nav-link-text-font-size-range-slider-min',
-                                    'default' => 0
+                                    'default' => 14
                                 ),
                             ),
                         ),
@@ -4320,7 +4320,7 @@ return array(
                                     'category' => 'tab',
                                     'sliderId' => 'tab-widget-nav-link-min-width-range-slider-min',
                                     'sliderClass' => 'tab-widget-nav-link-min-width-range-slider-min',
-                                    'default' => 0
+                                    'default' => 90
                                 ),
                             ),
                         ),                       
@@ -4347,7 +4347,7 @@ return array(
                                     'class' => 'form-control',
                                     'id' => 'melis_core_platform_theme_tab_widget_nav_link_text_align',
                                     'category' => 'tab',
-                                    'default' => ''
+                                    'default' => 'center'
                                 ),
                             ),
                         ), 
@@ -4367,7 +4367,7 @@ return array(
                                     'category' => 'tab',
                                     'sliderId' => 'tab-widget-nav-link-height-range-slider-min',
                                     'sliderClass' => 'tab-widget-nav-link-height-range-slider-min',
-                                    'default' => 0
+                                    'default' => 37
                                 ),
                             ),
                         ),
@@ -4406,7 +4406,7 @@ return array(
                                     'category' => 'tab',
                                     'sliderId' => 'tab-widget-link-font-size-range-slider-min',
                                     'sliderClass' => 'tab-widget-link-font-size-range-slider-min',
-                                    'default' => 0
+                                    'default' => 24
                                 ),
                             ),
                         ),

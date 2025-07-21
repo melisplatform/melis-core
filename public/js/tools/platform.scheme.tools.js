@@ -360,7 +360,7 @@ var rangeSliderSize = {
                 selectorValue: ".form-button-submit-border-radius-range-slider-value", 
                 value: $("#melis_core_platform_theme_form_button_submit_border_radius").val(), 
                 min: 0, 
-                max: 16 
+                max: 10
             }, // form button/submit border radius
             { 
                 selectorMin: ".form-button-submit-border-width-range-slider-min", 
@@ -369,6 +369,20 @@ var rangeSliderSize = {
                 min: 0, 
                 max: 10 
             }, // form button/submit border width
+            { 
+                selectorMin: ".form-button-cancel-border-radius-size-range-slider-min", 
+                selectorValue: ".form-button-cancel-border-radius-size-range-slider-value", 
+                value: $("#melis_core_platform_theme_form_button_cancel_border_radius_size").val(), 
+                min: 0, 
+                max: 10 
+            }, // form button/cancel border radius
+            { 
+                selectorMin: ".form-button-cancel-border-width-range-slider-min", 
+                selectorValue: ".form-button-cancel-border-width-range-slider-value", 
+                value: $("#melis_core_platform_theme_form_button_cancel_border_width").val(), 
+                min: 1, 
+                max: 10 
+            }, // form button/cancel border width
             { 
                 selectorMin: ".dialog-title-font-size-range-slider-min", 
                 selectorValue: ".dialog-title-font-size-range-slider-value", 
@@ -429,7 +443,7 @@ var rangeSliderSize = {
                 selectorMin: ".tab-widget-nav-link-min-width-range-slider-min", 
                 selectorValue: ".tab-widget-nav-link-min-width-range-slider-value", 
                 value: $("#melis_core_platform_theme_tab_widget_nav_link_min_width").val(), 
-                min: 70, 
+                min: 70,
                 max: 200 
             }, // tab widget nav link text font size
             { 
@@ -443,7 +457,7 @@ var rangeSliderSize = {
                 selectorMin: ".tab-widget-link-font-size-range-slider-min", 
                 selectorValue: ".tab-widget-link-font-size-range-slider-value", 
                 value: $("#melis_core_platform_theme_tab_widget_link_icon_font_size").val(), 
-                min: 10, 
+                min: 24,
                 max: 50 
             }, // tab widget nav link text icon font size
             { 
@@ -600,7 +614,7 @@ var rangeSliderSize = {
                 min: 10,
                 max: 30
             }, // daterangepicker footer buttons text font size
-            { 
+            {
                 selectorMin: ".plugins-box-border-width-range-slider-min", 
                 selectorValue: ".plugins-box-border-width-range-slider-value", 
                 value: $("#melis_core_platform_theme_dnd_plugins_box_border_width").val(),
@@ -622,20 +636,70 @@ var rangeSliderSize = {
                 max: 15 
             }, // dnd plugins box title letter spacing
             { 
-                selectorMin: '.layout-column-button-decimal-range-slider-min',
-                selectorValue: '.layout-column-button-decimal-input-range-slider-value',
-                min: 0.8,
-                max: 1,
-                step: 0.01,
-                value: $("#melis_core_platform_theme_dnd_layout_column_button_hover_opacity").val()
-            }, // dnd layout column button hover opacity
-            { 
                 selectorMin: '.plugin-box-module-title-decimal-range-slider-min',
                 selectorValue: '.plugin-box-module-title-decimal-input-range-slider-value',
                 min: 0.5,
                 max: 1,
                 step: 0.01,
                 value: $("#melis_core_platform_theme_dnd_plugin_box_module_title_opacity").val()
+            }, // dnd plugins box title opacity
+            { 
+                selectorMin: ".dnd-plugins-box-button-border-radius-range-slider-min", 
+                selectorValue: ".dnd-plugins-box-button-border-radius-range-slider-value", 
+                value: $("#melis_core_platform_theme_dnd_plugins_box_btn_border_radius").val(),
+                min: 4,
+                max: 10
+            }, // dnd plugins box button border radius, for border-top-left-radius and border-bottom-left-radius
+            { 
+                selectorMin: ".dnd-plugins-box-button-icon-font-size-range-slider-min", 
+                selectorValue: ".dnd-plugins-box-button-icon-font-size-range-slider-value", 
+                value: $("#melis_core_platform_theme_dnd_plugins_box_btn_icon_font_size").val(),
+                min: 20,
+                max: 40
+            }, // dnd plugins box button icon font size
+            { 
+                selectorMin: ".dnd-plugins-box-category-btn-border-bottom-width-range-slider-min", 
+                selectorValue: ".dnd-plugins-box-category-btn-border-bottom-width-range-slider-value", 
+                value: $("#melis_core_platform_theme_dnd_plugins_box_category_btn_border_bottom_width").val(),
+                min: 1,
+                max: 5
+            }, // dnd plugins box category button bottom border width
+            { 
+                selectorMin: ".dnd-plugins-box-category-button-font-size-range-slider-min", 
+                selectorValue: ".dnd-plugins-box-category-button-font-size-range-slider-value", 
+                value: $("#melis_core_platform_theme_dnd_plugins_box_category_btn_font_size").val(),
+                min: 12,
+                max: 24
+            }, // dnd plugins box category button font size
+            { 
+                selectorMin: ".dnd-plugins-box-category-button-letter-spacing-range-slider-min", 
+                selectorValue: ".dnd-plugins-box-category-button-letter-spacing-range-slider-value", 
+                value: $("#melis_core_platform_theme_dnd_plugins_box_category_btn_letter_spacing").val(),
+                min: 1,
+                max: 10
+            }, // dnd plugins box category button letter spacing
+            { 
+                selectorMin: ".dnd-plugins-box-category-button-cms-filter-text-indent-range-slider-min", 
+                selectorValue: ".dnd-plugins-box-category-button-cms-filter-text-indent-range-slider-value", 
+                value: $("#melis_core_platform_theme_dnd_plugins_box_category_btn_cms_filter_text_indent").val(),
+                min: 29,
+                max: 50
+            }, // dnd plugins box category button cms filter text indent
+            { 
+                selectorMin: '.dnd-plugins-box-category-button-text-opacity-range-slider-min',
+                selectorValue: '.dnd-plugins-box-category-button-text-opacity-range-slider-value',
+                min: 0.4,
+                max: 1,
+                step: 0.01,
+                value: $("#melis_core_platform_theme_dnd_plugins_box_category_btn_text_opacity").val()
+            }, // dnd plugins box category button text opacity
+            { 
+                selectorMin: '.layout-column-button-decimal-range-slider-min',
+                selectorValue: '.layout-column-button-decimal-input-range-slider-value',
+                min: 0.8,
+                max: 1,
+                step: 0.01,
+                value: $("#melis_core_platform_theme_dnd_layout_column_button_hover_opacity").val()
             }, // dnd layout column button hover opacity
         ];
 

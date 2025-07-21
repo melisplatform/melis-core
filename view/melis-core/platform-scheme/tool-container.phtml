@@ -301,6 +301,8 @@ if ($headerTitleLen > 13) {
                                                             }
                                                             ?>
 
+                                                            <!-- added static form group -->
+                                                            <!-- edit button -->
                                                             <div class="form-group">
                                                                 <label for="melis_core_platform_theme_user_profile_edit_btn_bg_color" class="d-flex flex-row justify-content-between">
                                                                     <div class="label-text">Edit button background color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the edit button background color by typing the hexadecimal color code or by using the color picker"></i>
@@ -326,6 +328,18 @@ if ($headerTitleLen > 13) {
                                                             </div>
 
                                                             <div class="form-group">
+                                                                <label for="melis_core_platform_theme_user_profile_edit_btn_icon_color" class="d-flex flex-row justify-content-between">
+                                                                    <div class="label-text">Edit button icon color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the edit button icon color by typing the hexadecimal color code or by using the color picker"></i>
+                                                                </label>
+                                                                <div class="input-group platform-scheme osta_color_code">
+                                                                    <input type="text" name="melis_core_platform_theme_user_profile_edit_btn_icon_color" id="melis_core_platform_theme_user_profile_edit_btn_icon_color" class="form-control minicolor-hex" data-control="hue" placeholder="Edit button icon color" value="#fff">
+                                                                    <span class="input-group-addon">
+                                                                        <input type="hidden" class="minicolor" value="#fff" />
+                                                                    </span>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="form-group">
                                                                 <label for="melis_core_platform_theme_user_profile_edit_btn_hover_bg_color" class="d-flex flex-row justify-content-between">
                                                                     <div class="label-text">Edit button hover background color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the edit button hover background color by typing the hexadecimal color code or by using the color picker"></i>
                                                                 </label>
@@ -339,7 +353,7 @@ if ($headerTitleLen > 13) {
 
                                                             <div class="form-group">
                                                                 <label for="melis_core_platform_theme_user_profile_edit_btn_hover_icon_color" class="d-flex flex-row justify-content-between">
-                                                                    <div class="label-text">Edit button hover background color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the edit button hover icon color by typing the hexadecimal color code or by using the color picker"></i>
+                                                                    <div class="label-text">Edit button hover icon color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the edit button hover icon color by typing the hexadecimal color code or by using the color picker"></i>
                                                                 </label>
                                                                 <div class="input-group platform-scheme osta_color_code">
                                                                     <input type="text" name="melis_core_platform_theme_user_profile_edit_btn_hover_icon_color" id="melis_core_platform_theme_user_profile_edit_btn_hover_icon_color" class="form-control minicolor-hex" data-control="hue" placeholder="Edit button hover icon color" value="#e61c23">
@@ -348,7 +362,20 @@ if ($headerTitleLen > 13) {
                                                                     </span>
                                                                 </div>
                                                             </div>
-                                                            
+
+                                                            <div class="form-group">
+                                                                <label for="melis_core_platform_theme_user_profile_edit_btn_hover_border_color" class="d-flex flex-row justify-content-between">
+                                                                    <div class="label-text">Edit button hover border color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the edit button hover border color by typing the hexadecimal color code or by using the color picker"></i>
+                                                                </label>
+                                                                <div class="input-group platform-scheme osta_color_code">
+                                                                    <input type="text" name="melis_core_platform_theme_user_profile_edit_btn_hover_border_color" id="melis_core_platform_theme_user_profile_edit_btn_hover_border_color" class="form-control minicolor-hex" data-control="hue" placeholder="Edit button hover border color" value="#e61c23">
+                                                                    <span class="input-group-addon">
+                                                                        <input type="hidden" class="minicolor" value="#e61c23" />
+                                                                    </span>
+                                                                </div>
+                                                            </div>
+                                                            <!-- end edit button -->
+                                                            <!-- logout -->
                                                             <div class="form-group">
                                                                 <label for="melis_core_platform_theme_user_profile_logout_btn_bg_color" class="d-flex flex-row justify-content-between">
                                                                     <div class="label-text">Logout button background color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the logout button background color by typing the hexadecimal color code or by using the color picker"></i>
@@ -396,7 +423,8 @@ if ($headerTitleLen > 13) {
                                                                     </span>
                                                                 </div>
                                                             </div>
-
+                                                            <!-- end logout -->
+                                                            <!-- end added static form group -->
                                                         </div>
                                                     </div>
                                                 </div>
@@ -688,7 +716,8 @@ if ($headerTitleLen > 13) {
                                                         </div>
                                                     </div>
                                                 </div>
-
+                                                
+                                                <!-- added static drag and drop elements -->
                                                 <div class="accordion-item component-dragndrop">
                                                     <h6 class="accordion-header">
                                                         <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#component-dragndrop" aria-expanded="false" aria-controls="component-dragndrop">
@@ -697,6 +726,7 @@ if ($headerTitleLen > 13) {
                                                     </h6>
                                                     <div id="component-dragndrop" class="accordion-collapse collapse" data-bs-arent="#components-accordion">
                                                         <div class="accordion-body">
+                                                            <!-- start .melis-cms-dnd-box -->
                                                             <div class="form-group">
                                                                 <label for="melis_core_platform_theme_dnd_plugins_box_bg_color" class="d-flex flex-row justify-content-between">
                                                                     <div class="label-text">Plugins box background color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the background color by typing the hexadecimal color code or by using the color picker"></i>
@@ -734,7 +764,9 @@ if ($headerTitleLen > 13) {
                                                                     </span>
                                                                 </div>
                                                             </div>
+                                                            <!-- end .melis-cms-dnd-box -->
 
+                                                            <!-- start .melis-cms-dnd-title -->
                                                             <div class="form-group">
                                                                 <label for="melis_core_platform_theme_dnd_plugins_box_title_bg_color" class="d-flex flex-row justify-content-between">
                                                                     <div class="label-text">Plugins box title background color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the plugins box title background color by typing the hexadecimal color code or by using the color picker"></i>
@@ -821,7 +853,207 @@ if ($headerTitleLen > 13) {
                                                                     <label class="btn btn-default" for="dnd-plugins-box-title-right"><i class="bi bi-text-right"></i></label>
                                                                 </div>
                                                             </div>
+                                                            <!-- end .melis-cms-dnd-title -->
 
+                                                            <!-- start plugin box button -->
+                                                            <div class="form-group">
+                                                                <label for="melis_core_platform_theme_dnd_plugins_box_btn_bg_color" class="d-flex flex-row justify-content-between">
+                                                                    <div class="label-text">Plugins box button background color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the plugins box button background color by typing the hexadecimal color code or by using the color picker"></i>
+                                                                </label>
+                                                                <div class="input-group platform-scheme osta_color_code">
+                                                                    <input type="text" name="melis_core_platform_theme_dnd_plugins_box_btn_bg_color" id="melis_core_platform_theme_dnd_plugins_box_btn_bg_color" class="form-control minicolor-hex" data-control="hue" placeholder="Dnd plugins box button background color" value="#e61c23">
+                                                                    <span class="input-group-addon">
+                                                                        <input type="hidden" class="minicolor" value="#e61c23" />
+                                                                    </span>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="form-group">
+                                                                <label for="melis_core_platform_theme_dnd_plugins_box_btn_border_radius" class="d-flex flex-row justify-content-between">
+                                                                    <div class="label-text">Plugins box button border radius</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the plugins box button border radius"></i>
+                                                                </label>
+                                                                <div class="row">
+                                                                    <div class="col-9">
+                                                                        <div id="dnd-plugins-box-button-border-radius-range-slider-min" class="dnd-plugins-box-button-border-radius-range-slider-min" style="border: 0; color: #f6931f; font-weight: bold;"></div>
+                                                                    </div>
+                                                                    <div class="col-3">
+                                                                        <input type="text" name="melis_core_platform_theme_dnd_plugins_box_btn_border_radius" id="melis_core_platform_theme_dnd_plugins_box_btn_border_radius" class="dnd-plugins-box-button-border-radius-range-slider-value range-slider-value form-control" />
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            
+                                                            <div class="form-group">
+                                                                <label for="melis_core_platform_theme_dnd_plugins_box_btn_icon_color" class="d-flex flex-row justify-content-between">
+                                                                    <div class="label-text">Plugins box button icon color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the plugins box button icon color by typing the hexadecimal color code or by using the color picker"></i>
+                                                                </label>
+                                                                <div class="input-group platform-scheme osta_color_code">
+                                                                    <input type="text" name="melis_core_platform_theme_dnd_plugins_box_btn_icon_color" id="melis_core_platform_theme_dnd_plugins_box_btn_icon_color" class="form-control minicolor-hex" data-control="hue" placeholder="Dnd plugins box button icon color" value="#fff">
+                                                                    <span class="input-group-addon">
+                                                                        <input type="hidden" class="minicolor" value="#fff" />
+                                                                    </span>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="form-group">
+                                                                <label for="melis_core_platform_theme_dnd_plugins_box_btn_icon_font_size" class="d-flex flex-row justify-content-between">
+                                                                    <div class="label-text">Plugins box button icon font size</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the plugins box button icon font size"></i>
+                                                                </label>
+                                                                <div class="row">
+                                                                    <div class="col-8">
+                                                                        <div id="dnd-plugins-box-button-icon-font-size-range-slider-min" class="dnd-plugins-box-button-icon-font-size-range-slider-min" style="border: 0; color: #f6931f; font-weight: bold;"></div>
+                                                                    </div>
+                                                                    <div class="col-4">
+                                                                        <input type="text" name="melis_core_platform_theme_dnd_plugins_box_btn_icon_font_size" id="melis_core_platform_theme_dnd_plugins_box_btn_icon_font_size" class="dnd-plugins-box-button-icon-font-size-range-slider-value range-slider-value form-control" />
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            
+                                                            <div class="form-group">
+                                                                <label for="melis_core_platform_theme_dnd_plugins_box_category_btn_bg_color" class="d-flex flex-row justify-content-between">
+                                                                    <div class="label-text">Plugins box category button background color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the plugins box category button background color by typing the hexadecimal color code or by using the color picker"></i>
+                                                                </label>
+                                                                <div class="input-group platform-scheme osta_color_code">
+                                                                    <input type="text" name="melis_core_platform_theme_dnd_plugins_box_category_btn_bg_color" id="melis_core_platform_theme_dnd_plugins_box_category_btn_bg_color" class="form-control minicolor-hex" data-control="hue" placeholder="Dnd plugins box category button background color" value="#373737">
+                                                                    <span class="input-group-addon">
+                                                                        <input type="hidden" class="minicolor" value="#373737" />
+                                                                    </span>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="form-group">
+                                                                <label for="melis_core_platform_theme_dnd_plugins_box_category_btn_border_bottom_width" class="d-flex flex-row justify-content-between">
+                                                                    <div class="label-text">Plugins box category button border bottom width</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the plugins box category button border bottom width"></i>
+                                                                </label>
+                                                                <div class="row">
+                                                                    <div class="col-9">
+                                                                        <div id="dnd-plugins-box-category-btn-border-bottom-width-range-slider-min" class="dnd-plugins-box-category-btn-border-bottom-width-range-slider-min" style="border: 0; color: #f6931f; font-weight: bold;"></div>
+                                                                    </div>
+                                                                    <div class="col-3">
+                                                                        <input type="text" name="melis_core_platform_theme_dnd_plugins_box_category_btn_border_bottom_width" id="melis_core_platform_theme_dnd_plugins_box_category_btn_border_bottom_width" class="dnd-plugins-box-category-btn-border-bottom-width-range-slider-value range-slider-value form-control" />
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="form-group">
+                                                                <label for="melis_core_platform_theme_dnd_plugins_box_category_btn_border_bottom_color" class="d-flex flex-row justify-content-between">
+                                                                    <div class="label-text">Plugins box category button border bottom color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the plugins box category button border bottom color by typing the hexadecimal color code or by using the color picker"></i>
+                                                                </label>
+                                                                <div class="input-group platform-scheme osta_color_code">
+                                                                    <input type="text" name="melis_core_platform_theme_dnd_plugins_box_category_btn_border_bottom_color" id="melis_core_platform_theme_dnd_plugins_box_category_btn_border_bottom_color" class="form-control minicolor-hex" data-control="hue" placeholder="Dnd plugins box category button border bottom color" value="#2c2c2c">
+                                                                    <span class="input-group-addon">
+                                                                        <input type="hidden" class="minicolor" value="#2c2c2c" />
+                                                                    </span>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="form-group">
+                                                                <label for="melis_core_platform_theme_dnd_plugins_box_category_btn_text_color" class="d-flex flex-row justify-content-between">
+                                                                    <div class="label-text">Plugins box category button text color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the plugins box category button text color by typing the hexadecimal color code or by using the color picker"></i>
+                                                                </label>
+                                                                <div class="input-group platform-scheme osta_color_code">
+                                                                    <input type="text" name="melis_core_platform_theme_dnd_plugins_box_category_btn_text_color" id="melis_core_platform_theme_dnd_plugins_box_category_btn_text_color" class="form-control minicolor-hex" data-control="hue" placeholder="Dnd plugins box category button text color" value="#fff">
+                                                                    <span class="input-group-addon">
+                                                                        <input type="hidden" class="minicolor" value="#fff" />
+                                                                    </span>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="form-group">
+                                                                <label for="melis_core_platform_theme_dnd_plugins_box_category_btn_font_size" class="d-flex flex-row justify-content-between">
+                                                                    <div class="label-text">Plugins box category button font size</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the plugins box category button font size"></i>
+                                                                </label>
+                                                                <div class="row">
+                                                                    <div class="col-8">
+                                                                        <div id="dnd-plugins-box-category-button-font-size-range-slider-min" class="dnd-plugins-box-category-button-font-size-range-slider-min" style="border: 0; color: #f6931f; font-weight: bold;"></div>
+                                                                    </div>
+                                                                    <div class="col-4">
+                                                                        <input type="text" name="melis_core_platform_theme_dnd_plugins_box_category_btn_font_size" id="melis_core_platform_theme_dnd_plugins_box_category_btn_font_size" class="dnd-plugins-box-category-button-font-size-range-slider-value range-slider-value form-control" />
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="form-group">
+                                                                <label for="melis_core_platform_theme_dnd_plugins_box_category_btn_letter_spacing" class="d-flex flex-row justify-content-between">
+                                                                    <div class="label-text">Plugins box category button letter spacing</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the plugins box category button letter spacing"></i>
+                                                                </label>
+                                                                <div class="row">
+                                                                    <div class="col-8">
+                                                                        <div id="dnd-plugins-box-category-button-letter-spacing-range-slider-min" class="dnd-plugins-box-category-button-letter-spacing-range-slider-min" style="border: 0; color: #f6931f; font-weight: bold;"></div>
+                                                                    </div>
+                                                                    <div class="col-4">
+                                                                        <input type="text" name="melis_core_platform_theme_dnd_plugins_box_category_btn_letter_spacing" id="melis_core_platform_theme_dnd_plugins_box_category_btn_letter_spacing" class="dnd-plugins-box-category-button-letter-spacing-range-slider-value range-slider-value form-control" />
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="form-group">
+                                                                <label for="melis_core_platform_theme_dnd_plugins_box_category_btn_cms_filter_text_indent" class="d-flex flex-row justify-content-between">
+                                                                    <div class="label-text">Plugins box category button letter spacing</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the plugins box category button cms filter text indent"></i>
+                                                                </label>
+                                                                <div class="row">
+                                                                    <div class="col-8">
+                                                                        <div id="dnd-plugins-box-category-button-cms-filter-text-indent-range-slider-min" class="dnd-plugins-box-category-button-cms-filter-text-indent-range-slider-min" style="border: 0; color: #f6931f; font-weight: bold;"></div>
+                                                                    </div>
+                                                                    <div class="col-4">
+                                                                        <input type="text" name="melis_core_platform_theme_dnd_plugins_box_category_btn_cms_filter_text_indent" id="melis_core_platform_theme_dnd_plugins_box_category_btn_cms_filter_text_indent" class="dnd-plugins-box-category-button-cms-filter-text-indent-range-slider-value range-slider-value form-control" />
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            
+                                                            <div class="form-group">
+                                                                <label for="melis_core_platform_theme_dnd_plugins_box_category_btn_hover_bg_color" class="d-flex flex-row justify-content-between">
+                                                                    <div class="label-text">Plugins box category button hover background color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the plugins box category button hover background color by typing the hexadecimal color code or by using the color picker"></i>
+                                                                </label>
+                                                                <div class="input-group platform-scheme osta_color_code">
+                                                                    <input type="text" name="melis_core_platform_theme_dnd_plugins_box_category_btn_hover_bg_color" id="melis_core_platform_theme_dnd_plugins_box_category_btn_hover_bg_color" class="form-control minicolor-hex" data-control="hue" placeholder="Dnd plugins box category button hover background color" value="#2c2c2c">
+                                                                    <span class="input-group-addon">
+                                                                        <input type="hidden" class="minicolor" value="#2c2c2c" />
+                                                                    </span>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="form-group">
+                                                                <label for="melis_core_platform_theme_dnd_plugins_box_category_btn_hover_border_color" class="d-flex flex-row justify-content-between">
+                                                                    <div class="label-text">Plugins box category button hover border color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the plugins box category button hover border color by typing the hexadecimal color code or by using the color picker"></i>
+                                                                </label>
+                                                                <div class="input-group platform-scheme osta_color_code">
+                                                                    <input type="text" name="melis_core_platform_theme_dnd_plugins_box_category_btn_hover_border_color" id="melis_core_platform_theme_dnd_plugins_box_category_btn_hover_border_color" class="form-control minicolor-hex" data-control="hue" placeholder="Dnd plugins box category button hover border color" value="#2c2c2c">
+                                                                    <span class="input-group-addon">
+                                                                        <input type="hidden" class="minicolor" value="#2c2c2c" />
+                                                                    </span>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="form-group">
+                                                                <label for="melis_core_platform_theme_dnd_plugins_box_category_btn_text_align" class="d-flex flex-row justify-content-between">
+                                                                    <div class="label-text">Plugins box category button text alignment</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the plugins box category button text alignment"></i>
+                                                                </label>
+                                                                <div class="btn-group btn-group-alignment" role="group" aria-label="Text align radio toggle button group">
+                                                                    <input type="radio" class="btn-check" name="dnd-plugins-box-category-button-text-left" id="dnd-plugins-box-category-button-text-left" autocomplete="off">
+                                                                    <label class="btn btn-default" for="dnd-plugins-box-category-button-text-left"><i class="bi bi-text-left"></i></label>
+                                                                    <input type="radio" class="btn-check" name="dnd-plugins-box-category-button-text-center" id="dnd-plugins-box-category-button-text-center" autocomplete="off">
+                                                                    <label class="btn btn-default" for="dnd-plugins-box-category-button-text-center"><i class="bi bi-text-center"></i></label>
+                                                                    <input type="radio" class="btn-check" name="dnd-plugins-box-category-button-text-right" id="dnd-plugins-box-category-button-text-right" autocomplete="off">
+                                                                    <label class="btn btn-default" for="dnd-plugins-box-category-button-text-right"><i class="bi bi-text-right"></i></label>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="form-group">
+                                                                <label for="melis_core_platform_theme_dnd_plugins_box_category_btn_text_opacity" class="d-flex flex-row justify-content-between">
+                                                                    <div class="label-text">Plugins box category button text opacity</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change plugins box category button text opacity"></i>
+                                                                </label>
+                                                                <div class="row">
+                                                                    <div class="col-8">
+                                                                        <div id="dnd-plugins-box-category-button-text-opacity-range-slider-min" class="dnd-plugins-box-category-button-text-opacity-range-slider-min" style="border: 0; color: #f6931f; font-weight: bold;"></div>
+                                                                    </div>
+                                                                    <div class="col-4">
+                                                                        <input type="text" name="melis_core_platform_theme_dnd_plugins_box_category_btn_text_opacity" id="melis_core_platform_theme_dnd_plugins_box_category_btn_text_opacity" class="dnd-plugins-box-category-button-text-opacity-range-slider-value range-slider-value form-control" />
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <!-- end plugin box button -->
+
+                                                            <!-- start cms category button active -->
                                                             <div class="form-group">
                                                                 <label for="melis_core_platform_theme_dnd_plugins_box_cms_category_button_active_bg_color" class="d-flex flex-row justify-content-between">
                                                                     <div class="label-text">Plugins box cms category button active background color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the dnd plugins tools box sub tools background color by typing the hexadecimal color code or by using the color picker"></i>
@@ -845,7 +1077,7 @@ if ($headerTitleLen > 13) {
                                                                     </span>
                                                                 </div>
                                                             </div>
-
+                                                            
                                                             <div class="form-group">
                                                                 <label for="melis_core_platform_theme_dnd_plugins_box_cms_category_box_border_bottom_color" class="d-flex flex-row justify-content-between">
                                                                     <div class="label-text">Plugins box cms category box border bottom color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the plugins box cms category box border bottom color by typing the hexadecimal color code or by using the color picker"></i>
@@ -857,7 +1089,9 @@ if ($headerTitleLen > 13) {
                                                                     </span>
                                                                 </div>
                                                             </div>
-
+                                                            <!-- end cms category button active -->
+                                                            
+                                                            <!-- start category plugins box and melis-ui-outlined hover -->
                                                             <div class="form-group">
                                                                 <label for="melis_core_platform_theme_dnd_zone_plugin_outline_hover_color" class="d-flex flex-row justify-content-between">
                                                                     <div class="label-text">DND zone plugin outline hover color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the DND zone plugin outline hover color by typing the hexadecimal color code or by using the color picker"></i>
@@ -884,7 +1118,7 @@ if ($headerTitleLen > 13) {
 
                                                             <div class="form-group">
                                                                 <label for="melis_core_platform_theme_dnd_plugin_sub_tools_bg_color" class="d-flex flex-row justify-content-between">
-                                                                    <div class="label-text">DND plugins tools box background color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the dnd plugins tools box sub tools background color by typing the hexadecimal color code or by using the color picker"></i>
+                                                                    <div class="label-text">DND plugins tools box sub tools background color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the dnd plugins tools box sub tools background color by typing the hexadecimal color code or by using the color picker"></i>
                                                                 </label>
                                                                 <div class="input-group platform-scheme osta_color_code">
                                                                     <input type="text" name="melis_core_platform_theme_dnd_plugin_sub_tools_bg_color" id="melis_core_platform_theme_dnd_plugin_sub_tools_bg_color" class="form-control minicolor-hex" data-control="hue" placeholder="DND plugins tools box sub tools background color" value="#e61c23">
@@ -893,7 +1127,9 @@ if ($headerTitleLen > 13) {
                                                                     </span>
                                                                 </div>
                                                             </div>
-
+                                                            <!-- end category plugins box and melis-ui-outlined hover -->
+                                                           
+                                                            <!-- start dynamic dnd -->
                                                             <div class="form-group">
                                                                 <label for="melis_core_platform_theme_dnd_layout_column_button_bg_color" class="d-flex flex-row justify-content-between">
                                                                     <div class="label-text">DND layout column button background color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the dnd layout column button background color by typing the hexadecimal color code or by using the color picker"></i>
@@ -1065,10 +1301,11 @@ if ($headerTitleLen > 13) {
                                                                     </span>
                                                                 </div>
                                                             </div>
-
+                                                            <!-- end dynamic dnd -->
                                                         </div>
                                                     </div>
                                                 </div>
+                                                <!-- end added static drag and drop elements -->
                                             </div>
                                             <!-- end of #accordion-sidebar -->
                                         </div>
@@ -1143,6 +1380,7 @@ if ($headerTitleLen > 13) {
                                                             }
                                                             ?>
                                                             
+                                                            <!-- added static form group -->
                                                             <div class="form-group">
                                                                 <label for="melis_core_platform_theme_modal_border_width" class="d-flex flex-row justify-content-between">
                                                                     <div class="label-text">Modal border width</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change modal border width"></i>
@@ -1156,6 +1394,7 @@ if ($headerTitleLen > 13) {
                                                                     </div>
                                                                 </div>
                                                             </div>
+                                                            <!-- end added static form group -->
                                                         </div>
                                                     </div>
                                                 </div>
@@ -1265,17 +1504,143 @@ if ($headerTitleLen > 13) {
                                                             }
                                                             ?>
 
+                                                            <!-- added static form group -->
                                                             <div class="form-group">
                                                                 <label for="melis_core_platform_theme_form_button_submit_hover_bg_color" class="d-flex flex-row justify-content-between">
                                                                     <div class="label-text">Form button/submit hover background color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the form button/submit hover background color by typing the hexadecimal color code or by using the color picker"></i>
                                                                 </label>
                                                                 <div class="input-group platform-scheme osta_color_code">
-                                                                    <input type="text" name="melis_core_platform_theme_form_button_submit_hover_bg_color" id="melis_core_platform_theme_form_button_submit_hover_bg_color" class="form-control minicolor-hex" data-control="hue" placeholder="Form button/submit hover background color" value="#fff">
+                                                                    <input type="text" name="melis_core_platform_theme_form_button_submit_hover_bg_color" id="melis_core_platform_theme_form_button_submit_hover_bg_color" class="form-control minicolor-hex" data-control="hue" placeholder="Form button/submit hover background color" value="#72af46">
+                                                                    <span class="input-group-addon">
+                                                                        <input type="hidden" class="minicolor" value="#72af46" />
+                                                                    </span>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="form-group">
+                                                                <label for="melis_core_platform_theme_form_button_submit_hover_border_color" class="d-flex flex-row justify-content-between">
+                                                                    <div class="label-text">Form button/submit hover border color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the form button/submit hover border color by typing the hexadecimal color code or by using the color picker"></i>
+                                                                </label>
+                                                                <div class="input-group platform-scheme osta_color_code">
+                                                                    <input type="text" name="melis_core_platform_theme_form_button_submit_hover_border_color" id="melis_core_platform_theme_form_button_submit_hover_border_color" class="form-control minicolor-hex" data-control="hue" placeholder="Form button/submit hover border color" value="#72af46">
+                                                                    <span class="input-group-addon">
+                                                                        <input type="hidden" class="minicolor" value="#72af46" />
+                                                                    </span>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="form-group">
+                                                                <label for="melis_core_platform_theme_form_button_submit_hover_text_icon_color" class="d-flex flex-row justify-content-between">
+                                                                    <div class="label-text">Form button/submit hover text and icon color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the form button/submit hover text and icon color by typing the hexadecimal color code or by using the color picker"></i>
+                                                                </label>
+                                                                <div class="input-group platform-scheme osta_color_code">
+                                                                    <input type="text" name="melis_core_platform_theme_form_button_submit_hover_text_icon_color" id="melis_core_platform_theme_form_button_submit_hover_text_icon_color" class="form-control minicolor-hex" data-control="hue" placeholder="Form button/submit hover text and icon color" value="#fff">
                                                                     <span class="input-group-addon">
                                                                         <input type="hidden" class="minicolor" value="#fff" />
                                                                     </span>
                                                                 </div>
                                                             </div>
+
+                                                            <div class="form-group">
+                                                                <label for="melis_core_platform_theme_form_button_cancel_bg_color" class="d-flex flex-row justify-content-between">
+                                                                    <div class="label-text">Form button/cancel background color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the form button/cancel background color by typing the hexadecimal color code or by using the color picker"></i>
+                                                                </label>
+                                                                <div class="input-group platform-scheme osta_color_code">
+                                                                    <input type="text" name="melis_core_platform_theme_form_button_cancel_bg_color" id="melis_core_platform_theme_form_button_cancel_bg_color" class="form-control minicolor-hex" data-control="hue" placeholder="Form button/cancel background color" value="#fff">
+                                                                    <span class="input-group-addon">
+                                                                        <input type="hidden" class="minicolor" value="#fff" />
+                                                                    </span>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="form-group">
+                                                                <label for="melis_core_platform_theme_form_button_cancel_text_icon_color" class="d-flex flex-row justify-content-between">
+                                                                    <div class="label-text">Form button/cancel text and icon color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the form button/cancel text and icon color by typing the hexadecimal color code or by using the color picker"></i>
+                                                                </label>
+                                                                <div class="input-group platform-scheme osta_color_code">
+                                                                    <input type="text" name="melis_core_platform_theme_form_button_cancel_text_icon_color" id="melis_core_platform_theme_form_button_cancel_text_icon_color" class="form-control minicolor-hex" data-control="hue" placeholder="Form button/cancel text color" value="#bd362f">
+                                                                    <span class="input-group-addon">
+                                                                        <input type="hidden" class="minicolor" value="#bd362f" />
+                                                                    </span>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="form-group">
+                                                                <label for="melis_core_platform_theme_form_button_cancel_border_radius_size" class="d-flex flex-row justify-content-between">
+                                                                    <div class="label-text">Form button/cancel border radius size</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the form button/cancel border radius size"></i>
+                                                                </label>
+                                                                <div class="row">
+                                                                    <div class="col-9">
+                                                                        <div id="form-button-cancel-border-radius-size-range-slider-min" class="form-button-cancel-border-radius-size-range-slider-min" style="border: 0; color: #f6931f; font-weight: bold;"></div>
+                                                                    </div>
+                                                                    <div class="col-3">
+                                                                        <input type="text" name="melis_core_platform_theme_form_button_cancel_border_radius_size" id="melis_core_platform_theme_form_button_cancel_border_radius_size" class="form-button-cancel-border-radius-size-range-slider-value range-slider-value form-control" />
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="form-group">
+                                                                <label for="melis_core_platform_theme_form_button_cancel_border_width" class="d-flex flex-row justify-content-between">
+                                                                    <div class="label-text">Form button/cancel border width</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the form button/cancel border width"></i>
+                                                                </label>
+                                                                <div class="row">
+                                                                    <div class="col-9">
+                                                                        <div id="form-button-cancel-border-width-range-slider-min" class="form-button-cancel-border-width-range-slider-min" style="border: 0; color: #f6931f; font-weight: bold;"></div>
+                                                                    </div>
+                                                                    <div class="col-3">
+                                                                        <input type="text" name="melis_core_platform_theme_form_button_cancel_border_width" id="melis_core_platform_theme_form_button_cancel_border_width" class="form-button-cancel-border-width-range-slider-value range-slider-value form-control" />
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="form-group">
+                                                                <label for="melis_core_platform_theme_form_button_cancel_border_color" class="d-flex flex-row justify-content-between">
+                                                                    <div class="label-text">Form button/cancel border color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the form button/cancel border color by typing the hexadecimal color code or by using the color picker"></i>
+                                                                </label>
+                                                                <div class="input-group platform-scheme osta_color_code">
+                                                                    <input type="text" name="melis_core_platform_theme_form_button_cancel_border_color" id="melis_core_platform_theme_form_button_cancel_border_color" class="form-control minicolor-hex" data-control="hue" placeholder="Form button/cancel border color" value="#bd362f">
+                                                                    <span class="input-group-addon">
+                                                                        <input type="hidden" class="minicolor" value="#bd362f" />
+                                                                    </span>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="form-group">
+                                                                <label for="melis_core_platform_theme_form_button_cancel_hover_bg_color" class="d-flex flex-row justify-content-between">
+                                                                    <div class="label-text">Form button/cancel hover background color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the form button/cancel hover background color by typing the hexadecimal color code or by using the color picker"></i>
+                                                                </label>
+                                                                <div class="input-group platform-scheme osta_color_code">
+                                                                    <input type="text" name="melis_core_platform_theme_form_button_cancel_hover_bg_color" id="melis_core_platform_theme_form_button_cancel_hover_bg_color" class="form-control minicolor-hex" data-control="hue" placeholder="Form button/cancel hover background color" value="#bd362f">
+                                                                    <span class="input-group-addon">
+                                                                        <input type="hidden" class="minicolor" value="#bd362f" />
+                                                                    </span>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="form-group">
+                                                                <label for="melis_core_platform_theme_form_button_cancel_hover_border_color" class="d-flex flex-row justify-content-between">
+                                                                    <div class="label-text">Form button/cancel hover border color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the form button/cancel hover border color by typing the hexadecimal color code or by using the color picker"></i>
+                                                                </label>
+                                                                <div class="input-group platform-scheme osta_color_code">
+                                                                    <input type="text" name="melis_core_platform_theme_form_button_cancel_hover_border_color" id="melis_core_platform_theme_form_button_cancel_hover_border_color" class="form-control minicolor-hex" data-control="hue" placeholder="Form button/cancel hover border color" value="#bd362f">
+                                                                    <span class="input-group-addon">
+                                                                        <input type="hidden" class="minicolor" value="#bd362f" />
+                                                                    </span>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="form-group">
+                                                                <label for="melis_core_platform_theme_form_button_cancel_hover_text_icon_color" class="d-flex flex-row justify-content-between">
+                                                                    <div class="label-text">Form button/cancel hover text and icon color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the form button/cancel hover text and icon color by typing the hexadecimal color code or by using the color picker"></i>
+                                                                </label>
+                                                                <div class="input-group platform-scheme osta_color_code">
+                                                                    <input type="text" name="melis_core_platform_theme_form_button_cancel_hover_text_icon_color" id="melis_core_platform_theme_form_button_cancel_hover_text_icon_color" class="form-control minicolor-hex" data-control="hue" placeholder="Form button/cancel hover text and icon color" value="#fff">
+                                                                    <span class="input-group-addon">
+                                                                        <input type="hidden" class="minicolor" value="#fff" />
+                                                                    </span>
+                                                                </div>
+                                                            </div>
+                                                            <!-- end added static form group -->
                                                         </div>
                                                     </div>
                                                 </div>
@@ -1526,39 +1891,6 @@ if ($headerTitleLen > 13) {
                     input: false,
                     buttonText: '<?= $this->translate('tr_meliscore_platform_scheme_file_button'); ?>'
                 });
-                /* const $sliders   = $(".decimal-range-slider-min"),
-                    $inputs      = $(".decimal-input-range-slider");
-
-                    $sliders.each(function() {
-                        const slider = $(this);
-                            $inputs.each(function() {
-                            const input = $(this);
-                                slider.slider({
-                                    min: 0,
-                                    max: 1,
-                                    step: 0.01,
-                                    value: 0.8, // default value
-                                    slide: function (event, ui) {
-                                        input.val(ui.value.toFixed(2));
-                                    }
-                                });
-
-                                // safely get the current value AFTER initialization
-                                const initialValue = slider.slider("option", "value");
-
-                                if (typeof initialValue === "number") {
-                                    input.val(initialValue.toFixed(2));
-                                }
-
-                                // optional: allow manual input to update slider
-                                input.on("input", function () {
-                                    let val = parseFloat($(this).val());
-                                        if (!isNaN(val) && val >= 0 && val <= 1) {
-                                            slider.slider("value", val);
-                                        }
-                                });
-                            });
-                    }); */
             })(jQuery);
         </script>
     <?php
