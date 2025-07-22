@@ -1876,6 +1876,8 @@ if ($headerTitleLen > 13) {
                 $(".platform-scheme .minicolor-hex").each(function(i, v) {
                     var $this = $(v);
                         $this.on("click", function() {
+                            console.log({$this});
+                            
                             // .minicolors-focus, .minicolors-panel style="display: block;"
                             $(this).parent(".input-group").find(".minicolors .minicolors-swatch").trigger("click");
                         });

@@ -1700,10 +1700,13 @@ div.glyphicons-social.glyphicon-primary i:before {
 .navbar.main.navbar-primary .dropdown-toggle i {
     color: <?= $headerTextIconColor; ?> !important;
 }
+body .navbar.main.navbar-primary,
+.navbar.main.navbar-primary .dropdown-toggle {
+    background-color: <?= $headerBgColor; ?> !important;
+} 
 .navbar.main.navbar-primary .dropdown-toggle {
     display: block;
     height: 47px;
-    background-color: <?= $headerBgColor; ?> !important;
 }
 .navbar.main.navbar-primary .nav > li.active > .dropdown-toggle .fa {
     color: <?= $headerTextIconActiveColor; ?> !important;
