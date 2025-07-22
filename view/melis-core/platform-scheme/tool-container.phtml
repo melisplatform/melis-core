@@ -429,13 +429,13 @@ if ($headerTitleLen > 13) {
                                                     </div>
                                                 </div>
 
-                                                <div class="accordion-item sidebar-menu">
+                                                <div class="accordion-item accordion-sidebar-menu">
                                                     <h6 class="accordion-header">
-                                                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#sidebar-menu" aria-expanded="false" aria-controls="sidebar-menu">
+                                                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#accordion-sidebar-menu" aria-expanded="false" aria-controls="sidebar-menu">
                                                             Menu
                                                         </button>
                                                     </h6>
-                                                    <div id="sidebar-menu" class="accordion-collapse collapse" data-bs-parent="#accordion-sidebar">
+                                                    <div id="accordion-sidebar-menu" class="accordion-collapse collapse" data-bs-parent="#accordion-sidebar">
                                                         <div class="accordion-body">
                                                             <?php
                                                             foreach ($platformThemeOptionForm->getElements() as $elementKey => $element) {
@@ -1876,10 +1876,8 @@ if ($headerTitleLen > 13) {
                 $(".platform-scheme .minicolor-hex").each(function(i, v) {
                     var $this = $(v);
                         $this.on("click", function() {
-                            console.log({$this});
-                            
                             // .minicolors-focus, .minicolors-panel style="display: block;"
-                            $(this).parent(".input-group").find(".minicolors .minicolors-swatch").trigger("click");
+                            $(this).closest(".input-group").find(".minicolors .minicolors-swatch").trigger("click");
                         });
                 });
 
