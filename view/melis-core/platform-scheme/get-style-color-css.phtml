@@ -1296,7 +1296,11 @@ div.glyphicons-social.glyphicon-primary i:before {
 .navbar.main.navbar-primary .navbar-brand {
     border-bottom: 1px solid <?= $secondaryColor; ?>;
 }
-#newplugin-cont .nav .open > a, #newplugin-cont .nav > li > a:focus, #newplugin-cont .nav .open > a:focus, #newplugin-cont .nav > li > a:hover, #newplugin-cont .nav .open > a:hover {
+#newplugin-cont .nav .open > a, 
+#newplugin-cont .nav > li > a:focus, 
+#newplugin-cont .nav .open > a:focus, 
+#newplugin-cont .nav > li > a:hover, 
+#newplugin-cont .nav .open > a:hover {
     background-color: <?= $secondaryColor; ?>;
 }
 #res-page-cont {
@@ -1622,6 +1626,10 @@ div.glyphicons-social.glyphicon-primary i:before {
     color: <?= $userProfileStatusTextIconColor; ?> !important;
 }
 /* menu */
+.meliscms-search-box.sidebar-treeview-search .sbox-icon,
+.sidebar.sidebar-inverse > .sidebarMenuWrapper > ul li.active-menu.hasSubmenu, 
+.meliscms-search-box.sidebar-treeview-search input, 
+#treeview-container,
 #id_meliscore_leftmenu,
 .sidebar>.sidebarMenuWrapper {
     background-color: <?= $menuBgColor; ?> !important;
@@ -1655,6 +1663,13 @@ div.glyphicons-social.glyphicon-primary i:before {
 .sidebar.sidebar-inverse>.sidebarMenuWrapper>ul li.active.hasSubmenu .hasSubmenu.active>a {
     background: <?= $submenuHoverActiveBgColor; ?> !important;
     color: <?= $submenuTextIconHoverColor; ?> !important;
+}
+.meliscms-search-box.sidebar-treeview-search .sbox-icon,
+.meliscms-search-box.sidebar-treeview-search .sbox-icon i {
+    transition: none;
+    -webkit-transition: none;
+    -moz-transition: none;
+    -ms-transition: none;
 }
 #id-mod-menu-dynatree span.fancytree-active .fancytree-title {
     background-color: transparent;
