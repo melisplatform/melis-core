@@ -4083,7 +4083,7 @@ return array(
                                     'data-control' => 'hue',
                                     'placeholder' => 'tr_meliscore_platform_theme_form_button_submit_text_color',
                                     'category' => 'form_elements',
-                                    'default' => '#444'
+                                    'default' => '#72af46'
                                 ),
                             ),
                         ),
@@ -4123,7 +4123,7 @@ return array(
                                     'category' => 'form_elements',
                                     'sliderId' => 'form-button-submit-border-width-range-slider-min',
                                     'sliderClass' => 'form-button-submit-border-width-range-slider-min',
-                                    'default' => 0
+                                    'default' => 1
                                 ),
                             ),
                         ),
@@ -4142,7 +4142,7 @@ return array(
                                     'data-control' => 'hue',
                                     'placeholder' => 'tr_meliscore_platform_theme_form_button_submit_border_color',
                                     'category' => 'form_elements',
-                                    'default' => '#444'
+                                    'default' => '#72af46'
                                 ),
                             ),
                         ),
@@ -4279,7 +4279,7 @@ return array(
                                     'category' => 'form_elements',
                                     'sliderId' => 'form-button-cancel-border-width-range-slider-min',
                                     'sliderClass' => 'form-button-cancel-border-width-range-slider-min',
-                                    'default' => 0
+                                    'default' => 1
                                 ),
                             ),
                         ),
@@ -4363,7 +4363,6 @@ return array(
                                 ),
                             ),
                         ),
-
 
                         //Tabs
                         array(

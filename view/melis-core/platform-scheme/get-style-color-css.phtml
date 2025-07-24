@@ -114,7 +114,7 @@
     $dashboardPluginPluginBodyBgColor                   = $this->melis_core_platform_theme_dashboard_plugin_plugin_body_bg_color;
     $dashboardPluginPluginBodyBorderColor               = $this->melis_core_platform_theme_dashboard_plugin_plugin_body_border_color;
 
-    // //Dashboard Plugin Menu
+    //Dashboard Plugin Menu
     $dashboardPluginMenuBoxBgColor                      = $this->melis_core_platform_theme_dashboard_plugin_menu_box_bg_color;
     $dashboardPluginMenuBoxBorderColor                  = $this->melis_core_platform_theme_dashboard_plugin_menu_box_border_color;
     $dashboardPluginMenuBoxBorderWidth                  = $this->melis_core_platform_theme_dashboard_plugin_menu_box_border_width;
@@ -225,19 +225,19 @@
     $formButtonSubmitBorderRadius               = $this->melis_core_platform_theme_form_button_submit_border_radius;
     $formButtonSubmitBorderWidth                = $this->melis_core_platform_theme_form_button_submit_border_width;
     $formButtonSubmitBorderColor                = $this->melis_core_platform_theme_form_button_submit_border_color;
-    //$formButtonSubmitBgHoverColor             = $this->melis_core_platform_theme_form_button_submit_bg_hover_color;
-    //$formButtonSubmitHoverBorderColor         = $this->melis_core_platform_theme_form_button_submit_hover_border_color;
-    //$formButtonSubmitHoverTextIconColor       = $this->melis_core_platform_theme_form_button_submit_hover_text_icon_color;
+    $formButtonSubmitBgHoverColor             = $this->melis_core_platform_theme_form_button_submit_hover_bg_color;
+    $formButtonSubmitHoverBorderColor         = $this->melis_core_platform_theme_form_button_submit_hover_border_color;
+    $formButtonSubmitHoverTextIconColor       = $this->melis_core_platform_theme_form_button_submit_hover_text_icon_color;
 
     // form button, submit, cancel and not (dismiss modal) .btn-danger same on #resetPlatformScheme button
-    // $formButtonCancelBgColor                 = $this->melis_core_platform_theme_form_button_cancel_bg_color;
-    // $formButtonCancelTextColor               = $this->melis_core_platform_theme_form_button_cancel_text_color;
-    // $formButtonCancelBorderRadius            = $this->melis_core_platform_theme_form_button_cancel_border_radius;
-    // $formButtonCancelBorderWidth             = $this->melis_core_platform_theme_form_button_cancel_border_width;
-    // $formButtonCancelBorderColor             = $this->melis_core_platform_theme_form_button_cancel_border_color;
-    // $formButtonCancelBgHoverColor            = $this->melis_core_platform_theme_form_button_cancel_bg_hover_color;
-    // $formButtonCancelHoverBorderColor        = $this->melis_core_platform_theme_form_button_cancel_hover_border_color;
-    // $formButtonCancelHoverTextIconColor      = = $this->melis_core_platform_theme_form_button_cancel_hover_text_icon_color;
+    $formButtonCancelBgColor                 = $this->melis_core_platform_theme_form_button_cancel_bg_color;
+    $formButtonCancelTextColor               = $this->melis_core_platform_theme_form_button_cancel_text_icon_color;
+    $formButtonCancelBorderRadius            = $this->melis_core_platform_theme_form_button_cancel_border_radius_size;
+    $formButtonCancelBorderWidth             = $this->melis_core_platform_theme_form_button_cancel_border_width;
+    $formButtonCancelBorderColor             = $this->melis_core_platform_theme_form_button_cancel_border_color;
+    $formButtonCancelBgHoverColor            = $this->melis_core_platform_theme_form_button_cancel_hover_bg_color;
+    $formButtonCancelHoverBorderColor        = $this->melis_core_platform_theme_form_button_cancel_hover_border_color;
+    $formButtonCancelHoverTextIconColor      = $this->melis_core_platform_theme_form_button_cancel_hover_text_icon_color;
 
     //Tab
     $tabWidgetHeadBgColor               = $this->melis_core_platform_theme_tab_widget_head_bg_color;
@@ -1643,12 +1643,13 @@ div.glyphicons-social.glyphicon-primary i:before {
 .sidebar.sidebar-inverse>.sidebarMenuWrapper>ul li:hover>a {
     background: <?= $menuHoverColor; ?> !important;
 }
-.sidebar.sidebar-inverse > .sidebarMenuWrapper > ul li.active-menu.hasSubmenu > a[data-bs-toggle="collapse"],
-.sidebar.sidebar-inverse > .sidebarMenuWrapper > ul li.active.hasSubmenu > a[data-bs-toggle="collapse"] {
+.sidebar.sidebar-inverse > .sidebarMenuWrapper > ul li.active-menu.hasSubmenu ul li.active-menu > a[data-bs-toggle="collapse"],
+.sidebar.sidebar-inverse > .sidebarMenuWrapper > ul > li.active.hasSubmenu > a[data-bs-toggle="collapse"] {
     background-color: <?= $menuFocusColor; ?> !important;
     color: <?= $menuTextIconColor; ?> !important;
 }
-.sidebar.sidebar-inverse > .sidebarMenuWrapper > ul li.active.hasSubmenu > a[data-bs-toggle="collapse"] {
+.sidebar.sidebar-inverse > .sidebarMenuWrapper > ul > li.active-menu.hasSubmenu > ul > li > a:hover > i,
+.sidebar.sidebar-inverse > .sidebarMenuWrapper > ul > li.active.hasSubmenu > a[data-bs-toggle="collapse"] {
     color: <?= $menuTextIconColor; ?> !important;
 }
 /** cms menus */
@@ -1658,10 +1659,11 @@ div.glyphicons-social.glyphicon-primary i:before {
     color: <?= $submenuTextIconColor; ?>;
 }
 #id-mod-menu-dynatree .fancytree-node.fancytree-active,
-.sidebar.sidebar-inverse>.sidebarMenuWrapper>ul li.active-menu.hasSubmenu ul li a:hover,
-.sidebar.sidebar-inverse>.sidebarMenuWrapper>ul li.active.hasSubmenu .hasSubmenu.active>a i.fa,
+.sidebar.sidebar-inverse>.sidebarMenuWrapper>ul > li.active-menu.hasSubmenu > ul > li > a:hover,
 .sidebar.sidebar-inverse>.sidebarMenuWrapper>ul li.active.hasSubmenu .hasSubmenu.active>a {
     background: <?= $submenuHoverActiveBgColor; ?> !important;
+}
+.sidebar.sidebar-inverse>.sidebarMenuWrapper>ul li.active.hasSubmenu .hasSubmenu.active>a i.fa {
     color: <?= $submenuTextIconHoverColor; ?> !important;
 }
 .meliscms-search-box.sidebar-treeview-search .sbox-icon,
@@ -2120,7 +2122,7 @@ form .form-group select option {
 form .form-group textarea,
 form .form-group select,
 form .form-group input[type="text"]:not(.tt-input),
-form .form-group input[type="submit"],
+form .form-group input[type="submit"]:not(.btn-primary),
 form .form-group input[type="button"] {
     background-color: <?= $formInputElementsBgColor; ?> !important;
     border-width: <?= $formInputElementsBorderWidth; ?>px !important;
@@ -2137,20 +2139,39 @@ form .form-group input[type="text"]:readonly {
     border-color: <?= $formInputTextDisableReadonlyBorderColor; ?> !important;
     color: <?= $formInputTextDisableReadonlyTextColor; ?> !important;
 }
+.btn-success:not(.dtActionCls .btn-success) ,
 form .form-group input[type="button"],
-form .form-group input[type="submit"] {
+form .form-group input[type="submit"]:not(.btn-primary) {
     background-color: <?= $formButtonSubmitBgColor; ?> !important;
+    
     border-width: <?= $formButtonSubmitBorderWidth; ?>px !important;
     border-style: solid;
     border-color: <?= $formButtonSubmitBorderColor; ?> !important;
+
     border-radius: <?= $formButtonSubmitBorderRadius; ?> !important;
     color: <?= $formButtonSubmitTextIconColor; ?> !important;
 }
+.btn-success::not(.dtActionCls .btn-success)hover,
 form .form-group input[type="button"]:hover,
-form .form-group input[type="submit"]:hover {
-    background-color: #444;
-    border-color: #fff;
-    color: #ffffff;
+form .form-group input[type="submit"]:not(.btn-primary):hover {
+    background-color: <?= $formButtonSubmitBgHoverColor; ?> !important;
+    border-color: <?= $formButtonSubmitHoverBorderColor; ?> !important;
+    color: <?= $formButtonSubmitHoverTextIconColor; ?> !important;
+}
+.btn-danger:not(.dtActionCls .btn-danger) {
+    background-color: <?= $formButtonCancelBgColor; ?> !important;
+
+    border-width: <?= $formButtonCancelBorderWidth; ?>px !important;
+    border-style: solid;
+    border-color: <?= $formButtonCancelBorderColor; ?> !important;
+
+    border-radius: <?= $formButtonCancelBorderRadius; ?> !important;
+    color: <?= $formButtonCancelTextColor; ?> !important;
+}
+.btn-danger:not(.dtActionCls .btn-danger):hover {
+    background-color: <?= $formButtonCancelBgHoverColor; ?> !important;
+    border-color: <?= $formButtonCancelHoverBorderColor; ?> !important;
+    color: <?= $formButtonCancelHoverTextIconColor; ?> !important;
 }
 form .form-group label span.switch-left {
     color: #ffffff;

@@ -441,14 +441,9 @@ body {
 	padding-left: 40px;
 }
 
-.sidebar.sidebar-inverse
-	> .sidebarMenuWrapper
-	> ul
-	li.active-menu.hasSubmenu
-	ul
-	li
-	a:hover {
-	color: #fff !important;
+.sidebar.sidebar-inverse > .sidebarMenuWrapper > ul > li.active-menu.hasSubmenu > ul > li > a:hover > i,
+.sidebar.sidebar-inverse > .sidebarMenuWrapper > ul > li.active-menu.hasSubmenu > ul > li > a:hover {
+	color: #fff;
 }
 .sidebar.sidebar-inverse
 	> .sidebarMenuWrapper
@@ -459,13 +454,7 @@ body {
 	a {
 	color: #5a5a5a;
 }
-.sidebar.sidebar-inverse
-	> .sidebarMenuWrapper
-	> ul
-	li.active-menu.hasSubmenu
-	ul
-	li.active-menu
-	> a {
+.sidebar.sidebar-inverse > .sidebarMenuWrapper > ul li.active-menu.hasSubmenu ul li.active-menu > a {
 	color: #fff;
 }
 .sidebar.sidebar-inverse
