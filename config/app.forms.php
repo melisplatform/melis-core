@@ -4146,6 +4146,224 @@ return array(
                                 ),
                             ),
                         ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_form_button_submit_hover_bg_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_melis_core_platform_theme_form_button_submit_hover_bg_color',
+                                    'tooltip' => 'tr_melis_core_platform_theme_form_button_submit_hover_bg_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_form_button_submit_hover_bg_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'melis_core_platform_theme_form_button_submit_hover_bg_color',
+                                    'category' => 'form_elements',
+                                    'default' => '#72af46'
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_form_button_submit_hover_border_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_melis_core_platform_theme_form_button_submit_hover_border_color',
+                                    'tooltip' => 'tr_melis_core_platform_theme_form_button_submit_hover_border_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_form_button_submit_hover_border_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'melis_core_platform_theme_form_button_submit_hover_border_color',
+                                    'category' => 'form_elements',
+                                    'default' => '#72af46'
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_form_button_submit_hover_text_icon_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_melis_core_platform_theme_form_button_submit_hover_text_icon_color',
+                                    'tooltip' => 'tr_melis_core_platform_theme_form_button_submit_hover_text_icon_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_form_button_submit_hover_text_icon_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'melis_core_platform_theme_form_button_submit_hover_text_icon_color',
+                                    'category' => 'form_elements',
+                                    'default' => '#fff'
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_form_button_cancel_bg_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_melis_core_platform_theme_form_button_cancel_bg_color',
+                                    'tooltip' => 'tr_melis_core_platform_theme_form_button_cancel_bg_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_form_button_cancel_bg_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'melis_core_platform_theme_form_button_cancel_bg_color',
+                                    'category' => 'form_elements',
+                                    'default' => '#fff'
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_form_button_cancel_text_icon_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_melis_core_platform_theme_form_button_cancel_text_icon_color',
+                                    'tooltip' => 'tr_melis_core_platform_theme_form_button_cancel_text_icon_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_form_button_cancel_text_icon_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'melis_core_platform_theme_form_button_cancel_text_icon_color',
+                                    'category' => 'form_elements',
+                                    'default' => '#bd362f'
+                                ),
+                            ),
+                        ),
+
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_form_button_cancel_border_radius_size',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_melis_core_platform_theme_form_button_cancel_border_radius_size',
+                                    'tooltip' => 'tr_melis_core_platform_theme_form_button_cancel_border_radius_size_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_form_button_cancel_border_radius_size',
+                                    'value' => '',
+                                    'class' => 'form-button-cancel-border-radius-size-range-slider-value range-slider-value form-control',
+                                    'placeholder' => 'tr_melis_core_platform_theme_form_button_cancel_border_radius_size',
+                                    'category' => 'form_elements',
+                                    'sliderId' => 'form-button-cancel-border-radius-size-range-slider-min',
+                                    'sliderClass' => 'form-button-cancel-border-radius-size-range-slider-min',
+                                    'default' => 0
+                                ),
+                            ),
+                        ),
+
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_form_button_cancel_border_width',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_melis_core_platform_theme_form_button_cancel_border_width',
+                                    'tooltip' => 'tr_melis_core_platform_theme_form_button_cancel_border_width_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_form_button_cancel_border_width',
+                                    'value' => '',
+                                    'class' => 'form-button-cancel-border-width-range-slider-value range-slider-value form-control',
+                                    'placeholder' => 'tr_melis_core_platform_theme_form_button_cancel_border_width',
+                                    'category' => 'form_elements',
+                                    'sliderId' => 'form-button-cancel-border-width-range-slider-min',
+                                    'sliderClass' => 'form-button-cancel-border-width-range-slider-min',
+                                    'default' => 0
+                                ),
+                            ),
+                        ),
+
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_form_button_cancel_border_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_melis_core_platform_theme_form_button_cancel_border_color',
+                                    'tooltip' => 'tr_melis_core_platform_theme_form_button_cancel_border_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_form_button_cancel_border_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'melis_core_platform_theme_form_button_cancel_border_color',
+                                    'category' => 'form_elements',
+                                    'default' => '#bd362f'
+                                ),
+                            ),
+                        ),
+
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_form_button_cancel_hover_bg_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_melis_core_platform_theme_form_button_cancel_hover_bg_color',
+                                    'tooltip' => 'tr_melis_core_platform_theme_form_button_cancel_hover_bg_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_form_button_cancel_hover_bg_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'melis_core_platform_theme_form_button_cancel_hover_bg_color',
+                                    'category' => 'form_elements',
+                                    'default' => '#bd362f'
+                                ),
+                            ),
+                        ),
+
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_form_button_cancel_hover_border_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_melis_core_platform_theme_form_button_cancel_hover_border_color',
+                                    'tooltip' => 'tr_melis_core_platform_theme_form_button_cancel_hover_border_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_form_button_cancel_hover_border_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'melis_core_platform_theme_form_button_cancel_hover_border_color',
+                                    'category' => 'form_elements',
+                                    'default' => '#bd362f'
+                                ),
+                            ),
+                        ),
+
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_form_button_cancel_hover_text_icon_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_melis_core_platform_theme_form_button_cancel_hover_text_icon_color',
+                                    'tooltip' => 'tr_melis_core_platform_theme_form_button_cancel_hover_text_icon_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_form_button_cancel_hover_text_icon_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'melis_core_platform_theme_form_button_cancel_hover_text_icon_color',
+                                    'category' => 'form_elements',
+                                    'default' => '#fff'
+                                ),
+                            ),
+                        ),
+
 
                         //Tabs
                         array(

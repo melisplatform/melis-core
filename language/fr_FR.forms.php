@@ -612,6 +612,27 @@ return array(
     'tr_meliscore_platform_theme_daterangepicker_footer_apply_btn_text_color_tooltip' => 'Change the color by typing the hexadecimal color code or by using the color picker',
     'tr_meliscore_platform_theme_daterangepicker_footer_apply_btn_hover_text_color' => 'Daterangepicker footer apply button hover text color',
     'tr_meliscore_platform_theme_daterangepicker_footer_apply_btn_hover_text_color_tooltip' => 'Change the color by typing the hexadecimal color code or by using the color picker',
-
+    'tr_melis_core_platform_theme_form_button_submit_hover_bg_color' => 'Form button/submit hover background color',
+    'tr_melis_core_platform_theme_form_button_submit_hover_bg_color_tooltip' => 'Change the color by typing the hexadecimal color code or by using the color picker',
+    'tr_melis_core_platform_theme_form_button_submit_hover_border_color' => 'Form button/submit hover border color',
+    'tr_melis_core_platform_theme_form_button_submit_hover_border_color_tooltip' => 'Change the color by typing the hexadecimal color code or by using the color picker',
+    'tr_melis_core_platform_theme_form_button_submit_hover_text_icon_color' => 'Form button/submit hover text and icon color',
+    'tr_melis_core_platform_theme_form_button_submit_hover_text_icon_color_tooltip' => 'Change the color by typing the hexadecimal color code or by using the color picker',
+    'tr_melis_core_platform_theme_form_button_cancel_bg_color' => 'Form button/cancel background color',
+    'tr_melis_core_platform_theme_form_button_cancel_bg_color_tooltip' => 'Change the color by typing the hexadecimal color code or by using the color picker',
+    'tr_melis_core_platform_theme_form_button_cancel_text_icon_color' => 'Form button/cancel text and icon color',
+    'tr_melis_core_platform_theme_form_button_cancel_text_icon_color_tooltip' => 'Change the color by typing the hexadecimal color code or by using the color picker',
+    'tr_melis_core_platform_theme_form_button_cancel_border_radius_size' => 'Form button/cancel border radius size',
+    'tr_melis_core_platform_theme_form_button_cancel_border_radius_size_tooltip' => 'Set the size using the slider',
+    'tr_melis_core_platform_theme_form_button_cancel_border_width' => 'Form button/cancel border width',
+    'tr_melis_core_platform_theme_form_button_cancel_border_width_tooltip' => 'Set the width using the slider',
+    'tr_melis_core_platform_theme_form_button_cancel_border_color' => 'Form button/cancel border color',
+    'tr_melis_core_platform_theme_form_button_cancel_border_color_tooltip' => 'Change the color by typing the hexadecimal color code or by using the color picker',
+    'tr_melis_core_platform_theme_form_button_cancel_hover_bg_color' => 'Form button/cancel hover background color',
+    'tr_melis_core_platform_theme_form_button_cancel_hover_bg_color_tooltip' => 'Change the color by typing the hexadecimal color code or by using the color picker',
+    'tr_melis_core_platform_theme_form_button_cancel_hover_border_color' => 'Form button/cancel hover border color',
+    'tr_melis_core_platform_theme_form_button_cancel_hover_border_color_tooltip' => 'Change the color by typing the hexadecimal color code or by using the color picker',
+    'tr_melis_core_platform_theme_form_button_cancel_hover_text_icon_color' => 'Form button/cancel hover text and icon color',
+    'tr_melis_core_platform_theme_form_button_cancel_hover_text_icon_color_tooltip' => 'Change the color by typing the hexadecimal color code or by using the color picker'
 );
 ?>
