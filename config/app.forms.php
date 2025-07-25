@@ -10524,9 +10524,17 @@ return array(
                             'required' => false,
                         ],
                         'melis_core_platform_theme_dnd_plugins_box_title_font_styles' => [
-                            'name'     => 'melis_core_platform_theme_datepicker_table_th_td_text_align',
+                            'name'     => 'melis_core_platform_theme_dnd_plugins_box_title_font_styles',
                             'required' => false,
-                        ]
+                        ],
+                        'melis_core_platform_theme_dnd_plugins_box_title_text_align' => [
+                            'name'     => 'melis_core_platform_theme_dnd_plugins_box_title_text_align',
+                            'required' => false,
+                        ],
+                        'melis_core_platform_theme_dnd_plugins_box_category_btn_text_align' => [
+                            'name'     => 'melis_core_platform_theme_dnd_plugins_box_category_btn_text_align',
+                            'required' => false,
+                        ],
                     )
                 ),
             ),
