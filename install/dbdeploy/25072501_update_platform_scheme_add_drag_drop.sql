@@ -42,6 +42,6 @@ UPDATE `melis_core_platform_scheme` SET `pscheme_drag_drop` = '{"melis_core_plat
         "melis_core_platform_theme_dnd_no_content_before_after_pseudo_element_color": "#ce5459",
         "melis_core_platform_theme_dnd_zone_hover_outline_color": "#ce5459",
         "melis_core_platform_theme_dnd_zone_hover_shadow_color": "#ce5459",
-        "melis_core_platform_theme_dnd_zone_icons_color": "#fff",
+        "melis_core_platform_theme_dnd_zone_icons_color": "#fff"
 }'
 WHERE `melis_core_platform_scheme`.`pscheme_id` IN (1,2);
