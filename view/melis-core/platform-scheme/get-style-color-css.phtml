@@ -225,9 +225,9 @@
     $formButtonSubmitBorderRadius               = $this->melis_core_platform_theme_form_button_submit_border_radius;
     $formButtonSubmitBorderWidth                = $this->melis_core_platform_theme_form_button_submit_border_width;
     $formButtonSubmitBorderColor                = $this->melis_core_platform_theme_form_button_submit_border_color;
-    $formButtonSubmitBgHoverColor             = $this->melis_core_platform_theme_form_button_submit_hover_bg_color;
-    $formButtonSubmitHoverBorderColor         = $this->melis_core_platform_theme_form_button_submit_hover_border_color;
-    $formButtonSubmitHoverTextIconColor       = $this->melis_core_platform_theme_form_button_submit_hover_text_icon_color;
+    $formButtonSubmitBgHoverColor               = $this->melis_core_platform_theme_form_button_submit_hover_bg_color;
+    $formButtonSubmitHoverBorderColor           = $this->melis_core_platform_theme_form_button_submit_hover_border_color;
+    $formButtonSubmitHoverTextIconColor         = $this->melis_core_platform_theme_form_button_submit_hover_text_icon_color;
 
     // form button, submit, cancel and not (dismiss modal) .btn-danger same on #resetPlatformScheme button
     $formButtonCancelBgColor                 = $this->melis_core_platform_theme_form_button_cancel_bg_color;
@@ -2147,7 +2147,7 @@ form .form-group input[type="text"]:readonly {
     border-color: <?= $formInputTextDisableReadonlyBorderColor; ?> !important;
     color: <?= $formInputTextDisableReadonlyTextColor; ?> !important;
 }
-.btn-success:not(.dtActionCls .btn-success) ,
+.btn-success:not(.dtActionCls .btn-success),
 form .form-group input[type="button"],
 form .form-group input[type="submit"]:not(.btn-primary) {
     background-color: <?= $formButtonSubmitBgColor; ?> !important;
