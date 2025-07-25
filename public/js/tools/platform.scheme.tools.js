@@ -618,8 +618,8 @@ var rangeSliderSize = {
                 selectorMin: ".plugins-box-border-width-range-slider-min", 
                 selectorValue: ".plugins-box-border-width-range-slider-value", 
                 value: $("#melis_core_platform_theme_dnd_plugins_box_border_width").val(),
-                min: 4,
-                max: 10 
+                min: 12,
+                max: 20 
             }, // dnd plugins box border width
             { 
                 selectorMin: ".plugins-box-title-line-height-range-slider-min", 

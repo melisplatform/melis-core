@@ -6392,7 +6392,7 @@ return array(
                                     'category' => 'dragdrop',
                                     'sliderId' => 'plugins-box-title-letter-spacing-range-slider-min',
                                     'sliderClass' => 'plugins-box-title-letter-spacing-range-slider-min',
-                                    'default' => 0,
+                                    'default' => 4,
                                 ),
                             ),
                         ),
