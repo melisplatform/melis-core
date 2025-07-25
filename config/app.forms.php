@@ -6305,17 +6305,17 @@ return array(
 
                         array(
                             'spec' => array(
-                                'name' => 'melis_core_platform_theme_dnd_plugins_box_line_height',
+                                'name' => 'melis_core_platform_theme_dnd_plugins_box_title_line_height',
                                 'type' => 'Text',
                                 'options' => array(
-                                    'label' => 'tr_melis_core_platform_theme_dnd_plugins_box_line_height',
-                                    'tooltip' => 'tr_melis_core_platform_theme_dnd_plugins_box_line_height_tooltip',
+                                    'label' => 'tr_melis_core_platform_theme_dnd_plugins_box_title_line_height',
+                                    'tooltip' => 'tr_melis_core_platform_theme_dnd_plugins_box_title_line_height_tooltip',
                                 ),
                                 'attributes' => array(
-                                    'id' => 'melis_core_platform_theme_dnd_plugins_box_line_height',
+                                    'id' => 'melis_core_platform_theme_dnd_plugins_box_title_line_height',
                                     'value' => '',
                                     'class' => 'plugins-box-line-height-range-slider-value range-slider-value form-control',
-                                    'placeholder' => 'tr_melis_core_platform_theme_dnd_plugins_box_line_height',
+                                    'placeholder' => 'tr_melis_core_platform_theme_dnd_plugins_box_title_line_height',
                                     'category' => 'dragdrop',
                                     'sliderId' => 'plugins-box-title-line-height-range-slider-min',
                                     'sliderClass' => 'plugins-box-title-line-height-range-slider-min',
@@ -6326,11 +6326,11 @@ return array(
 
                         array(
                             'spec' => array(
-                                'name' => 'melis_core_platform_theme_dnd_plugins_box_title_font_styles',
+                                'name' => 'melis_core_platform_theme_dnd_plugins_box_title_text_font_styles',
                                 'type' => Laminas\Form\Element\MultiCheckbox::class,
                                 'options' => array(
-                                    'label' => 'tr_melis_core_platform_theme_dnd_plugins_box_title_font_styles',
-                                    'tooltip' => 'tr_melis_core_platform_theme_dnd_plugins_box_title_font_styles_tooltip',
+                                    'label' => 'tr_melis_core_platform_theme_dnd_plugins_box_title_text_font_styles',
+                                    'tooltip' => 'tr_melis_core_platform_theme_dnd_plugins_box_title_text_font_styles_tooltip',
                                     'value_options' => [
                                         'bold' => [
                                             'value' => 'bold',
@@ -6365,10 +6365,10 @@ return array(
                                     ],
                                 ),
                                 'attributes' => array(
-                                    'id' => 'melis_core_platform_theme_dnd_plugins_box_title_font_styles',
+                                    'id' => 'melis_core_platform_theme_dnd_plugins_box_title_text_font_styles',
                                     'value' => '',
                                     'class' => 'form-control',
-                                    'placeholder' => 'tr_melis_core_platform_theme_dnd_plugins_box_title_font_styles',
+                                    'placeholder' => 'tr_melis_core_platform_theme_dnd_plugins_box_title_text_font_styles',
                                     'category' => 'dragdrop',
                                     'required' => false,
                                     'default' => '',
@@ -10523,8 +10523,8 @@ return array(
                             'name'     => 'melis_core_platform_theme_datepicker_table_th_td_text_align',
                             'required' => false,
                         ],
-                        'melis_core_platform_theme_dnd_plugins_box_title_font_styles' => [
-                            'name'     => 'melis_core_platform_theme_dnd_plugins_box_title_font_styles',
+                        'melis_core_platform_theme_dnd_plugins_box_title_text_font_styles' => [
+                            'name'     => 'melis_core_platform_theme_dnd_plugins_box_title_text_font_styles',
                             'required' => false,
                         ],
                         'melis_core_platform_theme_dnd_plugins_box_title_text_align' => [

@@ -742,7 +742,8 @@ if ($headerTitleLen > 13) {
                                                                                     <input type="hidden" class="minicolor" value="<?= $element->getValue(); ?>" />
                                                                                 </span>
                                                                             </div>
-                                                                        <?php  } elseif (strpos($element->getName(), 'size') !== false || strpos($element->getName(), 'width') !== false  || strpos($element->getName(), 'radius') !== false || strpos($element->getName(), 'height') !== false || strpos($element->getName(), 'spacing') !== false) {
+                                                                        <?php  } elseif (strpos($element->getName(), 'size') !== false || strpos($element->getName(), 'width') !== false  || strpos($element->getName(), 'radius') !== false || strpos($element->getName(), 'height') !== false 
+                                                                                || strpos($element->getName(), 'spacing') !== false || strpos($element->getName(), 'opacity') !== false || strpos($element->getName(), 'indent') !== false) {
                                                                             $element->setAttribute('readonly', true);
                                                                         ?>
                                                                             <div class="row">
