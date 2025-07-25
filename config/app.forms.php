@@ -1,9 +1,9 @@
 <?php
 
 return array(
-	'plugins' => array(
-		'meliscore' => array(
-			'forms' => array(
+    'plugins' => array(
+        'meliscore' => array(
+            'forms' => array(
                 'meliscore_other_config_login_account_lock_form' => [
                     'attributes' => [
                         'name' => 'otherConfigForm',
@@ -21,7 +21,7 @@ return array(
                                     'tooltip' => 'tr_meliscore_tool_other_config_activate_the_lock_account_option_for_failed_login_attempts_tooltip',
                                     'label' => 'tr_meliscore_tool_other_config_activate_the_lock_account_option_for_failed_login_attempts',
                                     'checked_value' => '1',
-                                    'unchecked_value' => '0',                                                                                                                                                                                   
+                                    'unchecked_value' => '0',
                                     'switchOptions' => array(
                                         'label-on' => 'tr_meliscore_tool_other_config_login_account_lock_status_active',
                                         'label-off' => 'tr_meliscore_tool_other_config_login_account_lock_status_inactive',
@@ -29,8 +29,8 @@ return array(
                                     ),
                                     'disable_inarray_validator' => true,
                                 ],
-                                'attributes' => [                                  
-                                    'class' => 'form-control',                                 
+                                'attributes' => [
+                                    'class' => 'form-control',
                                     'id' => 'login_account_lock_status'
                                 ],
                             ],
@@ -43,12 +43,12 @@ return array(
                                     'label' => 'tr_meliscore_tool_other_config_login_account_admin_email',
                                     'tooltip' => 'tr_meliscore_tool_other_config_login_account_admin_email_tooltip',
                                 ],
-                                'attributes' => [                                  
-                                    'class' => 'form-control',                                 
+                                'attributes' => [
+                                    'class' => 'form-control',
                                     'id' => 'login_account_admin_email'
                                 ],
                             ],
-                        ], 
+                        ],
                         [
                             'spec' => [
                                 'name' => 'login_account_lock_number_of_attempts',
@@ -58,8 +58,8 @@ return array(
                                     'label' => 'tr_meliscore_tool_other_config_number_of_attempts_before_account_is_locked',
                                     'class' => 'd-flex flex-row justify-content-between',
                                 ],
-                                'attributes' => [                                  
-                                    'class' => 'form-control',                                 
+                                'attributes' => [
+                                    'class' => 'form-control',
                                     'id' => 'login_account_lock_number_of_attempts'
                                 ],
                             ],
@@ -77,12 +77,12 @@ return array(
                                     ),
                                     'label_attributes' => array(
                                         'class' => 'melis-radio-box',
-                                     ),
+                                    ),
                                 ],
                                 'attributes' => [
                                     'id' => 'login_account_type_of_lock',
                                     'class' => 'form-control',
-                                    'required' => false,                                      
+                                    'required' => false,
                                 ],
                             ],
                         ],
@@ -289,7 +289,7 @@ return array(
                                     'tooltip' => 'tr_meliscore_tool_other_config_password_validity_lifetime_status_tooltip',
                                     'label' => 'tr_meliscore_tool_other_config_password_validity_lifetime_status',
                                     'checked_value' => '1',
-                                    'unchecked_value' => '0',                                                                                                                                                                                   
+                                    'unchecked_value' => '0',
                                     'switchOptions' => array(
                                         'label-on' => 'tr_meliscore_tool_other_config_password_validity_lifetime_status_active',
                                         'label-off' => 'tr_meliscore_tool_other_config_password_validity_lifetime_status_inactive',
@@ -297,12 +297,12 @@ return array(
                                     ),
                                     'disable_inarray_validator' => true,
                                 ],
-                                'attributes' => [                                  
-                                    'class' => 'form-control',                                 
+                                'attributes' => [
+                                    'class' => 'form-control',
                                     'id' => 'password_validity_status'
                                 ],
                             ],
-                        ], 
+                        ],
                         [
                             'spec' => [
                                 'name' => 'password_validity_lifetime',
@@ -312,8 +312,8 @@ return array(
                                     'label' => 'tr_meliscore_tool_other_config_password_validity_lifetime',
                                     'class' => 'd-flex flex-row justify-content-between',
                                 ],
-                                'attributes' => [                                  
-                                    'class' => 'form-control',                                 
+                                'attributes' => [
+                                    'class' => 'form-control',
                                     'id' => 'password_validity_lifetime'
                                 ],
                             ],
@@ -367,7 +367,7 @@ return array(
                                     'tooltip' => 'tr_meliscore_tool_other_config_password_duplicate_status_tooltip',
                                     'label' => 'tr_meliscore_tool_other_config_password_duplicate_status',
                                     'checked_value' => '1',
-                                    'unchecked_value' => '0',                                                                                                                                                                                   
+                                    'unchecked_value' => '0',
                                     'switchOptions' => array(
                                         'label-on' => 'tr_meliscore_tool_other_config_password_duplicate_status_active',
                                         'label-off' => 'tr_meliscore_tool_other_config_password_duplicate_status_inactive',
@@ -375,8 +375,8 @@ return array(
                                     ),
                                     'disable_inarray_validator' => true,
                                 ],
-                                'attributes' => [                                  
-                                    'class' => 'form-control',                                 
+                                'attributes' => [
+                                    'class' => 'form-control',
                                     'id' => 'password_duplicate_status'
                                 ],
                             ],
@@ -390,8 +390,8 @@ return array(
                                     'label' => 'tr_meliscore_tool_other_config_password_duplicate_lifetime',
                                     'class' => 'd-flex flex-row justify-content-between',
                                 ],
-                                'attributes' => [                                  
-                                    'class' => 'form-control',                                 
+                                'attributes' => [
+                                    'class' => 'form-control',
                                     'id' => 'password_duplicate_lifetime'
                                 ],
                             ],
@@ -442,12 +442,12 @@ return array(
                                 'name' => 'password_complexity_number_of_characters',
                                 'type' => 'MelisText',
                                 'options' => [
-                                    'tooltip' => 'Specify the minimum number of characters required for a password.',  
+                                    'tooltip' => 'Specify the minimum number of characters required for a password.',
                                     'label' => 'tr_meliscore_tool_other_config_password_complexity_number_of_characters',
                                     'class' => 'd-flex flex-row justify-content-between',
                                 ],
-                                'attributes' => [                                  
-                                    'class' => 'form-control',                                 
+                                'attributes' => [
+                                    'class' => 'form-control',
                                     'id' => 'password_complexity_number_of_characters'
                                 ],
                             ],
@@ -560,57 +560,57 @@ return array(
                         ],
                     ],
                 ],
-				'meliscore_login' => array(
-					'attributes' => array(
-						'name' => 'meliscore_login',
-						'id' => 'idformmeliscorelogin',
-						'method' => 'POST',
-						//'action' => '/melis/MelisCore/MelisAuth/authenticate',
-					),
-					'hydrator'  => 'Laminas\Hydrator\ArraySerializableHydrator',
-					'elements' => array(  
-						array(
-							'spec' => array(
-								'name' => 'usr_login',
-								'type' => 'Text',
-								'options' => array(
-									'label' => 'tr_meliscore_login_form_Login',
-								),
-								'attributes' => array(
-									'id' => 'id_usr_login',
-									'value' => '',
-								    'class' => 'form-control',
-								    'placeholder' => 'tr_meliscore_login_form_Login',
-								),
-							),
-						),
-						array(
-							'spec' => array(
-								'name' => 'usr_password',
-								'type' => 'Password',
-								'options' => array(
-									'label' => 'tr_meliscore_login_form_Password',
-								),
-								'attributes' => array(
-									'id' => 'id_usr_password',
-									'value' => '',
-								    'class' => 'form-control',
-								    'placeholder' => 'tr_meliscore_login_form_Password',
-								),
-							),
-						),
-					    array(
-					        'spec' => array(
-					            'name' => 'login_submit',
-					            'type' => 'Submit',
-					            'attributes' => array(
-					                'value' => 'tr_meliscore_login_form_submittext_Connect',
-					                'id' => 'login_submit',
-					                'class' => 'btn btn-primary btn-block',
-					            ),
-					        ),
-					    ),
-					    /* array(
+                'meliscore_login' => array(
+                    'attributes' => array(
+                        'name' => 'meliscore_login',
+                        'id' => 'idformmeliscorelogin',
+                        'method' => 'POST',
+                        //'action' => '/melis/MelisCore/MelisAuth/authenticate',
+                    ),
+                    'hydrator'  => 'Laminas\Hydrator\ArraySerializableHydrator',
+                    'elements' => array(
+                        array(
+                            'spec' => array(
+                                'name' => 'usr_login',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_login_form_Login',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'id_usr_login',
+                                    'value' => '',
+                                    'class' => 'form-control',
+                                    'placeholder' => 'tr_meliscore_login_form_Login',
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'usr_password',
+                                'type' => 'Password',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_login_form_Password',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'id_usr_password',
+                                    'value' => '',
+                                    'class' => 'form-control',
+                                    'placeholder' => 'tr_meliscore_login_form_Password',
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'login_submit',
+                                'type' => 'Submit',
+                                'attributes' => array(
+                                    'value' => 'tr_meliscore_login_form_submittext_Connect',
+                                    'id' => 'login_submit',
+                                    'class' => 'btn btn-primary btn-block',
+                                ),
+                            ),
+                        ),
+                        /* array(
 					        'spec' => array(
 					            'name' => 'usr_rem',
 					            'type' => 'checkbox',
@@ -620,118 +620,118 @@ return array(
                                  ),
 					        ),
 					    ), */
-					),
-				),
-			    'meliscore_forgot' => array(
-			        'attributes' => array(
-			            'name' => 'meliscore_forgot',
-			            'id' => 'idformmeliscoreforgot',
-			            'method' => 'POST',
-			            'novalidate' => 'novalidate',
-			            //'action' => '/melis/lost-password-request',
-			        ),
-			        'hydrator'  => 'Laminas\Hydrator\ArraySerializableHydrator',
-			        'elements' => array(
-			            array(
-			                'spec' => array(
-			                    'name' => 'usr_email',
-			                    'type' => 'Text',
-			                    'options' => array(
-			                        'label' => 'tr_meliscore_forgot_form_email',
-			                    ),
-			                    'attributes' => array(
-			                        'id' => 'id_usr_login',
-			                        'value' => '',
-			                        'class' => 'form-control',
-			                        'placeholder' => 'tr_meliscore_forgot_form_email',
-			                        'required' => 'required',
-			                    ),
-			                ),
-			            ),
-			            array(
-			                'spec' => array(
-			                    'name' => 'usr_login',
-			                    'type' => 'Text',
-			                    'options' => array(
-			                        'label' => 'tr_meliscore_forgot_form_login',
-			                    ),
-			                    'attributes' => array(
-			                        'id' => 'id_usr_login',
-			                        'value' => '',
-			                        'class' => 'form-control',
-			                        'placeholder' => 'tr_meliscore_forgot_form_login',
-			                        'required' => 'required',
-			                    ),
-			                ),
-			            ),
-			            array(
-			                'spec' => array(
-			                    'name' => 'forgot_submit',
-			                    'type' => 'submit',
-			                    'attributes' => array(
-			                        'value' => 'tr_meliscore_forgot_form_submit',
-			                        'id' => 'forgot_submit',
-			                        'class' => 'btn btn-primary btn-block',
-			                    ),
-			                ),
-			            ),
-			        ),
-			    ),
-			    
-			    'meliscore_resetpass' => array(
-			        'attributes' => array(
-			            'name' => 'meliscore_reset_pass',
-			            'id' => 'idformmeliscoreresetpass',
-			            'method' => 'POST',
-			            'novalidate' => 'novalidate',
-			        ),
-			        'hydrator'  => 'Laminas\Hydrator\ArraySerializableHydrator',
-			        'elements' => array(
-			            array(
-			                'spec' => array(
-			                    'name' => 'usr_pass',
-			                    'type' => 'Password',
-			                    'options' => array(
-			                        'label' => 'tr_meliscore_reset_password',
-			                    ),
-			                    'attributes' => array(
-			                        'id' => 'id_usr_pass',
-			                        'value' => '',
-			                        'class' => 'form-control',
-			                        'placeholder' => 'tr_meliscore_reset_password',
-			                        'required' => 'required',
-			                    ),
-			                ),
-			            ),
-			            array(
-			                'spec' => array(
-			                    'name' => 'usr_pass_confirm',
-			                    'type' => 'Password',
-			                    'options' => array(
-			                        'label' => 'tr_meliscore_reset_password_confirm',
-			                    ),
-			                    'attributes' => array(
-			                        'id' => 'id_usr_pass_confirm',
-			                        'value' => '',
-			                        'class' => 'form-control',
-			                        'placeholder' => 'tr_meliscore_reset_password_confirm',
-			                        'required' => 'required',
-			                    ),
-			                ),
-			            ),
-			            array(
-			                'spec' => array(
-			                    'name' => 'reset_submit',
-			                    'type' => 'submit',
-			                    'attributes' => array(
-			                        'value' => 'tr_meliscore_reset_password_button',
-			                        'id' => 'reset_submit',
-			                        'class' => 'btn btn-primary btn-block',
-			                    ),
-			                ),
-			            ),
-			        ),
-			    ),
+                    ),
+                ),
+                'meliscore_forgot' => array(
+                    'attributes' => array(
+                        'name' => 'meliscore_forgot',
+                        'id' => 'idformmeliscoreforgot',
+                        'method' => 'POST',
+                        'novalidate' => 'novalidate',
+                        //'action' => '/melis/lost-password-request',
+                    ),
+                    'hydrator'  => 'Laminas\Hydrator\ArraySerializableHydrator',
+                    'elements' => array(
+                        array(
+                            'spec' => array(
+                                'name' => 'usr_email',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_forgot_form_email',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'id_usr_login',
+                                    'value' => '',
+                                    'class' => 'form-control',
+                                    'placeholder' => 'tr_meliscore_forgot_form_email',
+                                    'required' => 'required',
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'usr_login',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_forgot_form_login',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'id_usr_login',
+                                    'value' => '',
+                                    'class' => 'form-control',
+                                    'placeholder' => 'tr_meliscore_forgot_form_login',
+                                    'required' => 'required',
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'forgot_submit',
+                                'type' => 'submit',
+                                'attributes' => array(
+                                    'value' => 'tr_meliscore_forgot_form_submit',
+                                    'id' => 'forgot_submit',
+                                    'class' => 'btn btn-primary btn-block',
+                                ),
+                            ),
+                        ),
+                    ),
+                ),
+
+                'meliscore_resetpass' => array(
+                    'attributes' => array(
+                        'name' => 'meliscore_reset_pass',
+                        'id' => 'idformmeliscoreresetpass',
+                        'method' => 'POST',
+                        'novalidate' => 'novalidate',
+                    ),
+                    'hydrator'  => 'Laminas\Hydrator\ArraySerializableHydrator',
+                    'elements' => array(
+                        array(
+                            'spec' => array(
+                                'name' => 'usr_pass',
+                                'type' => 'Password',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_reset_password',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'id_usr_pass',
+                                    'value' => '',
+                                    'class' => 'form-control',
+                                    'placeholder' => 'tr_meliscore_reset_password',
+                                    'required' => 'required',
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'usr_pass_confirm',
+                                'type' => 'Password',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_reset_password_confirm',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'id_usr_pass_confirm',
+                                    'value' => '',
+                                    'class' => 'form-control',
+                                    'placeholder' => 'tr_meliscore_reset_password_confirm',
+                                    'required' => 'required',
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'reset_submit',
+                                'type' => 'submit',
+                                'attributes' => array(
+                                    'value' => 'tr_meliscore_reset_password_button',
+                                    'id' => 'reset_submit',
+                                    'class' => 'btn btn-primary btn-block',
+                                ),
+                            ),
+                        ),
+                    ),
+                ),
                 'meliscore_generatepass' => array(
                     'attributes' => array(
                         'name' => 'meliscore_generate_password',
@@ -844,8 +844,8 @@ return array(
                 'melis_core_platform_scheme_form' => array(
                     'attributes' => array(
                         'name' => 'melis_core_platform_scheme_form',
-						'id' => 'melis_core_platform_scheme_form',
-						'class' => 'd-md-flex flex-row justify-content-between row',
+                        'id' => 'melis_core_platform_scheme_form',
+                        'class' => 'd-md-flex flex-row justify-content-between row',
                         'method' => 'POST',
                     ),
                     'hydrator'  => 'Laminas\Hydrator\ArraySerializableHydrator',
@@ -922,7 +922,8 @@ return array(
                             'required' => false,
                             'validators' => array(
                                 array(
-                                    'name' => 'regex', false,
+                                    'name' => 'regex',
+                                    false,
                                     'options' => array(
                                         'pattern' => '/#?([\da-fA-F]{2})([\da-fA-F]{2})([\da-fA-F]{2})/',
                                         'messages' => array(\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'),
@@ -940,7 +941,8 @@ return array(
                             'required' => false,
                             'validators' => array(
                                 array(
-                                    'name' => 'regex', false,
+                                    'name' => 'regex',
+                                    false,
                                     'options' => array(
                                         'pattern' => '/#?([\da-fA-F]{2})([\da-fA-F]{2})([\da-fA-F]{2})/',
                                         'messages' => array(\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'),
@@ -1000,14 +1002,10 @@ return array(
                         'id' => 'melis_core_platform_scheme_images_form',
                         'method' => 'POST',
                     ),
-                    'elements' => array(
-
-                    ),
-                    'input_filter' => array(
-
-                    )
+                    'elements' => array(),
+                    'input_filter' => array()
                 ),
-                
+
                 // Platform Theme Option form
                 'melis_core_platform_theme_option_form' => array(
                     'attributes' => array(
@@ -1106,7 +1104,7 @@ return array(
                                 'attributes' => array(
                                     'id' => 'melis_core_platform_theme_logo_text_font_size',
                                     'value' => '',
-                                    'class' => 'form-control logo-font-size-range-slider-value range-slider-value',                                  
+                                    'class' => 'form-control logo-font-size-range-slider-value range-slider-value',
                                     'placeholder' => 'tr_meliscore_platform_theme_logo_text_font_size',
                                     'category' => 'logo',
                                     'sliderId' => 'logo-font-size-range-slider-min',
@@ -1166,7 +1164,7 @@ return array(
                                 'attributes' => array(
                                     'id' => 'melis_core_platform_theme_user_profile_img_border_radius',
                                     'value' => '',
-                                    'class' => 'form-control',                                    
+                                    'class' => 'form-control',
                                     'placeholder' => 'tr_meliscore_platform_theme_user_profile_img_border_radius',
                                     'category' => 'user_profile',
                                     'default' => '50%'
@@ -1400,7 +1398,7 @@ return array(
                                     'class' => 'form-control minicolor-hex',
                                     'data-control' => 'hue',
                                     //'placeholder' => 'tr_meliscore_platform_theme_footer_text_color',
-                                    'category' => 'footer',                                  
+                                    'category' => 'footer',
                                     'default' => '#fff'
                                 ),
                             ),
@@ -1416,7 +1414,7 @@ return array(
                                 'attributes' => array(
                                     'id' => 'melis_core_platform_theme_footer_text_fontsize',
                                     'value' => '',
-                                    'class' => 'footer-version-font-size-range-slider-value range-slider-value form-control',                                    
+                                    'class' => 'footer-version-font-size-range-slider-value range-slider-value form-control',
                                     'placeholder' => 'tr_meliscore_platform_theme_footer_text_fontsize',
                                     'category' => 'footer',
                                     'sliderId' => 'footer-version-font-size-range-slider-min',
@@ -1629,8 +1627,8 @@ return array(
                                 ),
                                 'attributes' => array(
                                     'id' => 'melis_core_platform_theme_bubble_plugin_hide_btn_text_font_size',
-                                    'value' => '',                                  
-                                    'class' => 'hide-btn-text-font-size-range-slider-value range-slider-value form-control',                            
+                                    'value' => '',
+                                    'class' => 'hide-btn-text-font-size-range-slider-value range-slider-value form-control',
                                     'placeholder' => 'tr_meliscore_platform_theme_bubble_plugin_hide_btn_text_font_size',
                                     'category' => 'bubble',
                                     'sliderId' => 'hide-btn-text-font-size-range-slider-min',
@@ -1726,7 +1724,7 @@ return array(
                                 'attributes' => array(
                                     'id' => 'melis_core_platform_theme_bubble_plugin_widget_header_text_icon_font_size',
                                     'value' => '',
-                                    'class' => 'widget-header-text-font-size-range-slider-value range-slider-value form-control',                                    
+                                    'class' => 'widget-header-text-font-size-range-slider-value range-slider-value form-control',
                                     'placeholder' => 'tr_meliscore_platform_theme_bubble_plugin_widget_header_text_icon_font_size',
                                     'category' => 'bubble',
                                     'sliderId' => 'widget-header-text-font-size-range-slider-min',
@@ -1747,7 +1745,7 @@ return array(
                                 'attributes' => array(
                                     'id' => 'melis_core_platform_theme_bubble_plugin_widget_front_btn_txt_font_size',
                                     'value' => '',
-                                    'class' => 'widget-front-button-text-font-size-range-slider-value range-slider-value form-control',                           
+                                    'class' => 'widget-front-button-text-font-size-range-slider-value range-slider-value form-control',
                                     'placeholder' => 'tr_melis_core_platform_theme_bubble_plugin_widget_front_btn_txt_font_size',
                                     'category' => 'bubble',
                                     'sliderId' => 'widget-front-button-text-font-size-range-slider-min',
@@ -1976,7 +1974,7 @@ return array(
                                 'attributes' => array(
                                     'id' => 'melis_core_platform_theme_bubble_plugin_widget_header_btn_txt_font_size',
                                     'value' => '',
-                                    'class' => 'widget-button-text-font-size-range-slider-value range-slider-value form-control',                           
+                                    'class' => 'widget-button-text-font-size-range-slider-value range-slider-value form-control',
                                     'placeholder' => 'tr_meliscore_platform_theme_bubble_plugin_widget_header_btn_txt_font_size',
                                     'category' => 'bubble',
                                     'sliderId' => 'widget-button-text-font-size-range-slider-min',
@@ -2207,7 +2205,7 @@ return array(
                                 'attributes' => array(
                                     'id' => 'melis_core_platform_theme_dashboard_plugin_no_plugin_alert_text_font_size',
                                     'value' => '',
-                                    'class' => 'dashboard-plugin-no-plugin-alert-font-size-range-slider-value range-slider-value form-control',                                   
+                                    'class' => 'dashboard-plugin-no-plugin-alert-font-size-range-slider-value range-slider-value form-control',
                                     'placeholder' => 'tr_meliscore_platform_theme_dashboard_plugin_no_plugin_alert_text_font_size',
                                     'category' => 'dashboard_plugin',
                                     'sliderId' => 'dashboard-plugin-no-plugin-alert-font-size-range-slider-min',
@@ -2215,14 +2213,14 @@ return array(
                                     'default' => 14
                                 ),
                             ),
-                        ),                      
+                        ),
                         array(
                             'spec' => array(
                                 'name' => 'melis_core_platform_theme_dashboard_plugin_no_plugin_alert_text_font_style',
                                 'type' => Laminas\Form\Element\MultiCheckbox::class,
                                 'options' => array(
                                     'label' => 'tr_meliscore_platform_theme_dashboard_plugin_no_plugin_alert_text_font_style',
-                                    'tooltip' => 'tr_meliscore_platform_theme_dashboard_plugin_no_plugin_alert_text_font_style_tooltip',                                  
+                                    'tooltip' => 'tr_meliscore_platform_theme_dashboard_plugin_no_plugin_alert_text_font_style_tooltip',
                                     'value_options' => [
                                         'option1' => [
                                             'value' => 'bold',
@@ -2254,7 +2252,7 @@ return array(
                                                 'style' => 'text-transform: underline;'
                                             ],
                                         ],
-                                    ]                                   
+                                    ]
                                 ),
                                 'attributes' => array(
                                     'id' => 'melis_core_platform_theme_dashboard_plugin_no_plugin_alert_text_font_style',
@@ -2509,7 +2507,7 @@ return array(
                                 'attributes' => array(
                                     'id' => 'melis_core_platform_theme_dashboard_plugin_menu_box_border_width',
                                     'value' => '',
-                                    'class' => 'plugins-menu-box-border-width-range-slider-value range-slider-value form-control',                                   
+                                    'class' => 'plugins-menu-box-border-width-range-slider-value range-slider-value form-control',
                                     'placeholder' => 'tr_meliscore_platform_theme_dashboard_plugin_menu_box_border_width',
                                     'category' => 'dashboard_plugin_menu',
                                     'sliderId' => 'plugins-menu-box-border-width-range-slider-min',
@@ -2568,7 +2566,7 @@ return array(
                                 'attributes' => array(
                                     'id' => 'melis_core_platform_theme_dashboard_plugin_menu_box_title_font_size',
                                     'value' => '',
-                                    'class' => 'plugins-menu-box-title-font-size-range-slider-value range-slider-value form-control',                              
+                                    'class' => 'plugins-menu-box-title-font-size-range-slider-value range-slider-value form-control',
                                     'placeholder' => 'tr_meliscore_platform_theme_dashboard_plugin_menu_box_title_font_size',
                                     'category' => 'dashboard_plugin_menu',
                                     'sliderId' => 'plugins-menu-box-title-font-size-range-slider-min',
@@ -2579,8 +2577,8 @@ return array(
                         ),
                         array(
                             'spec' => array(
-                                'name' => 'melis_core_platform_theme_dashboard_plugin_menu_box_title_font_style',                               
-                                'type' => Laminas\Form\Element\MultiCheckbox::class,                              
+                                'name' => 'melis_core_platform_theme_dashboard_plugin_menu_box_title_font_style',
+                                'type' => Laminas\Form\Element\MultiCheckbox::class,
                                 'options' => array(
                                     'label' => 'tr_meliscore_platform_theme_dashboard_plugin_menu_box_title_font_style',
                                     'tooltip' => 'tr_meliscore_platform_theme_dashboard_plugin_menu_box_title_font_style_tooltip',
@@ -4540,7 +4538,7 @@ return array(
                                     'default' => 90
                                 ),
                             ),
-                        ),                       
+                        ),
                         array(
                             'spec' => array(
                                 'name' => 'melis_core_platform_theme_tab_widget_nav_link_text_align',
@@ -4567,7 +4565,7 @@ return array(
                                     'default' => 'center'
                                 ),
                             ),
-                        ), 
+                        ),
                         array(
                             'spec' => array(
                                 'name' => 'melis_core_platform_theme_tab_widget_nav_link_icon_height',
@@ -6203,11 +6201,931 @@ return array(
                                 ),
                             ),
                         ),
-                    ),
+
+                        //drag and drop
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_dnd_plugins_box_bg_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_melis_core_platform_theme_dnd_plugins_box_bg_color',
+                                    'tooltip' => 'tr_melis_core_platform_theme_dnd_plugins_box_bg_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_dnd_plugins_box_bg_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_melis_core_platform_theme_dnd_plugins_box_bg_color',
+                                    'category' => 'dragdrop',
+                                    'default' => '#373737'
+                                ),
+                            ),
+                        ),
+
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_dnd_plugins_box_border_width',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_melis_core_platform_theme_dnd_plugins_box_border_width',
+                                    'tooltip' => 'tr_melis_core_platform_theme_dnd_plugins_box_border_width_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_dnd_plugins_box_border_width',
+                                    'value' => '',
+                                    'class' => 'plugins-box-border-width-range-slider-value range-slider-value form-control',
+                                    'placeholder' => 'tr_melis_core_platform_theme_dnd_plugins_box_border_width',
+                                    'category' => 'dragdrop',
+                                    'sliderId' => 'plugins-box-border-width-range-slider-min',
+                                    'sliderClass' => 'plugins-box-border-width-range-slider-min',
+                                    'default' => 12
+                                ),
+                            ),
+                        ),
+
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_dnd_plugins_box_border_bottom_and_left_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_melis_core_platform_theme_dnd_plugins_box_border_bottom_and_left_color',
+                                    'tooltip' => 'tr_melis_core_platform_theme_dnd_plugins_box_border_bottom_and_left_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_dnd_plugins_box_border_bottom_and_left_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_melis_core_platform_theme_dnd_plugins_box_border_bottom_and_left_color',
+                                    'category' => 'dragdrop',
+                                    'default' => '#e61c23'
+                                ),
+                            ),
+                        ),
+
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_dnd_plugins_box_title_bg_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_melis_core_platform_theme_dnd_plugins_box_title_bg_color',
+                                    'tooltip' => 'tr_melis_core_platform_theme_dnd_plugins_box_title_bg_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_dnd_plugins_box_title_bg_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_melis_core_platform_theme_dnd_plugins_box_title_bg_color',
+                                    'category' => 'dragdrop',
+                                    'default' => '#e61c23'
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_dnd_plugins_box_title_text_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_melis_core_platform_theme_dnd_plugins_box_title_text_color',
+                                    'tooltip' => 'tr_melis_core_platform_theme_dnd_plugins_box_title_text_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_dnd_plugins_box_title_text_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_melis_core_platform_theme_dnd_plugins_box_title_text_color',
+                                    'category' => 'dragdrop',
+                                    'default' => '#fff',
+                                ),
+                            ),
+                        ),
+
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_dnd_plugins_box_line_height',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_melis_core_platform_theme_dnd_plugins_box_line_height',
+                                    'tooltip' => 'tr_melis_core_platform_theme_dnd_plugins_box_line_height_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_dnd_plugins_box_line_height',
+                                    'value' => '',
+                                    'class' => 'plugins-box-line-height-range-slider-value range-slider-value form-control',
+                                    'placeholder' => 'tr_melis_core_platform_theme_dnd_plugins_box_line_height',
+                                    'category' => 'dragdrop',
+                                    'sliderId' => 'plugins-box-title-line-height-range-slider-min',
+                                    'sliderClass' => 'plugins-box-title-line-height-range-slider-min',
+                                    'default' => 12
+                                ),
+                            ),
+                        ),
+
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_dnd_plugins_box_title_font_styles',
+                                'type' => Laminas\Form\Element\MultiCheckbox::class,
+                                'options' => array(
+                                    'label' => 'tr_melis_core_platform_theme_dnd_plugins_box_title_font_styles',
+                                    'tooltip' => 'tr_melis_core_platform_theme_dnd_plugins_box_title_font_styles_tooltip',
+                                    'value_options' => [
+                                        'bold' => [
+                                            'value' => 'bold',
+                                            'label' => '<strong>B</strong>',
+                                            'label_attributes' => [
+                                                'class' => 'btn btn-default',
+                                            ],
+                                        ],
+                                        'italic' => [
+                                            'value' => 'italic',
+                                            'label' => '<em>I</em>',
+                                            'label_attributes' => [
+                                                'class' => 'btn btn-default',
+                                            ],
+                                        ],
+                                        'uppercase' => [
+                                            'value' => 'uppercase',
+                                            'label' => 'TT',
+                                            'label_attributes' => [
+                                                'class' => 'btn btn-default',
+                                                'style' => 'text-transform: uppercase;',
+                                            ],
+                                        ],
+                                        'underline' => [
+                                            'value' => 'underline',
+                                            'label' => 'U',
+                                            'label_attributes' => [
+                                                'class' => 'btn btn-default',
+                                                'style' => 'text-decoration: underline;',
+                                            ],
+                                        ],
+                                    ],
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_dnd_plugins_box_title_font_styles',
+                                    'value' => '',
+                                    'class' => 'form-control',
+                                    'placeholder' => 'tr_melis_core_platform_theme_dnd_plugins_box_title_font_styles',
+                                    'category' => 'dragdrop',
+                                    'required' => false,
+                                    'default' => '',
+                                ),
+                            ),
+                        ),
+
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_dnd_plugins_box_title_letter_spacing',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_melis_core_platform_theme_dnd_plugins_box_title_letter_spacing',
+                                    'tooltip' => 'tr_melis_core_platform_theme_dnd_plugins_box_title_letter_spacing_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_dnd_plugins_box_title_letter_spacing',
+                                    'value' => '',
+                                    'class' => 'plugins-box-letter-spacing-range-slider-value range-slider-value form-control',
+                                    'placeholder' => 'tr_melis_core_platform_theme_dnd_plugins_box_title_letter_spacing',
+                                    'category' => 'dragdrop',
+                                    'sliderId' => 'plugins-box-title-letter-spacing-range-slider-min',
+                                    'sliderClass' => 'plugins-box-title-letter-spacing-range-slider-min',
+                                    'default' => 0,
+                                ),
+                            ),
+                        ),
+
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_dnd_plugins_box_title_text_align',
+                                'type' => 'Laminas\Form\Element\Radio',
+                                'options' => array(
+                                    'label' => 'tr_melis_core_platform_theme_dnd_plugins_box_title_text_align',
+                                    'tooltip' => 'tr_melis_core_platform_theme_dnd_plugins_box_title_text_align_tooltip',
+                                    'value_options' => array(
+                                        'left' => '<label class="btn btn-default" for="melis_core_platform_theme_dnd_plugins_box_title_text_align_left"><i class="bi bi-text-left"></i></label>',
+                                        'center' => '<label class="btn btn-default" for="melis_core_platform_theme_dnd_plugins_box_title_text_align_center"><i class="bi bi-text-center"></i></label>',
+                                        'right' => '<label class="btn btn-default" for="melis_core_platform_theme_dnd_plugins_box_title_text_align_right"><i class="bi bi-text-right"></i></label>',
+                                    ),
+                                    'label_attributes' => array(
+                                        'class' => 'melis-radio-box',
+                                    ),
+                                    'disable_inarray_validator' => true,
+                                ),
+                                'attributes' => array(
+                                    'value' => '',
+                                    'placeholder' => '',
+                                    'class' => 'form-control',
+                                    'id' => 'melis_core_platform_theme_dnd_plugins_box_title_text_align',
+                                    'category' => 'dragdrop',
+                                    'default' => 'center'
+                                ),
+                            ),
+                        ),
+
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_dnd_plugins_box_btn_bg_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_melis_core_platform_theme_dnd_plugins_box_btn_bg_color',
+                                    'tooltip' => 'tr_melis_core_platform_theme_dnd_plugins_box_btn_bg_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_dnd_plugins_box_btn_bg_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_melis_core_platform_theme_dnd_plugins_box_btn_bg_color',
+                                    'category' => 'dragdrop',
+                                    'default' => '#e61c23',
+                                ),
+                            ),
+                        ),
+
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_dnd_plugins_box_btn_border_radius',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_melis_core_platform_theme_dnd_plugins_box_btn_border_radius',
+                                    'tooltip' => 'tr_melis_core_platform_theme_dnd_plugins_box_btn_border_radius_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_dnd_plugins_box_btn_border_radius',
+                                    'value' => '',
+                                    'class' => 'dnd-plugins-box-button-border-radius-range-slider-value range-slider-value form-control',
+                                    'placeholder' => 'tr_melis_core_platform_theme_dnd_plugins_box_btn_border_radius',
+                                    'category' => 'dragdrop',
+                                    'sliderId' => 'dnd-plugins-box-button-border-radius-range-slider-min',
+                                    'sliderClass' => 'dnd-plugins-box-button-border-radius-range-slider-min',
+                                    'default' => 0,
+                                ),
+                            ),
+                        ),
+
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_dnd_plugins_box_btn_icon_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_melis_core_platform_theme_dnd_plugins_box_btn_icon_color',
+                                    'tooltip' => 'tr_melis_core_platform_theme_dnd_plugins_box_btn_icon_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_dnd_plugins_box_btn_icon_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_melis_core_platform_theme_dnd_plugins_box_btn_icon_color',
+                                    'category' => 'dragdrop',
+                                    'default' => '#fff',
+                                ),
+                            ),
+                        ),
+
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_dnd_plugins_box_btn_icon_font_size',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_melis_core_platform_theme_dnd_plugins_box_btn_icon_font_size',
+                                    'tooltip' => 'tr_melis_core_platform_theme_dnd_plugins_box_btn_icon_font_size_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_dnd_plugins_box_btn_icon_font_size',
+                                    'value' => '',
+                                    'class' => 'dnd-plugins-box-button-icon-font-size-range-slider-value range-slider-value form-control',
+                                    'placeholder' => 'tr_melis_core_platform_theme_dnd_plugins_box_btn_icon_font_size',
+                                    'category' => 'dragdrop',
+                                    'sliderId' => 'dnd-plugins-box-button-icon-font-size-range-slider-min',
+                                    'sliderClass' => 'dnd-plugins-box-button-icon-font-size-range-slider-min',
+                                    'default' => 12,
+                                ),
+                            ),
+                        ),
+
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_dnd_plugins_box_category_btn_bg_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_melis_core_platform_theme_dnd_plugins_box_category_btn_bg_color',
+                                    'tooltip' => 'tr_melis_core_platform_theme_dnd_plugins_box_category_btn_bg_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_dnd_plugins_box_category_btn_bg_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_melis_core_platform_theme_dnd_plugins_box_category_btn_bg_color',
+                                    'category' => 'dragdrop',
+                                    'default' => '#373737',
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_dnd_plugins_box_category_btn_border_bottom_width',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_melis_core_platform_theme_dnd_plugins_box_category_btn_border_bottom_width',
+                                    'tooltip' => 'tr_melis_core_platform_theme_dnd_plugins_box_category_btn_border_bottom_width_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_dnd_plugins_box_category_btn_border_bottom_width',
+                                    'value' => '',
+                                    'class' => 'dnd-plugins-box-category-btn-border-bottom-width-range-slider-value range-slider-value form-control',
+                                    'placeholder' => 'tr_melis_core_platform_theme_dnd_plugins_box_category_btn_border_bottom_width',
+                                    'category' => 'dragdrop',
+                                    'sliderId' => 'dnd-plugins-box-category-btn-border-bottom-width-range-slider-min',
+                                    'sliderClass' => 'dnd-plugins-box-category-btn-border-bottom-width-range-slider-min',
+                                    'default' => 12,
+                                ),
+                            ),
+                        ),
+
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_dnd_plugins_box_category_btn_border_bottom_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_melis_core_platform_theme_dnd_plugins_box_category_btn_border_bottom_color',
+                                    'tooltip' => 'tr_melis_core_platform_theme_dnd_plugins_box_category_btn_border_bottom_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_dnd_plugins_box_category_btn_border_bottom_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_melis_core_platform_theme_dnd_plugins_box_category_btn_border_bottom_color',
+                                    'category' => 'dragdrop',
+                                    'default' => '#2c2c2c',
+                                ),
+                            ),
+                        ),
+
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_dnd_plugins_box_category_btn_text_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_melis_core_platform_theme_dnd_plugins_box_category_btn_text_color',
+                                    'tooltip' => 'tr_melis_core_platform_theme_dnd_plugins_box_category_btn_text_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_dnd_plugins_box_category_btn_text_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_melis_core_platform_theme_dnd_plugins_box_category_btn_text_color',
+                                    'category' => 'dragdrop',
+                                    'default' => '#fff',
+                                ),
+                            ),
+                        ),
+
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_dnd_plugins_box_category_btn_font_size',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_melis_core_platform_theme_dnd_plugins_box_category_btn_font_size',
+                                    'tooltip' => 'tr_melis_core_platform_theme_dnd_plugins_box_category_btn_font_size_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_dnd_plugins_box_category_btn_font_size',
+                                    'value' => '',
+                                    'class' => 'dnd-plugins-box-category-button-font-size-range-slider-value range-slider-value form-control',
+                                    'placeholder' => 'tr_melis_core_platform_theme_dnd_plugins_box_category_btn_font_size',
+                                    'category' => 'dragdrop',
+                                    'sliderId' => 'dnd-plugins-box-category-button-font-size-range-slider-min',
+                                    'sliderClass' => 'dnd-plugins-box-category-button-font-size-range-slider-min',
+                                    'default' => 12,
+                                ),
+                            ),
+                        ),
+
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_dnd_plugins_box_category_btn_letter_spacing',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_melis_core_platform_theme_dnd_plugins_box_category_btn_letter_spacing',
+                                    'tooltip' => 'tr_melis_core_platform_theme_dnd_plugins_box_category_btn_letter_spacing_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_dnd_plugins_box_category_btn_letter_spacing',
+                                    'value' => '',
+                                    'class' => 'dnd-plugins-box-category-button-letter-spacing-range-slider-value range-slider-value form-control',
+                                    'placeholder' => 'tr_melis_core_platform_theme_dnd_plugins_box_category_btn_letter_spacing',
+                                    'category' => 'dragdrop',
+                                    'sliderId' => 'dnd-plugins-box-category-button-letter-spacing-range-slider-min',
+                                    'sliderClass' => 'dnd-plugins-box-category-button-letter-spacing-range-slider-min',
+                                    'default' => 12,
+                                ),
+                            ),
+                        ),
+
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_dnd_plugins_box_category_btn_cms_filter_text_indent',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_melis_core_platform_theme_dnd_plugins_box_category_btn_cms_filter_text_indent',
+                                    'tooltip' => 'tr_melis_core_platform_theme_dnd_plugins_box_category_btn_cms_filter_text_indent_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_dnd_plugins_box_category_btn_cms_filter_text_indent',
+                                    'value' => '',
+                                    'class' => 'dnd-plugins-box-category-button-cms-filter-text-indent-range-slider-value range-slider-value form-control',
+                                    'placeholder' => 'tr_melis_core_platform_theme_dnd_plugins_box_category_btn_cms_filter_text_indent',
+                                    'category' => 'dragdrop',
+                                    'sliderId' => 'dnd-plugins-box-category-button-cms-filter-text-indent-range-slider-min',
+                                    'sliderClass' => 'dnd-plugins-box-category-button-cms-filter-text-indent-range-slider-min',
+                                    'default' => 12,
+                                ),
+                            ),
+                        ),
+
+
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_dnd_plugins_box_category_btn_hover_bg_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_melis_core_platform_theme_dnd_plugins_box_category_btn_hover_bg_color',
+                                    'tooltip' => 'tr_melis_core_platform_theme_dnd_plugins_box_category_btn_hover_bg_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_dnd_plugins_box_category_btn_hover_bg_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_melis_core_platform_theme_dnd_plugins_box_category_btn_hover_bg_color',
+                                    'category' => 'dragdrop',
+                                    'default' => '#2c2c2c',
+                                ),
+                            ),
+                        ),
+
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_dnd_plugins_box_category_btn_hover_border_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_melis_core_platform_theme_dnd_plugins_box_category_btn_hover_border_color',
+                                    'tooltip' => 'tr_melis_core_platform_theme_dnd_plugins_box_category_btn_hover_border_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_dnd_plugins_box_category_btn_hover_border_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_melis_core_platform_theme_dnd_plugins_box_category_btn_hover_border_color',
+                                    'category' => 'dragdrop',
+                                    'default' => '#2c2c2c',
+                                ),
+                            ),
+                        ),
+
+                           array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_dnd_plugins_box_category_btn_text_align',
+                                'type' => 'Laminas\Form\Element\Radio',
+                                'options' => array(
+                                    'label' => 'tr_melis_core_platform_theme_dnd_plugins_box_category_btn_text_align',
+                                    'tooltip' => 'tr_melis_core_platform_theme_dnd_plugins_box_category_btn_text_align_tooltip',
+                                    'value_options' => array(
+                                        'left' => '<label class="btn btn-default" for="melis_core_platform_theme_dnd_plugins_box_category_btn_text_align_left"><i class="bi bi-text-left"></i></label>',
+                                        'center' => '<label class="btn btn-default" for="melis_core_platform_theme_dnd_plugins_box_category_btn_text_align_center"><i class="bi bi-text-center"></i></label>',
+                                        'right' => '<label class="btn btn-default" for="melis_core_platform_theme_dnd_plugins_box_category_btn_text_align_right"><i class="bi bi-text-right"></i></label>',
+                                    ),
+                                    'label_attributes' => array(
+                                        'class' => 'melis-radio-box',
+                                    ),
+                                    'disable_inarray_validator' => true,
+                                ),
+                                'attributes' => array(
+                                    'value' => '',
+                                    'placeholder' => '',
+                                    'class' => 'form-control',
+                                    'id' => 'melis_core_platform_theme_dnd_plugins_box_category_btn_text_align',
+                                    'category' => 'dragdrop',
+                                    'default' => 'center'
+                                ),
+                            ),
+                        ),
+                              
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_dnd_plugins_box_category_btn_text_opacity',
+                                    'type' => 'Text',
+                                    'options' => array(
+                                    'label' => 'tr_melis_core_platform_theme_dnd_plugins_box_category_btn_text_opacity',
+                                    'tooltip' => 'tr_melis_core_platform_theme_dnd_plugins_box_category_btn_text_opacity_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_dnd_plugins_box_category_btn_text_opacity',
+                                    'value' => '',
+                                    'class' => 'dnd-plugins-box-category-button-text-opacity-range-slider-value range-slider-value form-control',
+                                    'placeholder' => 'tr_melis_core_platform_theme_dnd_plugins_box_category_btn_text_opacity',
+                                    'category' => 'dragdrop',
+                                    'sliderId' => 'dnd-plugins-box-category-button-text-opacity-range-slider-min',
+                                    'sliderClass' => 'dnd-plugins-box-category-button-text-opacity-range-slider-min',
+                                    'default' => 12,
+                                    ),
+                            ),
+                        ),
+
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_dnd_plugins_box_cms_category_button_active_bg_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                'label' => 'tr_melis_core_platform_theme_dnd_plugins_box_cms_category_button_active_bg_color',
+                                'tooltip' => 'tr_melis_core_platform_theme_dnd_plugins_box_cms_category_button_active_bg_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_dnd_plugins_box_cms_category_button_active_bg_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_melis_core_platform_theme_dnd_plugins_box_cms_category_button_active_bg_color',
+                                    'category' => 'dragdrop',
+                                    'default' => '#e61c23',
+                                ),
+                            ),
+                        ),
+
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_dnd_plugins_box_cms_category_button_active_border_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                'label' => 'tr_melis_core_platform_theme_dnd_plugins_box_cms_category_button_active_border_color',
+                                'tooltip' => 'tr_melis_core_platform_theme_dnd_plugins_box_cms_category_button_active_border_color_tooltip',
+                            ),
+                            'attributes' => array(
+                                'id' => 'melis_core_platform_theme_dnd_plugins_box_cms_category_button_active_border_color',
+                                'value' => '',
+                                'class' => 'form-control minicolor-hex',
+                                'data-control' => 'hue',
+                                'placeholder' => 'tr_melis_core_platform_theme_dnd_plugins_box_cms_category_button_active_border_color',
+                                'category' => 'dragdrop',
+                                'default' => '#e61c23',
+                                ),
+                            ),
+                        ),
+                        
+                        array(
+                            'spec' => array(
+                                    'name' => 'melis_core_platform_theme_dnd_plugins_box_cms_category_box_border_bottom_color',
+                                    'type' => 'Text',
+                                    'options' => array(
+                                        'label' => 'tr_melis_core_platform_theme_dnd_plugins_box_cms_category_box_border_bottom_color',
+                                        'tooltip' => 'tr_melis_core_platform_theme_dnd_plugins_box_cms_category_box_border_bottom_color_tooltip',
+                                    ),
+                                    'attributes' => array(
+                                        'id' => 'melis_core_platform_theme_dnd_plugins_box_cms_category_box_border_bottom_color',
+                                        'value' => '',
+                                        'class' => 'form-control minicolor-hex',
+                                        'data-control' => 'hue',
+                                        'placeholder' => 'tr_melis_core_platform_theme_dnd_plugins_box_cms_category_box_border_bottom_color',
+                                        'category' => 'dragdrop',
+                                        'default' => '#e61c23',
+                                    ),
+                            ),
+                        ), 
+
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_dnd_zone_plugin_outline_hover_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                'label' => 'tr_melis_core_platform_theme_dnd_zone_plugin_outline_hover_color',
+                                'tooltip' => 'tr_melis_core_platform_theme_dnd_zone_plugin_outline_hover_color_tooltip',
+                            ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_dnd_zone_plugin_outline_hover_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_melis_core_platform_theme_dnd_zone_plugin_outline_hover_color',
+                                    'category' => 'dragdrop',
+                                    'default' => '#e61c23',
+                                ),
+                            ),
+                        ), 
+
+                        array(
+                                'spec' => array(
+                                'name' => 'melis_core_platform_theme_dnd_zone_plugin_box_shadow_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_melis_core_platform_theme_dnd_zone_plugin_box_shadow_color',
+                                    'tooltip' => 'tr_melis_core_platform_theme_dnd_zone_plugin_box_shadow_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_dnd_zone_plugin_box_shadow_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_melis_core_platform_theme_dnd_zone_plugin_box_shadow_color',
+                                    'category' => 'dragdrop',
+                                    'default' => '#e61c23',
+                                ),
+                            ),
+                        ), 
+
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_dnd_plugin_sub_tools_bg_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_melis_core_platform_theme_dnd_plugin_sub_tools_bg_color',
+                                    'tooltip' => 'tr_melis_core_platform_theme_dnd_plugin_sub_tools_bg_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_dnd_plugin_sub_tools_bg_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_melis_core_platform_theme_dnd_plugin_sub_tools_bg_color',
+                                    'category' => 'dragdrop',
+                                    'default' => '#e61c23',
+                                ),
+                            ),
+                        ), 
+
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_dnd_layout_column_button_bg_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                'label' => 'tr_melis_core_platform_theme_dnd_layout_column_button_bg_color',
+                                'tooltip' => 'tr_melis_core_platform_theme_dnd_layout_column_button_bg_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_dnd_layout_column_button_bg_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_melis_core_platform_theme_dnd_layout_column_button_bg_color',
+                                    'category' => 'dragdrop',
+                                    'default' => '#e61c23',
+                                ),
+                            ),
+                        ), 
+
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_dnd_layout_column_button_border_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                'label' => 'tr_melis_core_platform_theme_dnd_layout_column_button_border_color',
+                                'tooltip' => 'tr_melis_core_platform_theme_dnd_layout_column_button_border_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_dnd_layout_column_button_border_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_melis_core_platform_theme_dnd_layout_column_button_border_color',
+                                    'category' => 'dragdrop',
+                                    'default' => '#e61c23',
+                                ),
+                            ),
+                        ), 
+
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_dnd_layout_column_button_hover_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_melis_core_platform_theme_dnd_layout_column_button_hover_color',
+                                    'tooltip' => 'tr_melis_core_platform_theme_dnd_layout_column_button_hover_color_tooltip',
+                                ),
+                            'attributes' => array(
+                                'id' => 'melis_core_platform_theme_dnd_layout_column_button_hover_color',
+                                'value' => '',
+                                'class' => 'form-control minicolor-hex',
+                                'data-control' => 'hue',
+                                'placeholder' => 'tr_melis_core_platform_theme_dnd_layout_column_button_hover_color',
+                                'category' => 'dragdrop',
+                                'default' => '#fff',
+                                ),
+                            ),
+                        ), 
+
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_dnd_layout_wrapper_outline_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_melis_core_platform_theme_dnd_layout_wrapper_outline_color',
+                                    'tooltip' => 'tr_melis_core_platform_theme_dnd_layout_wrapper_outline_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_dnd_layout_wrapper_outline_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_melis_core_platform_theme_dnd_layout_wrapper_outline_color',
+                                    'category' => 'dragdrop',
+                                    'default' => '#e61c23',
+                                ),
+                            ),
+                        ), 
+
+                        array(
+                                'spec' => array(
+                                'name' => 'melis_core_platform_theme_dnd_layout_buttons_bg_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_melis_core_platform_theme_dnd_layout_buttons_bg_color',
+                                    'tooltip' => 'tr_melis_core_platform_theme_dnd_layout_buttons_bg_color_tooltip',
+                                    ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_dnd_layout_buttons_bg_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_melis_core_platform_theme_dnd_layout_buttons_bg_color',
+                                    'category' => 'dragdrop',
+                                    'default' => '#e61c23',
+                                ),
+                            ),
+                         ), 
+
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_dnd_layout_column_button_bg_red_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_melis_core_platform_theme_dnd_layout_column_button_bg_red_color',
+                                    'tooltip' => 'tr_melis_core_platform_theme_dnd_layout_column_button_bg_red_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_dnd_layout_column_button_bg_red_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_melis_core_platform_theme_dnd_layout_column_button_bg_red_color',
+                                    'category' => 'dragdrop',
+                                    'default' => '#e61c23',
+                                ),
+                            ),
+                        ), 
+
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_dnd_layout_column_button_bg_red_border_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_melis_core_platform_theme_dnd_layout_column_button_bg_red_border_color',
+                                    'tooltip' => 'tr_melis_core_platform_theme_dnd_layout_column_button_bg_red_border_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_dnd_layout_column_button_bg_red_border_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_melis_core_platform_theme_dnd_layout_column_button_bg_red_border_color',
+                                    'category' => 'dragdrop',
+                                    'default' => '#e61c23',
+                                ),
+                            ),
+                        ),
+
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_dnd_plugin_box_module_plugin_title_text_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_melis_core_platform_theme_dnd_plugin_box_module_plugin_title_text_color',
+                                    'tooltip' => 'tr_melis_core_platform_theme_dnd_plugin_box_module_plugin_title_text_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_dnd_plugin_box_module_plugin_title_text_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_melis_core_platform_theme_dnd_plugin_box_module_plugin_title_text_color',
+                                    'category' => 'dragdrop',
+                                    'default' => '#fff',
+                                ),
+                            ),
+                        ),
+
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_dnd_plugin_box_module_title_opacity',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_melis_core_platform_theme_dnd_plugin_box_module_title_opacity',
+                                    'tooltip' => 'tr_melis_core_platform_theme_dnd_plugin_box_module_title_opacity_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_dnd_plugin_box_module_title_opacity',
+                                    'value' => '',
+                                    'class' => 'form-control range-slider-value plugin-box-module-title-decimal-input-range-slider-value',
+                                    'placeholder' => 'tr_melis_core_platform_theme_dnd_plugin_box_module_title_opacity',
+                                    'category' => 'dragdrop',
+                                    'sliderId' => 'dnd-layout-plugin-box-module-title-opacity-range-slider-min',
+                                    'sliderClass' => 'dnd-layout-plugin-box-module-title-opacity-range-slider-min plugin-box-module-title-decimal-range-slider-min',
+                                    'default' => 1,
+                                ),
+                            ),
+                        ),
+
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_dnd_no_content_before_after_pseudo_element_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_melis_core_platform_theme_dnd_no_content_before_after_pseudo_element_color',
+                                    'tooltip' => 'tr_melis_core_platform_theme_dnd_no_content_before_after_pseudo_element_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_dnd_no_content_before_after_pseudo_element_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_melis_core_platform_theme_dnd_no_content_before_after_pseudo_element_color',
+                                    'category' => 'dragdrop',
+                                    'default' => '#ce5459',
+                                ),
+                            ),
+                        ), 
+
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_dnd_zone_hover_outline_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_melis_core_platform_theme_dnd_zone_hover_outline_color',
+                                    'tooltip' => 'tr_melis_core_platform_theme_dnd_zone_hover_outline_color_tooltip',
+                                    ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_dnd_zone_hover_outline_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_melis_core_platform_theme_dnd_zone_hover_outline_color',
+                                    'category' => 'dragdrop',
+                                    'default' => '#ce5459',
+                                ),
+                            ),
+                        ), 
+
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_dnd_zone_hover_shadow_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_melis_core_platform_theme_dnd_zone_hover_shadow_color',
+                                    'tooltip' => 'tr_melis_core_platform_theme_dnd_zone_hover_shadow_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_dnd_zone_hover_shadow_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_melis_core_platform_theme_dnd_zone_hover_shadow_color',
+                                    'category' => 'dragdrop',
+                                    'default' => '#ce5459',
+                                ),
+                            ),
+                        ),                 
+
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_dnd_zone_icons_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_melis_core_platform_theme_dnd_zone_icons_color',
+                                    'tooltip' => 'tr_melis_core_platform_theme_dnd_zone_icons_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_dnd_zone_icons_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    'placeholder' => 'tr_melis_core_platform_theme_dnd_zone_icons_color',
+                                    'category' => 'dragdrop',
+                                    'default' => '#fff',
+                                ),
+                            ),
+                        ),                     
+                    ),                  
+                                
                     'input_filter' => array(
                         'melis_core_platform_theme_dashboard_plugin_no_plugin_alert_text_font_style' => array(
                             'name'     => 'melis_core_platform_theme_dashboard_plugin_no_plugin_alert_text_font_style',
-                            'required' => false,                            
+                            'required' => false,
                             'filters'  => array(
                                 array('name' => 'StripTags'),
                                 array('name' => 'StringTrim'),
@@ -6226,7 +7144,7 @@ return array(
                             'required' => false,
                             'validators' => array(
                                 array(
-                                    'name' => 'regex',                                    
+                                    'name' => 'regex',
                                     'options' => array(
                                         'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
                                         'messages' => array(\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'),
@@ -6244,7 +7162,7 @@ return array(
                             'required' => false,
                             'validators' => array(
                                 array(
-                                    'name' => 'regex',                                    
+                                    'name' => 'regex',
                                     'options' => array(
                                         'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
                                         'messages' => array(\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'),
@@ -6262,7 +7180,7 @@ return array(
                             'required' => false,
                             'validators' => array(
                                 array(
-                                    'name' => 'regex',                                   
+                                    'name' => 'regex',
                                     'options' => array(
                                         'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
                                         'messages' => array(\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'),
@@ -6280,7 +7198,7 @@ return array(
                             'required' => false,
                             'validators' => array(
                                 array(
-                                    'name' => 'regex',                                    
+                                    'name' => 'regex',
                                     'options' => array(
                                         'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
                                         'messages' => array(\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'),
@@ -6298,7 +7216,7 @@ return array(
                             'required' => false,
                             'validators' => array(
                                 array(
-                                    'name' => 'regex',                                   
+                                    'name' => 'regex',
                                     'options' => array(
                                         'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
                                         'messages' => array(\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'),
@@ -6316,7 +7234,7 @@ return array(
                             'required' => false,
                             'validators' => array(
                                 array(
-                                    'name' => 'regex',                                   
+                                    'name' => 'regex',
                                     'options' => array(
                                         'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
                                         'messages' => array(\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'),
@@ -6334,7 +7252,7 @@ return array(
                             'required' => false,
                             'validators' => array(
                                 array(
-                                    'name' => 'regex',                                    
+                                    'name' => 'regex',
                                     'options' => array(
                                         'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
                                         'messages' => array(\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'),
@@ -6352,7 +7270,7 @@ return array(
                             'required' => false,
                             'validators' => array(
                                 array(
-                                    'name' => 'regex',                                  
+                                    'name' => 'regex',
                                     'options' => array(
                                         'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
                                         'messages' => array(\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'),
@@ -6370,7 +7288,7 @@ return array(
                             'required' => false,
                             'validators' => array(
                                 array(
-                                    'name' => 'regex',                                   
+                                    'name' => 'regex',
                                     'options' => array(
                                         'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
                                         'messages' => array(\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'),
@@ -6388,7 +7306,7 @@ return array(
                             'required' => false,
                             'validators' => array(
                                 array(
-                                    'name' => 'regex',                                   
+                                    'name' => 'regex',
                                     'options' => array(
                                         'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
                                         'messages' => array(\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'),
@@ -6406,7 +7324,7 @@ return array(
                             'required' => false,
                             'validators' => array(
                                 array(
-                                    'name' => 'regex',                                 
+                                    'name' => 'regex',
                                     'options' => array(
                                         'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
                                         'messages' => array(\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'),
@@ -6424,7 +7342,7 @@ return array(
                             'required' => false,
                             'validators' => array(
                                 array(
-                                    'name' => 'regex',                                    
+                                    'name' => 'regex',
                                     'options' => array(
                                         'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
                                         'messages' => array(\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'),
@@ -6442,7 +7360,7 @@ return array(
                             'required' => false,
                             'validators' => array(
                                 array(
-                                    'name' => 'regex',                                   
+                                    'name' => 'regex',
                                     'options' => array(
                                         'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
                                         'messages' => array(\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'),
@@ -6460,7 +7378,7 @@ return array(
                             'required' => false,
                             'validators' => array(
                                 array(
-                                    'name' => 'regex',                                   
+                                    'name' => 'regex',
                                     'options' => array(
                                         'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
                                         'messages' => array(\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'),
@@ -6478,7 +7396,7 @@ return array(
                             'required' => false,
                             'validators' => array(
                                 array(
-                                    'name' => 'regex',                                  
+                                    'name' => 'regex',
                                     'options' => array(
                                         'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
                                         'messages' => array(\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'),
@@ -6496,7 +7414,7 @@ return array(
                             'required' => false,
                             'validators' => array(
                                 array(
-                                    'name' => 'regex',                                  
+                                    'name' => 'regex',
                                     'options' => array(
                                         'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
                                         'messages' => array(\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'),
@@ -6514,7 +7432,7 @@ return array(
                             'required' => false,
                             'validators' => array(
                                 array(
-                                    'name' => 'regex',                                  
+                                    'name' => 'regex',
                                     'options' => array(
                                         'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
                                         'messages' => array(\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'),
@@ -7593,7 +8511,7 @@ return array(
                             'validators' => [
                                 [
                                     'name' => 'regex',
-                                    'options' => [                                        
+                                    'options' => [
                                         'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
                                         'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
                                         'encoding' => 'UTF-8',
@@ -7612,7 +8530,7 @@ return array(
                             'required' => false,
                             'validators' => [
                                 [
-                                    'name' => 'regex',                                  
+                                    'name' => 'regex',
                                     'options' => [
                                         'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
                                         'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
@@ -7630,7 +8548,7 @@ return array(
                             'required' => false,
                             'validators' => [
                                 [
-                                    'name' => 'regex',                                  
+                                    'name' => 'regex',
                                     'options' => [
                                         'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
                                         'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
@@ -7648,7 +8566,7 @@ return array(
                             'required' => false,
                             'validators' => [
                                 [
-                                    'name' => 'regex',                                   
+                                    'name' => 'regex',
                                     'options' => [
                                         'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
                                         'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
@@ -7666,7 +8584,7 @@ return array(
                             'required' => false,
                             'validators' => [
                                 [
-                                    'name' => 'regex',                                  
+                                    'name' => 'regex',
                                     'options' => [
                                         'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
                                         'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
@@ -7684,7 +8602,7 @@ return array(
                             'required' => false,
                             'validators' => [
                                 [
-                                    'name' => 'regex',                              
+                                    'name' => 'regex',
                                     'options' => [
                                         'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
                                         'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
@@ -7696,14 +8614,14 @@ return array(
                                 ['name' => 'StripTags'],
                                 ['name' => 'StringTrim'],
                             ],
-                        ],      
-                    
+                        ],
+
                         'melis_core_platform_theme_modal_nav_tabs_text_icon_hover_color' => [
                             'name'     => 'melis_core_platform_theme_modal_nav_tabs_text_icon_hover_color',
                             'required' => false,
                             'validators' => [
                                 [
-                                    'name' => 'regex',                                   
+                                    'name' => 'regex',
                                     'options' => [
                                         'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
                                         'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
@@ -7721,7 +8639,7 @@ return array(
                             'required' => false,
                             'validators' => [
                                 [
-                                    'name' => 'regex',                                    
+                                    'name' => 'regex',
                                     'options' => [
                                         'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
                                         'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
@@ -7739,7 +8657,7 @@ return array(
                             'required' => false,
                             'validators' => [
                                 [
-                                    'name' => 'regex',                                  
+                                    'name' => 'regex',
                                     'options' => [
                                         'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
                                         'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
@@ -7757,7 +8675,7 @@ return array(
                             'required' => false,
                             'validators' => [
                                 [
-                                    'name' => 'regex',                                   
+                                    'name' => 'regex',
                                     'options' => [
                                         'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
                                         'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
@@ -7775,7 +8693,7 @@ return array(
                             'required' => false,
                             'validators' => [
                                 [
-                                    'name' => 'regex',                                   
+                                    'name' => 'regex',
                                     'options' => [
                                         'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
                                         'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
@@ -7787,13 +8705,13 @@ return array(
                                 ['name' => 'StripTags'],
                                 ['name' => 'StringTrim'],
                             ],
-                        ],                          
+                        ],
                         'melis_core_platform_theme_modal_content_close_btn_border_color' => [
                             'name'     => 'melis_core_platform_theme_modal_content_close_btn_border_color',
                             'required' => false,
                             'validators' => [
                                 [
-                                    'name' => 'regex',                                   
+                                    'name' => 'regex',
                                     'options' => [
                                         'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
                                         'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
@@ -7811,7 +8729,7 @@ return array(
                             'required' => false,
                             'validators' => [
                                 [
-                                    'name' => 'regex',                                   
+                                    'name' => 'regex',
                                     'options' => [
                                         'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
                                         'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
@@ -7829,7 +8747,7 @@ return array(
                             'required' => false,
                             'validators' => [
                                 [
-                                    'name' => 'regex',                                  
+                                    'name' => 'regex',
                                     'options' => [
                                         'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
                                         'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
@@ -7847,7 +8765,7 @@ return array(
                             'required' => false,
                             'validators' => [
                                 [
-                                    'name' => 'regex',                                    
+                                    'name' => 'regex',
                                     'options' => [
                                         'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
                                         'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
@@ -7865,7 +8783,7 @@ return array(
                             'required' => false,
                             'validators' => [
                                 [
-                                    'name' => 'regex',                                 
+                                    'name' => 'regex',
                                     'options' => [
                                         'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
                                         'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
@@ -7936,7 +8854,7 @@ return array(
                         ],
                         'melis_core_platform_theme_modal_content_text_font_styles' => [
                             'name'     => 'melis_core_platform_theme_modal_content_text_font_styles',
-                            'required' => false,                            
+                            'required' => false,
                             'filters'  => [
                                 ['name' => 'StripTags'],
                                 ['name' => 'StringTrim'],
@@ -8345,7 +9263,7 @@ return array(
                                 ['name' => 'StripTags'],
                                 ['name' => 'StringTrim'],
                             ],
-                        ],                        
+                        ],
                         'melis_core_platform_theme_form_input_elements_text_color' => [
                             'name'     => 'melis_core_platform_theme_form_input_elements_text_color',
                             'required' => false,
@@ -8363,7 +9281,7 @@ return array(
                                 ['name' => 'StripTags'],
                                 ['name' => 'StringTrim'],
                             ],
-                        ],                     
+                        ],
                         'melis_core_platform_theme_form_input_elements_border_color' => [
                             'name'     => 'melis_core_platform_theme_form_input_elements_border_color',
                             'required' => false,
@@ -8600,7 +9518,7 @@ return array(
                         ],
                         'melis_core_platform_theme_tab_widget_nav_link_text_align' => [
                             'name'     => 'melis_core_platform_theme_tab_widget_nav_link_text_align',
-                            'required' => false,                           
+                            'required' => false,
                             'filters'  => [
                                 ['name' => 'StripTags'],
                                 ['name' => 'StringTrim'],
@@ -9607,7 +10525,7 @@ return array(
                         ]
                     )
                 ),
-			),
-		),
-	),
+            ),
+        ),
+    ),
 );
