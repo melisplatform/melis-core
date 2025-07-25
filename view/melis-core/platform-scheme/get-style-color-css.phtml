@@ -66,9 +66,9 @@
     $bubblePluginWidgetBgColor                      = $this->melis_core_platform_theme_bubble_plugin_widget_bg_color;
     $bubblePluginWidgetBtnBgColor                   = $this->melis_core_platform_theme_bubble_plugin_widget_btn_bg_color;
     $bubblePluginWidgetBtnTextHoverColor            = $this->melis_core_platform_theme_bubble_plugin_widget_btn_text_hover_color;
-    $bubblePluginWidgetheaderTextIconColor          = $this->melis_core_platform_theme_bubble_plugin_widget_header_text_icon_color;
+    $bubblePluginWidgetHeaderTextIconColor          = $this->melis_core_platform_theme_bubble_plugin_widget_header_text_icon_color;
     $bubblePluginWidgetHeaderTextIconFontSize       = $this->melis_core_platform_theme_bubble_plugin_widget_header_text_icon_font_size;
-    //$bubblePluginWidgetFrontTextFontSize          = $this->melis_core_platform_theme_bubble_plugin_widget_front_text_font_size; // to be added on database
+    $bubblePluginWidgetFrontTextFontSize            = $this->melis_core_platform_theme_bubble_plugin_widget_front_text_font_size;
 
     $bubblePluginUpdatesHeaderTextIconColor         = $this->melis_core_platform_theme_bubble_plugin_updates_header_text_icon_color;
     $bubblePluginUpdatesHeaderBgColor               = $this->melis_core_platform_theme_bubble_plugin_updates_header_bg_color;
@@ -118,7 +118,7 @@
     $dashboardPluginMenuBoxBgColor                      = $this->melis_core_platform_theme_dashboard_plugin_menu_box_bg_color;
     $dashboardPluginMenuBoxBorderColor                  = $this->melis_core_platform_theme_dashboard_plugin_menu_box_border_color;
     $dashboardPluginMenuBoxBorderWidth                  = $this->melis_core_platform_theme_dashboard_plugin_menu_box_border_width;
-    //$dashboardPluginMenuBoxTitleBgColor               = $this->melis_core_platform_theme_dashboard_plugin_menu_box_title_bg_color; // to be added on database
+    $dashboardPluginMenuBoxTitleBgColor                 = $this->melis_core_platform_theme_dashboard_plugin_menu_box_title_bg_color;
     $dashboardPluginMenuBoxTitleColor                   = $this->melis_core_platform_theme_dashboard_plugin_menu_box_title_color;
     $dashboardPluginMenuBoxTitleFontSize                = $this->melis_core_platform_theme_dashboard_plugin_menu_box_title_font_size;
     $dashboardPluginMenuBoxTitleFontStyle               = $this->melis_core_platform_theme_dashboard_plugin_menu_box_title_font_style;
@@ -629,7 +629,7 @@ a, a:hover {
 .navbar.main.navbar-primary .nav > li.active .dropdown-toggle:hover,
 .navbar.main.navbar-primary .nav > li.active .dropdown-toggle:hover .fa,
 .navbar.main.navbar-primary .nav > li .dropdown-toggle:hover,
-.navbar.main.navbar-primary .nav > li .dropdown-toggle:hover .fa {
+.navbar.main.navbar-primary .nav > li .dropdown-toggle:hover .fa:before {
     color: <?= $primaryColor; ?> !important;
 }
 
@@ -1571,7 +1571,7 @@ div.glyphicons-social.glyphicon-primary i:before {
     color: #686868;
     font-size: 10px;
 }
-.form-group .group-span-filestyle label {
+.form-group .group-span-filestyle label:not(.group-span-filestyle label) {
     color: #fff;
 }
 
@@ -1714,12 +1714,12 @@ div.glyphicons-social.glyphicon-primary i:before {
 .navbar.main.navbar-primary .nav > li .dropdown-toggle:hover,
 .navbar.main.navbar-primary .dropdown-toggle,
 .navbar.main.navbar-primary .dropdown-toggle i {
-    color: <?= $headerTextIconColor; ?> !important;
+    color: <?= $headerTextIconColor; ?>;
 }
 .navbar.main .nav.navbar-right,
 body .navbar.main.navbar-primary,
 .navbar.main.navbar-primary .dropdown-toggle {
-    background-color: <?= $headerBgColor; ?> !important;
+    background-color: <?= $headerBgColor; ?>;
 } 
 .navbar.main.navbar-primary .dropdown-toggle {
     display: block;
@@ -1728,8 +1728,13 @@ body .navbar.main.navbar-primary,
 .navbar.main.navbar-primary .nav > li.active > .dropdown-toggle .fa {
     color: <?= $headerTextIconActiveColor; ?> !important;
 }
+.navbar.main.navbar-primary .nav > li.has-sub > .nav-group-dropdown li .dropdown-toggle:hover,
+.navbar.main.navbar-primary .nav > li.has-sub.active-parent.on > .nav-group-dropdown li .dropdown-toggle:hover,
 .navbar.main.navbar-primary .nav > li.active > .dropdown-toggle {
     background-color: <?= $headerBgActiveColor; ?> !important;
+    color: <?= $headerTextIconActiveColor; ?> !important;
+}
+.navbar.main.navbar-primary .nav > li.has-sub > .nav-group-dropdown li .dropdown-toggle:hover i:before {
     color: <?= $headerTextIconActiveColor; ?> !important;
 }
 
@@ -1825,7 +1830,7 @@ body .navbar.main.navbar-primary,
 }
 
 .melis-dashboard-bubble-plugin .front .widget-body .btn {
-    font-size: <?= $bubblePluginWidgetFrontTextFontSize; ?>px !!important;
+    font-size: <?= $bubblePluginWidgetFrontTextFontSize; ?>px !important;
 }
 .melis-dashboard-bubble-plugin .back .widget-head {
     background-color: <?= $bubblePluginWidgetBackHeaderBgColor; ?> !important;
@@ -1908,6 +1913,7 @@ body .navbar.main.navbar-primary,
 }
 .melis-core-dashboard-dnd-title {
     background-color: <?= $dashboardPluginMenuBoxTitleBgColor; ?> !important;
+
     color: <?= $dashboardPluginMenuBoxTitleColor; ?> !important;
     font-size: <?= $dashboardPluginMenuBoxTitleFontSize; ?>px !important;
     <?php
@@ -2003,12 +2009,14 @@ body .navbar.main.navbar-primary,
 }
 /** options_modal_nav_tabs_text_color */
 .modal-content .widget.widget-tabs-double > .widget-head ul li:not(.active) a.glyphicons i:before, 
-.modal-content .widget.widget-tabs-double .widget-head ul li a.glyphicons i:before,
 .modal-content .widget.widget-tabs-double > .widget-head ul li:not(.active) a.glyphicons,
+.modal-content .widget.widget-tabs-double .widget-head ul li a.glyphicons i:before,
 .modal-content .widget.widget-tabs-double .widget-head ul li a.glyphicons {
-    color: <?= $modalNavTabsTextIconColor; ?> !important;
+    color: <?= $modalNavTabsTextIconColor; ?>;
     font-size: <?= $modalNavTabsTextIconFontSize; ?>px !important;
 }
+.modal-content .nav-tabs.product-text-tab > li.active > a,
+.modal-content .widget.widget-tabs-double > .widget-head ul li:not(.active) a.active.glyphicons,
 .modal-content .widget.widget-tabs-double > .widget-head ul li a.glyphicons:hover {
     background-color: <?= $modalNavTabsActiveBgColor; ?> !important;
     color: <?= $modalNavTabsTextIconHoverColor; ?> !important;
@@ -2121,7 +2129,7 @@ form .form-group select option {
 }
 form .form-group textarea,
 form .form-group select,
-form .form-group input[type="text"]:not(.tt-input),
+form .form-group input[type="text"]:not(.tt-input, .tt-hint),
 form .form-group input[type="submit"]:not(.btn-primary),
 form .form-group input[type="button"] {
     background-color: <?= $formInputElementsBgColor; ?> !important;
