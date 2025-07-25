@@ -62,7 +62,8 @@ class PlatformSchemeController extends MelisAbstractActionController
             $formElement = json_decode($schemeData->getFormElement(), true);
             $tab = json_decode($schemeData->getTab(), true);
             $datepicker = json_decode($schemeData->getDatepicker(), true);
-
+            $dragDrop = json_decode($schemeData->getDragdrop(), true);
+           
             //set the value as array for multicheckbox(they are imploded by ';' when saving)
             $dashboardPlugin = array_map(function ($a) {
                 return strpos($a, ';') ? explode(';', $a) : $a;
@@ -77,8 +78,13 @@ class PlatformSchemeController extends MelisAbstractActionController
             $modal = array_map(function ($a) {
                 return strpos($a, ';') ? explode(';', $a) : $a;
             }, $modal);
+
+            //set the value as array for multicheckbox(they are imploded by ';' when saving)
+            $dragDrop = array_map(function ($a) {
+                return strpos($a, ';') ? explode(';', $a) : $a;
+            }, $dragDrop);
            
-            $platformThemeOptionData = array_merge($topLogo, $userProfile, $menu, $footer, $header, $bubblePlugin, $dashboardPlugin, $dashboardPluginMenu, $modal, $dialog, $formElement, $tab, $datepicker);
+            $platformThemeOptionData = array_merge($topLogo, $userProfile, $menu, $footer, $header, $bubblePlugin, $dashboardPlugin, $dashboardPluginMenu, $modal, $dialog, $formElement, $tab, $datepicker, $dragDrop);
 
             if ($platformThemeOptionData) {
                 $platformThemeOptionForm->setData($platformThemeOptionData);
@@ -513,8 +519,9 @@ class PlatformSchemeController extends MelisAbstractActionController
             $formElement = json_decode($schemeData->getFormElement(), true);
             $tab = json_decode($schemeData->getTab(), true);
             $datepicker = json_decode($schemeData->getDatepicker(), true);
+            $dragDrop = json_decode($schemeData->getDragdrop(), true);
 
-            $platformThemeData = array_merge($topLogo, $userProfile, $menu, $footer, $header, $bubblePlugin, $dashboardPlugin, $dashboardPluginMenu, $modal, $dialog, $formElement, $tab, $datepicker);
+            $platformThemeData = array_merge($topLogo, $userProfile, $menu, $footer, $header, $bubblePlugin, $dashboardPlugin, $dashboardPluginMenu, $modal, $dialog, $formElement, $tab, $datepicker, $dragDrop);
            
             $platformThemeForm = $this->getPlatformThemeOptionForm();
             if (!empty($platformThemeData)) {
@@ -753,6 +760,7 @@ class PlatformSchemeController extends MelisAbstractActionController
                 $formElement = [];
                 $tab = [];
                 $datepicker = [];
+                $dragdrop = [];
 
                 foreach ($form->getElements() as $key => $elem) {
                     //add brackets to get the data
@@ -789,6 +797,8 @@ class PlatformSchemeController extends MelisAbstractActionController
                         $tab[$key] = $data;
                     } elseif ($elem->getAttribute('category') == 'datepicker') {
                         $datepicker[$key] = $data;
+                    } elseif ($elem->getAttribute('category') == 'dragdrop') {
+                        $dragdrop[$key] = $data;
                     }
                 }
 
@@ -808,7 +818,8 @@ class PlatformSchemeController extends MelisAbstractActionController
                     'pscheme_dialog' => json_encode($dialog),
                     'pscheme_form_elements' => json_encode($formElement),
                     'pscheme_tab' => json_encode($tab),
-                    'pscheme_datepicker' => json_encode($datepicker)
+                    'pscheme_datepicker' => json_encode($datepicker),
+                    'pscheme_drag_drop' => json_encode($dragdrop),
                 );
 
                 $success = $this->getPlatformSchemeSvc()->saveScheme($data, $schemeId, true);

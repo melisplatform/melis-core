@@ -36,6 +36,7 @@ class MelisCorePlatformScheme
     protected $formElement;
     protected $tab;
     protected $datepicker;
+    protected $dragdrop;
 
     public function setId($id)
     {
@@ -260,5 +261,15 @@ class MelisCorePlatformScheme
     public function getDatepicker()
     {
         return $this->datepicker;
+    }
+
+    public function setDragdrop($dragdrop)
+    {
+        $this->dragdrop = $dragdrop;
+    }
+
+    public function getDragdrop()
+    {
+        return $this->dragdrop;
     }
 }

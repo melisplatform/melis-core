@@ -61,6 +61,7 @@ class MelisCorePlatformSchemeService extends MelisGeneralService
             $entScheme->setColors($schemeData->pscheme_colors);
 
             if(!$colorsOnly) {
+
                 $entScheme->setSidebarHeaderLogo($schemeData->pscheme_sidebar_header_logo);
                 $entScheme->setSidebarHeaderText($schemeData->pscheme_sidebar_header_text);
                 $entScheme->setLoginLogo($schemeData->pscheme_login_logo);
@@ -78,7 +79,8 @@ class MelisCorePlatformSchemeService extends MelisGeneralService
                 $entScheme->setDialog($schemeData->pscheme_dialog);
                 $entScheme->setFormElement($schemeData->pscheme_form_elements);
                 $entScheme->setTab($schemeData->pscheme_tab);
-                $entScheme->setDatepicker($schemeData->pscheme_datepicker);                
+                $entScheme->setDatepicker($schemeData->pscheme_datepicker);     
+                $entScheme->setDragdrop($schemeData->pscheme_drag_drop);             
             }
 
             $entScheme->setIsActive($schemeData->pscheme_is_active);
@@ -165,6 +167,7 @@ class MelisCorePlatformSchemeService extends MelisGeneralService
                 'pscheme_form_elements' => $defaultSchemeData->pscheme_form_elements,
                 'pscheme_tab' => $defaultSchemeData->pscheme_tab,
                 'pscheme_datepicker' => $defaultSchemeData->pscheme_datepicker,
+                'pscheme_drag_drop' => $defaultSchemeData->pscheme_drag_drop,
             );
 
             $success = $this->schemeTable()->save($data, $id);
