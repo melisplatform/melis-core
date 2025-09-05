@@ -1205,3 +1205,62 @@ div.glyphicons-social.glyphicon-primary i:before {
 button.column-icon .icon-col-bg {
     background-color: #fff;
 }
+/** mcq color scheme */
+.sidebar-header.search,
+.sidebar-header.basket,
+#question-groups .group-header {
+    background-color: <?= $primaryColor; ?>;
+}
+.deactivated-question {
+    <?php
+        // remove the # if present
+        $hex = ltrim($primaryColor, "#");
+
+        // validate hex format
+        if (preg_match('/^[0-9A-F]{6}$/i', $hex)) {
+            // convert hex to RGB using sscanf
+            sscanf($hex, "%02x%02x%02x", $r, $g, $b);
+
+            $rgbOutput = "$r, $g, $b";
+        }
+        else {
+            $rgbOutput = 'Invalid hex format!';
+        }
+    ?>
+    background-color: rgba(<?= $rgbOutput; ?>, 0.12) !important;
+}
+.deactivated-question:hover {
+    background-color: rgba(<?= $rgbOutput; ?>, 0.1) !important;
+}
+.questions-basket-popover .popover-header {
+    background-color: <?= $primaryColor; ?>;
+}
+.question-basket-popover .bs-popover-auto[data-popper-placement^=bottom]>.popover-arrow::after,
+.question-basket-popover .bs-popover-bottom>.popover-arrow::after {
+    border-bottom-color: <?= $primaryColor; ?>;
+}
+.questions-basket-popover .bs-popover-auto[data-popper-placement^=bottom]>.popover-arrow::after,
+.questions-basket-popover .bs-popover-bottom>.popover-arrow::after {
+    border-bottom-color: <?= $primaryColor; ?>;
+}
+.questions-basket-popover .popover-header {
+    background-color: <?= $primaryColor; ?>;
+}
+.tooltip.question-tooltip .tooltip-inner {
+    background-color: <?= $secondaryColor; ?>;
+}
+.tooltip.question-tooltip[data-popper-placement^=left] .tooltip-arrow::before {
+    border-left-color: <?= $secondaryColor; ?>;
+}
+.tooltip.question-tooltip .bs-tooltip-auto[data-popper-placement^=top] .tooltip-arrow::before {
+    border-top-color: <?= $secondaryColor; ?>;
+}
+.tooltip.question-tooltip .bs-tooltip-auto[data-popper-placement^=bottom] .tooltip-arrow::before {
+    border-bottom-color: <?= $secondaryColor; ?>;
+}
+.tooltip.question-tooltip .bs-tooltip-auto[data-popper-placement^=right] .tooltip-arrow::before {
+    border-right-color: <?= $secondaryColor; ?>;
+}
+.tooltip.question-tooltip .bs-tooltip-auto[data-popper-placement^=left] .tooltip-arrow::before {
+    border-left-color: <?= $secondaryColor; ?>;
+}
