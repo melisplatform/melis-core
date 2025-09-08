@@ -20,6 +20,9 @@ $(function() {
 
         $body.on("click", "#savePlatformScheme, .save-platform-theme-options", function() {
             $("form#melis_core_platform_scheme_images").trigger("submit");
+
+            // dynamic dnd, issue: https://mantis2.uat.melistechnology.fr/view.php?id=8466
+            //reloadMelisIframe();
         });
 
         $body.on("click", "#resetPlatformScheme", function() {
@@ -31,17 +34,21 @@ $(function() {
                 translations.tr_meliscore_platform_scheme_reset_confirm,
                 function() {
                     melisCoreTool.pending(".button");
+
                     $.ajax({
                         type    : 'GET',
                         url     : 'melis/MelisCore/PlatformScheme/resetToDefault',
                         processData : false,
                         cache       : false,
                         contentType : false,
-                        dataType    : 'json'
+                        dataType    : 'json',
                     }).done(function(data) {
                         if(data.success) {
                             melisCoreTool.processing();
-                            location.reload(true);
+                            window.location.reload(true);
+
+                            // dynamic dnd, issue: https://mantis2.uat.melistechnology.fr/view.php?id=8466
+                            //reloadMelisIframe();
                         }
                         else {
                             melisHelper.melisKoNotification(data.title, data.message, data.errors);
@@ -794,4 +801,20 @@ var rangeDecimalSlider = {
 
         $elValue.val($elMin.slider("value"));
     }
+};
+
+window.forceReload = function() {
+    // preserve current path, query, and hash
+    const url       = window.location.href.split('#')[0],
+        separator   = url.includes('?') ? '&' : '?',
+        reloadedUrl = url + separator + 'cb=' + Date.now();
+
+        window.location.replace(reloadedUrl); // no redirect to a different route
+};
+
+window.reloadMelisIframe = function() {
+    const $melisIframe = $(`[data-meliskey="meliscms_page"]`).find(".meliscms-page-tab-edition .melis-iframe");
+        if ($melisIframe) {
+            $melisIframe[0]?.contentWindow.location.reload();
+        }
 };

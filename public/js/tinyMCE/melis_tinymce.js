@@ -216,6 +216,35 @@ var melisTinyMCE = (function() {
 					});
 			});
 		});
+
+		// don't show .melis-plugin-tools-box on focus
+		editor.on("focus", function() {
+			const $this 		= $(this),
+				$thisFocus 		= $this[0],
+				targetElmFocus	= $thisFocus.targetElm,
+				//$toolbarFocus 	= $(editor.getContainer()).find(".tox-editor-header"),
+				$toolsBoxFocus	= $(targetElmFocus).closest(".melis-ui-outlined").find(".melis-plugin-tools-box");
+				
+				// raise current toolbar after a short delay to ensure its visible
+				setTimeout(() => {				
+					$toolsBoxFocus.css("opacity", 0);
+					$toolsBoxFocus.css("visibility", "hidden");
+				}, 100);
+		});
+
+		// don't show .melis-plugin-tools-box on blur
+		editor.on("blur", function() {
+			const $thisBlur 	= $(this)[0],
+				targetElmBlur 	= $thisBlur.targetElm,
+				//$toolbarBlur 	= $(editor.getContainer()).find(".tox-editor-header"),
+				$toolBoxBlur 	= $(targetElmBlur).closest(".melis-ui-outlined").find(".melis-plugin-tools-box");
+				//$dndWrapBlur 	= $(targetElmBlur).closest(".dnd-layout-wrapper")
+
+				// reset .melis-plugin-tools-box inline css
+				setTimeout(() => {
+					$toolBoxBlur.removeAttr("style");
+				}, 100);
+		});
 	}
 
 	// top, window.parent.$("body")
