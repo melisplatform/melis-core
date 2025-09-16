@@ -348,7 +348,7 @@
         if (! self.$element.attr('disabled')) {
           self.$input.prop('disabled', false);
         }
-        self.$input.focus();
+        self.$input.trigger("focus");
       }, self));
 
         if (self.options.addOnBlur && self.options.freeInput) {
