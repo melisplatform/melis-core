@@ -1551,10 +1551,10 @@
                 return this;
             },
             focus: function focus() {
-                this.$input.focus();
+                this.$input.trigger("focus");
             },
             blur: function blur() {
-                this.$input.blur();
+                this.$input.trigger("blur");
             },
             getLangDir: function getLangDir() {
                 return this.dir;
@@ -2160,7 +2160,7 @@
                         $e.preventDefault();
                         $e.stopImmediatePropagation();
                         _.defer(function() {
-                            $input.focus();
+                            $input.trigger("focus");
                         });
                     }
                 });
