@@ -2407,24 +2407,34 @@ form .form-group .tip-info {
  * Drag and drop elements
  */
 .melis-cms-dnd-box {
-    background-color: #373737;
-    border-width: 4px;
+    background-color: <?= $dragdropPluginsBoxBgColor; ?>;
+    border-width: <?= $dragdropPluginsBoxBorderWidth; ?>px;
     border-style: solid;
 
-    border-bottom-color: <?= $primaryColor;?>!important;
+    border-bottom-color: <?= $dragdropPluginsBoxBorderColor; ?>!important;
     
-    border-left-color: <?= $primaryColor;?>!important;
+    border-left-color: <?= $dragdropPluginsBoxBorderColor; ?>!important;
 
     border-top: 0;
 }
 .melis-cms-dnd-title {
-    background: <?= $primaryColor; ?>!important;
+    background: <?= $dragdropPluginsBoxTitleBgColor; ?>!important;
 
-    color: #fff;
-    line-height: 47px;
+    color: <?= $dragdropPluginsBoxTitleTextColor; ?>;
+    line-height: <?= $dragdropPluginsBoxTitleLineHeight; ?>px;
+    <?php
+        echo 'testing ' . $dragdropPluginsBoxTitleTextFontStyle;
+        $dndPluginsBoxTitleTextFontStyle = explode(';', $dragdropPluginsBoxTitleTextFontStyle);
 
-    text-transform: uppercase;
-    font-weight: 700;
+        $dndPluginsBoxTitleTextFontWeight   = $dndPluginsBoxTitleTextFontStyle[0] ?? 'normal';
+        $dndPluginsBoxTitleTextFontStyle    = $dndPluginsBoxTitleTextFontStyle[1] ?? 'normal';
+        $dndPluginsBoxTitleTextTransform    = $dndPluginsBoxTitleTextFontStyle[2] ?? 'inherit';
+        $dndPluginsBoxTitleTextDecoraton    = $dndPluginsBoxTitleTextFontStyle[3] ?? 'inherit';
+    ?>
+    font-style: <?= $dndPluginsBoxTitleTextFontStyle; ?>;
+    font-weight: <?= $dndPluginsBoxTitleTextFontWeight; ?>;
+    text-transform: <?= $dndPluginsBoxTitleTextTransform; ?>;
+    text-decoration: <?= $dndPluginsBoxTitleTextDecoraton; ?>;
 
     letter-spacing: 4px;
     text-align: center;
