@@ -146,10 +146,9 @@
     $modalBgColor                       = $this->melis_core_platform_theme_modal_bg_color;
     $modalBorderColor                   = $this->melis_core_platform_theme_modal_border_color;
     $modalBorderRadiusSize              = $this->melis_core_platform_theme_modal_border_radius_size;
-    $modalBorderWidth                 = $this->melis_core_platform_theme_modal_border_width; // to be added on database
+    $modalBorderWidth                   = $this->melis_core_platform_theme_modal_border_width;
 
     $modalNavTabsBgColor                = $this->melis_core_platform_theme_modal_nav_tabs_bg_color;
-    //echo 'testing ' . $modalNavTabsBgColor;
     $modalNavTabsActiveBgColor          = $this->melis_core_platform_theme_modal_nav_tabs_active_bg_color;
     $modalNavTabsTextIconColor          = $this->melis_core_platform_theme_modal_nav_tabs_text_icon_color;
     $modalNavTabsTextIconHoverColor     = $this->melis_core_platform_theme_modal_nav_tabs_text_icon_hover_color;
@@ -1497,7 +1496,6 @@ div.glyphicons-social.glyphicon-primary i:before {
 .widget.widget-tabs-double .widget-head ul li a.glyphicons i:before {
     color: #fff;
 }
-
 /* Media Queries */
 @media (max-width: 768px) {
      .login-page .navbar.main .nav>li .dropdown-menu li {
@@ -1508,24 +1506,19 @@ div.glyphicons-social.glyphicon-primary i:before {
     .navbar #melis-id-nav-bar-tabs > li {
         border-right: 1px solid <?= $secondaryColor; ?>;
     }
-
     .navbar.main.navbar-primary .navbar-brand {
         border-right: 1px solid <?= $secondaryColor; ?>;
     }
-
     .navbar.main .nav.navbar-right > li {
         border-left-color: <?= $secondaryColor; ?>;
     }
-
     .navbar.main .nav.navbar-right > li {
         border-right: 1px solid <?= $secondaryColor; ?>;
     }
-
     .container-level-a  .tooltabmodal .widget.widget-tabs.widget-tabs-responsive > .widget-head ul li {
         border-right: 1px solid <?= $secondaryColor; ?>;
     }
 }
-
 /* Melis Default Color */
 .melis-primary-txt {
     color: <?= $secondaryColor; ?> !important;
@@ -1533,7 +1526,6 @@ div.glyphicons-social.glyphicon-primary i:before {
 .melis-primary-bg {
     background: <?= $primaryColor; ?> !important;
 }
-
 /* common */
 .modal-content .form-group .has-switch .switch-animate span {
     color: #ffffff !important;
@@ -1572,10 +1564,10 @@ div.glyphicons-social.glyphicon-primary i:before {
     color: #686868;
     font-size: 10px;
 }
-.form-group .group-span-filestyle label:not(.step-fields .group-span-filestyle label, .step-fields-div .group-span-filestyle label) {
+.form-group .group-span-filestyle label:not(.step-fields .group-span-filestyle label, 
+.step-fields-div .group-span-filestyle label) {
     color: #fff;
 }
-
 /* Platform theme options */
 /* top logo */
 .navbar.main.navbar-primary .toggle-button i {
@@ -1591,7 +1583,6 @@ div.glyphicons-social.glyphicon-primary i:before {
     color: <?= $logoTxtColor; ?> !important;
     font-size: <?= $logoTxtFontSize; ?>px !important;
 }
-
 /* user profile */
 #id_meliscore_leftmenu_identity {
     background-color: <?= $userProfileBgColor; ?> !important;
@@ -1618,7 +1609,6 @@ div.glyphicons-social.glyphicon-primary i:before {
 .sidebar.sidebar-inverse .user-profile ul li.active:hover {
     border-color: #2c2c2c !important;
 }
-
 /* #user-name-link */
 .sidebar.sidebar-inverse .user-profile a {
     color: <?= $userProfileNameTextColor; ?> !important;
@@ -1700,7 +1690,6 @@ div.glyphicons-social.glyphicon-primary i:before {
 #id_meliscore_footer .footer p {
     color: <?= $footerTextColor; ?> !important;
 }
-
 /** login footer */
 #id_meliscore_login_footer .footer a,
 #id_meliscore_login_footer .footer p {
@@ -1738,7 +1727,6 @@ body .navbar.main.navbar-primary,
 .navbar.main.navbar-primary .nav > li.has-sub > .nav-group-dropdown li .dropdown-toggle:hover i:before {
     color: <?= $headerTextIconActiveColor; ?> !important;
 }
-
 /* bubble plugins */
 #btn-hide-bubble-plugins {
     background: <?= $bubblePluginHideBtnBgBorderColor; ?> !important;
@@ -1756,25 +1744,21 @@ body .navbar.main.navbar-primary,
     background: <?= $bubblePluginHideBtnBgHoverColor; ?> !important;
     color: <?= $bubblePluginHideBtnTextIconHoverColor; ?> !important;
 }
-
 .melis-dashboard-bubble-plugin .widget {
     background-color: <?= $bubblePluginWidgetBgColor; ?> !important;
 }
-
 .melis-dashboard-bubble-plugin .front .btn {
     background-color: <?= $bubblePluginWidgetBtnBgColor; ?> !important;
 }
 .melis-dashboard-bubble-plugin .front .btn:hover {
     color: <?= $bubblePluginWidgetBtnTextHoverColor; ?> !important;
 }
-
 /* applicable only on news, notification and message widgets */
 .melis-dashboard-bubble-plugin .front .widget-body .lead .fa,
 .melis-dashboard-bubble-plugin .front .widget-body .lead {
     color: <?= $bubblePluginWidgetHeaderTextIconColor; ?> !important;
     font-size: <?= $bubblePluginWidgetHeaderTextIconFontSize; ?>px !important;
 }
-
 /** updates, header, button and border has the same color */
 .melis-dashboard-bubble-updates-plugin .front .widget-body .lead .fa,
 .melis-dashboard-bubble-updates-plugin .front .widget-body .lead {
@@ -1791,7 +1775,6 @@ body .navbar.main.navbar-primary,
     background-color: <?= $bubblePluginUpdatesHeaderBgColor; ?> !important;
     border-color: <?= $bubblePluginUpdatesHeaderBgColor; ?> !important;
 }
-
 /** themed colors for news card button effects */
 .melis-dashboard-bubble-news-melis-plugin .front .widget-body .innerAll.bg-inverse {
     background-color: <?= $bubblePluginNewsHeaderBgColor; ?> !important;
@@ -1803,7 +1786,6 @@ body .navbar.main.navbar-primary,
 .melis-dashboard-bubble-news-melis-plugin .front .widget-body .btn:hover {
     background-color: <?= $bubblePluginNewsBtnBgHoverColor; ?> !important;
 }
-
 /** themed colors for notification card button effects */
 .melis-dashboard-bubble-notifications-plugin .front .widget-body .innerAll.bg-success {
     background-color: <?= $bubblePluginNotifHeaderBgColor; ?> !important;
@@ -1816,7 +1798,6 @@ body .navbar.main.navbar-primary,
     background-color: <?= $bubblePluginNotifBtnBorderTextColor; ?> !important;
     border-color: <?= $bubblePluginNotifBtnBorderTextColor; ?> !important;
 }
-
 /** themed colors for chat card button effects */
 .melis-dashboard-bubble-chat-plugin .front .widget-body .innerAll.bg-info {
     background-color: <?= $bubblePluginMsgHeaderBgColor; ?> !important
@@ -1856,7 +1837,6 @@ body .navbar.main.navbar-primary,
 .melis-dashboard-bubble-plugin .back .widget-body table tr:not(:first-child) td {
     color: <?= $bubblePluginWidgetBackContentDetailsTextColor; ?> !important;
 }
-
 /* dashboard plugins msg */
 .melis-core-dashboard-msg .alert-info.no-plugins {
     background-color: <?= $dashboardPluginNoPluginAlertBgColor; ?> !important;
@@ -1876,7 +1856,6 @@ body .navbar.main.navbar-primary,
     text-transform: <?= $noPluginsTextTransform; ?> !important;
     text-decoration: <?= $noPluginsTextDecoraton; ?> !important;
 }
-
 /* plugins */
 .grid-stack>.grid-stack-item>.grid-stack-item-content {
     border-radius: <?= $dashboardPluginBorderRadius; ?> !important;
@@ -1960,7 +1939,6 @@ body .navbar.main.navbar-primary,
     color: <?= $dashboardPluginMenuDeleteAllBtnTextColor; ?> !important;
     font-size: <?= $dashboardPluginMenuDeleteAllBtnTextFontSize; ?>px !important;
 }
-
 /* Component options */
 /* modals */
 .modal .widget,
@@ -1970,7 +1948,7 @@ body .navbar.main.navbar-primary,
     background-color: <?= $modalBgColor; ?> !important;
 }
 .modal .modal-content {
-    border-width: 0;
+    border-width: <?= $modalBorderWidth; ?> !important;
     border-color: <?= $modalBorderColor; ?> !important;
 }
 /* affected classes for border-radius */
@@ -1985,7 +1963,6 @@ body .navbar.main.navbar-primary,
     border-top-right-radius: <?= $modalBorderRadiusSize; ?> !important;
 }
 /* end affected classes for border-radius */
-
 /** options_modal_nav_tabs_color */
 .modal-content .widget .widget-head {
     background-color: <?= $modalNavTabsBgColor; ?> !important;
@@ -2074,7 +2051,6 @@ body .navbar.main.navbar-primary,
     border-color: <?= $modalContentSaveBtnBorderColor; ?> !important;
     color: <?= $modalContentSaveBtnHoverTextColor; ?> !important;
 }
-
 /* bootstrap dialog */
 .bootstrap-dialog.confirm-modal-header.type-warning .modal-header {
     background-color: <?= $dialogContentHeaderBgColor; ?> !important;
