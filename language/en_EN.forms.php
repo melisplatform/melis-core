@@ -726,5 +726,32 @@ return array(
     'tr_melis_core_platform_theme_dnd_zone_icons_color_tooltip' => 'Change the dnd zone icons color by typing the hexadecimal color code or by using the color picker',
     'tr_melis_core_platform_theme_dnd_plugins_box_line_height' => 'Plugins box title line height',
     'tr_melis_core_platform_theme_dnd_plugins_box_line_height_tooltip' => 'Change plugins box title line height',
+
+    // Edit button
+    'tr_meliscore_platform_theme_user_profile_edit_btn_bg_color_label'          => 'Edit button background color',
+    'tr_meliscore_platform_theme_user_profile_edit_btn_bg_color_tooltip'        => 'Change the edit button background color by typing the hexadecimal color code or by using the color picker',
+    'tr_meliscore_platform_theme_user_profile_edit_btn_border_color_label'      => 'Edit button border color',
+    'tr_meliscore_platform_theme_user_profile_edit_btn_border_color_tooltip'    => 'Change the edit button border color by typing the hexadecimal color code or by using the color picker',
+    'tr_meliscore_platform_theme_user_profile_edit_btn_icon_color_label'        => 'Edit button icon color',
+    'tr_meliscore_platform_theme_user_profile_edit_btn_icon_color_tooltip'      => 'Change the edit button icon color by typing the hexadecimal color code or by using the color picker',
+    'tr_meliscore_platform_theme_user_profile_edit_btn_hover_bg_color_label'    => 'Edit button hover background color',
+    'tr_meliscore_platform_theme_user_profile_edit_btn_hover_bg_color_tooltip'  => 'Change the edit button hover background color by typing the hexadecimal color code or by using the color picker',
+    'tr_meliscore_platform_theme_user_profile_edit_btn_hover_icon_color_label'  => 'Edit button hover icon color',
+    'tr_meliscore_platform_theme_user_profile_edit_btn_hover_icon_color_tooltip'=> 'Change the edit button hover icon color by typing the hexadecimal color code or by using the color picker',
+    'tr_meliscore_platform_theme_user_profile_edit_btn_hover_border_color_label' => 'Edit button hover border color',
+    'tr_meliscore_platform_theme_user_profile_edit_btn_hover_border_color_tooltip' => 'Change the edit button hover border color by typing the hexadecimal color code or by using the color picker',
+    // Logout button
+    'tr_meliscore_platform_theme_user_profile_logout_btn_bg_color_label'        => 'Logout button background color',
+    'tr_meliscore_platform_theme_user_profile_logout_btn_bg_color_tooltip'      => 'Change the logout button background color by typing the hexadecimal color code or by using the color picker',
+    'tr_meliscore_platform_theme_user_profile_logout_btn_icon_color_label'      => 'Logout button icon color',
+    'tr_meliscore_platform_theme_user_profile_logout_btn_icon_color_tooltip'    => 'Change the logout button icon color by typing the hexadecimal color code or by using the color picker',
+    'tr_meliscore_platform_theme_user_profile_logout_btn_hover_bg_color_label'  => 'Logout button hover background color',
+    'tr_meliscore_platform_theme_user_profile_logout_btn_hover_bg_color_tooltip'=> 'Change the logout button hover background color by typing the hexadecimal color code or by using the color picker',
+    'tr_meliscore_platform_theme_user_profile_logout_btn_hover_icon_color_label' => 'Logout button hover icon color',
+    'tr_meliscore_platform_theme_user_profile_logout_btn_hover_icon_color_tooltip' => 'Change the logout button hover icon color by typing the hexadecimal color code or by using the color picker',
+    'tr_meliscore_platform_theme_modal_border_width' => 'Modal border width',
+    'tr_meliscore_platform_theme_modal_border_width_tooltip' => 'Change modal border width'
+
+
 );
 ?>

@@ -1209,6 +1209,199 @@ return array(
                                 ),
                             ),
                         ),
+                  
+                        [
+                            'spec' => [
+                                'name' => 'melis_core_platform_theme_user_profile_edit_btn_bg_color',
+                                'type' => 'Text',
+                                'options' => [
+                                    'label'   => 'tr_meliscore_platform_theme_user_profile_edit_btn_bg_color_label',
+                                    'tooltip' => 'tr_meliscore_platform_theme_user_profile_edit_btn_bg_color_tooltip',
+                                ],
+                                'attributes' => [
+                                    'id'          => 'melis_core_platform_theme_user_profile_edit_btn_bg_color',
+                                    'value'       => '#e61c23',
+                                    'class'       => 'form-control minicolor-hex',
+                                    'data-control'=> 'hue',
+                                    'placeholder' => 'Edit button background color',
+                                    'category'    => 'user_profile',
+                                    'default'     => '#e61c23',
+                                ],
+                            ],
+                        ],
+                        [
+                            'spec' => [
+                                'name' => 'melis_core_platform_theme_user_profile_edit_btn_border_color',
+                                'type' => 'Text',
+                                'options' => [
+                                    'label'   => 'tr_meliscore_platform_theme_user_profile_edit_btn_border_color_label',
+                                    'tooltip' => 'tr_meliscore_platform_theme_user_profile_edit_btn_border_color_tooltip',
+                                ],
+                                'attributes' => [
+                                    'id'          => 'melis_core_platform_theme_user_profile_edit_btn_border_color',
+                                    'value'       => '#2c2c2c',
+                                    'class'       => 'form-control minicolor-hex',
+                                    'data-control'=> 'hue',
+                                    'placeholder' => 'Edit button border color',
+                                    'category'    => 'user_profile',
+                                    'default'     => '#2c2c2c',
+                                ],
+                            ],
+                        ],
+                        [
+                            'spec' => [
+                                'name' => 'melis_core_platform_theme_user_profile_edit_btn_icon_color',
+                                'type' => 'Text',
+                                'options' => [
+                                    'label'   => 'tr_meliscore_platform_theme_user_profile_edit_btn_icon_color_label',
+                                    'tooltip' => 'tr_meliscore_platform_theme_user_profile_edit_btn_icon_color_tooltip',
+                                ],
+                                'attributes' => [
+                                    'id'          => 'melis_core_platform_theme_user_profile_edit_btn_icon_color',
+                                    'value'       => '#fff',
+                                    'class'       => 'form-control minicolor-hex',
+                                    'data-control'=> 'hue',
+                                    'placeholder' => 'Edit button icon color',
+                                    'category'    => 'user_profile',
+                                    'default'     => '#fff',
+                                ],
+                            ],
+                        ],
+                        [
+                            'spec' => [
+                                'name' => 'melis_core_platform_theme_user_profile_edit_btn_hover_bg_color',
+                                'type' => 'Text',
+                                'options' => [
+                                    'label'   => 'tr_meliscore_platform_theme_user_profile_edit_btn_hover_bg_color_label',
+                                    'tooltip' => 'tr_meliscore_platform_theme_user_profile_edit_btn_hover_bg_color_tooltip',
+                                ],
+                                'attributes' => [
+                                    'id'          => 'melis_core_platform_theme_user_profile_edit_btn_hover_bg_color',
+                                    'value'       => '#fff',
+                                    'class'       => 'form-control minicolor-hex',
+                                    'data-control'=> 'hue',
+                                    'placeholder' => 'Edit button hover background color',
+                                    'category'    => 'user_profile',
+                                    'default'     => '#fff',
+                                ],
+                            ],
+                        ],
+                        [
+                            'spec' => [
+                                'name' => 'melis_core_platform_theme_user_profile_edit_btn_hover_icon_color',
+                                'type' => 'Text',
+                                'options' => [
+                                    'label'   => 'tr_meliscore_platform_theme_user_profile_edit_btn_hover_icon_color_label',
+                                    'tooltip' => 'tr_meliscore_platform_theme_user_profile_edit_btn_hover_icon_color_tooltip',
+                                ],
+                                'attributes' => [
+                                    'id'          => 'melis_core_platform_theme_user_profile_edit_btn_hover_icon_color',
+                                    'value'       => '#e61c23',
+                                    'class'       => 'form-control minicolor-hex',
+                                    'data-control'=> 'hue',
+                                    'placeholder' => 'Edit button hover icon color',
+                                    'category'    => 'user_profile',
+                                    'default'     => '#e61c23',
+                                ],
+                            ],
+                        ],
+                        [
+                            'spec' => [
+                                'name' => 'melis_core_platform_theme_user_profile_edit_btn_hover_border_color',
+                                'type' => 'Text',
+                                'options' => [
+                                    'label'   => 'tr_meliscore_platform_theme_user_profile_edit_btn_hover_border_color_label',
+                                    'tooltip' => 'tr_meliscore_platform_theme_user_profile_edit_btn_hover_border_color_tooltip',
+                                ],
+                                'attributes' => [
+                                    'id'          => 'melis_core_platform_theme_user_profile_edit_btn_hover_border_color',
+                                    'value'       => '#e61c23',
+                                    'class'       => 'form-control minicolor-hex',
+                                    'data-control'=> 'hue',
+                                    'placeholder' => 'Edit button hover border color',
+                                    'category'    => 'user_profile',
+                                    'default'     => '#e61c23',
+                                ],
+                            ],
+                        ],
+
+                        // Logout button group
+                        [
+                            'spec' => [
+                                'name' => 'melis_core_platform_theme_user_profile_logout_btn_bg_color',
+                                'type' => 'Text',
+                                'options' => [
+                                    'label'   => 'tr_meliscore_platform_theme_user_profile_logout_btn_bg_color_label',
+                                    'tooltip' => 'tr_meliscore_platform_theme_user_profile_logout_btn_bg_color_tooltip',
+                                ],
+                                'attributes' => [
+                                    'id'          => 'melis_core_platform_theme_user_profile_logout_btn_bg_color',
+                                    'value'       => '#2c2c2c',
+                                    'class'       => 'form-control minicolor-hex',
+                                    'data-control'=> 'hue',
+                                    'placeholder' => 'Logout button background color',
+                                    'category'    => 'user_profile',
+                                    'default'     => '#2c2c2c',
+                                ],
+                            ],
+                        ],
+                        [
+                            'spec' => [
+                                'name' => 'melis_core_platform_theme_user_profile_logout_btn_icon_color',
+                                'type' => 'Text',
+                                'options' => [
+                                    'label'   => 'tr_meliscore_platform_theme_user_profile_logout_btn_icon_color_label',
+                                    'tooltip' => 'tr_meliscore_platform_theme_user_profile_logout_btn_icon_color_tooltip',
+                                ],
+                                'attributes' => [
+                                    'id'          => 'melis_core_platform_theme_user_profile_logout_btn_icon_color',
+                                    'value'       => '#fff',
+                                    'class'       => 'form-control minicolor-hex',
+                                    'data-control'=> 'hue',
+                                    'placeholder' => 'Logout button icon color',
+                                    'category'    => 'user_profile',
+                                    'default'     => '#fff',
+                                ],
+                            ],
+                        ],
+                        [
+                            'spec' => [
+                                'name' => 'melis_core_platform_theme_user_profile_logout_btn_hover_bg_color',
+                                'type' => 'Text',
+                                'options' => [
+                                    'label'   => 'tr_meliscore_platform_theme_user_profile_logout_btn_hover_bg_color_label',
+                                    'tooltip' => 'tr_meliscore_platform_theme_user_profile_logout_btn_hover_bg_color_tooltip',
+                                ],
+                                'attributes' => [
+                                    'id'          => 'melis_core_platform_theme_user_profile_logout_btn_hover_bg_color',
+                                    'value'       => '#e61c23',
+                                    'class'       => 'form-control minicolor-hex',
+                                    'data-control'=> 'hue',
+                                    'placeholder' => 'Logout button hover background color',
+                                    'category'    => 'user_profile',
+                                    'default'     => '#e61c23',
+                                ],
+                            ],
+                        ],
+                        [
+                            'spec' => [
+                                'name' => 'melis_core_platform_theme_user_profile_logout_btn_hover_icon_color',
+                                'type' => 'Text',
+                                'options' => [
+                                    'label'   => 'tr_meliscore_platform_theme_user_profile_logout_btn_hover_icon_color_label',
+                                    'tooltip' => 'tr_meliscore_platform_theme_user_profile_logout_btn_hover_icon_color_tooltip',
+                                ],
+                                'attributes' => [
+                                    'id'          => 'melis_core_platform_theme_user_profile_logout_btn_hover_icon_color',
+                                    'value'       => '#2c2c2c',
+                                    'class'       => 'form-control minicolor-hex',
+                                    'data-control'=> 'hue',
+                                    'placeholder' => 'Logout button hover icon color',
+                                    'category'    => 'user_profile',
+                                    'default'     => '#2c2c2c',
+                                ],
+                            ],
+                        ],                  
 
                         //Menu
                         array(
@@ -3388,6 +3581,27 @@ return array(
                                     'placeholder' => 'tr_meliscore_platform_theme_modal_content_save_btn_hover_text_color',
                                     'category' => 'modal',
                                     'default' => '#72af46'
+                                ),
+                            ),
+                        ),
+
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_modal_border_width',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_modal_border_width',
+                                    'tooltip' => 'tr_meliscore_platform_theme_modal_border_width_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_modal_border_width',
+                                    'value' => '',
+                                    'class' => 'modal-border-width-range-slider-value range-slider-value form-control',
+                                    'placeholder' => 'melis_core_platform_theme_modal_border_width',
+                                    'category' => 'modal',
+                                    'sliderId' => 'modal-border-width-range-slider-min',
+                                    'sliderClass' => 'modal-border-width-range-slider-min',
+                                    'default' => 14
                                 ),
                             ),
                         ),

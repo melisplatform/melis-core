@@ -348,6 +348,13 @@ var rangeSliderSize = {
                 min: 1, 
                 max: 25 
             }, // modal content text font size
+             { 
+                selectorMin: ".modal-border-width-range-slider-min", 
+                selectorValue: ".modal-border-width-range-slider-value", 
+                value: $("#melis_core_platform_theme_modal_border_width").val(), 
+                min: 0, 
+                max: 25 
+            }, // modal border width range
             { 
                 selectorMin: ".form-inputs-element-border-radius-range-slider-min", 
                 selectorValue: ".form-inputs-element-border-radius-range-slider-value", 
