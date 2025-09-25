@@ -1,6 +1,10 @@
 <?php
 
 use MelisCore\Support\MelisCore;
+use Laminas\Session\Container;
+
+$container = new Container('meliscore');
+$locale = $container['melis-lang-locale'];
 
 return array(
     'plugins' => array(
@@ -243,7 +247,7 @@ return array(
                     '/MelisCore/css/custom-style.css',
                 ),
                 'js' => array(
-                    '/melis/get-translations',
+                    '/melis/get-translations?locale=' . $locale,
                     '/MelisCore/assets/components/library/jquery/jquery.min.js',
                     '/MelisCore/assets/components/library/jquery-ui/js/jquery-ui.min.js',
                     '/MelisCore/assets/components/library/jquery/jquery-migrate.min.js',
@@ -337,7 +341,7 @@ return array(
                         '/MelisCore/build/css/bundle.css',
                     ],
                     'js' => [
-                        '/melis/get-translations',
+                        '/melis/get-translations?locale=' . $locale,
                         '/MelisCore/build/js/bundle.js',
                     ]
                 ]
@@ -690,7 +694,7 @@ return array(
                     '/MelisCore/css/custom-style.css',
                 ),
                 'js' => array(
-                    '/melis/get-translations',
+                    '/melis/get-translations?locale=' . $locale,
                     '/MelisCore/assets/components/library/jquery/jquery.min.js?v=v1.2.3',
                     '/MelisCore/js/tools/melisCoreTool.js',
                     '/MelisCore/js/core/login.js',
