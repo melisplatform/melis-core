@@ -1,7 +1,7 @@
 $(function() {
 	
 	// LOGIN 
-    $('form#idformmeliscorelogin').submit(function(event) {
+    $('form#idformmeliscorelogin').on("submit", function(event) {
         var datastring = $("form#idformmeliscorelogin").serialize();
         $(this).find("input").attr("disabled", "disabled");
         $.ajax({
@@ -15,7 +15,6 @@ $(function() {
                 window.location.replace("/melis");
             }
             else{
-
                 var errorTxt = "";
                 $.each(data.errors, function(i,v) {
                     errorTxt = v;
@@ -30,11 +29,57 @@ $(function() {
                 else {
                     melisCoreTool.alertDanger('#loginprompt', translations.tr_meliscore_common_error+"!", errorTxt);
                 }
-                $("form#idformmeliscorelogin").find("input").removeAttr("disabled", "disabled");
 
+                if (data.accountLocked) {
+                    let icon = "<div style='text-align: center;'><a href='#' class='glyphicons lock'><i></i></a></div>";
+                    let message = '';
+                    let adminEmail = data.accountLockAdminEmail;
+                    let firstSentence = '<h4 style="margin-top: 10px; margin-bottom: 15px; text-align: center;">' + translations.tr_meliscore_login_maximum_amount_of_failed_login_attempts_message + '</h4>';
+                    let thirdSentence = '<p style="text-align: center;"><i>' + translations.tr_meliscore_login_contact_an_administrator_for_assistance_message.replace('%s', '<strong>' + adminEmail + '</strong>') + '</i></p>';
+
+                    if (data.accountLockType == 'admin') {
+                        let secondSentence = '<p style="text-align: center; font-size: 1rem;">' + translations.tr_meliscore_login_account_is_now_locked_message + '</p>';
+                        message = firstSentence + secondSentence + thirdSentence;
+                        melisHelper.melisKoNotification(icon, message, []);
+                        $("form#idformmeliscorelogin").find("input").prop("disabled", false);
+                    } else if (data.accountLockType == 'timer') {
+                        let days = data.accountLockDurationInDays;
+                        let hours = data.accountLockDurationInHours;
+                        let minutes = data.accountLockDurationInMinutes;
+                        let daysString = translations.tr_meliscore_login_locked_in_days_message;
+                        let hoursString = translations.tr_meliscore_login_locked_in_hours_message;
+                        let minutesString = translations.tr_meliscore_login_locked_in_minutes_message;
+                        let durationString = '<strong>';
+                        let components = [];
+
+                        if (days > 0) {
+                            components.push(daysString.replace('%d', days));
+                        }
+                        
+                        if (hours > 0) {
+                            components.push(hoursString.replace('%d', hours));
+                        }
+
+                        if (minutes > 0) {
+                            components.push(minutesString.replace('%d', minutes));
+                        }
+
+                        if (components.length === 1) {
+                            durationString += components[0] + "</strong>.";
+                        } else {
+                            durationString += components.join(', ') + "</strong>.";
+                        }
+
+                        let secondSentence = '<p style="text-align: center; font-size: 1rem;">' + translations.tr_meliscore_login_account_is_now_locked_for_duration_message + durationString + '</p>';
+                        message = firstSentence + secondSentence + thirdSentence;
+                        melisHelper.melisKoNotification(icon, message, []);
+                        $("form#idformmeliscorelogin").find("input").prop("disabled", false);
+                    }
+                }
+                $("form#idformmeliscorelogin").find("input").prop("disabled", false);
             }
         }).fail(function() {
-            $("form#idformmeliscorelogin").find("input").removeAttr("disabled", "disabled");
+            $("form#idformmeliscorelogin").find("input").prop("disabled", false);
             
             alert( translations.tr_meliscore_error_message );
         });

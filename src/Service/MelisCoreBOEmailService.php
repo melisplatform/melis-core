@@ -368,8 +368,11 @@ class MelisCoreBOEmailService extends MelisServiceManager
 	                            foreach ($emailPropertiesDetails As $proKey => $proVal){
 	                                // Replacing Accepted Tag on Email content with certain values
 	                                // Using the Case-insensitave PHP funation str_ireplace()
-	                                $emailPropertiesDetails[$proKey]['html'] = str_ireplace('['.$tagKey.']', $tagVal  ,$proVal['html']);
-	                                $emailPropertiesDetails[$proKey]['text'] = str_ireplace('['.$tagKey.']', $tagVal  ,$proVal['text']);
+                                    if(!empty($proVal['html']))
+	                                    $emailPropertiesDetails[$proKey]['html'] = str_ireplace('['.$tagKey.']', $tagVal  ,$proVal['html']);
+
+                                    if(!empty($proVal['text']))
+	                                    $emailPropertiesDetails[$proKey]['text'] = str_ireplace('['.$tagKey.']', $tagVal  ,$proVal['text']);
 	                            }
 	                        }
 	                    }

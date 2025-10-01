@@ -14,6 +14,10 @@ use Composer\IO\NullIO;
 use Composer\Package\CompletePackage;
 use Laminas\Config\Config;
 use Laminas\Config\Writer\PhpArray;
+use Laminas\Session\Container;
+use MelisCore\Controller\ModulesController;
+use MelisCore\View\Helper\MelisCoreHeadPluginHelper;
+use MatthiasMullie\Minify;
 
 class MelisCoreModulesService extends MelisServiceManager
 {
@@ -39,7 +43,7 @@ class MelisCoreModulesService extends MelisServiceManager
         $melisInstalledPackages = $melisComposer->getInstalledPackages();
 
         foreach ($melisInstalledPackages as $package) {
-            $packageModuleName = isset($package->extra) ? (array) $package->extra : null;
+            $packageModuleName = isset($package->extra) ? (array)$package->extra : null;
             $module = null;
             if (isset($packageModuleName['module-name'])) {
                 $module = $packageModuleName['module-name'];
@@ -146,7 +150,7 @@ class MelisCoreModulesService extends MelisServiceManager
                 continue;
             }
 
-            if (!is_file( $modulePath . "Module.php")) {
+            if (!is_file($modulePath . "Module.php")) {
                 /** Module.php file was not found - remove module from the list */
                 unset($modules[$moduleIndex]);
             }
@@ -267,7 +271,7 @@ class MelisCoreModulesService extends MelisServiceManager
         });
 
         $modules = array_map(function ($package) {
-            $extra = (array) $package->extra;
+            $extra = (array)$package->extra;
             /** @var CompletePackage $package */
             return $extra['module-name'];
         }, $packages);
@@ -431,15 +435,16 @@ class MelisCoreModulesService extends MelisServiceManager
      * @param bool $returnFullPath
      * @return string
      */
-    public function getUserSitePath($siteName, $returnFullPath = true){
+    public function getUserSitePath($siteName, $returnFullPath = true)
+    {
         $path = '';
         $melisSitesPath = $_SERVER['DOCUMENT_ROOT'] . '/../module/MelisSites';
 
-        if ($this->checkDir($melisSitesPath .DIRECTORY_SEPARATOR. $siteName)) {
+        if ($this->checkDir($melisSitesPath . DIRECTORY_SEPARATOR . $siteName)) {
             if (!$returnFullPath) {
-                $path = '/MelisSites/'.$siteName;
+                $path = '/MelisSites/' . $siteName;
             } else {
-                $path = $melisSitesPath.'/'.$siteName;
+                $path = $melisSitesPath . '/' . $siteName;
             }
         }
 
@@ -566,8 +571,8 @@ class MelisCoreModulesService extends MelisServiceManager
      * @return bool
      */
     public function createModuleLoader($pathToStore, $modules = [],
-                                    $topModules = ['melisassetmanager', 'melisdbdeploy', 'meliscomposerdeploy', 'meliscore'],
-                                    $bottomModules = ['MelisModuleConfig'])
+                                       $topModules = ['melisassetmanager', 'melisdbdeploy', 'meliscomposerdeploy', 'meliscore'],
+                                       $bottomModules = ['MelisModuleConfig'])
     {
         $moduleSrv = $this->getServiceManager()->get('MelisAssetManagerModulesService');
         return $moduleSrv->createModuleLoader($pathToStore, $modules, $topModules, $bottomModules);
@@ -650,18 +655,505 @@ class MelisCoreModulesService extends MelisServiceManager
         $repo = null;
 
         foreach ($packages as $package) {
-            $packageModuleName = isset($package->extra) ? (array) $package->extra : null;
+            $packageModuleName = isset($package->extra) ? (array)$package->extra : null;
 
             if (isset($packageModuleName['module-name']) && $packageModuleName['module-name'] == $module) {
-                $repo = (array) $package->extra;
+                $repo = (array)$package->extra;
                 break;
             }
         }
 
         if (isset($repo['melis-site'])) {
-            return (bool) $repo['melis-site'] ?? false;
+            return (bool)$repo['melis-site'] ?? false;
         }
 
         return false;
+    }
+
+    /**
+     * Merge all assets into one
+     */
+    public function generateBundle()
+    {
+        ini_set('max_execution_time', '0');
+
+        $webPack = $this->getServiceManager()->get('MelisAssetManagerWebPack');
+        $assets = $webPack->getAssets(false);
+
+        if (!empty($assets)) {
+            foreach ($assets as $type => $files) {
+                $vendorFileHolder = [];
+                $moduleFileHolder = [];
+                $moduleFileHolderAlreadyBundled = [];
+                /**
+                 * We will separate all the already bundle file
+                 * and for those who are in vendor and in module
+                 * so we can re bundle the assets inside module folder in case
+                 * its not yet bundled
+                 */
+                $this->segregateFiles($files, $moduleFileHolder, $vendorFileHolder, $moduleFileHolderAlreadyBundled);
+                /**
+                 * Lets minify all unminified files from module folder
+                 */
+                $arrayPaths = [];
+                if ($type == 'css')
+                    $this->minifyCss($moduleFileHolder, $arrayPaths);
+                elseif ($type == 'js')
+                    $this->minifyJs($moduleFileHolder, $arrayPaths);
+
+                //hot fix
+                $newModuleFildeHolder = [];
+                if(!empty($moduleFileHolder)){
+                    foreach($moduleFileHolder as $module => $moduleFiles){
+                        foreach($moduleFiles as $file) {
+                            $newModuleFildeHolder[] = $file;
+                        }
+                    }
+                }
+
+                /**
+                 * We merge all bundled files
+                 */
+                $allAssets = array_merge($vendorFileHolder, $moduleFileHolderAlreadyBundled, $newModuleFildeHolder);
+//                $allAssets = array_merge($vendorFileHolder, $moduleFileHolderAlreadyBundled, $arrayPaths);
+                /**
+                 * Combine all
+                 */
+                $this->combineAssets($allAssets, $type);
+            }
+
+            /**
+             * Lets bundle the login assets
+             */
+            $this->bundleLoginAssets();
+
+            /**
+             * Copy needed assets
+             */
+            $this->copyNeededAssets();
+
+            //save bundle cache time
+            $platformTable = $this->getServiceManager()->get('MelisCoreTablePlatform');
+            $platformData = $platformTable->getEntryByField('plf_name', getenv('MELIS_PLATFORM'))->current();
+
+            if (!empty($platformData)) {
+                $platformTable->save(['plf_bundle_cache_time' => time()], $platformData->plf_id);
+            }
+        }
+    }
+
+    /**
+     * Function to bundle all login page assets
+     */
+    private function bundleLoginAssets()
+    {
+        $plugin = new MelisCoreHeadPluginHelper();
+        $plugin->setServiceManager($this->getServiceManager());
+        $assets = $plugin->__invoke('/meliscore_login');
+
+        if (!empty($assets)) {
+            foreach ($assets as $type => $files) {
+                $vendorFileHolder = [];
+                $moduleFileHolder = [];
+                $moduleFileHolderAlreadyBundled = [];
+                /**
+                 * We will separate all the already bundle file
+                 * and for those who are in vendor and in module
+                 * so we can re bundle the assets inside module folder in case
+                 * its not yet bundled
+                 */
+                $this->segregateFiles($files, $moduleFileHolder, $vendorFileHolder, $moduleFileHolderAlreadyBundled);
+                /**
+                 * Lets minify all unminified files from module folder
+                 */
+                $arrayPaths = [];
+                if ($type == 'css')
+                    $this->minifyCss($moduleFileHolder, $arrayPaths);
+                elseif ($type == 'js')
+                    $this->minifyJs($moduleFileHolder, $arrayPaths);
+
+                /**
+                 * We merge all bundled files
+                 */
+                $allAssets = array_merge($vendorFileHolder, $moduleFileHolderAlreadyBundled, $arrayPaths);
+                /**
+                 * Combine all
+                 */
+                $this->combineAssets($allAssets, $type, 'bundle-all-login');
+            }
+        }
+    }
+
+    /**
+     *
+     * We will separate all the already bundle file
+     * and for those who are in vendor and in module
+     * so we can re bundle the assets inside module folder in case
+     * its not yet bundled
+     *
+     * @param $assets
+     * @param $moduleFileHolder
+     * @param $vendorFileHolder
+     * @param $moduleFileHolderAlreadyBundled
+     */
+    private function segregateFiles($assets, &$moduleFileHolder, &$vendorFileHolder, &$moduleFileHolderAlreadyBundled)
+    {
+        $melisAppConfig = $this->serviceManager->get('MelisConfig');
+        $assetManagerService = $this->getServiceManager()->get('MelisAssetManagerModulesService');
+
+        foreach ($assets as $key => $val) {
+            $filePath = explode('/', $val);
+            $modulePath = $assetManagerService->getModulePath($filePath[1], false);
+            if (!empty($modulePath)) {
+                $moduleFilePart = explode('/', $modulePath);
+                if (!empty($moduleFilePart)) {
+                    if ($moduleFilePart[1] == 'module') {//in module
+                        //check if bundle is enable
+                        $appsConfig = $melisAppConfig->getItem(end($moduleFilePart));
+                        if (empty($appsConfig))
+                            $appsConfig = $melisAppConfig->getItem(strtolower(end($moduleFilePart)));
+
+                        if (!empty($appsConfig)) {
+                            if (isset($appsConfig['ressources']['build']['disable_bundle'])) {
+                                if (!$appsConfig['ressources']['build']['disable_bundle']) {
+                                    $moduleFileHolderAlreadyBundled[] = $val;
+                                } else {
+                                    $moduleFileHolder[end($moduleFilePart)][] = $val;
+                                }
+                            } else {
+                                $moduleFileHolder[end($moduleFilePart)][] = $val;
+                            }
+                        }
+                    } else {//in vendor
+                        $vendorFileHolder[] = $val;
+                    }
+                }
+            } else {//for special url like get-translations
+                if (!empty($val))
+                    $vendorFileHolder[] = $val;
+            }
+        }
+    }
+
+    /**
+     * @param $array
+     * @param $type
+     * @param string $fileName
+     */
+    private function combineAssets($array, $type, $fileName = 'bundle-all')
+    {
+        if (!empty($array)) {
+            $contentString = '';
+            foreach ($array as $key => $val) {
+                $url = (empty($_SERVER['HTTPS']) ? 'http' : 'https') . "://$_SERVER[HTTP_HOST]" . $val;
+                $cleanString = $this->getFileContent($url, false);//file_get_contents($url);
+                if ($type == 'css') {
+                    $cleanString = $this->replaceURL($cleanString, $val);
+                } elseif ($type == 'js') {//make sure it ends with `;` to avoid problem on combining
+                    if (!str_ends_with($cleanString, ';')) {
+                        $cleanString .= ';';
+                    }
+                }
+
+                $contentString .= $cleanString;
+            }
+
+            $path = $this->createDIR($type);
+            $file = @fopen($path . '/' . $fileName . '.' . $type, 'w+');
+            @fwrite($file, $contentString);
+            @fclose($file);
+        }
+    }
+
+    /**
+     * @param $array
+     * @param $arrayPaths
+     */
+    private function minifyJs($array, &$arrayPaths)
+    {
+        if (!empty($array)) {
+            foreach ($array as $moduleName => $jsFiles) {
+                $jsMinifier = new Minify\JS();
+                $hostName = (empty($_SERVER['HTTPS']) ? 'http' : 'https') . "://$_SERVER[HTTP_HOST]";
+                foreach ($jsFiles as $key => $js) {
+                    $url = $hostName . $js;
+                    $jsMinifier->add($this->getFileContent($url));
+                }
+                $path = $this->createDIR('js');
+                $path = $path . '/bundle-' . $moduleName . '.js';
+                $jsMinifier->minify($path);
+                $arrayPaths[] = '/' . ModulesController::BUNDLE_FOLDER_NAME . '/js/bundle-' . $moduleName . '.js';
+            }
+        }
+    }
+
+    /**
+     * @param $array
+     * @param $arrayPaths
+     */
+    private function minifyCss($array, &$arrayPaths)
+    {
+        if (!empty($array)) {
+
+            foreach ($array as $moduleName => $cssFiles) {
+                $cssMinifier = new Minify\CSS();
+                $hostName = (empty($_SERVER['HTTPS']) ? 'http' : 'https') . "://$_SERVER[HTTP_HOST]";
+                foreach ($cssFiles as $key => $css) {
+                    $url = $hostName . $css;
+                    /**
+                     * This will replace all url inside css to put the correct url
+                     */
+                    $fileContent = $this->replaceURL($this->getFileContent($url), $css);
+                    $cssMinifier->add($fileContent);
+                }
+                $path = $this->createDIR('css');
+                $path = $path . '/bundle-' . $moduleName . '.css';
+                $cssMinifier->minify($path);
+                $arrayPaths[] = '/' . ModulesController::BUNDLE_FOLDER_NAME . '/css/bundle-' . $moduleName . '.css';
+            }
+        }
+    }
+
+
+    /**
+     * @param $css
+     * @param $filePath
+     * @return mixed
+     */
+    private function replaceURL($css, $filePath)
+    {
+        $moduleName = 'MelisCore';
+        $postPath = 'build/';
+        if (!empty($filePath)) {
+            $filePath = explode('/', $filePath);
+            $moduleName = $filePath[1] ?? 'MelisCore';
+            /**
+             * Check if file is from module
+             */
+            $assetManagerService = $this->getServiceManager()->get('MelisAssetManagerModulesService');
+            $modulePath = $assetManagerService->getModulePath($filePath[1], false);
+            if (!empty($modulePath)) {
+                $moduleFilePart = explode('/', $modulePath);
+                if ($moduleFilePart[1] == 'module') {
+                    $postPath = '';
+                }
+            }
+        }
+
+        $path = '/' . $moduleName . '/' . $postPath;
+
+        // Clear out the line breaks
+        $content = str_replace('<br />', '', $css);
+
+        // Clear out bogus whitespace
+        $content = preg_replace('/\(\s+/', '(', $content);
+        $content = preg_replace('/\s+\)/', ')', $content);
+
+        // Clear out quotes
+//        $content = preg_replace('/(?:\'|\")/', '', $content);
+
+        // Replaces repeating ../ patterns
+        $content = preg_replace('/(?:\.\.\/)+(.*?\))/', $path . '$1', $content);
+
+        // Prepend the path to lines that do not have a "//" anywhere
+//        $content = preg_replace('/(url\((?!.*\/\/))/i', '$1'.$path, $content);
+
+        /**
+         * This will fixed the problem on not getting the image/icon since the file /melis as folder,
+         * so we just need to add / in front of path
+         */
+        // Regular expression to match url('something') where:
+        // - "something" does NOT start with `/`
+        // - "something" does NOT start with "data:"
+        $pattern = "/url\(['\"]((?!data:|\/)[^'\")]+)['\"]\)/i";
+
+        // Replace with `/something` (adding a `/` in front)
+        $content = preg_replace_callback($pattern, function ($matches) {
+            return "url('/" . $matches[1] . "')";
+        }, $content);
+
+        return $content;
+    }
+
+    /**
+     * This function copy necessary files
+     */
+    private function copyNeededAssets()
+    {
+        $moduleService = $this->getServiceManager()->get('MelisAssetManagerModulesService');
+        $activeModules = $moduleService->getMelisActiveModules();
+        $userModules = $this->getUserModules();
+
+        $config = $this->getServiceManager()->get('config');
+        $isFromVendor = true;
+        foreach ($activeModules as $moduleName) {
+            $currentModuleName = $this->convertToPackageName($moduleName);
+            //check if its a user module(not in vendor)
+            if(in_array($moduleName, $userModules)){
+                $currentModuleName = $moduleName;
+                $isFromVendor = false;
+            }
+
+            $loweredModuleName = strtolower($moduleName);
+
+            $neededFiles = $config['plugins'][$loweredModuleName]['datas']['bundle_all_needed_files'] ?? [];
+            if (!empty($neededFiles)) {
+                foreach ($neededFiles as $type => $file) {
+                    $this->copyFile($file, $type, $currentModuleName, $isFromVendor);
+                }
+            }
+        }
+    }
+
+    /**
+     * @param $fileNeeded
+     * @param $type
+     * @param $moduleName
+     * @param $isFromVendor
+     */
+    private function copyFile($fileNeeded, $type, $moduleName, $isFromVendor)
+    {
+        $docroot = $_SERVER['DOCUMENT_ROOT'];
+//        $bundleFolder = $docroot.'/../etc';
+        $bundleFolder = $docroot;
+
+        $path = $bundleFolder;// . '/' . ModulesController::BUNDLE_FOLDER_NAME . '/'.$type;
+        $dir = $_SERVER['DOCUMENT_ROOT'] . '/../vendor/melisplatform/';
+        if(!$isFromVendor) {
+            $dir = $_SERVER['DOCUMENT_ROOT'] . '/../module/';
+        }
+
+        foreach($fileNeeded as $key => $file){
+            $files = explode('/', $file);
+            $fileName = end($files);
+
+            $completFilePath = $moduleName.'/public'.$file;
+
+            //make sure file does not exist yet in destination
+            //if(!file_exists($path.'/'.$fileName)){
+                //make sure file source exist
+                if(file_exists($dir.$completFilePath)){
+                    if(!is_writable($dir.$completFilePath))
+                        chmod($dir.$completFilePath, 0777);
+
+                    if(is_dir($dir.$completFilePath)){
+                        $this->copyDir($dir.$completFilePath, $path.'/'.$fileName);
+                    }else {
+                        copy($dir . $completFilePath, $path . '/' . $fileName);
+                    }
+                }
+            //}
+        }
+    }
+
+    /**
+     * @param $src
+     * @param $dst
+     */
+    private function copyDir($src, $dst) {
+        // open the source directory
+        $dir = opendir($src);
+        //create folder if not exist
+        if(!file_exists($dst))
+            mkdir($dst, 0777);
+
+        //make sure destination is writable
+        if(!is_writable($dst))
+            chmod($dst, 0777);
+
+        // Loop through the files in source directory
+        while( $file = readdir($dir) ) {
+
+            if (( $file != '.' ) && ( $file != '..' )) {
+                if ( is_dir($src . '/' . $file) )
+                {
+                    // Recursively calling custom copy function
+                    // for sub directory
+                    $this->copyDir($src . '/' . $file, $dst . '/' . $file);
+                }
+                else {
+                    copy($src . '/' . $file, $dst . '/' . $file);
+                }
+            }
+        }
+        closedir($dir);
+    }
+
+    /**
+     * @param $camelCase
+     * @return string
+     */
+    private function camelToDash($camelCase) {
+        return strtolower(preg_replace('/([a-zA-Z])(?=[A-Z])/', '$1-', $camelCase));
+    }
+
+    /**
+     * @param $fileStr
+     * @param bool $removeComments
+     * @return bool|mixed|string
+     */
+    private function getFileContent($fileStr, $removeComments = true)
+    {
+//        $container = new Container('meliscore');
+//        $locale = $container['melis-lang-locale'];
+
+        if(!str_contains($fileStr, '/get-translations')) {
+            if (function_exists('curl_version')) {
+
+//                if(str_contains($fileStr, '/get-translations'))
+//                    $fileStr .= '?locale=' . $locale;
+
+                $ch = curl_init();
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+                curl_setopt($ch, CURLOPT_URL, $fileStr);
+                curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, FALSE);
+                curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
+                //to fixed problem on redirect
+                curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+                $text = curl_exec($ch);
+                curl_close($ch);
+            } else {
+                //to fixed problem on redirect
+                $options = [
+                    "http" => [
+                        "method" => "GET",
+                        "follow_location" => 1, // Enable following redirects
+                    ],
+                ];
+                $context = stream_context_create($options);
+                $text = file_get_contents($fileStr, false, $context);
+            }
+
+            if ($removeComments)
+                $text = preg_replace('!/\*.*?\*/!s', '', $text);
+
+            return $text;
+        }
+        return "";
+    }
+
+    /**
+     * @param $name
+     * @return string
+     */
+    private function createDIR($name)
+    {
+        $docroot = $_SERVER['DOCUMENT_ROOT'];
+        $bundleFolder = $docroot.'/../etc';
+        if(!file_exists($bundleFolder))
+            mkdir($bundleFolder, 0777);
+
+        $path = $bundleFolder.'/'.ModulesController::BUNDLE_FOLDER_NAME.'/'.$name;
+
+        if(!file_exists($bundleFolder.'/'.ModulesController::BUNDLE_FOLDER_NAME.'/'))
+            mkdir($bundleFolder.'/'.ModulesController::BUNDLE_FOLDER_NAME, 0777);
+
+        if(!file_exists($path))
+            mkdir($path, 0777);
+
+        if(!is_writable($path.'/'))
+            chmod($path.'/', 0777);
+
+        return $path;
     }
 }

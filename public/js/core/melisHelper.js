@@ -1,4 +1,4 @@
-var melisHelper = (function() {
+var melisHelper = (function () {
 	var version = "2.0.0";
 
 	// CACHE SELECTORS
@@ -38,7 +38,7 @@ var melisHelper = (function() {
 		var errorTexts = "<h3>" + melisTranslator(title) + "</h3>";
 
 		errorTexts += "<h4>" + melisTranslator(message) + "</h4>";
-		$.each(errors, function(key, error) {
+		$.each(errors, function (key, error) {
 			if (key !== "label") {
 				var label =
 					errors[key]["label"] == undefined
@@ -55,7 +55,7 @@ var melisHelper = (function() {
 
 				// catch error level of object
 				try {
-					$.each(error, function(key, value) {
+					$.each(error, function (key, value) {
 						if (key !== "label") {
 							errorTexts +=
 								'<span><i class="fa fa-circle"></i>' + value + "</span>";
@@ -92,7 +92,7 @@ var melisHelper = (function() {
 		var errorTexts = "<h3>" + melisHelper.melisTranslator(title) + "</h3>";
 		errorTexts += "<h4>" + melisHelper.melisTranslator(message) + "</h4>";
 
-		$.each(errors, function(key, error) {
+		$.each(errors, function (key, error) {
 			if (key !== "label") {
 				errorTexts +=
 					'<p class="modal-error-cont"><b>' +
@@ -104,7 +104,7 @@ var melisHelper = (function() {
 					": </b>  ";
 				// catch error level of object
 				try {
-					$.each(error, function(key, value) {
+					$.each(error, function (key, value) {
 						if (key !== "label" && key !== "form") {
 							$errMsg = "";
 							if (value instanceof Object) {
@@ -149,9 +149,9 @@ var melisHelper = (function() {
 		$("" + selector + " .form-group label").css("color", "inherit");
 		// if all form fields are error color them red
 		if (!success) {
-			$.each(errors, function(key, error) {
+			$.each(errors, function (key, error) {
 				if ("form" in error) {
-					$.each(this.form, function(fkey, fvalue) {
+					$.each(this.form, function (fkey, fvalue) {
 						$("#" + fvalue + " .form-control[name='" + key + "']")
 							.parents(".form-group")
 							.find("label")
@@ -173,7 +173,7 @@ var melisHelper = (function() {
 	 * @param callBackFunction, callback function of the date range picker
 	 */
 	function initDateRangePicker(selector, callBackFunction) {
-		setTimeout(function() {
+		setTimeout(function () {
 			var target = $(selector);
 			target.addClass("dt-date-range-picker");
 			target.html(
@@ -203,12 +203,8 @@ var melisHelper = (function() {
 				moment().endOf("month"),
 			];
 			rangeStringParam[sLastMonth] = [
-				moment()
-					.subtract(1, "month")
-					.startOf("month"),
-				moment()
-					.subtract(1, "month")
-					.endOf("month"),
+				moment().subtract(1, "month").startOf("month"),
+				moment().subtract(1, "month").endOf("month"),
 			];
 
 			target.daterangepicker(
@@ -223,7 +219,7 @@ var melisHelper = (function() {
 					},
 					ranges: rangeStringParam,
 				},
-				function(start, end) {
+				function (start, end) {
 					target
 						.find("span")
 						.html(
@@ -232,7 +228,7 @@ var melisHelper = (function() {
 				}
 			);
 
-			target.on("apply.daterangepicker", function(ev, picker) {
+			target.on("apply.daterangepicker", function (ev, picker) {
 				if (callBackFunction !== undefined) {
 					callBackFunction(ev, picker);
 				}
@@ -243,7 +239,7 @@ var melisHelper = (function() {
 	function initSwitch(selector) {
 		var targetInput = $(selector);
 		if (targetInput.length) {
-			targetInput.each(function() {
+			targetInput.each(function () {
 				var parentDiv = $(this).parent("div.form-group");
 				var attribRequired = "";
 				if (typeof $(this).data("required") != "undefined") {
@@ -252,7 +248,7 @@ var melisHelper = (function() {
 				var attribTooltip = "";
 				if (typeof $(this).data("tooltip") != "undefined") {
 					attribTooltip =
-						'<i class="fa fa-info-circle fa-lg" data-toggle="tooltip" data-placement="left" title="" data-original-title="' +
+						'<i class="fa fa-info-circle fa-lg" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-original-title="' +
 						$(this).data("tooltip") +
 						'"></i>';
 				}
@@ -292,15 +288,9 @@ var melisHelper = (function() {
 			$iframeContainer = $melisCms.find(".iframe-container"),
 			$melisTabEdition = $iframeContainer.find(".melismcs-page-tab-edition"),
 			$melisIframe = $melisTabEdition.find(".melis-iframe"),
-			$melisIframeHeight = $melisIframe
-				.contents()
-				.find("body")
-				.height(),
+			$melisIframeHeight = $melisIframe.contents().find("body").height(),
 			$loader = $melisTabEdition.find("#loader"),
-			$iframeChildren = $melisIframe
-				.contents()
-				.find("body")
-				.children();
+			$iframeChildren = $melisIframe.contents().find("body").children();
 
 		if ($melisIframe.length && $iframeChildren.length) {
 			// set .melis-iframe css height
@@ -324,28 +314,23 @@ var melisHelper = (function() {
 		activeTabId = tabID;
 
 		// run and check all the <li> to remove the 'active class'
-		$navBarTabsLiCont.each(function() {
+		$navBarTabsLiCont.each(function () {
 			var $this = $(this);
 			$this.removeClass("active");
 		});
 
-		$navBarTabsLi.each(function() {
+		$navBarTabsLi.each(function () {
 			var $this = $(this);
 			$this.removeClass("active-parent on");
 		});
 
 		if ($(subMenu).length) {
-			$(subMenu)
-				.parents("li")
-				.addClass("active-parent on");
+			$(subMenu).parents("li").addClass("active-parent on");
 		}
 
 		//add active class to the parent of the clicked <a> ( to the <li> )
 		$tabElement.closest("li").addClass("active");
-		$tabElement
-			.parent("li")
-			.parents("li")
-			.addClass("active-parent on");
+		$tabElement.parent("li").parents("li").addClass("active-parent on");
 
 		//show current selected container
 		$("#" + tabID).addClass("active");
@@ -372,11 +357,7 @@ var melisHelper = (function() {
 		 * sub tab
 		 */
 		if (!fromGroup) {
-			if (
-				$(this)
-					.closest("ul")
-					.hasClass("nav-group-dropdown")
-			) {
+			if ($(this).closest("ul").hasClass("nav-group-dropdown")) {
 				fromGroup = true;
 			}
 		}
@@ -385,14 +366,8 @@ var melisHelper = (function() {
 		var currentParent = $(".tabsbar a[data-id='" + tabContentID + "']").parent(
 			"li"
 		);
-		var nextActiveTab = currentParent
-			.next("li")
-			.children()
-			.data("id");
-		var prevActiveTab = currentParent
-			.prev("li")
-			.children()
-			.data("id");
+		var nextActiveTab = currentParent.next("li").children().data("id");
+		var prevActiveTab = currentParent.prev("li").children().data("id");
 		var tabCount = $navTabs.children("li").length;
 		var removedWidth = currentParent.width();
 		var currentGrandParent = currentParent
@@ -408,9 +383,7 @@ var melisHelper = (function() {
 			!nextActiveTab
 		) {
 			$("#close-all-tab").hide();
-			$("#close-all-tab")
-				.closest("li")
-				.hide(); // fix for double border left
+			$("#close-all-tab").closest("li").hide(); // fix for double border left
 		}
 
 		var navBox = currentParent.closest(".scroll");
@@ -418,7 +391,7 @@ var melisHelper = (function() {
 
 		if (currentParent.hasClass("active-parent")) {
 			var tabMenuGroup = currentParent.find(".nav-group-dropdown");
-			tabMenuGroup.find("li a.tab-element").each(function() {
+			tabMenuGroup.find("li a.tab-element").each(function () {
 				var tabeMenuDataID = $(this).data("id");
 				// remove the tabs corresponds to tab menu
 				$("#" + tabeMenuDataID).remove();
@@ -468,7 +441,7 @@ var melisHelper = (function() {
 
 		// get the <ul> container width and disable the tabExpander
 		var navUlContainer = 1;
-		$("#id_meliscore_header #melis-id-nav-bar-tabs > li").each(function() {
+		$("#id_meliscore_header #melis-id-nav-bar-tabs > li").each(function () {
 			navUlContainer += $(this).outerWidth();
 		});
 
@@ -516,10 +489,7 @@ var melisHelper = (function() {
 		}
 
 		// dataTable responsive plugin ----=[ PLUGIN BUG FIX ]=-----
-		$("table.dataTable")
-			.DataTable()
-			.columns.adjust()
-			.responsive.recalc();
+		$("table.dataTable").DataTable().columns.adjust().responsive.recalc();
 	}
 
 	// TAB OPEN =====================================================================================================================
@@ -535,9 +505,7 @@ var melisHelper = (function() {
 		//Show the close(X) button on header
 		if (melisKey !== "meliscore_dashboard") {
 			$("#close-all-tab").show();
-			$("#close-all-tab")
-				.closest("li")
-				.show();
+			$("#close-all-tab").closest("li").show();
 		}
 		//check if the tab is already open and added to the main nav
 		var alreadyOpen = $(
@@ -546,7 +514,7 @@ var melisHelper = (function() {
 
 		if (alreadyOpen.length < 1) {
 			var li =
-				"<li data-tool-name='" +
+				"<li class='nav-item' data-tool-name='" +
 				title +
 				"' data-tool-icon='" +
 				icon +
@@ -554,14 +522,14 @@ var melisHelper = (function() {
 				zoneId +
 				"' data-tool-meliskey='" +
 				melisKey +
-				"'>";
+				"' role='presentation'>";
 			li +=
-				"<a data-toggle='tab' class='dropdown-toggle menu-icon tab-element' href='#" +
+				"<a data-bs-toggle='tab' class='nav-link dropdown-toggle menu-icon tab-element' href='#" +
 				zoneId +
 				"' data-id='" +
 				zoneId +
 				"' title='" +
-				title.replace(/'/g, "&apos;") +
+				title?.replace(/'/g, "&apos;") +
 				"'>";
 			li +=
 				"<i class='fa " + icon + " fa-2x'></i><span class='navtab-pagename'>";
@@ -586,20 +554,12 @@ var melisHelper = (function() {
 
 					if ($(hasdropdown).length) {
 						// check if menu are too many
-						if (
-							$(hasdropdown)
-								.first()
-								.height() > 350
-						) {
-							$(hasdropdown)
-								.first()
-								.addClass("scroll");
+						if ($(hasdropdown).first().height() > 350) {
+							$(hasdropdown).first().addClass("scroll");
 						}
 
 						// add li in the first nav-group-dropdown
-						$(hasdropdown)
-							.first()
-							.append(li);
+						$(hasdropdown).first().append(li);
 					} else {
 						// create a sub menu ul and append the li
 						navBox.append("<ul class='nav-group-dropdown'></ul>");
@@ -609,17 +569,17 @@ var melisHelper = (function() {
 					$("body #melis-id-nav-bar-tabs").append(li);
 
 					/* if(navTabsGroup == "design_module") {
-                                var liTest = "<li>";
-                                liTest += "<a data-toggle='tab' class='dropdown-toggle menu-icon tab-element' href='#"+ zoneId + "' data-id='design_module'>";
-                                liTest += "<i class='fa  fa-paint-brush fa-2x'></i><span class='navtab-pagename'>";
-                                liTest += 'Design '+ title + "</span></a>";
-                                liTest += "<a class='close close-tab' data-id='" + zoneId + "'>"+ translations.tr_meliscore_notification_modal_Close +"</a>";
-                                liTest += "</li>";
-                                $("body #melis-id-nav-bar-tabs").append(liTest);
-                            } else {
-                                // append the <li> to the menu
-                                $("body #melis-id-nav-bar-tabs").append(li);
-                            }*/
+						var liTest = "<li>";
+						liTest += "<a data-bs-toggle='tab' class='dropdown-toggle menu-icon tab-element' href='#"+ zoneId + "' data-id='design_module'>";
+						liTest += "<i class='fa  fa-paint-brush fa-2x'></i><span class='navtab-pagename'>";
+						liTest += 'Design '+ title + "</span></a>";
+						liTest += "<a class='close close-tab' data-id='" + zoneId + "'>"+ translations.tr_meliscore_notification_modal_Close +"</a>";
+						liTest += "</li>";
+						$("body #melis-id-nav-bar-tabs").append(liTest);
+					} else {
+						// append the <li> to the menu
+						$("body #melis-id-nav-bar-tabs").append(li);
+					}*/
 				}
 			} else {
 				// append the <li> to the menu melis-tabnext
@@ -639,7 +599,7 @@ var melisHelper = (function() {
 				$body.removeClass("sidebar-mini");
 				// hide sidebar footer when opening tab
 				$("#id_meliscore_footer").addClass("slide-left");
-				$("#id_meliscore_leftmenu, #id_meliscore_footer").removeAttr("style");
+				$("#id_meliscore_leftmenu, #id_meliscore_footer").prop("style", null);
 
 				// slide up the dropdown menu
 				$("#melis-id-nav-bar-tabs").slideUp(300);
@@ -684,7 +644,7 @@ var melisHelper = (function() {
 				typeof melisDashBoardDragnDrop !== undefined &&
 				melisKey == "meliscore_dashboard"
 			) {
-				setTimeout(function() {
+				setTimeout(function () {
 					melisDashBoardDragnDrop.checkDashboard();
 				}, 2000);
 			}
@@ -696,7 +656,7 @@ var melisHelper = (function() {
 
 	// CHECK SUBMENU =================================================================================
 	function checkSubMenu() {
-		$("body #melis-id-nav-bar-tabs li").each(function() {
+		$("body #melis-id-nav-bar-tabs li").each(function () {
 			if ($(this).children("ul").length) {
 				$(this).addClass("has-sub");
 			} else {
@@ -721,91 +681,70 @@ var melisHelper = (function() {
 
 	// ZONE RELOADING =================================================================================================================
 	function zoneReload(zoneId, melisKey, parameters, callback) {
-		var datastring = { cpath: melisKey },
-			$melisCmsPage = $body.find(
-				"#" + activeTabId + "[data-meliskey='meliscms_page'].tab-pane"
-			),
-			$iframeContainer = $melisCmsPage.find(".iframe-container"),
-			$pageEdition = $iframeContainer.find(".meliscms-page-tab-edition");
+		var datastring 			= { cpath: melisKey },
+			$melisCmsPage 		= $body.find("#" + activeTabId + "[data-meliskey='meliscms_page'].tab-pane"),
+			$iframeContainer 	= $melisCmsPage.find(".iframe-container"),
+			$pageEdition 		= $iframeContainer.find(".meliscms-page-tab-edition");
 
-		//add parameters value to datastring object if available
-		if (parameters !== undefined) {
-			$.each(parameters, function(index, value) {
-				datastring[index] = value;
-			});
-		}
+			//add parameters value to datastring object if available
+			if (parameters !== undefined) {
+				$.each(parameters, function (index, value) {
+					datastring[index] = value;
+				});
+			}
 
-		// add the temp loader
-		var tempLoader =
-			'<div id="loader" class="overlay-loader"><img class="loader-icon spinning-cog" src="/MelisCore/assets/images/cog12.svg" data-cog="cog12"></div>';
-		$("#" + zoneId).append(tempLoader);
+			// add the temp loader
+			var tempLoader = '<div id="loader" class="overlay-loader"><img class="loader-icon spinning-cog" src="/MelisCore/assets/images/cog12.svg" data-cog="cog12"></div>';
+			$("#" + zoneId).append(tempLoader);
 
-		// add an inline css overflow: hidden
-		melisCoreTool.addOverflowHidden();
+			// add an inline css overflow-x: hidden, page edition
+			melisCoreTool.addOverflowHidden();
 
-		$.ajax({
-			url: "/melis/zoneview",
-			data: datastring,
-			encode: true,
-			dataType: "json",
-		})
-			.done(function(data) {
-				// remove the inline style
-				melisCoreTool.removeOverflowHidden();
-
+			$.ajax({
+				url: "/melis/zoneview",
+				data: datastring,
+				encode: true,
+				dataType: "json"
+			})
+			.done(function (data) {
 				setTimeout(function() {
+					// console.log(`user-management melisHelper.js zoneReload() [`+ zoneId +`] data: `, data);
 					if (data !== null) {
 						// hide the loader
-						//$('.container-level-a > #loader > .loader-icon').removeClass('spinning-cog').addClass('shrinking-cog');
+						// $('.container-level-a > #loader > .loader-icon').removeClass('spinning-cog').addClass('shrinking-cog');
 
-						$("#" + zoneId)
-							.html(data.html)
-							.children()
-							.unwrap();
+						// remove the inline style overflow for page edition
+						melisCoreTool.removeOverflowHidden();
+
+						$("#" + zoneId).html(data.html).children().unwrap();
 
 						// set the current active tab based from 'activeTabId' value
 						tabSwitch(activeTabId);
 
 						// set active the the 'Edition' tab and its 'Tab Content'
 						$("#" + zoneId + " .nav-tabs li:first-child").addClass("active");
-						$("#" + zoneId + " .tab-content > div:first-child").addClass(
-							"active"
-						);
+						$("#" + zoneId + " .tab-content > div:first-child").addClass("active");
 
 						// --------------------------------------------------------------
 						// Run callback scripts here | from app.interface
 						// --------------------------------------------------------------
 						var jsCallbacks = data.jsCallbacks;
+							// console.log(`melisHelper.js zoneReload() jsCallbacks: `, jsCallbacks);
+							$.each(jsCallbacks, function (key, value) {
+								// check if there is more than 1 function in a single jsCallback from app.interface
+								// example: 'jscallback' => 'simpleChartInit(); anotherFunction();'  separated by (space)
+								var splitFunctions = value.split(" ");
 
-						$.each(jsCallbacks, function(key, value) {
-							// check if there is more than 1 function in a single jsCallback from app.interface
-							// example: 'jscallback' => 'simpleChartInit(); anotherFunction();'  separated by (space)
-							var splitFunctions = value.split(" ");
-
-							/*if( splitFunctions.length > 1){
-                                    // run all the function extracted from a single jsCallback
-                                    $.each( splitFunctions, function( key, value ) {
-                                        value = value.slice(0, -3);
-                                        executeCallbackFunction(value, window);
-                                    });
-                                }
-                                else{
-                                    value = value.slice(0, -3);
-                                    executeCallbackFunction(value, window);
-                                }*/
-
-							$.each(splitFunctions, function(key, value) {
-								try {
-									eval(value);
-								} catch (err) {
-									// console.log(err);
-								}
+									$.each(splitFunctions, function (key, value) {
+										try {
+											eval(value);
+										} catch (e) {
+											//console.log(e);
+										}
+									});
 							});
-						});
 					} else {
-						$('#melis-id-nav-bar-tabs a[data-id="' + zoneId + '"]')
-							.parent("li")
-							.remove();
+						$('#melis-id-nav-bar-tabs a[data-id="' + zoneId + '"]').parent("li").remove();
 						$("#" + zoneId).remove();
 
 						melisHelper.melisKoNotification(
@@ -815,21 +754,48 @@ var melisHelper = (function() {
 							"#000"
 						);
 					}
-					if (callback !== undefined || callback !== null) {
+
+					if ( callback !== undefined || callback !== null) {
 						if (callback) {
 							callback();
 						}
 					}
+
+					//this will reload all cached dashboard plugins
+					if ($("#" + zoneId).length > 0) {
+						//console.log(`$("#" + zoneId + " .grid-stack-item"): `, $("#" + zoneId + " .grid-stack-item") );
+						$.each($("#" + zoneId + " .grid-stack-item"), function() {
+							$(this).find(".dashboard-plugin-refresh").trigger("click");
+						});
+
+						//find active dashboard end with _toolstree_section_dashboard
+						if ( $("[id$=_toolstree_section_dashboard]").hasClass("active") ) {
+							//update bubble plugins
+							var bubble = MelisCoreDashboardBubblePlugin.showBubblePlugins();
+								if ( bubble == true ) {
+									$("#" + zoneId +".active #id_meliscore_dashboard_bubble_plugins").find(".bubble-plugin-flip-cards").removeClass("hidden");
+									$("#" + zoneId +".active #id_meliscore_dashboard_bubble_plugins").find(".bubble-plugin-flip-cards .melis-dashboard-bubble-plugin").css("visibility", "visible");
+
+									MelisCoreDashboardBubbleNewsMelisPlugin.getNews();
+									MelisCoreDashboardBubbleNotificationsPlugin.getNotifications();
+									MelisCoreDashboardBubbleUpdatesPlugin.getUpdates();
+								} 
+								else {
+									$("#" + zoneId +".active #id_meliscore_dashboard_bubble_plugins").find(".bubble-plugin-flip-cards").addClass("hidden");
+									$("#" + zoneId +".active #id_meliscore_dashboard_bubble_plugins").find(".bubble-plugin-flip-cards .melis-dashboard-bubble-plugin").css("visibility", "hidden");
+								}
+						}
+					}
 				}, 300);
 			})
-			.fail(function(xhr, textStatus, errorThrown) {
+			.fail(function (xhr, textStatus, errorThrown) {
 				//hide the loader
 				//$('.container-level-a > #loader > .loader-icon').removeClass('spinning-cog').addClass('shrinking-cog');
+
+				// console.log("ERROR !! Status = " + textStatus + "\n Error = " + errorThrown + "\n xhr = " + xhr + "\n xhr.statusText = " + xhr.statusText);
 				alert(translations.tr_meliscore_error_message);
 
-				$('#melis-id-nav-bar-tabs a[data-id="' + zoneId + '"]')
-					.parent("li")
-					.remove();
+				$('#melis-id-nav-bar-tabs a[data-id="' + zoneId + '"]').parent("li").remove();
 				$("#" + zoneId).remove();
 			});
 	}
@@ -872,41 +838,43 @@ var melisHelper = (function() {
 				data: datastring,
 				encode: true,
 			})
-				.done(function(data) {
-					// Requesting flag set to false so this function will set state to ready
-					createModalRequestingFlag = false;
+			.done(function (data) {
+				// Requesting flag set to false so this function will set state to ready
+				createModalRequestingFlag = false;
 
-					$("#melis-modals-container").append(data);
-					var modalID = $(data)
-						.find(".modal")
-						.attr("id");
-					melisHelper.zoneReload(zoneId, melisKey, parameters);
+				$("#melis-modals-container").append(data);
 
-					$("#" + modalID).modal({
-						show: true,
-						keyboard: false,
-						backdrop: modalBackDrop,
-					});
+				var modalID = $(data).find(".modal").attr("id");
 
-					if (
-						typeof callback !== "undefined" &&
-						typeof callback === "function"
-					) {
-						callback();
-					}
-				})
-				.fail(function(xhr, textStatus, errorThrown) {
-					alert(
-						"ERROR !! Status = " +
-							textStatus +
-							"\n Error = " +
-							errorThrown +
-							"\n xhr = " +
-							xhr.statusText
-					);
-					// Requesting flag set to false so this function will set state to ready
-					createModalRequestingFlag = true;
+				melisHelper.zoneReload(zoneId, melisKey, parameters);
+
+				const $modal = new bootstrap.Modal('#' + modalID, {
+					show: true,
+					keyboard: false,
+					backdrop: modalBackDrop
 				});
+
+				$modal.show();
+
+				if (
+					typeof callback !== "undefined" &&
+					typeof callback === "function"
+				) {
+					callback();
+				}
+			})
+			.fail(function (xhr, textStatus, errorThrown) {
+				alert(
+					"ERROR !! Status = " +
+						textStatus +
+						"\n Error = " +
+						errorThrown +
+						"\n xhr = " +
+						xhr.statusText
+				);
+				// Requesting flag set to false so this function will set state to ready
+				createModalRequestingFlag = true;
+			});
 		}
 	}
 
@@ -948,28 +916,25 @@ var melisHelper = (function() {
 
 	// disabled all tabs
 	function disableAllTabs() {
-		$.each($("#melis-id-nav-bar-tabs li a"), function(i, v) {
+		$.each($("#melis-id-nav-bar-tabs li a"), function (i, v) {
 			var tabId = $(v).data("id");
 			disableTab(tabId);
 		});
 
 		// disable navigation too
-		$.each($("ul.sideMenu"), function(i, v) {
-			$(v)
-				.css("pointer-events", "none")
-				.parent()
-				.css("cursor", "not-allowed");
+		$.each($("ul.sideMenu"), function (i, v) {
+			$(v).css("pointer-events", "none").parent().css("cursor", "not-allowed");
 		});
 	}
 
 	// enables all tabs
 	function enableAllTabs() {
-		$.each($("#melis-id-nav-bar-tabs li a"), function(i, v) {
+		$.each($("#melis-id-nav-bar-tabs li a"), function (i, v) {
 			var tabId = $(v).data("id");
 			enableTab(tabId);
 		});
 
-		$.each($("ul.sideMenu"), function(i, v) {
+		$.each($("ul.sideMenu"), function (i, v) {
 			$(v)
 				.css("pointer-events", "none")
 				.css("pointer-events", "auto")
@@ -990,6 +955,7 @@ var melisHelper = (function() {
 				searching: true,
 				// ordering of the table default [column,direction]
 				order: [[0, "desc"]],
+				pagingType: "simple_numbers",
 				responsive: true,
 				processing: true,
 				lengthMenu: [
@@ -997,33 +963,44 @@ var melisHelper = (function() {
 					[5, 10, 25, 50],
 				],
 				pageLength: 10,
-				bSort: true,
 				searchDelay: 1500,
 				columnDefs: [
 					{ responsivePriority: 1, targets: 0 },
 					{ responsivePriority: 2, targets: -1 },
 				],
-				language: window.melisDataTable.tableLanguage[langTrans],				
+				language: window.melisDataTable.tableLanguage[langTrans],
 			};
-			
+
+			if (requiredSettings.hasOwnProperty("ajaxCallback")) {
+				if (Object.keys(requiredSettings.ajaxCallback).length > 0) {
+					settings.fnDrawCallback = function (oSettings) {
+						var callbacks = requiredSettings.ajaxCallback
+							.split(";")
+							.filter((item) => item);
+						$.each(callbacks, function (i) {
+							window[callbacks[i].replace("()", "").replace(";", "")]();
+						});
+					};
+				}
+			}
 
 			//merge here the data config with the default settings
 			if (requiredSettings.hasOwnProperty("data")) {
-				if(Object.keys(requiredSettings.data).length > 0) {					
-					settings = Object.assign(settings, requiredSettings.data);					
-				}							
+				if (Object.keys(requiredSettings.data).length > 0) {
+					settings = Object.assign(settings, requiredSettings.data);
+				}
 			}
 
 			var dataFunction = null;
 			if (requiredSettings.hasOwnProperty("dataFunction")) {
-				dataFunction  = window[requiredSettings.dataFunction];
+				dataFunction = window[requiredSettings.dataFunction];
 			}
 
 			if (requiredSettings.hasOwnProperty("ajaxUrl")) {
 				settings.ajax = {
 					url: requiredSettings.ajaxUrl,
 					type: "POST",
-					data: dataFunction
+					data: dataFunction,
 				};
 			}
 			// check for columns
@@ -1032,25 +1009,33 @@ var melisHelper = (function() {
 				var tmpDefColumns = [];
 				if (Object.keys(requiredSettings.columns).length > 0) {
 					var ctr = 0;
+					var isColumnSortable;
 					// loop all columns
-					$.each(requiredSettings.columns, function(index, item) {
+					$.each(requiredSettings.columns, function (index, item) {
+						isColumnSortable = true;
+						
 						tmpColumns.push({
 							data: index,
 						});
+						if (item.sortable == false) {
+							isColumnSortable = false;
+						}
 						settings.columnDefs.push({
 							width: item.css.width,
-							targets: ctr,	
-							sClass: item.sClass						
+							targets: ctr,
+							className: item.className,
+							orderable: isColumnSortable,
 						});
 
 						ctr++;
 					});
 				}
+
 				// set datatable columns
 				settings.columns = tmpColumns;
 			}
 
-			if (requiredSettings.hasOwnProperty("filters")) {				  		
+			if (requiredSettings.hasOwnProperty("filters")) {
 				var preDefinedFilters = ["l", "f"];
 				var tableTop = '<"filter-bar"<"row"';
 				var leftDom = '<"fb-dt-left col-xs-12 col-md-4"';
@@ -1059,10 +1044,10 @@ var melisHelper = (function() {
 				var tableBottom = '<"bottom" t<"pagination-cont"rip>>';
 				var jsSdomContentInit = [];
 
-				// left filter area				
-				if (Object.keys(requiredSettings.filters.left).length > 0) {					
+				// left filter area
+				if (Object.keys(requiredSettings.filters.left).length > 0) {
 					// loop all left filters
-					$.each(requiredSettings.filters.left, function(index, item) {
+					$.each(requiredSettings.filters.left, function (index, item) {
 						// check for predefined datatble content
 						if (preDefinedFilters.indexOf(item) >= 0) {
 							// construct correct syntax of datatable filter
@@ -1071,7 +1056,7 @@ var melisHelper = (function() {
 							// construct correct syntax of datatable filter
 							leftDom = leftDom + '<"' + index + '">';
 							// append needed function for callback function after datatable initiliazation
-							jsSdomContentInit.push(function() {
+							jsSdomContentInit.push(function () {
 								return $("." + index).html(item);
 							});
 						}
@@ -1080,7 +1065,7 @@ var melisHelper = (function() {
 				// center filter area
 				if (Object.keys(requiredSettings.filters.center).length > 0) {
 					// loop all center filters
-					$.each(requiredSettings.filters.center, function(index, item) {
+					$.each(requiredSettings.filters.center, function (index, item) {
 						// check for predefined datatble content
 						if (preDefinedFilters.indexOf(item) >= 0) {
 							// construct correct syntax of datatable filter
@@ -1089,7 +1074,7 @@ var melisHelper = (function() {
 							// construct correct syntax of datatable filter
 							centerDom = centerDom + '<"' + index + '">';
 							// append needed function for callback function after datatable initiliazation
-							jsSdomContentInit.push(function() {
+							jsSdomContentInit.push(function () {
 								return $("." + index).html(item);
 							});
 						}
@@ -1098,7 +1083,7 @@ var melisHelper = (function() {
 				// right filter area
 				if (Object.keys(requiredSettings.filters.right).length > 0) {
 					// loop all right filters
-					$.each(requiredSettings.filters.right, function(index, item) {
+					$.each(requiredSettings.filters.right, function (index, item) {
 						// check for predefined datatble content
 						if (preDefinedFilters.indexOf(item) >= 0) {
 							// construct correct syntax of datatable filter
@@ -1107,7 +1092,7 @@ var melisHelper = (function() {
 							// construct correct syntax of datatable filter
 							rightDom = rightDom + '<"' + index + '">';
 							// append needed function for callback function after datatable initiliazation
-							jsSdomContentInit.push(function() {
+							jsSdomContentInit.push(function () {
 								return $("." + index).html(item);
 							});
 						}
@@ -1126,29 +1111,33 @@ var melisHelper = (function() {
 			}
 
 			//check if no filters set, sDom should not be displayed
-			if(Object.keys(requiredSettings.filters.left).length == 0 && Object.keys(requiredSettings.filters.center).length == 0 
-				&& Object.keys(requiredSettings.filters.right).length == 0){				
+			if (
+				Object.keys(requiredSettings.filters.left).length == 0 &&
+				Object.keys(requiredSettings.filters.center).length == 0 &&
+				Object.keys(requiredSettings.filters.right).length == 0
+			) {
 				settings.sDom = "";
 			}
 
 			// add action buttons
-			if(requiredSettings.hasOwnProperty("actionButtons")) {
+			if (requiredSettings.hasOwnProperty("actionButtons")) {
 				// check if it has elements
 				if (Object.keys(requiredSettings.actionButtons).length > 0) {
 					settings.columns.push({
-						data: "actions",
+						data: null,
 					});
 					var actionButtons = "";
-					$.each(requiredSettings.actionButtons, function(idx, item) {
+					$.each(requiredSettings.actionButtons, function (idx, item) {
 						actionButtons = actionButtons + item + " ";
 					});
 					settings.columnDefs.push({
 						targets: -1,
 						data: null,
 						width: "10%",
-						bSortable: false,
-						sClass: "dtActionCls all",
-						mRender: function() {
+						orderable: false,
+						// sClass: "dtActionCls all",
+						className: "dtActionCls all",
+						mRender: function () {
 							return actionButtons;
 						},
 					});
@@ -1162,10 +1151,10 @@ var melisHelper = (function() {
 				.responsive.recalc();
 
 			//run callback function for addtional filters
-			target.on("init.dt", function() {
+			target.on("init.dt", function () {
 				// get all filter function
 				if (jsSdomContentInit.length > 0) {
-					$.each(jsSdomContentInit, function(index, fn) {
+					$.each(jsSdomContentInit, function (index, fn) {
 						// run all functions
 						fn();
 					});
@@ -1176,11 +1165,11 @@ var melisHelper = (function() {
 					.siblings(".filter-bar")
 					.find('.search input[type="search"]');
 				// unbind
-				searchField.unbind();
+				searchField.off();
 				// for better logic trigger search when there are 2 or more characters
 				searchField.typeWatch({
 					captureLength: 2,
-					callback: function(value) {
+					callback: function (value) {
 						melisDataTable.search(value).draw();
 					},
 				});
@@ -1197,18 +1186,15 @@ var melisHelper = (function() {
 	$body.on(
 		"click",
 		".melis-modal-cont.KOnotif span.btn, .overlay-hideonclick, .delete-page-modal .cancel, .melis-prompt, melis-prompt .cancel",
-		function() {
+		function () {
 			$(".melis-modaloverlay, .melis-modal-cont").remove();
 		}
 	);
 
 	// Input-group that has clear function button
-	$body.on("click", ".meliscore-clear-input", function() {
+	$body.on("click", ".meliscore-clear-input", function () {
 		// Clearing the input of input-group
-		$(this)
-			.closest(".input-group")
-			.find("input")
-			.val("");
+		$(this).closest(".input-group").find("input").val("");
 	});
 
 	/*

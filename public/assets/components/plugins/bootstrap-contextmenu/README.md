@@ -20,9 +20,9 @@ Usage
 
 Add `data-toggle="context"` to any element that needs a custom context menu and via CSS set `position: relative` to the element.
 
-Point `data-target` attribute to your custom context menu.
+Point `data-bs-target` attribute to your custom context menu.
 
-`<div class="context" data-toggle="context" data-target="#context-menu"></div>`
+`<div class="context" data-toggle="context" data-bs-target="#context-menu"></div>`
 
 ### Via Javascript
 
@@ -42,7 +42,7 @@ $('.context').contextmenu({
 
 ### Options
 
-`target` - is the equivalent of the `data-target` attribute. It identifies the html of the menu that will be displayed. 
+`target` - is the equivalent of the `data-bs-target` attribute. It identifies the html of the menu that will be displayed. 
 
 `before` - is a function that is called before the context menu is displayed. If this function returns false, the context menu will not be displayed. It is passed two parameters,
 

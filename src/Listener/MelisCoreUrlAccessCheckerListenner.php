@@ -11,6 +11,7 @@ namespace MelisCore\Listener;
 
 use Laminas\EventManager\EventManagerInterface;
 use Laminas\EventManager\ListenerAggregateInterface;
+use Laminas\Mvc\Controller\Plugin\Redirect;
 use Laminas\Mvc\MvcEvent;
 use Laminas\Mvc\Router\Http\Segment;
 
@@ -19,6 +20,8 @@ use Laminas\Mvc\Router\Http\Segment;
  */
 class MelisCoreUrlAccessCheckerListenner implements ListenerAggregateInterface
 {
+    public $listeners = [];
+
     public function attach(EventManagerInterface $events, $priority = 1)
     {
         $callBackHandler = $events->attach(
@@ -36,7 +39,6 @@ class MelisCoreUrlAccessCheckerListenner implements ListenerAggregateInterface
         		$routeMatch = $router->match($sm->get('request'));
                 $uri = $router->getRequestUri();
 
-
                 if ($routeMatch && $uri->getPath("/melis"))
         		{
                     // Retrieving the router Details, This will return URL details in Object
@@ -45,16 +47,14 @@ class MelisCoreUrlAccessCheckerListenner implements ListenerAggregateInterface
                     $host = $configDefaultData['host'];
                     $scheme = $configDefaultData['scheme'];
                     $env = !empty(getenv('MELIS_PLATFORM')) ? getenv('MELIS_PLATFORM') : null;
-                    if($env)
-                    {
-                        $configEnvData = $config->getItem("meliscore/datas/".$env);
-                        $host  =  isset($configEnvData['host']) ? $configEnvData['host'] : $host;
-                        $scheme  =  isset($configEnvData['scheme']) ? $configEnvData['scheme'] : $scheme;
+                    if ($env) {
+                        $configEnvData = $config->getItem("meliscore/datas/" . $env);
+                        $host = isset($configEnvData['host']) ? $configEnvData['host'] : $host;
+                        $scheme = isset($configEnvData['scheme']) ? $configEnvData['scheme'] : $scheme;
                     }
 
-                    if($uri->getHost() != $host)
-                    {
-                        $url = $scheme."://".$host."/melis";
+                    if ($uri->getHost() != $host) {
+                        $url = $scheme . "://" . $host . "/melis";
                         if ($url) {
                             // Redirection
                             $response = $e->getResponse();
@@ -66,8 +66,23 @@ class MelisCoreUrlAccessCheckerListenner implements ListenerAggregateInterface
                             $response->sendHeaders();
                             exit ();
                         }
-                    }
+                    }else{
+                        /**
+                         * Check if user is already logged in
+                         */
+                        $pathUri = rtrim($uri->getPath(), "/");
+                        if(in_array($pathUri, ['/melis/lost-password', '/melis/login', '/melis/reset-password'])){
+                            $melisCoreAuth = $sm->get('MelisCoreAuth');
+                            $controllerPluginManager = $sm->get('ControllerPluginManager');
+                            // Get the Redirect plugin
+                            /** @var Redirect $redirectPlugin */
+                            $redirectPlugin = $controllerPluginManager->get('redirect');
 
+                            if ($melisCoreAuth->hasIdentity()) {
+                                $redirectPlugin->toUrl('/melis');
+                            }
+                        }
+                    }
         		}
         	},
         -1000);

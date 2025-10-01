@@ -15,7 +15,7 @@ $availableLang = "";
             <div id="accordion-alert-email-<?= $data['lang_cms_locale'] ?>" class="">
                 <div class="card" style="border: none;">
                 <div id="alert-email-<?=strtolower($data['lang_cms_locale']) ?>" >
-                        <a data-toggle="collapse" data-target="#alert-email-content-<?= $data['lang_cms_locale'] ?>" aria-expanded="true" aria-controls="alert-email" class="accordion-heading-sm pad-10 toggle-arrow-indication arrow-down-sm-accordion" >
+                        <a data-bs-toggle="collapse" data-bs-target="#alert-email-content-<?= $data['lang_cms_locale'] ?>" aria-expanded="true" aria-controls="alert-email" class="accordion-heading-sm pad-10 toggle-arrow-indication arrow-down-sm-accordion" >
                         <h5 class="accordion-heading-title alert-email-<?= strtolower($data['lang_cms_locale'])?>"><?= $this->translate('tr_melis_core_gdpr_autodelete_label_alert_email_heading')?></h5>
                         </a>
                     </div>
@@ -93,7 +93,7 @@ $availableLang = "";
                 <div id="accordion-account-deleted-email-<?= $data['lang_cms_locale'] ?>" class="">
                     <div class="card" style="border: none;">
                     <div id="alert-delete-email-<?= strtolower($data['lang_cms_locale']) ?>">
-                            <a data-toggle="collapse" data-target="#account-deleted-email-<?= $data['lang_cms_locale'] ?>"
+                            <a data-bs-toggle="collapse" data-bs-target="#account-deleted-email-<?= $data['lang_cms_locale'] ?>"
                                aria-expanded="true" aria-controls="alert-email" class="accordion-heading-sm pad-10 toggle-arrow-indication arrow-right-sm-accordion">
                                <h5 class="accordion-heading-title "><?= $this->translate('tr_melis_core_gdpr_autodelete_label_alert_email_heading2')?></h5>
                             </a>
@@ -134,7 +134,7 @@ $availableLang = "";
                                     // set value for tags
                                     if (!empty($this->module_tags)) {
                                         // remove url revalidation
-                                        $forDeleteTags = str_replace(',URL_VALIDATION', null, $this->module_tags);
+                                        $forDeleteTags = str_replace(',URL_VALIDATION', '', $this->module_tags);
                                         $formEmailDelete->get('mgdpre_email_tags')->setValue($forDeleteTags);
                                     }
                                     // form open tag

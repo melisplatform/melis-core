@@ -487,6 +487,27 @@ Creating other config is possible. Add the config in a file then declare the fil
 ```   
 **[See Full documentation on TinyMCE and Melis Platform here](https://www.melistechnology.com/MelisTechnology/resources/documentation/back-office/configuration-of-tinymce/Configurationfilesoverview)**
 
+####Cache and Bundle
+Cache
+* Caching system is already applied in Melis platform BO, particularly in leftmenu, dashboard, dashboard plugins menu and front plugins menu.
+* Clearing the cache will be done automatically by updating the user or updating the modules in module tool.
+* You can also disable the caching system inside platform tool.
+
+Bundle
+* Melis platform improved its bundling system by loading one file instead of every file in each module.
+* You can re-bundle all assets inside the Module tool.
+* To disable/enable bundle per platform, you can override it inside the MelisModuleConfig interface:
+```
+'development' => [
+    'build_bundle' => false,
+],
+'preprod' => [
+    'build_bundle' => true,
+],
+'prod' => [
+    'build_bundle' => true,
+]
+```  
 
 ## Authors
 

@@ -144,6 +144,14 @@ class MelisCorePlatformSchemeService extends MelisGeneralService
 
             $success = $this->schemeTable()->save($data, $id);
             if($success) {
+
+                //generate scheme file time
+                $platformTable = $this->getServiceManager()->get('MelisCoreTablePlatform');
+                $platformData = $platformTable->getEntryByField('plf_name', getenv('MELIS_PLATFORM'))->current();
+                if(!empty($platformData)){
+                    $platformTable->save(['plf_scheme_file_time' => time()], $platformData->plf_id);
+                }
+
                 $results = true;
             }
         }

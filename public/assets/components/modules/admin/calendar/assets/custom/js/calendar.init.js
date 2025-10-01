@@ -3,13 +3,11 @@ $(function()
 	/* initialize the external events
 	-----------------------------------------------------------------*/
 
-	$('#external-events ul li').each(function() 
-	{
-	
+	$('#external-events ul li').each(function() {
 		// create an Event Object (http://arshaw.com/fullcalendar/docs/event_data/Event_Object/)
 		// it doesn't need to have a start or end
 		var eventObject = {
-			title: $.trim($(this).text()) // use the element's text as the event title
+			title: $(this).text().trim() // use the element's text as the event title
 		};
 		
 		// store the Event Object in the DOM element so we can get to it later

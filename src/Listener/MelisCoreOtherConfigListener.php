@@ -27,8 +27,14 @@ class MelisCoreOtherConfigListener extends MelisGeneralListener implements Liste
         	'meliscore_save_other_config', 
         	function($event){
                 $params = $event->getParams();
-                
                 $passwordSettings = [];
+                $passwordSettings['login_account_lock_status'] = $params['login_account_lock_status'] ?? '';
+                $passwordSettings['login_account_admin_email'] = $params['login_account_admin_email'] ?? '';
+                $passwordSettings['login_account_lock_number_of_attempts'] = $params['login_account_lock_number_of_attempts'] ?? '';
+                $passwordSettings['login_account_type_of_lock'] = $params['login_account_type_of_lock'] ?? '';
+                $passwordSettings['login_account_duration_days'] = $params['login_account_duration_days'] ?? '';
+                $passwordSettings['login_account_duration_hours'] = $params['login_account_duration_hours'] ?? '';
+                $passwordSettings['login_account_duration_minutes'] = $params['login_account_duration_minutes'] ?? '';
                 $passwordSettings['password_validity_status'] = $params['password_validity_status'] ?? '';
                 $passwordSettings['password_validity_lifetime'] = $params['password_validity_lifetime'] ?? '';
                 $passwordSettings['password_duplicate_status'] = $params['password_duplicate_status'] ?? '';

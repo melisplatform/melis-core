@@ -35,7 +35,24 @@ class MelisCoreDashboardBubbleUpdatesPlugin extends MelisCoreDashboardTemplating
     public function getUpdates()
     {
         $moduleService = $this->getServiceManager()->get('MelisAssetManagerModulesService');
-        $marketplaceService = $this->getServiceManager()->get('MelisMarketPlaceService');
+
+        $isAccessible = false;
+        //make sure marketplace is loaded
+        if($moduleService->isModuleLoaded('MelisMarketPlace')) {
+            $result = $this->getController()->forward()->dispatch(
+                'MelisMarketPlace\Controller\MelisMarketPlace',
+                ['action' => 'isMarketplaceAccessible'])->getVariables();
+
+            $isAccessible = $result['isMarketplaceAccessible'];
+        }
+
+        if(!$isAccessible){
+            return new JsonModel([
+                'data' => [],
+                'count' => 0
+            ]);
+        }
+
         $requestJsonUrl = $this->getMelisPackagistServer() . '/get-packages/page/1/search//item_per_page/0/order/asc/order_by//status/2/group/';
         $serverPackages = [];
         $packagesData = [];
@@ -99,7 +116,11 @@ class MelisCoreDashboardBubbleUpdatesPlugin extends MelisCoreDashboardTemplating
                 }
             }
             //Get the version difference of local modules from repo modules
-            $status = $marketplaceService->compareLocalVersionFromRepo($moduleName, $version);
+            $status = 0;
+            if($this->getServiceManager()->has('MelisMarketPlaceService')) {//Make sure marketplace service is active (Marketplace module is not deactivated)
+                $marketplaceService = $this->getServiceManager()->get('MelisMarketPlaceService');
+                $status = $marketplaceService->compareLocalVersionFromRepo($moduleName, $version);
+            }
 
             $data[] = [
                 'module_name' => $packageName,

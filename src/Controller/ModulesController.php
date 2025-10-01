@@ -9,6 +9,7 @@
 
 namespace MelisCore\Controller;
 
+use function Laminas\Session\SaveHandler\read;
 use Laminas\View\Model\ViewModel;
 use Laminas\View\Model\JsonModel;
 use Laminas\Session\Container;
@@ -16,11 +17,15 @@ use MelisCore\Service\MelisCoreRightsService;
 use Laminas\Config\Config;
 use Laminas\Config\Writer\PhpArray;
 use MelisCalendar\Service\MelisCalendarService;
+use MatthiasMullie\Minify;
+use MelisCore\View\Helper\MelisCoreHeadPluginHelper;
+
 /**
  * Module Management Tool
  */
 class ModulesController extends MelisAbstractActionController
 {
+    const BUNDLE_FOLDER_NAME = 'bundles';
 
     const MODULE_LOADER_FILE = 'config/melis.module.load.php';
     private $exclude_modules = array(
@@ -155,6 +160,8 @@ class ModulesController extends MelisAbstractActionController
             $success = $this->createModuleLoaderFile($modules) === true ? 1 : 0;
 
             if($success == 1) {
+                //regenerate bundle
+
                 $textMessage = 'tr_meliscore_module_management_prompt_success';
             }
         }
@@ -294,6 +301,96 @@ class ModulesController extends MelisAbstractActionController
         return new JsonModel($response);
 
     }
+
+    /**
+     * Function to bundle all assets into one
+     *
+     * @return JsonModel
+     */
+    public function bundleAction()
+    {
+        $translator = $this->getServiceManager()->get('translator');
+        $moduleService = $this->getServiceManager()->get('ModulesService');
+        $message = 'tr_meliscore_module_management_modules_bundle_failed';
+        try {
+            /**
+             * We will combine all the assets into one file
+             * so it will load faster
+             */
+            $moduleService->generateBundle();
+
+            $success = true;
+            $message = 'tr_meliscore_module_management_modules_bundle_success';
+        }catch (\Exception $ex){
+            $success = false;
+        }
+
+        return new JsonModel(array(
+            'textTitle' => $translator->translate('tr_meliscore_module_management_modules_bundle'),
+            'textMessage' => $translator->translate($message),
+            'success' => $success,
+            'errors' => []
+        ));
+    }
+
+    /**
+     * Returns a Javascript format of Melis Translations
+     */
+    public function getJsBundlesAction()
+    {
+        $docroot = $_SERVER['DOCUMENT_ROOT'];
+        $bundleFolder = $docroot.'/../etc';
+
+        $path = $bundleFolder . '/' . ModulesController::BUNDLE_FOLDER_NAME . '/js/bundle-all.js';
+
+        $melisCoreAuth = $this->getServiceManager()->get('MelisCoreAuth');
+        $user = $melisCoreAuth->hasIdentity();
+        if(!$user)
+            $path = $bundleFolder . '/' . ModulesController::BUNDLE_FOLDER_NAME . '/js/bundle-all-login.js';
+
+        if (file_exists($path)) {
+            // Send the appropriate headers to tell the browser this is a js file
+            header('Content-Type: text/javascript');
+            header('Content-Length: ' . filesize($path));
+            //cached for 1 month (2629744 seconds)
+            header('Cache-Control: public, max-age=2629744, immutable');
+
+            // Output the file content
+            readfile($path);
+        }
+        exit;
+    }
+
+    /**
+     * Returns a Javascript format of Melis Translations
+     */
+    public function getCssBundlesAction()
+    {
+        $docroot = $_SERVER['DOCUMENT_ROOT'];
+        $bundleFolder = $docroot.'/../etc';
+
+        $path = $bundleFolder . '/' . ModulesController::BUNDLE_FOLDER_NAME . '/css/bundle-all.css';
+
+        $melisCoreAuth = $this->getServiceManager()->get('MelisCoreAuth');
+        $user = $melisCoreAuth->hasIdentity();
+
+        if(!$user) {
+            $path = $bundleFolder . '/' . ModulesController::BUNDLE_FOLDER_NAME . '/css/bundle-all-login.css';
+        }
+
+        if (file_exists($path)) {
+            // Send the appropriate headers to tell the browser this is a CSS file
+            header('Content-Type: text/css');
+            header('Content-Length: ' . filesize($path));
+            //cached for 1 month (2629744 seconds)
+            header('Cache-Control: public, max-age=2629744, immutable');
+
+            // Output the file content
+            readfile($path);
+        }
+        exit;
+    }
+
 
     /**
      * Creates the module loader file and the temp holder for the enabled & disabled modules

@@ -3,25 +3,24 @@
 	if (!empty($this->zoneconfig['conf']['id']))
 		$id = ' id="' .$this->zoneconfig['conf']['id'] . '"';
 	$data_melisKey = $this->melisKey;
-    
-	
 ?>
-<div <?= $id; ?>  class="tab-pane container-level-a" data-melisKey='<?= $data_melisKey; ?>'> 
-		<?php 
-		if(empty($this->noAccess))
-		{
-		    if(!empty($this->zoneconfig['interface'])) {
-		        foreach($this->zoneconfig['interface'] as $keyConfig => $menuConfig) {
-		            echo $this->$keyConfig;
-		        }
-		    }
+
+<div <?= $id; ?>  class="tab-pane container-level-a" data-melisKey='<?= $data_melisKey; ?>'>
+	<?php 
+	if(empty($this->noAccess))
+	{
+		if(!empty($this->zoneconfig['interface'])) {
+			foreach($this->zoneconfig['interface'] as $keyConfig => $menuConfig) {
+				echo $this->$keyConfig;
+			}
 		}
-        else 
-        {
-            echo '<h4>'.$this->noAccess.'</h4>';
-        }
-        
-		?>
+	}
+	else 
+	{
+		echo '<h4>'.$this->noAccess.'</h4>';
+	}
+	
+	?>
     <?php if($this->netStatus){?>
         <iframe class="marketplaceUpdate" src="about:blank" width="1px" height="1px" style="border-color: transparent; background: transparent;"></iframe>
     <?php }?>

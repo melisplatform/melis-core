@@ -108,6 +108,10 @@ class LanguageController extends MelisAbstractActionController
                 $flashMsgSrv = $this->getServiceManager()->get('MelisCoreFlashMessenger');
                 $flashMsgSrv->clearFlashMessage();
                 $this->getEventManager()->trigger('meliscore_get_recent_user_logs', $this, array());
+
+                //clear cache when changing language
+                $coreCacheService = $this->getServiceManager()->get('MelisCoreCacheSystemService');
+                $coreCacheService->deleteCacheByPrefix('*', PluginViewController::cacheConfig);
             }
         }
         else
@@ -130,10 +134,12 @@ class LanguageController extends MelisAbstractActionController
      */
     public function getTranslationsAction()
     {
-        // Get the current language
-        $container = new Container('meliscore');
-        $locale = $container['melis-lang-locale'];
-
+       $locale = $this->getRequest()->getQuery('locale');
+//         Get the current language
+       if(empty($locale)) {
+            $container = new Container('meliscore');
+            $locale = $container['melis-lang-locale'];
+       }
 
         $translator = $this->getServiceManager()->get('translator');
         $melisTranslation = $this->getServiceManager()->get('MelisCoreTranslation');
@@ -141,7 +147,8 @@ class LanguageController extends MelisAbstractActionController
         // Set the headers of this route
         $response = $this->getResponse();
         $response->getHeaders()
-            ->addHeaderLine('Content-Type', 'text/javascript; charset=utf-8');
+            ->addHeaderLine('Content-Type', 'text/javascript; charset=utf-8')
+            ->addHeaderLine('Cache-Control', 'public, max-age=86400, immutable');
 
         $translationCompilation = '';
         foreach($melisTranslation->getTranslationMessages($locale) as $transKey => $transValue)

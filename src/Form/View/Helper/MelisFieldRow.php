@@ -19,6 +19,7 @@ class MelisFieldRow extends FormRow
 
     public function render(ElementInterface $element, ?string $labelPosition = null): string
     {
+        $formElement = '';
         $translator = $this->getTranslator();
 
         if (empty($element->getAttribute('id'))){
@@ -45,7 +46,7 @@ class MelisFieldRow extends FormRow
             
             $element->setLabelOptions(['disable_html_escape' => true]);
         
-            $openTool = '<i class="fa fa-wrench fa-lg melis-opentools m-dnd-tool-open" data-toggle="tooltip" data-placement="left" title="" data-original-title="'.$toolConfig['tooltip'].'"
+            $openTool = '<i class="fa fa-wrench fa-lg melis-opentools m-dnd-tool-open" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="'.$toolConfig['tooltip'].'"
                 data-tool-icon="'.$toolConfig['tool_icon'].'"
                 data-tool-name="'.$toolConfig['tool_name'].'"
                 data-tool-id="'.$toolConfig['tool_id'].'"
@@ -71,7 +72,7 @@ class MelisFieldRow extends FormRow
                 if (!is_null($openTool)) {
                     $label = '<div class="label-text">' . $firstLabel . '</div>';
                 }
-                $label = $label . "<div class='slider-open-tooltip'>". $openTool .'<i class="fa fa-info-circle fa-lg tip-info" data-toggle="tooltip" data-placement="left" title="" data-original-title="' . $element->getOption('tooltip') . '"></i></div>';
+                $label = $label . "<div class='slider-open-tooltip'>". $openTool .'<i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="' . $element->getOption('tooltip') . '"></i></div>';
                 
                 $element->setLabel($label);
             }
@@ -225,7 +226,7 @@ class MelisFieldRow extends FormRow
             // text for no available tags
             $textNoTags = $element->getOption('no_tags_text');
 
-            $multiValTooltip = empty($element->getOption('tooltip')) ? '' : '<i class="fa fa-info-circle fa-lg" data-toggle="tooltip" data-placement="left" title="" data-original-title="' . $element->getOption('tooltip') . '"></i>';
+            $multiValTooltip = empty($element->getOption('tooltip')) ? '' : '<i class="fa fa-info-circle fa-lg" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="' . $element->getOption('tooltip') . '"></i>';
 
             $label = $element->getLabel();
             if (!empty($element->getOption('label'))) {
@@ -235,7 +236,9 @@ class MelisFieldRow extends FormRow
             $label = '<label for="tags" class="d-flex flex-row justify-content-between"><div class="label-text">' . $label . '</div>' . $multiValTooltip . '</label>';
             $element->setLabel("");
 
-            $getTags = explode(',', $dataTags);
+            $getTags = [];
+            !empty($dataTags) && $getTags = explode(',', $dataTags);
+
             $ulStart = '<ul class="multi-value-input clearfix" ' . ($notEditable ? "style=\"cursor:not-allowed\"" : null) . '>';
             $ulEnd = '</ul>';
             if ($notEditable) {
@@ -261,34 +264,31 @@ class MelisFieldRow extends FormRow
             $multiValElement .= $tagItems . $liInput . $ulEnd;
             $formElement = '<div class="form-group">' . $multiValElement . '</div>';
 
-        }elseif (strpos($element->getAttribute('class'), self::MELIS_DRAGGABLE_INPUT)){
-
+        }elseif (@strpos($element->getAttribute('class'), self::MELIS_DRAGGABLE_INPUT)){
             $isDraggable = $element->getAttribute('data-draggable');
 
-            if ($isDraggable){
+            if ($isDraggable) {
                 $element->setLabel('');
                 $formElement = '<div class="input-group melis-draggable-input">
-                                '.parent::render($element, $labelPosition).'
+                                ' . parent::render($element, $labelPosition) . '
                                 <span class="input-group-addon bg-primary"><i class="fa fa-arrows fa-lg" aria-hidden="true"></i></span>
                             </div>';
-            }else{
-                $formElement = '<div class="form-group">'. parent::render($element, $labelPosition).'</div>';
+            } else {
+                $formElement = '<div class="form-group">' . parent::render($element, $labelPosition) . '</div>';
             }
-
-        }elseif (strpos($element->getAttribute('class'), self::MELIS_COMMERCE_DATE)){
-            
+        }elseif (@strpos($element->getAttribute('class'), self::MELIS_COMMERCE_DATE)){
             $label = $element->getLabel();
             $element->setLabel('');
             $attrib = $element->getAttributes();
             $formElement = '<div class="form-group">
-                            <label for="'.$element->getName().'" class="'.$element->getOption('class').'">'.$label.'</label>
-                                <div class="input-group date '.$attrib['dateId'].'">
-                                '.parent::render($element).'
-                                    <span class="input-group-addon">
-                                        <span class="glyphicon glyphicon-calendar"></span>
-                                    </span>
-                                </div>
-                            </div>';
+                        <label for="' . $element->getName() . '" class="' . $element->getOption('class') . '">' . $label . '</label>
+                            <div class="input-group date ' . $attrib['dateId'] . '">
+                            ' . parent::render($element) . '
+                                <span class="input-group-addon">
+                                    <span class="glyphicon glyphicon-calendar"></span>
+                                </span>
+                            </div>
+                        </div>';
 
         }elseif ($element->hasAttribute('meliscore-datetimepicker')){
 
@@ -394,18 +394,16 @@ class MelisFieldRow extends FormRow
             $formElement .= '</div>
                             </div>';
 
-        }elseif(strpos($element->getAttribute('class'), self::MELIS_MSGR_MSG_BOX)){
-
+        }elseif(@strpos($element->getAttribute('class'), self::MELIS_MSGR_MSG_BOX)){
             $element->setLabel('');
             $formElement = '<div class="row msg-chat-no-padding">
-                                <div class="col-lg-11 col-md-10 col-sm-11">
-                                    '.parent::render($element).'
-                                </div>    
-                                <div class="col-lg-1 col-md-2 col-sm-1">
-                                    <button id="btn-send-message" type="submit" class="btn btn-primary"><i class="fa fa-paper-plane fa-2x"></i></button>
-                                </div>
-                            </div>';
-
+                            <div class="col-lg-11 col-md-10 col-sm-11">
+                                ' . parent::render($element) . '
+                            </div>    
+                            <div class="col-lg-1 col-md-2 col-sm-1">
+                                <button id="btn-send-message" type="submit" class="btn btn-primary"><i class="fa fa-paper-plane fa-2x"></i></button>
+                            </div>
+                        </div>';
         }elseif ($element->getOption('form_type') == 'form-horizontal'){
 
             $formElement = '<div id="' . $element->getAttribute('id') . '" class="form-group">

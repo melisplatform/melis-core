@@ -1,6 +1,10 @@
 <?php
 
 use MelisCore\Support\MelisCore;
+use Laminas\Session\Container;
+
+$container = new Container('meliscore');
+$locale = $container['melis-lang-locale'];
 
 return array(
     'plugins' => array(
@@ -91,8 +95,8 @@ return array(
                             'php_cli' => '/usr/local/bin/php',
                             'phpunit' => '/usr/local/bin/phpunit',
                             /**
-                             * NOTE: CURRENTLY WORKING ON PHPUnit 5.7.21
-                             */
+                         * NOTE: CURRENTLY WORKING ON PHPUnit 5.7.21
+                         */
                         ),
                     ),
                     'langauges' => array(
@@ -139,16 +143,33 @@ return array(
                 'gdpr_auto_anonymized_time_format' => "d",
 
                 /**
-                 * scheme configuration to use in the url
                  *  - override this in the MelisModuleConfig
                  */
                 getenv('MELIS_PLATFORM') => [
+                    //scheme configuration to use in the url
                     // host
                     'host' => $_SERVER['HTTP_HOST'],
                     // scheme
-                    'platform_scheme' => $_SERVER['REQUEST_SCHEME']
-                ]
+                    'platform_scheme' => $_SERVER['REQUEST_SCHEME'],
+                    //use to check whether we use the bundle-all assets or load bundle for each module
+                    'build_bundle' => true,
+                ],
+                /**
+                 * Used to copy necessary file to
+                 * main public/bundles-generated folder
+                 */
+                'bundle_all_needed_files' => [
+                    //will be put inside css folder
+                    'css' => [
+                        '/build/css/loading.gif',
+                        '/build/css/icons.gif',
+                        '/assets/components/library/icons/bootstrap-icons/font/fonts'
+                    ],
+                    //will be put inside js folder
+                    'js' => [
 
+                    ]
+                ]
             ),
             'ressources' => array(
                 'css' => array(
@@ -171,32 +192,35 @@ return array(
                     '/MelisCore/assets/components/modules/admin/forms/elements/bootstrap-timepicker/assets/lib/css/bootstrap-timepicker.css',
                     '/MelisCore/assets/components/modules/admin/forms/elements/colorpicker-farbtastic/assets/css/farbtastic.css',
 
-                    // Data Tables
-                    '/MelisCore/assets/components/modules/admin/tables/datatables/assets/css/datatables.min.css',
-                    /* '/MelisCore/assets/components/modules/admin/tables/datatables/assets/css/dataTables.bootstrap.css',
-                    '/MelisCore/assets/components/modules/admin/tables/datatables/assets/extensions/Responsive/css/responsive.bootstrap.css',
-                    '/MelisCore/assets/components/modules/admin/tables/datatables/assets/extensions/Buttons/css/buttons.bootstrap.css', */
+                    // DataTables
+                    //'/MelisCore/assets/components/modules/admin/tables/datatables/assets/css/datatables.min.css',
+                    '/MelisCore/assets/components/modules/admin/tables/datatables/assets/css/datatables-2.1.4.min.css',
 
                     // fancytree
                     '/MelisCore/js/library/fancytree/src/skin-lion/ui.fancytree.css',
                     '/MelisCore/js/library/fancytree/extensions/contextmenu/css/jquery.contextMenu.css',
 
                     '/MelisCore/assets/components/library/bootstrap/css/bootstrap.min.css',
+                    '/MelisCore/assets/components/library/icons/bootstrap-icons/font/bootstrap-icons.min.css',
                     '/MelisCore/assets/components/library/icons/fontawesome/assets/css/font-awesome.min.css',
                     '/MelisCore/assets/components/library/icons/glyphicons/assets/css/glyphicons_regular.css',
                     '/MelisCore/assets/components/library/icons/glyphicons/assets/css/glyphicons_social.css',
                     '/MelisCore/assets/components/library/icons/glyphicons/assets/css/glyphicons_filetypes.css',
+                    '/MelisCore/assets/components/library/icons/glyphicons/b4-glyphicons/css/bootstrap-glyphicons.css',
                     '/MelisCore/assets/components/library/icons/pictoicons/css/picto.css',
                     '/MelisCore/assets/components/library/animate/animate.min.css',
                     '/MelisCore/assets/components/modules/admin/tables/responsive/assets/lib/css/footable.core.min.css',
 
                     // datetimepicker
                     '/MelisCore/assets/components/plugins/bootstrap-datepicker-4/css/bootstrap-datetimepicker.min.css',
+                    // '/MelisCore/assets/components/plugins/tempus-dominus/css/tempus-dominus.min.css',
+
+                    //daterangepicker
+                    '/MelisCore/assets/components/plugins/daterangepicker/css/daterangepicker.css',
 
                     // admin
                     '/MelisCore/assets/css/admin/module.admin.page.form_elements.min.css',
                     '/MelisCore/assets/css/admin/module.admin.page.tables_responsive.min.css',
-
 
                     // Melis Admin
                     '/MelisCore/assets/css/admin/module.admin.page.core.min.css',
@@ -204,26 +228,29 @@ return array(
                     // Bootstrap Dialog
                     '/MelisCore/css/bootstrap-dialog.min.css',
 
-                    // Plugins Move css group
+                    // Plugins Move css group, select2 and bootstrap-colorpicker
                     '/MelisCore/css/plugin.group.css',
 
                     //Bootstrap tags
                     '/MelisCore/css/bootstrap-tagsinput.css',
+                    // tiny-slider
+                    '/MelisCore/css/tiny-slider.css',
 
-                    // MelisCore main CSS - should always be in bottom
-                    '/MelisCore/css/styles.css',
-                    // custom-style.css for the update on jquery 3.3.1 and bootstrap 4.3.1
-                    '/MelisCore/css/custom-style.css',
                     '/MelisCore/css/diagnostic.css',
 
                     // Custom font-awesome checkbox
                     '/MelisCore/css/custom-fontawesome.css',
 
+                    // MelisCore main CSS - should always be in bottom
+                    '/MelisCore/css/styles.css',
+                    // override some css from styles.css
+                    '/MelisCore/css/custom-style.css',
                 ),
                 'js' => array(
-                    '/melis/get-translations',
+                    '/melis/get-translations?locale=' . $locale,
                     '/MelisCore/assets/components/library/jquery/jquery.min.js',
-                    //'/MelisCore/assets/components/library/jquery-ui/js/jquery-ui.min.js',
+                    '/MelisCore/assets/components/library/jquery-ui/js/jquery-ui.min.js',
+                    '/MelisCore/assets/components/library/jquery/jquery-migrate.min.js',
 
                     // Concat plugins
                     '/MelisCore/js/pluginConcat/melis-core-concat-plugins.js',
@@ -238,28 +265,38 @@ return array(
 
                     // tinyMCE
                     '/MelisCore/js/library/tinymce/tinymce.js?v=' . time(),
+                    //'/MelisCore/js/library/tinymce/jquery.tinymce.min.js',
                     '/MelisCore/js/library/tinymce/icons/default/icons.min.js',
                     '/MelisCore/js/library/tinymce/langs/fr_FR.js',
                     '/MelisCore/js/tinyMCE/melis_tinymce.js',
                     '/MelisCore/js/tinyMCE/tinymce_cleaner.js',
+                    //moment language
+                    '/MelisCore/js/moment/fr.js',
 
                     '/MelisCore/assets/components/modules/admin/notifications/gritter/assets/custom/js/gritter.init.js',
 
                     // flot charts
-                    '/MelisCore/assets/components/modules/admin/charts/flot/assets/lib/excanvas.js?v=v1.2.3',
-                    '/MelisCore/assets/components/modules/admin/charts/flot/assets/lib/jquery.flot.js?v=v1.2.3',
-                    '/MelisCore/assets/components/modules/admin/charts/flot/assets/lib/jquery.flot.resize.js?v=v1.2.3',
-                    '/MelisCore/assets/components/modules/admin/charts/flot/assets/lib/jquery.flot.time.js?v=v1.2.3',
-                    '/MelisCore/assets/components/modules/admin/charts/flot/assets/lib/plugins/jquery.flot.tooltip.min.js?v=v1.2.3',
-                    '/MelisCore/assets/components/modules/admin/charts/flot/assets/lib/jquery.flot.stack.js',
-                    '/MelisCore/assets/components/modules/admin/charts/flot/assets/custom/js/flotcharts.common.js?v=v1.2.3',
+                    '/MelisCore/assets/components/modules/admin/charts/flot/assets/lib/excanvas.js?v=v0.8.3',
+                    '/MelisCore/assets/components/modules/admin/charts/flot/assets/lib/jquery.flot.js?v=v0.8.3',
+                    '/MelisCore/assets/components/modules/admin/charts/flot/assets/lib/jquery.flot.resize.js?v=v0.8.3',
+                    //'/MelisCore/assets/components/modules/admin/charts/flot/assets/lib/jquery.flot.pie.js?v=v0.8.3',
+                    '/MelisCore/assets/components/modules/admin/charts/flot/assets/lib/jquery.flot.time.js?v=v0.8.3',
+                    '/MelisCore/assets/components/modules/admin/charts/flot/assets/lib/plugins/jquery.flot.tooltip.min.js?v=v0.8.3',
+                    '/MelisCore/assets/components/modules/admin/charts/flot/assets/lib/jquery.flot.stack.js?v=v0.8.3',
+                    '/MelisCore/assets/components/modules/admin/charts/flot/assets/custom/js/flotcharts.common.js?v=v0.8.3',
 
                     //datepicker translations
                     '/MelisCore/assets/components/library/bootstrap/js/bootstrap-datepicker.fr.js',
 
                     // datetimepicker
                     '/MelisCore/assets/components/plugins/bootstrap-datepicker-4/js/bootstrap-datetimepicker.min.js',
-                    //'/MelisCore/assets/components/modules/admin/forms/elements/bootstrap-timepicker/assets/lib/js/bootstrap-timerpicker.js',
+                    
+                    // deprecated no longer maintained, https://github.com/jdewit/bootstrap-timepicker
+                    // '/MelisCore/assets/components/modules/admin/forms/elements/bootstrap-timepicker/assets/lib/js/bootstrap-timerpicker.js', 
+
+                    /* '/MelisCore/assets/components/plugins/tempus-dominus/js/tempus-dominus.min.js',
+                    '/MelisCore/assets/components/plugins/tempus-dominus/js/tempus-dominus-jquery-interface.min.js', */
+
                     '/MelisCore/assets/components/FileSaver/FileSaver.min.js',
 
                     //Bootstrap tags
@@ -282,16 +319,18 @@ return array(
                     '/MelisCore/js/tools/user-profile.js',
                     '/MelisCore/js/tools/melisModalOpenTools.js',
                     '/MelisCore/js/tools/platform.scheme.tools.js',
+                    '/MelisCore/js/tools/announcement.tools.js',
 
                     '/MelisCore/js/tools/melis-core-gdpr-tool.js',
-                    '/MelisCore/js/core/loader.js'
+                    '/MelisCore/js/tools/melis-modal-nav-tabs-slider.js',
+                    '/MelisCore/js/core/loader.js',
                 ),
                 /**
                  * the "build" configuration compiles all assets into one file to make
                  * lesser requests
                  */
                 'build' => [
-                    // 'disable_bundle' => true,
+                    //'disable_bundle' => true,
                     // set to "true" if you want to use the build assets
                     'use_build_assets' => true,
                     // path to where the build CSS and JS are located
@@ -299,12 +338,11 @@ return array(
 
                     // lists of assets that will be loaded in the layout
                     'css' => [
-                        '/MelisCore/build/css/bundle.css?v=2021090801',
-
+                        '/MelisCore/build/css/bundle.css',
                     ],
                     'js' => [
-                        '/melis/get-translations',
-                        '/MelisCore/build/js/bundle.js?v=2021090801',
+                        '/melis/get-translations?locale=' . $locale,
+                        '/MelisCore/build/js/bundle.js',
                     ]
                 ]
             ),
@@ -314,7 +352,7 @@ return array(
                         'id' => 'id_meliscore_header',
                         'melisKey' => 'meliscore_header',
                         'name' => 'tr_meliscore_header',
-                        'rightsDisplay' => 'none',
+                        // 'rightsDisplay' => 'none',
                     ),
                     'forward' => array(
                         'module' => 'MelisCore',
@@ -395,6 +433,13 @@ return array(
                         'jscallback' => '',
                         'jsdatas' => array()
                     ),
+                    'cache' => [
+                        'activated' => true,
+                        'name' => 'meliscore_leftmenu',
+                        'add' => [
+                            'userId'
+                        ]
+                    ],
                     'interface' => array(
                         'meliscore_leftmenu_identity' =>  array(
                             'conf' => array(
@@ -520,7 +565,8 @@ return array(
                 ),
                 'meliscore_center' => array(
                     'conf' => array(
-                        'rightsDisplay' => 'none',
+//                        'rightsDisplay' => 'none',
+                        'name' => 'tr_meliscore_dashboard'
                     ),
                     'forward' => array(
                         'module' => 'MelisCore',
@@ -533,11 +579,18 @@ return array(
                         'meliscore_dashboard' => array(
                             'conf' => array(
                                 'id' => 'id_meliscore_toolstree_section_dashboard',
-                                'name' => 'tr_meliscore_dashboard',
+                                'name' => 'tr_meliscore_dashboard_content',
                                 'melisKey' => 'meliscore_dashboard',
                                 'icon' => 'fa-tachometer',
                                 'dashboard' => true
                             ),
+                            'cache' => [
+                                'activated' => true,
+                                'name' => 'meliscore_dashboard_plugins',
+                                'add' => [
+                                    'userId'
+                                ]
+                            ],
                             'interface' => [
                                 'meliscore_dashboard_header' => [
                                     'conf' => [
@@ -556,8 +609,8 @@ return array(
                                     'conf' => [
                                         'id' => 'id_meliscore_dashboard_bubble_plugins',
                                         'melisKey' => 'meliscore_dashboard_bubble_plugins',
-                                        'name' => 'tr_meliscore_dashboard',
-                                        'rightsDisplay' => 'none'
+                                        'name' => 'tr_meliscore_dashboard_bubble_plugins',
+//                                        'rightsDisplay' => 'none'
                                     ],
                                     'forward' => [
                                         'module' => 'MelisCore',
@@ -582,6 +635,13 @@ return array(
                         'jscallback' => '',
                         'jsdatas' => array()
                     ),
+                    'cache' => [
+                        'activated' => true,
+                        'name' => 'meliscore_dashboard_menu',
+                        'add' => [
+                            'userId'
+                        ]
+                    ],
                 ),
                 'melis_dashboardplugin' => array(
                     'conf' => array(
@@ -594,37 +654,38 @@ return array(
         'meliscore_login' => array(
             'ressources' => array(
                 'css' => array(
-                    '/MelisCore/css/OpenSans.css',
-                    '/MelisCore/css/Roboto.css',
-                    '/MelisCore/css/Monseratt.css',
+                   /* '/MelisCore/css/OpenSans.css',
+                   '/MelisCore/css/Roboto.css',
+                   '/MelisCore/css/Montserrat.css', */
 
                     '/MelisCore/assets/components/library/bootstrap/css/bootstrap.min.css',
                     '/MelisCore/assets/components/library/icons/fontawesome/assets/css/font-awesome.min.css',
                     '/MelisCore/assets/components/library/icons/glyphicons/assets/css/glyphicons_regular.css',
                     '/MelisCore/assets/components/library/icons/glyphicons/assets/css/glyphicons_social.css',
                     '/MelisCore/assets/components/library/icons/glyphicons/assets/css/glyphicons_filetypes.css',
-                    '/MelisCore/assets/components/library/icons/pictoicons/css/picto.css',
-                    '/MelisCore/assets/components/library/animate/animate.min.css',
+                    '/MelisCore/assets/components/library/icons/glyphicons/b4-glyphicons/css/bootstrap-glyphicons.css',
 
-                    '/MelisCore/assets/components/library/jquery-ui/css/jquery-ui.min.css',
-                    '/MelisCore/assets/components/modules/admin/forms/elements/bootstrap-datepicker/assets/lib/css/bootstrap-datepicker.css',
-                    '/MelisCore/assets/components/modules/admin/charts/easy-pie/assets/lib/css/jquery.easy-pie-chart.css',
-                    '/MelisCore/assets/components/modules/admin/notifications/notyfy/assets/lib/css/jquery.notyfy.css',
-                    '/MelisCore/assets/components/modules/admin/notifications/notyfy/assets/lib/css/notyfy.theme.default.css',
+                   /* '/MelisCore/assets/components/library/icons/pictoicons/css/picto.css',
+                   '/MelisCore/assets/components/library/animate/animate.min.css',
 
-                    '/MelisCore/assets/components/modules/admin/forms/elements/bootstrap-select/assets/lib/css/bootstrap-select.css',
-                    '/MelisCore/assets/components/modules/admin/forms/elements/uniform/assets/lib/css/uniform.default.css',
+                   '/MelisCore/assets/components/library/jquery-ui/css/jquery-ui.min.css',
+                   '/MelisCore/assets/components/modules/admin/forms/elements/bootstrap-datepicker/assets/lib/css/bootstrap-datepicker.css',
+                   '/MelisCore/assets/components/modules/admin/charts/easy-pie/assets/lib/css/jquery.easy-pie-chart.css',
+                   '/MelisCore/assets/components/modules/admin/notifications/notyfy/assets/lib/css/jquery.notyfy.css',
+                   '/MelisCore/assets/components/modules/admin/notifications/notyfy/assets/lib/css/notyfy.theme.default.css',
 
-                    '/MelisCore/assets/components/modules/admin/gallery/blueimp-gallery/assets/lib/css/blueimp-gallery.min.css',
+                   '/MelisCore/assets/components/modules/admin/forms/elements/bootstrap-select/assets/lib/css/bootstrap-select.css',
+                   '/MelisCore/assets/components/modules/admin/forms/elements/uniform/assets/lib/css/uniform.default.css',
 
-                    '/MelisCore/assets/components/modules/admin/forms/elements/bootstrap-switch/assets/lib/css/bootstrap-switch.css',
-                    '/MelisCore/assets/components/modules/admin/notifications/gritter/assets/lib/css/jquery.gritter.css',
-                    '/MelisCore/assets/components/modules/admin/forms/editors/wysihtml5/assets/lib/css/bootstrap-wysihtml5-0.0.2.css',
-                    '/MelisCore/assets/components/modules/admin/forms/elements/jasny-fileupload/assets/css/fileupload.css',
-                    '/MelisCore/assets/components/modules/admin/forms/elements/select2/assets/lib/css/select2.css',
-                    '/MelisCore/assets/components/modules/admin/forms/elements/bootstrap-timepicker/assets/lib/css/bootstrap-timepicker.css',
-                    '/MelisCore/assets/components/modules/admin/forms/elements/colorpicker-farbtastic/assets/css/farbtastic.css',
+                   '/MelisCore/assets/components/modules/admin/gallery/blueimp-gallery/assets/lib/css/blueimp-gallery.min.css',
 
+                   '/MelisCore/assets/components/modules/admin/forms/elements/bootstrap-switch/assets/lib/css/bootstrap-switch.css',
+                   '/MelisCore/assets/components/modules/admin/notifications/gritter/assets/lib/css/jquery.gritter.css',
+                   '/MelisCore/assets/components/modules/admin/forms/editors/wysihtml5/assets/lib/css/bootstrap-wysihtml5-0.0.2.css',
+                   '/MelisCore/assets/components/modules/admin/forms/elements/jasny-fileupload/assets/css/fileupload.css',
+                   '/MelisCore/assets/components/modules/admin/forms/elements/select2/assets/lib/css/select2.css',
+                   '/MelisCore/assets/components/modules/admin/forms/elements/bootstrap-timepicker/assets/lib/css/bootstrap-timepicker.css',
+                   '/MelisCore/assets/components/modules/admin/forms/elements/colorpicker-farbtastic/assets/css/farbtastic.css', */
 
                     '/MelisCore/assets/css/admin/module.admin.page.core.min.css',
                     // MelisCore main CSS - should always be in bottom
@@ -633,11 +694,12 @@ return array(
                     '/MelisCore/css/custom-style.css',
                 ),
                 'js' => array(
-                    '/melis/get-translations',
+                    '/melis/get-translations?locale=' . $locale,
                     '/MelisCore/assets/components/library/jquery/jquery.min.js?v=v1.2.3',
                     '/MelisCore/js/tools/melisCoreTool.js',
                     '/MelisCore/js/core/login.js',
                     '/MelisCore/js/core/melispasswordservice.js',
+                    '/MelisCore/js/core/melisHelper.js',
                 ),
             ),
             'conf' => array(
@@ -649,7 +711,7 @@ return array(
                 'askaccount_email' => 'askaccount@test.com',
                 'lostpassword_email' => 'lostpassword@test.com',
                 'login_background' => '/MelisCore/images/login/melis-blackboard.jpg',
-                'login_logo' => '/MelisCore/images/login/melis-box.png',
+                'login_logo' => '/MelisCore/images/login/melis-logo.svg',
             ),
             'interface' => array(
                 'meliscore_login_header' => array(
@@ -675,7 +737,7 @@ return array(
                                 'controller' => 'Language',
                                 'action' => 'headerLanguage',
                                 'jscallback' => '',
-                                'jsdatas' => array('variable2' => 'titi')
+                                'jsdatas' => array()
                             ),
                         ),
                     ),
@@ -722,7 +784,7 @@ return array(
             ),
             'datas' => array(
                 'login_background' => 'MelisCore/images/login/melis-blackboard.jpg',
-                'lost_password_logo' => '/MelisCore/images/login/melis-box.png',
+                'lost_password_logo' => '/MelisCore/images/login/melis-logo.svg',
             ),
             'interface' => array(
                 'meliscore_lost_password_header' => array(
@@ -748,7 +810,7 @@ return array(
                                 'controller' => 'Language',
                                 'action' => 'headerLanguage',
                                 'jscallback' => '',
-                                'jsdatas' => array('variable2' => 'titi')
+                                'jsdatas' => array()
                             ),
                         ),
                     ),
@@ -798,7 +860,7 @@ return array(
             ),
             'datas' => array(
                 'login_background' => 'MelisCore/images/login/melis-blackboard.jpg',
-                'reset_password_logo' => '/MelisCore/images/login/melis-box.png',
+                'reset_password_logo' => '/MelisCore/images/login/melis-logo.svg',
             ),
             'interface' => array(
                 'meliscore_reset_password_header' => array(
@@ -824,7 +886,7 @@ return array(
                                 'controller' => 'Language',
                                 'action' => 'headerLanguage',
                                 'jscallback' => '',
-                                'jsdatas' => array('variable2' => 'titi')
+                                'jsdatas' => array()
                             ),
                         ),
                     ),
@@ -872,7 +934,7 @@ return array(
             ),
             'datas' => array(
                 'login_background' => 'MelisCore/images/login/melis-blackboard.jpg',
-                'generate_password_logo' => '/MelisCore/images/login/melis-box.png',
+                'generate_password_logo' => '/MelisCore/images/login/melis-logo.svg',
             ),
             'interface' => array(
                 'meliscore_generate_password_header' => array(
@@ -898,7 +960,7 @@ return array(
                                 'controller' => 'Language',
                                 'action' => 'headerLanguage',
                                 'jscallback' => '',
-                                'jsdatas' => array('variable2' => 'titi')
+                                'jsdatas' => array()
                             ),
                         ),
                     ),
@@ -946,7 +1008,7 @@ return array(
             ),
             'datas' => array(
                 'login_background' => 'MelisCore/images/login/melis-blackboard.jpg',
-                'renew_password_logo' => '/MelisCore/images/login/melis-box.png',
+                'renew_password_logo' => '/MelisCore/images/login/melis-logo.svg',
             ),
             'interface' => array(
                 'meliscore_renew_password_header' => array(
@@ -972,7 +1034,7 @@ return array(
                                 'controller' => 'Language',
                                 'action' => 'headerLanguage',
                                 'jscallback' => '',
-                                'jsdatas' => array('variable2' => 'titi')
+                                'jsdatas' => array()
                             ),
                         ),
                     ),

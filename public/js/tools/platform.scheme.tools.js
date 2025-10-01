@@ -17,8 +17,12 @@ $(function() {
                 return entityMap[s];
             });
         }
+
         $body.on("click", "#savePlatformScheme", function() {
-            $("form#melis_core_platform_scheme_images").submit();
+            $("form#melis_core_platform_scheme_images").trigger("submit");
+
+            // dynamic dnd, issue: https://mantis2.uat.melistechnology.fr/view.php?id=8466
+            //reloadMelisIframe();
         });
 
         $body.on("click", "#resetPlatformScheme", function() {
@@ -30,17 +34,21 @@ $(function() {
                 translations.tr_meliscore_platform_scheme_reset_confirm,
                 function() {
                     melisCoreTool.pending(".button");
+
                     $.ajax({
                         type    : 'GET',
                         url     : 'melis/MelisCore/PlatformScheme/resetToDefault',
                         processData : false,
                         cache       : false,
                         contentType : false,
-                        dataType    : 'json'
+                        dataType    : 'json',
                     }).done(function(data) {
                         if(data.success) {
                             melisCoreTool.processing();
-                            location.reload(true);
+                            window.location.reload(true);
+
+                            // dynamic dnd, issue: https://mantis2.uat.melistechnology.fr/view.php?id=8466
+                            //reloadMelisIframe();
                         }
                         else {
                             melisHelper.melisKoNotification(data.title, data.message, data.errors);
@@ -67,6 +75,9 @@ $(function() {
                 formData.append('colors', JSON.stringify(colors));
 
                 melisCoreTool.pending(".button");
+                
+                melisCoreTool.addOverflowHidden();
+
                 $.ajax({
                     type    : 'POST',
                     url     : 'melis/MelisCore/PlatformScheme/save',
@@ -77,6 +88,8 @@ $(function() {
                     dataType    : 'json'
                 }).done(function(data) {
                     if(data.success) {
+                        melisCoreTool.removeOverflowHidden();
+
                         melisCoreTool.processing();
                         location.reload(true);
                     }
@@ -106,5 +119,77 @@ $(function() {
                     $headerTitle.removeClass("ml-header");
                 }
                 $headerTitle.html(text);
-        })
+        });
 });
+
+window.forceReload = function() {
+    // Preserve current path, query, and hash
+    const url = window.location.href.split('#')[0];
+    const separator = url.includes('?') ? '&' : '?';
+    const reloadedUrl = url + separator + 'cb=' + Date.now();
+
+    window.location.replace(reloadedUrl); // no redirect to a different route
+};
+
+window.reloadMelisIframe = function() {
+    const $melisIframe = $(`[data-meliskey="meliscms_page"]`).find(".meliscms-page-tab-edition .melis-iframe");
+        if ($melisIframe) {
+            $melisIframe[0]?.contentWindow.location.reload();
+        }
+};
+
+/* window.reloadMelisIframe = function() {
+    const $melisIframe = $(`[data-meliskey="meliscms_page"]`).find(".meliscms-page-tab-edition .melis-iframe");
+        if ($melisIframe) {
+            //console.log({$melisIframe});
+            $melisIframe.each((i, v) => {
+                //setTimeout(() => {
+                    // reload iframe content with timestamp
+                    let $this       = $(v),
+                        iframeId    = $this.attr("id"),
+                        src         = $("#"+iframeId).attr("src");
+
+                        console.log({src});
+                        if (src) {
+                            let newSrc = src + "?v=" + new Date().getTime();
+
+                                $this.attr("src", newSrc);
+                        }
+                        else {
+                            console.error('Iframe src is undefined');
+                        }
+
+                        $this.on("load", () => {
+                            //console.log(`$this.on load !!!`);
+                            let $iframe     = $this,
+                                iframeDoc   = $iframe[0]?.contentDocument || $iframe[0]?.contentWindow?.document,
+                                timestamp   = new Date().getTime();
+                                // $iframe[0]?.contentWindow.location.reload();
+
+                                console.log({iframeDoc});
+                                //console.log({$iframe});
+
+                                if (!iframeDoc) {
+                                    console.error("Cannot access iframe document. Is it same-origin?");
+                                    return;
+                                }
+
+                                console.log(`$(iframeDoc).find('link[rel="stylesheet"]').length: `, $(iframeDoc).find('link[rel="stylesheet"]').length);
+
+                                // update all <link href="stylesheet">
+                                $(iframeDoc).find(`link[rel="stylesheet"]`).each(() => {
+                                    let href = $(this).attr("href").split("?")[0];
+                                        $(this).attr("href", href + "?v=" + timestamp);
+                                });
+
+                                // update all <script src="">
+                                $(iframeDoc).find(`script[src]`).each(() => {
+                                    let src = $(this).attr("src").split("?")[0];
+                                        $(this).attr("src", src + "?v=" + timestamp);
+                                });
+                        });
+                    //console.log(`setTimeout 2000 !!!`);
+                //}, 2000);
+            });
+        }
+}; */

@@ -76,7 +76,7 @@
           setTimeout(process, opts.interval);
         };
 
-        $(window).scroll(on_check).resize(on_check);
+        $(window).on("scroll", on_check).on("resize", on_check);
         check_binded = true;
       }
 

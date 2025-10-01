@@ -1,0 +1,124 @@
+<?php
+    $moduleHasNewPlugins  = [];
+    $sectionHasNewPlugins = [];
+    $ctrNewPlugins = 0;
+?>
+<div class="melis-core-dashboard-dnd-title"><?php echo $this->translate('tr_melisore_Plugins')?></div>
+<div class="melis-core-dashboard-plugin-filter-box">
+    <?php if(!empty($this->plugins)) { ?>
+        <?php foreach ($this->plugins as $moduleSection => $modules){ ?>
+            <?php
+            $maxWidthClassFirst = "";
+
+            // checking of plugins
+            $sectionChildrenCtr = count($modules);
+            foreach ($modules as $moduleName => $plugins){
+                foreach ($plugins as $name => $conf) {
+                    $pluginId = $conf['plugin_id'] ?? $conf['plugin'];
+                    if (isset($modules[$moduleName][$pluginId]['isNew']) && $modules[$moduleName][$pluginId]['isNew']) {
+                        // plugin counter
+                        $ctrNewPlugins++;
+                        // section that has new plugins under
+                        $sectionHasNewPlugins[] =  $moduleSection;
+                        // module that has new plugins under
+                        $moduleHasNewPlugins[] =  $moduleName;
+                    }
+                }
+            }
+            ?>
+            <?php if ($sectionChildrenCtr > 0) {?>
+                <div class="melis-core-dashboard-ps-box">
+                            <span class="melis-core-dashboard-filter-btn">
+                                    <?php  if ($ctrNewPlugins > 0 && in_array($moduleSection,$sectionHasNewPlugins)) { ?>
+                                        <div class="melis-plugins-icon-new-parent">
+                                            <span class="melis-plugins-icon-new new-plugin-indicator">NEW!</span>
+                                        </div>
+                                        <?php $maxWidthClassFirst = "module-name";}?>
+                                <?php
+                                // get melis module section icons
+                                echo $this->getMelisSectionIcons($moduleSection);
+                                ?>
+                                <span class="<?=$maxWidthClassFirst ?>">
+                                      <?php
+                                      $sectionName = $moduleSection;
+                                      if ($moduleSection == 'CustomProjects') {
+                                          $sectionName = "Custom / Projects";
+                                      }
+                                      ?>
+                                      <?= $sectionName; ?>
+                                  </span>
+                              <i class="fa fa-angle-down arrow-indicator"></i>
+                            </span>
+                    <div class="melis-core-dashboard-plugin-snippets-box">
+                        <?php foreach ($modules as $moduleName => $plugins){ ?>
+                            <?php
+                            $maxWidthClass2nd = "";
+                            // one special rule
+                            // if there's only one subsection then
+                            // dont rewrite the module name and just list plugins
+                            if ($sectionChildrenCtr > 1) { ?>
+                                <div class="melis-core-category-box" >
+                                            <span class="melis-core-dashboard-category-btn">
+                                                <?php  if (in_array($moduleName,$moduleHasNewPlugins)) { ?>
+                                                    <div class="melis-plugins-icon-new-child">
+                                                        <span class="melis-plugins-icon-new new-plugin-indicator">NEW!</span>
+                                                    </div>
+                                                    <?php $maxWidthClass2nd = "module-name";} ?>
+                                                <span class="<?= $maxWidthClass2nd ?>" title="<?= $this->translate('tr_PluginSection_'.strtolower($moduleName)); ?>">
+                                                    <?= $this->translate('tr_PluginSection_'.strtolower($moduleName)); ?>
+                                                </span>
+                                                <i class="fa fa-angle-down arrow-indicator"></i>
+                                            </span>
+                                    <div class="melis-core-dashboard-category-plugins-box">
+                                        <?php foreach ($plugins as $pluginName => $conf) { ?>
+                                            <!-- data-toggle="tooltip" data-placement="right" data-html="true" -->
+                                            <div class="melis-core-dashboard-plugin-snippets" title="<?php echo $this->translate($conf['description'])?>">
+                                                <div class="d-none plugin-json-config"><?php echo $conf['pluginRaw'] ?></div>
+                                                <img src="<?php echo $conf['thumbnail']?>" alt="" width="194px" class="dashboard-img-responsive">
+                                                <?php
+                                                $hasNewPlugins = "";
+                                                if (in_array($moduleName,$moduleHasNewPlugins)) {
+                                                    $hasNewPlugins = "has-new-plugins";
+                                                    ?>
+                                                    <div class="melis-plugins-icon-new-child">
+                                                        <span class="melis-plugins-icon-new new-plugin-indicator">NEW!</span>
+                                                    </div>
+                                                    <?php $maxWidthClass2nd = "module-name";} ?>
+                                                <span class="melis-core-dashboard-plugin-title <?php echo $hasNewPlugins; ?>"><?php echo $this->translate($conf['name'])?></span>
+                                            </div>
+                                        <?php }?>
+                                    </div>
+                                </div>
+                            <?php } else {?>
+                                <?php foreach ($plugins as $pluginName => $conf) { ?>
+                                    <div class="melis-core-dashboard-plugin-snippets" title="<?php echo $this->translate($conf['description'])?>">
+                                        <div class="d-none plugin-json-config"><?php echo $conf['pluginRaw'] ?></div>
+                                        <img src="<?php echo $conf['thumbnail']?>" alt="" width="194px" class="dashboard-img-responsive">
+                                        <?php
+                                        $hasNewPlugins = "";
+                                        if (in_array($moduleName,$moduleHasNewPlugins)) {
+                                            $hasNewPlugins = "has-new-plugins";
+                                            ?>
+                                            <div class="melis-plugins-icon-new-child">
+                                                <span class="melis-plugins-icon-new new-plugin-indicator">NEW!</span>
+                                            </div>
+                                            <?php $maxWidthClass2nd = "module-name";} ?>
+                                        <span class="melis-core-dashboard-plugin-title <?php echo $hasNewPlugins; ?>"><?php echo $this->translate($conf['name'])?></span>
+                                    </div>
+                                <?php }?>
+                            <?php }?>
+                        <?php }?>
+                    </div>
+                </div>
+
+            <?php }?>
+        <?php }?>
+    <?php } else { ?>
+        <div class="no-plugin-on-menu">
+            <p><?= $this->translate('tr_meliscore_melis_dashboard_no_access'); ?></p>
+        </div>
+    <?php } ?>
+</div>
+<div class="melis-core-dashboard-plugin-delete-all">
+    <button class='btn btn-primary btn-md' id='dashboard-plugin-delete-all'><?= $this->translate('tr_melisore_remove_all_plugins');?></button>
+</div>

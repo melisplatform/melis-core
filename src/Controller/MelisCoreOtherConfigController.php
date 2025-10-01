@@ -163,7 +163,6 @@ class MelisCoreOtherConfigController extends MelisAbstractActionController
 				$response['errors'] = array_merge($response['errors'], $res['errors']);
 			}
 		}
-		
 		return new JsonModel($response);
 	}
 }

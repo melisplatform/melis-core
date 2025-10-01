@@ -100,10 +100,10 @@ class MelisCoreUserService extends MelisServiceManager implements MelisCoreUserS
             $lastLoginDate = new \DateTime($data->usrcd_last_login_date);
             $connectionTime = new \DateTime($data->usrcd_last_connection_time);
 
-            $diff = $lastLoginDate->diff($connectionTime);
+            $diff = (array)$lastLoginDate->diff($connectionTime);
 
-            $diff->w = floor($diff->d / 7);
-            $diff->d -= $diff->w * 7;
+            $diff['w'] = floor($diff['d'] / 7);
+            $diff['d'] -= $diff['w'] * 7;
 
             $ago = $translator->translate('tr_meliscore_date_ago');
             $now = $translator->translate('tr_meliscore_date_just_now');
@@ -113,14 +113,16 @@ class MelisCoreUserService extends MelisServiceManager implements MelisCoreUserS
                 'm' => $translator->translate('tr_meliscore_date_month'),
                 'w' => $translator->translate('tr_meliscore_date_week'),
                 'd' => $translator->translate('tr_meliscore_date_day'),
+
+
                 'h' => $translator->translate('tr_meliscore_date_hour'),
                 'i' => $translator->translate('tr_meliscore_date_minute'),
                 's' => $translator->translate('tr_meliscore_date_second'),
             ];
 
             foreach ($output as $k => &$v) {
-                if ($diff->$k) {
-                    $v = $diff->$k . $v . ($diff->$k > 1 ? '' : '');
+                if ($diff[$k]) {
+                    $v = $diff[$k] . $v . ($diff[$k] > 1 ? '' : '');
                 } else {
                     unset($output[$k]);
                 }
@@ -146,5 +148,13 @@ class MelisCoreUserService extends MelisServiceManager implements MelisCoreUserS
         $data = $table->getUserConnectionData($userId, $lastLoginDate, $search, $searchableColumns, $orderBy, $orderDirection, $start, $limit);
 
         return $data;
+    }
+
+    public function getUserLastLoggedInDate($userId)
+    {
+        $table = $this->getServiceManager()->get('MelisCoreTableUser');
+        $data = $table->getLastLoggedInDate($userId)->toArray();
+
+        return $data[0]['usr_last_login_date'];
     }
 }

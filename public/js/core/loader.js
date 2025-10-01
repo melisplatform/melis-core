@@ -121,10 +121,7 @@ var loader = (function(window) {
                 if ( $loader.length === 0 ) {
                     // loader
                     $melisTabEdition.prepend( pageOverlayLoader );
-                    melisCoreTool.addOverflowHidden();
-                }
-                else {
-                    melisCoreTool.removeOverflowHidden();
+                    //melisCoreTool.addOverflowHidden();
                 }
 
                 // set .melis-iframe css height
@@ -141,14 +138,17 @@ var loader = (function(window) {
                 $iframeElements     = $melisIframe.contents().find("body").children(),
                 $loader             = $melisTabEdition.find("#loader");
 
-                // checks for the inside iframes elements
-                // if ( $iframeElements.length > 0 ) {
-                    // remove loader
+                // remove loader
+                if ( $loader.length )
                     $loader.remove();
 
-                    // remove overflow hidden
-                    melisCoreTool.removeOverflowHidden();
-                // }
+                // remove overflow hidden
+                melisCoreTool.removeOverflowHidden();
+
+                // scroll back to top
+                /* $('html, body').animate({
+                    scrollTop: 0
+                }, 500); */
 
                 // set .melis-iframe css height
                 $melisIframe.css("height", melisIframeHeight);
@@ -175,6 +175,7 @@ var loader = (function(window) {
                         else {
                             if ( $melisIframe.length > 0 ) {
                                 removePageEditionLoading();
+                                
                                 clearInterval( setCmsBtnDisabledInterval );
                             }
                         }
@@ -199,11 +200,49 @@ var loader = (function(window) {
                         }
                         else {
                             removeActivePageEditionLoading(zoneId);
-
+                            
                             clearInterval( setCmsBtnDisabledInterval );
                         }
                 }, 500);
             }, 3000);
+        }
+
+        // adding of loader overlay on left menu
+        function addLoadingDashboardPluginMenu() {
+            var $dashMenu = $("#dashboardPluginsMenuLoader");
+            if ( $dashMenu.length > 0 ) {
+                $dashMenu.prepend(overlayLoader);
+            }
+        }
+
+        // remove loader overlay on left menu on window load
+        function removeLoadingDashboardPluginMenu() {
+            var $loader = $("#dashboardPluginsMenuLoader #loader");
+            if ( $loader.length > 0 ) {
+                $loader.remove();
+            }
+        }
+
+        // adding of loader overlay on melis cms plugin menu
+        function addLoadingCmsPluginMenu(pageId) {
+            var $melisCms           = $body.find("#"+pageId+"[data-meliskey='meliscms_page']"),
+                $melisIframe        = $melisCms.find(".melis-iframe"),
+                $dashMenu           = $melisIframe.contents().find("#cmsPluginsMenuLoader");
+
+                if ( $dashMenu.length > 0 ) {
+                    $dashMenu.prepend(overlayLoader);
+                }
+        }
+
+        // remove loader overlay on melis cms plugin menu
+        function removeLoadingCmsPluginMenu(pageId) {
+            var $melisCms           = $body.find("#"+pageId+"[data-meliskey='meliscms_page']"),
+                $melisIframe        = $melisCms.find(".melis-iframe"),
+                $dashMenu           = $melisIframe.contents().find("#cmsPluginsMenuLoader");
+
+                if ( $dashMenu.length > 0 ) {
+                    $dashMenu.remove();
+                }
         }
 
         init();
@@ -218,7 +257,7 @@ var loader = (function(window) {
             // removing of loading overlay on left sidebar menu
             removeLoadingLeftMenuOnWindowLoad   : removeLoadingLeftMenuOnWindowLoad,
 
-            // #2
+            // #2, double click from melis-cms page
             addActivePageEditionLoading         : addActivePageEditionLoading,
             removeActivePageEditionLoading      : removeActivePageEditionLoading,
 
@@ -226,6 +265,14 @@ var loader = (function(window) {
             checkPageLoading                    : checkPageLoading,
 
             // for click events melisCms publishPage, calls #2 functions
-            checkClickEventPageLoading          : checkClickEventPageLoading
+            checkClickEventPageLoading          : checkClickEventPageLoading,
+
+            //for dashboard plugins menu
+            addLoadingDashboardPluginMenu       : addLoadingDashboardPluginMenu,
+            removeLoadingDashboardPluginMenu    : removeLoadingDashboardPluginMenu,
+
+            //for cms plugins menu
+            addLoadingCmsPluginMenu             : addLoadingCmsPluginMenu,
+            removeLoadingCmsPluginMenu          : removeLoadingCmsPluginMenu
         };
 })(window);

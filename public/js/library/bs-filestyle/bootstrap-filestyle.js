@@ -38,8 +38,8 @@
 				}
 			} else if (value === false) {
 				if (this.options.disabled) {
-					this.$element.removeAttr('disabled');
-					this.$elementFilestyle.find('label').removeAttr('disabled');
+					this.$element.prop('disabled', false);
+					this.$elementFilestyle.find('label').prop('disabled', false);
 					this.options.disabled = false;
 				}
 			} else {

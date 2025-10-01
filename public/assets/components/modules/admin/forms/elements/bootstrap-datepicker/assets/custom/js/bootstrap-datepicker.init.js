@@ -1,8 +1,6 @@
 $.fn.bdatepicker = $.fn.datepicker.noConflict();
 
-$(function()
-{
-
+$(function() {
 	/* DatePicker */
 	// default
 	$("#datepicker1").bdatepicker({
@@ -40,18 +38,12 @@ $(function()
 	    startDate: "2013-02-14 10:00",
 	    todayBtn: true
 	});
-
 	
+	/* window.initDatepicker = function(){
+		// other
+		if ($('#datepicker').length) $("#datepicker").bdatepicker({ showOtherMonths:true });
+		if ($('#datepicker-inline').length) $('#datepicker-inline').bdatepicker({ inline: true, showOtherMonths:true });
+	}
 	
-//	window.initDatepicker = function(){
-//		// other
-//		if ($('#datepicker').length) $("#datepicker").bdatepicker({ showOtherMonths:true });
-//		if ($('#datepicker-inline').length) $('#datepicker-inline').bdatepicker({ inline: true, showOtherMonths:true });
-//	}
-//	
-//	initDatepicker();
-	
-	
-	
-
+	initDatepicker(); */
 });

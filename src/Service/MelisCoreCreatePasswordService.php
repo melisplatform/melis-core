@@ -513,7 +513,7 @@ class MelisCoreCreatePasswordService extends MelisGeneralService implements Meli
         $protocol = stripos($_SERVER['SERVER_PROTOCOL'],'https') === 0 ? 'https://' : 'http://';
         $url = $protocol.$cfg['host'].'/melis/generate-password/'.$hash;
         
-        if($isActive){
+        // if($isActive){
             // Tags to be replace at email content with the corresponding value
             $name_to = $login;
             $email_to = $email;
@@ -548,9 +548,9 @@ class MelisCoreCreatePasswordService extends MelisGeneralService implements Meli
             }else{
                 return false;
             }
-        }else{
-            return false;
-        }
+        // }else{
+        //     return false;
+        // }
     }
     
     /**

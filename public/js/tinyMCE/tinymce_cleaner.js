@@ -1,4 +1,4 @@
-function tinyMceCleaner(editor) {
+tinyMceCleaner = function(editor) {
 	editor.serializer.addNodeFilter('script,style', function(nodes, name) {
 		var i = nodes.length, node, value, type;
 
@@ -17,4 +17,4 @@ function tinyMceCleaner(editor) {
 			}
 		}
 	});
-}
+};
