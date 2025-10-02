@@ -34,6 +34,10 @@ class MelisCoreDashboardBubbleUpdatesPlugin extends MelisCoreDashboardTemplating
 
     public function getUpdates()
     {
+        if (session_status() === PHP_SESSION_ACTIVE) {
+            session_write_close();
+        }
+
         $moduleService = $this->getServiceManager()->get('MelisAssetManagerModulesService');
 
         $isAccessible = false;
@@ -154,12 +158,12 @@ class MelisCoreDashboardBubbleUpdatesPlugin extends MelisCoreDashboardTemplating
     }
 
     //test func, remove this after testing
-    public function sleep() 
+    /* public function sleep() 
     {        
         sleep(20);
 
         return new JsonModel([
             'sleep' => true,           
         ]);
-    }
+    } */
 }

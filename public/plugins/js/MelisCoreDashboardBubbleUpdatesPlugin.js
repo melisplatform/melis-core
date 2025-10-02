@@ -115,10 +115,7 @@ $(function() {
 	var $body = $("body");
 	var showBubblePlugins = MelisCoreDashboardBubblePlugin.showBubblePlugins();	
 		if (showBubblePlugins) {
-			console.log('show bubble updates');
 			MelisCoreDashboardBubbleUpdatesPlugin.init();
-		} else {
-			console.log('do not show bubble updates');
 		}
 
 		$body.on("click", ".dashboard-bubble-update-details", function() {
