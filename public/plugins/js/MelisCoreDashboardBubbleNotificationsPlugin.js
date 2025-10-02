@@ -84,7 +84,7 @@ var MelisCoreDashboardBubbleNotificationsPlugin = {
 $(function() {
     var showBubblePlugins = MelisCoreDashboardBubblePlugin.showBubblePlugins();
 
-        /* if (showBubblePlugins) {
+        if (showBubblePlugins) {
             MelisCoreDashboardBubbleNotificationsPlugin.init();
-        } */
+        }
 });

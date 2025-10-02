@@ -118,9 +118,9 @@ $(function() {
     var $body = $('body');
     var showBubblePlugins = MelisCoreDashboardBubblePlugin.showBubblePlugins();
     
-    /* if (showBubblePlugins) {
+    if (showBubblePlugins) {
         MelisCoreDashboardBubbleNewsMelisPlugin.init();
-    } */
+    }
 
     $body.on('click', '.dashboard-bubble-news-plugin-show-news', function() {
         window.open( $(this).closest('div.media-body').data('link'), '_blank' );

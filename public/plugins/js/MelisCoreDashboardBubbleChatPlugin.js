@@ -98,9 +98,9 @@ $(function() {
     var msgrFirstLoad = true;
     var showBubblePlugins = MelisCoreDashboardBubblePlugin.showBubblePlugins();
 
-    /* if (showBubblePlugins) {
+    if (showBubblePlugins) {
         MelisCoreDashboardBubbleChatPlugin.init();
-    } */
+    }
 
     $body.on('click', '.dashboard-bubble-chat-read-more', function () {
         var senderId = $(this).data('senderid');
