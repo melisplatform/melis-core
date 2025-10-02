@@ -98,10 +98,10 @@ var MelisCoreDashboardBubbleUpdatesPlugin = {
 
 $(function() {
 	var $body = $("body");
-	var showBubblePlugins = MelisCoreDashboardBubblePlugin.showBubblePlugins();
+	/* var showBubblePlugins = MelisCoreDashboardBubblePlugin.showBubblePlugins();	
 		if (showBubblePlugins) {
 			MelisCoreDashboardBubbleUpdatesPlugin.init();
-		}
+		} */
 
 		$body.on("click", ".dashboard-bubble-update-details", function() {
 			var packageId = $(this).data("packageid");
