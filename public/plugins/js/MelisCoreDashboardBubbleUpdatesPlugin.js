@@ -21,7 +21,7 @@ var MelisCoreDashboardBubbleUpdatesPlugin = {
 		this.getUpdates();
 
 		//test remove this after testing
-		this.sleep();
+		// this.sleep();
 	},
 	getUpdates: function() {
 		$.ajax({
