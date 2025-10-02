@@ -152,4 +152,14 @@ class MelisCoreDashboardBubbleUpdatesPlugin extends MelisCoreDashboardTemplating
             return $server;
         }
     }
+
+    //test func, remove this after testing
+    public function sleep() 
+    {        
+        sleep(60);
+
+        return new JsonModel([
+            'sleep' => true,           
+        ]);
+    }
 }
