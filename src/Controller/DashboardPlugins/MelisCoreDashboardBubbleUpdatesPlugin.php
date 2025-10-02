@@ -156,7 +156,7 @@ class MelisCoreDashboardBubbleUpdatesPlugin extends MelisCoreDashboardTemplating
     //test func, remove this after testing
     public function sleep() 
     {        
-        sleep(60);
+        sleep(20);
 
         return new JsonModel([
             'sleep' => true,           
