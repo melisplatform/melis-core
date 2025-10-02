@@ -20,8 +20,8 @@ var MelisCoreDashboardBubbleNotificationsPlugin = {
         this.getNotifications();
     },
     getNotifications: function() {
-        if (MelisCoreDashboardBubbleNotificationsPluginInterval === '')
-            MelisCoreDashboardBubbleNotificationsPluginInterval = setInterval(this.getNotifications, 180000);
+        /* if (MelisCoreDashboardBubbleNotificationsPluginInterval === '')
+            MelisCoreDashboardBubbleNotificationsPluginInterval = setInterval(this.getNotifications, 180000); */
 
         $.ajax({
             type: 'POST',
