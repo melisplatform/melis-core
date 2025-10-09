@@ -552,6 +552,7 @@ body #newplugin-cont.show-menu {
 	font-size: 18px;
 }
 #newplugin-cont i:before {
+	display: block;
 	height: 18px;
 	width: 18px;
 }
