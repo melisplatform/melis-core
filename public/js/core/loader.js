@@ -281,6 +281,8 @@ var loader = (function(window) {
 
             //for cms plugins menu
             addLoadingCmsPluginMenu             : addLoadingCmsPluginMenu,
-            removeLoadingCmsPluginMenu          : removeLoadingCmsPluginMenu
+            removeLoadingCmsPluginMenu          : removeLoadingCmsPluginMenu,
+
+            overlayLoader                       : overlayLoader
         };
 })(window);
