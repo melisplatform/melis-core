@@ -4961,7 +4961,7 @@ return array(
                                     'class' => 'form-control',
                                     'id' => 'melis_core_platform_theme_datepicker_prev_next_data_action_button_text_align',
                                     'category' => 'datepicker',
-                                    'default' => ''
+                                    'default' => 'center'
                                 ),
                             ),
                         ),
@@ -6949,7 +6949,7 @@ return array(
                                     'category' => 'dragdrop',
                                     'sliderId' => 'dnd-plugins-box-category-button-text-opacity-range-slider-min',
                                     'sliderClass' => 'dnd-plugins-box-category-button-text-opacity-range-slider-min',
-                                    'default' => 12,
+                                    'default' => 0.4,
                                     ),
                             ),
                         ),
