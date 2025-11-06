@@ -93,10 +93,11 @@
     <script>
         (function() {
             try {
-                var stored = localStorage.getItem('melisTheme');
-                var prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-                var theme = stored || (prefersDark ? 'dark' : 'light');
-                document.documentElement.setAttribute('data-theme', theme);
+                const stored    = localStorage.getItem('melisTheme'),
+                    prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches,
+                    theme       = stored || (prefersDark ? 'dark' : 'light');
+
+                    document.documentElement.setAttribute('data-theme', theme);
             } catch (e) {
                 // no-op
             }
@@ -153,45 +154,53 @@
     <div id="melis-modals-container"></div>
 
     <!-- theme toggle (floating) -->
-    <button id="melis-theme-toggle" class="d-none" type="button" aria-label="Toggle dark mode" title="Toggle dark mode"
-            style="position: fixed; right: 14px; bottom: 14px; z-index: 10000; border: 1px solid rgba(0,0,0,.1); border-radius: 18px; padding: 6px 10px; background: #fff; color: #333; box-shadow: 0 2px 6px rgba(0,0,0,.15);">
+    <button id="melis-theme-toggle" type="button" aria-label="Toggle dark mode" title="Toggle dark mode"
+            style="position: fixed; left: 14px; bottom: 60px; z-index: 10000; border: 1px solid rgba(0,0,0,.1); border-radius: 18px; padding: 6px 10px; background: #fff; color: #333; box-shadow: 0 2px 6px rgba(0,0,0,.15);">
         <span id="melis-theme-toggle-label">Dark mode</span>
     </button>
     <script>
         (function() {
-            var btn = document.getElementById('melis-theme-toggle');
-            var label = document.getElementById('melis-theme-toggle-label');
-            if (!btn || !label) return;
-            function currentTheme() {
-                return document.documentElement.getAttribute('data-theme') || 'light';
-            }
-            function applyLabel() {
-                var t = currentTheme();
-                label.textContent = (t === 'dark') ? 'Light mode' : 'Dark mode';
-                if (t === 'dark') {
-                    btn.style.background = '#1f1f1f';
-                    btn.style.color = '#e5e5e5';
-                    btn.style.borderColor = 'rgba(255,255,255,.15)';
-                    btn.style.boxShadow = '0 2px 6px rgba(0,0,0,.6)';
-                } else {
-                    btn.style.background = '#fff';
-                    btn.style.color = '#333';
-                    btn.style.borderColor = 'rgba(0,0,0,.1)';
-                    btn.style.boxShadow = '0 2px 6px rgba(0,0,0,.15)';
+            const btn = document.getElementById('melis-theme-toggle'),
+                label = document.getElementById('melis-theme-toggle-label');
+
+                if (!btn || !label) return;
+
+                function currentTheme() {
+                    return document.documentElement.getAttribute('data-theme') || 'light';
                 }
-            }
-            applyLabel();
-            btn.addEventListener('click', function() {
-                var next = currentTheme() === 'dark' ? 'light' : 'dark';
-                document.documentElement.setAttribute('data-theme', next);
-                try { localStorage.setItem('melisTheme', next); } catch(e) {}
+
+                function applyLabel() {
+                    const t = currentTheme();
+
+                        label.textContent = (t === 'dark') ? 'Light mode' : 'Dark mode';
+                        
+                        if (t === 'dark') {
+                            btn.style.background = '#1f1f1f';
+                            btn.style.color = '#e5e5e5';
+                            btn.style.borderColor = 'rgba(255,255,255,.15)';
+                            btn.style.boxShadow = '0 2px 6px rgba(0,0,0,.6)';
+                        } else {
+                            btn.style.background = '#fff';
+                            btn.style.color = '#333';
+                            btn.style.borderColor = 'rgba(0,0,0,.1)';
+                            btn.style.boxShadow = '0 2px 6px rgba(0,0,0,.15)';
+                        }
+                }
+
                 applyLabel();
-            });
+
+                btn.addEventListener('click', function() {
+                    const next = currentTheme() === 'dark' ? 'light' : 'dark';
+
+                        document.documentElement.setAttribute('data-theme', next);
+                        try { localStorage.setItem('melisTheme', next); } catch(e) {}
+                        applyLabel();
+                });
         })();
     </script>
 
-    <script defer>
-        /* function iframeMarketplaceCallback(){
+    <!-- <script defer>
+        function iframeMarketplaceCallback(){
             var iframe = document.querySelectorAll(".marketplaceUpdate");
             var marketPlaceUrl = 'http://marketplace.melisplatform.com/marketplace-update?modulelist=<?php //echo $this->modules; ?>//&&domain=<?php //echo $this->domain?>//&&scheme=<?php //echo $this->scheme ?>//';
             for (i = 0; i < iframe.length; i++) {
@@ -201,7 +210,7 @@
                 xhr.send();
             }
         }
-        iframeMarketplaceCallback(); */
-    </script>
+        iframeMarketplaceCallback();
+    </script> -->
 </body>
 </html>
