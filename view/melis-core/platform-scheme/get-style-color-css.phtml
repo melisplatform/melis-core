@@ -2480,18 +2480,18 @@ form .form-group .tip-info {
 /** plugins snippets */
 .melis-cms-plugin-snippets, 
 .melis-cms-category-plugins {
-    background-color: <?= $dragdropPluginsBoxCategoryBtnBgColor; ?>;
+    background-color: <?= $dragdropPluginsBoxCategoryBtnSnippetsBgColor; ?>;
 
-    border-bottom-width: <?= $dragdropPluginsBoxCategoryBtnBorderBottomWidth; ?>px;
+    border-bottom-width: <?= $dragdropPluginsBoxCategoryBtnSnippetsBorderBottomWidth; ?>px;
     border-bottom-style: solid;
-    border-bottom-color: <?= $dragdropPluginsBoxCategoryBtnBorderBottomColor; ?>;
+    border-bottom-color: <?= $dragdropPluginsBoxCategoryBtnSnippetsBorderBottomColor; ?>;
 
-    text-align: <?= $dragdropPluginsBoxTitleTextAlign; ?>;
+    text-align: <?= $dragdropPluginsBoxCategoryBtnSnippetsTextAlign ?: 'inherit'; ?>;
 
     opacity: <?= $dragdropPluginsBoxCategoryBtnSnippetsOpacity; ?>; /** 0.4 */
 }
 .melis-cms-plugin-snippets:hover {
-    background-color: <?= $dragdropPluginsBoxCategoryBtnHoverBgColor; ?>;
+    background-color: <?= $dragdropPluginsBoxCategoryBtnSnippetsHoverBgColor; ?>;
 }
 .melis-cms-plugin-title {
     color: <?= $dragdropPluginsBoxCategoryBtnSnippetsPluginTitleColor; ?>;

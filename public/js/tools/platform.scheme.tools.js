@@ -629,6 +629,28 @@ var rangeSliderSize = {
                 max: 30
             }, // daterangepicker footer buttons text font size
             {
+                selectorMin: ".dnd-plugins-box-category-btn-snippets-border-bottom-width-range-slider-min", 
+                selectorValue: ".dnd-plugins-box-category-btn-snippets-border-bottom-width-range-slider-value", 
+                value: $("#melis_core_platform_theme_dnd_plugins_box_category_btn_snippets_border_bottom_width").val(),
+                min: 1,
+                max: 10 
+            }, // dnd_plugins_box_category_btn_snippets_border_bottom_width
+            { 
+                selectorMin: '.dnd-plugins-box-category-btn-snippets-opacity-range-slider-min',
+                selectorValue: '.dnd-plugins-box-category-btn-snippets-opacity-range-slider-value',
+                min: 0,
+                max: 1,
+                step: 0.01,
+                value: $("#melis_core_platform_theme_dnd_plugins_box_category_btn_snippets_opacity").val()
+            }, // dnd_plugins_box_category_btn_snippets_opacity
+            { 
+                selectorMin: '.dnd-plugins-box-category-button-snippets-plugin-title-font-size-range-slider-min',
+                selectorValue: '.dnd-plugins-box-category-button-snippets-plugin-title-font-size-range-slider-value',
+                min: 12,
+                max: 24,
+                value: $("#melis_core_platform_theme_dnd_plugins_box_category_btn_snippets_plugin_title_font_size").val()
+            }, // dnd_plugins_box_category_btn_snippets_plugin_title_font_size
+            {
                 selectorMin: ".plugins-box-border-width-range-slider-min", 
                 selectorValue: ".plugins-box-border-width-range-slider-value", 
                 value: $("#melis_core_platform_theme_dnd_plugins_box_border_width").val(),
