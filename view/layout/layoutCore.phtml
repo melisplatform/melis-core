@@ -133,7 +133,7 @@
             })();
         </script>
         <!-- dark mode overrides -->
-        <link href="/assets/css/dark-mode.css<?= $schemeTime; ?>" media="screen" rel="stylesheet" type="text/css">
+        <!-- <link href="/assets/css/dark-mode.css<?php //$schemeTime; ?>" media="screen" rel="stylesheet" type="text/css"> -->
     <?php endif; ?>
 
     <!-- Login page background <style> -->
@@ -162,7 +162,7 @@
     
     <?php if ($isBackOffice && !$isLoginPage) : ?>
         <!-- theme toggle (floating) -->
-        <button id="melis-theme-toggle" type="button" aria-label="Toggle dark theme" title="Toggle dark theme"
+        <button id="melis-theme-toggle" class="d-none" type="button" aria-label="Toggle dark theme" title="Toggle dark theme"
                 style="position: fixed; left: 14px; bottom: 60px; z-index: 10000; border: 1px solid rgba(0,0,0,.1); border-radius: 18px; padding: 6px 10px; background: #fff; color: #333; box-shadow: 0 2px 6px rgba(0,0,0,.15);">
             <span id="melis-theme-toggle-label">Dark theme</span>
         </button>
