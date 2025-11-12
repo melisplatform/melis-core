@@ -21,6 +21,14 @@
     }
 
     echo $this->doctype();
+
+    $renderMode = (
+        strpos($_SERVER['REQUEST_URI'] ?? '', '/melis') === 0
+    ) ? 'melis' : 'front';
+    
+    // optional helper boolean
+    $isBackOffice = ($renderMode === 'melis');
+    $isLoginPage = ($this->layout()->isLogin || !empty($loginClas));
 ?>
 <!--[if lt IE 7]>
 <html class="ie lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
@@ -89,21 +97,6 @@
     <link href="/assets/css/schemes.css<?= $schemeTime; ?>" media="screen" rel="stylesheet" type="text/css">
 
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!-- Initialize light/dark theme ASAP to avoid FOUC -->
-    <script>
-        (function() {
-            try {
-                const stored    = localStorage.getItem('melisTheme'),
-                    prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches,
-                    theme       = stored || (prefersDark ? 'dark' : 'light');
-
-                    document.documentElement.setAttribute('data-theme', theme);
-            } catch (e) {
-                // no-op
-            }
-        })();
-    </script>
-
     <!--[if lt IE 9]>
     <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
     <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script><![endif]-->
@@ -122,12 +115,26 @@
             inverseColor = '#45484d';
 
         var themerPrimaryColor = primaryColor;
-
-
     </script>
 
-    <!-- Dark mode overrides -->
-    <link href="/assets/css/dark-mode.css<?= $schemeTime; ?>" media="screen" rel="stylesheet" type="text/css">
+    <?php if ($isBackOffice && !$isLoginPage) : ?>
+        <!-- initialize light/dark theme ASAP to avoid FOUC -->
+        <script>
+            (function() {
+                try {
+                    const stored    = localStorage.getItem('melisTheme'),
+                        prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches,
+                        theme       = stored || (prefersDark ? 'dark' : 'light');
+
+                        document.documentElement.setAttribute('data-theme', theme);
+                } catch (e) {
+                    // no-op
+                }
+            })();
+        </script>
+        <!-- dark mode overrides -->
+        <link href="/assets/css/dark-mode.css<?= $schemeTime; ?>" media="screen" rel="stylesheet" type="text/css">
+    <?php endif; ?>
 
     <!-- Login page background <style> -->
     <?php
@@ -152,52 +159,54 @@
     <?= $this->headScript() ?>
     <!-- modals container -->
     <div id="melis-modals-container"></div>
+    
+    <?php if ($isBackOffice && !$isLoginPage) : ?>
+        <!-- theme toggle (floating) -->
+        <button id="melis-theme-toggle" type="button" aria-label="Toggle dark theme" title="Toggle dark theme"
+                style="position: fixed; left: 14px; bottom: 60px; z-index: 10000; border: 1px solid rgba(0,0,0,.1); border-radius: 18px; padding: 6px 10px; background: #fff; color: #333; box-shadow: 0 2px 6px rgba(0,0,0,.15);">
+            <span id="melis-theme-toggle-label">Dark theme</span>
+        </button>
+        <script>
+            (function() {
+                const btn = document.getElementById('melis-theme-toggle'),
+                    label = document.getElementById('melis-theme-toggle-label');
 
-    <!-- theme toggle (floating) -->
-    <button id="melis-theme-toggle" type="button" aria-label="Toggle dark theme" title="Toggle dark theme"
-            style="position: fixed; left: 14px; bottom: 60px; z-index: 10000; border: 1px solid rgba(0,0,0,.1); border-radius: 18px; padding: 6px 10px; background: #fff; color: #333; box-shadow: 0 2px 6px rgba(0,0,0,.15);">
-        <span id="melis-theme-toggle-label">Dark theme</span>
-    </button>
-    <script>
-        (function() {
-            const btn = document.getElementById('melis-theme-toggle'),
-                label = document.getElementById('melis-theme-toggle-label');
+                    if (!btn || !label) return;
 
-                if (!btn || !label) return;
+                    function currentTheme() {
+                        return document.documentElement.getAttribute('data-theme') || 'light';
+                    }
 
-                function currentTheme() {
-                    return document.documentElement.getAttribute('data-theme') || 'light';
-                }
+                    function applyLabel() {
+                        const t = currentTheme();
 
-                function applyLabel() {
-                    const t = currentTheme();
+                            label.textContent = (t === 'dark') ? 'Light theme' : 'Dark theme';
+                            
+                            if (t === 'dark') {
+                                btn.style.background = '#1f1f1f';
+                                btn.style.color = '#e5e5e5';
+                                btn.style.borderColor = 'rgba(255,255,255,.15)';
+                                btn.style.boxShadow = '0 2px 6px rgba(0,0,0,.6)';
+                            } else {
+                                btn.style.background = '#fff';
+                                btn.style.color = '#333';
+                                btn.style.borderColor = 'rgba(0,0,0,.1)';
+                                btn.style.boxShadow = '0 2px 6px rgba(0,0,0,.15)';
+                            }
+                    }
 
-                        label.textContent = (t === 'dark') ? 'Light theme' : 'Dark theme';
-                        
-                        if (t === 'dark') {
-                            btn.style.background = '#1f1f1f';
-                            btn.style.color = '#e5e5e5';
-                            btn.style.borderColor = 'rgba(255,255,255,.15)';
-                            btn.style.boxShadow = '0 2px 6px rgba(0,0,0,.6)';
-                        } else {
-                            btn.style.background = '#fff';
-                            btn.style.color = '#333';
-                            btn.style.borderColor = 'rgba(0,0,0,.1)';
-                            btn.style.boxShadow = '0 2px 6px rgba(0,0,0,.15)';
-                        }
-                }
+                    applyLabel();
 
-                applyLabel();
+                    btn.addEventListener('click', function() {
+                        const next = currentTheme() === 'dark' ? 'light' : 'dark';
 
-                btn.addEventListener('click', function() {
-                    const next = currentTheme() === 'dark' ? 'light' : 'dark';
-
-                        document.documentElement.setAttribute('data-theme', next);
-                        try { localStorage.setItem('melisTheme', next); } catch(e) {}
-                        applyLabel();
-                });
-        })();
-    </script>
+                            document.documentElement.setAttribute('data-theme', next);
+                            try { localStorage.setItem('melisTheme', next); } catch(e) {}
+                            applyLabel();
+                    });
+            })();
+        </script>
+    <?php endif; ?>
 
     <!-- <script defer>
         function iframeMarketplaceCallback(){
