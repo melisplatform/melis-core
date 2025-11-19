@@ -884,10 +884,10 @@ var themeSwitcher = (function($) {
 
         function setupEventListeners() {
             // theme option clicks (delegated for dynamically injected markup)
-            $(document).on('click', '.platform-theme-options .theme-option', function(e) {
+            $(document).on('change', '.theme-radio', function(e) {
                 e.preventDefault();
 
-                var theme = $(this).data('theme');
+                var theme = $(this).val();
                     setTheme(theme);
                     saveTheme(theme);
             });
