@@ -203,12 +203,28 @@ if ($headerTitleLen > 13) {
                 <div class="platform-theme-options-detail">
                     <div class="platform-theme-options-block">
                         <div class="platform-theme-options-tools-info">
+                            <div class="theme-switcher">
+                                <h3>Color themes</h3>
+                                <div class="card p-3 shadow-sm">
+                                    <div class="form-check">
+                                        <input class="form-check-input theme-radio" type="radio" name="themeChoice" id="themeLight" value="light" checked>
+                                        <label class="form-check-label" for="themeLight">
+                                            ☀️ Light
+                                        </label>
+                                    </div>
 
+                                    <div class="form-check">
+                                        <input class="form-check-input theme-radio" type="radio" name="themeChoice" id="themeDark" value="dark">
+                                        <label class="form-check-label" for="themeDark">
+                                            🌙 Dark
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
                             <?php
-                            $platformThemeOptionForm = $this->platformThemeOptionForm;
-                            echo $this->form()->openTag($platformThemeOptionForm);
+                                $platformThemeOptionForm = $this->platformThemeOptionForm;
+                                echo $this->form()->openTag($platformThemeOptionForm);
                             ?>
-
                             <div id="theme-options" class="accordion">
                                 <div class="accordion-item general-options">
                                     <h3 class="accordion-header active-header">

@@ -2637,6 +2637,10 @@ table.dataTable.dtr-inline.collapsed>tbody>tr.dtr-expanded>th.dtr-control:before
 	z-index: 1;
 	right: 0.5rem;
 }
+.platform-theme-options-tools-info .theme-switcher h3 {
+	color: #686868;
+	font-size: 1rem;
+}
 .tooltabmodal ul.ui-fancytree > li:not(:first-child) .fancytree-parent-has-child-selected,
 .tooltabmodal ul.ui-fancytree > li:not(:first-child) .parent-with-child-selected .fancytree-title {
 	color: #99c975 !important;
