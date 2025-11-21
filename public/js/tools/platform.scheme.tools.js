@@ -194,10 +194,6 @@ $(function() {
         // defer execution to make sure the module definition (located later in this file)
         // has finished evaluating even when this ready callback runs synchronously
         setTimeout(initializeThemeSwitcher, 0);
-
-        $(document).on("themeChanged", function(event, theme) {
-            console.log('Theme changed to:', theme);
-        });
         // end evo/platform-scheme
 });
 

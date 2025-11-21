@@ -2637,9 +2637,22 @@ table.dataTable.dtr-inline.collapsed>tbody>tr.dtr-expanded>th.dtr-control:before
 	z-index: 1;
 	right: 0.5rem;
 }
+/* theme switcher */
 .platform-theme-options-tools-info .theme-switcher h3 {
 	color: #686868;
 	font-size: 1rem;
+}
+.theme-switcher .card {
+	border: 0;
+	display: flex;
+	flex-flow: row;
+	justify-content: space-between;
+}
+.theme-switcher .card .form-check {
+	display: inline;
+}
+#id_meliscore_header_language .dropdown-menu li:last-child {
+	border-bottom: 0;
 }
 .tooltabmodal ul.ui-fancytree > li:not(:first-child) .fancytree-parent-has-child-selected,
 .tooltabmodal ul.ui-fancytree > li:not(:first-child) .parent-with-child-selected .fancytree-title {
