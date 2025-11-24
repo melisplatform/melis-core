@@ -2651,6 +2651,9 @@ table.dataTable.dtr-inline.collapsed>tbody>tr.dtr-expanded>th.dtr-control:before
 .theme-switcher .card .form-check {
 	display: inline;
 }
+.theme-switcher .card .form-check .form-check-label {
+	margin-bottom: 0;
+}
 #id_meliscore_header_language .dropdown-menu li:last-child {
 	border-bottom: 0;
 }
