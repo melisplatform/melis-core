@@ -28,9 +28,10 @@ img {
 /* fix: tinymce toolbar overlaps and gets behind the .header_area */
 .tox-tinymce-inline,
 .tox-tinymce-inline .tox-editor-header,
-.tox-tinymce-inline .tox-editor-header .tox-toolbar__primary{
+.tox-tinymce-inline .tox-editor-header .tox-toolbar__primary {
     position: relative;
-    z-index: 1100;
+    /* z-index: 1100; */
+    z-index: 21;
 }
 /* fix: tinymce dialogs is partially hidden & moxiemanager container */
 .moxman-container.moxman-window {
