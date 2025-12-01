@@ -32,7 +32,12 @@ img {
     position: relative;
     z-index: 1100;
 }
-/* fix: tinymce dialogs is partially hidden */
+/* fix: tinymce dialogs is partially hidden & moxiemanager container */
+.moxman-container.moxman-window {
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    margin-left: 0 !important;
+}
 .tox-tinymce-aux .tox-dialog {
 	left: initial !important;
 }
