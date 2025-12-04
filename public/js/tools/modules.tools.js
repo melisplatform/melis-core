@@ -173,65 +173,79 @@ $(function() {
         );
 
         $body.on("click", "#saveOtherConfig", function(){
-            // merge data from all forms
-            let mergedData = $('#id_meliscore_tool_other_config form').map(function() {
-                return $(this).serializeArray();
-            }).get().flat();
+            let configFormsData = [];
+            let forms = $('#id_meliscore_tool_other_config form');
 
-            var btn = $(this);
+            forms.each(function() {
+                let $form = $(this);
+                let formConfig = {};
+                let formId = $form.attr('id');
+                let formName = $form.attr('name');
 
-            $body.find('#id_meliscore_tool_other_config form .make-switch div').each(function () {
-                var $this       = $(this),
-                    field       = $this.find('input').attr('name'),
-                    status      = $this.hasClass('switch-on'),
-                    saveStatus  = (status) ? 1 : 0;
-
-                if (! saveStatus) {
-                    mergedData.push({name: field, value: saveStatus});
+                if (!formId) {
+                    console.error("Configuration form is missing an ID, skipping serialization.", $form);
+                    return;
                 }
+
+                $.each($form.serializeArray(), function(i, field){
+                    formConfig[field.name] = field.value;
+                });
+
+                $form.find('.make-switch div').each(function () {
+                    let fieldName = $(this).find('input').attr('name');
+                    let status = $(this).hasClass('switch-on');
+                    let saveStatus = (status) ? 1 : 0;
+                       
+                    formConfig[fieldName] = saveStatus;
+                });
+               
+                configFormsData.push({
+                    form_id: formId,
+                    form_name: formName,
+                    data: formConfig
+                });
             });
 
-            var form = $('form#password-validity-form');
+            let finalPayload = {
+                all_config_forms_data: configFormsData
+            };
+           
+            let btn = $(this);
+            let form = $('form#password-validity-form');
 
             form.off("submit");
-    
+           
             form.on("submit", function(e) {
                 e.preventDefault();
 
                 btn.attr('disabled', true);
-                
+               
                 $.ajax({
                     type: 'POST',
                     url: '/melis/MelisCore/MelisCoreOtherConfig/saveOtherConfig',
-                    data: mergedData,
+                    data: finalPayload,
                     dataType: 'json',
                 }).done(function (data) {
                     if (data.success){
-                        // Notifications
                         melisHelper.melisOkNotification(data.textTitle, data.textMessage);
-    
-                        // // Reload List
-                        // melisHelper.zoneReload("id_meliscore_tool_other_config", "meliscore_tool_other_config");    
                         melisHelper.tabClose("id_meliscore_tool_other_config");
-
                         melisHelper.tabOpen(
-                            translations.tr_meliscore_tool_other_config, 
-                            'fa fa-cube fa-2x', 
-                            'id_meliscore_tool_other_config', 
+                            translations.tr_meliscore_tool_other_config,
+                            'fa fa-cube fa-2x',
+                            'id_meliscore_tool_other_config',
                             'meliscore_tool_other_config'
                         );
                     } else{
                         melisHelper.melisKoNotification(data.textTitle, data.textMessage, data.errors);
-                        // melisHelper.highlightMultiErrors(data.success, data.errors, "#"+id+"_id_song_properties_content");
                     }
-    
+
                     btn.attr('disabled', false);
-    
+
                 }).fail(function () {
                     alert(translations.tr_meliscore_error_message);
                 });
             });
-    
+
             form.trigger("submit");
         });
 
