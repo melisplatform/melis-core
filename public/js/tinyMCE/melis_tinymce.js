@@ -187,7 +187,7 @@ var melisTinyMCE = (function() {
 						// media library, create new folder, create button
 						moxieCreateButton(rect, editorContainer);
 					}
-					else if (e.command === "mceMedia" || e.command === "mceCodeEditor") {
+					else if (e.command === "mceMedia" || e.command === "mceCodeEditor" || e.command === "mceAnchor" || e.command === "mceShowCharmap" || e.command === "mceEmoticons") {
 						// scroll to view dialog box, add styles to position near the cursor or selection
 						setTimeout(() => openDialogNearCursor('.tox-dialog', rect, editorContainer), 100);
 
@@ -350,26 +350,46 @@ var melisTinyMCE = (function() {
 			editorWidth = editorContainer.width,
 			editorHeight = editorContainer.height;
 
-		const dialogWidth = dialog.offsetWidth,
-			dialogHeight = dialog.offsetHeight;
+		const dialogWidth = dialog.offsetWidth || 600, // fallback width
+			dialogHeight = dialog.offsetHeight || 400; // fallback height
 
 			if (!rect) {
 				rect = { top: editorTop + editorHeight / 2, left: editorLeft + editorWidth / 2, width: 0 };
 			}
-		
-		// calculate centered position within the editor
-		let top = rect.top + window.scrollY - (dialogHeight / 2);
-		let left = rect.left + window.scrollX - (dialogWidth / 2) + (rect.width / 2);
-						
-		// ensure the dialog stays inside the editor's viewport
-		top = Math.max(editorTop + 10, Math.min(top, editorTop + editorHeight - dialogHeight - 10));
-		left = Math.max(editorLeft + 10, Math.min(left, editorLeft + editorWidth - dialogWidth - 10));
-	
-		dialog.style.position = 'absolute';
-		dialog.style.top = `${top}px`;
-		dialog.style.left = `${left}px`;
+			
+			// Get viewport dimensions
+			const viewportHeight = window.innerHeight;
+			const viewportWidth = window.innerWidth;
+			const scrollY = window.scrollY;
+			const scrollX = window.scrollX;
+			
+			// Calculate centered position
+			let top = rect.top + scrollY - (dialogHeight / 2);
+			let left = rect.left + scrollX - (dialogWidth / 2) + (rect.width / 2);
+			
+			// Ensure dialog stays within viewport bounds (with padding)
+			const padding = 20;
+				top = Math.max(padding, Math.min(top, scrollY + viewportHeight - dialogHeight - padding));
+				left = Math.max(padding, Math.min(left, scrollX + viewportWidth - dialogWidth - padding));
+			
+			// If dialog would be cut off at bottom, position it higher
+			if (top + dialogHeight > scrollY + viewportHeight - padding) {
+				top = scrollY + viewportHeight - dialogHeight - padding;
+			}
+			
+			// If dialog would be cut off at top, position it lower
+			if (top < scrollY + padding) {
+				top = scrollY + padding;
+			}
 
-		dialog.scrollIntoView({ behavior: "smooth", block: "center" });
+			dialog.style.position = 'fixed'; // Use fixed instead of absolute for better control
+			dialog.style.top = `${top}px`;
+			dialog.style.left = `${left}px`;
+			dialog.style.maxHeight = `${viewportHeight - (padding * 2)}px`;
+			dialog.style.overflowY = 'auto';
+
+			// Ensure dialog is visible
+			dialog.scrollIntoView({ behavior: "smooth", block: "center", inline: "nearest" });
 	}
 
 	function observeAndLockMoxieDialogPosition(rect, editorContainer) {
