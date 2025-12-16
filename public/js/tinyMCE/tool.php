@@ -11,7 +11,6 @@
 		],
 		'branding' => false,
 		'inline' => false,
-		'menubar' => false,
 		'mini_templates_url' => '/melis/MelisCore/MelisTinyMce/getTinyTemplates',
 		'forced_root_block' => 'p',
 		'image_uploadtab' => false,
@@ -23,15 +22,22 @@
         'file_picker_callback' => 'filePickerCallback',
         'images_upload_url' => '/melis/MelisCore/MelisTinyMce/uploadImage',
 		'plugins' => [
-           'lists', 'advlist', 'autolink', 'link', 'image', 'charmap', 'preview', 'anchor', 'help', 'nonbreaking',
-		   'searchreplace', 'visualblocks', 'code', 'fullscreen', 'insertdatetime', 'media', 'table', 'minitemplate' 
+           'autoresize', 'autosave', 'emoticons', 'importcss', 'visualchars', 'wordcount', 'lists', 'advlist', 'autolink', 'link', 'image', 'charmap', 'anchor', 'nonbreaking', 'searchreplace', 'visualblocks', 'code', 'fullscreen', 'insertdatetime', 'media', 'table', 'minitemplate' 
 		],
 		'external_plugins' => [
 			'minitemplate' => '/MelisCore/js/minitemplate/plugin.min.js?v=20230214'
 		],
         'image_advtab' => true,
+		'menubar' => 'edit view tools',
+		'menu' => [
+			'view' => [
+				'title' => 'View',
+				'items' => 'code | visualaid visualchars visualblocks'
+			]
+		],
 		// formatselect = blocks
-        'toolbar' => 'insertfile undo redo | blocks | forecolor | bold italic strikethrough underline | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image media | minitemplate code',
+        'toolbar' => 'insertfile undo redo | blocks fontfamily fontsize | bold italic strikethrough underline | alignleft aligncenter alignright alignjustify | bullist numlist | link unlink image | table media | lineheight outdent indent | forecolor backcolor | charmap emoticons | minitemplate code fullscreen | anchor',
+		'font_size_formats' => '0.6665rem 0.8331rem 1.0rem 1.1664rem 1.4996rem 2.0rem 2.5rem 3.0rem',
 		'toolbar_mode' => 'sliding',
 		'deprecation_warnings' => false,
 		'promotion' => false,

@@ -20,8 +20,8 @@ var MelisCoreDashboardBubbleChatPlugin = {
         this.getMessages();
     },
     getMessages: function() {
-        if (MelisCoreDashboardBubbleChatPluginInterval === '')
-            MelisCoreDashboardBubbleChatPluginInterval = setInterval(this.getMessages, 180000);
+        /* if (MelisCoreDashboardBubbleChatPluginInterval === '')
+            MelisCoreDashboardBubbleChatPluginInterval = setInterval(this.getMessages, 180000); */
 
         $.ajax({
             type: 'POST',

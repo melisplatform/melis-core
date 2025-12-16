@@ -24,8 +24,11 @@ var loader = (function(window) {
             // check left menu selector is found
             addLoadingLeftMenu();
 
-            // if window is loaded remove the #loader element
-            removeLoadingLeftMenuOnWindowLoad();
+            // if window is loaded remove the #loader element, waits for iframes/images/fonts/etc., so it may take a while
+            // removeLoadingLeftMenuOnWindowLoad();
+
+            // don’t wait for full window.load to clear the loader, issue: https://mantis2.uat.melistechnology.fr/view.php?id=4891
+            removeLoadingLeftMenuOnReady();
         }
 
         // adding of loader overlay on left menu
@@ -38,19 +41,24 @@ var loader = (function(window) {
                 }
         }
 
+        function removeLoadingLeftMenuOnReady() {
+            $(function() {
+                $("#id_meliscore_leftmenu #loader").remove();
+            });
+        }
+
         // remove loader overlay on left menu on window load
         function removeLoadingLeftMenuOnWindowLoad() {
             $window.on("load", function() {
-                // #loader element
-                var $loader = $("#loader");
-
                 var loaderInterval = setInterval(function() {
-                    if ( $loader.length > 0 ) {
-                        $loader.remove();
+                    // #loader element
+                    var $loader = $("#loader");      
+                        if ( $loader.length > 0 ) {
+                            $loader.remove();
 
-                        clearInterval(loaderInterval);
-                    }
-                }, 1000);
+                            clearInterval(loaderInterval);
+                        }
+                }, 500);
             });
         }
 

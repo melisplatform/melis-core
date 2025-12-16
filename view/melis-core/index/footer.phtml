@@ -1,13 +1,14 @@
 <?php
 
-	$id = '';
-	if (!empty($this->zoneconfig['conf']['id']))
-		$id = ' id="' . $this->zoneconfig['conf']['id'] . '"';
-	$data_melisKey = $this->melisKey;
-		
+$id = '';
+if (!empty($this->zoneconfig['conf']['id']))
+	$id = ' id="' . $this->zoneconfig['conf']['id'] . '"';
+$data_melisKey = $this->melisKey;
+
 ?>
 <div <?= $id; ?> data-melisKey='<?= $data_melisKey; ?>' class="hidden-print transition3ms">
 	<div class="copy footer container">
+<<<<<<< HEAD
 		<p>
 			<a href="http://www.melistechnology.com/" target="_blank"><?php echo $this->translate('tr_meliscore_footer_2015 by Melis Technology') ?></a>
 			- <?php echo $this->translate('tr_meliscore_footer_all rights reserved') ?> 
@@ -19,5 +20,13 @@
         <?php if($this->netConn){?>
             <iframe class="marketplaceUpdate" src="about:blank" width="1px" height="1px" style="border-color: transparent; background: transparent;"></iframe>
         <?php }?>
+=======
+		<a href="https://www.melisplatform.com/en" target="_blank"><?php echo $this->translate('tr_meliscore_footer_2015 by Melis Technology') ?></a>
+		- <?php echo $this->translate('tr_meliscore_footer_all rights reserved') ?>
+		- <?php echo $this->translate('tr_meliscore_footer_Version') ?>: <?= $this->platformVersion; ?>
+		<?php if ($this->netConn) { ?>
+			<iframe class="marketplaceUpdate" src="about:blank" width="1px" height="1px" style="border-color: transparent; background: transparent;"></iframe>
+		<?php } ?>
+>>>>>>> master
 	</div>
 </div>

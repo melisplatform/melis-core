@@ -58,6 +58,9 @@ class MelisCoreDashboardBubbleNewsMelisPlugin extends MelisCoreDashboardTemplati
         curl_setopt($curl, CURLOPT_POSTFIELDS, $newsMelisConfig['datas']['filter']);
         curl_setopt($curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 3);
+        curl_setopt($curl, CURLOPT_TIMEOUT, 5);  
+        curl_setopt($curl, CURLOPT_NOSIGNAL, 1);
         $response = json_decode(curl_exec($curl), true);
         curl_close($curl);
 
