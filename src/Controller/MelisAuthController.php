@@ -838,15 +838,11 @@ class MelisAuthController extends MelisAbstractActionController
                                         $this->forgetMe($postValues['usr_login'], $postValues['usr_password']);
                                     }
                                     
-                                    // ----------------------------------------------------
-                                    // NEW: 2FA Event Trigger
-                                    // ----------------------------------------------------
                                     $authEvent = $this->getEventManager()->trigger('melis_core_auth_pre_success', $this, [
                                         'user' => $user,
                                     ]);
 
-                                    if ($authEvent->stopped() && is_array($authEvent->last())) {
-                                        // A listener (like 2FA) stopped the flow and provided a response array
+                                    if ($authEvent->stopped()) {
                                         $result = $authEvent->last();
                                     } else {
                                         // Default success: always use a command for redirection
@@ -857,10 +853,6 @@ class MelisAuthController extends MelisAbstractActionController
                                             'command' => $jsCommand, // <-- FINAL SUCCESS COMMAND
                                         ];
                                     }
-                                    // ----------------------------------------------------
-                                    // END: 2FA Event Trigger
-                                    // ----------------------------------------------------
-
                                 } else { 
                                     // Authentication failed due to wrong password/etc.
                                     if (file_exists($_SERVER['DOCUMENT_ROOT'] . '/../vendor/melisplatform/melis-core/config/app.login.php')) {
@@ -1042,6 +1034,479 @@ class MelisAuthController extends MelisAbstractActionController
         // dd($result);
         return new JsonModel($result);
     }
+
+    // public function authenticateAction()
+    // {
+    //     $request = $this->getRequest();
+    //     $translator = $this->getServiceManager()->get('translator');
+    //     $melisCoreAuth = $this->getServiceManager()->get('MelisCoreAuth');
+    //     $melisMelisCoreConfig = $this->getServiceManager()->get('MelisCoreConfig');
+    //     $userTable = $this->getServiceManager()->get('MelisCoreTableUser');
+    //     $pathAppConfigForm = '/meliscore/forms/meliscore_login';
+
+    //     // Creating the Laminas Form to validate datas
+    //     $appConfigForm = $melisMelisCoreConfig->getItem($pathAppConfigForm);
+    //     $factory = new \Laminas\Form\Factory();
+    //     $loginForm = $factory->createForm($appConfigForm);
+
+    //     // Default Fallback Command (No POST data)
+    //     $errorTitle = $translator->translate('tr_meliscore_common_error');
+    //     $errorTxt = $translator->translate('tr_meliscore_login_errors_Empty datas');
+    //     $jsCommand = "melisCoreTool.alertDanger('#loginprompt', '{$errorTitle}!', '{$errorTxt}');";
+        
+    //     $result = [
+    //         'success' => false,
+    //         'errors' => ['empty' => $errorTxt],
+    //         'command' => $jsCommand,
+    //     ];
+
+    //     if ($request->isPost()) {
+    //         $postValues = $request->getPost()->toArray();
+
+    //         $loginForm->setData($postValues);
+
+    //         // Validate datas
+    //         if ($loginForm->isValid()) {
+    //             //try using user email
+    //             if(filter_var($postValues['usr_login'], FILTER_VALIDATE_EMAIL)){
+    //                 $userData = $userTable->getEntryByField('usr_email', $postValues['usr_login'])->current();
+    //                 /**
+    //                  *  If user use his/her email to login, we update the adapter identity column to email
+    //                  */
+    //                 if(!empty($userData)) {
+    //                     $dbAdapter = $this->getServiceManager()->get(Adapter::class);
+    //                     $dbTableAuthAdapter = new DbTable($dbAdapter);
+    //                     $dbTableAuthAdapter->setTableName('melis_core_user')
+    //                         ->setIdentityColumn('usr_email')
+    //                         ->setCredentialColumn('usr_password');
+
+    //                     $melisCoreAuth->setAdapter($dbTableAuthAdapter);
+    //                 }
+    //             }else {//try user login
+    //                 $userData = $userTable->getEntryByField('usr_login', $postValues['usr_login'])->current();
+    //             }
+
+    //             if (!empty($userData)) {
+    //                 $config = $this->getLoginConfig();
+
+    //                 /**
+    //                  * PASSWORD UPDATE - June 05, 2017
+    //                  * description: the following code below checks if the user's password is currently still on MD5,
+    //                  * if it's on MD5, it will still accept it, once correctly matched then it will update the user's password
+    //                  * encryption.
+    //                  */
+
+    //                 // @var $requiresPasswordReset - Flag for password update when successfully logged-in
+    //                 $requiresPasswordReset = false;
+    //                 // @var $password - user provided password
+    //                 $password = $postValues['usr_password'];
+    //                 // @var $newPassword - variable holder for new password encryption
+    //                 $newPassword = null;
+    //                 // @var $md5Regex - regular expression for checking if the password in the user table is on MD5
+    //                 $md5Regex = '/^[a-f0-9]{32}$/';
+    //                 // @var $needReset - Flag if user need's to use the forgot password link
+    //                 $needReset = false;
+    //                 // @var $isPassExpired - Flag if user need's to renew password
+    //                 $isPassExpired = false;
+
+    //                 // if the user password in the user table is on MD5
+    //                 if (preg_match($md5Regex, $userData->usr_password)) {
+    //                     // set $requiresPasswordReset flag to "true" to update to new password encryption
+    //                     $requiresPasswordReset = true;
+    //                     // encrypt the password to new encryption
+    //                     $newPassword = $melisCoreAuth->encryptPassword($password);
+    //                     // set the MD5 value of the user provided password, to match its' value to the user table password field
+    //                     $password = md5($postValues['usr_password']);
+    //                 } else {
+    //                     // check if the user password in user table is already in the new password encryption algorithm
+    //                     if (strlen($userData->usr_password) != 60) {
+    //                         // get the 'use_mcrypt' config
+    //                         $useMcrypt = $melisMelisCoreConfig->getItem('/meliscore/datas/default/accounts')['use_mcrypt'];
+    //                         // encrypt the password to new encryption
+    //                         $newPassword = $melisCoreAuth->encryptPassword($password);
+
+    //                         /**
+    //                          * if 'use_mcrypt' is set to "true", then we'll use the mcrypt API for password checking,
+    //                          * however, this will still update the password to new password encryption.
+    //                          *
+    //                          * WARNING: mcrypt API is deprecated on PHP 7.1
+    //                          */
+    //                         if ($useMcrypt) {
+    //                             // salt config
+    //                             $salt = $melisMelisCoreConfig->getItem('/meliscore/datas/default/accounts')['salt'];
+    //                             // hash_method config
+    //                             $hash = $melisMelisCoreConfig->getItem('/meliscore/datas/default/accounts')['hash_method'];
+
+    //                             $enc = new \Laminas\Crypt\BlockCipher(new \Laminas\Crypt\Symmetric\Mcrypt([
+    //                                 'algo' => 'aes',
+    //                                 'mode' => 'cfb',
+    //                                 'hash' => $hash,
+    //                             ]));
+    //                             $enc->setKey($salt);
+
+    //                             // get the encrypted password value from the user table
+    //                             $userEncPassword = $userData->usr_password;
+    //                             // get the decrypted password value from the user table
+    //                             $decryptedPassword = $enc->decrypt($userData->usr_password);
+
+    //                             // try to login using AES SHA256 by matching the decrypted user password to the user provided password
+    //                             if ($password == $decryptedPassword) {
+    //                                 // set $requiresPasswordReset flag to "true" to update to new password encryption
+    //                                 $requiresPasswordReset = true;
+    //                                 // encrypt the password to new encryption
+    //                                 $newPassword = $melisCoreAuth->encryptPassword($password);
+    //                                 // set the MD5 value of the user provided password, to match its' value to the user table password field
+    //                                 $password = $userEncPassword;
+    //                             }
+    //                         } else {
+    //                             // asked the password to reset their password (by using "forgot password" link)
+    //                             $needReset = true;
+    //                         }
+    //                     } else {
+    //                         $userPassword = $userData->usr_password;
+    //                         if ($melisCoreAuth->isPasswordCorrect($password, $userPassword)) {
+    //                             // this will be used in setCredential method
+    //                             $password = $userPassword;
+    //                             $passwordHistory = $this->getServiceManager()->get('MelisUpdatePasswordHistoryService');
+    //                             $userLastPasswordUpdatedDate = $passwordHistory->getLastPasswordUpdatedDate($userData->usr_id)[0]['uph_password_updated_date'];
+
+    //                             if (!empty($config['password_validity_status']) && !empty($config['password_validity_lifetime'])) {
+    //                                 $passwordValidityLifetime = $config['password_validity_lifetime'];
+    //                                 $passwordExpiryDate = date('Y-m-d H:i:s', strtotime($userLastPasswordUpdatedDate . '+' . $passwordValidityLifetime . ' days'));
+    //                                 $currentDate = date('Y-m-d H:i:s');
+
+    //                                 if (strtotime($currentDate) > strtotime($passwordExpiryDate)) {
+    //                                     $isPassExpired = true;
+    //                                 }
+    //                             }
+    //                         }
+    //                     }
+    //                 }
+
+    //                 // Load config again if necessary (already done above, but keeping structure for safety)
+    //                 // if (file_exists($_SERVER['DOCUMENT_ROOT'] . '/../vendor/melisplatform/melis-core/config/app.login.php')) {
+    //                 //     $config = $this->getServiceManager()->get('MelisCoreConfig')->getItem('meliscore/datas/login');
+    //                 // } else {
+    //                 //     //get default
+    //                 //     $config = $this->getServiceManager()->get('MelisCoreConfig')->getItem('meliscore/datas/otherconfig_default/login');
+    //                 // }
+                    
+    //                 // Account Lock Status Check and Activation (Timer lock lapsed)
+    //                 if (isset($config['login_account_lock_status'])
+    //                     && !empty($config['login_account_lock_status'])
+    //                     && $config['login_account_type_of_lock'] == 'timer'
+    //                     && $userData->usr_status == self::USER_INACTIVE) {
+                        
+    //                     $melisCoreTableLogType = $this->getServiceManager()->get('MelisCoreTableLogType');
+    //                     $melisCoreTableLog = $this->getServiceManager()->get('MelisCoreTableLog');
+    //                     $logTypeId = current($melisCoreTableLogType->getEntryByField('logt_code', self::ACCOUNT_LOCKED)->toArray())['logt_id'];
+    //                     $dateAccountWasLocked = $melisCoreTableLog->getDateAccountWasLocked($logTypeId, $userData->usr_id);
+
+    //                     $days = (int) $config['login_account_duration_days'];
+    //                     $hours = (int) $config['login_account_duration_hours'];
+    //                     $minutes = (int) $config['login_account_duration_minutes'];
+    //                     $days += floor($hours / 24);
+    //                     $hours %= 24;
+
+    //                     $totalInSeconds = ($days * 24 * 60 * 60) + ($hours * 60 * 60) + ($minutes * 60);
+    //                     $interval = new DateInterval('PT' . $totalInSeconds . 'S');
+    //                     $accountWillUnlockDateTime = (new DateTime($dateAccountWasLocked))->add($interval)->format('Y-m-d H:i:s');
+    //                     $currentDateTime = (new DateTime('now'))->format('Y-m-d H:i:s');
+
+    //                     // Account is now unlocked
+    //                     if ($currentDateTime > $accountWillUnlockDateTime) {
+    //                         $melisUserTable = $this->getServiceManager()->get('MelisCore\Model\Tables\MelisUserTable');
+    //                         $userData->usr_status = self::USER_ACTIVE;
+    //                         $melisUserTable->save(['usr_status' => $userData->usr_status], $userData->usr_id);
+
+    //                         // COMMAND INJECTION: Account Unlocked (Alert Danger)
+    //                         $errorTitle = $translator->translate('tr_meliscore_common_error');
+    //                         $errorTxt = $translator->translate('tr_meliscore_login_auth_failed_too_many_failed_attempts');
+    //                         $jsCommand = "melisCoreTool.alertDanger('#loginprompt', '{$errorTitle}!', '{$errorTxt}');";
+
+    //                         $result = [
+    //                             'success' => false,
+    //                             'errors' => ['empty' => $errorTxt],
+    //                             'command' => $jsCommand, // <-- NEW COMMAND
+    //                             'textTitle' => 'Account unlocked',
+    //                             'textMessage' => 'Account unlocked',
+    //                             'datas' => [],
+    //                         ];
+    //                         $this->getEventManager()->trigger('meliscore_login_attempt_end', $this, array_merge($result, ['typeCode' => self::ACCOUNT_UNLOCKED, 'itemId' => $userData->usr_id]));
+    //                     }
+    //                 }
+
+    //                 // If user is active
+    //                 if ($userData->usr_status == self::USER_ACTIVE) {
+    //                     if(!$isPassExpired) {
+    //                         if (!$needReset) {
+    //                             $melisCoreAuth->getAdapter()->setIdentity($postValues['usr_login'])
+    //                                 ->setCredential($password);
+
+    //                             $authResult = $melisCoreAuth->authenticate(); // Renamed to $authResult to avoid conflict
+
+    //                             if ($authResult->isValid()) {
+    //                                 $user = $melisCoreAuth->getAdapter()->getResultRowObject();
+
+    //                                 $authEvent = $this->getEventManager()->trigger('melis_core_auth_pre_success', $this, [
+    //                                     'user' => $user,
+    //                                 ]);
+
+    //                                 if ($authEvent->stopped()) {
+    //                                     $result = $authEvent->last();
+    //                                 } else {
+    //                                     $this->finalizeSuccessfulLogin(
+    //                                         $user,
+    //                                         $userData,
+    //                                         $requiresPasswordReset,
+    //                                         $newPassword,
+    //                                         $postValues
+    //                                     );
+    //                                     // Default success: always use a command for redirection
+    //                                     $jsCommand = "window.location.replace('/melis');";
+    //                                     $result = [
+    //                                         'success' => true,
+    //                                         'errors' => [],
+    //                                         'command' => $jsCommand, // <-- FINAL SUCCESS COMMAND
+    //                                     ];
+    //                                 }
+                                    
+
+    //                                 // Update the rights of the user if it's not a custom role
+    //                                 if ($user->usr_role_id != self::ROLE_ID_CUSTOM) {
+    //                                     $tableUserRole = $this->getServiceManager()->get('MelisCoreTableUserRole');
+    //                                     $datasRole = $tableUserRole->getEntryById($user->usr_role_id);
+    //                                     if ($datasRole) {
+    //                                         $datasRole = $datasRole->current();
+    //                                         if (!empty($datasRole)) {
+    //                                             $user->usr_rights = $datasRole->urole_rights;
+    //                                         }
+    //                                     }
+    //                                 }
+
+    //                                 // Write session
+    //                                 $melisCoreAuth->getStorage()->write($user);
+
+    //                                 // Update Melis BO locale
+    //                                 $melisLangTable = $this->getServiceManager()->get('MelisCore\Model\Tables\MelisLangTable');
+    //                                 $datasLang = $melisLangTable->getEntryById($user->usr_lang_id);
+
+    //                                 if (!empty($datasLang->current())) {
+    //                                     $datasLang = $datasLang->current();
+    //                                     $container = new Container('meliscore');
+    //                                     $container['melis-lang-id'] = $user->usr_lang_id;
+    //                                     $container['melis-lang-locale'] = $datasLang->lang_locale;
+    //                                 }
+
+    //                                 // update last login
+    //                                 $loggedInDate = date('Y-m-d H:i:s');
+    //                                 $this->getEventManager()->trigger('melis_core_auth_login_ok', $this, [
+    //                                     'login_date' => $loggedInDate,
+    //                                     'usr_id' => $user->usr_id,
+    //                                 ]);
+
+    //                                 // update user password if the password is on MD5
+    //                                 if ($requiresPasswordReset) {
+    //                                     $userTable->save(['usr_password' => $newPassword,], $userData->usr_id);
+    //                                     $response = [];
+    //                                     $response['success'] = true;
+    //                                     $response['datas']['usr_id'] = $userData->usr_id;
+    //                                     $response['datas']['usr_password'] = $newPassword;
+    //                                     $this->getEventManager()->trigger('meliscore_update_password_history', $this, $response);
+    //                                 }
+
+    //                                 // Retrieving recent user logs on database
+    //                                 $this->getEventManager()->trigger('meliscore_get_recent_user_logs', $this, []);
+
+    //                                 // set same site cookie in built in php cookie (remember me)
+    //                                 $rememberMe = (int) $request->getPost('remember');
+    //                                 if ($rememberMe == 1) {
+    //                                     $this->rememberMe($postValues['usr_login'], $postValues['usr_password']);
+    //                                 } else {
+    //                                     $this->forgetMe($postValues['usr_login'], $postValues['usr_password']);
+    //                                 }
+                                    
+    //                             } else { 
+    //                                 // Authentication failed due to wrong password/etc.
+    //                                 if (file_exists($_SERVER['DOCUMENT_ROOT'] . '/../vendor/melisplatform/melis-core/config/app.login.php')) {
+    //                                     $config = $this->getServiceManager()->get('MelisCoreConfig')->getItem('meliscore/datas/login');
+    //                                 } else {
+    //                                     $config = $this->getServiceManager()->get('MelisCoreConfig')->getItem('meliscore/datas/otherconfig_default/login');
+    //                                 }
+                                    
+    //                                 // Generic error setup
+    //                                 $errorTitle = $translator->translate('tr_meliscore_common_error');
+    //                                 $errorTxt = $translator->translate('tr_meliscore_login_auth_Failed authentication');
+    //                                 $jsCommand = "melisCoreTool.alertDanger('#loginprompt', '{$errorTitle}!', '{$errorTxt}');";
+
+    //                                 // If login account lock is activated
+    //                                 if (isset($config['login_account_lock_status']) && !empty($config['login_account_lock_status'])) {
+    //                                     // Check if account should be locked now
+    //                                     $melisCoreUserService = $this->getServiceManager()->get('MelisCoreUser');
+    //                                     $userLastLoggedInDate = $melisCoreUserService->getUserLastLoggedInDate($userData->usr_id);
+    //                                     $passwordHistory = $this->getServiceManager()->get('MelisUpdatePasswordHistoryService');
+    //                                     $userLastPasswordUpdatedDate = $passwordHistory->getLastPasswordUpdatedDate($userData->usr_id)[0]['uph_password_updated_date'];
+    //                                     $melisCoreTableLogType = $this->getServiceManager()->get('MelisCoreTableLogType');
+    //                                     $melisCoreTableLog = $this->getServiceManager()->get('MelisCoreTableLog');
+                                        
+    //                                     $logTypeId = current($melisCoreTableLogType->getEntryByField('logt_code', self::WRONG_LOGIN_CREDENTIALS)->toArray())['logt_id'];
+    //                                     $dateAccountWasUnlocked = empty($melisCoreTableLogType->getEntryByField('logt_code', self::ACCOUNT_UNLOCKED)->toArray()) ? null : 
+    //                                         $melisCoreTableLog->getDateAccountWasUnlocked(current($melisCoreTableLogType->getEntryByField('logt_code', self::ACCOUNT_UNLOCKED)->toArray())['logt_id'], $userData->usr_id);
+                                        
+    //                                     $date = max($userLastLoggedInDate, $userLastPasswordUpdatedDate, $dateAccountWasUnlocked);
+    //                                     $numberOfFailedLoginAttempts = $melisCoreTableLog->getFailedLoginAttempts($logTypeId, $userData->usr_id, $date);
+
+    //                                     if ($numberOfFailedLoginAttempts >= $config['login_account_lock_number_of_attempts']) {
+    //                                         // dd('yes');
+    //                                         $melisUserTable = $this->getServiceManager()->get('MelisCore\Model\Tables\MelisUserTable');
+    //                                         $melisUserTable->save(['usr_status' => self::USER_INACTIVE], $userData->usr_id);
+                                            
+    //                                         // COMMAND INJECTION: Account Locked Notification (Complex JS)
+    //                                         $icon = '<div style="text-align: center;"><a href="#" class="glyphicons lock"><i></i></a></div>';
+    //                                         $adminEmail = $config['login_account_admin_email'];
+    //                                         $maxFailedAttemptsMsg = $translator->translate('tr_meliscore_login_maximum_amount_of_failed_login_attempts_message');
+    //                                         $contactAdminMsg = $translator->translate('tr_meliscore_login_contact_an_administrator_for_assistance_message');
+
+    //                                         $firstSentence = '<h4 style="margin-top: 10px; margin-bottom: 15px; text-align: center;">' . $maxFailedAttemptsMsg . '</h4>';
+    //                                         $thirdSentence = '<p style="text-align: center;"><i>' . str_replace('%s', '<strong>' . $adminEmail . '</strong>', $contactAdminMsg) . '</i></p>';
+
+    //                                         if ($config['login_account_type_of_lock'] == 'admin') {
+    //                                             $secondSentence = '<p style="text-align: center; font-size: 1rem;">' . $translator->translate('tr_meliscore_login_account_is_now_locked_message') . '</p>';
+    //                                             $message = $firstSentence . $secondSentence . $thirdSentence;
+    //                                         } else { // timer
+    //                                             $daysString = $translator->translate('tr_meliscore_login_locked_in_days_message');
+    //                                             $hoursString = $translator->translate('tr_meliscore_login_locked_in_hours_message');
+    //                                             $minutesString = $translator->translate('tr_meliscore_login_locked_in_minutes_message');
+                                                
+    //                                             $components = [];
+    //                                             if ($config['login_account_duration_days'] > 0) { $components[] = str_replace('%d', $config['login_account_duration_days'], $daysString); }
+    //                                             if ($config['login_account_duration_hours'] > 0) { $components[] = str_replace('%d', $config['login_account_duration_hours'], $hoursString); }
+    //                                             if ($config['login_account_duration_minutes'] > 0) { $components[] = str_replace('%d', $config['login_account_duration_minutes'], $minutesString); }
+                                                
+    //                                             $durationString = '<strong>' . (count($components) === 1 ? $components[0] : implode(', ', $components)) . "</strong>.";
+                                                
+    //                                             $secondSentence = '<p style="text-align: center; font-size: 1rem;">' . $translator->translate('tr_meliscore_login_account_is_now_locked_for_duration_message') . $durationString . '</p>';
+    //                                             $message = $firstSentence . $secondSentence . $thirdSentence;
+    //                                             // dd($message);
+    //                                         }
+                                            
+    //                                         $jsCommand = "melisHelper.melisKoNotification('" . $icon . "', '" . $message . "', []);";
+    //                                         $errorLogMessage = $translator->translate('tr_meliscore_login_auth_failed_too_many_failed_attempts');
+    //                                         // dd($jsCommand);
+    //                                         $result = [
+    //                                             'success' => false,
+    //                                             'errors' => ['empty' => $errorLogMessage],
+    //                                             'command' => $jsCommand, // <-- Final lock command
+    //                                             'textTitle' => 'Account locked',
+    //                                             'textMessage' => 'Account locked',
+    //                                             'datas' => [],
+    //                                         ];
+    //                                         $this->getEventManager()->trigger('meliscore_login_attempt_end', $this, array_merge($result, ['typeCode' => self::ACCOUNT_LOCKED, 'itemId' => $userData->usr_id]));
+    //                                     } else {
+    //                                         // dd('t');
+    //                                         // Auth Failed with lock enabled but not locked yet - use the general failed message
+    //                                         $errorLogMessage = $translator->translate('tr_meliscore_login_auth_failed_too_many_failed_attempts');
+    //                                         $jsCommand = "melisCoreTool.alertDanger('#loginprompt', '{$errorTitle}!', '{$errorLogMessage}');";
+                                            
+    //                                         $result = [
+    //                                             'success' => false,
+    //                                             'errors' => ['empty' => $errorLogMessage],
+    //                                             'command' => $jsCommand,
+    //                                             'textTitle' => 'Wrong credentials on login',
+    //                                             'textMessage' => 'Wrong credentials on login',
+    //                                             'datas' => [],
+    //                                         ];
+    //                                         $this->getEventManager()->trigger('meliscore_login_attempt_end', $this, array_merge($result, ['typeCode' => self::WRONG_LOGIN_CREDENTIALS, 'itemId' => $userData->usr_id]));
+    //                                     }
+    //                                 } else {
+    //                                     // Auth Failed - Lock disabled
+    //                                     $result = [
+    //                                         'success' => false,
+    //                                         'errors' => ['empty' => $errorTxt],
+    //                                         'command' => $jsCommand,
+    //                                         'textTitle' => 'Wrong credentials on login',
+    //                                         'textMessage' => 'Wrong credentials on login',
+    //                                         'datas' => [],
+    //                                     ];
+    //                                     $this->getEventManager()->trigger('meliscore_login_attempt_end', $this, array_merge($result, ['typeCode' => self::WRONG_LOGIN_CREDENTIALS, 'itemId' => $userData->usr_id]));
+    //                                 }
+    //                             }
+    //                         } else {
+    //                             // COMMAND INJECTION: Required Password Reset (Old Encryption/Mcrypt)
+    //                             $warningTitle = $translator->translate('tr_meliscore_common_warning');
+    //                             $warningMessage = $translator->translate('tr_meliscore_login_password_enc_update');
+    //                             $jsCommand = "melisCoreTool.alertWarning('#loginprompt', '<i class=\"fa fa-exclamation-triangle\"></i> ' + '{$warningTitle}' + '!', '{$warningMessage}');";
+                                
+    //                             $result = [
+    //                                 'success' => false,
+    //                                 'errors' => ['empty' => $warningMessage],
+    //                                 'command' => $jsCommand, // <-- NEW COMMAND
+    //                             ];
+    //                         }
+    //                     } else {
+    //                         // COMMAND INJECTION: Password Expired (Redirect)
+    //                         $melisCreatePwdSvc = $this->getServiceManager()->get('MelisCoreCreatePassword');
+    //                         $url = $melisCreatePwdSvc->createExpiredPasswordRequest($userData->usr_login,$userData->usr_email);
+    //                         $jsRedirectCommand = "window.location.replace('{$url}');";
+                            
+    //                         $result = [
+    //                             'success' => false,
+    //                             'command' => $jsRedirectCommand, // <-- NEW COMMAND (Redirect)
+    //                             'errors' => ['empty' => $translator->translate('tr_meliscore_login_password_enc_update')],
+    //                         ];
+    //                     }
+    //                 } else {
+    //                     // User is inactive (admin lock, or timer not lapsed)
+                        
+    //                     // We check lock status again to decide if we show the alert or the special lock notification
+    //                     // Since the complex lock notification logic is already handled above based on $numberOfFailedLoginAttempts
+    //                     // and sets the $result, we reuse the generic command for standard inactive user.
+                        
+    //                     $errorTitle = $translator->translate('tr_meliscore_common_error');
+    //                     $errorTxt = $translator->translate('tr_meliscore_login_auth_Failed authentication');
+    //                     $jsCommand = "melisCoreTool.alertDanger('#loginprompt', '{$errorTitle}!', '{$errorTxt}');";
+                        
+    //                     $result = [
+    //                         'success' => false,
+    //                         'errors' => ['empty' => $errorTxt],
+    //                         'command' => $jsCommand, // <-- NEW COMMAND
+    //                     ];
+
+    //                     // Account locked UI flags are no longer strictly needed but log logic remains
+    //                 }
+    //             } else {
+    //                 // User Data is Empty/Not Found
+    //                 $errorTitle = $translator->translate('tr_meliscore_common_error');
+    //                 $errorTxt = $translator->translate('tr_meliscore_login_auth_Failed authentication');
+    //                 $jsCommand = "melisCoreTool.alertDanger('#loginprompt', '{$errorTitle}!', '{$errorTxt}');";
+                    
+    //                 $result = [
+    //                     'success' => false,
+    //                     'errors' => ['empty' => $errorTxt],
+    //                     'command' => $jsCommand,
+    //                 ];
+    //             }
+    //         } else {
+    //             // Form Validation Errors
+    //             $errorMessage = $translator->translate('tr_meliscore_common_error');
+    //             $formMessages = $loginForm->getMessages();
+    //             $firstErrorMessage = '';
+    //             foreach ($formMessages as $elementName => $messages) {
+    //                 $firstErrorMessage = implode(' ', $messages);
+    //                 break;
+    //             }
+    //             $jsCommand = "melisCoreTool.alertDanger('#loginprompt', '{$errorMessage}!', '{$firstErrorMessage}');";
+                
+    //             $result = [
+    //                 'success' => false,
+    //                 'errors' => $formMessages,
+    //                 'command' => $jsCommand,
+    //             ];
+    //         }
+    //     } 
+    //     // dd($result);
+    //     return new JsonModel($result);
+    // }
 
     protected function getLoginConfig()
     {
@@ -1306,5 +1771,103 @@ class MelisAuthController extends MelisAbstractActionController
 
 
         return $view;
+    }
+
+    private function finalizeSuccessfulLogin(
+        $user,
+        $userData,
+        bool $requiresPasswordReset,
+        ?string $newPassword,
+        array $postValues
+    ) {
+        $sm            = $this->getServiceManager();
+        $melisCoreAuth = $sm->get('MelisCoreAuth');
+        $userTable     = $sm->get('MelisCoreTableUser');
+
+        /** -------------------------------
+         * Update rights if not custom role
+         * ------------------------------- */
+        if ($user->usr_role_id != self::ROLE_ID_CUSTOM) {
+            $tableUserRole = $sm->get('MelisCoreTableUserRole');
+            $datasRole = $tableUserRole->getEntryById($user->usr_role_id);
+
+            if ($datasRole && $datasRole->current()) {
+                $user->usr_rights = $datasRole->current()->urole_rights;
+            }
+        }
+
+        /** -------------------------------
+         * Write session
+         * ------------------------------- */
+        $melisCoreAuth->getStorage()->write($user);
+
+        /** -------------------------------
+         * Update Melis BO locale
+         * ------------------------------- */
+        $melisLangTable = $sm->get('MelisCore\Model\Tables\MelisLangTable');
+        $datasLang = $melisLangTable->getEntryById($user->usr_lang_id);
+
+        if ($datasLang && $datasLang->current()) {
+            $container = new Container('meliscore');
+            $container['melis-lang-id']     = $user->usr_lang_id;
+            $container['melis-lang-locale'] = $datasLang->current()->lang_locale;
+        }
+
+        /** -------------------------------
+         * Trigger login OK event
+         * ------------------------------- */
+        $loggedInDate = date('Y-m-d H:i:s');
+        $this->getEventManager()->trigger('melis_core_auth_login_ok', $this, [
+            'login_date' => $loggedInDate,
+            'usr_id'     => $user->usr_id,
+        ]);
+
+        /** -------------------------------
+         * Update password if needed
+         * ------------------------------- */
+        if ($requiresPasswordReset && !empty($newPassword)) {
+            $userTable->save(
+                ['usr_password' => $newPassword],
+                $userData->usr_id
+            );
+
+            $this->getEventManager()->trigger(
+                'meliscore_update_password_history',
+                $this,
+                [
+                    'success' => true,
+                    'datas' => [
+                        'usr_id'       => $userData->usr_id,
+                        'usr_password' => $newPassword,
+                    ],
+                ]
+            );
+        }
+
+        /** -------------------------------
+         * Retrieve recent logs
+         * ------------------------------- */
+        $this->getEventManager()->trigger(
+            'meliscore_get_recent_user_logs',
+            $this,
+            []
+        );
+
+        /** -------------------------------
+         * Remember me handling
+         * ------------------------------- */
+        $rememberMe = (int) ($postValues['remember'] ?? 0);
+
+        if ($rememberMe === 1) {
+            $this->rememberMe(
+                $postValues['usr_login'],
+                $postValues['usr_password']
+            );
+        } else {
+            $this->forgetMe(
+                $postValues['usr_login'],
+                $postValues['usr_password']
+            );
+        }
     }
 }
