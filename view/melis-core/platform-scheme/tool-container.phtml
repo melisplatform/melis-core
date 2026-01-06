@@ -395,6 +395,121 @@ if ($headerTitleLen > 13) {
                                                     </div>
                                                 </div>
 
+                                                <div class="accordion-item login-page">
+                                                    <h6 class="accordion-header">
+                                                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#login-page" aria-expanded="false" aria-controls="login-page">
+                                                            Login page
+                                                        </button>
+                                                    </h6>
+                                                </div>
+                                                <div id="login-page" class="accordion-collapse collapse" data-bs-parent="#accordion-sidebar">
+                                                    <div class="accordion-body">
+                                                        <!-- to be added under footer after login page - need added on db -->
+                                                        <div class="form-group">
+                                                            <label for="melis_core_platform_theme_login_page_font_size" class="d-flex flex-row justify-content-between">
+                                                                <div class="label-text">Login page form text font size</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the login page form text font size"></i>
+                                                            </label>
+                                                            <div class="row">
+                                                                <div class="col-9">
+                                                                    <div id="login-page-font-size-range-slider-min" class="login-page-font-size-range-slider-min" style="border: 0; color: #f6931f; font-weight: bold;"></div>
+                                                                </div>
+                                                                <div class="col-3 g-0">
+                                                                    <input type="text" name="melis_core_platform_theme_login_page_font_size" id="melis_core_platform_theme_login_page_font_size" class="login-page-font-size-range-slider-value range-slider-value form-control" />
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="form-group">
+                                                            <label for="melis_core_platform_theme_login_page_text_color" class="d-flex flex-row justify-content-between">
+                                                                <div class="label-text">Login page form text color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the login page form text color by typing the hexadecimal color code or by using the color picker"></i>
+                                                            </label>
+                                                            <div class="input-group platform-scheme osta_color_code">
+                                                                <input type="text" name="melis_core_platform_theme_login_page_text_color" id="melis_core_platform_theme_login_page_text_color" class="form-control minicolor-hex" data-control="hue" placeholder="Edit login page form text color" value="#e61c23">
+                                                                <span class="input-group-addon">
+                                                                    <input type="hidden" class="minicolor" value="#e61c23" />
+                                                                </span>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="form-group">
+                                                            <label for="melis_core_platform_theme_login_page_form_submit_btn_font_size" class="d-flex flex-row justify-content-between">
+                                                                <div class="label-text">Login page form submit button text font size</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the login page form submit button text font size"></i>
+                                                            </label>
+                                                            <div class="row">
+                                                                <div class="col-9">
+                                                                    <div id="login-page-submit-btn-font-size-range-slider-min" class="login-page-submit-btn-font-size-range-slider-min" style="border: 0; color: #f6931f; font-weight: bold;"></div>
+                                                                </div>
+                                                                <div class="col-3 g-0">
+                                                                    <input type="text" name="melis_core_platform_theme_login_page_form_submit_btn_font_size" id="melis_core_platform_theme_login_page_form_submit_btn_font_size" class="login-page-submit-btn   -font-size-range-slider-value range-slider-value form-control" />
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="form-group">
+                                                            <label for="melis_core_platform_theme_login_page_submit_btn_bg_color" class="d-flex flex-row justify-content-between">
+                                                                <div class="label-text">Login page form submit button background color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the login page submit button background color by typing the hexadecimal color code or by using the color picker"></i>
+                                                            </label>
+                                                            <div class="input-group platform-scheme osta_color_code">
+                                                                <input type="text" name="melis_core_platform_theme_login_page_submit_btn_bg_color" id="melis_core_platform_theme_login_page_submit_btn_bg_color" class="form-control minicolor-hex" data-control="hue" placeholder="Edit login page form submit button background color" value="#e61c23">
+                                                                <span class="input-group-addon">
+                                                                    <input type="hidden" class="minicolor" value="#e61c23" />
+                                                                </span>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="form-group">
+                                                            <label for="melis_core_platform_theme_login_page_submit_btn_border_color" class="d-flex flex-row justify-content-between">
+                                                                <div class="label-text">Login page form submit button border color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the login page form submit button border color by typing the hexadecimal color code or by using the color picker"></i>
+                                                            </label>
+                                                            <div class="input-group platform-scheme osta_color_code">
+                                                                <input type="text" name="melis_core_platform_theme_login_page_submit_btn_border_color" id="melis_core_platform_theme_login_page_submit_btn_border_color" class="form-control minicolor-hex" data-control="hue" placeholder="Edit login page form submit button border color" value="#e61c23">
+                                                                <span class="input-group-addon">
+                                                                    <input type="hidden" class="minicolor" value="#e61c23" />
+                                                                </span>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="form-group">
+                                                            <label for="melis_core_platform_theme_login_page_form_bottom_text_font_size" class="d-flex flex-row justify-content-between">
+                                                                <div class="label-text">Login page form bottom text font size</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the login page form bottom text font size"></i>
+                                                            </label>
+                                                            <div class="row">
+                                                                <div class="col-9">
+                                                                    <div id="login-page-form-bottom-text-font-size-range-slider-min" class="login-page-form-bottom-text-font-size-range-slider-min" style="border: 0; color: #f6931f; font-weight: bold;"></div>
+                                                                </div>
+                                                                <div class="col-3 g-0">
+                                                                    <input type="text" name="melis_core_platform_theme_login_page_form_bottom_text_font_size" id="melis_core_platform_theme_login_page_form_bottom_text_font_size" class="login-page-form-bottom-text-font-size-range-slider-value range-slider-value form-control" />
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="form-group">
+                                                            <label for="melis_core_platform_theme_login_page_form_bottom_remember_text_color" class="d-flex flex-row justify-content-between">
+                                                                <div class="label-text">Login page bottom remember text color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the login page form bottom remember text color by typing the hexadecimal color code or by using the color picker"></i>
+                                                            </label>
+                                                            <div class="input-group platform-scheme osta_color_code">
+                                                                <input type="text" name="melis_core_platform_theme_login_page_form_bottom_remember_text_color" id="melis_core_platform_theme_login_page_form_bottom_remember_text_color" class="form-control minicolor-hex" data-control="hue" placeholder="Edit login page form bottom remember text color" value="#686868">
+                                                                <span class="input-group-addon">
+                                                                    <input type="hidden" class="minicolor" value="#686868" />
+                                                                </span>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="form-group">
+                                                            <label for="melis_core_platform_theme_login_page_form_bottom_forgot_password_text_color" class="d-flex flex-row justify-content-between">
+                                                                <div class="label-text">Login page bottom forgot password text color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the login page form bottom forgot password text color by typing the hexadecimal color code or by using the color picker"></i>
+                                                            </label>
+                                                            <div class="input-group platform-scheme osta_color_code">
+                                                                <input type="text" name="melis_core_platform_theme_login_page_form_bottom_forgot_password_text_color" id="melis_core_platform_theme_login_page_form_bottom_forgot_password_text_color" class="form-control minicolor-hex" data-control="hue" placeholder="Edit login page form bottom forgot password text color" value="#e61c23">
+                                                                <span class="input-group-addon">
+                                                                    <input type="hidden" class="minicolor" value="#e61c23" />
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                        <!-- end to be added under footer after login page - need added on db -->
+                                                    </div>
+                                                </div>
+
                                                 <div class="accordion-item header">
                                                     <h6 class="accordion-header">
                                                         <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#header-navigation" aria-expanded="false" aria-controls="header-navigation">
@@ -602,7 +717,6 @@ if ($headerTitleLen > 13) {
                                                     </div>
                                                 </div>
                                                 
-                                                <!-- added static drag and drop elements -->
                                                 <div class="accordion-item component-dragndrop">
                                                     <h6 class="accordion-header">
                                                         <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#component-dragndrop" aria-expanded="false" aria-controls="component-dragndrop">

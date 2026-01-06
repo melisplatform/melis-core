@@ -1606,12 +1606,12 @@ div.glyphicons-social.glyphicon-primary i:before {
     background-color: <?= $userProfileEditBtnBgColor; ?> !important;
 }
 #btnUserInfoEdit .fa {
-    color: <?= $userProfileEditBtnIconColor; ?> !important;
+    color: <?= $userProfileEditBtnIconColor; ?>;
 }
 #btnUserInfoEdit:hover {
     background-color: <?= $userProfileEditBtnHoverBgColor; ?> !important;
 }
-#bntUserInfoEdit:hover .fa {
+#btnUserInfoEdit:hover .fa {
     color: <?= $userProfileEditBtnHoverIconColor; ?> !important;
 }
 /** #btnUserInfoEdit border-color all same on hover */
@@ -1701,6 +1701,22 @@ div.glyphicons-social.glyphicon-primary i:before {
     color: <?= $footerTextColor; ?> !important;
 }
 /** login footer */
+#login_submit {
+    background-color: <?= $primaryColor; ?> !important;
+    border-color: <?= $primaryColor; ?> !important;
+}
+#login_submit:hover {
+    color: <?= $primaryColor; ?> !important;
+    border-color: <?= $primaryColor; ?> !important;
+}
+#idformmeliscorelogin .cb-cont .cbmask-outer {
+    border-color: <?= $primaryColor; ?> !important;
+}
+#idformmeliscorelogin .forgot-password a:hover,
+#idformmeliscorelogin .forgot-password a {
+    color: <?= $primaryColor; ?> !important;    
+}
+#login_submit,
 #id_meliscore_login_footer .footer a,
 #id_meliscore_login_footer .footer p {
     color: <?= $loginPagefooterTextColor; ?> !important;

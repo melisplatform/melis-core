@@ -151,7 +151,7 @@ return array(
     'tr_meliscore_platform_theme_footer_link_text_color_tooltip' => 'Change the link text color by typing the hexadecimal color code or by using the color picker',
     'tr_meliscore_platform_theme_footer_text_color' => 'Footer text color',
     'tr_meliscore_platform_theme_footer_text_color_tooltip' => 'Change the text color by typing the hexadecimal color code or by using the color picker',
-    'tr_meliscore_platform_theme_header_text_icon_color' => 'Header navigation text and icon colo',
+    'tr_meliscore_platform_theme_header_text_icon_color' => 'Header navigation text and icon color',
     'tr_meliscore_platform_theme_header_text_icon_color_tooltip' => 'Change the navigation text and icon color by typing the hexadecimal color code or by using the color picker',
     'tr_meliscore_platform_theme_header_text_icon_active_color'  => 'Header navigation text and icon active color',
     'tr_meliscore_platform_theme_header_text_icon_active_color_tooltip'  => 'Change the navigation text and icon active color by typing the hexadecimal color code or by using the color picker',
