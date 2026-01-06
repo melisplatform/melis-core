@@ -18,6 +18,7 @@
     $userProfileImgBorderRadius             = $this->melis_core_platform_theme_user_profile_img_border_radius;
     $userProfileNameTextColor               = $this->melis_core_platform_theme_user_profile_name_text_color;
     $userProfileStatusTextIconColor         = $this->melis_core_platform_theme_user_profile_status_text_icon_color;
+
     $userProfileEditBtnBgColor              = $this->melis_core_platform_theme_user_profile_edit_btn_bg_color;
     $userProfileEditBtnBorderColor          = $this->melis_core_platform_theme_user_profile_edit_btn_border_color;
     $userProfileEditBtnIconColor            = $this->melis_core_platform_theme_user_profile_edit_btn_icon_color;
@@ -1602,21 +1603,21 @@ div.glyphicons-social.glyphicon-primary i:before {
     border-radius: <?= $userProfileImgBorderRadius; ?> !important;
 }
 #btnUserInfoEdit {
-    background-color: <?= $primaryColor; ?> !important;
+    background-color: <?= $userProfileEditBtnBgColor; ?> !important;
 }
 #btnUserInfoEdit .fa {
-    color: #fff !important;
+    color: <?= $userProfileEditBtnIconColor; ?> !important;
 }
 #btnUserInfoEdit:hover {
-    background-color: #fff !important;
+    background-color: <?= $userProfileEditBtnHoverBgColor; ?> !important;
 }
 #bntUserInfoEdit:hover .fa {
-    color: <?= $primaryColor; ?> !important;
+    color: <?= $userProfileEditBtnHoverIconColor; ?> !important;
 }
 /** #btnUserInfoEdit border-color all same on hover */
 .sidebar.sidebar-inverse .user-profile ul li.active, 
 .sidebar.sidebar-inverse .user-profile ul li.active:hover {
-    border-color: #2c2c2c !important;
+    border-color: <?= $userProfileEditBtnBorderColor; ?> !important;
 }
 /* #user-name-link */
 .sidebar.sidebar-inverse .user-profile a {
