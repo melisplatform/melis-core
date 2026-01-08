@@ -316,15 +316,32 @@ var melisTinyMCE = (function() {
 		const dialogInterval = setInterval(() => {
 			const dialog = document.querySelector('.moxman-container'+label);
 				if (dialog) {
-					// dialog repositioning
-					handleDialogReposition(dialog, rect, editorContainer);
-					
-					// lock moxie dialog position
-					//observeAndLockMoxieDialogPosition(dialog, rect, editorContainer);
+					const style = window.getComputedStyle(dialog);
+					const isVisible = style.display !== 'none' && 
+									style.visibility !== 'hidden' && 
+									style.opacity !== '0';
+					if (isVisible) {
+						// ensure dialog is displayed					
+						if (dialog.style.display === 'none') {
+							dialog.style.display = 'block';
+						}
 
-					clearInterval(dialogInterval);
+						if (dialog.style.visibility === 'hidden') {
+							dialog.style.visibility = 'visible';
+						}
+
+						// dialog repositioning
+						handleDialogReposition(dialog, rect, editorContainer);
+						
+						clearInterval(dialogInterval);
+					}
 				}
-		}, 100);
+		}, 300);
+
+		// safety timeout to prevent infinite interval
+		setTimeout(() => {
+			clearInterval(dialogInterval);
+		}, 5000); // 5 second timeout
 	}
 
 	// add styles to position near the cursor or selection
@@ -357,38 +374,46 @@ var melisTinyMCE = (function() {
 				rect = { top: editorTop + editorHeight / 2, left: editorLeft + editorWidth / 2, width: 0 };
 			}
 			
-			// Get viewport dimensions
+			// get viewport dimensions
 			const viewportHeight = window.innerHeight;
 			const viewportWidth = window.innerWidth;
 			const scrollY = window.scrollY;
 			const scrollX = window.scrollX;
 			
-			// Calculate centered position
+			// calculate centered position
 			let top = rect.top + scrollY - (dialogHeight / 2);
 			let left = rect.left + scrollX - (dialogWidth / 2) + (rect.width / 2);
 			
-			// Ensure dialog stays within viewport bounds (with padding)
+			// ensure dialog stays within viewport bounds (with padding)
 			const padding = 20;
 				top = Math.max(padding, Math.min(top, scrollY + viewportHeight - dialogHeight - padding));
 				left = Math.max(padding, Math.min(left, scrollX + viewportWidth - dialogWidth - padding));
 			
-			// If dialog would be cut off at bottom, position it higher
+			// if dialog would be cut off at bottom, position it higher
 			if (top + dialogHeight > scrollY + viewportHeight - padding) {
 				top = scrollY + viewportHeight - dialogHeight - padding;
 			}
 			
-			// If dialog would be cut off at top, position it lower
+			// if dialog would be cut off at top, position it lower
 			if (top < scrollY + padding) {
 				top = scrollY + padding;
 			}
 
-			dialog.style.position = 'fixed'; // Use fixed instead of absolute for better control
-			dialog.style.top = `${top}px`;
+			const isInIframe = window.self !== window.top;
+
+			dialog.style.position = 'fixed'; // use fixed instead of absolute for better control
+
+			if (isInIframe) {
+				dialog.style.top = `${top}px`;
+			}
+			else {
+				dialog.style.top = `20%`;
+			}
+			
 			dialog.style.left = `${left}px`;
 			dialog.style.maxHeight = `${viewportHeight - (padding * 2)}px`;
 			dialog.style.overflowY = 'auto';
 
-			// Ensure dialog is visible
 			dialog.scrollIntoView({ behavior: "smooth", block: "center", inline: "nearest" });
 	}
 

@@ -38,6 +38,7 @@ img {
     left: 50% !important;
     transform: translateX(-50%) !important;
     margin-left: 0 !important;
+    /* top: 20% !important; */
 }
 .tox-tinymce-aux .tox-dialog {
 	left: initial !important;
