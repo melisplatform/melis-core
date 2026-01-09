@@ -420,10 +420,7 @@ var melisTinyMCE = (function() {
 			}
 	}
 
-	function handleDialogReposition(dialog, rect, editorContainer) {
-		console.log(`handleDialogReposition()...`);
-		console.log({rect, editorContainer});
-		
+	function handleDialogReposition(dialog, rect, editorContainer) {	
 		const dialogWidth = dialog.offsetWidth || 600;
 		const dialogHeight = dialog.offsetHeight || 400;
 		
