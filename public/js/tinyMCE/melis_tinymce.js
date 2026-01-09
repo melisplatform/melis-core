@@ -140,7 +140,8 @@ var melisTinyMCE = (function() {
 					rect 			 = selection.getBoundingClientRect(),
 					editorContainer  = editor.getContainer().getBoundingClientRect(),
 					moxieLabel		 = `[aria-label="Media Library"]`;
-
+					console.log(`editor.on("ExecCommand")...`);
+					console.log({rect});
 					if (e.command === "mceLink") {
 						// wait for DOM to update
 						setTimeout(function() {
@@ -202,7 +203,7 @@ var melisTinyMCE = (function() {
 					{
 						selector: '.tox-tbtn[aria-label="Mini Template"]',
 					}
-				];
+					];
 					buttons.forEach(({ selector }) => {
 						const button = editor.editorContainer.querySelector(selector) ?? document.querySelector(selector);
 							if (button) {
@@ -362,6 +363,8 @@ var melisTinyMCE = (function() {
 	}
 
 	function handleDialogReposition(dialog, rect, editorContainer) {
+		console.log(`handleDialogReposition()...`);
+		console.log({rect});
 		const editorTop = editorContainer.top + window.scrollY,
 			editorLeft = editorContainer.left + window.scrollX,
 			editorWidth = editorContainer.width,
@@ -370,6 +373,7 @@ var melisTinyMCE = (function() {
 		const dialogWidth = dialog.offsetWidth || 600, // fallback width
 			dialogHeight = dialog.offsetHeight || 400; // fallback height
 
+			console.log(`!rect: `, !rect);
 			if (!rect) {
 				rect = { top: editorTop + editorHeight / 2, left: editorLeft + editorWidth / 2, width: 0 };
 			}
