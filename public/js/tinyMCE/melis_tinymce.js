@@ -134,87 +134,145 @@ var melisTinyMCE = (function() {
 		});
 	
 		editor.on("init", function(e) {
-			// for Insert/Edit Link and other e.command
-			editor.on("ExecCommand", function(e) {
-				var selection 		 = editor.selection.getRng(),
-					rect 			 = selection.getBoundingClientRect(),
-					editorContainer  = editor.getContainer().getBoundingClientRect(),
-					moxieLabel		 = `[aria-label="Media Library"]`;
-					console.log(`editor.on("ExecCommand")...`);
-					console.log({rect});
-					if (e.command === "mceLink") {
-						// wait for DOM to update
-						setTimeout(function() {
-							let $dialogTitle 	= document.querySelector(".tox-dialog__title"),
-								$dialogBody 	= document.querySelector(".tox-dialog__body-content"),
-								$browseUrl  	= $dialogBody.querySelector(".tox-form__controls-h-stack .tox-browse-url");						  
-
-							// creates new custom button and set attributes
-							let $customButton = document.createElement("button");
-
-								$customButton.innerHTML = '<i class="icon icon-sitemap fa fa-sitemap" style="font-family: FontAwesome; position: relative; font-size: 16px; display: block; text-align: center;"></i>';
-								//$customButton.classList.add("mce-btn", "mce-open");
-
-								setMultipleAttributes($customButton, { 
-									"title" : "Site tree view",
-									"id"	: "mce-link-tree",
-									"style" : "width: 34px; height: 34px;",
-									"class" : "mce-btn mce-open"
-								});
-
-								// insert the new button after browse URL button
-								$browseUrl.parentNode.insertBefore( $customButton, $browseUrl.nextElementSibling );
-
-								// event handler of new button
-								$customButton.onclick = function() {
-									// show modal for #id_meliscms_find_page_tree
+			// store button handlers to prevent duplicates
+			const buttonHandlers = new Map();
+			let execCommandHandler = null;
+			
+			// set up ExecCommand listener once
+			execCommandHandler = editor.on("ExecCommand", function(e) {
+				// get selection rect - validate it first
+				let rect = null;
+				let editorContainer = null;
+				
+				try {
+					const selection = editor.selection.getRng();
+					if (selection && !selection.collapsed) {
+						rect = selection.getBoundingClientRect();
+					}
+				} catch (err) {
+					console.warn('Could not get selection rect:', err);
+				}
+				
+				try {
+					editorContainer = editor.getContainer().getBoundingClientRect();
+				} catch (err) {
+					console.warn('Could not get editor container rect:', err);
+				}
+				
+				const moxieLabel = `[aria-label="Media Library"]`;
+				
+				if (e.command === "mceLink") {
+					setTimeout(function() {
+						let $dialogTitle = document.querySelector(".tox-dialog__title"),
+							$dialogBody = document.querySelector(".tox-dialog__body-content"),
+							$browseUrl = $dialogBody?.querySelector(".tox-form__controls-h-stack .tox-browse-url");
+						
+						if (!$browseUrl) return;
+						
+						// check if button already exists
+						let $customButton = document.getElementById("mce-link-tree");
+						if (!$customButton) {
+							$customButton = document.createElement("button");
+							$customButton.innerHTML = '<i class="icon icon-sitemap fa fa-sitemap" style="font-family: FontAwesome; position: relative; font-size: 16px; display: block; text-align: center;"></i>';
+							
+							setMultipleAttributes($customButton, { 
+								"title": "Site tree view",
+								"id": "mce-link-tree",
+								"style": "width: 34px; height: 34px;",
+								"class": "mce-btn mce-open"
+							});
+							
+							$browseUrl.parentNode.insertBefore($customButton, $browseUrl.nextElementSibling);
+							
+							$customButton.onclick = function() {
+								if (typeof melisLinkTree !== 'undefined') {
 									melisLinkTree.createTreeModal();
-								};
-
-								// scroll to view dialog box, add styles to position near the cursor or selection
-								setTimeout(() => openDialogNearCursor('.tox-dialog', rect, editorContainer), 100);
-								
-								// .tox-browser-url button click
-								toxBrowseUrl(rect, editorContainer, moxieLabel);
-						}, 10);
-					} 
-					else if (e.command === "mceInsertFile") {
-						// media library, scroll to view moxman container
-						moveMoxieDialogNear(rect, editorContainer, moxieLabel);
-
-						// media library, create new folder
-						moxieCreateNewFolder(rect, editorContainer);
-
-						// media library, create new folder, create button
-						moxieCreateButton(rect, editorContainer);
-					}
-					else if (e.command === "mceMedia" || e.command === "mceCodeEditor" || e.command === "mceAnchor" || e.command === "mceShowCharmap" || e.command === "mceEmoticons") {
-						// scroll to view dialog box, add styles to position near the cursor or selection
+								}
+							};
+						}
+						
 						setTimeout(() => openDialogNearCursor('.tox-dialog', rect, editorContainer), 100);
-
-						// .tox-browser-url button click
 						toxBrowseUrl(rect, editorContainer, moxieLabel);
-					}
-
-				const buttons = [
-					{
-						selector: '.tox-tbtn[aria-label="' + tinymce.util.I18n.translate("Insert/edit image") + '"]',
-					},
-					{
-						selector: '.tox-tbtn[aria-label="Mini Template"]',
-					}
-					];
-					buttons.forEach(({ selector }) => {
-						const button = editor.editorContainer.querySelector(selector) ?? document.querySelector(selector);
-							if (button) {
-								button.addEventListener("click", () => {
-									setTimeout(() => openDialogNearCursor('.tox-dialog', rect, editorContainer), 100);
-
-									// .tox-browser-url button click
-									toxBrowseUrl(rect, editorContainer, moxieLabel);
-								});
+					}, 10);
+				} 
+				else if (e.command === "mceInsertFile") {
+					moveMoxieDialogNear(rect, editorContainer, moxieLabel);
+					moxieCreateNewFolder(rect, editorContainer);
+					moxieCreateButton(rect, editorContainer);
+				}
+				else if (e.command === "mceMedia" || e.command === "mceCodeEditor" || e.command === "mceAnchor" || e.command === "mceShowCharmap" || e.command === "mceEmoticons") {
+					setTimeout(() => openDialogNearCursor('.tox-dialog', rect, editorContainer), 100);
+					toxBrowseUrl(rect, editorContainer, moxieLabel);
+				}
+			});
+			
+			// set up button listeners once, not on every ExecCommand
+			const buttons = [
+				{
+					selector: '.tox-tbtn[aria-label="' + tinymce.util.I18n.translate("Insert/edit image") + '"]',
+				},
+				{
+					selector: '.tox-tbtn[aria-label="Mini Template"]',
+				}
+			];
+			
+			// use a flag or check to ensure listeners are only added once
+			const setupButtonListeners = () => {
+				buttons.forEach(({ selector }) => {
+					// Skip if handler already exists for this selector
+					if (buttonHandlers.has(selector)) return;
+					
+					const button = editor.editorContainer?.querySelector(selector) ?? document.querySelector(selector);
+					if (button) {
+						const handler = () => {
+							// Get fresh rect and editorContainer when button is clicked
+							let rect = null;
+							let editorContainer = null;
+							
+							try {
+								const selection = editor.selection.getRng();
+								if (selection && !selection.collapsed) {
+									rect = selection.getBoundingClientRect();
+								}
+							} catch (err) {
+								// Ignore
 							}
-					});
+							
+							try {
+								editorContainer = editor.getContainer().getBoundingClientRect();
+							} catch (err) {
+								// Ignore
+							}
+							
+							setTimeout(() => openDialogNearCursor('.tox-dialog', rect, editorContainer), 100);
+							toxBrowseUrl(rect, editorContainer, `[aria-label="Media Library"]`);
+						};
+						
+						button.addEventListener("click", handler);
+						buttonHandlers.set(selector, { button, handler });
+					}
+				});
+			};
+			
+			// set up button listeners after a short delay to ensure buttons exist
+			setTimeout(setupButtonListeners, 500);
+			
+			// also try to set up when toolbar is ready
+			editor.on("NodeChange", function() {
+				if (buttonHandlers.size < buttons.length) {
+					setupButtonListeners();
+				}
+			});
+			
+			// cleanup on editor removal
+			editor.on("remove", function() {
+				if (execCommandHandler) {
+					execCommandHandler.off();
+				}
+				buttonHandlers.forEach(({ button, handler }) => {
+					button.removeEventListener("click", handler);
+				});
+				buttonHandlers.clear();
 			});
 		});
 
@@ -364,61 +422,121 @@ var melisTinyMCE = (function() {
 
 	function handleDialogReposition(dialog, rect, editorContainer) {
 		console.log(`handleDialogReposition()...`);
-		console.log({rect});
-		const editorTop = editorContainer.top + window.scrollY,
-			editorLeft = editorContainer.left + window.scrollX,
-			editorWidth = editorContainer.width,
-			editorHeight = editorContainer.height;
+		console.log({rect, editorContainer});
+		
+		const dialogWidth = dialog.offsetWidth || 600;
+		const dialogHeight = dialog.offsetHeight || 400;
+		
+		// Get viewport dimensions
+		const viewportHeight = window.innerHeight;
+		const viewportWidth = window.innerWidth;
+		const padding = 20;
+		
+		// Validate rect - check if it has meaningful values
+		const isRectValid = rect && 
+						typeof rect.top === 'number' && 
+						typeof rect.left === 'number' &&
+						!isNaN(rect.top) && 
+						!isNaN(rect.left) &&
+						// Check if rect has non-zero dimensions or valid position
+						(rect.width > 0 || rect.height > 0 || (rect.top !== 0 || rect.left !== 0));
+		
+		// Validate editorContainer
+		const isEditorContainerValid = editorContainer && 
+									typeof editorContainer.top === 'number' &&
+									typeof editorContainer.width === 'number' &&
+									!isNaN(editorContainer.top) &&
+									!isNaN(editorContainer.width) &&
+									editorContainer.width > 0 &&
+									editorContainer.height > 0;
+		
+		let top, left;
+		
+		if (isRectValid) {
+			// Use rect position (cursor/selection position)
+			// For position: fixed, use viewport-relative coordinates (no scroll)
+			top = rect.top - (dialogHeight / 2);
+			left = rect.left - (dialogWidth / 2) + ((rect.width || 0) / 2);
+		} else if (isEditorContainerValid) {
+			// Fallback to editor center (viewport-relative, no scroll)
+			top = editorContainer.top + (editorContainer.height / 2) - (dialogHeight / 2);
+			left = editorContainer.left + (editorContainer.width / 2) - (dialogWidth / 2);
+		} else {
+			// Final fallback: center in viewport
+			top = (viewportHeight / 2) - (dialogHeight / 2);
+			left = (viewportWidth / 2) - (dialogWidth / 2);
+		}
+		
+		// Ensure dialog stays within viewport bounds
+		top = Math.max(padding, Math.min(top, viewportHeight - dialogHeight - padding));
+		left = Math.max(padding, Math.min(left, viewportWidth - dialogWidth - padding));
+		
+		// If dialog would be cut off at bottom, position it higher
+		if (top + dialogHeight > viewportHeight - padding) {
+			top = viewportHeight - dialogHeight - padding;
+		}
+		
+		// If dialog would be cut off at top, position it lower
+		if (top < padding) {
+			top = padding;
+		}
 
-		const dialogWidth = dialog.offsetWidth || 600, // fallback width
-			dialogHeight = dialog.offsetHeight || 400; // fallback height
-
-			console.log(`!rect: `, !rect);
-			if (!rect) {
-				rect = { top: editorTop + editorHeight / 2, left: editorLeft + editorWidth / 2, width: 0 };
+		const isInIframe = window.self !== window.top;
+		dialog.style.position = 'fixed';
+		
+		// Handle parent window case (when dialog is in parent, not iframe)
+		if (isInIframe) {
+			try {
+				const label = '[aria-label="Media Library"]';
+				const parentDialog = window.parent.document.querySelector('.moxman-container' + label);
+				if (parentDialog && parentDialog === dialog) {
+					// Dialog is in parent window, recalculate for parent viewport
+					const iframe = window.frameElement;
+					if (iframe) {
+						const iframeRect = iframe.getBoundingClientRect();
+						const parentViewportHeight = window.parent.innerHeight;
+						const parentViewportWidth = window.parent.innerWidth;
+						
+						// Recalculate position relative to parent window
+						if (isRectValid) {
+							top = iframeRect.top + rect.top - (dialogHeight / 2);
+							left = iframeRect.left + rect.left - (dialogWidth / 2) + ((rect.width || 0) / 2);
+						} else if (isEditorContainerValid) {
+							top = iframeRect.top + editorContainer.top + (editorContainer.height / 2) - (dialogHeight / 2);
+							left = iframeRect.left + editorContainer.left + (editorContainer.width / 2) - (dialogWidth / 2);
+						} else {
+							// Center in parent viewport
+							top = (parentViewportHeight / 2) - (dialogHeight / 2);
+							left = (parentViewportWidth / 2) - (dialogWidth / 2);
+						}
+						
+						// Clamp to parent viewport
+						top = Math.max(padding, Math.min(top, parentViewportHeight - dialogHeight - padding));
+						left = Math.max(padding, Math.min(left, parentViewportWidth - dialogWidth - padding));
+					}
+				}
+			} catch (e) {
+				// Cross-origin iframe, can't access parent
+				console.warn('Cannot access parent window:', e);
 			}
-			
-			// get viewport dimensions
-			const viewportHeight = window.innerHeight;
-			const viewportWidth = window.innerWidth;
-			const scrollY = window.scrollY;
-			const scrollX = window.scrollX;
-			
-			// calculate centered position
-			let top = rect.top + scrollY - (dialogHeight / 2);
-			let left = rect.left + scrollX - (dialogWidth / 2) + (rect.width / 2);
-			
-			// ensure dialog stays within viewport bounds (with padding)
-			const padding = 20;
-				top = Math.max(padding, Math.min(top, scrollY + viewportHeight - dialogHeight - padding));
-				left = Math.max(padding, Math.min(left, scrollX + viewportWidth - dialogWidth - padding));
-			
-			// if dialog would be cut off at bottom, position it higher
-			if (top + dialogHeight > scrollY + viewportHeight - padding) {
-				top = scrollY + viewportHeight - dialogHeight - padding;
-			}
-			
-			// if dialog would be cut off at top, position it lower
-			if (top < scrollY + padding) {
-				top = scrollY + padding;
-			}
+		}
+		
+		dialog.style.top = `${top}px`;
+		dialog.style.left = `${left}px`;
+		dialog.style.maxHeight = `${viewportHeight - (padding * 2)}px`;
+		dialog.style.overflowY = 'auto';
+		// dialog.style.zIndex = '10000';
 
-			const isInIframe = window.self !== window.top;
+		dialog.scrollIntoView({ behavior: "smooth", block: "center", inline: "nearest" });
 
-			dialog.style.position = 'fixed'; // use fixed instead of absolute for better control
-
-			if (isInIframe) {
-				dialog.style.top = `${top}px`;
+		// Only call scrollIntoView if dialog is in current window context
+		/* if (dialog.offsetParent !== null && (!isInIframe || dialog.ownerDocument === document)) {
+			try {
+				dialog.scrollIntoView({ behavior: "smooth", block: "center", inline: "nearest" });
+			} catch (e) {
+				console.warn('scrollIntoView failed:', e);
 			}
-			else {
-				dialog.style.top = `20%`;
-			}
-			
-			dialog.style.left = `${left}px`;
-			dialog.style.maxHeight = `${viewportHeight - (padding * 2)}px`;
-			dialog.style.overflowY = 'auto';
-
-			dialog.scrollIntoView({ behavior: "smooth", block: "center", inline: "nearest" });
+		} */
 	}
 
 	function observeAndLockMoxieDialogPosition(rect, editorContainer) {
