@@ -750,6 +750,63 @@ var rangeSliderSize = {
                 step: 0.01,
                 value: $("#melis_core_platform_theme_dnd_layout_column_button_hover_opacity").val()
             }, // dnd layout column button hover opacity
+            { 
+                selectorMin: '.login-page-header-text-font-size-range-slider-min',
+                selectorValue: '.login-page-header-text-font-size-range-slider-value',
+                min: 21,
+                max: 40,
+                value: $("#melis_core_platform_theme_login_page_header_text_font_size").val()
+            }, // melis_core_platform_theme_login_page_header_text_font_size
+            { 
+                selectorMin: '.login-page-form-text-font-size-range-slider-min',
+                selectorValue: '.login-page-form-text-font-size-range-slider-value',
+                min: 13,
+                max: 30,
+                value: $("#melis_core_platform_theme_login_page_form_text_font_size").val()
+            }, // melis_core_platform_theme_login_page_form_text_font_size
+            { 
+                selectorMin: '.login-page-form-submit-btn-font-size-range-slider-min',
+                selectorValue: '.login-page-form-submit-btn-font-size-range-slider-value',
+                min: 16,
+                max: 30,
+                value: $("#melis_core_platform_theme_login_page_form_submit_btn_font_size").val()
+            }, // melis_core_platform_theme_login_page_form_submit_btn_font_size
+            { 
+                selectorMin: '.login-page-form-bottom-text-font-size-range-slider-min',
+                selectorValue: '.login-page-form-bottom-text-font-size-range-slider-value',
+                min: 13,
+                max: 30,
+                value: $("#melis_core_platform_theme_login_page_form_bottom_text_font_size").val()
+            }, // melis_core_platform_theme_login_page_form_bottom_text_font_size    
+            // platform theme options panel
+            { 
+                selectorMin: '.theme-options-panel-title-text-font-size-range-slider-min',
+                selectorValue: '.theme-options-panel-title-text-font-size-range-slider-value',
+                min: 13,
+                max: 30,
+                value: $("#melis_core_platform_theme_options_panel_title_text_font_size").val()
+            }, // melis_core_platform_theme_options_panel_title_text_font_size 
+            { 
+                selectorMin: '.theme-options-panel-header-close-btn-font-size-range-slider-min',
+                selectorValue: '.theme-options-panel-header-close-btn-font-size-range-slider-value',
+                min: 14,
+                max: 32,
+                value: $("#melis_core_platform_theme_options_panel_header_close_btn_font_size").val()
+            }, // melis_core_platform_theme_options_panel_header_close_btn_font_size
+            { 
+                selectorMin: '.theme-options-panel-header-border-width-range-slider-min',
+                selectorValue: '.theme-options-panel-header-border-width-range-slider-value',
+                min: 1,
+                max: 6,
+                value: $("#melis_core_platform_theme_options_panel_header_border_width").val()
+            }, // melis_core_platform_theme_options_panel_header_border_width
+            { 
+                selectorMin: '.theme-options-panel-options-tip-info-text-font-size-range-slider-min',
+                selectorValue: '.theme-options-panel-options-tip-info-text-font-size-range-slider-value',
+                min: 17,
+                max: 34,
+                value: $("#melis_core_platform_theme_options_panel_options_tip_info_text_font_size").val()
+            }, // melis_core_platform_theme_options_panel_options_tip_info_text_font_size
         ];
 
             sliders.forEach(slider => {

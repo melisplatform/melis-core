@@ -205,7 +205,7 @@ if ($headerTitleLen > 13) {
                         <div class="platform-theme-options-tools-info">
                             <div class="theme-switcher">
                                 <h3>Color themes</h3>
-                                <div class="card p-3">
+                                <div class="card p-3 mb-0">
                                     <div class="form-check">
                                         <input class="form-check-input theme-radio" type="radio" name="themeChoice" id="themeLight" value="light" checked>
                                         <label class="form-check-label" for="themeLight">Light</label>
@@ -394,122 +394,161 @@ if ($headerTitleLen > 13) {
                                                         </div>
                                                     </div>
                                                 </div>
-
-                                                <div class="accordion-item login-page">
+                                                
+                                                <!-- Login page -->
+                                                <div class="accordion-item login-page-options">
                                                     <h6 class="accordion-header">
-                                                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#login-page" aria-expanded="false" aria-controls="login-page">
+                                                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#login-page-options" aria-expanded="false" aria-controls="login-page-options">
                                                             Login page
                                                         </button>
                                                     </h6>
-                                                </div>
-                                                <div id="login-page" class="accordion-collapse collapse" data-bs-parent="#accordion-sidebar">
-                                                    <div class="accordion-body">
-                                                        <!-- to be added under footer after login page - need added on db -->
-                                                        <div class="form-group">
-                                                            <label for="melis_core_platform_theme_login_page_font_size" class="d-flex flex-row justify-content-between">
-                                                                <div class="label-text">Login page form text font size</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the login page form text font size"></i>
-                                                            </label>
-                                                            <div class="row">
-                                                                <div class="col-9">
-                                                                    <div id="login-page-font-size-range-slider-min" class="login-page-font-size-range-slider-min" style="border: 0; color: #f6931f; font-weight: bold;"></div>
-                                                                </div>
-                                                                <div class="col-3 g-0">
-                                                                    <input type="text" name="melis_core_platform_theme_login_page_font_size" id="melis_core_platform_theme_login_page_font_size" class="login-page-font-size-range-slider-value range-slider-value form-control" />
+                                                    <div id="login-page-options" class="accordion-collapse collapse" data-bs-parent="#accordion-sidebar">
+                                                        <div class="accordion-body">
+                                                            <!-- to be added under footer after login page - need added on db -->
+                                                            <div class="form-group">
+                                                                <label for="melis_core_platform_theme_login_page_header_bg_color" class="d-flex flex-row justify-content-between">
+                                                                    <div class="label-text">Login page header background color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the login page header background color by typing the hexadecimal color code or by using the color picker"></i>
+                                                                </label>
+                                                                <div class="input-group platform-scheme osta_color_code">
+                                                                    <input type="text" name="melis_core_platform_theme_login_page_header_bg_color" id="melis_core_platform_theme_login_page_header_bg_color" class="form-control minicolor-hex" data-control="hue" placeholder="Edit login page header text and icon color" value="#fff">
+                                                                    <span class="input-group-addon">
+                                                                        <input type="hidden" class="minicolor" value="#fff" />
+                                                                    </span>
                                                                 </div>
                                                             </div>
-                                                        </div>
 
-                                                        <div class="form-group">
-                                                            <label for="melis_core_platform_theme_login_page_text_color" class="d-flex flex-row justify-content-between">
-                                                                <div class="label-text">Login page form text color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the login page form text color by typing the hexadecimal color code or by using the color picker"></i>
-                                                            </label>
-                                                            <div class="input-group platform-scheme osta_color_code">
-                                                                <input type="text" name="melis_core_platform_theme_login_page_text_color" id="melis_core_platform_theme_login_page_text_color" class="form-control minicolor-hex" data-control="hue" placeholder="Edit login page form text color" value="#e61c23">
-                                                                <span class="input-group-addon">
-                                                                    <input type="hidden" class="minicolor" value="#e61c23" />
-                                                                </span>
-                                                            </div>
-                                                        </div>
-
-                                                        <div class="form-group">
-                                                            <label for="melis_core_platform_theme_login_page_form_submit_btn_font_size" class="d-flex flex-row justify-content-between">
-                                                                <div class="label-text">Login page form submit button text font size</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the login page form submit button text font size"></i>
-                                                            </label>
-                                                            <div class="row">
-                                                                <div class="col-9">
-                                                                    <div id="login-page-submit-btn-font-size-range-slider-min" class="login-page-submit-btn-font-size-range-slider-min" style="border: 0; color: #f6931f; font-weight: bold;"></div>
-                                                                </div>
-                                                                <div class="col-3 g-0">
-                                                                    <input type="text" name="melis_core_platform_theme_login_page_form_submit_btn_font_size" id="melis_core_platform_theme_login_page_form_submit_btn_font_size" class="login-page-submit-btn   -font-size-range-slider-value range-slider-value form-control" />
+                                                            <div class="form-group">
+                                                                <label for="melis_core_platform_theme_login_page_header_text_font_size" class="d-flex flex-row justify-content-between">
+                                                                    <div class="label-text">Login page header text font size</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the login page header text font size"></i>
+                                                                </label>
+                                                                <div class="row">
+                                                                    <div class="col-9">
+                                                                        <div id="login-page-header-text-font-size-range-slider-min" class="login-page-header-text-font-size-range-slider-min" style="border: 0; color: #f6931f; font-weight: bold;"></div>
+                                                                    </div>
+                                                                    <div class="col-3 g-0">
+                                                                        <input type="text" name="melis_core_platform_theme_login_page_header_text_font_size" id="melis_core_platform_theme_login_page_header_text_font_size" class="login-page-header-text-font-size-range-slider-value range-slider-value form-control" />
+                                                                    </div>
                                                                 </div>
                                                             </div>
-                                                        </div>
 
-                                                        <div class="form-group">
-                                                            <label for="melis_core_platform_theme_login_page_submit_btn_bg_color" class="d-flex flex-row justify-content-between">
-                                                                <div class="label-text">Login page form submit button background color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the login page submit button background color by typing the hexadecimal color code or by using the color picker"></i>
-                                                            </label>
-                                                            <div class="input-group platform-scheme osta_color_code">
-                                                                <input type="text" name="melis_core_platform_theme_login_page_submit_btn_bg_color" id="melis_core_platform_theme_login_page_submit_btn_bg_color" class="form-control minicolor-hex" data-control="hue" placeholder="Edit login page form submit button background color" value="#e61c23">
-                                                                <span class="input-group-addon">
-                                                                    <input type="hidden" class="minicolor" value="#e61c23" />
-                                                                </span>
-                                                            </div>
-                                                        </div>
-
-                                                        <div class="form-group">
-                                                            <label for="melis_core_platform_theme_login_page_submit_btn_border_color" class="d-flex flex-row justify-content-between">
-                                                                <div class="label-text">Login page form submit button border color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the login page form submit button border color by typing the hexadecimal color code or by using the color picker"></i>
-                                                            </label>
-                                                            <div class="input-group platform-scheme osta_color_code">
-                                                                <input type="text" name="melis_core_platform_theme_login_page_submit_btn_border_color" id="melis_core_platform_theme_login_page_submit_btn_border_color" class="form-control minicolor-hex" data-control="hue" placeholder="Edit login page form submit button border color" value="#e61c23">
-                                                                <span class="input-group-addon">
-                                                                    <input type="hidden" class="minicolor" value="#e61c23" />
-                                                                </span>
-                                                            </div>
-                                                        </div>
-
-                                                        <div class="form-group">
-                                                            <label for="melis_core_platform_theme_login_page_form_bottom_text_font_size" class="d-flex flex-row justify-content-between">
-                                                                <div class="label-text">Login page form bottom text font size</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the login page form bottom text font size"></i>
-                                                            </label>
-                                                            <div class="row">
-                                                                <div class="col-9">
-                                                                    <div id="login-page-form-bottom-text-font-size-range-slider-min" class="login-page-form-bottom-text-font-size-range-slider-min" style="border: 0; color: #f6931f; font-weight: bold;"></div>
-                                                                </div>
-                                                                <div class="col-3 g-0">
-                                                                    <input type="text" name="melis_core_platform_theme_login_page_form_bottom_text_font_size" id="melis_core_platform_theme_login_page_form_bottom_text_font_size" class="login-page-form-bottom-text-font-size-range-slider-value range-slider-value form-control" />
+                                                            <div class="form-group">
+                                                                <label for="melis_core_platform_theme_login_page_header_text_icon_color" class="d-flex flex-row justify-content-between">
+                                                                    <div class="label-text">Login page header text & icon color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the login page header text and icon color by typing the hexadecimal color code or by using the color picker"></i>
+                                                                </label>
+                                                                <div class="input-group platform-scheme osta_color_code">
+                                                                    <input type="text" name="melis_core_platform_theme_login_page_header_text_icon_color" id="melis_core_platform_theme_login_page_header_text_icon_color" class="form-control minicolor-hex" data-control="hue" placeholder="Edit login page header text and icon color" value="#686868">
+                                                                    <span class="input-group-addon">
+                                                                        <input type="hidden" class="minicolor" value="#686868" />
+                                                                    </span>
                                                                 </div>
                                                             </div>
-                                                        </div>
 
-                                                        <div class="form-group">
-                                                            <label for="melis_core_platform_theme_login_page_form_bottom_remember_text_color" class="d-flex flex-row justify-content-between">
-                                                                <div class="label-text">Login page bottom remember text color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the login page form bottom remember text color by typing the hexadecimal color code or by using the color picker"></i>
-                                                            </label>
-                                                            <div class="input-group platform-scheme osta_color_code">
-                                                                <input type="text" name="melis_core_platform_theme_login_page_form_bottom_remember_text_color" id="melis_core_platform_theme_login_page_form_bottom_remember_text_color" class="form-control minicolor-hex" data-control="hue" placeholder="Edit login page form bottom remember text color" value="#686868">
-                                                                <span class="input-group-addon">
-                                                                    <input type="hidden" class="minicolor" value="#686868" />
-                                                                </span>
+                                                            <div class="form-group">
+                                                                <label for="melis_core_platform_theme_login_page_form_text_font_size" class="d-flex flex-row justify-content-between">
+                                                                    <div class="label-text">Login page form text font size</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the login page form text font size"></i>
+                                                                </label>
+                                                                <div class="row">
+                                                                    <div class="col-9">
+                                                                        <div id="login-page-form-text-font-size-range-slider-min" class="login-page-form-text-font-size-range-slider-min" style="border: 0; color: #f6931f; font-weight: bold;"></div>
+                                                                    </div>
+                                                                    <div class="col-3 g-0">
+                                                                        <input type="text" name="melis_core_platform_theme_login_page_form_text_font_size" id="melis_core_platform_theme_login_page_form_text_font_size" class="login-page-form-text-font-size-range-slider-value range-slider-value form-control" />
+                                                                    </div>
+                                                                </div>
                                                             </div>
-                                                        </div>
 
-                                                        <div class="form-group">
-                                                            <label for="melis_core_platform_theme_login_page_form_bottom_forgot_password_text_color" class="d-flex flex-row justify-content-between">
-                                                                <div class="label-text">Login page bottom forgot password text color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the login page form bottom forgot password text color by typing the hexadecimal color code or by using the color picker"></i>
-                                                            </label>
-                                                            <div class="input-group platform-scheme osta_color_code">
-                                                                <input type="text" name="melis_core_platform_theme_login_page_form_bottom_forgot_password_text_color" id="melis_core_platform_theme_login_page_form_bottom_forgot_password_text_color" class="form-control minicolor-hex" data-control="hue" placeholder="Edit login page form bottom forgot password text color" value="#e61c23">
-                                                                <span class="input-group-addon">
-                                                                    <input type="hidden" class="minicolor" value="#e61c23" />
-                                                                </span>
+                                                            <div class="form-group">
+                                                                <label for="melis_core_platform_theme_login_page_form_text_color" class="d-flex flex-row justify-content-between">
+                                                                    <div class="label-text">Login page form text color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the login page form text color by typing the hexadecimal color code or by using the color picker"></i>
+                                                                </label>
+                                                                <div class="input-group platform-scheme osta_color_code">
+                                                                    <input type="text" name="melis_core_platform_theme_login_page_form_text_color" id="melis_core_platform_theme_login_page_form_text_color" class="form-control minicolor-hex" data-control="hue" placeholder="Edit login page form text color" value="#e61c23">
+                                                                    <span class="input-group-addon">
+                                                                        <input type="hidden" class="minicolor" value="#e61c23" />
+                                                                    </span>
+                                                                </div>
                                                             </div>
+
+                                                            <div class="form-group">
+                                                                <label for="melis_core_platform_theme_login_page_form_submit_btn_font_size" class="d-flex flex-row justify-content-between">
+                                                                    <div class="label-text">Login page form submit button text font size</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the login page form submit button text font size"></i>
+                                                                </label>
+                                                                <div class="row">
+                                                                    <div class="col-9">
+                                                                        <div id="login-page-form-submit-btn-font-size-range-slider-min" class="login-page-form-submit-btn-font-size-range-slider-min" style="border: 0; color: #f6931f; font-weight: bold;"></div>
+                                                                    </div>
+                                                                    <div class="col-3 g-0">
+                                                                        <input type="text" name="melis_core_platform_theme_login_page_form_submit_btn_font_size" id="melis_core_platform_theme_login_page_form_submit_btn_font_size" class="login-page-form-submit-btn-font-size-range-slider-value range-slider-value form-control" />
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="form-group">
+                                                                <label for="melis_core_platform_theme_login_page_form_submit_btn_bg_color" class="d-flex flex-row justify-content-between">
+                                                                    <div class="label-text">Login page form submit button background color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the login page form submit button background color by typing the hexadecimal color code or by using the color picker"></i>
+                                                                </label>
+                                                                <div class="input-group platform-scheme osta_color_code">
+                                                                    <input type="text" name="melis_core_platform_theme_login_page_form_submit_btn_bg_color" id="melis_core_platform_theme_login_page_form_submit_btn_bg_color" class="form-control minicolor-hex" data-control="hue" placeholder="Edit login page form submit button background color" value="#e61c23">
+                                                                    <span class="input-group-addon">
+                                                                        <input type="hidden" class="minicolor" value="#e61c23" />
+                                                                    </span>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="form-group">
+                                                                <label for="melis_core_platform_theme_login_page_form_submit_btn_border_color" class="d-flex flex-row justify-content-between">
+                                                                    <div class="label-text">Login page form submit button border color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the login page form submit button border color by typing the hexadecimal color code or by using the color picker"></i>
+                                                                </label>
+                                                                <div class="input-group platform-scheme osta_color_code">
+                                                                    <input type="text" name="melis_core_platform_theme_login_page_form_submit_btn_border_color" id="melis_core_platform_theme_login_page_form_submit_btn_border_color" class="form-control minicolor-hex" data-control="hue" placeholder="Edit login page form submit button border color" value="#e61c23">
+                                                                    <span class="input-group-addon">
+                                                                        <input type="hidden" class="minicolor" value="#e61c23" />
+                                                                    </span>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="form-group">
+                                                                <label for="melis_core_platform_theme_login_page_form_bottom_text_font_size" class="d-flex flex-row justify-content-between">
+                                                                    <div class="label-text">Login page form bottom text font size</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the login page form bottom text font size"></i>
+                                                                </label>
+                                                                <div class="row">
+                                                                    <div class="col-9">
+                                                                        <div id="login-page-form-bottom-text-font-size-range-slider-min" class="login-page-form-bottom-text-font-size-range-slider-min" style="border: 0; color: #f6931f; font-weight: bold;"></div>
+                                                                    </div>
+                                                                    <div class="col-3 g-0">
+                                                                        <input type="text" name="melis_core_platform_theme_login_page_form_bottom_text_font_size" id="melis_core_platform_theme_login_page_form_bottom_text_font_size" class="login-page-form-bottom-text-font-size-range-slider-value range-slider-value form-control" />
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="form-group">
+                                                                <label for="melis_core_platform_theme_login_page_form_bottom_remember_text_color" class="d-flex flex-row justify-content-between">
+                                                                    <div class="label-text">Login page bottom remember text color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the login page form bottom remember text color by typing the hexadecimal color code or by using the color picker"></i>
+                                                                </label>
+                                                                <div class="input-group platform-scheme osta_color_code">
+                                                                    <input type="text" name="melis_core_platform_theme_login_page_form_bottom_remember_text_color" id="melis_core_platform_theme_login_page_form_bottom_remember_text_color" class="form-control minicolor-hex" data-control="hue" placeholder="Edit login page form bottom remember text color" value="#686868">
+                                                                    <span class="input-group-addon">
+                                                                        <input type="hidden" class="minicolor" value="#686868" />
+                                                                    </span>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="form-group">
+                                                                <label for="melis_core_platform_theme_login_page_form_bottom_forgot_password_text_color" class="d-flex flex-row justify-content-between">
+                                                                    <div class="label-text">Login page bottom forgot password text color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the login page form bottom forgot password text color by typing the hexadecimal color code or by using the color picker"></i>
+                                                                </label>
+                                                                <div class="input-group platform-scheme osta_color_code">
+                                                                    <input type="text" name="melis_core_platform_theme_login_page_form_bottom_forgot_password_text_color" id="melis_core_platform_theme_login_page_form_bottom_forgot_password_text_color" class="form-control minicolor-hex" data-control="hue" placeholder="Edit login page form bottom forgot password text color" value="#e61c23">
+                                                                    <span class="input-group-addon">
+                                                                        <input type="hidden" class="minicolor" value="#e61c23" />
+                                                                    </span>
+                                                                </div>
+                                                            </div>
+                                                            <!-- end to be added under footer after login page - need added on db -->
                                                         </div>
-                                                        <!-- end to be added under footer after login page - need added on db -->
                                                     </div>
                                                 </div>
-
+                                                
                                                 <div class="accordion-item header">
                                                     <h6 class="accordion-header">
                                                         <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#header-navigation" aria-expanded="false" aria-controls="header-navigation">
@@ -781,7 +820,7 @@ if ($headerTitleLen > 13) {
                                                             <?php
                                                             }?>
                                                             
-                                                            <!-- to be added before DND zone and layout, page edition dnd plugins menu - snippets -->
+                                                            <!-- Additional DND zone and layout -->
                                                             <div class="form-group">
                                                                 <label for="melis_core_platform_theme_dnd_plugins_box_category_btn_snippets_bg_color" class="d-flex flex-row justify-content-between">
                                                                     <div class="label-text">Plugins box category button snippets background color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the plugins box category button snippets background color by typing the hexadecimal color code or by using the color picker"></i>
@@ -889,7 +928,343 @@ if ($headerTitleLen > 13) {
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <!-- end added static drag and drop elements -->
+                                                
+                                                <!-- Platform theme options -->
+                                                <div class="accordion-item platform-theme-opts">
+                                                    <h6 class="accordion-header">
+                                                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#platform-theme-opts" aria-expanded="false" aria-controls="platform-theme-opts">
+                                                            Platform theme options
+                                                        </button>
+                                                    </h6>
+                                                    <div id="platform-theme-opts" class="accordion-collapse collapse" data-bs-parent="#accordion-sidebar">
+                                                        <div class="accordion-body">
+                                                            <div class="form-group">
+                                                                <label for="melis_core_platform_theme_options_panel_bg_color" class="d-flex flex-row justify-content-between">
+                                                                    <div class="label-text">Platform theme options panel background color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the platform theme options panel background color by typing the hexadecimal color code or by using the color picker"></i>
+                                                                </label>
+                                                                <div class="input-group platform-scheme osta_color_code">
+                                                                    <input type="text" name="melis_core_platform_theme_options_panel_bg_color" id="melis_core_platform_theme_options_panel_bg_color" class="form-control minicolor-hex" data-control="hue" placeholder="Edit platform theme options panel background color" value="#fff">
+                                                                    <span class="input-group-addon">
+                                                                        <input type="hidden" class="minicolor" value="#fff" />
+                                                                    </span>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="form-group">
+                                                                <label for="melis_core_platform_theme_options_panel_title_text_color" class="d-flex flex-row justify-content-between">
+                                                                    <div class="label-text">Platform theme options panel title text color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the platform theme options panel title text color by typing the hexadecimal color code or by using the color picker"></i>
+                                                                </label>
+                                                                <div class="input-group platform-scheme osta_color_code">
+                                                                    <input type="text" name="melis_core_platform_theme_options_panel_title_text_color" id="melis_core_platform_theme_options_panel_title_text_color" class="form-control minicolor-hex" data-control="hue" placeholder="Edit platform theme options panel title text color" value="#686868">
+                                                                    <span class="input-group-addon">
+                                                                        <input type="hidden" class="minicolor" value="#686868" />
+                                                                    </span>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="form-group">
+                                                                <label for="melis_core_platform_theme_options_panel_title_text_font_size" class="d-flex flex-row justify-content-between">
+                                                                    <div class="label-text">Platform theme options panel title text font size</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the platform theme options panel title text font size"></i>
+                                                                </label>
+                                                                <div class="row">
+                                                                    <div class="col-9">
+                                                                        <div id="theme-options-panel-title-text-font-size-range-slider-min" class="theme-options-panel-title-text-font-size-range-slider-min" style="border: 0; color: #f6931f; font-weight: bold;"></div>
+                                                                    </div>
+                                                                    <div class="col-3 g-0">
+                                                                        <input type="text" name="melis_core_platform_theme_options_panel_title_text_font_size" id="melis_core_platform_theme_options_panel_title_text_font_size" class="theme-options-panel-title-text-font-size-range-slider-value range-slider-value form-control" />
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="form-group">
+                                                                <label for="melis_core_platform_theme_options_panel_header_close_btn_color" class="d-flex flex-row justify-content-between">
+                                                                    <div class="label-text">Platform theme options panel header close button color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the platform theme options panel header close button color by typing the hexadecimal color code or by using the color picker"></i>
+                                                                </label>
+                                                                <div class="input-group platform-scheme osta_color_code">
+                                                                    <input type="text" name="melis_core_platform_theme_options_panel_header_close_btn_color" id="melis_core_platform_theme_options_panel_header_close_btn_color" class="form-control minicolor-hex" data-control="hue" placeholder="Edit platform theme options panel header close button color" value="#686868">
+                                                                    <span class="input-group-addon">
+                                                                        <input type="hidden" class="minicolor" value="#686868" />
+                                                                    </span>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="form-group">
+                                                                <label for="melis_core_platform_theme_options_panel_header_close_btn_font_size" class="d-flex flex-row justify-content-between">
+                                                                    <div class="label-text">Platform theme options panel header close button font size</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the platform theme options panel header close button font size"></i>
+                                                                </label>
+                                                                <div class="row">
+                                                                    <div class="col-9">
+                                                                        <div id="theme-options-panel-header-close-btn-font-size-range-slider-min" class="theme-options-panel-header-close-btn-font-size-range-slider-min" style="border: 0; color: #f6931f; font-weight: bold;"></div>
+                                                                    </div>
+                                                                    <div class="col-3 g-0">
+                                                                        <input type="text" name="melis_core_platform_theme_options_panel_header_close_btn_font_size" id="melis_core_platform_theme_options_panel_header_close_btn_font_size" class="theme-options-panel-header-close-btn-font-size-range-slider-value range-slider-value form-control" />
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                            <!-- need to apply also on the options border width and color -->
+                                                            <div class="form-group">
+                                                                <label for="melis_core_platform_theme_options_panel_header_border_width" class="d-flex flex-row justify-content-between">
+                                                                    <div class="label-text">Platform theme options panel header border width</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the platform theme options panel header border width"></i>
+                                                                </label>
+                                                                <div class="row">
+                                                                    <div class="col-9">
+                                                                        <div id="theme-options-panel-header-border-width-range-slider-min" class="theme-options-panel-header-border-width-range-slider-min" style="border: 0; color: #f6931f; font-weight: bold;"></div>
+                                                                    </div>
+                                                                    <div class="col-3 g-0">
+                                                                        <input type="text" name="melis_core_platform_theme_options_panel_header_border_width" id="melis_core_platform_theme_options_panel_header_border_width" class="theme-options-panel-header-border-width-range-slider-value range-slider-value form-control" />
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="form-group">
+                                                                <label for="melis_core_platform_theme_options_panel_header_border_color" class="d-flex flex-row justify-content-between">
+                                                                    <div class="label-text">Platform theme options panel header border color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the platform theme options panel header border color by typing the hexadecimal color code or by using the color picker"></i>
+                                                                </label>
+                                                                <div class="input-group platform-scheme osta_color_code">
+                                                                    <input type="text" name="melis_core_platform_theme_options_panel_header_border_color" id="melis_core_platform_theme_options_panel_header_border_color" class="form-control minicolor-hex" data-control="hue" placeholder="Edit platform theme options panel header border color" value="#eeeeee">
+                                                                    <span class="input-group-addon">
+                                                                        <input type="hidden" class="minicolor" value="#eeeeee" />
+                                                                    </span>
+                                                                </div>
+                                                            </div>
+                                                            <!-- end need to apply -->
+
+                                                            <div class="form-group">
+                                                                <label for="melis_core_platform_theme_options_panel_options_input_radio_border_color" class="d-flex flex-row justify-content-between">
+                                                                    <div class="label-text">Platform theme options panel options input radio border color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the platform theme options panel options input radio border color by typing the hexadecimal color code or by using the color picker"></i>
+                                                                </label>
+                                                                <div class="input-group platform-scheme osta_color_code">
+                                                                    <input type="text" name="melis_core_platform_theme_options_panel_options_input_radio_border_color" id="melis_core_platform_theme_options_panel_options_input_radio_border_color" class="form-control minicolor-hex" data-control="hue" placeholder="Edit platform theme options panel options input radio border color" value="#dee2e6">
+                                                                    <span class="input-group-addon">
+                                                                        <input type="hidden" class="minicolor" value="#dee2e6" />
+                                                                    </span>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="form-group">
+                                                                <label for="melis_core_platform_theme_options_panel_options_input_radio_checked_border_bg_color" class="d-flex flex-row justify-content-between">
+                                                                    <div class="label-text">Platform theme options panel options input radio checked border and background color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the platform theme options panel options input radio border and background color by typing the hexadecimal color code or by using the color picker"></i>
+                                                                </label>
+                                                                <div class="input-group platform-scheme osta_color_code">
+                                                                    <input type="text" name="melis_core_platform_theme_options_panel_options_input_radio_checked_border_bg_color" id="melis_core_platform_theme_options_panel_options_input_radio_checked_border_bg_color" class="form-control minicolor-hex" data-control="hue" placeholder="Edit platform theme options panel options input radio checked border and background color" value="#0d6efd">
+                                                                    <span class="input-group-addon">
+                                                                        <input type="hidden" class="minicolor" value="#0d6efd" />
+                                                                    </span>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="form-group">
+                                                                <label for="melis_core_platform_theme_options_panel_options_title_bg_color" class="d-flex flex-row justify-content-between">
+                                                                    <div class="label-text">Platform theme options panel options title background color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the platform theme options panel options title background color by typing the hexadecimal color code or by using the color picker"></i>
+                                                                </label>
+                                                                <div class="input-group platform-scheme osta_color_code">
+                                                                    <input type="text" name="melis_core_platform_theme_options_panel_options_title_bg_color" id="melis_core_platform_theme_options_panel_options_title_bg_color" class="form-control minicolor-hex" data-control="hue" placeholder="Edit platform theme options panel options title background color" value="#ffffff">
+                                                                    <span class="input-group-addon">
+                                                                        <input type="hidden" class="minicolor" value="#ffffff" />
+                                                                    </span>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="form-group">
+                                                                <label for="melis_core_platform_theme_options_panel_options_title_expanded_bg_color" class="d-flex flex-row justify-content-between">
+                                                                    <div class="label-text">Platform theme options panel options title expanded background color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the platform theme options panel options title expanded background color by typing the hexadecimal color code or by using the color picker"></i>
+                                                                </label>
+                                                                <div class="input-group platform-scheme osta_color_code">
+                                                                    <input type="text" name="melis_core_platform_theme_options_panel_options_title_expanded_bg_color" id="melis_core_platform_theme_options_panel_options_title_expanded_bg_color" class="form-control minicolor-hex" data-control="hue" placeholder="Edit platform theme options panel options title expanded background color" value="#ffffff">
+                                                                    <span class="input-group-addon">
+                                                                        <input type="hidden" class="minicolor" value="#ffffff" />
+                                                                    </span>
+                                                                </div>
+                                                            </div>
+
+                                                            <!-- includes the title and labels under accordions -->
+                                                            <div class="form-group">
+                                                                <label for="melis_core_platform_theme_options_panel_options_title_label_icon_and_texts_color" class="d-flex flex-row justify-content-between">
+                                                                    <div class="label-text">Platform theme options panel options title label, icon and texts color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the platform theme options panel options title label, icon and texts color by typing the hexadecimal color code or by using the color picker"></i>
+                                                                </label>
+                                                                <div class="input-group platform-scheme osta_color_code">
+                                                                    <input type="text" name="melis_core_platform_theme_options_panel_options_title_label_icon_and_texts_color" id="melis_core_platform_theme_options_panel_options_title_label_icon_and_texts_color" class="form-control minicolor-hex" data-control="hue" placeholder="Edit platform theme options panel options title label, icon and texts color" value="#686868">
+                                                                    <span class="input-group-addon">
+                                                                        <input type="hidden" class="minicolor" value="#686868" />
+                                                                    </span>
+                                                                </div>
+                                                            </div>
+                                                            
+                                                            <div class="form-group">
+                                                                <label for="melis_core_platform_theme_options_panel_options_input_text_bg_color" class="d-flex flex-row justify-content-between">
+                                                                    <div class="label-text">Platform theme options panel options input text background color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the platform theme options panel options input text background color by typing the hexadecimal color code or by using the color picker"></i>
+                                                                </label>
+                                                                <div class="input-group platform-scheme osta_color_code">
+                                                                    <input type="text" name="melis_core_platform_theme_options_panel_options_input_text_bg_color" id="melis_core_platform_theme_options_panel_options_input_text_bg_color" class="form-control minicolor-hex" data-control="hue" placeholder="Edit platform theme options panel options input text background color" value="#ffffff">
+                                                                    <span class="input-group-addon">
+                                                                        <input type="hidden" class="minicolor" value="#ffffff" />
+                                                                    </span>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="form-group">
+                                                                <label for="melis_core_platform_theme_options_panel_options_input_text_color" class="d-flex flex-row justify-content-between">
+                                                                    <div class="label-text">Platform theme options panel options input text color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the platform theme options panel options input text color by typing the hexadecimal color code or by using the color picker"></i>
+                                                                </label>
+                                                                <div class="input-group platform-scheme osta_color_code">
+                                                                    <input type="text" name="melis_core_platform_theme_options_panel_options_input_text_color" id="melis_core_platform_theme_options_panel_options_input_text_color" class="form-control minicolor-hex" data-control="hue" placeholder="Edit platform theme options panel options input text color" value="#444444">
+                                                                    <span class="input-group-addon">
+                                                                        <input type="hidden" class="minicolor" value="#444444" />
+                                                                    </span>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="form-group">
+                                                                <label for="melis_core_platform_theme_options_panel_options_range_slider_ui_handle_bg_border_color" class="d-flex flex-row justify-content-between">
+                                                                    <div class="label-text">Platform theme options panel options range slider ui handle background and border color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the platform theme options panel options range slider ui handle background and border color by typing the hexadecimal color code or by using the color picker"></i>
+                                                                </label>
+                                                                <div class="input-group platform-scheme osta_color_code">
+                                                                    <input type="text" name="melis_core_platform_theme_options_panel_options_range_slider_ui_handle_bg_border_color" id="melis_core_platform_theme_options_panel_options_range_slider_ui_handle_bg_border_color" class="form-control minicolor-hex" data-control="hue" placeholder="Edit platform theme options panel options range slider ui handle background and border color" value="#c5c5c5">
+                                                                    <span class="input-group-addon">
+                                                                        <input type="hidden" class="minicolor" value="#c5c5c5" />
+                                                                    </span>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="form-group">
+                                                                <label for="melis_core_platform_theme_options_panel_options_range_slider_ui_min_bg_color" class="d-flex flex-row justify-content-between">
+                                                                    <div class="label-text">Platform theme options panel options range slider ui min background color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the platform theme options panel options range slider ui min background color by typing the hexadecimal color code or by using the color picker"></i>
+                                                                </label>
+                                                                <div class="input-group platform-scheme osta_color_code">
+                                                                    <input type="text" name="melis_core_platform_theme_options_panel_options_range_slider_ui_min_bg_color" id="melis_core_platform_theme_options_panel_options_range_slider_ui_min_bg_color" class="form-control minicolor-hex" data-control="hue" placeholder="Edit platform theme options panel options range slider ui min background color" value="#e61c23">
+                                                                    <span class="input-group-addon">
+                                                                        <input type="hidden" class="minicolor" value="#e61c23" />
+                                                                    </span>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="form-group">
+                                                                <label for="melis_core_platform_theme_options_panel_options_range_slider_ui_widget_content_bg_color" class="d-flex flex-row justify-content-between">
+                                                                    <div class="label-text">Platform theme options panel options range slider ui widget content background color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the platform theme options panel options range slider ui widget content background color by typing the hexadecimal color code or by using the color picker"></i>
+                                                                </label>
+                                                                <div class="input-group platform-scheme osta_color_code">
+                                                                    <input type="text" name="melis_core_platform_theme_options_panel_options_range_slider_ui_widget_content_bg_color" id="melis_core_platform_theme_options_panel_options_range_slider_ui_widget_content_bg_color" class="form-control minicolor-hex" data-control="hue" placeholder="Edit platform theme options panel options range slider ui widget content background color" value="#e9e9e9">
+                                                                    <span class="input-group-addon">
+                                                                        <input type="hidden" class="minicolor" value="#e9e9e9" />
+                                                                    </span>
+                                                                </div>
+                                                            </div>
+
+                                                            <!-- button groups includes text alignment and text font styles -->
+                                                            <div class="form-group">
+                                                                <label for="melis_core_platform_theme_options_panel_options_btn_group_bg_color" class="d-flex flex-row justify-content-between">
+                                                                    <div class="label-text">Platform theme options panel options button group background color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the platform theme options panel options button group background color by typing the hexadecimal color code or by using the color picker"></i>
+                                                                </label>
+                                                                <div class="input-group platform-scheme osta_color_code">
+                                                                    <input type="text" name="melis_core_platform_theme_options_panel_options_btn_group_bg_color" id="melis_core_platform_theme_options_panel_options_btn_group_bg_color" class="form-control minicolor-hex" data-control="hue" placeholder="Edit platform theme options panel options button group background color" value="#fafafa">
+                                                                    <span class="input-group-addon">
+                                                                        <input type="hidden" class="minicolor" value="#fafafa" />
+                                                                    </span>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="form-group">
+                                                                <label for="melis_core_platform_theme_options_panel_options_btn_group_border_color" class="d-flex flex-row justify-content-between">
+                                                                    <div class="label-text">Platform theme options panel options button group border color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the platform theme options panel options button group border color by typing the hexadecimal color code or by using the color picker"></i>
+                                                                </label>
+                                                                <div class="input-group platform-scheme osta_color_code">
+                                                                    <input type="text" name="melis_core_platform_theme_options_panel_options_btn_group_border_color" id="melis_core_platform_theme_options_panel_options_btn_group_border_color" class="form-control minicolor-hex" data-control="hue" placeholder="Edit platform theme options panel options button group border color" value="#cecece">
+                                                                    <span class="input-group-addon">
+                                                                        <input type="hidden" class="minicolor" value="#cecece" />
+                                                                    </span>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="form-group">
+                                                                <label for="melis_core_platform_theme_options_panel_options_btn_group_text_color" class="d-flex flex-row justify-content-between">
+                                                                    <div class="label-text">Platform theme options panel options button group text color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the platform theme options panel options button group text color by typing the hexadecimal color code or by using the color picker"></i>
+                                                                </label>
+                                                                <div class="input-group platform-scheme osta_color_code">
+                                                                    <input type="text" name="melis_core_platform_theme_options_panel_options_btn_group_text_color" id="melis_core_platform_theme_options_panel_options_btn_group_text_color" class="form-control minicolor-hex" data-control="hue" placeholder="Edit platform theme options panel options button group text color" value="#797979">
+                                                                    <span class="input-group-addon">
+                                                                        <input type="hidden" class="minicolor" value="#797979" />
+                                                                    </span>
+                                                                </div>
+                                                            </div>
+                                                            <!-- end button groups -->
+
+                                                            <div class="form-group">
+                                                                <label for="melis_core_platform_theme_options_panel_options_tip_info_text_color" class="d-flex flex-row justify-content-between">
+                                                                    <div class="label-text">Platform theme options panel options tip info text color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the platform theme options panel options tip info text color by typing the hexadecimal color code or by using the color picker"></i>
+                                                                </label>
+                                                                <div class="input-group platform-scheme osta_color_code">
+                                                                    <input type="text" name="melis_core_platform_theme_options_panel_options_tip_info_text_color" id="melis_core_platform_theme_options_panel_options_tip_info_text_color" class="form-control minicolor-hex" data-control="hue" placeholder="Edit platform theme options panel options tip info text color" value="#686868">
+                                                                    <span class="input-group-addon">
+                                                                        <input type="hidden" class="minicolor" value="#686868" />
+                                                                    </span>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="form-group">
+                                                                <label for="melis_core_platform_theme_options_panel_options_tip_info_text_font_size" class="d-flex flex-row justify-content-between">
+                                                                    <div class="label-text">Platform theme options panel options tip info text font size</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the platform theme options panel options tip info text font size"></i>
+                                                                </label>
+                                                                <div class="row">
+                                                                    <div class="col-9">
+                                                                        <div id="theme-options-panel-options-tip-info-text-font-size-range-slider-min" class="theme-options-panel-options-tip-info-text-font-size-range-slider-min" style="border: 0; color: #f6931f; font-weight: bold;"></div>
+                                                                    </div>
+                                                                    <div class="col-3 g-0">
+                                                                        <input type="text" name="melis_core_platform_theme_options_panel_options_tip_info_text_font_size" id="melis_core_platform_theme_options_panel_options_tip_info_text_font_size" class="theme-options-panel-options-tip-info-text-font-size-range-slider-value range-slider-value form-control" />
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="form-group">
+                                                                <label for="melis_core_platform_theme_options_panel_save_btn_bg_border_color" class="d-flex flex-row justify-content-between">
+                                                                    <div class="label-text">Platform theme options panel save button background and border color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the platform theme options panel save button background and border color by typing the hexadecimal color code or by using the color picker"></i>
+                                                                </label>
+                                                                <div class="input-group platform-scheme osta_color_code">
+                                                                    <input type="text" name="melis_core_platform_theme_options_panel_save_btn_bg_border_color" id="melis_core_platform_theme_options_panel_save_btn_bg_border_color" class="form-control minicolor-hex" data-control="hue" placeholder="Edit platform theme options panel save button background and border color" value="#e61c23">
+                                                                    <span class="input-group-addon">
+                                                                        <input type="hidden" class="minicolor" value="#e61c23" />
+                                                                    </span>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="form-group">
+                                                                <label for="melis_core_platform_theme_options_panel_save_btn_text_color" class="d-flex flex-row justify-content-between">
+                                                                    <div class="label-text">Platform theme options panel save button text color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the platform theme options panel save button text color by typing the hexadecimal color code or by using the color picker"></i>
+                                                                </label>
+                                                                <div class="input-group platform-scheme osta_color_code">
+                                                                    <input type="text" name="melis_core_platform_theme_options_panel_save_btn_text_color" id="melis_core_platform_theme_options_panel_save_btn_text_color" class="form-control minicolor-hex" data-control="hue" placeholder="Edit platform theme options panel save button text color" value="#ffffff">
+                                                                    <span class="input-group-addon">
+                                                                        <input type="hidden" class="minicolor" value="#ffffff" />
+                                                                    </span>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="form-group">
+                                                                <label for="melis_core_platform_theme_options_panel_save_btn_hover_bg_color" class="d-flex flex-row justify-content-between">
+                                                                    <div class="label-text">Platform theme options panel save button hover background color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the platform theme options panel save button hover background color by typing the hexadecimal color code or by using the color picker"></i>
+                                                                </label>
+                                                                <div class="input-group platform-scheme osta_color_code">
+                                                                    <input type="text" name="melis_core_platform_theme_options_panel_save_btn_hover_bg_color" id="melis_core_platform_theme_options_panel_save_btn_hover_bg_color" class="form-control minicolor-hex" data-control="hue" placeholder="Edit platform theme options panel save button hover background color" value="#ffffff">
+                                                                    <span class="input-group-addon">
+                                                                        <input type="hidden" class="minicolor" value="#ffffff" />
+                                                                    </span>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="form-group">
+                                                                <label for="melis_core_platform_theme_options_panel_save_btn_hover_text_color" class="d-flex flex-row justify-content-between">
+                                                                    <div class="label-text">Platform theme options panel save button hover text color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the platform theme options panel save button hover text color by typing the hexadecimal color code or by using the color picker"></i>
+                                                                </label>
+                                                                <div class="input-group platform-scheme osta_color_code">
+                                                                    <input type="text" name="melis_core_platform_theme_options_panel_save_btn_hover_text_color" id="melis_core_platform_theme_options_panel_save_btn_hover_text_color" class="form-control minicolor-hex" data-control="hue" placeholder="Edit platform theme options panel save button hover text color" value="#e61c23">
+                                                                    <span class="input-group-addon">
+                                                                        <input type="hidden" class="minicolor" value="#e61c23" />
+                                                                    </span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -962,22 +1337,6 @@ if ($headerTitleLen > 13) {
                                                             <?php
                                                             }
                                                             ?>
-                                                            
-                                                            <!-- added static form group -->
-                                                            <!-- <div class="form-group">
-                                                                <label for="melis_core_platform_theme_modal_border_width" class="d-flex flex-row justify-content-between">
-                                                                    <div class="label-text">Modal border width</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change modal border width"></i>
-                                                                </label>
-                                                                <div class="row">
-                                                                    <div class="col-9">
-                                                                        <div id="modal-border-width-range-slider-min" class="modal-border-width-range-slider-min" style="border: 0; color: #f6931f; font-weight: bold;"></div>
-                                                                    </div>
-                                                                    <div class="col-3">
-                                                                        <input type="text" name="melis_core_platform_theme_modal_border_width" id="melis_core_platform_theme_modal_border_width" class="modal-border-width-range-slider-value range-slider-value form-control" />
-                                                                    </div>
-                                                                </div>
-                                                            </div> -->
-                                                            <!-- end added static form group -->
                                                         </div>
                                                     </div>
                                                 </div>
