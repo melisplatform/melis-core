@@ -750,6 +750,7 @@ var rangeSliderSize = {
                 step: 0.01,
                 value: $("#melis_core_platform_theme_dnd_layout_column_button_hover_opacity").val()
             }, // dnd layout column button hover opacity
+            // login page options
             { 
                 selectorMin: '.login-page-header-text-font-size-range-slider-min',
                 selectorValue: '.login-page-header-text-font-size-range-slider-value',
