@@ -71,6 +71,7 @@ class MelisCorePlatformSchemeService extends MelisGeneralService
                 $entScheme->setUserProfile($schemeData->pscheme_user_profile);
                 $entScheme->setMenu($schemeData->pscheme_menu);
                 $entScheme->setFooter($schemeData->pscheme_footer);
+                $entScheme->setLogin($schemeData->pscheme_login_page);
                 $entScheme->setHeader($schemeData->pscheme_header_navigation);
                 $entScheme->setBubblePlugin($schemeData->pscheme_bubble_plugins);
                 $entScheme->setDashboardPlugin($schemeData->pscheme_dashboard_plugins);
@@ -80,7 +81,8 @@ class MelisCorePlatformSchemeService extends MelisGeneralService
                 $entScheme->setFormElement($schemeData->pscheme_form_elements);
                 $entScheme->setTab($schemeData->pscheme_tab);
                 $entScheme->setDatepicker($schemeData->pscheme_datepicker);     
-                $entScheme->setDragdrop($schemeData->pscheme_drag_drop);             
+                $entScheme->setDragdrop($schemeData->pscheme_drag_drop);
+                $entScheme->setPlatformThemeBox($schemeData->pscheme_platform_theme_box);
             }
 
             $entScheme->setIsActive($schemeData->pscheme_is_active);
@@ -158,6 +160,7 @@ class MelisCorePlatformSchemeService extends MelisGeneralService
                 'pscheme_user_profile' => $defaultSchemeData->pscheme_user_profile,
                 'pscheme_menu' => $defaultSchemeData->pscheme_menu,
                 'pscheme_footer' => $defaultSchemeData->pscheme_footer,
+                'pscheme_login_page' => $defaultSchemeData->pscheme_login_page,
                 'pscheme_header_navigation' => $defaultSchemeData->pscheme_header_navigation,
                 'pscheme_bubble_plugins' =>  $defaultSchemeData->pscheme_bubble_plugins,
                 'pscheme_dashboard_plugins' => $defaultSchemeData->pscheme_dashboard_plugins,
@@ -168,6 +171,7 @@ class MelisCorePlatformSchemeService extends MelisGeneralService
                 'pscheme_tab' => $defaultSchemeData->pscheme_tab,
                 'pscheme_datepicker' => $defaultSchemeData->pscheme_datepicker,
                 'pscheme_drag_drop' => $defaultSchemeData->pscheme_drag_drop,
+                'pscheme_platform_theme_box' => $defaultSchemeData->pscheme_platform_theme_box,
             );
 
             $success = $this->schemeTable()->save($data, $id);

@@ -53,6 +53,7 @@ class PlatformSchemeController extends MelisAbstractActionController
             $userProfile = json_decode($schemeData->getUserProfile(), true);           
             $menu = json_decode($schemeData->getMenu(), true);         
             $footer = json_decode($schemeData->getFooter(), true);
+            $login = json_decode($schemeData->getLogin(), true);
             $header = json_decode($schemeData->getHeader(), true);
             $bubblePlugin = json_decode($schemeData->getBubblePlugin(), true);
             $dashboardPlugin = json_decode($schemeData->getDashboardPlugin(), true);
@@ -63,6 +64,7 @@ class PlatformSchemeController extends MelisAbstractActionController
             $tab = json_decode($schemeData->getTab(), true);
             $datepicker = json_decode($schemeData->getDatepicker(), true);
             $dragDrop = json_decode($schemeData->getDragdrop(), true);
+            $platformThemeBox = json_decode($schemeData->getplatformThemeBox(), true);
            
             //set the value as array for multicheckbox(they are imploded by ';' when saving)
             $dashboardPlugin = array_map(function ($a) {
@@ -84,7 +86,7 @@ class PlatformSchemeController extends MelisAbstractActionController
                 return strpos($a, ';') ? explode(';', $a) : $a;
             }, $dragDrop);
            
-            $platformThemeOptionData = array_merge($topLogo, $userProfile, $menu, $footer, $header, $bubblePlugin, $dashboardPlugin, $dashboardPluginMenu, $modal, $dialog, $formElement, $tab, $datepicker, $dragDrop);
+            $platformThemeOptionData = array_merge($topLogo, $userProfile, $menu, $footer, $login, $header, $bubblePlugin, $dashboardPlugin, $dashboardPluginMenu, $modal, $dialog, $formElement, $tab, $datepicker, $dragDrop, $platformThemeBox);
 
             if ($platformThemeOptionData) {
                 $platformThemeOptionForm->setData($platformThemeOptionData);
@@ -510,6 +512,7 @@ class PlatformSchemeController extends MelisAbstractActionController
             $userProfile = json_decode($schemeData->getUserProfile(), true);
             $menu = json_decode($schemeData->getMenu(), true);
             $footer = json_decode($schemeData->getFooter(), true);
+            $login = json_decode($schemeData->getLogin(), true);
             $header = json_decode($schemeData->getHeader(), true);
             $bubblePlugin = json_decode($schemeData->getBubblePlugin(), true);
             $dashboardPlugin = json_decode($schemeData->getDashboardPlugin(), true);
@@ -520,8 +523,9 @@ class PlatformSchemeController extends MelisAbstractActionController
             $tab = json_decode($schemeData->getTab(), true);
             $datepicker = json_decode($schemeData->getDatepicker(), true);
             $dragDrop = json_decode($schemeData->getDragdrop(), true);
+            $platformThemeBox = json_decode($schemeData->getPlatformThemeBox(), true);
 
-            $platformThemeData = array_merge($topLogo, $userProfile, $menu, $footer, $header, $bubblePlugin, $dashboardPlugin, $dashboardPluginMenu, $modal, $dialog, $formElement, $tab, $datepicker, $dragDrop);
+            $platformThemeData = array_merge($topLogo, $userProfile, $menu, $footer, $header, $bubblePlugin, $dashboardPlugin, $dashboardPluginMenu, $modal, $dialog, $formElement, $tab, $datepicker, $dragDrop, $platformThemeBox);
            
             $platformThemeForm = $this->getPlatformThemeOptionForm();
             if (!empty($platformThemeData)) {
@@ -751,6 +755,7 @@ class PlatformSchemeController extends MelisAbstractActionController
                 $userProfile = [];
                 $menu = [];
                 $footer = [];
+                $loginPage = [];
                 $header = [];
                 $bubble = [];
                 $dashboardPlugin = [];
@@ -761,6 +766,7 @@ class PlatformSchemeController extends MelisAbstractActionController
                 $tab = [];
                 $datepicker = [];
                 $dragdrop = [];
+                $platformThemeBox = [];
 
                 foreach ($form->getElements() as $key => $elem) {
                     //add brackets to get the data
@@ -779,6 +785,8 @@ class PlatformSchemeController extends MelisAbstractActionController
                         $menu[$key] = $data;
                     } elseif ($elem->getAttribute('category') == 'footer') {
                         $footer[$key] = $data;
+                    } elseif ($elem->getAttribute('category') == 'login_page') {
+                        $loginPage[$key] = $data;
                     } elseif ($elem->getAttribute('category') == 'header') {
                         $header[$key] = $data;
                     } elseif ($elem->getAttribute('category') == 'bubble') {
@@ -799,6 +807,8 @@ class PlatformSchemeController extends MelisAbstractActionController
                         $datepicker[$key] = $data;
                     } elseif ($elem->getAttribute('category') == 'dragdrop') {
                         $dragdrop[$key] = $data;
+                    } elseif ($elem->getAttribute('category') == 'platform_theme_options_panel') {
+                        $platformThemeBox[$key] = $data;
                     }
                 }
 
@@ -810,6 +820,7 @@ class PlatformSchemeController extends MelisAbstractActionController
                     'pscheme_user_profile' => json_encode($userProfile),
                     'pscheme_menu' => json_encode($menu),
                     'pscheme_footer' => json_encode($footer),
+                    'pscheme_login_page' => json_encode($loginPage),
                     'pscheme_header_navigation' => json_encode($header),
                     'pscheme_bubble_plugins' => json_encode($bubble),
                     'pscheme_dashboard_plugins' => json_encode($dashboardPlugin),
@@ -820,6 +831,7 @@ class PlatformSchemeController extends MelisAbstractActionController
                     'pscheme_tab' => json_encode($tab),
                     'pscheme_datepicker' => json_encode($datepicker),
                     'pscheme_drag_drop' => json_encode($dragdrop),
+                    'pscheme_platform_theme_box' => json_encode($platformThemeBox),
                 );
 
                 $success = $this->getPlatformSchemeSvc()->saveScheme($data, $schemeId, true);

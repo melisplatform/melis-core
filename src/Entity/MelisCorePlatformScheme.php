@@ -27,6 +27,7 @@ class MelisCorePlatformScheme
     protected $userProfile;
     protected $menu;
     protected $footer;
+    protected $login;
     protected $header;
     protected $bubblePlugin;
     protected $dashboardPlugin;
@@ -37,6 +38,7 @@ class MelisCorePlatformScheme
     protected $tab;
     protected $datepicker;
     protected $dragdrop;
+    protected $platformThemeBox;
 
     public function setId($id)
     {
@@ -173,6 +175,16 @@ class MelisCorePlatformScheme
         return $this->footer;
     }
 
+    public function setLogin($login)
+    {
+        $this->login = $login;
+    }
+
+    public function getLogin()
+    {
+        return $this->login;
+    }
+
     public function setHeader($header)
     {
         $this->header = $header;
@@ -271,5 +283,15 @@ class MelisCorePlatformScheme
     public function getDragdrop()
     {
         return $this->dragdrop;
+    }
+
+    public function setPlatformThemeBox($platformThemeBox)
+    {
+        $this->platformThemeBox = $platformThemeBox;
+    }
+
+    public function getPlatformThemeBox()
+    {
+        return $this->platformThemeBox;
     }
 }

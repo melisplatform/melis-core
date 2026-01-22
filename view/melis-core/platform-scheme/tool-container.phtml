@@ -217,8 +217,8 @@ if ($headerTitleLen > 13) {
                                 </div>
                             </div>
                             <?php
-                                $platformThemeOptionForm = $this->platformThemeOptionForm;
-                                echo $this->form()->openTag($platformThemeOptionForm);
+                            $platformThemeOptionForm = $this->platformThemeOptionForm;
+                            echo $this->form()->openTag($platformThemeOptionForm);
                             ?>
                             <div id="theme-options" class="accordion">
                                 <div class="accordion-item general-options">
@@ -309,7 +309,7 @@ if ($headerTitleLen > 13) {
                                                                     </div>
                                                             <?php    }
                                                             }
-                                                            ?>                                                         
+                                                            ?>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -394,7 +394,7 @@ if ($headerTitleLen > 13) {
                                                         </div>
                                                     </div>
                                                 </div>
-                                                
+
                                                 <!-- Login page -->
                                                 <div class="accordion-item login-page-options">
                                                     <h6 class="accordion-header">
@@ -404,8 +404,44 @@ if ($headerTitleLen > 13) {
                                                     </h6>
                                                     <div id="login-page-options" class="accordion-collapse collapse" data-bs-parent="#accordion-sidebar">
                                                         <div class="accordion-body">
-                                                            <!-- to be added under footer after login page - need added on db -->
-                                                            <div class="form-group">
+
+                                                            <?php
+                                                            foreach ($platformThemeOptionForm->getElements() as $elementKey => $element) {
+                                                                if ($element->getAttribute('category') == 'login_page') { ?>
+                                                                    <div class="form-group">
+                                                                        <label for="<?= $element->getAttribute('id') ?>" class="d-flex flex-row justify-content-between">
+                                                                            <div class="label-text"><?= $element->getLabel(); ?></div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="<?= $this->translate($element->getOptions()['tooltip']); ?>"></i>
+                                                                        </label>
+
+                                                                        <?php
+                                                                        if (strpos($element->getName(), 'color') !== false) { ?>
+                                                                            <div class="input-group platform-scheme osta_color_code">
+                                                                                <?= $this->formRow($element->setLabel("")); ?>
+                                                                                <span class="input-group-addon">
+                                                                                    <input type="hidden" class="minicolor" value="<?= $element->getValue(); ?>" />
+                                                                                </span>
+                                                                            </div>
+                                                                        <?php  } elseif (strpos($element->getName(), 'size') !== false) {
+                                                                            $element->setAttribute('readonly', true);
+                                                                        ?>
+                                                                            <div class="row">
+                                                                                <div class="col-9">
+                                                                                    <div id="<?= $element->getAttribute('sliderId') ?>" class="<?= $element->getAttribute('sliderClass') ?>" style="border: 0; color: #f6931f; font-weight: bold;"></div>
+                                                                                </div>
+                                                                                <div class="col-3 g-0">
+                                                                                    <?= $this->formRow($element->setLabel("")); ?>
+                                                                                </div>
+                                                                            </div>
+                                                                        <?php } ?>
+                                                                    </div>
+                                                                <?php    }
+                                                                ?>
+                                                            <?php
+                                                            }
+                                                            ?>
+                                                            <!-- to be added under footer after login page -
+                                                              need added on db -->
+                                                            <!-- <div class="form-group">
                                                                 <label for="melis_core_platform_theme_login_page_header_bg_color" class="d-flex flex-row justify-content-between">
                                                                     <div class="label-text">Login page header background color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the login page header background color by typing the hexadecimal color code or by using the color picker"></i>
                                                                 </label>
@@ -543,12 +579,12 @@ if ($headerTitleLen > 13) {
                                                                         <input type="hidden" class="minicolor" value="#e61c23" />
                                                                     </span>
                                                                 </div>
-                                                            </div>
+                                                            </div> -->
                                                             <!-- end to be added under footer after login page - need added on db -->
                                                         </div>
                                                     </div>
                                                 </div>
-                                                
+
                                                 <div class="accordion-item header">
                                                     <h6 class="accordion-header">
                                                         <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#header-navigation" aria-expanded="false" aria-controls="header-navigation">
@@ -755,7 +791,7 @@ if ($headerTitleLen > 13) {
                                                         </div>
                                                     </div>
                                                 </div>
-                                                
+
                                                 <div class="accordion-item component-dragndrop">
                                                     <h6 class="accordion-header">
                                                         <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#component-dragndrop" aria-expanded="false" aria-controls="component-dragndrop">
@@ -780,8 +816,10 @@ if ($headerTitleLen > 13) {
                                                                                     <input type="hidden" class="minicolor" value="<?= $element->getValue(); ?>" />
                                                                                 </span>
                                                                             </div>
-                                                                        <?php  } elseif (strpos($element->getName(), 'size') !== false || strpos($element->getName(), 'width') !== false  || strpos($element->getName(), 'radius') !== false || strpos($element->getName(), 'height') !== false 
-                                                                                || strpos($element->getName(), 'spacing') !== false || strpos($element->getName(), 'opacity') !== false || strpos($element->getName(), 'indent') !== false) {
+                                                                        <?php  } elseif (
+                                                                            strpos($element->getName(), 'size') !== false || strpos($element->getName(), 'width') !== false  || strpos($element->getName(), 'radius') !== false || strpos($element->getName(), 'height') !== false
+                                                                            || strpos($element->getName(), 'spacing') !== false || strpos($element->getName(), 'opacity') !== false || strpos($element->getName(), 'indent') !== false
+                                                                        ) {
                                                                             $element->setAttribute('readonly', true);
                                                                         ?>
                                                                             <div class="row">
@@ -818,10 +856,10 @@ if ($headerTitleLen > 13) {
                                                                 <?php    }
                                                                 ?>
                                                             <?php
-                                                            }?>
-                                                            
+                                                            } ?>
+
                                                             <!-- Additional DND zone and layout -->
-                                                            <div class="form-group">
+                                                            <!-- <div class="form-group">
                                                                 <label for="melis_core_platform_theme_dnd_plugins_box_category_btn_snippets_bg_color" class="d-flex flex-row justify-content-between">
                                                                     <div class="label-text">Plugins box category button snippets background color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the plugins box category button snippets background color by typing the hexadecimal color code or by using the color picker"></i>
                                                                 </label>
@@ -866,12 +904,12 @@ if ($headerTitleLen > 13) {
                                                                 </label>
                                                                 <div class="btn-group btn-group-alignment" role="group" aria-label="Text align radio toggle button group">
                                                                     <input name="melis_core_platform_theme_dnd_plugins_box_category_btn_text_align" type="radio" class="btn-check" id="melis_core_platform_theme_dnd_plugins_box_category_btn_text_align_left" autocomplete="off" value="left">
-                                                                    <label class="btn btn-default" for="melis_core_platform_theme_dnd_plugins_box_category_btn_text_align_left"><i class="bi bi-text-left"></i></label>                                                                                                                                                                    <input name="melis_core_platform_theme_dnd_plugins_box_category_btn_text_align" type="radio" class="btn-check" id="melis_core_platform_theme_dnd_plugins_box_category_btn_text_align_center" autocomplete="off" value="center" checked="">
-                                                                    <label class="btn btn-default" for="melis_core_platform_theme_dnd_plugins_box_category_btn_text_align_center"><i class="bi bi-text-center"></i></label>                                                                                                                                                                    <input name="melis_core_platform_theme_dnd_plugins_box_category_btn_text_align" type="radio" class="btn-check" id="melis_core_platform_theme_dnd_plugins_box_category_btn_text_align_right" autocomplete="off" value="right">
-                                                                    <label class="btn btn-default" for="melis_core_platform_theme_dnd_plugins_box_category_btn_text_align_right"><i class="bi bi-text-right"></i></label>                                                                                                                                                            
+                                                                    <label class="btn btn-default" for="melis_core_platform_theme_dnd_plugins_box_category_btn_text_align_left"><i class="bi bi-text-left"></i></label> <input name="melis_core_platform_theme_dnd_plugins_box_category_btn_text_align" type="radio" class="btn-check" id="melis_core_platform_theme_dnd_plugins_box_category_btn_text_align_center" autocomplete="off" value="center" checked="">
+                                                                    <label class="btn btn-default" for="melis_core_platform_theme_dnd_plugins_box_category_btn_text_align_center"><i class="bi bi-text-center"></i></label> <input name="melis_core_platform_theme_dnd_plugins_box_category_btn_text_align" type="radio" class="btn-check" id="melis_core_platform_theme_dnd_plugins_box_category_btn_text_align_right" autocomplete="off" value="right">
+                                                                    <label class="btn btn-default" for="melis_core_platform_theme_dnd_plugins_box_category_btn_text_align_right"><i class="bi bi-text-right"></i></label>
                                                                 </div>
                                                             </div>
-                                                            
+
                                                             <div class="form-group">
                                                                 <label for="melis_core_platform_theme_dnd_plugins_box_category_btn_snippets_opacity" class="d-flex flex-row justify-content-between">
                                                                     <div class="label-text">Plugins box category button snippets opacity</div>
@@ -882,11 +920,11 @@ if ($headerTitleLen > 13) {
                                                                         <div id="dnd-plugins-box-category-btn-snippets-opacity-range-slider-min" class="dnd-plugins-box-category-btn-snippets-opacity-range-slider-min" style="border: 0; color: #f6931f; font-weight: bold;"></div>
                                                                     </div>
                                                                     <div class="col-3 g-0">
-                                                                        <input type="text" name="melis_core_platform_theme_dnd_plugins_box_category_btn_snippets_opacity" id="melis_core_platform_theme_dnd_plugins_box_category_btn_snippets_opacity" class="dnd-plugins-box-category-btn-snippets-opacity-range-slider-value range-slider-value form-control" />                                                                                
+                                                                        <input type="text" name="melis_core_platform_theme_dnd_plugins_box_category_btn_snippets_opacity" id="melis_core_platform_theme_dnd_plugins_box_category_btn_snippets_opacity" class="dnd-plugins-box-category-btn-snippets-opacity-range-slider-value range-slider-value form-control" />
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                            
+
                                                             <div class="form-group">
                                                                 <label for="melis_core_platform_theme_dnd_plugins_box_category_btn_snippets_hover_bg_color" class="d-flex flex-row justify-content-between">
                                                                     <div class="label-text">Plugins box category button snippets hover background color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the plugins box category button snippets hover background color by typing the hexadecimal color code or by using the color picker"></i>
@@ -923,12 +961,12 @@ if ($headerTitleLen > 13) {
                                                                         <input type="text" name="melis_core_platform_theme_dnd_plugins_box_category_btn_snippets_plugin_title_font_size" id="melis_core_platform_theme_dnd_plugins_box_category_btn_snippets_plugin_title_font_size" class="dnd-plugins-box-category-button-snippets-plugin-title-font-size-range-slider-value range-slider-value form-control" />
                                                                     </div>
                                                                 </div>
-                                                            </div>
+                                                            </div> -->
                                                             <!-- end added -->
                                                         </div>
                                                     </div>
                                                 </div>
-                                                
+
                                                 <!-- Platform theme options -->
                                                 <div class="accordion-item platform-theme-opts">
                                                     <h6 class="accordion-header">
@@ -938,7 +976,43 @@ if ($headerTitleLen > 13) {
                                                     </h6>
                                                     <div id="platform-theme-opts" class="accordion-collapse collapse" data-bs-parent="#accordion-sidebar">
                                                         <div class="accordion-body">
-                                                            <div class="form-group">
+
+                                                            <?php
+                                                            foreach ($platformThemeOptionForm->getElements() as $elementKey => $element) {
+                                                                if ($element->getAttribute('category') == 'platform_theme_options_panel') { ?>
+                                                                    <div class="form-group">
+                                                                        <label for="<?= $element->getAttribute('id') ?>" class="d-flex flex-row justify-content-between">
+                                                                            <div class="label-text"><?= $element->getLabel(); ?></div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="<?= $this->translate($element->getOptions()['tooltip']); ?>"></i>
+                                                                        </label>
+
+                                                                        <?php
+                                                                        if (strpos($element->getName(), 'color') !== false) { ?>
+                                                                            <div class="input-group platform-scheme osta_color_code">
+                                                                                <?= $this->formRow($element->setLabel("")); ?>
+                                                                                <span class="input-group-addon">
+                                                                                    <input type="hidden" class="minicolor" value="<?= $element->getValue(); ?>" />
+                                                                                </span>
+                                                                            </div>
+                                                                        <?php  } elseif (strpos($element->getName(), 'size') !== false || strpos($element->getName(), 'width') !== false) {
+                                                                            $element->setAttribute('readonly', true);
+                                                                        ?>
+                                                                            <div class="row">
+                                                                                <div class="col-9">
+                                                                                    <div id="<?= $element->getAttribute('sliderId') ?>" class="<?= $element->getAttribute('sliderClass') ?>" style="border: 0; color: #f6931f; font-weight: bold;"></div>
+                                                                                </div>
+                                                                                <div class="col-3 g-0">
+                                                                                    <?= $this->formRow($element->setLabel("")); ?>
+                                                                                </div>
+                                                                            </div>
+                                                                        <?php } ?>
+                                                                    </div>
+                                                                <?php    }
+                                                                ?>
+                                                            <?php
+                                                            }
+                                                            ?>
+
+                                                            <!-- <div class="form-group">
                                                                 <label for="melis_core_platform_theme_options_panel_bg_color" class="d-flex flex-row justify-content-between">
                                                                     <div class="label-text">Platform theme options panel background color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the platform theme options panel background color by typing the hexadecimal color code or by using the color picker"></i>
                                                                 </label>
@@ -1000,10 +1074,10 @@ if ($headerTitleLen > 13) {
                                                                         <input type="text" name="melis_core_platform_theme_options_panel_header_close_btn_font_size" id="melis_core_platform_theme_options_panel_header_close_btn_font_size" class="theme-options-panel-header-close-btn-font-size-range-slider-value range-slider-value form-control" />
                                                                     </div>
                                                                 </div>
-                                                            </div>
+                                                            </div> -->
 
                                                             <!-- need to apply also on the options border width and color -->
-                                                            <div class="form-group">
+                                                            <!-- <div class="form-group">
                                                                 <label for="melis_core_platform_theme_options_panel_header_border_width" class="d-flex flex-row justify-content-between">
                                                                     <div class="label-text">Platform theme options panel header border width</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the platform theme options panel header border width"></i>
                                                                 </label>
@@ -1027,10 +1101,10 @@ if ($headerTitleLen > 13) {
                                                                         <input type="hidden" class="minicolor" value="#eeeeee" />
                                                                     </span>
                                                                 </div>
-                                                            </div>
+                                                            </div> -->
                                                             <!-- end need to apply -->
 
-                                                            <div class="form-group">
+                                                            <!-- <div class="form-group">
                                                                 <label for="melis_core_platform_theme_options_panel_options_input_radio_border_color" class="d-flex flex-row justify-content-between">
                                                                     <div class="label-text">Platform theme options panel options input radio border color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the platform theme options panel options input radio border color by typing the hexadecimal color code or by using the color picker"></i>
                                                                 </label>
@@ -1078,7 +1152,7 @@ if ($headerTitleLen > 13) {
                                                                 </div>
                                                             </div>
 
-                                                            <!-- includes the title and labels under accordions -->
+                                                          
                                                             <div class="form-group">
                                                                 <label for="melis_core_platform_theme_options_panel_options_title_label_icon_and_texts_color" class="d-flex flex-row justify-content-between">
                                                                     <div class="label-text">Platform theme options panel options title label, icon and texts color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the platform theme options panel options title label, icon and texts color by typing the hexadecimal color code or by using the color picker"></i>
@@ -1090,7 +1164,7 @@ if ($headerTitleLen > 13) {
                                                                     </span>
                                                                 </div>
                                                             </div>
-                                                            
+
                                                             <div class="form-group">
                                                                 <label for="melis_core_platform_theme_options_panel_options_input_text_bg_color" class="d-flex flex-row justify-content-between">
                                                                     <div class="label-text">Platform theme options panel options input text background color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the platform theme options panel options input text background color by typing the hexadecimal color code or by using the color picker"></i>
@@ -1150,8 +1224,7 @@ if ($headerTitleLen > 13) {
                                                                     </span>
                                                                 </div>
                                                             </div>
-
-                                                            <!-- button groups includes text alignment and text font styles -->
+                                                      
                                                             <div class="form-group">
                                                                 <label for="melis_core_platform_theme_options_panel_options_btn_group_bg_color" class="d-flex flex-row justify-content-between">
                                                                     <div class="label-text">Platform theme options panel options button group background color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the platform theme options panel options button group background color by typing the hexadecimal color code or by using the color picker"></i>
@@ -1186,10 +1259,10 @@ if ($headerTitleLen > 13) {
                                                                         <input type="hidden" class="minicolor" value="#797979" />
                                                                     </span>
                                                                 </div>
-                                                            </div>
+                                                            </div> -->
                                                             <!-- end button groups -->
 
-                                                            <div class="form-group">
+                                                            <!-- <div class="form-group">
                                                                 <label for="melis_core_platform_theme_options_panel_options_tip_info_text_color" class="d-flex flex-row justify-content-between">
                                                                     <div class="label-text">Platform theme options panel options tip info text color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the platform theme options panel options tip info text color by typing the hexadecimal color code or by using the color picker"></i>
                                                                 </label>
@@ -1251,7 +1324,7 @@ if ($headerTitleLen > 13) {
                                                                 </div>
                                                             </div>
 
-                                                            
+
                                                             <div class="form-group">
                                                                 <label for="melis_core_platform_theme_options_panel_save_btn_hover_text_color" class="d-flex flex-row justify-content-between">
                                                                     <div class="label-text">Platform theme options panel save button hover text color</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change the platform theme options panel save button hover text color by typing the hexadecimal color code or by using the color picker"></i>
@@ -1262,7 +1335,8 @@ if ($headerTitleLen > 13) {
                                                                         <input type="hidden" class="minicolor" value="#e61c23" />
                                                                     </span>
                                                                 </div>
-                                                            </div>
+                                                            </div> -->
+
                                                         </div>
                                                     </div>
                                                 </div>
@@ -1584,12 +1658,12 @@ if ($headerTitleLen > 13) {
                                                                                         <?= $this->formRow($element->setLabel("")); ?>
                                                                                     </div>
                                                                                 </div>
-                                                                      <?php } 
-                                                                        }        
+                                                                    <?php }
+                                                                        }
                                                                     }
                                                                     ?>
                                                                 </div>
-                                                            </div>                                                           
+                                                            </div>
 
                                                             <div class="form-group">
                                                                 <label for="daterangepicker_end_date_label" class="d-flex flex-row justify-content-between">
@@ -1615,8 +1689,8 @@ if ($headerTitleLen > 13) {
                                                                                         <?= $this->formRow($element->setLabel("")); ?>
                                                                                     </div>
                                                                                 </div>
-                                                                    <?php   } 
-                                                                        }                                                                        
+                                                                    <?php   }
+                                                                        }
                                                                     }
                                                                     ?>
                                                                 </div>
@@ -1680,10 +1754,10 @@ if ($headerTitleLen > 13) {
 
                 $(".platform-scheme .minicolor-hex").each(function(i, v) {
                     var $this = $(v);
-                        $this.on("click", function() {
-                            // .minicolors-focus, .minicolors-panel style="display: block;"
-                            $(this).closest(".input-group").find(".minicolors .minicolors-swatch").trigger("click");
-                        });
+                    $this.on("click", function() {
+                        // .minicolors-focus, .minicolors-panel style="display: block;"
+                        $(this).closest(".input-group").find(".minicolors .minicolors-swatch").trigger("click");
+                    });
                 });
 
                 $("input:file").filestyle({

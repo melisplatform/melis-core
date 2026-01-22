@@ -23,7 +23,7 @@ UPDATE `melis_core_platform_scheme` SET `pscheme_menu` = '{"melis_core_platform_
 WHERE `melis_core_platform_scheme`.`pscheme_id` IN (1,2);    
 
 UPDATE `melis_core_platform_scheme` SET `pscheme_footer` = '{"melis_core_platform_theme_footer_text_fontsize": 10, 
-    "melis_core_platform_theme_footer_link_text_color": "#e61c23", "melis_core_platform_theme_footer_text_color": "#686868", "melis_core_platform_theme_login_page_footer_text_color": "#fff"}'
+    "melis_core_platform_theme_footer_link_text_color": "#e61c23", "melis_core_platform_theme_footer_text_color": "#686868"}'
 WHERE `melis_core_platform_scheme`.`pscheme_id` IN (1,2);
 
 UPDATE `melis_core_platform_scheme` SET `pscheme_header_navigation` = '{"melis_core_platform_theme_header_text_icon_color": "#fff", 
