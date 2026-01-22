@@ -704,9 +704,12 @@ class MelisAuthController extends MelisAbstractActionController
                                 // this will be used in setCredential method
                                 $password = $userPassword;
                                 $passwordHistory = $this->getServiceManager()->get('MelisUpdatePasswordHistoryService');
-                                $userLastPasswordUpdatedDate = $passwordHistory->getLastPasswordUpdatedDate($userData->usr_id)[0]['uph_password_updated_date'];
+                                $lastPasswordHistory = $passwordHistory->getLastPasswordUpdatedDate($userData->usr_id);
+                                $userLastPasswordUpdatedDate = $lastPasswordHistory[0]['uph_password_updated_date'] ?? null;
 
-                                if (!empty($config['password_validity_status']) && !empty($config['password_validity_lifetime'])) {
+                                if (!empty($config['password_validity_status'])
+                                    && !empty($config['password_validity_lifetime'])
+                                    && !empty($userLastPasswordUpdatedDate)) {
                                     $passwordValidityLifetime = $config['password_validity_lifetime'];
                                     $passwordExpiryDate = date('Y-m-d H:i:s', strtotime($userLastPasswordUpdatedDate . '+' . $passwordValidityLifetime . ' days'));
                                     $currentDate = date('Y-m-d H:i:s');
