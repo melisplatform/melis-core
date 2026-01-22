@@ -780,8 +780,11 @@ class MelisAuthController extends MelisAbstractActionController
                                     'user' => $userData,
                                 ]);
 
+                                $authResult = $authEvent->last();
                                 if ($authEvent->stopped()) {
-                                    $result = $authEvent->last();
+                                    $result = $authResult;
+                                } elseif (is_array($authResult) && isset($authResult['success']) && $authResult['success'] === false) {
+                                    $result = $authResult;
                                 } else {
                                     $melisCoreAuth->getAdapter()->setIdentity($postValues['usr_login'])
                                         ->setCredential($password);
