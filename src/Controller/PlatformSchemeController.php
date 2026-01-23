@@ -64,6 +64,7 @@ class PlatformSchemeController extends MelisAbstractActionController
             $tab = json_decode($schemeData->getTab(), true);
             $datepicker = json_decode($schemeData->getDatepicker(), true);
             $dragDrop = json_decode($schemeData->getDragdrop(), true);
+
             $platformThemeBox = json_decode($schemeData->getplatformThemeBox(), true);
            
             //set the value as array for multicheckbox(they are imploded by ';' when saving)

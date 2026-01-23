@@ -7611,15 +7611,15 @@ return array(
                         ),
                         array(
                             'spec' => array(
-                                'name' => 'melis_core_platform_theme_dnd_plugins_box_category_btn_text_align',
+                                'name' => 'melis_core_platform_theme_dnd_plugins_box_category_btn_snippets_text_align',
                                 'type' => 'Laminas\Form\Element\Radio',
                                 'options' => array(
-                                    'label' => 'tr_meliscore_platform_theme_dnd_plugins_box_category_btn_text_align',
-                                    'tooltip' => 'tr_meliscore_platform_theme_dnd_plugins_box_category_btn_text_align_tooltip',
+                                    'label' => 'tr_melis_core_platform_theme_dnd_plugins_box_category_btn_snippets_text_align',
+                                    'tooltip' => 'tr_melis_core_platform_theme_dnd_plugins_box_category_btn_snippets_text_align_tooltip',
                                     'value_options' => array(
-                                        'left' => '<label class="btn btn-default" for="melis_core_platform_theme_dnd_plugins_box_category_btn_text_align_left"><i class="bi bi-text-left"></i></label>',
-                                        'center' => '<label class="btn btn-default" for="melis_core_platform_theme_dnd_plugins_box_category_btn_text_align_center"><i class="bi bi-text-center"></i></label>',
-                                        'right' => '<label class="btn btn-default" for="melis_core_platform_theme_dnd_plugins_box_category_btn_text_align_right"><i class="bi bi-text-right"></i></label>',
+                                        'left' => '<label class="btn btn-default" for="melis_core_platform_theme_dnd_plugins_box_category_btn_snippets_text_align_left"><i class="bi bi-text-left"></i></label>',
+                                        'center' => '<label class="btn btn-default" for="melis_core_platform_theme_dnd_plugins_box_category_btn_snippets_text_align_center"><i class="bi bi-text-center"></i></label>',
+                                        'right' => '<label class="btn btn-default" for="melis_core_platform_theme_dnd_plugins_box_category_btn_snippets_text_align_right"><i class="bi bi-text-right"></i></label>',
                                     ),
                                     'label_attributes' => array(
                                         'class' => 'melis-radio-box',
@@ -7630,7 +7630,7 @@ return array(
                                     'value' => '',
                                     'placeholder' => '',
                                     'class' => 'form-control',
-                                    'id' => 'melis_core_platform_theme_dnd_plugins_box_category_btn_text_align',
+                                    'id' => 'melis_core_platform_theme_dnd_plugins_box_category_btn_snippets_text_align',
                                     'category' => 'dragdrop',
                                     'default' => 'center'
                                 ),
@@ -12158,6 +12158,78 @@ return array(
                         ],
                     ],
 
+                        'melis_core_platform_theme_dnd_plugins_box_category_btn_snippets_bg_color' => [
+                            'name'     => 'melis_core_platform_theme_dnd_plugins_box_category_btn_snippets_bg_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',
+                                    'options' => [
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+                        'melis_core_platform_theme_dnd_plugins_box_category_btn_snippets_border_bottom_color' => [
+                            'name'     => 'melis_core_platform_theme_dnd_plugins_box_category_btn_snippets_border_bottom_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',
+                                    'options' => [
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+                        'melis_core_platform_theme_dnd_plugins_box_category_btn_snippets_hover_bg_color' => [
+                            'name'     => 'melis_core_platform_theme_dnd_plugins_box_category_btn_snippets_hover_bg_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',
+                                    'options' => [
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+                        'melis_core_platform_theme_dnd_plugins_box_category_btn_snippets_plugin_title_color' => [
+                            'name'     => 'melis_core_platform_theme_dnd_plugins_box_category_btn_snippets_plugin_title_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',
+                                    'options' => [
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
                     )
                 ),
             ),

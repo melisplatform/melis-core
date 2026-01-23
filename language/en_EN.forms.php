@@ -829,6 +829,22 @@ return array(
     'tr_meliscore_platform_theme_options_panel_save_btn_hover_bg_color_tooltip' => 'Change the platform theme options panel save button hover background color by typing the hexadecimal color code or by using the color picker',
     'tr_meliscore_platform_theme_options_panel_save_btn_hover_text_color' => 'Platform theme options panel save button hover text color',
     'tr_meliscore_platform_theme_options_panel_save_btn_hover_text_color_tooltip' => 'Change the platform theme options panel save button hover text color by typing the hexadecimal color code or by using the color picker',
+    'tr_meliscore_platform_theme_dnd_plugins_box_category_btn_snippets_bg_color' => 'Plugins box category button snippets background color',
+    'tr_meliscore_platform_theme_dnd_plugins_box_category_btn_snippets_bg_color_tooltip' => 'Change the plugins box category button snippets background color by typing the hexadecimal color code or by using the color picker',
+    'tr_meliscore_platform_theme_dnd_plugins_box_category_btn_snippets_border_bottom_width' => 'Plugins box category button snippets border bottom width',
+    'tr_meliscore_platform_theme_dnd_plugins_box_category_btn_snippets_border_bottom_width_tooltip' => 'Change the plugins box category button snippets border bottom width',
+    'tr_meliscore_platform_theme_dnd_plugins_box_category_btn_snippets_border_bottom_color' => 'Plugins box category button snippets border bottom color',
+    'tr_meliscore_platform_theme_dnd_plugins_box_category_btn_snippets_border_bottom_color_tooltip' => 'Change the plugins box category button snippets border bottom color by typing the hexadecimal color code or by using the color picker',
+    'tr_melis_core_platform_theme_dnd_plugins_box_category_btn_snippets_text_align' => 'Plugins box category button snippets text alignment',
+    'tr_melis_core_platform_theme_dnd_plugins_box_category_btn_snippets_text_align_tooltip' => 'Change the plugins box category button snippets text alignment',
+    'tr_meliscore_platform_theme_dnd_plugins_box_category_btn_snippets_opacity' => 'Plugins box category button snippets opacity',
+    'tr_meliscore_platform_theme_dnd_plugins_box_category_btn_snippets_opacity_tooltip' => 'Change the plugins box category button snippets opacity',
+    'tr_meliscore_platform_theme_dnd_plugins_box_category_btn_snippets_hover_bg_color' => 'Plugins box category button snippets hover background color',
+    'tr_meliscore_platform_theme_dnd_plugins_box_category_btn_snippets_hover_bg_color_tooltip' => 'Change the plugins box category button snippets hover background color by typing the hexadecimal color code or by using the color picker',
+    'tr_meliscore_platform_theme_dnd_plugins_box_category_btn_snippets_plugin_title_color' => 'Plugins box category button snippets plugin title color',
+    'tr_meliscore_platform_theme_dnd_plugins_box_category_btn_snippets_plugin_title_color_tooltip' => 'Change the plugins box category button snippets plugin title color by typing the hexadecimal color code or by using the color picker',
+    'tr_meliscore_platform_theme_dnd_plugins_box_category_btn_snippets_plugin_title_font_size' => 'Plugins box category button snippets plugin title font size',
+    'tr_meliscore_platform_theme_dnd_plugins_box_category_btn_snippets_plugin_title_font_size_tooltip' => 'Change plugins box category button snippets plugin title font size',
 
 );
 ?>
