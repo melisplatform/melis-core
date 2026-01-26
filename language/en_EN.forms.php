@@ -435,7 +435,7 @@ return array(
     'tr_meliscore_platform_theme_tab_widget_head_border_color' => 'Tab widget header border color',
     'tr_meliscore_platform_theme_tab_widget_head_border_color_tooltip' => 'Change the color by typing the hexadecimal color code or by using the color picker',
     'tr_meliscore_platform_theme_tab_widget_head_nav_item_and_link_height' => 'Tab widget head navigation height',
-    'tr_meliscore_platform_theme_tab_widget_head_nav_item_and_link_height_tooltip' => '',
+    'tr_meliscore_platform_theme_tab_widget_head_nav_item_and_link_height_tooltip' => 'Set the height using the slider',
     'tr_meliscore_platform_theme_tab_widget_nav_item_border_right_width' => 'Tab widget navigation item border right width',
     'tr_meliscore_platform_theme_tab_widget_nav_item_border_right_width_tooltip' => 'Set the width using the slider',
     'tr_meliscore_platform_theme_tab_widget_nav_item_border_right_color' => 'Tab widget navigation item border right color',
@@ -449,7 +449,7 @@ return array(
     'tr_meliscore_platform_theme_tab_widget_nav_link_text_align' => 'Tab widget navigation link text/icon alignment',
     'tr_meliscore_platform_theme_tab_widget_nav_link_text_align_tooltip' => 'Set the alignment',
     'tr_meliscore_platform_theme_tab_widget_nav_link_icon_height' => 'Tab widget navigation link text/icon height',
-    'tr_meliscore_platform_theme_tab_widget_nav_link_icon_height_tooltip' => '',
+    'tr_meliscore_platform_theme_tab_widget_nav_link_icon_height_tooltip' => 'Set the height using the slider',
     'tr_meliscore_platform_theme_tab_widget_link_icon_color' => 'Tab widget navigation link text/icon color',
     'tr_meliscore_platform_theme_tab_widget_link_icon_color_tooltip' => 'Change the color by typing the hexadecimal color code or by using the color picker',
     'tr_meliscore_platform_theme_tab_widget_link_icon_font_size' => 'Tab widget navigation link text/icon font size',
@@ -845,6 +845,8 @@ return array(
     'tr_meliscore_platform_theme_dnd_plugins_box_category_btn_snippets_plugin_title_color_tooltip' => 'Change the plugins box category button snippets plugin title color by typing the hexadecimal color code or by using the color picker',
     'tr_meliscore_platform_theme_dnd_plugins_box_category_btn_snippets_plugin_title_font_size' => 'Plugins box category button snippets plugin title font size',
     'tr_meliscore_platform_theme_dnd_plugins_box_category_btn_snippets_plugin_title_font_size_tooltip' => 'Change plugins box category button snippets plugin title font size',
+    'tr_melis_core_platform_theme_dashboard_plugin_menu_box_title_bg_color' => 'Plugins menu box title background color',
+    'tr_melis_core_platform_theme_dashboard_plugin_menu_box_title_bg_color_tooltip' => 'Change the plugins menu box title background color by typing the hexadecimal color code or by using the color picker',
 
-);
+ );
 ?>
