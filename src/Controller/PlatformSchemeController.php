@@ -93,31 +93,7 @@ class PlatformSchemeController extends MelisAbstractActionController
                 $platformThemeOptionForm->setData($platformThemeOptionData);
             }
         }
-
-        foreach ($platformThemeOptionForm->getElements() as $key => $elem) {
-            // if ($elem->getAttribute('category') == 'bubble' || $elem->getAttribute('category') == 'dashboard_plugin' || $elem->getAttribute('category') == 'dashboard_plugin_menu') {
-            //     dump ($key);
-            //     echo "\n";
-            // }
-            // if ($elem->getAttribute('category') == 'logo' || $elem->getAttribute('category') == 'menu') {
-            //     dump($key);
-            //     echo "\n";
-            // }
-
-            // if ($elem->getAttribute('category') == 'footer' || $elem->getAttribute('category') == 'header') {
-            //     dump($key);
-            //     echo "\n";
-            // }
-
-            // if ($elem->getAttribute('category') == 'user_profile') {
-            //     //dump($key);
-            //     //echo $key.":". $elem->getAttribute('default');
-            //     //melis_core_platform_theme_modal_bg_color
-            //     echo "$".lcfirst(str_replace(" ", "", ucwords(str_replace('_', ' ', str_replace('melis_core_platform_theme_', '', $key)))))." = \$this->".$key.";";
-            //     echo "\n";
-            // }
-        }
-   
+         
         $view->setVariable('form', $form);
         $view->setVariable('platformThemeOptionForm', $platformThemeOptionForm);
         $view->schemes = $schemeData;
