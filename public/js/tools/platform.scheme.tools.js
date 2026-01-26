@@ -114,6 +114,7 @@ $(function() {
                     }
                     else {
                         melisHelper.melisKoNotification(data.textTitle, data.textMessage, data.errors);
+                        melisCoreTool.highlightErrors(data.success, data.errors, "id_meliscore_tool_platform_scheme_tool_content");
                     }
                     melisCoreTool.done(".button");
                 }).fail(function() {
