@@ -8379,6 +8379,186 @@ return array(
                                 array('name' => 'StringTrim'),
                             ),
                         ),
+                        'melis_core_platform_theme_user_profile_edit_btn_bg_color' => array(
+                            'name'     => 'melis_core_platform_theme_user_profile_edit_btn_bg_color',
+                            'required' => false,
+                            'validators' => array(
+                                array(
+                                    'name' => 'regex',
+                                    'options' => array(
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
+                                        'messages' => array(\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'),
+                                        'encoding' => 'UTF-8',
+                                    ),
+                                ),
+                            ),
+                            'filters'  => array(
+                                array('name' => 'StripTags'),
+                                array('name' => 'StringTrim'),
+                            ),
+                        ),
+                        'melis_core_platform_theme_user_profile_edit_btn_border_color' => array(
+                            'name'     => 'melis_core_platform_theme_user_profile_edit_btn_border_color',
+                            'required' => false,
+                            'validators' => array(
+                                array(
+                                    'name' => 'regex',
+                                    'options' => array(
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
+                                        'messages' => array(\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'),
+                                        'encoding' => 'UTF-8',
+                                    ),
+                                ),
+                            ),
+                            'filters'  => array(
+                                array('name' => 'StripTags'),
+                                array('name' => 'StringTrim'),
+                            ),
+                        ),
+                        'melis_core_platform_theme_user_profile_edit_btn_icon_color' => array(
+                            'name'     => 'melis_core_platform_theme_user_profile_edit_btn_icon_color',
+                            'required' => false,
+                            'validators' => array(
+                                array(
+                                    'name' => 'regex',
+                                    'options' => array(
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
+                                        'messages' => array(\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'),
+                                        'encoding' => 'UTF-8',
+                                    ),
+                                ),
+                            ),
+                            'filters'  => array(
+                                array('name' => 'StripTags'),
+                                array('name' => 'StringTrim'),
+                            ),
+                        ),
+                        'melis_core_platform_theme_user_profile_edit_btn_hover_bg_color' => array(
+                            'name'     => 'melis_core_platform_theme_user_profile_edit_btn_hover_bg_color',
+                            'required' => false,
+                            'validators' => array(
+                                array(
+                                    'name' => 'regex',
+                                    'options' => array(
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
+                                        'messages' => array(\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'),
+                                        'encoding' => 'UTF-8',
+                                    ),
+                                ),
+                            ),
+                            'filters'  => array(
+                                array('name' => 'StripTags'),
+                                array('name' => 'StringTrim'),
+                            ),
+                        ),
+                        'melis_core_platform_theme_user_profile_edit_btn_hover_icon_color' => array(
+                            'name'     => 'melis_core_platform_theme_user_profile_edit_btn_hover_icon_color',
+                            'required' => false,
+                            'validators' => array(
+                                array(
+                                    'name' => 'regex',
+                                    'options' => array(
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
+                                        'messages' => array(\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'),
+                                        'encoding' => 'UTF-8',
+                                    ),
+                                ),
+                            ),
+                            'filters'  => array(
+                                array('name' => 'StripTags'),
+                                array('name' => 'StringTrim'),
+                            ),
+                        ),
+                        'melis_core_platform_theme_user_profile_edit_btn_hover_border_color' => array(
+                            'name'     => 'melis_core_platform_theme_user_profile_edit_btn_hover_border_color',
+                            'required' => false,
+                            'validators' => array(
+                                array(
+                                    'name' => 'regex',
+                                    'options' => array(
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
+                                        'messages' => array(\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'),
+                                        'encoding' => 'UTF-8',
+                                    ),
+                                ),
+                            ),
+                            'filters'  => array(
+                                array('name' => 'StripTags'),
+                                array('name' => 'StringTrim'),
+                            ),
+                        ),
+                        'melis_core_platform_theme_user_profile_logout_btn_bg_color' => array(
+                            'name'     => 'melis_core_platform_theme_user_profile_logout_btn_bg_color',
+                            'required' => false,
+                            'validators' => array(
+                                array(
+                                    'name' => 'regex',
+                                    'options' => array(
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
+                                        'messages' => array(\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'),
+                                        'encoding' => 'UTF-8',
+                                    ),
+                                ),
+                            ),
+                            'filters'  => array(
+                                array('name' => 'StripTags'),
+                                array('name' => 'StringTrim'),
+                            ),
+                        ),
+                        'melis_core_platform_theme_user_profile_logout_btn_icon_color' => array(
+                            'name'     => 'melis_core_platform_theme_user_profile_logout_btn_icon_color',
+                            'required' => false,
+                            'validators' => array(
+                                array(
+                                    'name' => 'regex',
+                                    'options' => array(
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
+                                        'messages' => array(\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'),
+                                        'encoding' => 'UTF-8',
+                                    ),
+                                ),
+                            ),
+                            'filters'  => array(
+                                array('name' => 'StripTags'),
+                                array('name' => 'StringTrim'),
+                            ),
+                        ),
+                        'melis_core_platform_theme_user_profile_logout_btn_hover_bg_color' => array(
+                            'name'     => 'melis_core_platform_theme_user_profile_logout_btn_hover_bg_color',
+                            'required' => false,
+                            'validators' => array(
+                                array(
+                                    'name' => 'regex',
+                                    'options' => array(
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
+                                        'messages' => array(\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'),
+                                        'encoding' => 'UTF-8',
+                                    ),
+                                ),
+                            ),
+                            'filters'  => array(
+                                array('name' => 'StripTags'),
+                                array('name' => 'StringTrim'),
+                            ),
+                        ),
+                        'melis_core_platform_theme_user_profile_logout_btn_hover_icon_color' => array(
+                            'name'     => 'melis_core_platform_theme_user_profile_logout_btn_hover_icon_color',
+                            'required' => false,
+                            'validators' => array(
+                                array(
+                                    'name' => 'regex',
+                                    'options' => array(
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
+                                        'messages' => array(\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'),
+                                        'encoding' => 'UTF-8',
+                                    ),
+                                ),
+                            ),
+                            'filters'  => array(
+                                array('name' => 'StripTags'),
+                                array('name' => 'StringTrim'),
+                            ),
+                        ),
                         'melis_core_platform_theme_menu_bg_color' => array(
                             'name'     => 'melis_core_platform_theme_menu_bg_color',
                             'required' => false,
@@ -12319,6 +12499,529 @@ return array(
                             ['name' => 'StringTrim'],
                         ],
                     ],
+
+                        'melis_core_platform_theme_dnd_plugins_box_bg_color' => [
+                            'name'     => 'melis_core_platform_theme_dnd_plugins_box_bg_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',
+                                    'options' => [
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+                        'melis_core_platform_theme_dnd_plugins_box_border_bottom_and_left_color' => [
+                            'name'     => 'melis_core_platform_theme_dnd_plugins_box_border_bottom_and_left_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',
+                                    'options' => [
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+                        'melis_core_platform_theme_dnd_plugins_box_title_bg_color' => [
+                            'name'     => 'melis_core_platform_theme_dnd_plugins_box_title_bg_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',
+                                    'options' => [
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+                        'melis_core_platform_theme_dnd_plugins_box_title_text_color' => [
+                            'name'     => 'melis_core_platform_theme_dnd_plugins_box_title_text_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',
+                                    'options' => [
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+                        'melis_core_platform_theme_dnd_plugins_box_btn_bg_color' => [
+                            'name'     => 'melis_core_platform_theme_dnd_plugins_box_btn_bg_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',
+                                    'options' => [
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+                        'melis_core_platform_theme_dnd_plugins_box_btn_icon_color' => [
+                            'name'     => 'melis_core_platform_theme_dnd_plugins_box_btn_icon_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',
+                                    'options' => [
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+                        'melis_core_platform_theme_dnd_plugins_box_category_btn_bg_color' => [
+                            'name'     => 'melis_core_platform_theme_dnd_plugins_box_category_btn_bg_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',
+                                    'options' => [
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+                        'melis_core_platform_theme_dnd_plugins_box_category_btn_border_bottom_color' => [
+                            'name'     => 'melis_core_platform_theme_dnd_plugins_box_category_btn_border_bottom_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',
+                                    'options' => [
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+                        'melis_core_platform_theme_dnd_plugins_box_category_btn_text_color' => [
+                            'name'     => 'melis_core_platform_theme_dnd_plugins_box_category_btn_text_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',
+                                    'options' => [
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+                        'melis_core_platform_theme_dnd_plugins_box_category_btn_hover_bg_color' => [
+                            'name'     => 'melis_core_platform_theme_dnd_plugins_box_category_btn_hover_bg_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',
+                                    'options' => [
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+                        'melis_core_platform_theme_dnd_plugins_box_category_btn_hover_border_color' => [
+                            'name'     => 'melis_core_platform_theme_dnd_plugins_box_category_btn_hover_border_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',
+                                    'options' => [
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+                        'melis_core_platform_theme_dnd_plugins_box_cms_category_button_active_bg_color' => [
+                            'name'     => 'melis_core_platform_theme_dnd_plugins_box_cms_category_button_active_bg_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',
+                                    'options' => [
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+                        'melis_core_platform_theme_dnd_plugins_box_cms_category_button_active_border_color' => [
+                            'name'     => 'melis_core_platform_theme_dnd_plugins_box_cms_category_button_active_border_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',
+                                    'options' => [
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+                        'melis_core_platform_theme_dnd_plugins_box_cms_category_box_border_bottom_color' => [
+                            'name'     => 'melis_core_platform_theme_dnd_plugins_box_cms_category_box_border_bottom_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',
+                                    'options' => [
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+                        'melis_core_platform_theme_dnd_zone_plugin_outline_hover_color' => [
+                            'name'     => 'melis_core_platform_theme_dnd_zone_plugin_outline_hover_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',
+                                    'options' => [
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+                        'melis_core_platform_theme_dnd_zone_plugin_box_shadow_color' => [
+                            'name'     => 'melis_core_platform_theme_dnd_zone_plugin_box_shadow_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',
+                                    'options' => [
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+                        'melis_core_platform_theme_dnd_plugin_sub_tools_bg_color' => [
+                            'name'     => 'melis_core_platform_theme_dnd_plugin_sub_tools_bg_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',
+                                    'options' => [
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+                        'melis_core_platform_theme_dnd_layout_column_button_bg_color' => [
+                            'name'     => 'melis_core_platform_theme_dnd_layout_column_button_bg_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',
+                                    'options' => [
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+                        'melis_core_platform_theme_dnd_layout_column_button_border_color' => [
+                            'name'     => 'melis_core_platform_theme_dnd_layout_column_button_border_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',
+                                    'options' => [
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+                        'melis_core_platform_theme_dnd_layout_column_button_hover_color' => [
+                            'name'     => 'melis_core_platform_theme_dnd_layout_column_button_hover_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',
+                                    'options' => [
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+                        'melis_core_platform_theme_dnd_layout_column_button_bg_red_color' => [
+                            'name'     => 'melis_core_platform_theme_dnd_layout_column_button_bg_red_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',
+                                    'options' => [
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+                        'melis_core_platform_theme_dnd_layout_column_button_bg_red_border_color' => [
+                            'name'     => 'melis_core_platform_theme_dnd_layout_column_button_bg_red_border_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',
+                                    'options' => [
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+                        'melis_core_platform_theme_dnd_layout_wrapper_outline_color' => [
+                            'name'     => 'melis_core_platform_theme_dnd_layout_wrapper_outline_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',
+                                    'options' => [
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+                        'melis_core_platform_theme_dnd_layout_buttons_bg_color' => [
+                            'name'     => 'melis_core_platform_theme_dnd_layout_buttons_bg_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',
+                                    'options' => [
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+                        'melis_core_platform_theme_dnd_plugin_box_module_plugin_title_text_color' => [
+                            'name'     => 'melis_core_platform_theme_dnd_plugin_box_module_plugin_title_text_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',
+                                    'options' => [
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+                        'melis_core_platform_theme_dnd_no_content_before_after_pseudo_element_color' => [
+                            'name'     => 'melis_core_platform_theme_dnd_no_content_before_after_pseudo_element_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',
+                                    'options' => [
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+                        'melis_core_platform_theme_dnd_zone_hover_outline_color' => [
+                            'name'     => 'melis_core_platform_theme_dnd_zone_hover_outline_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',
+                                    'options' => [
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+                        'melis_core_platform_theme_dnd_zone_hover_shadow_color' => [
+                            'name'     => 'melis_core_platform_theme_dnd_zone_hover_shadow_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',
+                                    'options' => [
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+                        'melis_core_platform_theme_dnd_zone_icons_color' => [
+                            'name'     => 'melis_core_platform_theme_dnd_zone_icons_color',
+                            'required' => false,
+                            'validators' => [
+                                [
+                                    'name' => 'regex',
+                                    'options' => [
+                                        'pattern' => '/^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/',
+                                        'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ],
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
 
                         'melis_core_platform_theme_dnd_plugins_box_category_btn_snippets_bg_color' => [
                             'name'     => 'melis_core_platform_theme_dnd_plugins_box_category_btn_snippets_bg_color',
