@@ -1668,7 +1668,7 @@ return array(
                                     'value' => '',
                                     'class' => 'form-control minicolor-hex',
                                     'data-control' => 'hue',
-                                    'placeholder' => 'tr_meliscore_platform_theme_login_page_header_bg_color',
+                                    //'placeholder' => 'tr_meliscore_platform_theme_login_page_header_bg_color',
                                     'category' => 'login_page',
                                     'default' => '#fff'
                                 ),
@@ -1707,7 +1707,7 @@ return array(
                                     'value' => '',
                                     'class' => 'form-control minicolor-hex',
                                     'data-control' => 'hue',
-                                    'placeholder' => 'tr_meliscore_platform_theme_login_page_header_text_icon_color',
+                                    //'placeholder' => 'tr_meliscore_platform_theme_login_page_header_text_icon_color',
                                     'category' => 'login_page',
                                     'default' => '#686868'
                                 ),
@@ -1746,7 +1746,7 @@ return array(
                                     'value' => '',
                                     'class' => 'form-control minicolor-hex',
                                     'data-control' => 'hue',
-                                    'placeholder' => 'tr_meliscore_platform_theme_login_page_form_text_color',
+                                    // 'placeholder' => 'tr_meliscore_platform_theme_login_page_form_text_color',
                                     'category' => 'login_page',
                                     'default' => '#e61c23'
                                 ),
@@ -1785,7 +1785,7 @@ return array(
                                     'value' => '',
                                     'class' => 'form-control minicolor-hex',
                                     'data-control' => 'hue',
-                                    'placeholder' => 'tr_meliscore_platform_theme_login_page_form_submit_btn_bg_color',
+                                    // 'placeholder' => 'tr_meliscore_platform_theme_login_page_form_submit_btn_bg_color',
                                     'category' => 'login_page',
                                     'default' => '#e61c23'
                                 ),
@@ -1804,7 +1804,7 @@ return array(
                                     'value' => '',
                                     'class' => 'form-control minicolor-hex',
                                     'data-control' => 'hue',
-                                    'placeholder' => 'tr_meliscore_platform_theme_login_page_form_submit_btn_border_color',
+                                    // 'placeholder' => 'tr_meliscore_platform_theme_login_page_form_submit_btn_border_color',
                                     'category' => 'login_page',
                                     'default' => '#e61c23'
                                 ),
@@ -1843,7 +1843,7 @@ return array(
                                     'value' => '',
                                     'class' => 'form-control minicolor-hex',
                                     'data-control' => 'hue',
-                                    'placeholder' => 'tr_meliscore_platform_theme_login_page_form_bottom_remember_text_color',
+                                    // 'placeholder' => 'tr_meliscore_platform_theme_login_page_form_bottom_remember_text_color',
                                     'category' => 'login_page',
                                     'default' => '#686868'
                                 ),
@@ -1862,7 +1862,7 @@ return array(
                                     'value' => '',
                                     'class' => 'form-control minicolor-hex',
                                     'data-control' => 'hue',
-                                    'placeholder' => 'tr_meliscore_platform_theme_login_page_form_bottom_forgot_password_text_color',
+                                    // 'placeholder' => 'tr_meliscore_platform_theme_login_page_form_bottom_forgot_password_text_color',
                                     'category' => 'login_page',
                                     'default' => '#e61c23'
                                 ),
@@ -7564,7 +7564,7 @@ return array(
                                     'value' => '',
                                     'class' => 'form-control minicolor-hex',
                                     'data-control' => 'hue',
-                                    'placeholder' => 'tr_meliscore_platform_theme_dnd_plugins_box_category_btn_snippets_bg_color',
+                                    // 'placeholder' => 'tr_meliscore_platform_theme_dnd_plugins_box_category_btn_snippets_bg_color',
                                     'category' => 'dragdrop',
                                     'default' => '#2c2c2c'
                                 ),
@@ -7603,7 +7603,7 @@ return array(
                                     'value' => '',
                                     'class' => 'form-control minicolor-hex',
                                     'data-control' => 'hue',
-                                    'placeholder' => 'tr_meliscore_platform_theme_dnd_plugins_box_category_btn_snippets_border_bottom_color',
+                                    // 'placeholder' => 'tr_meliscore_platform_theme_dnd_plugins_box_category_btn_snippets_border_bottom_color',
                                     'category' => 'dragdrop',
                                     'default' => '#3e3e3e'
                                 ),
@@ -7669,7 +7669,7 @@ return array(
                                     'value' => '',
                                     'class' => 'form-control minicolor-hex',
                                     'data-control' => 'hue',
-                                    'placeholder' => 'tr_meliscore_platform_theme_dnd_plugins_box_category_btn_snippets_hover_bg_color',
+                                    // 'placeholder' => 'tr_meliscore_platform_theme_dnd_plugins_box_category_btn_snippets_hover_bg_color',
                                     'category' => 'dragdrop',
                                     'default' => '#e61c23'
                                 ),
@@ -7688,7 +7688,7 @@ return array(
                                     'value' => '',
                                     'class' => 'form-control minicolor-hex',
                                     'data-control' => 'hue',
-                                    'placeholder' => 'tr_meliscore_platform_theme_dnd_plugins_box_category_btn_snippets_plugin_title_color',
+                                    // 'placeholder' => 'tr_meliscore_platform_theme_dnd_plugins_box_category_btn_snippets_plugin_title_color',
                                     'category' => 'dragdrop',
                                     'default' => '#ffffff'
                                 ),
@@ -7730,7 +7730,7 @@ return array(
                                 'value' => '',
                                 'class' => 'form-control minicolor-hex',
                                 'data-control' => 'hue',
-                                'placeholder' => 'tr_meliscore_platform_theme_options_panel_bg_color',
+                                // 'placeholder' => 'tr_meliscore_platform_theme_options_panel_bg_color',
                                 'category' => 'platform_theme_options_panel',
                                 'default' => '#fff'
                             ),
@@ -7749,7 +7749,7 @@ return array(
                                 'value' => '',
                                 'class' => 'form-control minicolor-hex',
                                 'data-control' => 'hue',
-                                'placeholder' => 'tr_meliscore_platform_theme_options_panel_title_text_color',
+                                // 'placeholder' => 'tr_meliscore_platform_theme_options_panel_title_text_color',
                                 'category' => 'platform_theme_options_panel',
                                 'default' => '#686868'
                             ),
@@ -7788,7 +7788,7 @@ return array(
                                 'value' => '',
                                 'class' => 'form-control minicolor-hex',
                                 'data-control' => 'hue',
-                                'placeholder' => 'tr_meliscore_platform_theme_options_panel_header_close_btn_color',
+                                // 'placeholder' => 'tr_meliscore_platform_theme_options_panel_header_close_btn_color',
                                 'category' => 'platform_theme_options_panel',
                                 'default' => '#686868'
                             ),
@@ -7847,7 +7847,7 @@ return array(
                                 'value' => '',
                                 'class' => 'form-control minicolor-hex',
                                 'data-control' => 'hue',
-                                'placeholder' => 'tr_meliscore_platform_theme_options_panel_header_border_color',
+                                // 'placeholder' => 'tr_meliscore_platform_theme_options_panel_header_border_color',
                                 'category' => 'platform_theme_options_panel',
                                 'default' => '#eeeeee'
                             ),
@@ -7866,7 +7866,7 @@ return array(
                                 'value' => '',
                                 'class' => 'form-control minicolor-hex',
                                 'data-control' => 'hue',
-                                'placeholder' => 'tr_meliscore_platform_theme_options_panel_options_input_radio_border_color',
+                                // 'placeholder' => 'tr_meliscore_platform_theme_options_panel_options_input_radio_border_color',
                                 'category' => 'platform_theme_options_panel',
                                 'default' => '#dee2e6'
                             ),
@@ -7885,7 +7885,7 @@ return array(
                                 'value' => '',
                                 'class' => 'form-control minicolor-hex',
                                 'data-control' => 'hue',
-                                'placeholder' => 'tr_meliscore_platform_theme_options_panel_options_input_radio_checked_border_bg_color',
+                                // 'placeholder' => 'tr_meliscore_platform_theme_options_panel_options_input_radio_checked_border_bg_color',
                                 'category' => 'platform_theme_options_panel',
                                 'default' => '#0d6efd'
                             ),
@@ -7904,7 +7904,7 @@ return array(
                                 'value' => '',
                                 'class' => 'form-control minicolor-hex',
                                 'data-control' => 'hue',
-                                'placeholder' => 'tr_meliscore_platform_theme_options_panel_options_title_bg_color',
+                                // 'placeholder' => 'tr_meliscore_platform_theme_options_panel_options_title_bg_color',
                                 'category' => 'platform_theme_options_panel',
                                 'default' => '#ffffff'
                             ),
@@ -7923,7 +7923,7 @@ return array(
                                 'value' => '',
                                 'class' => 'form-control minicolor-hex',
                                 'data-control' => 'hue',
-                                'placeholder' => 'tr_meliscore_platform_theme_options_panel_options_title_expanded_bg_color',
+                                // 'placeholder' => 'tr_meliscore_platform_theme_options_panel_options_title_expanded_bg_color',
                                 'category' => 'platform_theme_options_panel',
                                 'default' => '#ffffff'
                             ),
@@ -7942,7 +7942,7 @@ return array(
                                 'value' => '',
                                 'class' => 'form-control minicolor-hex',
                                 'data-control' => 'hue',
-                                'placeholder' => 'tr_meliscore_platform_theme_options_panel_options_title_label_icon_and_texts_color',
+                                // 'placeholder' => 'tr_meliscore_platform_theme_options_panel_options_title_label_icon_and_texts_color',
                                 'category' => 'platform_theme_options_panel',
                                 'default' => '#686868'
                             ),
@@ -7961,7 +7961,7 @@ return array(
                                 'value' => '',
                                 'class' => 'form-control minicolor-hex',
                                 'data-control' => 'hue',
-                                'placeholder' => 'tr_meliscore_platform_theme_options_panel_options_input_text_bg_color',
+                                // 'placeholder' => 'tr_meliscore_platform_theme_options_panel_options_input_text_bg_color',
                                 'category' => 'platform_theme_options_panel',
                                 'default' => '#ffffff'
                             ),
@@ -7980,7 +7980,7 @@ return array(
                                 'value' => '',
                                 'class' => 'form-control minicolor-hex',
                                 'data-control' => 'hue',
-                                'placeholder' => 'tr_meliscore_platform_theme_options_panel_options_input_text_color',
+                                // 'placeholder' => 'tr_meliscore_platform_theme_options_panel_options_input_text_color',
                                 'category' => 'platform_theme_options_panel',
                                 'default' => '#444444'
                             ),
@@ -7999,7 +7999,7 @@ return array(
                                 'value' => '',
                                 'class' => 'form-control minicolor-hex',
                                 'data-control' => 'hue',
-                                'placeholder' => 'tr_meliscore_platform_theme_options_panel_options_range_slider_ui_handle_bg_border_color',
+                                // 'placeholder' => 'tr_meliscore_platform_theme_options_panel_options_range_slider_ui_handle_bg_border_color',
                                 'category' => 'platform_theme_options_panel',
                                 'default' => '#c5c5c5'
                             ),
@@ -8018,7 +8018,7 @@ return array(
                                 'value' => '',
                                 'class' => 'form-control minicolor-hex',
                                 'data-control' => 'hue',
-                                'placeholder' => 'tr_meliscore_platform_theme_options_panel_options_range_slider_ui_min_bg_color',
+                                // 'placeholder' => 'tr_meliscore_platform_theme_options_panel_options_range_slider_ui_min_bg_color',
                                 'category' => 'platform_theme_options_panel',
                                 'default' => '#e61c23'
                             ),
@@ -8037,7 +8037,7 @@ return array(
                                 'value' => '',
                                 'class' => 'form-control minicolor-hex',
                                 'data-control' => 'hue',
-                                'placeholder' => 'tr_meliscore_platform_theme_options_panel_options_range_slider_ui_widget_content_bg_color',
+                                // 'placeholder' => 'tr_meliscore_platform_theme_options_panel_options_range_slider_ui_widget_content_bg_color',
                                 'category' => 'platform_theme_options_panel',
                                 'default' => '#e9e9e9'
                             ),
@@ -8056,7 +8056,7 @@ return array(
                                 'value' => '',
                                 'class' => 'form-control minicolor-hex',
                                 'data-control' => 'hue',
-                                'placeholder' => 'tr_meliscore_platform_theme_options_panel_options_btn_group_bg_color',
+                                // 'placeholder' => 'tr_meliscore_platform_theme_options_panel_options_btn_group_bg_color',
                                 'category' => 'platform_theme_options_panel',
                                 'default' => '#fafafa'
                             ),
@@ -8075,7 +8075,7 @@ return array(
                                 'value' => '',
                                 'class' => 'form-control minicolor-hex',
                                 'data-control' => 'hue',
-                                'placeholder' => 'tr_meliscore_platform_theme_options_panel_options_btn_group_border_color',
+                                // 'placeholder' => 'tr_meliscore_platform_theme_options_panel_options_btn_group_border_color',
                                 'category' => 'platform_theme_options_panel',
                                 'default' => '#cecece'
                             ),
@@ -8094,7 +8094,7 @@ return array(
                                 'value' => '',
                                 'class' => 'form-control minicolor-hex',
                                 'data-control' => 'hue',
-                                'placeholder' => 'tr_meliscore_platform_theme_options_panel_options_btn_group_text_color',
+                                // 'placeholder' => 'tr_meliscore_platform_theme_options_panel_options_btn_group_text_color',
                                 'category' => 'platform_theme_options_panel',
                                 'default' => '#797979'
                             ),
@@ -8113,7 +8113,7 @@ return array(
                                 'value' => '',
                                 'class' => 'form-control minicolor-hex',
                                 'data-control' => 'hue',
-                                'placeholder' => 'tr_meliscore_platform_theme_options_panel_options_tip_info_text_color',
+                                // 'placeholder' => 'tr_meliscore_platform_theme_options_panel_options_tip_info_text_color',
                                 'category' => 'platform_theme_options_panel',
                                 'default' => '#686868'
                             ),
@@ -8152,7 +8152,7 @@ return array(
                                 'value' => '',
                                 'class' => 'form-control minicolor-hex',
                                 'data-control' => 'hue',
-                                'placeholder' => 'tr_meliscore_platform_theme_options_panel_save_btn_bg_border_color',
+                                // 'placeholder' => 'tr_meliscore_platform_theme_options_panel_save_btn_bg_border_color',
                                 'category' => 'platform_theme_options_panel',
                                 'default' => '#e61c23'
                             ),
@@ -8171,7 +8171,7 @@ return array(
                                 'value' => '',
                                 'class' => 'form-control minicolor-hex',
                                 'data-control' => 'hue',
-                                'placeholder' => 'tr_meliscore_platform_theme_options_panel_save_btn_text_color',
+                                // 'placeholder' => 'tr_meliscore_platform_theme_options_panel_save_btn_text_color',
                                 'category' => 'platform_theme_options_panel',
                                 'default' => '#ffffff'
                             ),
@@ -8190,7 +8190,7 @@ return array(
                                 'value' => '',
                                 'class' => 'form-control minicolor-hex',
                                 'data-control' => 'hue',
-                                'placeholder' => 'tr_meliscore_platform_theme_options_panel_save_btn_hover_bg_color',
+                                // 'placeholder' => 'tr_meliscore_platform_theme_options_panel_save_btn_hover_bg_color',
                                 'category' => 'platform_theme_options_panel',
                                 'default' => '#ffffff'
                             ),
@@ -8209,7 +8209,7 @@ return array(
                                 'value' => '',
                                 'class' => 'form-control minicolor-hex',
                                 'data-control' => 'hue',
-                                'placeholder' => 'tr_meliscore_platform_theme_options_panel_save_btn_hover_text_color',
+                                // 'placeholder' => 'tr_meliscore_platform_theme_options_panel_save_btn_hover_text_color',
                                 'category' => 'platform_theme_options_panel',
                                 'default' => '#e61c23'
                             ),
