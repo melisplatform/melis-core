@@ -99,12 +99,12 @@ return array(
                         ),
                     ),
                 ),
-                '2FAEMAIL' => array(
-                    'email_name' => '2FA Email',
+                'EMAIL2FA' => array(
+                    'email_name' => 'Email 2FA',
                     'layout' => 'melis-core/view/layout/layoutEmail.phtml',
                     'headers' => array(
                         'from' => 'noreply@melistechnology.com',
-                        'from_name' => '',
+                        'from_name' => 'Melis Platform',
                         'replyTo' => 'noreply@melistechnology.com',
                         'tags' => 'SUBJECT,CODE,VALIDITY_MINUTES,FORGOT_PASSWORD_URL',
                     ),
