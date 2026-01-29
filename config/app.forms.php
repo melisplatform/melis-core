@@ -1638,25 +1638,6 @@ return array(
                         //Login
                         array(
                             'spec' => array(
-                                'name' => 'melis_core_platform_theme_login_page_footer_text_color',
-                                'type' => 'Text',
-                                'options' => array(
-                                    'label' => 'tr_meliscore_platform_theme_login_page_footer_text_color',
-                                    'tooltip' => 'tr_meliscore_platform_theme_login_page_footer_text_color_tooltip',
-                                ),
-                                'attributes' => array(
-                                    'id' => 'melis_core_platform_theme_login_page_footer_text_color',
-                                    'value' => '',
-                                    'class' => 'form-control minicolor-hex',
-                                    'data-control' => 'hue',
-                                    //'placeholder' => 'tr_meliscore_platform_theme_footer_text_color',
-                                    'category' => 'login_page',
-                                    'default' => '#fff'
-                                ),
-                            ),
-                        ),
-                        array(
-                            'spec' => array(
                                 'name' => 'melis_core_platform_theme_login_page_header_bg_color',
                                 'type' => 'Text',
                                 'options' => array(
@@ -1865,6 +1846,25 @@ return array(
                                     // 'placeholder' => 'tr_meliscore_platform_theme_login_page_form_bottom_forgot_password_text_color',
                                     'category' => 'login_page',
                                     'default' => '#e61c23'
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_login_page_footer_text_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_login_page_footer_text_color',
+                                    'tooltip' => 'tr_meliscore_platform_theme_login_page_footer_text_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_login_page_footer_text_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    //'placeholder' => 'tr_meliscore_platform_theme_footer_text_color',
+                                    'category' => 'login_page',
+                                    'default' => '#fff'
                                 ),
                             ),
                         ),
@@ -7618,7 +7618,7 @@ return array(
                                     'tooltip' => 'tr_melis_core_platform_theme_dnd_plugins_box_category_btn_snippets_text_align_tooltip',
                                     'value_options' => array(
                                         'left' => '<label class="btn btn-default" for="melis_core_platform_theme_dnd_plugins_box_category_btn_snippets_text_align_left"><i class="bi bi-text-left"></i></label>',
-                                        'center' => '<label class="btn btn-default" for="melis_core_platform_theme_dnd_plugins_box_category_btn_snippets_text_align_center"><i class="bi bi-text-center"></i></label>',
+                                        'center' => '<label class="btn btn-default active" for="melis_core_platform_theme_dnd_plugins_box_category_btn_snippets_text_align_center"><i class="bi bi-text-center"></i></label>',
                                         'right' => '<label class="btn btn-default" for="melis_core_platform_theme_dnd_plugins_box_category_btn_snippets_text_align_right"><i class="bi bi-text-right"></i></label>',
                                     ),
                                     'label_attributes' => array(

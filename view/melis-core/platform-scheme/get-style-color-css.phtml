@@ -45,7 +45,6 @@
     $submenuHoverActiveBgColor                              = $this->melis_core_platform_theme_submenu_hover_active_bg_color;
 
     //Footer
-    $loginPagefooterTextColor                               = $this->melis_core_platform_theme_login_page_footer_text_color;
     $footerTextFontSize                                     = $this->melis_core_platform_theme_footer_text_fontsize;
     $footerLinkTextColor                                    = $this->melis_core_platform_theme_footer_link_text_color;
     $footerTextColor                                        = $this->melis_core_platform_theme_footer_text_color;
@@ -387,7 +386,7 @@
 
     $dragdropPluginSubToolsBgColor                              = $this->melis_core_platform_theme_dnd_plugin_sub_tools_bg_color;
 
-    // Dynamic dnd    
+    // Dynamic dnd
     $dragdropPluginDndLayoutButtonsBgColor                      = $this->melis_core_platform_theme_dnd_plugin_dnd_layout_buttons_bg_color;
     $dragdropPluginDndLayoutButtonsColumnIconBgColor            = $this->melis_core_platform_theme_dnd_plugin_dnd_layout_buttons_column_icon_bg_color;
     $dragdropPluginDndLayoutButtonsColumnIconBorderColor        = $this->melis_core_platform_theme_dnd_plugin_dnd_layout_buttons_column_icon_border_color;
@@ -406,20 +405,24 @@
     $dragdropPluginDndZoneHoverBoxShadowColor                   = $this->melis_core_platform_theme_dnd_zone_hover_box_shadow_color;
     $dragdropPluginDndZoneIconsColor                            = $this->melis_core_platform_theme_dnd_zone_icons_color;
 
+    // Login page
     $loginPageHeaderBgColor                                     = $this->melis_core_platform_theme_login_page_header_bg_color;
     $loginPageHeaderTextFontSize                                = $this->melis_core_platform_theme_login_page_header_text_font_size;
     $loginPageHeaderTextIconColor                               = $this->melis_core_platform_theme_login_page_header_text_icon_color;
 
     $loginPageFormTextFontSize                                  = $this->melis_core_platform_theme_login_page_form_text_font_size;
     $loginPageFormTextColor                                     = $this->melis_core_platform_theme_login_page_form_text_color;
-    $loginPageFormSubmitBtnFrontSize                            = $this->melis_core_platform_theme_login_page_form_submit_btn_font_size;
+
+    $loginPageFooterTextColor                                   = $this->melis_core_platform_theme_login_page_footer_text_color; // same with from submit text color
+    $loginPageFormSubmitBtnFontSize                             = $this->melis_core_platform_theme_login_page_form_submit_btn_font_size;
     $loginPageFormSubmitBtnBgColor                              = $this->melis_core_platform_theme_login_page_form_submit_btn_bg_color;
     $loginPageFormSubmitBtnBorderColor                          = $this->melis_core_platform_theme_login_page_form_submit_btn_border_color;
+
     $loginPageFormBottomTextFontSize                            = $this->melis_core_platform_theme_login_page_form_bottom_text_font_size;
     $loginPageFormBottomRemTextColor                            = $this->melis_core_platform_theme_login_page_form_bottom_remember_text_color;
     $loginPageFormBottomForgotPassTextColor                     = $this->melis_core_platform_theme_login_page_form_bottom_forgot_password_text_color;
 
- 
+    // Platform options box
     $optionsPanelBgColor                                        = $this->melis_core_platform_theme_options_panel_bg_color;
     $optionsPanelTitleTextColor                                 = $this->melis_core_platform_theme_options_panel_title_text_color;
     $optionsPanelTitleTextFontSize                              = $this->melis_core_platform_theme_options_panel_title_text_font_size;
@@ -449,8 +452,6 @@
     $optionsPanelSaveBtnTextColor                               = $this->melis_core_platform_theme_options_panel_save_btn_text_color;
     $optionsPanelSaveBtnHoverBgColor                            = $this->melis_core_platform_theme_options_panel_save_btn_hover_bg_color;
     $optionsPanelSaveBtnHoverTextColor                          = $this->melis_core_platform_theme_options_panel_save_btn_hover_text_color;
- 
-    
 ?>
 /* =============== Primary Color =============== */
 .table-primary thead th {
@@ -1740,26 +1741,52 @@ div.glyphicons-social.glyphicon-primary i:before {
 #id_meliscore_footer .footer p {
     color: <?= $footerTextColor; ?> !important;
 }
-/** login footer */
+/** login page */
+.login-page h4.innerAll {
+    background-color: <?= $loginPageHeaderBgColor; ?> !important;
+    font-size: <?= $loginPageHeaderTextFontSize; ?> !important;
+    color: <?= $loginPageHeaderTextIconColor; ?> !important;
+}
+.login-page .login form label {
+    font-size: <?= $loginPageFormTextFontSize; ?> !important;
+    color: <?= $loginPageFormTextColor; ?> !important;
+}
 #login_submit {
-    background-color: <?= $primaryColor; ?> !important;
-    border-color: <?= $primaryColor; ?> !important;
+    /** reverses for the hover effect */
+    background-color: <?= $loginPageFormSubmitBtnBgColor; ?> !important;
+    color: <?= $loginPageFooterTextColor; ?> !important;
+
+    border-color: <?= $loginPageFormSubmitBtnBorderColor; ?> !important;
+    font-size: <?= $loginPageFormSubmitBtnFontSize; ?> !important;
 }
 #login_submit:hover {
-    color: <?= $primaryColor; ?> !important;
-    border-color: <?= $primaryColor; ?> !important;
+    background-color: <?= $loginPageFooterTextColor; ?> !important;
+    color: <?= $loginPageFormSubmitBtnBgColor; ?> !important;
+
+    border-color: <?= $loginPageFormSubmitBtnBorderColor; ?> !important;
 }
 #idformmeliscorelogin .cb-cont .cbmask-outer {
-    border-color: <?= $primaryColor; ?> !important;
+    border-color: <?= $loginPageFormSubmitBtnBorderColor; ?> !important;
 }
 #idformmeliscorelogin .forgot-password a:hover,
 #idformmeliscorelogin .forgot-password a {
-    color: <?= $primaryColor; ?> !important;    
+    color: <?= $loginPageFooterTextColor; ?> !important;
 }
 #login_submit,
 #id_meliscore_login_footer .footer a,
+#id_meliscore_login_footer .copy.footer,
 #id_meliscore_login_footer .footer p {
-    color: <?= $loginPagefooterTextColor; ?> !important;
+    color: <?= $loginPageFooterTextColor; ?> !important;
+}
+.login-page .login form label.remember-me-cont {
+    color: <?= $loginPageFormBottomRemTextColor; ?> !important;
+}
+.login-page .login form .forgot-password a {
+    color: <?= $loginPageFormBottomForgotPassTextColor; ?> !important;
+}
+.login-page .login form label.remember-me-cont,
+.login-page .login form .forgot-password a {
+    font-size: <?= $loginPageFormBottomTextFontSize; ?> !important;
 }
 #id_meliscore_footer .footer p,
 #id_meliscore_login_footer .footer p {
