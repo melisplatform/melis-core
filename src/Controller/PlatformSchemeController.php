@@ -502,7 +502,7 @@ class PlatformSchemeController extends MelisAbstractActionController
             $dragDrop = json_decode($schemeData->getDragdrop(), true);
             $platformThemeBox = json_decode($schemeData->getPlatformThemeBox(), true);
 
-            $platformThemeData = array_merge($topLogo, $userProfile, $menu, $footer, $header, $bubblePlugin, $dashboardPlugin, $dashboardPluginMenu, $modal, $dialog, $formElement, $tab, $datepicker, $dragDrop, $platformThemeBox);
+            $platformThemeData = array_merge($topLogo, $userProfile, $menu, $footer, $login, $header, $bubblePlugin, $dashboardPlugin, $dashboardPluginMenu, $modal, $dialog, $formElement, $tab, $datepicker, $dragDrop, $platformThemeBox);
            
             $platformThemeForm = $this->getPlatformThemeOptionForm();
             if (!empty($platformThemeData)) {
