@@ -110,14 +110,14 @@ return array(
                     ),
                     'contents' => array(
                         'en_EN' => array(
-                            'subject' => 'tr_melislogin2FA_email_subject',
-                            'html' => 'tr_melislogin2FA_email_html_content',
-                            'text' => 'tr_melislogin2FA_email_text_content',
+                            'subject' => 'tr_melislogin2fa_email_subject',
+                            'html' => 'tr_melislogin2fa_email_html_content',
+                            'text' => 'tr_melislogin2fa_email_text_content',
                         ),
                         'fr_FR' => array(
-                            'subject' => 'tr_melislogin2FA_email_subject',
-                            'html' => 'tr_melislogin2FA_email_html_content',
-                            'text' => 'tr_melislogin2FA_email_text_content',
+                            'subject' => 'tr_melislogin2fa_email_subject',
+                            'html' => 'tr_melislogin2fa_email_html_content',
+                            'text' => 'tr_melislogin2fa_email_text_content',
                         ),
                     ),
                 ),
