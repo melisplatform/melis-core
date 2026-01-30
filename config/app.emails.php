@@ -99,6 +99,28 @@ return array(
                         ),
                     ),
                 ),
+                'EMAIL2FA' => array(
+                    'email_name' => 'Email 2FA',
+                    'layout' => 'melis-core/view/layout/layoutEmail.phtml',
+                    'headers' => array(
+                        'from' => 'noreply@melistechnology.com',
+                        'from_name' => 'Melis Platform',
+                        'replyTo' => 'noreply@melistechnology.com',
+                        'tags' => 'SUBJECT,CODE,VALIDITY_MINUTES,FORGOT_PASSWORD_URL',
+                    ),
+                    'contents' => array(
+                        'en_EN' => array(
+                            'subject' => 'tr_melislogin2fa_email_subject',
+                            'html' => 'tr_melislogin2fa_email_html_content',
+                            'text' => 'tr_melislogin2fa_email_text_content',
+                        ),
+                        'fr_FR' => array(
+                            'subject' => 'tr_melislogin2fa_email_subject',
+                            'html' => 'tr_melislogin2fa_email_html_content',
+                            'text' => 'tr_melislogin2fa_email_text_content',
+                        ),
+                    ),
+                ),
             )
         )
     )

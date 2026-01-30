@@ -60,6 +60,7 @@ class MelisCoreAuthService
 
         $rightsXML = '';
 
+        // if (!empty($user) && is_object($user)) {
         if (!empty($user)) {
             if (! $this->isRightsUpdated($user->usr_rights)) {
                 $user->usr_rights = $this->toNewXmlStructure($this->convertToNewRightsStructure());
