@@ -779,23 +779,24 @@ class MelisAuthController extends MelisAbstractActionController
                     if ($userData->usr_status == self::USER_ACTIVE) {
                         if(!$isPassExpired) {
                             if (!$needReset) {
-                                $authEvent = $this->getEventManager()->trigger('melis_core_auth_pre_success', $this, [
-                                    'user' => $userData,
-                                ]);
+                                $melisCoreAuth->getAdapter()->setIdentity($postValues['usr_login'])
+                                    ->setCredential($password);
 
-                                $authResult = $authEvent->last();
-                                if ($authEvent->stopped()) {
-                                    $result = $authResult;
-                                } elseif (is_array($authResult) && isset($authResult['success']) && $authResult['success'] === false) {
-                                    $result = $authResult;
-                                } else {
-                                    $melisCoreAuth->getAdapter()->setIdentity($postValues['usr_login'])
-                                        ->setCredential($password);
+                                $authResult = $melisCoreAuth->authenticate();
 
-                                    $authResult = $melisCoreAuth->authenticate();
+                                if ($authResult->isValid()) {
+                                    $user = $melisCoreAuth->getAdapter()->getResultRowObject();
 
-                                    if ($authResult->isValid()) {
-                                        $user = $melisCoreAuth->getAdapter()->getResultRowObject();
+                                    $authEvent = $this->getEventManager()->trigger('melis_core_auth_pre_success', $this, [
+                                        'user' => $userData,
+                                    ]);
+
+                                    $preAuthResult = $authEvent->last();
+                                    if ($authEvent->stopped()) {
+                                        $result = $preAuthResult;
+                                    // } elseif (is_array($preAuthResult) && isset($preAuthResult['success']) && $preAuthResult['success'] === false) {
+                                    //     $result = $preAuthResult;
+                                    } else {
 
                                         // Update the rights of the user if it's not a custom role
                                         if ($user->usr_role_id != self::ROLE_ID_CUSTOM) {
@@ -858,7 +859,8 @@ class MelisAuthController extends MelisAbstractActionController
                                             'errors' => [],
                                             'command' => $jsCommand, // <-- FINAL SUCCESS COMMAND
                                         ];
-                                    } else { 
+                                    }
+                                } else { 
                                         // Authentication failed due to wrong password/etc.
                                         if (file_exists($_SERVER['DOCUMENT_ROOT'] . '/../vendor/melisplatform/melis-core/config/app.login.php')) {
                                             $config = $this->getServiceManager()->get('MelisCoreConfig')->getItem('meliscore/datas/login');
@@ -1036,8 +1038,6 @@ class MelisAuthController extends MelisAbstractActionController
                     'command' => $jsCommand,
                 ];
             }
-        } 
-
         return new JsonModel($result);
     }
 
