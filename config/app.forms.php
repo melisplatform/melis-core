@@ -7227,7 +7227,173 @@ return array(
                                         'default' => '#e61c23',
                                     ),
                             ),
-                        ), 
+                        ),
+
+                        //additional dnd
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_dnd_plugins_box_category_btn_snippets_bg_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_dnd_plugins_box_category_btn_snippets_bg_color',
+                                    'tooltip' => 'tr_meliscore_platform_theme_dnd_plugins_box_category_btn_snippets_bg_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_dnd_plugins_box_category_btn_snippets_bg_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    // 'placeholder' => 'tr_meliscore_platform_theme_dnd_plugins_box_category_btn_snippets_bg_color',
+                                    'category' => 'dragdrop',
+                                    'default' => '#2c2c2c'
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_dnd_plugins_box_category_btn_snippets_border_bottom_width',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_dnd_plugins_box_category_btn_snippets_border_bottom_width',
+                                    'tooltip' => 'tr_meliscore_platform_theme_dnd_plugins_box_category_btn_snippets_border_bottom_width_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_dnd_plugins_box_category_btn_snippets_border_bottom_width',
+                                    'value' => '',
+                                    'class' => 'dnd-plugins-box-category-btn-snippets-border-bottom-width-range-slider-value range-slider-value form-control',
+                                    'placeholder' => 'tr_meliscore_platform_theme_dnd_plugins_box_category_btn_snippets_border_bottom_width',
+                                    'category' => 'dragdrop',
+                                    'sliderId' => 'dnd-plugins-box-category-btn-snippets-border-bottom-width-range-slider-min',
+                                    'sliderClass' => 'dnd-plugins-box-category-btn-snippets-border-bottom-width-range-slider-min',
+                                    'default' => 0
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_dnd_plugins_box_category_btn_snippets_border_bottom_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_dnd_plugins_box_category_btn_snippets_border_bottom_color',
+                                    'tooltip' => 'tr_meliscore_platform_theme_dnd_plugins_box_category_btn_snippets_border_bottom_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_dnd_plugins_box_category_btn_snippets_border_bottom_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    // 'placeholder' => 'tr_meliscore_platform_theme_dnd_plugins_box_category_btn_snippets_border_bottom_color',
+                                    'category' => 'dragdrop',
+                                    'default' => '#3e3e3e'
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_dnd_plugins_box_category_btn_snippets_text_align',
+                                'type' => 'Laminas\Form\Element\Radio',
+                                'options' => array(
+                                    'label' => 'tr_melis_core_platform_theme_dnd_plugins_box_category_btn_snippets_text_align',
+                                    'tooltip' => 'tr_melis_core_platform_theme_dnd_plugins_box_category_btn_snippets_text_align_tooltip',
+                                    'value_options' => array(
+                                        'left' => '<label class="btn btn-default" for="melis_core_platform_theme_dnd_plugins_box_category_btn_snippets_text_align_left"><i class="bi bi-text-left"></i></label>',
+                                        'center' => '<label class="btn btn-default active" for="melis_core_platform_theme_dnd_plugins_box_category_btn_snippets_text_align_center"><i class="bi bi-text-center"></i></label>',
+                                        'right' => '<label class="btn btn-default" for="melis_core_platform_theme_dnd_plugins_box_category_btn_snippets_text_align_right"><i class="bi bi-text-right"></i></label>',
+                                    ),
+                                    'label_attributes' => array(
+                                        'class' => 'melis-radio-box',
+                                    ),
+                                    'disable_inarray_validator' => true,
+                                ),
+                                'attributes' => array(
+                                    'value' => '',
+                                    'placeholder' => '',
+                                    'class' => 'form-control',
+                                    'id' => 'melis_core_platform_theme_dnd_plugins_box_category_btn_snippets_text_align',
+                                    'category' => 'dragdrop',
+                                    'default' => 'center'
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_dnd_plugins_box_category_btn_snippets_opacity',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_dnd_plugins_box_category_btn_snippets_opacity',
+                                    'tooltip' => 'tr_meliscore_platform_theme_dnd_plugins_box_category_btn_snippets_opacity_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_dnd_plugins_box_category_btn_snippets_opacity',
+                                    'value' => '',
+                                    'class' => 'dnd-plugins-box-category-btn-snippets-opacity-range-slider-value range-slider-value form-control',
+                                    'placeholder' => 'tr_meliscore_platform_theme_dnd_plugins_box_category_btn_snippets_opacity',
+                                    'category' => 'dragdrop',
+                                    'sliderId' => 'dnd-plugins-box-category-btn-snippets-opacity-range-slider-min',
+                                    'sliderClass' => 'dnd-plugins-box-category-btn-snippets-opacity-range-slider-min',
+                                    'default' => 0.4
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_dnd_plugins_box_category_btn_snippets_hover_bg_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_dnd_plugins_box_category_btn_snippets_hover_bg_color',
+                                    'tooltip' => 'tr_meliscore_platform_theme_dnd_plugins_box_category_btn_snippets_hover_bg_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_dnd_plugins_box_category_btn_snippets_hover_bg_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    // 'placeholder' => 'tr_meliscore_platform_theme_dnd_plugins_box_category_btn_snippets_hover_bg_color',
+                                    'category' => 'dragdrop',
+                                    'default' => '#e61c23'
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_dnd_plugins_box_category_btn_snippets_plugin_title_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_dnd_plugins_box_category_btn_snippets_plugin_title_color',
+                                    'tooltip' => 'tr_meliscore_platform_theme_dnd_plugins_box_category_btn_snippets_plugin_title_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_dnd_plugins_box_category_btn_snippets_plugin_title_color',
+                                    'value' => '',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
+                                    // 'placeholder' => 'tr_meliscore_platform_theme_dnd_plugins_box_category_btn_snippets_plugin_title_color',
+                                    'category' => 'dragdrop',
+                                    'default' => '#ffffff'
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_dnd_plugins_box_category_btn_snippets_plugin_title_font_size',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_theme_dnd_plugins_box_category_btn_snippets_plugin_title_font_size',
+                                    'tooltip' => 'tr_meliscore_platform_theme_dnd_plugins_box_category_btn_snippets_plugin_title_font_size_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_dnd_plugins_box_category_btn_snippets_plugin_title_font_size',
+                                    'value' => '',
+                                    'class' => 'dnd-plugins-box-category-button-snippets-plugin-title-font-size-range-slider-value range-slider-value form-control',
+                                    'placeholder' => 'tr_meliscore_platform_theme_dnd_plugins_box_category_btn_snippets_plugin_title_font_size',
+                                    'category' => 'dragdrop',
+                                    'sliderId' => 'dnd-plugins-box-category-button-snippets-plugin-title-font-size-range-slider-min',
+                                    'sliderClass' => 'dnd-plugins-box-category-button-snippets-plugin-title-font-size-range-slider-min',
+                                    'default' => 0
+                                ),
+                            ),
+                        ),
+                        //end additional dnd
 
                         array(
                             'spec' => array(
@@ -7549,172 +7715,6 @@ return array(
                                 ),
                             ),
                         ),
-
-                        //additional dnd
-                        array(
-                            'spec' => array(
-                                'name' => 'melis_core_platform_theme_dnd_plugins_box_category_btn_snippets_bg_color',
-                                'type' => 'Text',
-                                'options' => array(
-                                    'label' => 'tr_meliscore_platform_theme_dnd_plugins_box_category_btn_snippets_bg_color',
-                                    'tooltip' => 'tr_meliscore_platform_theme_dnd_plugins_box_category_btn_snippets_bg_color_tooltip',
-                                ),
-                                'attributes' => array(
-                                    'id' => 'melis_core_platform_theme_dnd_plugins_box_category_btn_snippets_bg_color',
-                                    'value' => '',
-                                    'class' => 'form-control minicolor-hex',
-                                    'data-control' => 'hue',
-                                    // 'placeholder' => 'tr_meliscore_platform_theme_dnd_plugins_box_category_btn_snippets_bg_color',
-                                    'category' => 'dragdrop',
-                                    'default' => '#2c2c2c'
-                                ),
-                            ),
-                        ),
-                        array(
-                            'spec' => array(
-                                'name' => 'melis_core_platform_theme_dnd_plugins_box_category_btn_snippets_border_bottom_width',
-                                'type' => 'Text',
-                                'options' => array(
-                                    'label' => 'tr_meliscore_platform_theme_dnd_plugins_box_category_btn_snippets_border_bottom_width',
-                                    'tooltip' => 'tr_meliscore_platform_theme_dnd_plugins_box_category_btn_snippets_border_bottom_width_tooltip',
-                                ),
-                                'attributes' => array(
-                                    'id' => 'melis_core_platform_theme_dnd_plugins_box_category_btn_snippets_border_bottom_width',
-                                    'value' => '',
-                                    'class' => 'dnd-plugins-box-category-btn-snippets-border-bottom-width-range-slider-value range-slider-value form-control',
-                                    'placeholder' => 'tr_meliscore_platform_theme_dnd_plugins_box_category_btn_snippets_border_bottom_width',
-                                    'category' => 'dragdrop',
-                                    'sliderId' => 'dnd-plugins-box-category-btn-snippets-border-bottom-width-range-slider-min',
-                                    'sliderClass' => 'dnd-plugins-box-category-btn-snippets-border-bottom-width-range-slider-min',
-                                    'default' => 0
-                                ),
-                            ),
-                        ),
-                        array(
-                            'spec' => array(
-                                'name' => 'melis_core_platform_theme_dnd_plugins_box_category_btn_snippets_border_bottom_color',
-                                'type' => 'Text',
-                                'options' => array(
-                                    'label' => 'tr_meliscore_platform_theme_dnd_plugins_box_category_btn_snippets_border_bottom_color',
-                                    'tooltip' => 'tr_meliscore_platform_theme_dnd_plugins_box_category_btn_snippets_border_bottom_color_tooltip',
-                                ),
-                                'attributes' => array(
-                                    'id' => 'melis_core_platform_theme_dnd_plugins_box_category_btn_snippets_border_bottom_color',
-                                    'value' => '',
-                                    'class' => 'form-control minicolor-hex',
-                                    'data-control' => 'hue',
-                                    // 'placeholder' => 'tr_meliscore_platform_theme_dnd_plugins_box_category_btn_snippets_border_bottom_color',
-                                    'category' => 'dragdrop',
-                                    'default' => '#3e3e3e'
-                                ),
-                            ),
-                        ),
-                        array(
-                            'spec' => array(
-                                'name' => 'melis_core_platform_theme_dnd_plugins_box_category_btn_snippets_text_align',
-                                'type' => 'Laminas\Form\Element\Radio',
-                                'options' => array(
-                                    'label' => 'tr_melis_core_platform_theme_dnd_plugins_box_category_btn_snippets_text_align',
-                                    'tooltip' => 'tr_melis_core_platform_theme_dnd_plugins_box_category_btn_snippets_text_align_tooltip',
-                                    'value_options' => array(
-                                        'left' => '<label class="btn btn-default" for="melis_core_platform_theme_dnd_plugins_box_category_btn_snippets_text_align_left"><i class="bi bi-text-left"></i></label>',
-                                        'center' => '<label class="btn btn-default active" for="melis_core_platform_theme_dnd_plugins_box_category_btn_snippets_text_align_center"><i class="bi bi-text-center"></i></label>',
-                                        'right' => '<label class="btn btn-default" for="melis_core_platform_theme_dnd_plugins_box_category_btn_snippets_text_align_right"><i class="bi bi-text-right"></i></label>',
-                                    ),
-                                    'label_attributes' => array(
-                                        'class' => 'melis-radio-box',
-                                    ),
-                                    'disable_inarray_validator' => true,
-                                ),
-                                'attributes' => array(
-                                    'value' => '',
-                                    'placeholder' => '',
-                                    'class' => 'form-control',
-                                    'id' => 'melis_core_platform_theme_dnd_plugins_box_category_btn_snippets_text_align',
-                                    'category' => 'dragdrop',
-                                    'default' => 'center'
-                                ),
-                            ),
-                        ),
-                        array(
-                            'spec' => array(
-                                'name' => 'melis_core_platform_theme_dnd_plugins_box_category_btn_snippets_opacity',
-                                'type' => 'Text',
-                                'options' => array(
-                                    'label' => 'tr_meliscore_platform_theme_dnd_plugins_box_category_btn_snippets_opacity',
-                                    'tooltip' => 'tr_meliscore_platform_theme_dnd_plugins_box_category_btn_snippets_opacity_tooltip',
-                                ),
-                                'attributes' => array(
-                                    'id' => 'melis_core_platform_theme_dnd_plugins_box_category_btn_snippets_opacity',
-                                    'value' => '',
-                                    'class' => 'dnd-plugins-box-category-btn-snippets-opacity-range-slider-value range-slider-value form-control',
-                                    'placeholder' => 'tr_meliscore_platform_theme_dnd_plugins_box_category_btn_snippets_opacity',
-                                    'category' => 'dragdrop',
-                                    'sliderId' => 'dnd-plugins-box-category-btn-snippets-opacity-range-slider-min',
-                                    'sliderClass' => 'dnd-plugins-box-category-btn-snippets-opacity-range-slider-min',
-                                    'default' => 0.4
-                                ),
-                            ),
-                        ),
-                        array(
-                            'spec' => array(
-                                'name' => 'melis_core_platform_theme_dnd_plugins_box_category_btn_snippets_hover_bg_color',
-                                'type' => 'Text',
-                                'options' => array(
-                                    'label' => 'tr_meliscore_platform_theme_dnd_plugins_box_category_btn_snippets_hover_bg_color',
-                                    'tooltip' => 'tr_meliscore_platform_theme_dnd_plugins_box_category_btn_snippets_hover_bg_color_tooltip',
-                                ),
-                                'attributes' => array(
-                                    'id' => 'melis_core_platform_theme_dnd_plugins_box_category_btn_snippets_hover_bg_color',
-                                    'value' => '',
-                                    'class' => 'form-control minicolor-hex',
-                                    'data-control' => 'hue',
-                                    // 'placeholder' => 'tr_meliscore_platform_theme_dnd_plugins_box_category_btn_snippets_hover_bg_color',
-                                    'category' => 'dragdrop',
-                                    'default' => '#e61c23'
-                                ),
-                            ),
-                        ),
-                        array(
-                            'spec' => array(
-                                'name' => 'melis_core_platform_theme_dnd_plugins_box_category_btn_snippets_plugin_title_color',
-                                'type' => 'Text',
-                                'options' => array(
-                                    'label' => 'tr_meliscore_platform_theme_dnd_plugins_box_category_btn_snippets_plugin_title_color',
-                                    'tooltip' => 'tr_meliscore_platform_theme_dnd_plugins_box_category_btn_snippets_plugin_title_color_tooltip',
-                                ),
-                                'attributes' => array(
-                                    'id' => 'melis_core_platform_theme_dnd_plugins_box_category_btn_snippets_plugin_title_color',
-                                    'value' => '',
-                                    'class' => 'form-control minicolor-hex',
-                                    'data-control' => 'hue',
-                                    // 'placeholder' => 'tr_meliscore_platform_theme_dnd_plugins_box_category_btn_snippets_plugin_title_color',
-                                    'category' => 'dragdrop',
-                                    'default' => '#ffffff'
-                                ),
-                            ),
-                        ),
-                        array(
-                            'spec' => array(
-                                'name' => 'melis_core_platform_theme_dnd_plugins_box_category_btn_snippets_plugin_title_font_size',
-                                'type' => 'Text',
-                                'options' => array(
-                                    'label' => 'tr_meliscore_platform_theme_dnd_plugins_box_category_btn_snippets_plugin_title_font_size',
-                                    'tooltip' => 'tr_meliscore_platform_theme_dnd_plugins_box_category_btn_snippets_plugin_title_font_size_tooltip',
-                                ),
-                                'attributes' => array(
-                                    'id' => 'melis_core_platform_theme_dnd_plugins_box_category_btn_snippets_plugin_title_font_size',
-                                    'value' => '',
-                                    'class' => 'dnd-plugins-box-category-button-snippets-plugin-title-font-size-range-slider-value range-slider-value form-control',
-                                    'placeholder' => 'tr_meliscore_platform_theme_dnd_plugins_box_category_btn_snippets_plugin_title_font_size',
-                                    'category' => 'dragdrop',
-                                    'sliderId' => 'dnd-plugins-box-category-button-snippets-plugin-title-font-size-range-slider-min',
-                                    'sliderClass' => 'dnd-plugins-box-category-button-snippets-plugin-title-font-size-range-slider-min',
-                                    'default' => 0
-                                ),
-                            ),
-                        ),
-                        //end additional dnd
 
                         //platform theme
                         array(
