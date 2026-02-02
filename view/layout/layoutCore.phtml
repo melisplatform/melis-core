@@ -71,7 +71,6 @@
     <link rel="stylesheet" href="../assets/components/library/bootstrap/css/bootstrap.min.css"/><![endif]-->
     <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css"> -->
 
-    <!-- fonts -->
     <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700|Roboto:400,300,700|Montserrat:300,400,700' rel='stylesheet' type='text/css'>
 
     <?php
@@ -93,8 +92,12 @@
     if(!empty($this->schemeTime))
         $schemeTime = '?v='.$this->schemeTime;
     ?>
-
-    <link href="/assets/css/schemes.css<?= $schemeTime; ?>" media="screen" rel="stylesheet" type="text/css">
+    
+    <?php if ($isBackOffice) : ?>
+        <link href="/assets/css/dark-theme.css<?= $schemeTime; ?>" media="screen" rel="stylesheet" type="text/css">
+    <?php else: ?>
+        <link href="/assets/css/schemes.css<?= $schemeTime; ?>" media="screen" rel="stylesheet" type="text/css">
+    <?php endif; ?>
 
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
@@ -116,11 +119,6 @@
 
         var themerPrimaryColor = primaryColor;
     </script>
-
-    <?php if ($isBackOffice && !$isLoginPage) : ?>
-        <!-- dark theme overrides -->
-        <link href="/assets/css/dark-theme.css<?= $schemeTime; ?>" media="screen" rel="stylesheet" type="text/css">
-    <?php endif; ?>
 
     <!-- login page background <style> -->
     <?php
