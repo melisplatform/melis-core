@@ -319,6 +319,7 @@ return array(
                     '/MelisCore/js/tools/user-profile.js',
                     '/MelisCore/js/tools/melisModalOpenTools.js',
                     '/MelisCore/js/tools/platform.scheme.tools.js?v='.date('YmdHis'),
+                    '/MelisCore/js/tools/platform-theme-switcher.js?v='.date('YmdHis'),
                     '/MelisCore/js/tools/announcement.tools.js',
 
                     '/MelisCore/js/tools/melis-core-gdpr-tool.js',
@@ -696,6 +697,7 @@ return array(
                 'js' => array(
                     '/melis/get-translations?locale=' . $locale,
                     '/MelisCore/assets/components/library/jquery/jquery.min.js?v=v1.2.3',
+                    '/MelisCore/js/tools/platform-theme-switcher.js',
                     '/MelisCore/js/tools/melisCoreTool.js',
                     '/MelisCore/js/core/login.js',
                     '/MelisCore/js/core/melispasswordservice.js',

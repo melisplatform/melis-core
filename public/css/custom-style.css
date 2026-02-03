@@ -215,6 +215,7 @@ a:not([href]).btn-danger:hover {
 	position: absolute;
 	top: 0;
 	right: 0;
+	width: auto;
 }
 /* tooltip */
 .bs-tooltip-auto[x-placement^="left"] .arrow::before,

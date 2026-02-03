@@ -1,5 +1,4 @@
 $(function() {
-	
 	// LOGIN 
     $('form#idformmeliscorelogin').on("submit", function(event) {
         var datastring = $("form#idformmeliscorelogin").serialize();
@@ -117,4 +116,7 @@ $(function() {
     if(rememberME){
     	$(".remember-me-cont .cbmask-inner").addClass("cb-active");
     }
+
+    // load saved theme from theme switcher
+    themeSwitcher.loadSavedTheme();
 });

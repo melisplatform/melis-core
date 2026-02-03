@@ -3652,7 +3652,7 @@ div.dataTables_wrapper div.dataTables_length select.new_filter {
 	padding: 10px 15px;
 	max-width: 230px;
 	width: auto;
-	height: 47px;
+	height: auto;
 	color: #fff;
 	text-transform: uppercase;
 	font-weight: 700;

@@ -84,7 +84,7 @@ if ($headerTitleLen > 13) {
             }
             echo $this->form()->closeTag();
             ?>
-            <button type="button" class="btn btn-primary open-theme-options mt-2">Open theme options</button>
+            <button type="button" class="btn btn-primary open-theme-options mt-2"><i class="fa fa-cog fa-lg"></i> Open theme options</button>
             <h3 class="mt-4"><?= $this->translate('tr_meliscore_platform_scheme_images'); ?></h3>
             <form method="POST" name="melis_core_platform_scheme_images" id="melis_core_platform_scheme_images" enctype="multipart/form-data">
                 <!-- FAVICON -->
@@ -655,7 +655,7 @@ if ($headerTitleLen > 13) {
                                                             Drag and drop
                                                         </button>
                                                     </h6>
-                                                    <div id="component-dragndrop" class="accordion-collapse collapse" data-bs-arent="#components-accordion">
+                                                    <div id="component-dragndrop" class="accordion-collapse collapse" data-bs-arent="#accordion-sidebar">
                                                         <div class="accordion-body">
                                                             <?php
                                                             foreach ($platformThemeOptionForm->getElements() as $elementKey => $element) {
