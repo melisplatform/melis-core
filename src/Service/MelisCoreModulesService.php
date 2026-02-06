@@ -238,7 +238,25 @@ class MelisCoreModulesService extends MelisServiceManager
      */
     public function getAllModules()
     {
-        return array_merge($this->getUserModules(), $this->getVendorModules());
+        //return array_merge($this->getUserModules(), $this->getVendorModules());
+        return array_merge($this->getUserModules(), $this->getVendorModules(), $this->getAIModules());
+    }
+      
+    /**
+     * Returns all modules created by the AI tool 
+      *
+     * @return array
+     */
+    public function getAIModules(): array
+    {
+        $aiModules = $_SERVER['DOCUMENT_ROOT'] . '/../module/AIModules';
+
+        $modules = [];
+        if ($this->checkDir($aiModules)) {
+            $modules = $this->getDir($aiModules);
+        }
+
+        return $modules;
     }
 
     /**
