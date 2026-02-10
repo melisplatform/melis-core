@@ -92,8 +92,8 @@
     if(!empty($this->schemeTime))
         $schemeTime = '?v='.$this->schemeTime;
     ?>
-    
-    <?php if ($isBackOffice || $isLoginPage) : ?>
+    <!-- $userTheme still needs create in back end ($isBackOffice || $isLoginPage) && $userTheme === 'dark' -->
+    <?php if ( $isBackOffice || $isLoginPage ) : ?>
         <link href="/assets/css/dark-theme.css<?= $schemeTime; ?>" media="screen" rel="stylesheet" type="text/css">
     <?php else: ?>
         <link href="/assets/css/schemes.css<?= $schemeTime; ?>" media="screen" rel="stylesheet" type="text/css">

@@ -1868,6 +1868,7 @@ a[data-bs-toggle="tab"] {
 }
 .me-heading .btn {
 	font-size: .875rem;
+	margin-right: 1rem;
 }
 .custom-accordion-heading a {
 	text-decoration: none;
@@ -2147,6 +2148,13 @@ table.dataTable.dtr-inline.collapsed>tbody>tr.dtr-expanded>th.dtr-control:before
     -o-transition: none;
     -moz-transition: none;
     -webkit-transition: none;
+}
+
+.wizard-design .wizard-head {
+	border-bottom: 1px solid #e5e5e5;
+}
+.field-accordion [data-toggle="collapse-widget"] .collapse-toggle:before {
+	color: #686868;
 }
 /* applicable on all DataTables table */
 .content-cont .dataTables_length {
