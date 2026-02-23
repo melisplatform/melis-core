@@ -7716,6 +7716,27 @@ return array(
                             ),
                         ),
 
+                          array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_theme_dnd_layout_column_button_hover_opacity',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_melis_core_platform_theme_dnd_layout_column_button_hover_opacity',
+                                    'tooltip' => 'tr_melis_core_platform_theme_dnd_layout_column_button_hover_opacity_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_theme_dnd_layout_column_button_hover_opacity',
+                                    'value' => '',
+                                    'class' => 'form-control range-slider-value layout-column-button-decimal-input-range-slider-value',
+                                    'placeholder' => 'tr_melis_core_platform_theme_dnd_layout_column_button_hover_opacity',
+                                    'category' => 'dragdrop',
+                                    'sliderId' => 'layout-column-button-decimal-range-slider-min',
+                                    'sliderClass' => 'layout-column-button-decimal-range-slider-min',
+                                    'default' => 4,
+                                ),
+                            ),
+                        ),
+
                         //platform theme
                         array(
                         'spec' => array(

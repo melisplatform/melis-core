@@ -864,14 +864,14 @@ var rangeSliderSize = {
 var rangeDecimalSlider = {
     setRangeDecimalSlider: function() {
         const decimal_sliders = [
-            {
-                selectMin: '.layout-column-button-decimal-range-slider-min',
-                selectValue: '.layout-column-button-decimal-input-range-slider-value',
-                min: 0,
-                max: 1,
-                step: 0.01,
-                value: $("#melis_core_platform_theme_dnd_layout_column_button_hover_opacity").val()
-            },
+            // {
+            //     selectMin: '.layout-column-button-decimal-range-slider-min',
+            //     selectValue: '.layout-column-button-decimal-input-range-slider-value',
+            //     min: 0,
+            //     max: 1,
+            //     step: 0.01,
+            //     value: $("#melis_core_platform_theme_dnd_layout_column_button_hover_opacity").val()
+            // },
             {
                 selectMin: '.plugin-box-module-title-decimal-range-slider-min',
                 selectValue: '.plugin-box-module-title-decimal-input-range-slider-value',
