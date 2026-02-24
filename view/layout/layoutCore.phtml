@@ -92,12 +92,9 @@
     if(!empty($this->schemeTime))
         $schemeTime = '?v='.$this->schemeTime;
     ?>
-    <!-- $userTheme still needs create in back end ($isBackOffice || $isLoginPage) && $userTheme === 'dark' -->
-    <?php if ( $isBackOffice || $isLoginPage ) : ?>
-        <link href="/assets/css/dark-theme.css<?= $schemeTime; ?>" media="screen" rel="stylesheet" type="text/css">
-    <?php else: ?>
-        <link href="/assets/css/schemes.css<?= $schemeTime; ?>" media="screen" rel="stylesheet" type="text/css">
-    <?php endif; ?>
+    
+    <link href="/assets/css/schemes.css<?= $schemeTime; ?>" media="screen" rel="stylesheet" type="text/css">
+    <link href="/assets/css/dark-theme.css<?= $schemeTime; ?>" media="screen" rel="stylesheet" type="text/css">
 
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>

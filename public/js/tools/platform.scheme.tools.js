@@ -860,50 +860,6 @@ var rangeSliderSize = {
     }
 };
 
-// slider for decimal
-var rangeDecimalSlider = {
-    setRangeDecimalSlider: function() {
-        const decimal_sliders = [
-            // {
-            //     selectMin: '.layout-column-button-decimal-range-slider-min',
-            //     selectValue: '.layout-column-button-decimal-input-range-slider-value',
-            //     min: 0,
-            //     max: 1,
-            //     step: 0.01,
-            //     value: $("#melis_core_platform_theme_dnd_layout_column_button_hover_opacity").val()
-            // },
-            {
-                selectMin: '.plugin-box-module-title-decimal-range-slider-min',
-                selectValue: '.plugin-box-module-title-decimal-input-range-slider-value',
-                min: 0,
-                max: 1,
-                step: 0.01,
-                value: $("#melis_core_platform_theme_dnd_plugin_box_module_title_opacity").val()
-            }
-        ];
-            decimal_sliders.forEach(slider => {
-                const $sliderMin = $(slider.selectMin),
-                    $sliderValue = $(slider.selectValue);
-
-                    this.rangeDecimalInit($sliderMin, $sliderValue, "min", slider.step, slider.value, slider.min, slider.max);
-            });
-    },
-    rangeDecimalInit: function($elMin, $elValue, range, step, value, min, max) {
-        $elMin.slider({
-            range: range,
-            min: min,
-            max: max,
-            step: step,
-            value: value,
-            slide: function(event, ui) {
-                $elValue.val(ui.value);
-            }
-        });
-
-        $elValue.val($elMin.slider("value"));
-    }
-};
-
 window.forceReload = function() {
     // preserve current path, query, and hash
     const url       = window.location.href.split('#')[0],
