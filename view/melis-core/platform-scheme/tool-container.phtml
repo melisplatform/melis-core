@@ -203,40 +203,64 @@ if ($headerTitleLen > 13) {
                 <div class="platform-theme-options-detail">
                     <div class="platform-theme-options-block">
                         <div class="platform-theme-options-tools-info">
-                            <div class="theme-switcher">
-                                <h3>Color themes</h3>
-                                <div class="card p-3 mb-0">
-                                    <div class="form-check">
-                                        <input class="form-check-input theme-radio" type="radio" name="themeChoice" id="themeLight" value="light" checked>
-                                        <label class="form-check-label" for="themeLight">Light</label>
-                                    </div>
-                                    <div class="form-check">
-                                        <input class="form-check-input theme-radio" type="radio" name="themeChoice" id="themeDark" value="dark">
-                                        <label class="form-check-label" for="themeDark">Dark</label>
-                                    </div>
-                                </div>
-                            </div>
                             <?php
                             $platformThemeOptionForm = $this->platformThemeOptionForm;
                             echo $this->form()->openTag($platformThemeOptionForm);
                             ?>
                             <div id="theme-options" class="accordion">
-                                <div class="accordion-item general-options">
+                                <div class="accordion-item global-options">
                                     <h3 class="accordion-header active-header">
-                                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#general-options" aria-expanded="true" aria-controls="general-options">
+                                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#global-options" aria-expanded="true" aria-controls="global-options">
+                                            Global Options
+                                        </button>
+                                    </h3>
+                                    <div id="global-options" class="accordion-collapse collapse show" data-bs-parent="#theme-options">
+                                        <div class="accordion-body">
+                                            <div id="global-accordion" class="accordion">
+                                                <h6 class="accordion-header">
+                                                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#color-themes" aria-expanded="true" aria-controls="color-themes">
+                                                        Color themes
+                                                    </button>
+                                                </h6>
+                                                <div id="color-themes" class="accordion-collapse collapse" data-bs-parent="#global-accordion">
+                                                    <div class="accordion-body">
+                                                        <div class="options-grid">
+                                                            <div class="theme-option active" data-theme="default">
+                                                                <span>☀️</span>
+                                                                <span>Default</span>
+                                                            </div>
+                                                            <div class="theme-option" data-theme="dark">
+                                                                <span>🌙</span>
+                                                                <span>Dark</span>
+                                                            </div>
+                                                            <div class="theme-option" data-theme="custom">
+                                                                <span>⭐</span>
+                                                                <span>Custom</span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="accordion-item general-options">
+                                    <h3 class="accordion-header">
+                                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#general-options" aria-expanded="false" aria-controls="general-options">
                                             General Options
                                         </button>
                                     </h3>
-                                    <div id="general-options" class="accordion-collapse collapse show" data-bs-parent="#theme-options">
+                                    <div id="general-options" class="accordion-collapse collapse" data-bs-parent="#theme-options">
                                         <div class="accordion-body">
-                                            <div id="accordion-sidebar" class="accordion">
+                                            <div id="general-accordion" class="accordion">
                                                 <div class="accordion-item top-logo">
                                                     <h6 class="accordion-header">
                                                         <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#top-logo" aria-expanded="false" aria-controls="top-logo">
                                                             Top logo
                                                         </button>
                                                     </h6>
-                                                    <div id="top-logo" class="accordion-collapse collapse" data-bs-parent="#accordion-sidebar">
+                                                    <div id="top-logo" class="accordion-collapse collapse" data-bs-parent="#general-sidebar">
                                                         <div class="accordion-body">
                                                             <?php
                                                             foreach ($platformThemeOptionForm->getElements() as $elementKey => $element) {
@@ -282,7 +306,7 @@ if ($headerTitleLen > 13) {
                                                             User profile
                                                         </button>
                                                     </h6>
-                                                    <div id="user-profile" class="accordion-collapse collapse" data-bs-parent="#accordion-sidebar">
+                                                    <div id="user-profile" class="accordion-collapse collapse" data-bs-parent="#general-accordion">
                                                         <div class="accordion-body">
                                                             <?php
                                                             foreach ($platformThemeOptionForm->getElements() as $elementKey => $element) {
@@ -320,7 +344,7 @@ if ($headerTitleLen > 13) {
                                                             Menu
                                                         </button>
                                                     </h6>
-                                                    <div id="accordion-sidebar-menu" class="accordion-collapse collapse" data-bs-parent="#accordion-sidebar">
+                                                    <div id="accordion-sidebar-menu" class="accordion-collapse collapse" data-bs-parent="#general-accordion">
                                                         <div class="accordion-body">
                                                             <?php
                                                             foreach ($platformThemeOptionForm->getElements() as $elementKey => $element) {
@@ -355,7 +379,7 @@ if ($headerTitleLen > 13) {
                                                             Footer
                                                         </button>
                                                     </h6>
-                                                    <div id="footer-version" class="accordion-collapse collapse" data-bs-parent="#accordion-sidebar">
+                                                    <div id="footer-version" class="accordion-collapse collapse" data-bs-parent="#general-accordion">
                                                         <div class="accordion-body">
                                                             <?php
                                                             foreach ($platformThemeOptionForm->getElements() as $elementKey => $element) {
@@ -395,14 +419,13 @@ if ($headerTitleLen > 13) {
                                                     </div>
                                                 </div>
 
-                                                <!-- Login page -->
                                                 <div class="accordion-item login-page-options">
                                                     <h6 class="accordion-header">
                                                         <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#login-page-options" aria-expanded="false" aria-controls="login-page-options">
                                                             Login page
                                                         </button>
                                                     </h6>
-                                                    <div id="login-page-options" class="accordion-collapse collapse" data-bs-parent="#accordion-sidebar">
+                                                    <div id="login-page-options" class="accordion-collapse collapse" data-bs-parent="#general-accordion">
                                                         <div class="accordion-body">
                                                             <?php
                                                             foreach ($platformThemeOptionForm->getElements() as $elementKey => $element) {
@@ -448,7 +471,7 @@ if ($headerTitleLen > 13) {
                                                             Header navigation
                                                         </button>
                                                     </h6>
-                                                    <div id="header-navigation" class="accordion-collapse collapse" data-bs-parent="#accordion-sidebar">
+                                                    <div id="header-navigation" class="accordion-collapse collapse" data-bs-parent="#general-accordion">
                                                         <div class="accordion-body">
                                                             <?php
                                                             foreach ($platformThemeOptionForm->getElements() as $elementKey => $element) {
@@ -483,7 +506,7 @@ if ($headerTitleLen > 13) {
                                                             Bubble plugins
                                                         </button>
                                                     </h6>
-                                                    <div id="pto-bubble-plugins" class="accordion-collapse collapse" data-bs-parent="#accordion-sidebar">
+                                                    <div id="pto-bubble-plugins" class="accordion-collapse collapse" data-bs-parent="#general-accordion">
                                                         <div class="accordion-body">
                                                             <?php
                                                             foreach ($platformThemeOptionForm->getElements() as $elementKey => $element) {
@@ -530,7 +553,7 @@ if ($headerTitleLen > 13) {
                                                             Dashboard plugins
                                                         </button>
                                                     </h6>
-                                                    <div id="dashboard-plugins" class="accordion-collapse collapse" data-bs-parent="#accordion-sidebar">
+                                                    <div id="dashboard-plugins" class="accordion-collapse collapse" data-bs-parent="#general-accordion">
                                                         <div class="accordion-body">
                                                             <?php
                                                             foreach ($platformThemeOptionForm->getElements() as $elementKey => $element) {
@@ -593,7 +616,7 @@ if ($headerTitleLen > 13) {
                                                             Dashboard plugins menu
                                                         </button>
                                                     </h6>
-                                                    <div id="dashboard-plugins-menu" class="accordion-collapse collapse" data-bs-parent="#accordion-sidebar">
+                                                    <div id="dashboard-plugins-menu" class="accordion-collapse collapse" data-bs-parent="#general-accordion">
                                                         <div class="accordion-body">
                                                             <?php
                                                             foreach ($platformThemeOptionForm->getElements() as $elementKey => $element) {
@@ -655,7 +678,7 @@ if ($headerTitleLen > 13) {
                                                             Drag and drop
                                                         </button>
                                                     </h6>
-                                                    <div id="component-dragndrop" class="accordion-collapse collapse" data-bs-arent="#accordion-sidebar">
+                                                    <div id="component-dragndrop" class="accordion-collapse collapse" data-bs-arent="#general-accordion">
                                                         <div class="accordion-body">
                                                             <?php
                                                             foreach ($platformThemeOptionForm->getElements() as $elementKey => $element) {
@@ -715,33 +738,17 @@ if ($headerTitleLen > 13) {
                                                             <?php
                                                             } ?>
 
-                                                            <!-- added missing option, need to be added after "DND layout column button hover color" -->
-                                                            <!-- <div class="form-group">
-                                                                <label for="melis_core_platform_theme_dnd_layout_column_button_hover_opacity  " class="d-flex flex-row justify-content-between">
-                                                                    <div class="label-text">DND layout column button hover opacity</div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Change dnd layout column button hover opacity"></i>
-                                                                </label>
-                                                                <div class="row">
-                                                                    <div class="col-8">
-                                                                        <div id="dnd-layout-column-button-hover-opacity-range-slider-min" class="dnd-layout-column-button-hover-opacity-range-slider-min layout-column-button-decimal-range-slider-min" style="border: 0; color: #f6931f; font-weight: bold;"></div>
-                                                                    </div>
-                                                                    <div class="col-4">
-                                                                        <input type="text" name="melis_core_platform_theme_dnd_layout_column_button_hover_opacity" id="melis_core_platform_theme_dnd_layout_column_button_hover_opacity" class="form-control range-slider-value layout-column-button-decimal-input-range-slider-value" />
-                                                                    </div>
-                                                                </div>
-                                                            </div> -->
-
                                                         </div>
                                                     </div>
                                                 </div>
 
-                                                <!-- Platform theme options -->
                                                 <div class="accordion-item platform-theme-opts">
                                                     <h6 class="accordion-header">
                                                         <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#platform-theme-opts" aria-expanded="false" aria-controls="platform-theme-opts">
                                                             Platform theme options box
                                                         </button>
                                                     </h6>
-                                                    <div id="platform-theme-opts" class="accordion-collapse collapse" data-bs-parent="#accordion-sidebar">
+                                                    <div id="platform-theme-opts" class="accordion-collapse collapse" data-bs-parent="#general-accordion">
                                                         <div class="accordion-body">
 
                                                             <?php
@@ -1143,7 +1150,6 @@ if ($headerTitleLen > 13) {
                                         </div>
                                     </div>
                                 </div>
-                                <!-- end of #general-options -->
                             </div>
                             <?php
                             echo $this->form()->closeTag();

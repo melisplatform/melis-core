@@ -2647,7 +2647,7 @@ table.dataTable.dtr-inline.collapsed>tbody>tr.dtr-expanded>th.dtr-control:before
 	right: 0.5rem;
 }
 /* theme switcher */
-.platform-theme-options-tools-info .theme-switcher h3 {
+.global-options .theme-switcher h3 {
 	color: #686868;
 	font-size: 1rem;
 }
@@ -2672,6 +2672,36 @@ table.dataTable.dtr-inline.collapsed>tbody>tr.dtr-expanded>th.dtr-control:before
 }
 #id_meliscore_footer .footer p {
 	margin-bottom: 0;
+}
+.options-grid {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 0.75rem;
+}
+.theme-option {
+	padding: 1rem;
+	border: 2px solid var(--border-color);
+	background-color: var(--bg-secondary);
+	border-radius: 12px;
+	cursor: pointer;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 0.5rem;
+	font-weight: 500;
+	color: var(--text-secondary);
+	transition: all 0.2s ease;
+}
+.theme-option:hover {
+	border-color: var(--primary-color);
+	transform: translateY(-2px);
+	box-shadow: 0 4px 12px var(--shadow);
+}
+.theme-option.active {
+	border-color: var(--primary-color);
+	background-color: var(--primary-light);
+	color: var(--primary-color);
+	box-shadow: 0 4px 12px var(--shadow);
 }
 /* dashboard bubble plugin */
 .melis-dashboard-bubble-plugin .front .widget {

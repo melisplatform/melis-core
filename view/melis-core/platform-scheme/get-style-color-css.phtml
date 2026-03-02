@@ -2080,7 +2080,7 @@ body .navbar.main.navbar-primary,
 .modal-content .widget.widget-tabs-double > .widget-head ul li:not(.active) a.glyphicons,
 .modal-content .widget.widget-tabs-double .widget-head ul li a.glyphicons i:before,
 .modal-content .widget.widget-tabs-double .widget-head ul li a.glyphicons {
-    color: <?= $modalNavTabsTextIconColor; ?>;
+    color: <?= $modalNavTabsTextIconColor; ?> !important;
     font-size: <?= $modalNavTabsTextIconFontSize; ?>px !important;
 }
 .modal-content .nav-tabs.product-text-tab > li.active > a,
@@ -2206,6 +2206,9 @@ form .form-group input[type="button"] {
     border-color: <?= $formInputElementsBorderColor; ?> !important;
     border-radius: <?= $formInputElementsBorderRadius; ?> !important;
     color: <?= $formInputElementsTextColor; ?> !important;
+}
+form .form-group .bootstrap-tagsinput input[type="text"] {
+    border: 0 !important;
 }
 form .form-group input[type="text"]:disable,
 form .form-group input[type="text"]:readonly {
