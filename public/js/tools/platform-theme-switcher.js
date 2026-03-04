@@ -66,7 +66,7 @@ var themeSwitcher = (function($) {
                 $defaultTheme.prop('disabled', true);
                 $darkTheme.prop('disabled', false);
             } else {
-                // default + custom both use the light stylesheet as base
+                // default stylesheet as base
                 $defaultTheme.prop('disabled', false); // default
                 $darkTheme.prop('disabled', true);
             }
