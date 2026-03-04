@@ -195,6 +195,107 @@ $(function() {
         // defer execution to make sure the module definition (located later in this file)
         // has finished evaluating even when this ready callback runs synchronously
         setTimeout(initializeThemeSwitcher, 0);
+
+        // helper to sync card selection with the current theme
+        const syncThemeCardsWithCurrentTheme = function () {
+            let theme = 'default';
+
+            if (window.themeSwitcher && typeof window.themeSwitcher.getCurrentTheme === 'function') {
+                theme = window.themeSwitcher.getCurrentTheme();
+            } else {
+                // fallback to localStorage if the module isn't available yet
+                theme = localStorage.getItem('preferred-theme') || 'default';
+            }
+
+            // map themeSwitcher values to card data-theme values
+            let cardTheme;
+            if (theme === 'dark') {
+                cardTheme = 'dark';
+            } else if (theme === 'custom') {
+                cardTheme = 'custom';
+            } else {
+                cardTheme = 'default';
+            }
+
+            const $options = $('#color-themes .theme-option');
+            $options.removeClass('active');
+
+            const $activeCard = $options.filter('[data-theme="' + cardTheme + '"]');
+            $activeCard.addClass('active');
+
+            // show/hide custom controls
+            if (cardTheme === 'custom') {
+                $activeCard.find('.custom-theme-controls').removeClass('d-none');
+            } else {
+                $('#color-themes .custom-theme-controls').addClass('d-none');
+            }
+        };
+
+        // give themeSwitcher a moment to apply the saved theme, then sync the cards
+        setTimeout(syncThemeCardsWithCurrentTheme, 500);
+
+        $(document).on('themeChanged', function (e, theme) {
+            syncThemeCardsWithCurrentTheme();
+        });
+
+        // initialize minicolors on custom inputs
+        /* $("#color-themes .minicolor").minicolors({
+            control: 'hue',
+            format: 'hex',
+            theme: 'bootstrap',
+            change: function (hex) {
+                const role = $(this).data('role');
+                if (!hex) return;
+
+                // apply as CSS variables for live preview
+                if (role === 'primary') {
+                    document.documentElement.style.setProperty('--theme-primary', hex);
+                } else if (role === 'secondary') {
+                    document.documentElement.style.setProperty('--theme-secondary', hex);
+                }
+
+                // Optional: call your existing save logic / AJAX here
+                // saveCustomThemeColors();
+            }
+        }); */
+
+        // handle clicks on the Default / Dark / Custom cards
+        $body.on("click", "#color-themes .theme-option", function (e) {
+            e.preventDefault();
+
+            const $option = $(this);
+            const cardTheme = $option.data('theme'); // "default" | "dark"
+            let theme;
+
+            // map card values to themeSwitcher values
+            if (cardTheme === "default") {
+                theme = "default"; // your current default in themeSwitcher
+            } else if (cardTheme === "dark") {
+                theme = "dark";
+            } /* else if (cardTheme === "custom") {
+                theme = "custom"; // only if you've added "custom" support in themeSwitcher
+            } else */ {
+                theme = "default";
+            }
+
+            // visually highlight the selected card
+            $("#color-themes .theme-option").removeClass("active");
+            $option.addClass("active");
+
+            // show/hide custom color controls
+            /* if (cardTheme === "custom") {
+                $option.closest("#color-themes").find(".custom-theme-controls").removeClass("d-none");
+            } else {
+                $("#color-themes .custom-theme-controls").addClass("d-none");
+            } */
+
+            // call the existing theme switcher
+            if (window.themeSwitcher && typeof window.themeSwitcher.setTheme === "function") {
+                window.themeSwitcher.setTheme(theme);
+                // persist preference like the radios do
+                localStorage.setItem('preferred-theme', theme);
+            }
+        });
         // end evo/platform-scheme
 });
 

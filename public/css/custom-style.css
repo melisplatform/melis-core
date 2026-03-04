@@ -2446,6 +2446,7 @@ table.dataTable.dtr-inline.collapsed>tbody>tr.dtr-expanded>th.dtr-control:before
 .platform-theme-options-block .accordion-item .accordion-body > .accordion .accordion-item .accordion-body {
 	padding-top: 0.5rem;
 }
+.platform-theme-options-block .accordion .accordion-item .accordion-header,
 .platform-theme-options-block .accordion-collapse .accordion-body .accordion .accordion-item .accordion-header {
 	padding-left: 0.5rem;
 }
@@ -2673,35 +2674,66 @@ table.dataTable.dtr-inline.collapsed>tbody>tr.dtr-expanded>th.dtr-control:before
 #id_meliscore_footer .footer p {
 	margin-bottom: 0;
 }
-.options-grid {
-	display: grid;
-	grid-template-columns: 1fr 1fr;
-	gap: 0.75rem;
+
+#color-themes .options-grid {
+    display: flex;
+    gap: 1rem;
+	margin: 1rem auto;
 }
-.theme-option {
-	padding: 1rem;
-	border: 2px solid var(--border-color);
-	background-color: var(--bg-secondary);
-	border-radius: 12px;
+#color-themes .theme-option {
+	background: #fff;
+    border-radius: 0;
+    border: 1px solid #d0d7e2;
 	cursor: pointer;
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	gap: 0.5rem;
-	font-weight: 500;
-	color: var(--text-secondary);
-	transition: all 0.2s ease;
+
+    padding: 1rem;
+    text-align: center;
+
+	flex: 1 1 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    
+	min-width: 76px;
+	height: 76px;
+
+	transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease, transform 0.08s ease;
 }
-.theme-option:hover {
-	border-color: var(--primary-color);
-	transform: translateY(-2px);
-	box-shadow: 0 4px 12px var(--shadow);
+#color-themes .theme-option i {
+    font-size: 1.4rem;
+    margin-bottom: 0.25rem;
 }
-.theme-option.active {
-	border-color: var(--primary-color);
-	background-color: var(--primary-light);
-	color: var(--primary-color);
-	box-shadow: 0 4px 12px var(--shadow);
+#color-themes .theme-option span:first-child {
+    display: block;
+    font-size: 1.5rem;
+    margin-bottom: 0.25rem;
+}
+#color-themes .theme-option.active {
+    border-color: #1e88e5;
+    /* box-shadow: 0 0 0 3px rgba(30, 136, 229, 0.15); */
+	box-shadow: none;
+    transform: translateY(-1px);
+}
+#color-themes .custom-theme-controls {
+    margin-top: 0.75rem;
+	margin-left: 0.75rem;
+    text-align: left;
+}
+#color-themes .theme-option[data-theme="default"]:hover {
+    background-color: #e0e0e0;
+    border-color: #c0c0c0;
+}
+#color-themes .theme-option[data-theme="dark"]:hover {
+    background-color: #000000;
+    border-color: #000000;
+    color: #ffffff;
+}
+#color-themes .theme-option:hover {
+    transform: translateY(-1px);
+}
+#color-themes .theme-option.active {
+    box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.15);
 }
 /* dashboard bubble plugin */
 .melis-dashboard-bubble-plugin .front .widget {

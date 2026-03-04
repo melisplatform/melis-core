@@ -210,7 +210,7 @@ if ($headerTitleLen > 13) {
                             <div id="theme-options" class="accordion">
                                 <div class="accordion-item global-options">
                                     <h3 class="accordion-header">
-                                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#global-options" aria-expanded="false" aria-controls="global-options">
+                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#global-options" aria-expanded="false" aria-controls="global-options">
                                             Global Options
                                         </button>
                                     </h3>
@@ -218,24 +218,20 @@ if ($headerTitleLen > 13) {
                                         <div class="accordion-body">
                                             <div id="global-accordion" class="accordion">
                                                 <h6 class="accordion-header">
-                                                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#color-themes" aria-expanded="false" aria-controls="color-themes">
+                                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#color-themes" aria-expanded="false" aria-controls="color-themes">
                                                         Color themes
                                                     </button>
                                                 </h6>
                                                 <div id="color-themes" class="accordion-collapse collapse" data-bs-parent="#global-accordion">
                                                     <div class="accordion-body">
                                                         <div class="options-grid">
-                                                            <div class="theme-option active" data-theme="default">
-                                                                <span>☀️</span>
+                                                            <div class="theme-option" data-theme="default">
+                                                                <i class="fa fa-sun-o" aria-hidden="true"></i>
                                                                 <span>Default</span>
                                                             </div>
                                                             <div class="theme-option" data-theme="dark">
-                                                                <span>🌙</span>
+                                                                <i class="fa fa-moon-o" aria-hidden="true"></i>
                                                                 <span>Dark</span>
-                                                            </div>
-                                                            <div class="theme-option" data-theme="custom">
-                                                                <span>⭐</span>
-                                                                <span>Custom</span>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -247,7 +243,7 @@ if ($headerTitleLen > 13) {
 
                                 <div class="accordion-item general-options">
                                     <h3 class="accordion-header">
-                                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#general-options" aria-expanded="false" aria-controls="general-options">
+                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#general-options" aria-expanded="false" aria-controls="general-options">
                                             General Options
                                         </button>
                                     </h3>
@@ -750,7 +746,6 @@ if ($headerTitleLen > 13) {
                                                     </h6>
                                                     <div id="platform-theme-opts" class="accordion-collapse collapse" data-bs-parent="#general-accordion">
                                                         <div class="accordion-body">
-
                                                             <?php
                                                             foreach ($platformThemeOptionForm->getElements() as $elementKey => $element) {
                                                                 if ($element->getAttribute('category') == 'platform_theme_options_panel') { ?>
@@ -758,7 +753,6 @@ if ($headerTitleLen > 13) {
                                                                         <label for="<?= $element->getAttribute('id') ?>" class="d-flex flex-row justify-content-between">
                                                                             <div class="label-text"><?= $element->getLabel(); ?></div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="<?= $this->translate($element->getOptions()['tooltip']); ?>"></i>
                                                                         </label>
-
                                                                         <?php
                                                                         if (strpos($element->getName(), 'color') !== false) { ?>
                                                                             <div class="input-group platform-scheme osta_color_code">
@@ -795,7 +789,7 @@ if ($headerTitleLen > 13) {
 
                                 <div class="accordion-item component-options">
                                     <h3 class="accordion-header">
-                                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#component-options" aria-expanded="false" aria-controls="component-options">
+                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#component-options" aria-expanded="false" aria-controls="component-options">
                                             Components Options
                                         </button>
                                     </h3>
@@ -1177,18 +1171,24 @@ if ($headerTitleLen > 13) {
                         position: $this.attr('data-position') || 'bottom',
                         swatches: $this.attr('data-swatches') ? $this.attr('data-swatches').split('|') : [],
                         change: function(hex, opacity) {
-                            var log;
                             try {
-                                /* log = hex ? hex : 'transparent';
-                                
-                                if (opacity)
-                                    log += ', ' + opacity; */
+                                // use the input that triggered the change
+                                var $input  = $(this);
+                                var $group  = $input.closest(".osta_color_code");
 
-                                if ($this.closest(".osta_color_code").find(".minicolor-hex").length) {
-                                    if (opacity === '0.00') {
-                                        $this.closest(".osta_color_code").find(".minicolor-hex").val('transparent');
+                                // primary target: .minicolor-hex
+                                var $hexField = $group.find(".minicolor-hex").first();
+
+                                // optional: fallback to first text input if needed
+                                if (!$hexField.length) {
+                                    $hexField = $group.find("input[type='text']").first();
+                                }
+
+                                if ($hexField.length) {
+                                    if (opacity !== undefined && opacity !== null && +opacity === 0) {
+                                        $hexField.val("transparent");
                                     } else {
-                                        $this.closest(".osta_color_code").find(".minicolor-hex").val(hex);
+                                        $hexField.val(hex || "");
                                     }
                                 }
                             } catch (e) {
@@ -1201,10 +1201,10 @@ if ($headerTitleLen > 13) {
 
                 $(".platform-scheme .minicolor-hex").each(function(i, v) {
                     var $this = $(v);
-                    $this.on("click", function() {
-                        // .minicolors-focus, .minicolors-panel style="display: block;"
-                        $(this).closest(".input-group").find(".minicolors .minicolors-swatch").trigger("click");
-                    });
+                        $this.on("click", function() {
+                            // .minicolors-focus, .minicolors-panel style="display: block;"
+                            $(this).closest(".input-group").find(".minicolors .minicolors-swatch").trigger("click");
+                        });
                 });
 
                 $("input:file").filestyle({

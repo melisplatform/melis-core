@@ -427,7 +427,8 @@
 
     $optionsPanelHeaderCloseBtnColor                            = $this->melis_core_platform_theme_options_panel_header_close_btn_color;
     $optionsPanelHeaderCloseBtnFontSize                         = $this->melis_core_platform_theme_options_panel_header_close_btn_font_size;
-    $optionsPanelHeaderBorderWidth                              = $this->melis_core_platform_theme_options_panel_header_border_width; // need to apply also on the options border width
+    // need to apply also on the options border width
+    $optionsPanelHeaderBorderWidth                              = $this->melis_core_platform_theme_options_panel_header_border_width;
     $optionsPanelHeaderBorderColor                              = $this->melis_core_platform_theme_options_panel_header_border_color;
 
     $optionsPanelOptionsInputRadioBorderColor                   = $this->melis_core_platform_theme_options_panel_options_input_radio_border_color;
@@ -1575,28 +1576,6 @@ div.glyphicons-social.glyphicon-primary i:before {
 .modal-content .form-group .has-switch .switch-animate span {
     color: #ffffff !important;
 }
-.platform-theme-options-tools-info .ui-widget-content {
-    background-color: #e9e9e9;
-}
-.platform-theme-options-tools-info .ui-widget-header {
-    background-color: #e61c23;
-}
-.platform-theme-options-tools-info .btn-group-font-style label {
-    color: #797979;
-    font-size: 25px;
-    font-weight: normal;
-    min-width: 3.5rem;
-    margin: 0 5px;
-}
-.platform-theme-options-tools-info .btn-group .btn-check:checked+.btn, 
-.platform-theme-options-tools-info .btn-group .btn.active, 
-.platform-theme-options-tools-info .btn-group .btn.show, 
-.platform-theme-options-tools-info .btn-group .btn:first-child:active, 
-.platform-theme-options-tools-info .btn-group :not(.btn-check)+.btn:active,
-.platform-theme-options-tools-info .btn-group .btn-check+.btn:hover {
-    background-color: #e61c23 !important;
-    border-color: #e61c23 !important;
-}
 .has-switch {
     border: 0;
 }
@@ -2597,6 +2576,57 @@ form .form-group .tip-info {
 .melis-cms-category-plugins-box {
     border-bottom-color: <?= $dragdropPluginsBoxCategoryBtnActiveBorderColor; ?> !important; /** same with the .melis-cms-filter-btn.active border color */
 }
+/**
+ * Platform theme options
+ */
+.platform-theme-options {
+    background-color: <?= $optionsPanelBgColor ?> !important;
+}
+.platform-theme-options .platform-theme-options-title {
+    border-width: <?= $optionsPanelHeaderBorderWidth ?> !important;
+    border-style: solid;
+    border-color: <?= $optionsPanelHeaderBorderColor ?> !important;
+}
+.platform-theme-options .platform-theme-options-title h6 {
+    color: <?= $optionsPanelTitleTextColor ?> !important;
+    font-size: <?= $optionsPanelTitleTextFontSize ?> !important;
+}
+.platform-theme-options .platform-theme-options-title .close-tools {
+    color: <?= $optionsPanelHeaderCloseBtnColor ?> !important;
+    font-size: <?= $optionsPanelHeaderCloseBtnFontSize ?> !important;
+}
+.platform-theme-options-tools-info .btn-group-font-style label {
+    color: #797979;
+    font-size: 25px;
+    font-weight: normal;
+    min-width: 3.5rem;
+    margin: 0 5px;
+}
+.platform-theme-options-tools-info .btn-group .btn-check:checked+.btn, 
+.platform-theme-options-tools-info .btn-group .btn.active, 
+.platform-theme-options-tools-info .btn-group .btn.show, 
+.platform-theme-options-tools-info .btn-group .btn:first-child:active, 
+.platform-theme-options-tools-info .btn-group :not(.btn-check)+.btn:active,
+.platform-theme-options-tools-info .btn-group .btn-check+.btn:hover {
+    background-color: #e61c23 !important;
+    border-color: #e61c23 !important;
+}
+.platform-theme-options-tools-info .theme-option[data-theme="default"]:hover {
+    background-color: <?= $secondaryColor; ?>;
+    border-color: <?= $secondaryColor; ?>;
+}
+.platform-theme-options-tools-info .theme-option[data-theme="dark"]:hover {
+    background-color: #000000;
+    border-color: #000000;
+    color: #ffffff;
+}
+.platform-theme-options-tools-info .ui-widget-header {
+    background-color: <?= $optionsPanelOptionsRangeSliderUiMinBgColor ?> !important;
+}
+.platform-theme-options-tools-info .ui-widget-content {
+    background-color: <?= $optionsPanelOptionsRangeSliderUiWidgetContentBgColor ?> !important;
+}
+
 /**
  * Dynamic dnd
  */

@@ -5,10 +5,10 @@ var themeSwitcher = (function($) {
     'use strict';
 
     // private variables
-    var currentTheme    = 'light',
+    var currentTheme    = 'default',
         storageKey      = 'preferred-theme',
         $html           = $('html'),
-        $lightTheme     = $('#light-theme'), // light = system colors, default
+        $defaultTheme     = $('#default-theme'), // light = system colors, default
         $darkTheme      = $('#dark-theme'),
         themeControlsObserver = null,
         themeControlsPollId   = null;
@@ -33,10 +33,10 @@ var themeSwitcher = (function($) {
 
         function setupEventListeners() {
             // theme option clicks (delegated for dynamically injected markup)
-            $(document).on('change', '.theme-radio', function(e) {
+            $(document).on('change', '#color-themes .theme-option', function(e) {
                 e.preventDefault();
 
-                var theme = $(this).val();
+                var theme = $(this).data("theme");
                     setTheme(theme);
                     saveTheme(theme);
             });
@@ -44,7 +44,7 @@ var themeSwitcher = (function($) {
 
         function setTheme(theme) {
             // validate theme
-            if (theme !== 'light' && theme !== 'dark') {
+            if (['default', 'dark'].indexOf(theme) === -1) {
                 console.warn('Invalid theme:', theme);
                 return;
             }
@@ -63,10 +63,11 @@ var themeSwitcher = (function($) {
             
             // enable/disable CSS files based on theme
             if (theme === 'dark') {
-                $lightTheme.prop('disabled', true);
+                $defaultTheme.prop('disabled', true);
                 $darkTheme.prop('disabled', false);
             } else {
-                $lightTheme.prop('disabled', false);
+                // default + custom both use the light stylesheet as base
+                $defaultTheme.prop('disabled', false); // default
                 $darkTheme.prop('disabled', true);
             }
             
@@ -79,12 +80,13 @@ var themeSwitcher = (function($) {
         }
 
         function updateUI() {
-            $('.theme-radio').each(function () {
-                $(this).prop('checked', $(this).val() === currentTheme);
-            });
-    
+            // sync new card UI
+            var $cards = $('#color-themes .theme-option');
+                $cards.removeClass('active');
+                $cards.filter('[data-theme="' + currentTheme + '"]').addClass('active');
+
             var config = getThemeConfig(currentTheme);
-            $('#currentTheme').text(config.displayName); // to display text of the theme
+                $('#currentTheme').text(config.displayName);
         }
     
         function watchThemeControls() {
@@ -134,7 +136,7 @@ var themeSwitcher = (function($) {
     
         // check if radio UI exists
         function controlsExist() {
-            return $('.theme-radio').length > 0;
+            return $('.theme-radio').length > 0 || $('#color-themes .theme-option').length > 0;
         }
     
         // ensure radio buttons display correct state
@@ -144,11 +146,12 @@ var themeSwitcher = (function($) {
 
         function getThemeConfig(theme) {
             var configs = {
-                light: { icon: '☀️', name: 'Light', displayName: 'Light' },
+                default: { icon: '☀️', name: 'Default', displayName: 'Default' },
                 dark: { icon: '🌙', name: 'Dark', displayName: 'Dark' }
+                // custom: { icon: '⭐', name: 'Custom', displayName: 'Custom' }
             };
 
-            return configs[theme] || configs.light;
+            return configs[theme] || configs.default;
         }
 
         function getCurrentTheme() {
@@ -156,7 +159,7 @@ var themeSwitcher = (function($) {
         }
 
         function toggleTheme() {
-            var newTheme = currentTheme === 'light' ? 'dark' : 'light';
+            var newTheme = currentTheme === 'default' ? 'dark' : 'default';
                 setTheme(newTheme);
                 saveTheme(newTheme);
         }
