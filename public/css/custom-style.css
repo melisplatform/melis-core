@@ -2475,7 +2475,6 @@ table.dataTable.dtr-inline.collapsed>tbody>tr.dtr-expanded>th.dtr-control:before
     height: 100vh;
     position: fixed;
     right: 0;
-    /* top: 5%; top: 3.5%; */
 	top: 47px;
     background-color: #ffffff;
     -webkit-transition: all 0.3s ease;
@@ -2634,7 +2633,7 @@ table.dataTable.dtr-inline.collapsed>tbody>tr.dtr-expanded>th.dtr-control:before
 .platform-theme-options-tools-info .minicolors-position-bottom .minicolors-panel {
 	left: -173px;
 }
-.platform-theme-options-tools-info .component-options .accordion-boy small {
+.platform-theme-options-tools-info .component-options .accordion-body small {
 	color: #686868;
 }
 .platform-theme-options-title .close-tools {
@@ -2675,12 +2674,12 @@ table.dataTable.dtr-inline.collapsed>tbody>tr.dtr-expanded>th.dtr-control:before
 	margin-bottom: 0;
 }
 
-#color-themes .options-grid {
+.global-options .options-grid {
     display: flex;
     gap: 1rem;
 	margin: 1rem auto;
 }
-#color-themes .theme-option {
+.global-options .theme-option {
 	background: #fff;
     border-radius: 0;
     border: 1px solid #d0d7e2;
@@ -2700,39 +2699,38 @@ table.dataTable.dtr-inline.collapsed>tbody>tr.dtr-expanded>th.dtr-control:before
 
 	transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease, transform 0.08s ease;
 }
-#color-themes .theme-option i {
+.global-options .theme-option i {
     font-size: 1.4rem;
     margin-bottom: 0.25rem;
 }
-#color-themes .theme-option span:first-child {
+.global-options .theme-option span:first-child {
     display: block;
     font-size: 1.5rem;
     margin-bottom: 0.25rem;
 }
-#color-themes .theme-option.active {
+.global-options .theme-option.active {
     border-color: #1e88e5;
-    /* box-shadow: 0 0 0 3px rgba(30, 136, 229, 0.15); */
-	box-shadow: none;
+    box-shadow: none;
     transform: translateY(-1px);
 }
-#color-themes .custom-theme-controls {
+.global-options .custom-theme-controls {
     margin-top: 0.75rem;
 	margin-left: 0.75rem;
     text-align: left;
 }
-#color-themes .theme-option[data-theme="default"]:hover {
+.global-options .theme-option[data-theme="default"]:hover {
     background-color: #e0e0e0;
     border-color: #c0c0c0;
 }
-#color-themes .theme-option[data-theme="dark"]:hover {
+.global-options .theme-option[data-theme="dark"]:hover {
     background-color: #000000;
     border-color: #000000;
     color: #ffffff;
 }
-#color-themes .theme-option:hover {
+.global-options .theme-option:hover {
     transform: translateY(-1px);
 }
-#color-themes .theme-option.active {
+.global-options .theme-option.active {
     box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.15);
 }
 /* dashboard bubble plugin */

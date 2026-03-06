@@ -1,21 +1,25 @@
 /**  
  * Theme Switcher Module using jQuery Modular Pattern
+ * Included UI styles: flat, rounded as its almost the same implementation
  */
 var themeSwitcher = (function($) {
     'use strict';
 
     // private variables
-    var currentTheme    = 'default',
-        storageKey      = 'preferred-theme',
-        $html           = $('html'),
-        $defaultTheme     = $('#default-theme'), // light = system colors, default
-        $darkTheme      = $('#dark-theme'),
-        themeControlsObserver = null,
-        themeControlsPollId   = null;
+    var currentTheme            = 'default',
+        storageKey              = 'preferred-theme',
+        $html                   = $('html'),
+        $defaultTheme           = $('#default-theme'), // light = system colors, default
+        $darkTheme              = $('#dark-theme'),
+        currentUiStyle          = 'flat',
+        uiStorageKey            = 'preferred-ui-style',
+        themeControlsObserver   = null,
+        themeControlsPollId     = null;
 
         // private methods
         function init() {
-            loadSavedTheme();
+            loadSavedTheme(); // theme
+            loadSavedUiStyle(); // ui style
             setupEventListeners();
             ensureThemeControlsState();
             watchThemeControls();
@@ -27,22 +31,86 @@ var themeSwitcher = (function($) {
                     setTheme(savedTheme);
                 } else {
                     // default to light theme if no saved preference
-                    setTheme('light');
+                    setTheme('default');
                 }
         }
 
         function setupEventListeners() {
             // theme option clicks (delegated for dynamically injected markup)
-            $(document).on('change', '#color-themes .theme-option', function(e) {
+            $(document).on('click', '#color-themes .theme-option', function(e) {
                 e.preventDefault();
 
                 var theme = $(this).data("theme");
+                    themeSwitcher.setTheme(theme);
+                    themeSwitcher.toggleTheme;
+
                     setTheme(theme);
                     saveTheme(theme);
             });
+
+            // ui style handler
+            $(document).on('click', '#ui-style .theme-option', function(e) {
+                e.preventDefault();
+
+                var style = $(this).data("style");
+                    setUiStyle(style);
+                    saveUiStyle(style);
+            });
         }
 
+        // start ui style
+        function loadSavedUiStyle() {
+            var savedStyle = localStorage.getItem(uiStorageKey);
+                if (savedStyle === 'rounded' || savedStyle === 'flat') {
+                    setUiStyle(savedStyle);
+                } else {
+                    setUiStyle('flat');
+                }
+        }
+
+        function setUiStyle(style) {
+            style = (style || '').toString().toLowerCase();
+            if (['flat', 'rounded'].indexOf(style) === -1) {
+                console.warn('Invalid UI style:', style);
+                return;
+            }
+        
+            currentUiStyle = style;
+            applyUiStyle(style);
+            updateUiStyleUI();
+        }
+        
+        function saveUiStyle(style) {
+            localStorage.setItem(uiStorageKey, style);
+        }
+        
+        function applyUiStyle(style) {
+            // target the back-office UI elements you want styled
+            var $targets = $(
+                '.widget, .panel, .card, .modal-content, .sidebar, .dropdown-menu, .table,' +
+                '.panel-heading, .panel-body, .card-header, .card-body, .form-control, .input-group-text,' +
+                '.btn, .list-group-item, .well, .nav-link, .dropdown-item, .modal-header, .modal-body, .modal-footer,' +
+                'input:not(.theme-radio), select, textarea'
+            );
+        
+            if (style === 'rounded') {
+                $targets.removeClass('flat').addClass('rounded');
+            } else {
+                $targets.removeClass('rounded').addClass('flat');
+            }
+        }
+        
+        function updateUiStyleUI() {
+            var $options = $('#ui-style .theme-option');
+                $options.removeClass('active');
+                $options.filter('[data-style="' + currentUiStyle + '"]').addClass('active');
+        }
+        // end ui style
+
         function setTheme(theme) {
+            // normalize
+            theme = (theme || '').toString().trim();
+            
             // validate theme
             if (['default', 'dark'].indexOf(theme) === -1) {
                 console.warn('Invalid theme:', theme);
@@ -136,12 +204,18 @@ var themeSwitcher = (function($) {
     
         // check if radio UI exists
         function controlsExist() {
-            return $('.theme-radio').length > 0 || $('#color-themes .theme-option').length > 0;
+            return (
+                $('.theme-radio').length > 0 || 
+                $('#color-themes .theme-option').length > 0 || 
+                $('#ui-style .theme-option').length > 0
+            );
         }
     
         // ensure radio buttons display correct state
         function ensureThemeControlsState() {
-            if (controlsExist()) updateUI();
+            if (!controlsExist()) return;
+                updateUI();
+                updateUiStyleUI();
         }
 
         function getThemeConfig(theme) {
@@ -173,3 +247,7 @@ var themeSwitcher = (function($) {
             loadSavedTheme  : loadSavedTheme
         };
 })(jQuery);
+
+$(function() {
+    themeSwitcher.init();
+});

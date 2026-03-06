@@ -2582,6 +2582,12 @@ form .form-group .tip-info {
 .platform-theme-options {
     background-color: <?= $optionsPanelBgColor ?> !important;
 }
+.platform-theme-options .platform-theme-options-toggle {
+    background-color: <?= $primaryColor ?> !important;
+}
+.platform-theme-options-toggle .overlay-loader {
+    color: #fff !important;
+}
 .platform-theme-options .platform-theme-options-title {
     border-width: <?= $optionsPanelHeaderBorderWidth ?> !important;
     border-style: solid;
@@ -2611,14 +2617,29 @@ form .form-group .tip-info {
     background-color: #e61c23 !important;
     border-color: #e61c23 !important;
 }
-.platform-theme-options-tools-info .theme-option[data-theme="default"]:hover {
-    background-color: <?= $secondaryColor; ?>;
-    border-color: <?= $secondaryColor; ?>;
+.platform-theme-options-tools-info .theme-option.active {
+    border-color: <?= $primaryColor; ?> !important;
 }
+.platform-theme-options-tools-info .theme-option[data-theme="default"]:hover {
+    background-color: <?= $primaryColor; ?>;
+    border-color: <?= $primaryColor; ?>;
+    color: #fff !important;
+}
+.platform-theme-options-tools-info .theme-option[data-theme="default"]:hover i {
+    color: #fff !important;
+}
+.platform-theme-options-tools-info .theme-option.active[data-theme="dark"]:hover,
 .platform-theme-options-tools-info .theme-option[data-theme="dark"]:hover {
     background-color: #000000;
     border-color: #000000;
     color: #ffffff;
+}
+.platform-theme-options-tools-info .theme-option.active[data-theme="dark"]:hover i,
+.platform-theme-options-tools-info .theme-option.active[data-theme="dark"]:hover {
+    color: #fff !important;
+}
+.platform-theme-options-tools-info .theme-option.active {
+    box-shadow: none;
 }
 .platform-theme-options-tools-info .ui-widget-header {
     background-color: <?= $optionsPanelOptionsRangeSliderUiMinBgColor ?> !important;
