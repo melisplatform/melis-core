@@ -85,6 +85,8 @@ var themeSwitcher = (function($) {
         }
         
         function applyUiStyle(style) {
+            style = (style || currentUiStyle || 'flat').toString().toLowerCase();
+
             // target the back-office UI elements you want styled
             var $targets = $(
                 '.widget, .panel, .card, .modal-content, .sidebar, .dropdown-menu, .table,' +
@@ -244,10 +246,19 @@ var themeSwitcher = (function($) {
             getCurrentTheme : getCurrentTheme,
             setTheme        : setTheme,
             toggleTheme     : toggleTheme,
-            loadSavedTheme  : loadSavedTheme
+            loadSavedTheme  : loadSavedTheme,
+            reApplyUiStyle  : function () { applyUiStyle(); }
         };
 })(jQuery);
 
 $(function() {
+    // init theme switcher
     themeSwitcher.init();
+
+    // on tab shown, reapply ui style
+    $(document).on("shown.bs.tab", "a[data-bs-toggle='tab']", function () {
+        if (window.themeSwitcher && typeof themeSwitcher.reApplyUiStyle === 'function') {
+            themeSwitcher.reApplyUiStyle();
+        }
+    });
 });

@@ -433,17 +433,22 @@
 
     $optionsPanelOptionsInputRadioBorderColor                   = $this->melis_core_platform_theme_options_panel_options_input_radio_border_color;
     $optionsPanelOptionsInputRadioCheckedBorderBgColor          = $this->melis_core_platform_theme_options_panel_options_input_radio_checked_border_bg_color;
+    
     $optionsPanelOptionsTitleBgColor                            = $this->melis_core_platform_theme_options_panel_options_title_bg_color;
     $optionsPanelOptionsTitleExpandedBgColor                    = $this->melis_core_platform_theme_options_panel_options_title_expanded_bg_color;
     $optionsPanelOptionsTitleLabelIconTextsColor                = $this->melis_core_platform_theme_options_panel_options_title_label_icon_and_texts_color;
+    
     $optionsPanelOptionsInputTextBgColor                        = $this->melis_core_platform_theme_options_panel_options_input_text_bg_color;
     $optionsPanelOptionsInputTextColor                          = $this->melis_core_platform_theme_options_panel_options_input_text_color;
+    
     $optionsPanelOptionsRangeSliderUiHandleBgBorderColor        = $this->melis_core_platform_theme_options_panel_options_range_slider_ui_handle_bg_border_color;
     $optionsPanelOptionsRangeSliderUiMinBgColor                 = $this->melis_core_platform_theme_options_panel_options_range_slider_ui_min_bg_color;
     $optionsPanelOptionsRangeSliderUiWidgetContentBgColor       = $this->melis_core_platform_theme_options_panel_options_range_slider_ui_widget_content_bg_color;
+    
     $optionsPanelOptionsBtnGroupBgColor                         = $this->melis_core_platform_theme_options_panel_options_btn_group_bg_color;
     $optionsPanelOptionsBtnGroupBorderColor                     = $this->melis_core_platform_theme_options_panel_options_btn_group_border_color;
     $optionsPanelOptionsBtnGroupTextColor                       = $this->melis_core_platform_theme_options_panel_options_btn_group_text_color;
+    
     $optionsPanelOptionsTipInfoTextColor                        = $this->melis_core_platform_theme_options_panel_options_tip_info_text_color;
     $optionsPanelOptionsTipInfoTextFontSize                     = $this->melis_core_platform_theme_options_panel_options_tip_info_text_font_size;
 
@@ -1721,11 +1726,11 @@ div.glyphicons-social.glyphicon-primary i:before {
 /** login page */
 .login-page h4.innerAll {
     background-color: <?= $loginPageHeaderBgColor; ?> !important;
-    font-size: <?= $loginPageHeaderTextFontSize; ?> !important;
+    font-size: <?= $loginPageHeaderTextFontSize; ?>px !important;
     color: <?= $loginPageHeaderTextIconColor; ?> !important;
 }
 .login-page .login form label {
-    font-size: <?= $loginPageFormTextFontSize; ?> !important;
+    font-size: <?= $loginPageFormTextFontSize; ?>px !important;
     color: <?= $loginPageFormTextColor; ?> !important;
 }
 #login_submit {
@@ -1734,7 +1739,7 @@ div.glyphicons-social.glyphicon-primary i:before {
     color: <?= $loginPageFooterTextColor; ?> !important;
 
     border-color: <?= $loginPageFormSubmitBtnBorderColor; ?> !important;
-    font-size: <?= $loginPageFormSubmitBtnFontSize; ?> !important;
+    font-size: <?= $loginPageFormSubmitBtnFontSize; ?>px !important;
 }
 #login_submit:hover {
     background-color: <?= $loginPageFooterTextColor; ?> !important;
@@ -1763,7 +1768,7 @@ div.glyphicons-social.glyphicon-primary i:before {
 }
 .login-page .login form label.remember-me-cont,
 .login-page .login form .forgot-password a {
-    font-size: <?= $loginPageFormBottomTextFontSize; ?> !important;
+    font-size: <?= $loginPageFormBottomTextFontSize; ?>px !important;
 }
 #id_meliscore_footer .footer p,
 #id_meliscore_login_footer .footer p {
@@ -2589,24 +2594,40 @@ form .form-group .tip-info {
     color: #fff !important;
 }
 .platform-theme-options .platform-theme-options-title {
-    border-width: <?= $optionsPanelHeaderBorderWidth ?> !important;
+    border-width: <?= $optionsPanelHeaderBorderWidth ?>px !important;
     border-style: solid;
     border-color: <?= $optionsPanelHeaderBorderColor ?> !important;
 }
 .platform-theme-options .platform-theme-options-title h6 {
     color: <?= $optionsPanelTitleTextColor ?> !important;
-    font-size: <?= $optionsPanelTitleTextFontSize ?> !important;
+    font-size: <?= $optionsPanelTitleTextFontSize ?>px !important;
 }
 .platform-theme-options .platform-theme-options-title .close-tools {
     color: <?= $optionsPanelHeaderCloseBtnColor ?> !important;
-    font-size: <?= $optionsPanelHeaderCloseBtnFontSize ?> !important;
+    font-size: <?= $optionsPanelHeaderCloseBtnFontSize ?>px !important;
 }
-.platform-theme-options-tools-info .btn-group-font-style label {
-    color: #797979;
-    font-size: 25px;
-    font-weight: normal;
-    min-width: 3.5rem;
-    margin: 0 5px;
+.platform-theme-options-block .accordion-item .accordion-button {
+    background-color: <?= $optionsPanelOptionsTitleBgColor ?> !important;
+	color: <?= $optionsPanelOptionsTitleLabelIconTextsColor ?> !important;
+}
+.platform-theme-options-block .accordion-item.active-header .accordion-button {
+    background-color: <?= $$optionsPanelOptionsTitleExpandedBgColor ?> !important;
+}
+.platform-theme-options-block .form-group input[type="text"] {
+    background-color: <?= $optionsPanelOptionsInputTextBgColor ?> !important;
+    color: <?= $optionsPanelOptionsInputTextColor ?> !important;
+}
+.platform-theme-options-tools-info .ui-widget-header {
+    background-color: <?= $optionsPanelOptionsRangeSliderUiMinBgColor ?> !important;
+}
+.platform-theme-options-tools-info .ui-widget-content {
+    background-color: <?= $optionsPanelOptionsRangeSliderUiWidgetContentBgColor ?> !important;
+}
+.platform-theme-options-tools-info .ui-slider-handle {
+    background-color: <?= $optionsPanelOptionsRangeSliderUiWidgetContentBgColor ?> !important;
+    border-width: 1px;
+    border-style: solid;
+    border-color: <?= $optionsPanelOptionsRangeSliderUiHandleBgBorderColor ?> !important;
 }
 .platform-theme-options-tools-info .btn-group .btn-check:checked+.btn, 
 .platform-theme-options-tools-info .btn-group .btn.active, 
@@ -2614,19 +2635,34 @@ form .form-group .tip-info {
 .platform-theme-options-tools-info .btn-group .btn:first-child:active, 
 .platform-theme-options-tools-info .btn-group :not(.btn-check)+.btn:active,
 .platform-theme-options-tools-info .btn-group .btn-check+.btn:hover {
-    background-color: #e61c23 !important;
-    border-color: #e61c23 !important;
+    background-color: <?= $optionsPanelOptionsBtnGroupBgColor ?> !important;
+    border-color: <?= $optionsPanelOptionsBtnGroupBorderColor ?> !important;
+}
+.platform-theme-options-tools-info .btn-group-alignment label,
+.platform-theme-options-tools-info .btn-group-font-style label {
+    color: <?= $optionsPanelOptionsBtnGroupTextColor ?> !important;
+}
+.platform-theme-options-tools-info .form-group .tip-info {
+    color: <?= $optionsPanelOptionsTipInfoTextColor ?> !important;
+    font-size: <?= $optionsPanelOptionsTipInfoTextFontSize ?>px !important;
+}
+.platform-theme-options-tools-info .save-platform-theme-options {
+    background-color: <?= $optionsPanelSaveBtnBgBorderColor ?> !important;
+    border-color: <?= $optionsPanelSaveBtnBgBorderColor ?> !important;
+    color: <?= $optionsPanelSaveBtnTextColor ?> !important;
+}
+.platform-theme-options-tools-info .save-platform-theme-options:hover {
+    background-color: <?= $optionsPanelSaveBtnHoverBgColor ?> !important;
+    border-color: <?= $optionsPanelSaveBtnHoverBgColor ?> !important;
+    color: <?= $optionsPanelSaveBtnHoverTextColor ?> !important;
 }
 .platform-theme-options-tools-info .theme-option.active {
     border-color: <?= $primaryColor; ?> !important;
+    box-shadow: none;
 }
 .platform-theme-options-tools-info .theme-option[data-theme="default"]:hover {
     background-color: <?= $primaryColor; ?>;
     border-color: <?= $primaryColor; ?>;
-    color: #fff !important;
-}
-.platform-theme-options-tools-info .theme-option[data-theme="default"]:hover i {
-    color: #fff !important;
 }
 .platform-theme-options-tools-info .theme-option.active[data-theme="dark"]:hover,
 .platform-theme-options-tools-info .theme-option[data-theme="dark"]:hover {
@@ -2637,15 +2673,6 @@ form .form-group .tip-info {
 .platform-theme-options-tools-info .theme-option.active[data-theme="dark"]:hover i,
 .platform-theme-options-tools-info .theme-option.active[data-theme="dark"]:hover {
     color: #fff !important;
-}
-.platform-theme-options-tools-info .theme-option.active {
-    box-shadow: none;
-}
-.platform-theme-options-tools-info .ui-widget-header {
-    background-color: <?= $optionsPanelOptionsRangeSliderUiMinBgColor ?> !important;
-}
-.platform-theme-options-tools-info .ui-widget-content {
-    background-color: <?= $optionsPanelOptionsRangeSliderUiWidgetContentBgColor ?> !important;
 }
 
 /**

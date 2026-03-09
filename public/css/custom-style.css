@@ -2430,7 +2430,7 @@ table.dataTable.dtr-inline.collapsed>tbody>tr.dtr-expanded>th.dtr-control:before
 }
 .platform-theme-options-block .accordion-item .accordion-button {
 	background-color: transparent;
-	color: #686868 !important;
+	color: #686868;
 	padding: 5px;
     margin-top: 10px;
 }

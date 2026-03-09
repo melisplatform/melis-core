@@ -1729,7 +1729,7 @@ return array(
                                     'data-control' => 'hue',
                                     // 'placeholder' => 'tr_meliscore_platform_theme_login_page_form_text_color',
                                     'category' => 'login_page',
-                                    'default' => '#e61c23'
+                                    'default' => '#686868'
                                 ),
                             ),
                         ),
