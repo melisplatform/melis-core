@@ -7792,7 +7792,7 @@ return array(
                                 'category' => 'platform_theme_options_panel',
                                 'sliderId' => 'theme-options-panel-title-text-font-size-range-slider-min',
                                 'sliderClass' => 'theme-options-panel-title-text-font-size-range-slider-min',
-                                'default' => 0
+                                'default' => 16
                             ),
                         ),
                     ),
@@ -7946,7 +7946,7 @@ return array(
                                 'data-control' => 'hue',
                                 // 'placeholder' => 'tr_meliscore_platform_theme_options_panel_options_title_expanded_bg_color',
                                 'category' => 'platform_theme_options_panel',
-                                'default' => '#ffffff'
+                                'default' => '#ffe9ea'
                             ),
                         ),
                     ),

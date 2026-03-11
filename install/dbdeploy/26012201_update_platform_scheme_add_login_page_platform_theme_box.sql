@@ -6,7 +6,7 @@ UPDATE `melis_core_platform_scheme` SET `pscheme_login_page` = '{
     "melis_core_platform_theme_login_page_header_text_font_size": "21",
     "melis_core_platform_theme_login_page_header_text_icon_color": "#686868",
     "melis_core_platform_theme_login_page_form_text_font_size": "13",
-    "melis_core_platform_theme_login_page_form_text_color": "#e61c23",
+    "melis_core_platform_theme_login_page_form_text_color": "#686868",
     "melis_core_platform_theme_login_page_form_submit_btn_font_size": "16",
     "melis_core_platform_theme_login_page_form_submit_btn_bg_color": "#e61c23",
     "melis_core_platform_theme_login_page_form_submit_btn_border_color": "#e61c23",
@@ -21,7 +21,7 @@ ALTER TABLE `melis_core_platform_scheme` ADD `pscheme_platform_theme_box` TEXT N
 UPDATE `melis_core_platform_scheme` SET `pscheme_platform_theme_box` = '{
     "melis_core_platform_theme_options_panel_bg_color": "#fff",
     "melis_core_platform_theme_options_panel_title_text_color": "#686868",
-    "melis_core_platform_theme_options_panel_title_text_font_size": "13",
+    "melis_core_platform_theme_options_panel_title_text_font_size": "16",
     "melis_core_platform_theme_options_panel_header_close_btn_color": "#686868",
     "melis_core_platform_theme_options_panel_header_close_btn_font_size": "14",
     "melis_core_platform_theme_options_panel_header_border_width": "1",
@@ -29,7 +29,7 @@ UPDATE `melis_core_platform_scheme` SET `pscheme_platform_theme_box` = '{
     "melis_core_platform_theme_options_panel_options_input_radio_border_color": "#dee2e6",
     "melis_core_platform_theme_options_panel_options_input_radio_checked_border_bg_color": "#0d6efd",
     "melis_core_platform_theme_options_panel_options_title_bg_color": "#ffffff",
-    "melis_core_platform_theme_options_panel_options_title_expanded_bg_color": "#ffffff",
+    "melis_core_platform_theme_options_panel_options_title_expanded_bg_color": "#ffe9ea",
     "melis_core_platform_theme_options_panel_options_title_label_icon_and_texts_color": "#686868",
     "melis_core_platform_theme_options_panel_options_input_text_bg_color": "#ffffff",
     "melis_core_platform_theme_options_panel_options_input_text_color": "#444444",
@@ -99,6 +99,7 @@ UPDATE `melis_core_platform_scheme` SET `pscheme_drag_drop` = '{"melis_core_plat
         "melis_core_platform_theme_dnd_plugins_box_category_btn_snippets_opacity": "0",
         "melis_core_platform_theme_dnd_plugins_box_category_btn_snippets_hover_bg_color": "#e61c23",
         "melis_core_platform_theme_dnd_plugins_box_category_btn_snippets_plugin_title_color": "#ffffff",
-        "melis_core_platform_theme_dnd_plugins_box_category_btn_snippets_plugin_title_font_size": "12"
+        "melis_core_platform_theme_dnd_plugins_box_category_btn_snippets_plugin_title_font_size": "12",
+        "melis_core_platform_theme_dnd_layout_column_button_hover_opacity": "0.8"
 }'
 WHERE `melis_core_platform_scheme`.`pscheme_id` IN (1,2);

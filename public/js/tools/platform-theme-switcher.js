@@ -87,6 +87,9 @@ var themeSwitcher = (function($) {
         function applyUiStyle(style) {
             style = (style || currentUiStyle || 'flat').toString().toLowerCase();
 
+            // keep <html> in sync
+            $html.attr('data-style', style);
+
             // target the back-office UI elements you want styled
             var $targets = $(
                 '.widget, .panel, .card, .modal-content, .sidebar, .dropdown-menu, .table,' +

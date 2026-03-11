@@ -2456,9 +2456,9 @@ table.dataTable.dtr-inline.collapsed>tbody>tr.dtr-expanded>th.dtr-control:before
 /* end accordion */
 
 /* platform theme options */
-.active-header {
+.platform-theme-options-block .accordion-header.active-header {
 	background-color: #ffe9ea;
-	color: white;
+	color: #fff;
 }
 .platform-theme-options-overlay {
 	display: none;
@@ -2699,6 +2699,16 @@ table.dataTable.dtr-inline.collapsed>tbody>tr.dtr-expanded>th.dtr-control:before
 
 	transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease, transform 0.08s ease;
 }
+#ui-style .options-grid .theme-option:hover {
+	background-color: #e61c23;
+	border-color: #e61c23;
+	color: #fff;
+}
+#ui-style .options-grid .theme-option.active {
+	border-color: #e61c23;
+	box-shadow: none;
+	transform: translateY(-1px);
+}
 .global-options .theme-option i {
     font-size: 1.4rem;
     margin-bottom: 0.25rem;
@@ -2721,6 +2731,7 @@ table.dataTable.dtr-inline.collapsed>tbody>tr.dtr-expanded>th.dtr-control:before
 .global-options .theme-option[data-theme="default"]:hover {
     background-color: #e0e0e0;
     border-color: #c0c0c0;
+	color: #fff;
 }
 .global-options .theme-option[data-theme="dark"]:hover {
     background-color: #000000;

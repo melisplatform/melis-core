@@ -885,7 +885,7 @@ var rangeSliderSize = {
             { 
                 selectorMin: '.theme-options-panel-title-text-font-size-range-slider-min',
                 selectorValue: '.theme-options-panel-title-text-font-size-range-slider-value',
-                min: 13,
+                min: 16,
                 max: 30,
                 value: $("#melis_core_platform_theme_options_panel_title_text_font_size").val()
             }, // melis_core_platform_theme_options_panel_title_text_font_size 

@@ -2022,19 +2022,19 @@ body .navbar.main.navbar-primary,
     background-color: <?= $modalBgColor; ?> !important;
 }
 .modal .modal-content {
-    border-width: <?= $modalBorderWidth; ?> !important;
+    border-width: <?= $modalBorderWidth; ?>px !important;
     border-color: <?= $modalBorderColor; ?> !important;
 }
 /* affected classes for border-radius */
 .modal .modal-content,
 .modal .dialog,
 .modal {
-    border-radius: <?= $modalBorderRadiusSize; ?> !important;
+    border-radius: <?= $modalBorderRadiusSize; ?>px !important;
 }
 .modal-content .widget.widget-tabs.widget-tabs-responsive > .widget-head,
 .modal-body .melis-nav-tabs-box {
-    border-top-left-radius: <?= $modalBorderRadiusSize; ?> !important;
-    border-top-right-radius: <?= $modalBorderRadiusSize; ?> !important;
+    border-top-left-radius: <?= $modalBorderRadiusSize; ?>px !important;
+    border-top-right-radius: <?= $modalBorderRadiusSize; ?>px !important;
 }
 /* end affected classes for border-radius */
 /** options_modal_nav_tabs_color */
@@ -2610,8 +2610,14 @@ form .form-group .tip-info {
     background-color: <?= $optionsPanelOptionsTitleBgColor ?> !important;
 	color: <?= $optionsPanelOptionsTitleLabelIconTextsColor ?> !important;
 }
-.platform-theme-options-block .accordion-item.active-header .accordion-button {
-    background-color: <?= $$optionsPanelOptionsTitleExpandedBgColor ?> !important;
+.platform-theme-options-block .accordion-header.active-header {
+    background-color: <?= $optionsPanelOptionsTitleExpandedBgColor ?> !important;    
+}
+.platform-theme-options-block > .accordion-header.active-header {
+    padding-left: 0 !important;
+}
+.platform-theme-options-block .accordion-item .accordion-header.active-header > .accordion-button {
+    background-color: transparent !important;
 }
 .platform-theme-options-block .form-group input[type="text"] {
     background-color: <?= $optionsPanelOptionsInputTextBgColor ?> !important;
@@ -2646,6 +2652,8 @@ form .form-group .tip-info {
     color: <?= $optionsPanelOptionsTipInfoTextColor ?> !important;
     font-size: <?= $optionsPanelOptionsTipInfoTextFontSize ?>px !important;
 }
+.platform-theme-options-tools-info .theme-option[data-theme="default"]:hover,
+.platform-theme-options-tools-info #ui-style .theme-option:hover,
 .platform-theme-options-tools-info .save-platform-theme-options {
     background-color: <?= $optionsPanelSaveBtnBgBorderColor ?> !important;
     border-color: <?= $optionsPanelSaveBtnBgBorderColor ?> !important;
@@ -2657,12 +2665,8 @@ form .form-group .tip-info {
     color: <?= $optionsPanelSaveBtnHoverTextColor ?> !important;
 }
 .platform-theme-options-tools-info .theme-option.active {
-    border-color: <?= $primaryColor; ?> !important;
+    border-color: <?= $optionsPanelSaveBtnBgBorderColor ?> !important;
     box-shadow: none;
-}
-.platform-theme-options-tools-info .theme-option[data-theme="default"]:hover {
-    background-color: <?= $primaryColor; ?>;
-    border-color: <?= $primaryColor; ?>;
 }
 .platform-theme-options-tools-info .theme-option.active[data-theme="dark"]:hover,
 .platform-theme-options-tools-info .theme-option[data-theme="dark"]:hover {
