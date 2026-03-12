@@ -2699,6 +2699,7 @@ table.dataTable.dtr-inline.collapsed>tbody>tr.dtr-expanded>th.dtr-control:before
 
 	transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease, transform 0.08s ease;
 }
+.global-options .theme-option[data-theme=default]:hover,
 #ui-style .options-grid .theme-option:hover {
 	background-color: #e61c23;
 	border-color: #e61c23;
