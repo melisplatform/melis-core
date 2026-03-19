@@ -32,6 +32,25 @@ class MelisAuthController extends MelisAbstractActionController
     const ACCOUNT_LOCKED = 'ACCOUNT_LOCKED';
     const ACCOUNT_UNLOCKED = 'ACCOUNT_UNLOCKED';
 
+    private function buildAlertDangerCommand($selector, $title, $message)
+    {
+        return sprintf(
+            'melisCoreTool.alertDanger(%s, %s, %s);',
+            json_encode((string) $selector),
+            json_encode((string) $title),
+            json_encode((string) $message)
+        );
+    }
+
+    private function buildKoNotificationCommand($icon, $message)
+    {
+        return sprintf(
+            'melisHelper.melisKoNotification(%s, %s, []);',
+            json_encode((string) $icon),
+            json_encode((string) $message)
+        );
+    }
+
     /**
      * Rendering the Melis CMS interface
      * @return \Laminas\View\Model\ViewModel
@@ -588,7 +607,7 @@ class MelisAuthController extends MelisAbstractActionController
         // Default Fallback Command (No POST data)
         $errorTitle = $translator->translate('tr_meliscore_common_error');
         $errorTxt = $translator->translate('tr_meliscore_login_errors_Empty datas');
-        $jsCommand = "melisCoreTool.alertDanger('#loginprompt', '{$errorTitle}!', '{$errorTxt}');";
+        $jsCommand = $this->buildAlertDangerCommand('#loginprompt', $errorTitle . '!', $errorTxt);
         
         $result = [
             'success' => false,
@@ -761,7 +780,7 @@ class MelisAuthController extends MelisAbstractActionController
                             // COMMAND INJECTION: Account Unlocked (Alert Danger)
                             $errorTitle = $translator->translate('tr_meliscore_common_error');
                             $errorTxt = $translator->translate('tr_meliscore_login_auth_failed_too_many_failed_attempts');
-                            $jsCommand = "melisCoreTool.alertDanger('#loginprompt', '{$errorTitle}!', '{$errorTxt}');";
+                            $jsCommand = $this->buildAlertDangerCommand('#loginprompt', $errorTitle . '!', $errorTxt);
 
                             $result = [
                                 'success' => false,
@@ -871,7 +890,7 @@ class MelisAuthController extends MelisAbstractActionController
                                         // Generic error setup
                                         $errorTitle = $translator->translate('tr_meliscore_common_error');
                                         $errorTxt = $translator->translate('tr_meliscore_login_auth_Failed authentication');
-                                        $jsCommand = "melisCoreTool.alertDanger('#loginprompt', '{$errorTitle}!', '{$errorTxt}');";
+                                        $jsCommand = $this->buildAlertDangerCommand('#loginprompt', $errorTitle . '!', $errorTxt);
 
                                         // If login account lock is activated
                                         if (isset($config['login_account_lock_status']) && !empty($config['login_account_lock_status'])) {
@@ -924,7 +943,7 @@ class MelisAuthController extends MelisAbstractActionController
                                                     // dd($message);
                                                 }
                                                 
-                                                $jsCommand = "melisHelper.melisKoNotification('" . $icon . "', '" . $message . "', []);";
+                                                $jsCommand = $this->buildKoNotificationCommand($icon, $message);
                                                 $errorLogMessage = $translator->translate('tr_meliscore_login_auth_failed_too_many_failed_attempts');
                                                 // dd($jsCommand);
                                                 $result = [
@@ -940,7 +959,7 @@ class MelisAuthController extends MelisAbstractActionController
                                                 // dd('t');
                                                 // Auth Failed with lock enabled but not locked yet - use the general failed message
                                                 $errorLogMessage = $translator->translate('tr_meliscore_login_auth_failed_too_many_failed_attempts');
-                                                $jsCommand = "melisCoreTool.alertDanger('#loginprompt', '{$errorTitle}!', '{$errorLogMessage}');";
+                                                $jsCommand = $this->buildAlertDangerCommand('#loginprompt', $errorTitle . '!', $errorLogMessage);
                                                 
                                                 $result = [
                                                     'success' => false,
@@ -999,7 +1018,7 @@ class MelisAuthController extends MelisAbstractActionController
                         
                         $errorTitle = $translator->translate('tr_meliscore_common_error');
                         $errorTxt = $translator->translate('tr_meliscore_login_auth_Failed authentication');
-                        $jsCommand = "melisCoreTool.alertDanger('#loginprompt', '{$errorTitle}!', '{$errorTxt}');";
+                        $jsCommand = $this->buildAlertDangerCommand('#loginprompt', $errorTitle . '!', $errorTxt);
                         
                         $result = [
                             'success' => false,
@@ -1013,7 +1032,7 @@ class MelisAuthController extends MelisAbstractActionController
                     // User Data is Empty/Not Found
                     $errorTitle = $translator->translate('tr_meliscore_common_error');
                     $errorTxt = $translator->translate('tr_meliscore_login_auth_Failed authentication');
-                    $jsCommand = "melisCoreTool.alertDanger('#loginprompt', '{$errorTitle}!', '{$errorTxt}');";
+                    $jsCommand = $this->buildAlertDangerCommand('#loginprompt', $errorTitle . '!', $errorTxt);
                     
                     $result = [
                         'success' => false,
@@ -1030,7 +1049,7 @@ class MelisAuthController extends MelisAbstractActionController
                     $firstErrorMessage = implode(' ', $messages);
                     break;
                 }
-                $jsCommand = "melisCoreTool.alertDanger('#loginprompt', '{$errorMessage}!', '{$firstErrorMessage}');";
+                $jsCommand = $this->buildAlertDangerCommand('#loginprompt', $errorMessage . '!', $firstErrorMessage);
                 
                 $result = [
                     'success' => false,
