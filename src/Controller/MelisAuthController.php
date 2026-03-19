@@ -51,6 +51,17 @@ class MelisAuthController extends MelisAbstractActionController
         );
     }
 
+    private function getFailedLoginCountStartDate($date)
+    {
+        if (empty($date)) {
+            return $date;
+        }
+
+        return (new DateTime($date))
+            ->modify('+1 second')
+            ->format('Y-m-d H:i:s');
+    }
+
     /**
      * Rendering the Melis CMS interface
      * @return \Laminas\View\Model\ViewModel
