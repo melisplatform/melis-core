@@ -8,6 +8,7 @@
 /.zfproject.xml
 /vendor
 /public/sass
+config/app.login.php
 .DS_Store
 composer.phar
 composer.lock
