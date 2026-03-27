@@ -30,8 +30,24 @@ img {
 .tox-tinymce-inline .tox-editor-header,
 .tox-tinymce-inline .tox-editor-header .tox-toolbar__primary {
     position: relative;
-    /* z-index: 1100; */
-    z-index: 21;
+    z-index: 1300 !important;
+}
+/* tinyMCE menus/popups */
+.tox-silver-sink,
+.tox-tinymce-aux {
+    z-index: 1310 !important;
+}
+/* tinyMCE dialog window */
+.tox-dialog-wrap,
+.tox-dialog {
+    z-index: 1320 !important;
+}
+/* when any Bootstrap modal is open, force TinyMCE below modal/backdrop */
+body.modal-open .tox-tinymce-inline,
+body.modal-open .tox-tinymce-aux,
+body.modal-open .tox-silver-sink,
+body.modal-open .tox-notifications-container {
+    z-index: 1049 !important; /* BS 5.3 backdrop=1050, modal=1055 */
 }
 /* fix: tinymce dialogs is partially hidden & moxiemanager container */
 .moxman-container.moxman-window {
