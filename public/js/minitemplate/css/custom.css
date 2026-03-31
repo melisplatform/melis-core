@@ -110,6 +110,7 @@
     padding-left: 1em !important;
     height: auto !important;
     border-top: 1px solid #ddd;
+    margin-bottom: 1rem;
 }
 .site-category.ui-accordion-content {
     border: 0 !important;
@@ -152,15 +153,19 @@
 }
 .site-category .main-category.ui-accordion-content-active.custom-last-child,
 .site-category .ui-accordion-header.custom-last-child {
-    /* margin-bottom: 0.5rem; */
-    margin-bottom: 0;
+    margin-bottom: 0.5rem;
 }
 .mini-template-content {
     height: 485px;
+    overflow: hidden;
+}
+.site-category .mini-template-button:first-child {
+    margin-top: 0.5rem;
 }
 #accordion-mini-template .site-category.ui-accordion-content {
-    height: 450px !important;
+    /* height: 450px !important; */
+    height: 420px !important;
 }
-#accordion-mini-template .nicescroll-rails-hr {
+#accordion-mini-template > .nicescroll-rails-hr {
     display: none !important;
 }

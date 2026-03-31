@@ -12,6 +12,8 @@
 		'branding' => false,
 		'inline' => false,
 		'mini_templates_url' => '/melis/MelisCore/MelisTinyMce/getTinyTemplates',
+		'mini_template_preview_mode' => 'auto',
+		'mini_template_dropzone_selector' => '.melis-dragdropzone:first',
 		'forced_root_block' => 'p',
 		'image_uploadtab' => false,
 		//'paste_word_valid_elements'=> "p,b,strong,i,em,h1,h2,h3,h4",
