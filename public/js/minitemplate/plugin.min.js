@@ -22,6 +22,9 @@
         tooltip: 'Mini Template',
         title: 'Mini Template',
         onAction: () => {
+          if (editor.selection && typeof editor.selection.getBookmark === 'function') {
+            editor.__miniTemplateBookmark = editor.selection.getBookmark(2, true);
+          }
           dialogApi = editor.windowManager.openUrl(_urlDialogConfig);
 
           dialogApi.block('Loading...');
@@ -39,6 +42,9 @@
         tooltip: 'Mini Template',
         title: 'Mini Template',
         onAction: () => {
+          if (editor.selection && typeof editor.selection.getBookmark === 'function') {
+            editor.__miniTemplateBookmark = editor.selection.getBookmark(2, true);
+          }
           dialogApi = editor.windowManager.openUrl(_urlDialogConfig);
 
           dialogApi.block('Loading...');

@@ -493,19 +493,22 @@
 
     // render template with runtime layout
     function renderTemplateWithRuntimeLayout(previewIframeEl, templateHtml) {
-        var sourceDoc = resolvePreviewSourceDoc();          
-            if (!sourceDoc || !sourceDoc.documentElement) return;
-
+        var sourceDoc = resolvePreviewSourceDoc();
         var parser = new DOMParser();
-        var pageDoc = parser.parseFromString(sourceDoc.documentElement.outerHTML, "text/html");
         var tplDoc = parser.parseFromString(templateHtml, "text/html");
+        $(tplDoc).find("link[rel='stylesheet'], style, script").remove();
+        var tplBodyHtml = tplDoc.body ? tplDoc.body.innerHTML : templateHtml;
+
+        if (!sourceDoc || !sourceDoc.documentElement) {
+            renderStandaloneMiniTemplatePreview(previewIframeEl, tplBodyHtml);
+            return;
+        }
+
+        var pageDoc = parser.parseFromString(sourceDoc.documentElement.outerHTML, "text/html");
         var dropzoneSelector = ".melis-dragdropzone:first";
             if (parent.tinymce && parent.tinymce.activeEditor && parent.tinymce.activeEditor.options) {
                 dropzoneSelector = parent.tinymce.activeEditor.options.get("mini_template_dropzone_selector") || dropzoneSelector;
             }
-            $(tplDoc).find("link[rel='stylesheet'], style, script").remove();
-
-        var tplBodyHtml = tplDoc.body ? tplDoc.body.innerHTML : templateHtml;
 
         removePreviewEditorArtifacts(pageDoc);
         replaceOnlyPreviewDropzone(pageDoc, tplBodyHtml, dropzoneSelector);
@@ -518,6 +521,32 @@
             outDoc.open();
             outDoc.write("<!DOCTYPE html>\n" + pageDoc.documentElement.outerHTML);
             outDoc.close();
+    }
+
+    function renderStandaloneMiniTemplatePreview(previewIframeEl, templateBodyHtml) {
+        var outDoc = previewIframeEl.contentWindow.document;
+        var standaloneHtml = [
+            "<!DOCTYPE html>",
+            "<html>",
+            "<head>",
+            '<meta charset="utf-8">',
+            '<meta name="viewport" content="width=device-width, initial-scale=1.0">',
+            "<style>",
+            "html, body { height: auto; min-height: 100%; overflow-y: auto; overflow-x: hidden; margin: 0; padding: 0; background: #fff; }",
+            "body { padding: 1rem; box-sizing: border-box; }",
+            ".mini-template-preview-content { width: 100%; }",
+            "img { max-width: 100%; height: auto; }",
+            "</style>",
+            "</head>",
+            "<body>",
+            '<div class="mini-template-preview-content">' + templateBodyHtml + "</div>",
+            "</body>",
+            "</html>"
+        ].join("");
+
+        outDoc.open();
+        outDoc.write(standaloneHtml);
+        outDoc.close();
     }
 
     // remove preview editor artifacts
@@ -691,6 +720,9 @@
         // 2) tinyMCE textarea/tool mode (inline false)
         try {
             if (window.parent && parent.tinymce && parent.tinymce.activeEditor) {
+                if (parent.tinymce.activeEditor.inline === false) {
+                    return null;
+                }
                 if (typeof parent.tinymce.activeEditor.getDoc === "function") {
                     var editorDoc = parent.tinymce.activeEditor.getDoc();
                     if (editorDoc && editorDoc.documentElement) {
@@ -837,6 +869,18 @@
         }
 
         if (miniTemplate) {
+            if (parent.tinymce && parent.tinymce.activeEditor) {
+                parent.tinymce.activeEditor.focus();
+                if (
+                    parent.tinymce.activeEditor.__miniTemplateBookmark &&
+                    parent.tinymce.activeEditor.selection &&
+                    typeof parent.tinymce.activeEditor.selection.moveToBookmark === "function"
+                ) {
+                    try {
+                        parent.tinymce.activeEditor.selection.moveToBookmark(parent.tinymce.activeEditor.__miniTemplateBookmark);
+                    } catch (e) {}
+                }
+            }
             parent.tinymce.activeEditor.insertContent(miniTemplate);
         }
         parent.tinymce.activeEditor.windowManager.close();
