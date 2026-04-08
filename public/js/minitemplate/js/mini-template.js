@@ -105,6 +105,7 @@
                 cache: false
             })
             .done(function(data) {
+                console.log({data});
                 setTimeout(function() {
                     appendAccordion(data);
                 }, 1000);
@@ -117,6 +118,8 @@
     // accordion
     function appendAccordion(data) {
         var $accordion = $("#accordion-mini-template");
+        var previewConfig = getPreviewConfig();
+        var fallbackSiteId = previewConfig.site_id || "";
             
             // template lists
             for ( var i = 0; i < data.length; i++ ) {
@@ -127,6 +130,7 @@
                     dType           = template.type,
                     dModule         = template.module,
                     dSiteName       = template.site_name,
+                    dSiteId         = template.site_id || template.siteId || fallbackSiteId,
                     dImageSource    = template.imgSource,
                     dUrl            = template.url,
                     buttons         = '';
@@ -144,6 +148,7 @@
                             "data-parent"     : dParent,
                             "data-type"       : dType,
                             "data-site-name"  : dSiteName,
+                            "data-site-id"    : dSiteId,
                             "data-url"        : dUrl
                         });
                     }
@@ -156,6 +161,7 @@
                             "class"             : 'mini-template-button category d-none',
                             "data-type"         : dType,
                             "data-site-name"    : dSiteName,
+                            "data-site-id"      : dSiteId,
                             "data-id"           : dId
                         });
                     }
@@ -331,10 +337,23 @@
                     
                     // site category
                     if ( siteName != 'undefined' ) {
-                        siteHtml = siteNameHtml( siteName, index );
+                        var siteId = getSiteIdByName($miniTemplateButtons, siteName);
+                        siteHtml = siteNameHtml( siteName, index, siteId );
                         $accordion.prepend( siteHtml );
                     }      
             }
+    }
+
+    function getSiteIdByName($miniTemplateButtons, siteName) {
+        var resolvedSiteId = "";
+        $.each($miniTemplateButtons, function(i, v) {
+            var $btn = $(v);
+            if ($btn.data("site-name") === siteName) {
+                resolvedSiteId = $btn.data("site-id") || $btn.attr("data-site-id") || "";
+                return false;
+            }
+        });
+        return resolvedSiteId;
     }
 
     function appendMainCategoryToSiteCategory( $miniTemplateButtons ) {
@@ -507,6 +526,7 @@
 
     // displays mini template in iframe
     function previewMiniTemplate(url) {
+        console.log(`mini-template.js previewMiniTemplate() !!!`);
         var $preview = $("#preview-mini-template"),
             $prevIframe = $preview.find(".preview-iframe");
 
@@ -521,7 +541,7 @@
                 cache: false
             })
             .done(function(templateHtml) {
-                renderTemplateWithSiteShell($prevIframe[0], templateHtml);
+                renderTemplateWithSiteShell($prevIframe[0], templateHtml, getPreviewConfig().site_module);
             })
             .fail(function() {
                 alert(parent.translations.tr_meliscore_error_message);
@@ -530,23 +550,23 @@
 
     function getPreviewConfig() {
         var miniTemplateConfig = {};
-        if (parent.tinymce && parent.tinymce.activeEditor && parent.tinymce.activeEditor.options) {
-            miniTemplateConfig = parent.tinymce.activeEditor.options.get("melis_minitemplate") || {};
-        }
+            if (parent.tinymce && parent.tinymce.activeEditor && parent.tinymce.activeEditor.options) {
+                miniTemplateConfig = parent.tinymce.activeEditor.options.get("melis_minitemplate") || {};
+            }
 
-        return {
-            preview_mode: parent.tinymce.activeEditor.options.get("mini_template_preview_mode") || "auto",
-            preview_shell_url: parent.tinymce.activeEditor.options.get("mini_template_preview_shell_url") || "",
-            site_module: parent.tinymce.activeEditor.options.get("mini_template_site_module") || "",
-            site_id: miniTemplateConfig.site_id || ""
-        };
+            return {
+                preview_mode: parent.tinymce.activeEditor.options.get("mini_template_preview_mode") || "auto",
+                preview_shell_url: parent.tinymce.activeEditor.options.get("mini_template_preview_shell_url") || "",
+                site_module: parent.tinymce.activeEditor.options.get("mini_template_site_module") || null,
+                site_id: miniTemplateConfig.site_id || null
+            };
     }
 
     function getPreviewMode() {
         return parent.tinymce.activeEditor.options.get("mini_template_preview_mode") || "auto";
     }
 
-    function renderTemplateWithSiteShell(previewIframeEl, templateHtml) {
+    function renderTemplateWithSiteShell(previewIframeEl, templateHtml, siteModule = null) {
         var previewConfig = getPreviewConfig();
         var mode = previewConfig.preview_mode || "auto";
         var shellUrl = resolvePreviewShellUrl(previewConfig.preview_shell_url || "", previewConfig);
@@ -554,6 +574,7 @@
                 renderTemplateWithRuntimeLayout(previewIframeEl, templateHtml);
                 return;
             }
+
             if (mode === "standalone") {
                 renderStandaloneMiniTemplatePreview(previewIframeEl, extractTemplateBodyHtml(templateHtml));
                 return;
@@ -566,22 +587,106 @@
 
                 return;
             }
+
             if (shellUrl) {
-                $.ajax({
-                    type: "GET",
-                    url: shellUrl,
-                    dataType: "html",
-                    cache: false
-                }).done(function(shellHtml) {
-                    renderTemplateWithFetchedShell(previewIframeEl, templateHtml, shellHtml);
-                }).fail(function() {
-                    // fallback if shell fetch fails
-                    renderStandaloneMiniTemplatePreview(previewIframeEl, extractTemplateBodyHtml(templateHtml));
-                });
-                return;
+                var selectedSiteContext = getSelectedSiteContextForShell(previewConfig),
+                    requestShellUrl     = buildShellRequestUrl(shellUrl, selectedSiteContext),
+                    requestShellData    = buildShellRequestData(selectedSiteContext);
+
+                    $.ajax({
+                        type: "GET",
+                        url: requestShellUrl,
+                        dataType: "html",
+                        data: requestShellData,
+                        cache: false
+                    }).done(function(shellHtml) {
+                        renderTemplateWithFetchedShell(previewIframeEl, templateHtml, shellHtml);
+                    }).fail(function() {
+                        // fallback if shell fetch fails
+                        renderStandaloneMiniTemplatePreview(previewIframeEl, extractTemplateBodyHtml(templateHtml));
+                    });
+                    
+                    return;
             }
 
         renderStandaloneMiniTemplatePreview(previewIframeEl, extractTemplateBodyHtml(templateHtml));
+    }
+
+    function getSelectedSiteContextForShell(previewConfig) {
+        var siteId = "";
+        var siteModule = "";
+        var $activeMiniTplBtn = $("#accordion-mini-template .mini-template-button.active[data-type='mini-template']").first();
+            if ($activeMiniTplBtn.length) {
+                siteId = $activeMiniTplBtn.data("site-id") || $activeMiniTplBtn.attr("data-site-id") || "";
+                siteModule = $activeMiniTplBtn.data("module") || $activeMiniTplBtn.attr("data-module") || "";
+            }
+
+            if (!siteId) {
+                var $activeHeader = $("#accordion-mini-template > .ui-accordion-header.ui-state-active, #accordion-mini-template > h3.ui-state-active").first();
+                    if ($activeHeader.length) {
+                        siteId = $activeHeader.data("site-id") || $activeHeader.attr("data-site-id") || "";
+                    }
+            }
+
+            if (!siteModule && $activeMiniTplBtn.length) {
+                siteModule = $activeMiniTplBtn.data("site-name") || $activeMiniTplBtn.attr("data-site-name") || "";
+            }
+
+            if (!siteId) {
+                siteId = previewConfig.site_id || "";
+            }
+
+            if (!siteModule) {
+                siteModule = previewConfig.site_module || "";
+            }
+
+            return {
+                siteId: siteId,
+                siteModule: siteModule
+            };
+    }
+
+    function buildShellRequestUrl(shellUrl, siteContext) {
+        var url = shellUrl || "",
+            sid = (siteContext && siteContext.siteId) ? siteContext.siteId : "",
+            smodule = (siteContext && siteContext.siteModule) ? siteContext.siteModule : "";
+
+            // Replace token when present.
+            url = url.replace("{siteId}", sid);
+            url = url.replace("{siteModule}", smodule);
+
+            // If no site id, remove empty siteId query param artifacts.
+            if (!sid) {
+                url = url
+                    .replace(/[?&]siteId=\{?siteId\}?/gi, "")
+                    .replace(/[?&]siteId=(?=&|$)/gi, "")
+                    .replace(/[?&]{2,}/g, "&")
+                    .replace(/\?&/g, "?")
+                    .replace(/[?&]$/g, "");
+            }
+
+            // Ensure siteModule is sent when siteId is unavailable.
+            if (!sid && smodule) {
+                url += (url.indexOf("?") === -1 ? "?" : "&") + "siteModule=" + encodeURIComponent(smodule);
+            }
+
+            return url;
+    }
+
+    function buildShellRequestData(siteContext) {
+        var sid = (siteContext && siteContext.siteId) ? siteContext.siteId : null;
+        var smodule = (siteContext && siteContext.siteModule) ? siteContext.siteModule : null;
+
+        // Prefer siteId. If unavailable, fallback to siteModule.
+        if (sid) {
+            return { siteId: sid };
+        }
+
+        if (smodule) {
+            return { siteModule: smodule };
+        }
+
+        return {};
     }
 
     function resolvePreviewShellUrl(shellUrl, previewConfig) {
@@ -589,26 +694,26 @@
             return "";
         }
 
-        var resolvedSiteId = previewConfig.site_id || "";
-        var resolvedSiteModule = previewConfig.site_module || "";
+        var resolvedSiteId      = previewConfig.site_id || "",
+            resolvedSiteModule  = previewConfig.site_module || "";
 
-        // Fallback: infer siteId from mini_templates_url query string if not provided in config.
-        if (!resolvedSiteId && parent.tinymce && parent.tinymce.activeEditor && parent.tinymce.activeEditor.options) {
-            var tinyTemplatesUrl = parent.tinymce.activeEditor.options.get("mini_templates_url") || "";
-            if (tinyTemplatesUrl && tinyTemplatesUrl.indexOf("?") !== -1) {
-                try {
-                    var query = tinyTemplatesUrl.split("?")[1] || "";
-                    var params = new URLSearchParams(query);
-                    resolvedSiteId = params.get("siteId") || "";
-                } catch (e) {
-                    console.error(e);
-                }
+            // Fallback: infer siteId from mini_templates_url query string if not provided in config.
+            if (!resolvedSiteId && parent.tinymce && parent.tinymce.activeEditor && parent.tinymce.activeEditor.options) {
+                var tinyTemplatesUrl = parent.tinymce.activeEditor.options.get("mini_templates_url") || "";
+                    if (tinyTemplatesUrl && tinyTemplatesUrl.indexOf("?") !== -1) {
+                        try {
+                            var query = tinyTemplatesUrl.split("?")[1] || "";
+                            var params = new URLSearchParams(query);
+                            resolvedSiteId = params.get("siteId") || "";
+                        } catch (e) {
+                            console.error(e);
+                        }
+                    }
             }
-        }
 
-        return shellUrl
-            .replace("{siteId}", resolvedSiteId)
-            .replace("{siteModule}", resolvedSiteModule);
+            return shellUrl
+                .replace("{siteId}", resolvedSiteId)
+                .replace("{siteModule}", resolvedSiteModule);
     }
 
     function extractTemplateBodyHtml(templateHtml) {
@@ -620,6 +725,7 @@
     }
 
     function renderTemplateWithFetchedShell(previewIframeEl, templateHtml, shellHtml) {
+        console.log(`mini-template.js renderTemplateWithFetchedShell() !!!`);
         var parser = new DOMParser();
         var shellDoc = parser.parseFromString(shellHtml, "text/html");
         var tplBodyHtml = extractTemplateBodyHtml(templateHtml);
@@ -648,6 +754,7 @@
 
     // render template with runtime layout
     function renderTemplateWithRuntimeLayout(previewIframeEl, templateHtml) {
+        console.log(`mini-template.js renderTemplateWithRuntimeLayout() !!!`);
         var sourceDoc = resolvePreviewSourceDoc();
         var parser = new DOMParser();
         var tplDoc = parser.parseFromString(templateHtml, "text/html");
@@ -684,6 +791,7 @@
 
     // render standalone mini template preview, tool.php and in mini template manager
     function renderStandaloneMiniTemplatePreview(previewIframeEl, templateBodyHtml) {
+        console.log(`mini-template.js renderStandaloneMiniTemplatePreview() !!!`);
         var outDoc = previewIframeEl.contentWindow.document;
         var standaloneHtml = [
             "<!DOCTYPE html>",
@@ -1004,9 +1112,9 @@
         }, 1000);
     }
 
-    function siteNameHtml( siteName, index ) {
-        return '<h3>'+ siteName +'</h3>' +
-                '<div id="site-category-'+index+'" class="site-category accordion" data-site-name="'+ siteName +'"></div>';
+    function siteNameHtml( siteName, index, siteId ) {
+        return '<h3 data-site-id="'+ siteId +'">'+ siteName +'</h3>' +
+                '<div id="site-category-'+index+'" class="site-category accordion" data-site-name="'+ siteName +'" data-site-id="'+ siteId +'"></div>';
     }
 
     function mainCategoryHtml( mainCategoryText, mainCategorySiteName, mainCategoryId, index ) {

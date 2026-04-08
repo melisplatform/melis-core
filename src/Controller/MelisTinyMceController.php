@@ -280,6 +280,15 @@ class MelisTinyMceController extends MelisAbstractActionController
             } catch (\Exception $e) {}
         }
 
+        if (empty($siteId) && !empty($siteModule)) {
+            try {
+                $site = $this->getService('MelisEngineTableSite')->getEntryByField('site_name', $siteModule)->current();
+                if ($site) {
+                    $siteId = $site->site_id ?? '';
+                }
+            } catch (\Exception $e) {}
+        }
+
         if (empty($siteModule)) {
             $tinyCfg = $this->getTinyMCEByType($type);
             if (!empty($tinyCfg['mini_template_site_module'])) {
@@ -294,17 +303,10 @@ class MelisTinyMceController extends MelisAbstractActionController
             }
         }
 
-        $host = $_SERVER['HTTP_HOST'] ?? '';
-        $scheme = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
-        $targetUrl = '';
-
-        if (!empty($host) && !empty($siteModule)) {
-            $targetUrl = $scheme . '://' . $host . '/' . ltrim($siteModule, '/');
-        } elseif (!empty($host)) {
-            $targetUrl = $scheme . '://' . $host . '/';
-        }
+        $targetUrl = $this->resolvePreviewTargetUrl($siteId, $siteModule);
 
         $html = '';
+        //echo 'targetUrl: ' . $targetUrl;
         if (!empty($targetUrl)) {
             $context = stream_context_create([
                 'http' => [
@@ -331,6 +333,38 @@ class MelisTinyMceController extends MelisAbstractActionController
         $response->setContent($html);
 
         return $response;
+    }
+
+    private function resolvePreviewTargetUrl($siteId, $siteModule)
+    {
+        $host = $_SERVER['HTTP_HOST'] ?? '';
+        $scheme = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
+
+        // Prefer site domain table for multi-domain setups.
+        if (!empty($siteId)) {
+            try {
+                $domains = $this->getService('MelisEngineTableSiteDomain')->getEntryByField('sdom_site_id', $siteId)->toArray();
+                if (!empty($domains)) {
+                    $domain = $domains[0]['sdom_domain'] ?? '';
+                    if (!empty($domain)) {
+                        if (!preg_match('#^https?://#i', $domain)) {
+                            $domain = $scheme . '://' . $domain;
+                        }
+                        return rtrim($domain, '/') . '/';
+                    }
+                }
+            } catch (\Exception $e) {}
+        }
+
+        // Fallback to current host and optional site module path.
+        if (!empty($host) && !empty($siteModule)) {
+            return $scheme . '://' . $host . '/' . ltrim($siteModule, '/');
+        }
+        if (!empty($host)) {
+            return $scheme . '://' . $host . '/';
+        }
+
+        return '';
     }
 
      
