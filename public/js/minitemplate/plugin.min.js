@@ -55,6 +55,21 @@
         }
       });
 
+      editor.options.register('mini_template_preview_mode', {
+        processor: 'string',
+        default: 'auto'
+      });
+
+      editor.options.register('mini_template_preview_shell_url', {
+        processor: 'string',
+        default: ''
+      });
+
+      editor.options.register('mini_template_site_module', {
+        processor: 'string',
+        default: ''
+      });
+
       // Register the additional tinymce custom option
       editor.options.register('mini_templates_url', {
         processor: 'string',

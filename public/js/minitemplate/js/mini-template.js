@@ -233,6 +233,7 @@
                              */
                             $btn.on("click", function(e) {
                                 var $this = $(this);
+                                var type = $this.data("type") || $this.attr("data-type");
 
                                     $this.toggleClass("active").siblings().removeClass("active");
 
@@ -240,7 +241,7 @@
                                      * For the issue on displaying all available mini templates.
                                      * Some button when clicked it closes the accordion
                                      */
-                                    if ( $this.hasClass( 'ui-accordion-header' ) ) {
+                                    if (type !== "mini-template" && $this.hasClass('ui-accordion-header')) {
                                         $this.closest(".site-category").prev(".ui-accordion-header").trigger("click");
                                     }
                             });
@@ -441,7 +442,9 @@
                                 miniTemplateBtnDataUrl = $siteCategoryChildBtn.data("url");
                         }
 
-                        previewMiniTemplate( miniTemplateBtnDataUrl );
+                        if (miniTemplateBtnDataUrl) {
+                            previewMiniTemplate(miniTemplateBtnDataUrl);
+                        }
                 }
                 
                 $.each($miniTemplateButtons, function(i, v) {
@@ -457,10 +460,48 @@
                                 });
                         }
 
-                        $btn.on("click", function() {
-                            previewMiniTemplate( $(this).data("url") );
-                        });
+                        // Ensure template buttons stay interactive after accordion/nicescroll mutations.
+                        $btn.removeClass("ui-state-disabled");
+                        $btn.prop("disabled", false);
+                        $btn.css("pointer-events", "auto");
                 });
+
+                // Delegated handler so all sites/categories (including dynamically moved nodes) are clickable.
+                $("body").off("click.miniTemplatePreview", ".mini-template-button");
+                $("body").on("click.miniTemplatePreview", ".mini-template-button", function(e) {
+                    var $btn = $(this);
+                    var type = $btn.data("type") || $btn.attr("data-type") || "";
+
+                    // Only mini-template items should trigger preview changes.
+                    if (type !== "mini-template") {
+                        return;
+                    }
+
+                    e.preventDefault();
+                    e.stopPropagation();
+                    e.stopImmediatePropagation();
+
+                    var url = $btn.data("url") || $btn.attr("data-url") || "";
+                        if (url) {
+                            previewMiniTemplate(url);
+                        }
+                });
+
+                // Hard-stop accordion from toggling when selecting real mini-template buttons.
+                $("#accordion-mini-template")
+                    .off("mousedown.miniTemplatePreview mouseup.miniTemplatePreview click.miniTemplatePreview", ".mini-template-button[data-type='mini-template']")
+                    .on("mousedown.miniTemplatePreview mouseup.miniTemplatePreview click.miniTemplatePreview", ".mini-template-button[data-type='mini-template']", function(e) {
+                        e.stopPropagation();
+                        if (e.type === "click") {
+                            var $btn = $(this);
+                            var url = $btn.data("url") || $btn.attr("data-url") || "";
+                                if (url) {
+                                    previewMiniTemplate(url);
+                                }
+                            e.preventDefault();
+                            e.stopImmediatePropagation();
+                        }
+                    });
         }, 1000);
     }
 
@@ -480,11 +521,126 @@
                 cache: false
             })
             .done(function(templateHtml) {
-                renderTemplateWithRuntimeLayout($prevIframe[0], templateHtml);
+                renderTemplateWithSiteShell($prevIframe[0], templateHtml);
             })
             .fail(function() {
                 alert(parent.translations.tr_meliscore_error_message);
             });
+    }
+
+    function getPreviewConfig() {
+        var miniTemplateConfig = {};
+        if (parent.tinymce && parent.tinymce.activeEditor && parent.tinymce.activeEditor.options) {
+            miniTemplateConfig = parent.tinymce.activeEditor.options.get("melis_minitemplate") || {};
+        }
+
+        return {
+            preview_mode: parent.tinymce.activeEditor.options.get("mini_template_preview_mode") || "auto",
+            preview_shell_url: parent.tinymce.activeEditor.options.get("mini_template_preview_shell_url") || "",
+            site_module: parent.tinymce.activeEditor.options.get("mini_template_site_module") || "",
+            site_id: miniTemplateConfig.site_id || ""
+        };
+    }
+
+    function getPreviewMode() {
+        return parent.tinymce.activeEditor.options.get("mini_template_preview_mode") || "auto";
+    }
+
+    function renderTemplateWithSiteShell(previewIframeEl, templateHtml) {
+        var previewConfig = getPreviewConfig();
+        var mode = previewConfig.preview_mode || "auto";
+        var shellUrl = resolvePreviewShellUrl(previewConfig.preview_shell_url || "", previewConfig);
+            if (mode === "page_layout") {
+                renderTemplateWithRuntimeLayout(previewIframeEl, templateHtml);
+                return;
+            }
+            if (mode === "standalone") {
+                renderStandaloneMiniTemplatePreview(previewIframeEl, extractTemplateBodyHtml(templateHtml));
+                return;
+            }
+
+        // auto or site_shell
+        var sourceDoc = resolvePreviewSourceDoc();
+            if (sourceDoc && sourceDoc.documentElement && mode === "auto") {
+                renderTemplateWithRuntimeLayout(previewIframeEl, templateHtml);
+
+                return;
+            }
+            if (shellUrl) {
+                $.ajax({
+                    type: "GET",
+                    url: shellUrl,
+                    dataType: "html",
+                    cache: false
+                }).done(function(shellHtml) {
+                    renderTemplateWithFetchedShell(previewIframeEl, templateHtml, shellHtml);
+                }).fail(function() {
+                    // fallback if shell fetch fails
+                    renderStandaloneMiniTemplatePreview(previewIframeEl, extractTemplateBodyHtml(templateHtml));
+                });
+                return;
+            }
+
+        renderStandaloneMiniTemplatePreview(previewIframeEl, extractTemplateBodyHtml(templateHtml));
+    }
+
+    function resolvePreviewShellUrl(shellUrl, previewConfig) {
+        if (!shellUrl) {
+            return "";
+        }
+
+        var resolvedSiteId = previewConfig.site_id || "";
+        var resolvedSiteModule = previewConfig.site_module || "";
+
+        // Fallback: infer siteId from mini_templates_url query string if not provided in config.
+        if (!resolvedSiteId && parent.tinymce && parent.tinymce.activeEditor && parent.tinymce.activeEditor.options) {
+            var tinyTemplatesUrl = parent.tinymce.activeEditor.options.get("mini_templates_url") || "";
+            if (tinyTemplatesUrl && tinyTemplatesUrl.indexOf("?") !== -1) {
+                try {
+                    var query = tinyTemplatesUrl.split("?")[1] || "";
+                    var params = new URLSearchParams(query);
+                    resolvedSiteId = params.get("siteId") || "";
+                } catch (e) {
+                    console.error(e);
+                }
+            }
+        }
+
+        return shellUrl
+            .replace("{siteId}", resolvedSiteId)
+            .replace("{siteModule}", resolvedSiteModule);
+    }
+
+    function extractTemplateBodyHtml(templateHtml) {
+        var parser = new DOMParser();
+        var tplDoc = parser.parseFromString(templateHtml, "text/html");
+            $(tplDoc).find("link[rel='stylesheet'], style, script").remove();
+        
+            return tplDoc.body ? tplDoc.body.innerHTML : templateHtml;
+    }
+
+    function renderTemplateWithFetchedShell(previewIframeEl, templateHtml, shellHtml) {
+        var parser = new DOMParser();
+        var shellDoc = parser.parseFromString(shellHtml, "text/html");
+        var tplBodyHtml = extractTemplateBodyHtml(templateHtml);
+        var dropzoneSelector = ".melis-dragdropzone:first";
+
+            if (parent.tinymce && parent.tinymce.activeEditor && parent.tinymce.activeEditor.options) {
+                dropzoneSelector = parent.tinymce.activeEditor.options.get("mini_template_dropzone_selector") || dropzoneSelector;
+            }
+            
+        removePreviewEditorArtifacts(shellDoc);
+        replaceOnlyPreviewDropzone(shellDoc, tplBodyHtml, dropzoneSelector);
+        ensureHeaderSpacer(shellDoc);
+        dedupeHeadStyles(shellDoc);
+        removeTinyMceAndMelisEditorScripts(shellDoc);
+        moveUniqueScriptsToFooter(shellDoc);
+        enforcePreviewScrollStyles(shellDoc);
+
+        var outDoc = previewIframeEl.contentWindow.document;
+            outDoc.open();
+            outDoc.write("<!DOCTYPE html>\n" + shellDoc.documentElement.outerHTML);
+            outDoc.close();
     }
 
     function getActivePageEditionIframe() {
@@ -496,26 +652,30 @@
         var sourceDoc = resolvePreviewSourceDoc();
         var parser = new DOMParser();
         var tplDoc = parser.parseFromString(templateHtml, "text/html");
-        $(tplDoc).find("link[rel='stylesheet'], style, script").remove();
+
+            $(tplDoc).find("link[rel='stylesheet'], style, script").remove();
+
         var tplBodyHtml = tplDoc.body ? tplDoc.body.innerHTML : templateHtml;
 
-        if (!sourceDoc || !sourceDoc.documentElement) {
-            renderStandaloneMiniTemplatePreview(previewIframeEl, tplBodyHtml);
-            return;
-        }
+            if (!sourceDoc || !sourceDoc.documentElement) {
+                renderStandaloneMiniTemplatePreview(previewIframeEl, tplBodyHtml);
+                return;
+            }
 
         var pageDoc = parser.parseFromString(sourceDoc.documentElement.outerHTML, "text/html");
         var dropzoneSelector = ".melis-dragdropzone:first";
+
             if (parent.tinymce && parent.tinymce.activeEditor && parent.tinymce.activeEditor.options) {
                 dropzoneSelector = parent.tinymce.activeEditor.options.get("mini_template_dropzone_selector") || dropzoneSelector;
             }
 
-        removePreviewEditorArtifacts(pageDoc);
-        replaceOnlyPreviewDropzone(pageDoc, tplBodyHtml, dropzoneSelector);
-        dedupeHeadStyles(pageDoc);
-        removeTinyMceAndMelisEditorScripts(pageDoc);
-        moveUniqueScriptsToFooter(pageDoc);
-        enforcePreviewScrollStyles(pageDoc);
+            removePreviewEditorArtifacts(pageDoc);
+            replaceOnlyPreviewDropzone(pageDoc, tplBodyHtml, dropzoneSelector);
+            ensureHeaderSpacer(pageDoc);
+            dedupeHeadStyles(pageDoc);
+            removeTinyMceAndMelisEditorScripts(pageDoc);
+            moveUniqueScriptsToFooter(pageDoc);
+            enforcePreviewScrollStyles(pageDoc);
 
         var outDoc = previewIframeEl.contentWindow.document;
             outDoc.open();
@@ -549,6 +709,24 @@
         outDoc.close();
     }
 
+    // on melis-demo-cms
+    function ensureHeaderSpacer(doc) {
+        // Keep front preview alignment where fixed header expects top spacer.
+        var $existingSpacer = $(doc).find('div[style*="height: 93px"]').first();
+        if ($existingSpacer.length) {
+            return;
+        }
+
+        var $header = $(doc).find("header:first");
+        var spacerHtml = '<div style="height: 93px"></div>';
+
+        if ($header.length) {
+            $(spacerHtml).insertAfter($header);
+        } else {
+            $(doc.body).prepend(spacerHtml);
+        }
+    }
+
     // remove preview editor artifacts
     function removePreviewEditorArtifacts(doc) {
         $(doc).find(".melis-plugin-tools-box, .m-plugin-sub-tools, .tox, .tox-tinymce-aux, .mce-tinymce").remove();
@@ -579,7 +757,24 @@
                         $targetZone.replaceWith(replacementHtml);
                     }
             } else {
-                $(doc.body).append(templateBodyHtml);
+                // Strict fallback: show only mini-template content between header and footer.
+                var $header = $(doc).find("header:first");
+                var $footer = $(doc).find("footer:first");
+                var replacementBlock = '<div class="mini-template-preview-content">' + templateBodyHtml + '</div>';
+
+                    if ($header.length && $footer.length) {
+                        $header.nextUntil($footer).remove();
+                        $(replacementBlock).insertAfter($header);
+                        return;
+                    }
+
+                // Secondary fallback: replace known content container entirely.
+                var $contentTarget = $(doc).find("main:first, #content:first, .page-content:first, .content:first").first();
+                    if ($contentTarget.length) {
+                        $contentTarget.html(replacementBlock);
+                    } else {
+                        $(doc.body).html(replacementBlock);
+                    }
             }
     }
 
@@ -705,6 +900,8 @@
     }
 
     function resolvePreviewSourceDoc() {
+        var isTextareaMode = false;
+
         // 1) page edition mode (iframe in active tab)
         try {
             if (window.parent && parent.activeTabId && window.parent.$) {
@@ -714,13 +911,14 @@
                 }
             }
         } catch (e) {
-            console.log(e);
+            console.error(e);
         }
 
         // 2) tinyMCE textarea/tool mode (inline false)
         try {
             if (window.parent && parent.tinymce && parent.tinymce.activeEditor) {
                 if (parent.tinymce.activeEditor.inline === false) {
+                    isTextareaMode = true;
                     return null;
                 }
                 if (typeof parent.tinymce.activeEditor.getDoc === "function") {
@@ -731,7 +929,12 @@
                 }
             }
         } catch (e) {
-            console.log(e);
+            console.error(e);
+        }
+
+        // Prevent preview leakage from parent textarea/document context.
+        if (isTextareaMode) {
+            return null;
         }
 
         // 3) last fallback: parent document
@@ -740,7 +943,7 @@
                 return window.parent.document;
             }
         } catch (e) {
-            console.log(e);
+            console.error(e);
         }
 
         return null;
@@ -840,6 +1043,7 @@
                  */
                 $btn.on("click", function(e) {
                     var $this = $(this);
+                    var type = $this.data("type") || $this.attr("data-type");
 
                         $this.toggleClass("active").siblings().removeClass("active");
 
@@ -847,7 +1051,7 @@
                          * For the issue on displaying all available mini templates.
                          * Some button when clicked it closes the accordion
                          */
-                        if ( $this.hasClass( 'ui-accordion-header' ) ) {
+                        if (type !== "mini-template" && $this.hasClass('ui-accordion-header')) {
                             $this.closest(".site-category").prev(".ui-accordion-header").trigger("click");
                         }
                 });
@@ -878,7 +1082,9 @@
                 ) {
                     try {
                         parent.tinymce.activeEditor.selection.moveToBookmark(parent.tinymce.activeEditor.__miniTemplateBookmark);
-                    } catch (e) {}
+                    } catch (e) {
+                        console.error(e);
+                    }
                 }
             }
             parent.tinymce.activeEditor.insertContent(miniTemplate);
