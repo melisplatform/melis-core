@@ -624,7 +624,6 @@
         var shellDoc = parser.parseFromString(shellHtml, "text/html");
         var tplBodyHtml = extractTemplateBodyHtml(templateHtml);
         var dropzoneSelector = ".melis-dragdropzone:first";
-
             if (parent.tinymce && parent.tinymce.activeEditor && parent.tinymce.activeEditor.options) {
                 dropzoneSelector = parent.tinymce.activeEditor.options.get("mini_template_dropzone_selector") || dropzoneSelector;
             }
@@ -683,6 +682,7 @@
             outDoc.close();
     }
 
+    // render standalone mini template preview, tool.php and in mini template manager
     function renderStandaloneMiniTemplatePreview(previewIframeEl, templateBodyHtml) {
         var outDoc = previewIframeEl.contentWindow.document;
         var standaloneHtml = [
@@ -748,20 +748,15 @@
             }
             
             if ($targetZone.length) {
-                // replace the whole row holding the drag-drop zone with mini template content.
-                var $row = $targetZone.closest(".row");
-                var replacementHtml = '<div class="mini-template-preview-content">' + templateBodyHtml + '</div>';
-                    if ($row.length) {
-                        $row.replaceWith(replacementHtml);
-                    } else {
-                        $targetZone.replaceWith(replacementHtml);
-                    }
+                // Keep dragdropzone visible and render mini-template content inside it.
+                $targetZone.removeClass("no-content highlight content-added ui-sortable");
+                $targetZone.removeAttr("data-dragdropzone-id");
+                $targetZone.html('<div class="mini-template-preview-content">' + templateBodyHtml + '</div>');
             } else {
                 // Strict fallback: show only mini-template content between header and footer.
                 var $header = $(doc).find("header:first");
                 var $footer = $(doc).find("footer:first");
-                var replacementBlock = '<div class="mini-template-preview-content">' + templateBodyHtml + '</div>';
-
+                var replacementBlock = '<div class="melis-dragdropzone"><div class="mini-template-preview-content">' + templateBodyHtml + '</div></div>';
                     if ($header.length && $footer.length) {
                         $header.nextUntil($footer).remove();
                         $(replacementBlock).insertAfter($header);
