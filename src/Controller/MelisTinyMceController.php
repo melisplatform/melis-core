@@ -294,14 +294,39 @@ class MelisTinyMceController extends MelisAbstractActionController
             }
         }
 
-        $host = $_SERVER['HTTP_HOST'] ?? '';
-        $scheme = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
         $targetUrl = '';
 
-        if (!empty($host) && !empty($siteModule)) {
-            $targetUrl = $scheme . '://' . $host . '/' . ltrim($siteModule, '/');
-        } elseif (!empty($host)) {
-            $targetUrl = $scheme . '://' . $host . '/';
+        if (!empty($siteModule)) {
+            try {
+                $siteService = $this->getServiceManager()->get('MelisCmsSiteService');
+                $site = $siteService->getSiteByModule($siteModule);
+
+                if (!empty($site) && !empty($site->site_id)) {
+                    $siteDomainsService = $this->getServiceManager()->get('MelisCmsSitesDomainsService');
+                    $currentEnv = (string) (getenv('MELIS_PLATFORM') ?: 'development');
+                    $domainEntries = $siteDomainsService->getDomainBySiteIdAndEnv((int) $site->site_id, $currentEnv);
+
+                    if (empty($domainEntries)) {
+                        $domainEntries = $siteDomainsService->getDomainsBySiteId((int) $site->site_id);
+                    }
+
+                    $domain = $domainEntries[0]['sdom_domain'] ?? '';
+                    $scheme = $domainEntries[0]['sdom_scheme'] ?? 'http';
+
+                    if (!empty($domain)) {
+                        $targetUrl = rtrim($scheme . '://' . $domain, '/');
+                    }
+                }
+            } catch (\Exception $e) {}
+        }
+
+        if (empty($targetUrl)) {
+            $host = $_SERVER['HTTP_HOST'] ?? '';
+            $scheme = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
+
+            if (!empty($host)) {
+                $targetUrl = $scheme . '://' . $host . '/';
+            }
         }
 
         $html = '';

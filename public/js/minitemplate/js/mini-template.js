@@ -528,204 +528,205 @@
             });
     }
 
-    function getPreviewConfig() {
-        var miniTemplateConfig = {};
-        if (parent.tinymce && parent.tinymce.activeEditor && parent.tinymce.activeEditor.options) {
-            miniTemplateConfig = parent.tinymce.activeEditor.options.get("melis_minitemplate") || {};
-        }
+    // function getPreviewConfig() {
+    //     var miniTemplateConfig = {};
+    //     if (parent.tinymce && parent.tinymce.activeEditor && parent.tinymce.activeEditor.options) {
+    //         miniTemplateConfig = parent.tinymce.activeEditor.options.get("melis_minitemplate") || {};
+    //     }
 
-        return {
-            preview_mode: parent.tinymce.activeEditor.options.get("mini_template_preview_mode") || "auto",
-            preview_shell_url: parent.tinymce.activeEditor.options.get("mini_template_preview_shell_url") || "",
-            site_module: parent.tinymce.activeEditor.options.get("mini_template_site_module") || "",
-            site_id: miniTemplateConfig.site_id || ""
-        };
-    }
+    //     return {
+    //         preview_mode: parent.tinymce.activeEditor.options.get("mini_template_preview_mode") || "auto",
+    //         preview_shell_url: parent.tinymce.activeEditor.options.get("mini_template_preview_shell_url") || "",
+    //         site_module: parent.tinymce.activeEditor.options.get("mini_template_site_module") || "",
+    //         site_id: miniTemplateConfig.site_id || ""
+    //     };
+    // }
 
     function getPreviewMode() {
         return parent.tinymce.activeEditor.options.get("mini_template_preview_mode") || "auto";
     }
 
-    function renderTemplateWithSiteShell(previewIframeEl, templateHtml) {
-        var previewConfig = getPreviewConfig();
-        var mode = previewConfig.preview_mode || "auto";
-        var shellUrl = resolvePreviewShellUrl(previewConfig.preview_shell_url || "", previewConfig);
-            if (mode === "page_layout") {
-                renderTemplateWithRuntimeLayout(previewIframeEl, templateHtml);
-                return;
-            }
-            if (mode === "standalone") {
-                renderStandaloneMiniTemplatePreview(previewIframeEl, extractTemplateBodyHtml(templateHtml));
-                return;
-            }
+    // function renderTemplateWithSiteShell(previewIframeEl, templateHtml, siteModule = null) {
+    //     var previewConfig = getPreviewConfig();
+    //     var mode = previewConfig.preview_mode || "auto";
+    //     var shellUrl = resolvePreviewShellUrl(previewConfig.preview_shell_url || "", previewConfig);
+    //         if (mode === "page_layout") {
+    //             renderTemplateWithRuntimeLayout(previewIframeEl, templateHtml);
+    //             return;
+    //         }
+    //         if (mode === "standalone") {
+    //             renderStandaloneMiniTemplatePreview(previewIframeEl, extractTemplateBodyHtml(templateHtml));
+    //             return;
+    //         }
 
-        // auto or site_shell
-        var sourceDoc = resolvePreviewSourceDoc();
-            if (sourceDoc && sourceDoc.documentElement && mode === "auto") {
-                renderTemplateWithRuntimeLayout(previewIframeEl, templateHtml);
+    //     // auto or site_shell
+    //     var sourceDoc = resolvePreviewSourceDoc();
+    //         if (sourceDoc && sourceDoc.documentElement && mode === "auto") {
+    //             renderTemplateWithRuntimeLayout(previewIframeEl, templateHtml);
 
-                return;
-            }
-            if (shellUrl) {
-                $.ajax({
-                    type: "GET",
-                    url: shellUrl,
-                    dataType: "html",
-                    cache: false
-                }).done(function(shellHtml) {
-                    renderTemplateWithFetchedShell(previewIframeEl, templateHtml, shellHtml);
-                }).fail(function() {
-                    // fallback if shell fetch fails
-                    renderStandaloneMiniTemplatePreview(previewIframeEl, extractTemplateBodyHtml(templateHtml));
-                });
-                return;
-            }
+    //             return;
+    //         }
+    //         if (shellUrl) {
+    //             $.ajax({
+    //                 type: "GET",
+    //                 url: shellUrl,
+    //                 dataType: "html",
+    //                 data: {siteModule: siteModule},
+    //                 cache: false
+    //             }).done(function(shellHtml) {
+    //                 renderTemplateWithFetchedShell(previewIframeEl, templateHtml, shellHtml);
+    //             }).fail(function() {
+    //                 // fallback if shell fetch fails
+    //                 renderStandaloneMiniTemplatePreview(previewIframeEl, extractTemplateBodyHtml(templateHtml));
+    //             });
+    //             return;
+    //         }
 
-        renderStandaloneMiniTemplatePreview(previewIframeEl, extractTemplateBodyHtml(templateHtml));
-    }
+    //     renderStandaloneMiniTemplatePreview(previewIframeEl, extractTemplateBodyHtml(templateHtml));
+    // }
 
-    function resolvePreviewShellUrl(shellUrl, previewConfig) {
-        if (!shellUrl) {
-            return "";
-        }
+    // function resolvePreviewShellUrl(shellUrl, previewConfig) {
+    //     if (!shellUrl) {
+    //         return "";
+    //     }
 
-        var resolvedSiteId = previewConfig.site_id || "";
-        var resolvedSiteModule = previewConfig.site_module || "";
+    //     var resolvedSiteId = previewConfig.site_id || "";
+    //     var resolvedSiteModule = previewConfig.site_module || "";
 
-        // Fallback: infer siteId from mini_templates_url query string if not provided in config.
-        if (!resolvedSiteId && parent.tinymce && parent.tinymce.activeEditor && parent.tinymce.activeEditor.options) {
-            var tinyTemplatesUrl = parent.tinymce.activeEditor.options.get("mini_templates_url") || "";
-            if (tinyTemplatesUrl && tinyTemplatesUrl.indexOf("?") !== -1) {
-                try {
-                    var query = tinyTemplatesUrl.split("?")[1] || "";
-                    var params = new URLSearchParams(query);
-                    resolvedSiteId = params.get("siteId") || "";
-                } catch (e) {
-                    console.error(e);
-                }
-            }
-        }
+    //     // Fallback: infer siteId from mini_templates_url query string if not provided in config.
+    //     if (!resolvedSiteId && parent.tinymce && parent.tinymce.activeEditor && parent.tinymce.activeEditor.options) {
+    //         var tinyTemplatesUrl = parent.tinymce.activeEditor.options.get("mini_templates_url") || "";
+    //         if (tinyTemplatesUrl && tinyTemplatesUrl.indexOf("?") !== -1) {
+    //             try {
+    //                 var query = tinyTemplatesUrl.split("?")[1] || "";
+    //                 var params = new URLSearchParams(query);
+    //                 resolvedSiteId = params.get("siteId") || "";
+    //             } catch (e) {
+    //                 console.error(e);
+    //             }
+    //         }
+    //     }
 
-        return shellUrl
-            .replace("{siteId}", resolvedSiteId)
-            .replace("{siteModule}", resolvedSiteModule);
-    }
+    //     return shellUrl
+    //         .replace("{siteId}", resolvedSiteId)
+    //         .replace("{siteModule}", resolvedSiteModule);
+    // }
 
-    function extractTemplateBodyHtml(templateHtml) {
-        var parser = new DOMParser();
-        var tplDoc = parser.parseFromString(templateHtml, "text/html");
-            $(tplDoc).find("link[rel='stylesheet'], style, script").remove();
+    // function extractTemplateBodyHtml(templateHtml) {
+    //     var parser = new DOMParser();
+    //     var tplDoc = parser.parseFromString(templateHtml, "text/html");
+    //         $(tplDoc).find("link[rel='stylesheet'], style, script").remove();
         
-            return tplDoc.body ? tplDoc.body.innerHTML : templateHtml;
-    }
+    //         return tplDoc.body ? tplDoc.body.innerHTML : templateHtml;
+    // }
 
-    function renderTemplateWithFetchedShell(previewIframeEl, templateHtml, shellHtml) {
-        var parser = new DOMParser();
-        var shellDoc = parser.parseFromString(shellHtml, "text/html");
-        var tplBodyHtml = extractTemplateBodyHtml(templateHtml);
-        var dropzoneSelector = ".melis-dragdropzone:first";
-            if (parent.tinymce && parent.tinymce.activeEditor && parent.tinymce.activeEditor.options) {
-                dropzoneSelector = parent.tinymce.activeEditor.options.get("mini_template_dropzone_selector") || dropzoneSelector;
-            }
+    // function renderTemplateWithFetchedShell(previewIframeEl, templateHtml, shellHtml) {
+    //     var parser = new DOMParser();
+    //     var shellDoc = parser.parseFromString(shellHtml, "text/html");
+    //     var tplBodyHtml = extractTemplateBodyHtml(templateHtml);
+    //     var dropzoneSelector = ".melis-dragdropzone:first";
+    //         if (parent.tinymce && parent.tinymce.activeEditor && parent.tinymce.activeEditor.options) {
+    //             dropzoneSelector = parent.tinymce.activeEditor.options.get("mini_template_dropzone_selector") || dropzoneSelector;
+    //         }
             
-        removePreviewEditorArtifacts(shellDoc);
-        replaceOnlyPreviewDropzone(shellDoc, tplBodyHtml, dropzoneSelector);
-        ensureHeaderSpacer(shellDoc);
-        dedupeHeadStyles(shellDoc);
-        removeTinyMceAndMelisEditorScripts(shellDoc);
-        moveUniqueScriptsToFooter(shellDoc);
-        enforcePreviewScrollStyles(shellDoc);
+    //     removePreviewEditorArtifacts(shellDoc);
+    //     replaceOnlyPreviewDropzone(shellDoc, tplBodyHtml, dropzoneSelector);
+    //     ensureHeaderSpacer(shellDoc);
+    //     dedupeHeadStyles(shellDoc);
+    //     removeTinyMceAndMelisEditorScripts(shellDoc);
+    //     moveUniqueScriptsToFooter(shellDoc);
+    //     enforcePreviewScrollStyles(shellDoc);
 
-        var outDoc = previewIframeEl.contentWindow.document;
-            outDoc.open();
-            outDoc.write("<!DOCTYPE html>\n" + shellDoc.documentElement.outerHTML);
-            outDoc.close();
-    }
+    //     var outDoc = previewIframeEl.contentWindow.document;
+    //         outDoc.open();
+    //         outDoc.write("<!DOCTYPE html>\n" + shellDoc.documentElement.outerHTML);
+    //         outDoc.close();
+    // }
 
     function getActivePageEditionIframe() {
         return window.parent.$("#" + parent.activeTabId).find(".melis-iframe").first();
     }
 
     // render template with runtime layout
-    function renderTemplateWithRuntimeLayout(previewIframeEl, templateHtml) {
-        var sourceDoc = resolvePreviewSourceDoc();
-        var parser = new DOMParser();
-        var tplDoc = parser.parseFromString(templateHtml, "text/html");
+    // function renderTemplateWithRuntimeLayout(previewIframeEl, templateHtml) {
+    //     var sourceDoc = resolvePreviewSourceDoc();
+    //     var parser = new DOMParser();
+    //     var tplDoc = parser.parseFromString(templateHtml, "text/html");
 
-            $(tplDoc).find("link[rel='stylesheet'], style, script").remove();
+    //         $(tplDoc).find("link[rel='stylesheet'], style, script").remove();
 
-        var tplBodyHtml = tplDoc.body ? tplDoc.body.innerHTML : templateHtml;
+    //     var tplBodyHtml = tplDoc.body ? tplDoc.body.innerHTML : templateHtml;
 
-            if (!sourceDoc || !sourceDoc.documentElement) {
-                renderStandaloneMiniTemplatePreview(previewIframeEl, tplBodyHtml);
-                return;
-            }
+    //         if (!sourceDoc || !sourceDoc.documentElement) {
+    //             renderStandaloneMiniTemplatePreview(previewIframeEl, tplBodyHtml);
+    //             return;
+    //         }
 
-        var pageDoc = parser.parseFromString(sourceDoc.documentElement.outerHTML, "text/html");
-        var dropzoneSelector = ".melis-dragdropzone:first";
+    //     var pageDoc = parser.parseFromString(sourceDoc.documentElement.outerHTML, "text/html");
+    //     var dropzoneSelector = ".melis-dragdropzone:first";
 
-            if (parent.tinymce && parent.tinymce.activeEditor && parent.tinymce.activeEditor.options) {
-                dropzoneSelector = parent.tinymce.activeEditor.options.get("mini_template_dropzone_selector") || dropzoneSelector;
-            }
+    //         if (parent.tinymce && parent.tinymce.activeEditor && parent.tinymce.activeEditor.options) {
+    //             dropzoneSelector = parent.tinymce.activeEditor.options.get("mini_template_dropzone_selector") || dropzoneSelector;
+    //         }
 
-            removePreviewEditorArtifacts(pageDoc);
-            replaceOnlyPreviewDropzone(pageDoc, tplBodyHtml, dropzoneSelector);
-            ensureHeaderSpacer(pageDoc);
-            dedupeHeadStyles(pageDoc);
-            removeTinyMceAndMelisEditorScripts(pageDoc);
-            moveUniqueScriptsToFooter(pageDoc);
-            enforcePreviewScrollStyles(pageDoc);
+    //         removePreviewEditorArtifacts(pageDoc);
+    //         replaceOnlyPreviewDropzone(pageDoc, tplBodyHtml, dropzoneSelector);
+    //         ensureHeaderSpacer(pageDoc);
+    //         dedupeHeadStyles(pageDoc);
+    //         removeTinyMceAndMelisEditorScripts(pageDoc);
+    //         moveUniqueScriptsToFooter(pageDoc);
+    //         enforcePreviewScrollStyles(pageDoc);
 
-        var outDoc = previewIframeEl.contentWindow.document;
-            outDoc.open();
-            outDoc.write("<!DOCTYPE html>\n" + pageDoc.documentElement.outerHTML);
-            outDoc.close();
-    }
+    //     var outDoc = previewIframeEl.contentWindow.document;
+    //         outDoc.open();
+    //         outDoc.write("<!DOCTYPE html>\n" + pageDoc.documentElement.outerHTML);
+    //         outDoc.close();
+    // }
 
     // render standalone mini template preview, tool.php and in mini template manager
-    function renderStandaloneMiniTemplatePreview(previewIframeEl, templateBodyHtml) {
-        var outDoc = previewIframeEl.contentWindow.document;
-        var standaloneHtml = [
-            "<!DOCTYPE html>",
-            "<html>",
-            "<head>",
-            '<meta charset="utf-8">',
-            '<meta name="viewport" content="width=device-width, initial-scale=1.0">',
-            "<style>",
-            "html, body { height: auto; min-height: 100%; overflow-y: auto; overflow-x: hidden; margin: 0; padding: 0; background: #fff; }",
-            "body { padding: 1rem; box-sizing: border-box; }",
-            ".mini-template-preview-content { width: 100%; }",
-            "img { max-width: 100%; height: auto; }",
-            "</style>",
-            "</head>",
-            "<body>",
-            '<div class="mini-template-preview-content">' + templateBodyHtml + "</div>",
-            "</body>",
-            "</html>"
-        ].join("");
+    // function renderStandaloneMiniTemplatePreview(previewIframeEl, templateBodyHtml) {
+    //     var outDoc = previewIframeEl.contentWindow.document;
+    //     var standaloneHtml = [
+    //         "<!DOCTYPE html>",
+    //         "<html>",
+    //         "<head>",
+    //         '<meta charset="utf-8">',
+    //         '<meta name="viewport" content="width=device-width, initial-scale=1.0">',
+    //         "<style>",
+    //         "html, body { height: auto; min-height: 100%; overflow-y: auto; overflow-x: hidden; margin: 0; padding: 0; background: #fff; }",
+    //         "body { padding: 1rem; box-sizing: border-box; }",
+    //         ".mini-template-preview-content { width: 100%; }",
+    //         "img { max-width: 100%; height: auto; }",
+    //         "</style>",
+    //         "</head>",
+    //         "<body>",
+    //         '<div class="mini-template-preview-content">' + templateBodyHtml + "</div>",
+    //         "</body>",
+    //         "</html>"
+    //     ].join("");
 
-        outDoc.open();
-        outDoc.write(standaloneHtml);
-        outDoc.close();
-    }
+    //     outDoc.open();
+    //     outDoc.write(standaloneHtml);
+    //     outDoc.close();
+    // }
 
     // on melis-demo-cms
-    function ensureHeaderSpacer(doc) {
-        // Keep front preview alignment where fixed header expects top spacer.
-        var $existingSpacer = $(doc).find('div[style*="height: 93px"]').first();
-        if ($existingSpacer.length) {
-            return;
-        }
+    // function ensureHeaderSpacer(doc) {
+    //     // Keep front preview alignment where fixed header expects top spacer.
+    //     var $existingSpacer = $(doc).find('div[style*="height: 93px"]').first();
+    //     if ($existingSpacer.length) {
+    //         return;
+    //     }
 
-        var $header = $(doc).find("header:first");
-        var spacerHtml = '<div style="height: 93px"></div>';
+    //     var $header = $(doc).find("header:first");
+    //     var spacerHtml = '<div style="height: 93px"></div>';
 
-        if ($header.length) {
-            $(spacerHtml).insertAfter($header);
-        } else {
-            $(doc.body).prepend(spacerHtml);
-        }
-    }
+    //     if ($header.length) {
+    //         $(spacerHtml).insertAfter($header);
+    //     } else {
+    //         $(doc.body).prepend(spacerHtml);
+    //     }
+    // }
 
     // remove preview editor artifacts
     function removePreviewEditorArtifacts(doc) {
@@ -741,137 +742,137 @@
     }
 
     // replace only preview dropzone
-    function replaceOnlyPreviewDropzone(doc, templateBodyHtml, dropzoneSelector) {
-        var $targetZone = $(doc).find(dropzoneSelector).first();
-            if (!$targetZone.length) {
-                $targetZone = $(doc).find(".dnd-plugins-content .melis-dragdropzone:first").first();
-            }
+    // function replaceOnlyPreviewDropzone(doc, templateBodyHtml, dropzoneSelector) {
+    //     var $targetZone = $(doc).find(dropzoneSelector).first();
+    //         if (!$targetZone.length) {
+    //             $targetZone = $(doc).find(".dnd-plugins-content .melis-dragdropzone:first").first();
+    //         }
             
-            if ($targetZone.length) {
-                // Keep dragdropzone visible and render mini-template content inside it.
-                $targetZone.removeClass("no-content highlight content-added ui-sortable");
-                $targetZone.removeAttr("data-dragdropzone-id");
-                $targetZone.html('<div class="mini-template-preview-content">' + templateBodyHtml + '</div>');
-            } else {
-                // Strict fallback: show only mini-template content between header and footer.
-                var $header = $(doc).find("header:first");
-                var $footer = $(doc).find("footer:first");
-                var replacementBlock = '<div class="melis-dragdropzone"><div class="mini-template-preview-content">' + templateBodyHtml + '</div></div>';
-                    if ($header.length && $footer.length) {
-                        $header.nextUntil($footer).remove();
-                        $(replacementBlock).insertAfter($header);
-                        return;
-                    }
+    //         if ($targetZone.length) {
+    //             // Keep dragdropzone visible and render mini-template content inside it.
+    //             $targetZone.removeClass("no-content highlight content-added ui-sortable");
+    //             $targetZone.removeAttr("data-dragdropzone-id");
+    //             $targetZone.html('<div class="mini-template-preview-content">' + templateBodyHtml + '</div>');
+    //         } else {
+    //             // Strict fallback: show only mini-template content between header and footer.
+    //             var $header = $(doc).find("header:first");
+    //             var $footer = $(doc).find("footer:first");
+    //             var replacementBlock = '<div class="melis-dragdropzone"><div class="mini-template-preview-content">' + templateBodyHtml + '</div></div>';
+    //                 if ($header.length && $footer.length) {
+    //                     $header.nextUntil($footer).remove();
+    //                     $(replacementBlock).insertAfter($header);
+    //                     return;
+    //                 }
 
-                // Secondary fallback: replace known content container entirely.
-                var $contentTarget = $(doc).find("main:first, #content:first, .page-content:first, .content:first").first();
-                    if ($contentTarget.length) {
-                        $contentTarget.html(replacementBlock);
-                    } else {
-                        $(doc.body).html(replacementBlock);
-                    }
-            }
-    }
+    //             // Secondary fallback: replace known content container entirely.
+    //             var $contentTarget = $(doc).find("main:first, #content:first, .page-content:first, .content:first").first();
+    //                 if ($contentTarget.length) {
+    //                     $contentTarget.html(replacementBlock);
+    //                 } else {
+    //                     $(doc.body).html(replacementBlock);
+    //                 }
+    //         }
+    // }
 
     // remove duplicate stylesheets from head
-    function dedupeHeadStyles(doc) {
-        var seenHref = new Set();
-            $(doc.head).find("link[rel='stylesheet']").each(function () {
-                var href = (this.getAttribute("href") || "").trim();
-                if (!href) return;
-                var key = href.split("#")[0];
-                if (seenHref.has(key)) {
-                    $(this).remove();
-                } else {
-                    seenHref.add(key);
-                }
-            });
-    }
+    // function dedupeHeadStyles(doc) {
+    //     var seenHref = new Set();
+    //         $(doc.head).find("link[rel='stylesheet']").each(function () {
+    //             var href = (this.getAttribute("href") || "").trim();
+    //             if (!href) return;
+    //             var key = href.split("#")[0];
+    //             if (seenHref.has(key)) {
+    //                 $(this).remove();
+    //             } else {
+    //                 seenHref.add(key);
+    //             }
+    //         });
+    // }
 
     // move unique scripts to footer
-    function moveUniqueScriptsToFooter(doc) {
-        var seenSrc = new Set();
-        var inlineSeen = new Set();
-        var $allScripts = $(doc).find("script");
-        var uniqueScripts = [];
+    // function moveUniqueScriptsToFooter(doc) {
+    //     var seenSrc = new Set();
+    //     var inlineSeen = new Set();
+    //     var $allScripts = $(doc).find("script");
+    //     var uniqueScripts = [];
 
-            $allScripts.each(function () {
-                var src = (this.getAttribute("src") || "").trim();
-                    if (src) {
-                        var key = src.split("#")[0];
-                        if (!seenSrc.has(key)) {
-                            seenSrc.add(key);
-                            uniqueScripts.push(this.cloneNode(true));
-                        }
-                    } else {
-                        var txt = (this.textContent || "").trim();
-                        if (txt && !inlineSeen.has(txt)) {
-                            inlineSeen.add(txt);
-                            uniqueScripts.push(this.cloneNode(true));
-                        }
-                    }
-            });
+    //         $allScripts.each(function () {
+    //             var src = (this.getAttribute("src") || "").trim();
+    //                 if (src) {
+    //                     var key = src.split("#")[0];
+    //                     if (!seenSrc.has(key)) {
+    //                         seenSrc.add(key);
+    //                         uniqueScripts.push(this.cloneNode(true));
+    //                     }
+    //                 } else {
+    //                     var txt = (this.textContent || "").trim();
+    //                     if (txt && !inlineSeen.has(txt)) {
+    //                         inlineSeen.add(txt);
+    //                         uniqueScripts.push(this.cloneNode(true));
+    //                     }
+    //                 }
+    //         });
 
-        // remove all scripts from original positions
-        $allScripts.remove();
+    //     // remove all scripts from original positions
+    //     $allScripts.remove();
 
-        // append deduped scripts at footer
-        var body = doc.body || doc.documentElement;
-            uniqueScripts.forEach(function (s) { body.appendChild(s); });
-    }
+    //     // append deduped scripts at footer
+    //     var body = doc.body || doc.documentElement;
+    //         uniqueScripts.forEach(function (s) { body.appendChild(s); });
+    // }
 
-    function removeTinyMceAndMelisEditorScripts(doc) {
-        $(doc).find("script").each(function () {
-            var scriptId = (this.getAttribute("id") || "").toLowerCase();
-            var src = (this.getAttribute("src") || "").toLowerCase();
-            var txt = (this.textContent || "").toLowerCase();
-                if (
-                    scriptId === "jquery-checker" ||
-                    src.indexOf("tinymce") !== -1 ||
-                    src.indexOf("melistinymce") !== -1 ||
-                    src.indexOf("/meliscms/") !== -1 ||
-                    src.indexOf("dragndrop") !== -1 ||
-                    src.indexOf("findpage.tool.js") !== -1 ||
-                    src.indexOf("plugins.edition.js") !== -1 ||
-                    src.indexOf("front.pagelock.js") !== -1 ||
-                    src.indexOf("plugin.melisdragdropzone.js") !== -1 ||
-                    src.indexOf("plugin.melistaghtml.init.js") !== -1 ||
-                    src.indexOf("plugin.cmsslider.init.js") !== -1 ||
-                    src.indexOf("plugin.melisgdprbanner.init.js") !== -1 ||
-                    src.indexOf("plugin.related.data.js") !== -1 ||
-                    txt.indexOf("tinymce.init") !== -1 ||
-                    txt.indexOf("melistinymce") !== -1 ||
-                    txt.indexOf("melisdragn") !== -1 ||
-                    txt.indexOf("melispluginedition") !== -1
-                ) {
-                    $(this).remove();
-                }
-        });
-    }
+    // function removeTinyMceAndMelisEditorScripts(doc) {
+    //     $(doc).find("script").each(function () {
+    //         var scriptId = (this.getAttribute("id") || "").toLowerCase();
+    //         var src = (this.getAttribute("src") || "").toLowerCase();
+    //         var txt = (this.textContent || "").toLowerCase();
+    //             if (
+    //                 scriptId === "jquery-checker" ||
+    //                 src.indexOf("tinymce") !== -1 ||
+    //                 src.indexOf("melistinymce") !== -1 ||
+    //                 src.indexOf("/meliscms/") !== -1 ||
+    //                 src.indexOf("dragndrop") !== -1 ||
+    //                 src.indexOf("findpage.tool.js") !== -1 ||
+    //                 src.indexOf("plugins.edition.js") !== -1 ||
+    //                 src.indexOf("front.pagelock.js") !== -1 ||
+    //                 src.indexOf("plugin.melisdragdropzone.js") !== -1 ||
+    //                 src.indexOf("plugin.melistaghtml.init.js") !== -1 ||
+    //                 src.indexOf("plugin.cmsslider.init.js") !== -1 ||
+    //                 src.indexOf("plugin.melisgdprbanner.init.js") !== -1 ||
+    //                 src.indexOf("plugin.related.data.js") !== -1 ||
+    //                 txt.indexOf("tinymce.init") !== -1 ||
+    //                 txt.indexOf("melistinymce") !== -1 ||
+    //                 txt.indexOf("melisdragn") !== -1 ||
+    //                 txt.indexOf("melispluginedition") !== -1
+    //             ) {
+    //                 $(this).remove();
+    //             }
+    //     });
+    // }
 
-    function enforcePreviewScrollStyles(doc) {
-        var styleId = "mini-template-preview-scroll-style";
-        if ($(doc.head).find("#" + styleId).length) {
-            return;
-        }
+    // function enforcePreviewScrollStyles(doc) {
+    //     var styleId = "mini-template-preview-scroll-style";
+    //     if ($(doc.head).find("#" + styleId).length) {
+    //         return;
+    //     }
 
-        var style = doc.createElement("style");
-        style.id = styleId;
-        style.type = "text/css";
-        style.textContent = [
-            "html, body {",
-            "  height: auto !important;",
-            "  min-height: 100% !important;",
-            "  overflow-y: auto !important;",
-            "  overflow-x: hidden !important;",
-            "}",
-            "body {",
-            "  position: static !important;",
-            "}"
-        ].join("\n");
+    //     var style = doc.createElement("style");
+    //     style.id = styleId;
+    //     style.type = "text/css";
+    //     style.textContent = [
+    //         "html, body {",
+    //         "  height: auto !important;",
+    //         "  min-height: 100% !important;",
+    //         "  overflow-y: auto !important;",
+    //         "  overflow-x: hidden !important;",
+    //         "}",
+    //         "body {",
+    //         "  position: static !important;",
+    //         "}"
+    //     ].join("\n");
 
-        doc.head.appendChild(style);
-    }
+    //     doc.head.appendChild(style);
+    // }
 
     function setupPreviewViewport() {
         var $preview = $("#preview-mini-template");
@@ -894,55 +895,55 @@
         $iframe.attr("scrolling", "yes");
     }
 
-    function resolvePreviewSourceDoc() {
-        var isTextareaMode = false;
+    // function resolvePreviewSourceDoc() {
+    //     var isTextareaMode = false;
 
-        // 1) page edition mode (iframe in active tab)
-        try {
-            if (window.parent && parent.activeTabId && window.parent.$) {
-                var $frame = window.parent.$("#" + parent.activeTabId).find(".melis-iframe").first();
-                if ($frame.length && $frame[0].contentDocument) {
-                    return $frame[0].contentDocument;
-                }
-            }
-        } catch (e) {
-            console.error(e);
-        }
+    //     // 1) page edition mode (iframe in active tab)
+    //     try {
+    //         if (window.parent && parent.activeTabId && window.parent.$) {
+    //             var $frame = window.parent.$("#" + parent.activeTabId).find(".melis-iframe").first();
+    //             if ($frame.length && $frame[0].contentDocument) {
+    //                 return $frame[0].contentDocument;
+    //             }
+    //         }
+    //     } catch (e) {
+    //         console.error(e);
+    //     }
 
-        // 2) tinyMCE textarea/tool mode (inline false)
-        try {
-            if (window.parent && parent.tinymce && parent.tinymce.activeEditor) {
-                if (parent.tinymce.activeEditor.inline === false) {
-                    isTextareaMode = true;
-                    return null;
-                }
-                if (typeof parent.tinymce.activeEditor.getDoc === "function") {
-                    var editorDoc = parent.tinymce.activeEditor.getDoc();
-                    if (editorDoc && editorDoc.documentElement) {
-                        return editorDoc;
-                    }
-                }
-            }
-        } catch (e) {
-            console.error(e);
-        }
+    //     // 2) tinyMCE textarea/tool mode (inline false)
+    //     try {
+    //         if (window.parent && parent.tinymce && parent.tinymce.activeEditor) {
+    //             if (parent.tinymce.activeEditor.inline === false) {
+    //                 isTextareaMode = true;
+    //                 return null;
+    //             }
+    //             if (typeof parent.tinymce.activeEditor.getDoc === "function") {
+    //                 var editorDoc = parent.tinymce.activeEditor.getDoc();
+    //                 if (editorDoc && editorDoc.documentElement) {
+    //                     return editorDoc;
+    //                 }
+    //             }
+    //         }
+    //     } catch (e) {
+    //         console.error(e);
+    //     }
 
-        // Prevent preview leakage from parent textarea/document context.
-        if (isTextareaMode) {
-            return null;
-        }
+    //     // Prevent preview leakage from parent textarea/document context.
+    //     if (isTextareaMode) {
+    //         return null;
+    //     }
 
-        // 3) last fallback: parent document
-        try {
-            if (window.parent && window.parent.document && window.parent.document.documentElement) {
-                return window.parent.document;
-            }
-        } catch (e) {
-            console.error(e);
-        }
+    //     // 3) last fallback: parent document
+    //     try {
+    //         if (window.parent && window.parent.document && window.parent.document.documentElement) {
+    //             return window.parent.document;
+    //         }
+    //     } catch (e) {
+    //         console.error(e);
+    //     }
 
-        return null;
-    }
+    //     return null;
+    // }
 
     // insertion of melis-demo-cms mini template css in iframe head, disabled for now
     function insertDemoMiniTemplateCss() {
@@ -1111,3 +1112,382 @@
         });
     });
 }(jQuery));
+
+window.extractTemplateBodyHtml = function(templateHtml) {
+    var parser = new DOMParser();
+    var tplDoc = parser.parseFromString(templateHtml, "text/html");
+        $(tplDoc).find("link[rel='stylesheet'], style, script").remove();
+    
+        return tplDoc.body ? tplDoc.body.innerHTML : templateHtml;
+}
+
+window.resolvePreviewSourceDoc = function() {
+        var isTextareaMode = false;
+
+        // 1) page edition mode (iframe in active tab)
+        try {
+            if (window.parent && parent.activeTabId && window.parent.$) {
+                var $frame = window.parent.$("#" + parent.activeTabId).find(".melis-iframe").first();
+                if ($frame.length && $frame[0].contentDocument) {
+                    return $frame[0].contentDocument;
+                }
+            }
+        } catch (e) {
+            console.error(e);
+        }
+
+        // 2) tinyMCE textarea/tool mode (inline false)
+        try {
+            if (window.parent && parent.tinymce && parent.tinymce.activeEditor) {
+                if (parent.tinymce.activeEditor.inline === false) {
+                    isTextareaMode = true;
+                    return null;
+                }
+                if (typeof parent.tinymce.activeEditor.getDoc === "function") {
+                    var editorDoc = parent.tinymce.activeEditor.getDoc();
+                    if (editorDoc && editorDoc.documentElement) {
+                        return editorDoc;
+                    }
+                }
+            }
+        } catch (e) {
+            console.error(e);
+        }
+
+        // Prevent preview leakage from parent textarea/document context.
+        if (isTextareaMode) {
+            return null;
+        }
+
+        // 3) last fallback: parent document
+        try {
+            if (window.parent && window.parent.document && window.parent.document.documentElement) {
+                return window.parent.document;
+            }
+        } catch (e) {
+            console.error(e);
+        }
+
+        return null;
+    }
+
+window.renderStandaloneMiniTemplatePreview = function(previewIframeEl, templateBodyHtml) {
+    var outDoc = previewIframeEl.contentWindow.document;
+    var standaloneHtml = [
+        "<!DOCTYPE html>",
+        "<html>",
+        "<head>",
+        '<meta charset="utf-8">',
+        '<meta name="viewport" content="width=device-width, initial-scale=1.0">',
+        "<style>",
+        "html, body { height: auto; min-height: 100%; overflow-y: auto; overflow-x: hidden; margin: 0; padding: 0; background: #fff; }",
+        "body { padding: 1rem; box-sizing: border-box; }",
+        ".mini-template-preview-content { width: 100%; }",
+        "img { max-width: 100%; height: auto; }",
+        "</style>",
+        "</head>",
+        "<body>",
+        '<div class="mini-template-preview-content">' + templateBodyHtml + "</div>",
+        "</body>",
+        "</html>"
+    ].join("");
+
+    outDoc.open();
+    outDoc.write(standaloneHtml);
+    outDoc.close();
+}
+
+window.resolvePreviewShellUrl = function(shellUrl, previewConfig) {
+    if (!shellUrl) {
+        return "";
+    }
+
+    var resolvedSiteId = previewConfig.site_id || "";
+    var resolvedSiteModule = previewConfig.site_module || "";
+
+    // Fallback: infer siteId from mini_templates_url query string if not provided in config.
+    if (!resolvedSiteId && parent.tinymce && parent.tinymce.activeEditor && parent.tinymce.activeEditor.options) {
+        var tinyTemplatesUrl = parent.tinymce.activeEditor.options.get("mini_templates_url") || "";
+        if (tinyTemplatesUrl && tinyTemplatesUrl.indexOf("?") !== -1) {
+            try {
+                var query = tinyTemplatesUrl.split("?")[1] || "";
+                var params = new URLSearchParams(query);
+                resolvedSiteId = params.get("siteId") || "";
+            } catch (e) {
+                console.error(e);
+            }
+        }
+    }
+
+    return shellUrl
+        .replace("{siteId}", resolvedSiteId)
+        .replace("{siteModule}", resolvedSiteModule);
+}
+
+window.renderTemplateWithRuntimeLayout = function(previewIframeEl, templateHtml) {
+        var sourceDoc = resolvePreviewSourceDoc();
+        var parser = new DOMParser();
+        var tplDoc = parser.parseFromString(templateHtml, "text/html");
+
+            $(tplDoc).find("link[rel='stylesheet'], style, script").remove();
+
+        var tplBodyHtml = tplDoc.body ? tplDoc.body.innerHTML : templateHtml;
+
+            if (!sourceDoc || !sourceDoc.documentElement) {
+                renderStandaloneMiniTemplatePreview(previewIframeEl, tplBodyHtml);
+                return;
+            }
+
+        var pageDoc = parser.parseFromString(sourceDoc.documentElement.outerHTML, "text/html");
+        var dropzoneSelector = ".melis-dragdropzone:first";
+
+            if (parent.tinymce && parent.tinymce.activeEditor && parent.tinymce.activeEditor.options) {
+                dropzoneSelector = parent.tinymce.activeEditor.options.get("mini_template_dropzone_selector") || dropzoneSelector;
+            }
+
+            removePreviewEditorArtifacts(pageDoc);           
+            replaceOnlyPreviewDropzone(pageDoc, tplBodyHtml, dropzoneSelector);           
+            ensureHeaderSpacer(pageDoc);            
+            dedupeHeadStyles(pageDoc);          
+            removeTinyMceAndMelisEditorScripts(pageDoc);           
+            moveUniqueScriptsToFooter(pageDoc);
+            enforcePreviewScrollStyles(pageDoc);           
+
+        var outDoc = previewIframeEl.contentWindow.document;
+            outDoc.open();
+            outDoc.write("<!DOCTYPE html>\n" + pageDoc.documentElement.outerHTML);
+            outDoc.close();
+    }
+
+window.getPreviewConfig = function() {
+        var miniTemplateConfig = {};
+        if (parent.tinymce && parent.tinymce.activeEditor && parent.tinymce.activeEditor.options) {
+            miniTemplateConfig = parent.tinymce.activeEditor.options.get("melis_minitemplate") || {};
+        }
+
+        return {
+            preview_mode: parent.tinymce.activeEditor.options.get("mini_template_preview_mode") || "auto",
+            preview_shell_url: parent.tinymce.activeEditor.options.get("mini_template_preview_shell_url") || "",
+            site_module: parent.tinymce.activeEditor.options.get("mini_template_site_module") || "",
+            site_id: miniTemplateConfig.site_id || ""
+        };
+    }
+
+window.renderTemplateWithSiteShell = function(previewIframeEl, templateHtml, siteModule = null) {
+    console.log('inside window.renderTemplateWithSiteShell');
+    console.log('site module:', siteModule);
+
+    var previewConfig = getPreviewConfig();
+        var mode = previewConfig.preview_mode || "auto";
+        var shellUrl = resolvePreviewShellUrl(previewConfig.preview_shell_url || "", previewConfig);
+            if (mode === "page_layout") {
+                renderTemplateWithRuntimeLayout(previewIframeEl, templateHtml);
+                return;
+            }
+            if (mode === "standalone") {
+                renderStandaloneMiniTemplatePreview(previewIframeEl, extractTemplateBodyHtml(templateHtml));
+                return;
+            }
+
+        // auto or site_shell
+        var sourceDoc = resolvePreviewSourceDoc();
+            if (sourceDoc && sourceDoc.documentElement && mode === "auto") {
+                renderTemplateWithRuntimeLayout(previewIframeEl, templateHtml);
+
+                return;
+            }
+            if (shellUrl) {
+                $.ajax({
+                    type: "GET",
+                    url: shellUrl,
+                    dataType: "html",
+                    data: {siteModule: siteModule},
+                    cache: false
+                }).done(function(shellHtml) {
+                    renderTemplateWithFetchedShell(previewIframeEl, templateHtml, shellHtml);
+                }).fail(function() {
+                    // fallback if shell fetch fails
+                    renderStandaloneMiniTemplatePreview(previewIframeEl, extractTemplateBodyHtml(templateHtml));
+                });
+                return;
+            }
+
+        renderStandaloneMiniTemplatePreview(previewIframeEl, extractTemplateBodyHtml(templateHtml));
+}
+
+window.renderTemplateWithFetchedShell = function(previewIframeEl, templateHtml, shellHtml) {
+    var parser = new DOMParser();
+    var shellDoc = parser.parseFromString(shellHtml, "text/html");
+    var tplBodyHtml = extractTemplateBodyHtml(templateHtml);
+    var dropzoneSelector = ".melis-dragdropzone:first";
+        if (parent.tinymce && parent.tinymce.activeEditor && parent.tinymce.activeEditor.options) {
+            dropzoneSelector = parent.tinymce.activeEditor.options.get("mini_template_dropzone_selector") || dropzoneSelector;
+        }
+        
+    removePreviewEditorArtifacts(shellDoc);   
+    replaceOnlyPreviewDropzone(shellDoc, tplBodyHtml, dropzoneSelector);   
+    ensureHeaderSpacer(shellDoc);   
+    dedupeHeadStyles(shellDoc);    
+    removeTinyMceAndMelisEditorScripts(shellDoc);    
+    moveUniqueScriptsToFooter(shellDoc);    
+    enforcePreviewScrollStyles(shellDoc);
+
+    var outDoc = previewIframeEl.contentWindow.document;
+        outDoc.open();
+        outDoc.write("<!DOCTYPE html>\n" + shellDoc.documentElement.outerHTML);
+        outDoc.close();
+}
+
+// remove preview editor artifacts
+window.removePreviewEditorArtifacts = function(doc) {
+    $(doc).find(".melis-plugin-tools-box, .m-plugin-sub-tools, .tox, .tox-tinymce-aux, .mce-tinymce").remove();
+    $(doc).find(".melis-cms-dnd-box, #cmsPluginsMenuContent, #melisPluginBtn").remove();
+    $(doc).find("textarea.tool-editable-selector, textarea.html-editable-selector").removeClass("tool-editable-selector html-editable-selector");
+    $(doc).find("[contenteditable='true']").removeAttr("contenteditable");
+
+    // remove editor classes
+    $(doc).find(".melis-ui-outlined").removeClass("melis-ui-outlined");
+    $(doc).find(".melis-plugin-indicator").remove();
+    $(doc).find(".html-editable, .melis-editable").removeClass("html-editable, melis-editable");
+}
+
+window.ensureHeaderSpacer = function(doc) {
+    var $existingSpacer = $(doc).find('div[style*="height: 93px"]').first();
+    if ($existingSpacer.length) {
+        return;
+    }
+
+    var $header = $(doc).find("header:first");
+    var spacerHtml = '<div style="height: 93px"></div>';
+
+    if ($header.length) {
+        $(spacerHtml).insertAfter($header);
+    } else {
+        $(doc.body).prepend(spacerHtml);
+    }
+};
+
+window.replaceOnlyPreviewDropzone = function(doc, templateBodyHtml, dropzoneSelector) {
+    var $targetZone = $(doc).find(dropzoneSelector).first();
+    if (!$targetZone.length) {
+        $targetZone = $(doc).find(".dnd-plugins-content .melis-dragdropzone:first").first();
+    }
+
+    if ($targetZone.length) {
+        $targetZone.removeClass("no-content highlight content-added ui-sortable");
+        $targetZone.removeAttr("data-dragdropzone-id");
+        $targetZone.html('<div class="mini-template-preview-content">' + templateBodyHtml + '</div>');
+    } else {
+        var $header = $(doc).find("header:first");
+        var $footer = $(doc).find("footer:first");
+        var replacementBlock = '<div class="melis-dragdropzone"><div class="mini-template-preview-content">' + templateBodyHtml + '</div></div>';
+        if ($header.length && $footer.length) {
+            $header.nextUntil($footer).remove();
+            $(replacementBlock).insertAfter($header);
+            return;
+        }
+
+        var $contentTarget = $(doc).find("main:first, #content:first, .page-content:first, .content:first").first();
+        if ($contentTarget.length) {
+            $contentTarget.html(replacementBlock);
+        } else {
+            $(doc.body).html(replacementBlock);
+        }
+    }
+};
+
+window.dedupeHeadStyles = function(doc) {
+    var seenHref = new Set();
+    $(doc.head).find("link[rel='stylesheet']").each(function () {
+        var href = (this.getAttribute("href") || "").trim();
+        if (!href) return;
+        var key = href.split("#")[0];
+        if (seenHref.has(key)) {
+            $(this).remove();
+        } else {
+            seenHref.add(key);
+        }
+    });
+};
+
+window.moveUniqueScriptsToFooter = function(doc) {
+    var seenSrc = new Set();
+    var inlineSeen = new Set();
+    var $allScripts = $(doc).find("script");
+    var uniqueScripts = [];
+
+    $allScripts.each(function () {
+        var src = (this.getAttribute("src") || "").trim();
+        if (src) {
+            var key = src.split("#")[0];
+            if (!seenSrc.has(key)) {
+                seenSrc.add(key);
+                uniqueScripts.push(this.cloneNode(true));
+            }
+        } else {
+            var txt = (this.textContent || "").trim();
+            if (txt && !inlineSeen.has(txt)) {
+                inlineSeen.add(txt);
+                uniqueScripts.push(this.cloneNode(true));
+            }
+        }
+    });
+
+    $allScripts.remove();
+
+    var body = doc.body || doc.documentElement;
+    uniqueScripts.forEach(function (s) { body.appendChild(s); });
+};
+
+window.removeTinyMceAndMelisEditorScripts = function(doc) {
+    $(doc).find("script").each(function () {
+        var scriptId = (this.getAttribute("id") || "").toLowerCase();
+        var src = (this.getAttribute("src") || "").toLowerCase();
+        var txt = (this.textContent || "").toLowerCase();
+        if (
+            scriptId === "jquery-checker" ||
+            src.indexOf("tinymce") !== -1 ||
+            src.indexOf("melistinymce") !== -1 ||
+            src.indexOf("/meliscms/") !== -1 ||
+            src.indexOf("dragndrop") !== -1 ||
+            src.indexOf("findpage.tool.js") !== -1 ||
+            src.indexOf("plugins.edition.js") !== -1 ||
+            src.indexOf("front.pagelock.js") !== -1 ||
+            src.indexOf("plugin.melisdragdropzone.js") !== -1 ||
+            src.indexOf("plugin.melistaghtml.init.js") !== -1 ||
+            src.indexOf("plugin.cmsslider.init.js") !== -1 ||
+            src.indexOf("plugin.melisgdprbanner.init.js") !== -1 ||
+            src.indexOf("plugin.related.data.js") !== -1 ||
+            txt.indexOf("tinymce.init") !== -1 ||
+            txt.indexOf("melistinymce") !== -1 ||
+            txt.indexOf("melisdragn") !== -1 ||
+            txt.indexOf("melispluginedition") !== -1
+        ) {
+            $(this).remove();
+        }
+    });
+};
+
+window.enforcePreviewScrollStyles = function(doc) {
+    var styleId = "mini-template-preview-scroll-style";
+    if ($(doc.head).find("#" + styleId).length) {
+        return;
+    }
+
+    var style = doc.createElement("style");
+    style.id = styleId;
+    style.type = "text/css";
+    style.textContent = [
+        "html, body {",
+        "  height: auto !important;",
+        "  min-height: 100% !important;",
+        "  overflow-y: auto !important;",
+        "  overflow-x: hidden !important;",
+        "}",
+        "body {",
+        "  position: static !important;",
+        "}"
+    ].join("\n");
+
+    doc.head.appendChild(style);
+};
