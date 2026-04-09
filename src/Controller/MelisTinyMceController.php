@@ -280,14 +280,14 @@ class MelisTinyMceController extends MelisAbstractActionController
             } catch (\Exception $e) {}
         }
 
-        if (empty($siteId) && !empty($siteModule)) {
-            try {
-                $site = $this->getService('MelisEngineTableSite')->getEntryByField('site_name', $siteModule)->current();
-                if ($site) {
-                    $siteId = $site->site_id ?? '';
-                }
-            } catch (\Exception $e) {}
-        }
+        // if (empty($siteId) && !empty($siteModule)) {
+        //     try {
+        //         $site = $this->getService('MelisEngineTableSite')->getEntryByField('site_name', $siteModule)->current();
+        //         if ($site) {
+        //             $siteId = $site->site_id ?? '';
+        //         }
+        //     } catch (\Exception $e) {}
+        // }
 
         if (empty($siteModule)) {
             $tinyCfg = $this->getTinyMCEByType($type);
