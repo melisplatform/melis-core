@@ -117,8 +117,8 @@
     // accordion
     function appendAccordion(data) {
         var $accordion = $("#accordion-mini-template");
-        var previewConfig = getPreviewConfig();
-        var fallbackSiteId = previewConfig.site_id || "";
+        /* var previewConfig = getPreviewConfig();
+        var fallbackSiteId = previewConfig.site_id || ""; */
             
             // template lists
             for ( var i = 0; i < data.length; i++ ) {
@@ -129,7 +129,7 @@
                     dType           = template.type,
                     dModule         = template.module,
                     dSiteName       = template.site_name,
-                    dSiteId         = template.site_id || template.siteId || fallbackSiteId,
+                    // dSiteId         = template.site_id || template.siteId || fallbackSiteId,
                     dImageSource    = template.imgSource,
                     dUrl            = template.url,
                     buttons         = '';
@@ -147,7 +147,7 @@
                             "data-parent"     : dParent,
                             "data-type"       : dType,
                             "data-site-name"  : dSiteName,
-                            "data-site-id"    : dSiteId,
+                            //"data-site-id"    : dSiteId,
                             "data-url"        : dUrl
                         });
                     }
@@ -160,7 +160,7 @@
                             "class"             : 'mini-template-button category d-none',
                             "data-type"         : dType,
                             "data-site-name"    : dSiteName,
-                            "data-site-id"      : dSiteId,
+                            //"data-site-id"      : dSiteId,
                             "data-id"           : dId
                         });
                     }
@@ -447,21 +447,24 @@
                
                 // preview mini template at first load without clicking of buttons
                 if ( $siteCategory.length ) {
-                    var $mainCategoryBtn = $("#accordion-mini-template > .site-category.ui-accordion-content-active .main-category > .mini-template-button:first-child"),
-                        miniTemplateBtnDataUrl = "";
+                    var $mainCategoryBtn            = $("#accordion-mini-template > .site-category.ui-accordion-content-active .main-category > .mini-template-button:first-child"),
+                        miniTemplateBtnDataUrl      = "",
+                        miniTemplateBtnDataModule   = "";
 
                         // with .main-category
                         if ( $mainCategoryBtn.length ) {
-                            miniTemplateBtnDataUrl = $mainCategoryBtn.data("url");
+                            miniTemplateBtnDataUrl      = $mainCategoryBtn.data("url");
+                            miniTemplateBtnDataModule   = $mainCategoryBtn.data("module");
                         }
                         // no .main-category
                         else {
-                            var $siteCategoryChildBtn = $("#accordion-mini-template > .site-category.ui-accordion-content-active > .mini-template-button:first-child");
-                                miniTemplateBtnDataUrl = $siteCategoryChildBtn.data("url");
+                            var $siteCategoryChildBtn   = $("#accordion-mini-template > .site-category.ui-accordion-content-active > .mini-template-button:first-child");
+                                miniTemplateBtnDataUrl  = $siteCategoryChildBtn.data("url");
                         }
 
                         if (miniTemplateBtnDataUrl) {
-                            previewMiniTemplate(miniTemplateBtnDataUrl);
+                            console.log('getSelectedMiniTemplate(), miniTemplateBtnDataModule: ', miniTemplateBtnDataModule);
+                            previewMiniTemplate(miniTemplateBtnDataUrl, miniTemplateBtnDataModule);
                         }
                 }
                 
@@ -499,9 +502,11 @@
                     e.stopPropagation();
                     e.stopImmediatePropagation();
 
-                    var url = $btn.data("url") || $btn.attr("data-url") || "";
+                    console.log('inside click event...');
+                    var url         = $btn.data("url") || $btn.attr("data-url") || "",
+                        siteModule  = $btn.data("module") || $btn.attr("data-module") || "";
                         if (url) {
-                            previewMiniTemplate(url);
+                            previewMiniTemplate(url, siteModule);
                         }
                 });
 
@@ -512,9 +517,11 @@
                         e.stopPropagation();
                         if (e.type === "click") {
                             var $btn = $(this);
-                            var url = $btn.data("url") || $btn.attr("data-url") || "";
+                            var url         = $btn.data("url") || $btn.attr("data-url") || "",
+                                siteModule  = $btn.data("module") || $btn.attr("data-module") || "";
+                                console.log('hard-stop accordion inside click event...');
                                 if (url) {
-                                    previewMiniTemplate(url);
+                                    previewMiniTemplate(url, siteModule);
                                 }
                             e.preventDefault();
                             e.stopImmediatePropagation();
@@ -524,8 +531,10 @@
     }
 
     // displays mini template in iframe
-    function previewMiniTemplate(url) {
-        var $preview = $("#preview-mini-template"),
+    function previewMiniTemplate(url, siteModule) {
+        console.log('inside previewMiniTemplate...');
+        console.log('url: ', url);
+        var $preview    = $("#preview-mini-template"),
             $prevIframe = $preview.find(".preview-iframe");
 
             if (!$prevIframe.length || !url) {
@@ -539,7 +548,12 @@
                 cache: false
             })
             .done(function(templateHtml) {
-                renderTemplateWithSiteShell($prevIframe[0], templateHtml, getPreviewConfig().site_module);
+                var site_module = siteModule ? siteModule : (getPreviewConfig().site_module || null);
+                    if (site_module) {
+                        renderTemplateWithSiteShell($prevIframe[0], templateHtml, site_module);
+                    } else {
+                        renderTemplateWithSiteShell($prevIframe[0], templateHtml);
+                    }
             })
             .fail(function() {
                 alert(parent.translations.tr_meliscore_error_message);
@@ -749,7 +763,7 @@ window.extractTemplateBodyHtml = function(templateHtml) {
         $(tplDoc).find("link[rel='stylesheet'], style, script").remove();
     
         return tplDoc.body ? tplDoc.body.innerHTML : templateHtml;
-}
+};
 
 window.resolvePreviewSourceDoc = function() {
         var isTextareaMode = false;
@@ -799,7 +813,7 @@ window.resolvePreviewSourceDoc = function() {
         }
 
         return null;
-    }
+};
 
 window.renderStandaloneMiniTemplatePreview = function(previewIframeEl, templateBodyHtml) {
     var outDoc = previewIframeEl.contentWindow.document;
@@ -825,7 +839,7 @@ window.renderStandaloneMiniTemplatePreview = function(previewIframeEl, templateB
     outDoc.open();
     outDoc.write(standaloneHtml);
     outDoc.close();
-}
+};
 
 window.resolvePreviewShellUrl = function(shellUrl, previewConfig) {
     if (!shellUrl) {
@@ -852,7 +866,7 @@ window.resolvePreviewShellUrl = function(shellUrl, previewConfig) {
     return shellUrl
         .replace("{siteId}", resolvedSiteId)
         .replace("{siteModule}", resolvedSiteModule);
-}
+};
 
 window.renderTemplateWithRuntimeLayout = function(previewIframeEl, templateHtml) {
         var sourceDoc = resolvePreviewSourceDoc();
@@ -887,26 +901,35 @@ window.renderTemplateWithRuntimeLayout = function(previewIframeEl, templateHtml)
             outDoc.open();
             outDoc.write("<!DOCTYPE html>\n" + pageDoc.documentElement.outerHTML);
             outDoc.close();
-    }
+};
 
 window.getPreviewConfig = function() {
-        var miniTemplateConfig = {};
+    var miniTemplateConfig      = {},
+        editorOptions           = null,
+        siteModuleFromButton    = null;
+
         if (parent.tinymce && parent.tinymce.activeEditor && parent.tinymce.activeEditor.options) {
-            miniTemplateConfig = parent.tinymce.activeEditor.options.get("melis_minitemplate") || {};
+            editorOptions = parent.tinymce.activeEditor.options;
+            miniTemplateConfig = editorOptions.get("melis_minitemplate") || {};
         }
 
+        siteModuleFromButton = $("#accordion-mini-template .mini-template-button.active[data-type='mini-template']").first().data("module") ||
+            $("#accordion-mini-template .mini-template-button[data-type='mini-template']").first().data("module") ||
+            null;
+
         return {
-            preview_mode: parent.tinymce.activeEditor.options.get("mini_template_preview_mode") || "auto",
-            preview_shell_url: parent.tinymce.activeEditor.options.get("mini_template_preview_shell_url") || "",
-            site_module: parent.tinymce.activeEditor.options.get("mini_template_site_module") || "",
-            site_id: miniTemplateConfig.site_id || ""
+            preview_mode: editorOptions ? (editorOptions.get("mini_template_preview_mode") || "auto") : "auto",
+            preview_shell_url: editorOptions ? (editorOptions.get("mini_template_preview_shell_url") || "") : "",
+            site_module: editorOptions ? (editorOptions.get("mini_template_site_module") || siteModuleFromButton) : siteModuleFromButton,
+            site_id: miniTemplateConfig.site_id || null
         };
-    }
+};
 
 window.renderTemplateWithSiteShell = function(previewIframeEl, templateHtml, siteModule = null) {
-    var previewConfig = getPreviewConfig();
-    var mode = previewConfig.preview_mode || "auto";
-    var shellUrl = resolvePreviewShellUrl(previewConfig.preview_shell_url || "", previewConfig);
+    var previewConfig   = getPreviewConfig(),
+        mode            = previewConfig.preview_mode || "auto",
+        shellUrl        = resolvePreviewShellUrl(previewConfig.preview_shell_url || "", previewConfig);
+
         if (mode === "page_layout") {
             renderTemplateWithRuntimeLayout(previewIframeEl, templateHtml);
             return;
@@ -940,7 +963,7 @@ window.renderTemplateWithSiteShell = function(previewIframeEl, templateHtml, sit
         }
 
     renderStandaloneMiniTemplatePreview(previewIframeEl, extractTemplateBodyHtml(templateHtml));
-}
+};
 
 window.renderTemplateWithFetchedShell = function(previewIframeEl, templateHtml, shellHtml) {
     var parser = new DOMParser();
@@ -963,7 +986,7 @@ window.renderTemplateWithFetchedShell = function(previewIframeEl, templateHtml, 
         outDoc.open();
         outDoc.write("<!DOCTYPE html>\n" + shellDoc.documentElement.outerHTML);
         outDoc.close();
-}
+};
 
 // remove preview editor artifacts
 window.removePreviewEditorArtifacts = function(doc) {
@@ -976,7 +999,7 @@ window.removePreviewEditorArtifacts = function(doc) {
     $(doc).find(".melis-ui-outlined").removeClass("melis-ui-outlined");
     $(doc).find(".melis-plugin-indicator").remove();
     $(doc).find(".html-editable, .melis-editable").removeClass("html-editable, melis-editable");
-}
+};
 
 window.ensureHeaderSpacer = function(doc) {
     var $existingSpacer = $(doc).find('div[style*="height: 93px"]').first();
