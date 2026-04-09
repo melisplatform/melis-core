@@ -280,6 +280,15 @@ class MelisTinyMceController extends MelisAbstractActionController
             } catch (\Exception $e) {}
         }
 
+        if (empty($siteId) && !empty($siteModule)) {
+            try {
+                $site = $this->getService('MelisEngineTableSite')->getEntryByField('site_name', $siteModule)->current();
+                if ($site) {
+                    $siteId = $site->site_id ?? '';
+                }
+            } catch (\Exception $e) {}
+        }
+
         if (empty($siteModule)) {
             $tinyCfg = $this->getTinyMCEByType($type);
             if (!empty($tinyCfg['mini_template_site_module'])) {
@@ -330,6 +339,7 @@ class MelisTinyMceController extends MelisAbstractActionController
         }
 
         $html = '';
+        //echo 'targetUrl: ' . $targetUrl;
         if (!empty($targetUrl)) {
             $context = stream_context_create([
                 'http' => [
@@ -356,6 +366,69 @@ class MelisTinyMceController extends MelisAbstractActionController
         $response->setContent($html);
 
         return $response;
+    }
+
+    private function resolvePreviewTargetUrl($siteId, $siteModule)
+    {
+        $host = $_SERVER['HTTP_HOST'] ?? '';
+        $currentHost = strtolower(preg_replace('/:\d+$/', '', $host));
+        $scheme = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
+
+        // 1) Prefer site domain table for multi-domain setups (best match by current host first).
+        if (!empty($siteId)) {
+            try {
+                $domains = $this->getService('MelisEngineTableSiteDomain')->getEntryByField('sdom_site_id', $siteId)->toArray();
+                if (!empty($domains)) {
+                    $selectedDomain = '';
+
+                    // Prefer exact host match with current request host.
+                    foreach ($domains as $domainRow) {
+                        $domain = $domainRow['sdom_domain'] ?? '';
+                        if (empty($domain)) {
+                            continue;
+                        }
+                        $domainHost = strtolower(parse_url(
+                            preg_match('#^https?://#i', $domain) ? $domain : ($scheme . '://' . $domain),
+                            PHP_URL_HOST
+                        ) ?: '');
+                        if (!empty($domainHost) && $domainHost === $currentHost) {
+                            $selectedDomain = $domain;
+                            break;
+                        }
+                    }
+
+                    // Otherwise fallback to first non-empty domain for the selected site.
+                    if (empty($selectedDomain)) {
+                        foreach ($domains as $domainRow) {
+                            $domain = $domainRow['sdom_domain'] ?? '';
+                            if (!empty($domain)) {
+                                $selectedDomain = $domain;
+                                break;
+                            }
+                        }
+                    }
+
+                    if (!empty($selectedDomain)) {
+                        if (!preg_match('#^https?://#i', $selectedDomain)) {
+                            $selectedDomain = $scheme . '://' . $selectedDomain;
+                        }
+                        return rtrim($selectedDomain, '/') . '/';
+                    }
+                }
+            } catch (\Exception $e) {}
+        }
+
+        // 2) Fallback to current host and optional site module path.
+        if (!empty($host) && !empty($siteModule)) {
+            return $scheme . '://' . $host . '/' . ltrim($siteModule, '/');
+        }
+
+        // 3) Last fallback: current host root.
+        if (!empty($host)) {
+            return $scheme . '://' . $host . '/';
+        }
+
+        return '';
     }
 
      

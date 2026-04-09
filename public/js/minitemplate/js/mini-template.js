@@ -117,6 +117,8 @@
     // accordion
     function appendAccordion(data) {
         var $accordion = $("#accordion-mini-template");
+        var previewConfig = getPreviewConfig();
+        var fallbackSiteId = previewConfig.site_id || "";
             
             // template lists
             for ( var i = 0; i < data.length; i++ ) {
@@ -127,6 +129,7 @@
                     dType           = template.type,
                     dModule         = template.module,
                     dSiteName       = template.site_name,
+                    dSiteId         = template.site_id || template.siteId || fallbackSiteId,
                     dImageSource    = template.imgSource,
                     dUrl            = template.url,
                     buttons         = '';
@@ -144,6 +147,7 @@
                             "data-parent"     : dParent,
                             "data-type"       : dType,
                             "data-site-name"  : dSiteName,
+                            "data-site-id"    : dSiteId,
                             "data-url"        : dUrl
                         });
                     }
@@ -156,6 +160,7 @@
                             "class"             : 'mini-template-button category d-none',
                             "data-type"         : dType,
                             "data-site-name"    : dSiteName,
+                            "data-site-id"      : dSiteId,
                             "data-id"           : dId
                         });
                     }
@@ -331,10 +336,23 @@
                     
                     // site category
                     if ( siteName != 'undefined' ) {
-                        siteHtml = siteNameHtml( siteName, index );
+                        var siteId = getSiteIdByName($miniTemplateButtons, siteName);
+                        siteHtml = siteNameHtml( siteName, index, siteId );
                         $accordion.prepend( siteHtml );
                     }      
             }
+    }
+
+    function getSiteIdByName($miniTemplateButtons, siteName) {
+        var resolvedSiteId = "";
+        $.each($miniTemplateButtons, function(i, v) {
+            var $btn = $(v);
+            if ($btn.data("site-name") === siteName) {
+                resolvedSiteId = $btn.data("site-id") || $btn.attr("data-site-id") || "";
+                return false;
+            }
+        });
+        return resolvedSiteId;
     }
 
     function appendMainCategoryToSiteCategory( $miniTemplateButtons ) {
@@ -521,7 +539,7 @@
                 cache: false
             })
             .done(function(templateHtml) {
-                renderTemplateWithSiteShell($prevIframe[0], templateHtml);
+                renderTemplateWithSiteShell($prevIframe[0], templateHtml, getPreviewConfig().site_module);
             })
             .fail(function() {
                 alert(parent.translations.tr_meliscore_error_message);
@@ -1005,9 +1023,9 @@
         }, 1000);
     }
 
-    function siteNameHtml( siteName, index ) {
-        return '<h3>'+ siteName +'</h3>' +
-                '<div id="site-category-'+index+'" class="site-category accordion" data-site-name="'+ siteName +'"></div>';
+    function siteNameHtml( siteName, index, siteId ) {
+        return '<h3 data-site-id="'+ siteId +'">'+ siteName +'</h3>' +
+                '<div id="site-category-'+index+'" class="site-category accordion" data-site-name="'+ siteName +'" data-site-id="'+ siteId +'"></div>';
     }
 
     function mainCategoryHtml( mainCategoryText, mainCategorySiteName, mainCategoryId, index ) {
