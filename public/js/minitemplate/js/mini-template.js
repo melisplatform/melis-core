@@ -105,7 +105,6 @@
                 cache: false
             })
             .done(function(data) {
-                console.log({data});
                 setTimeout(function() {
                     appendAccordion(data);
                 }, 1000);
@@ -526,7 +525,6 @@
 
     // displays mini template in iframe
     function previewMiniTemplate(url) {
-        console.log(`mini-template.js previewMiniTemplate() !!!`);
         var $preview = $("#preview-mini-template"),
             $prevIframe = $preview.find(".preview-iframe");
 
@@ -725,7 +723,6 @@
     }
 
     function renderTemplateWithFetchedShell(previewIframeEl, templateHtml, shellHtml) {
-        console.log(`mini-template.js renderTemplateWithFetchedShell() !!!`);
         var parser = new DOMParser();
         var shellDoc = parser.parseFromString(shellHtml, "text/html");
         var tplBodyHtml = extractTemplateBodyHtml(templateHtml);
@@ -754,7 +751,6 @@
 
     // render template with runtime layout
     function renderTemplateWithRuntimeLayout(previewIframeEl, templateHtml) {
-        console.log(`mini-template.js renderTemplateWithRuntimeLayout() !!!`);
         var sourceDoc = resolvePreviewSourceDoc();
         var parser = new DOMParser();
         var tplDoc = parser.parseFromString(templateHtml, "text/html");
@@ -791,7 +787,6 @@
 
     // render standalone mini template preview, tool.php and in mini template manager
     function renderStandaloneMiniTemplatePreview(previewIframeEl, templateBodyHtml) {
-        console.log(`mini-template.js renderStandaloneMiniTemplatePreview() !!!`);
         var outDoc = previewIframeEl.contentWindow.document;
         var standaloneHtml = [
             "<!DOCTYPE html>",
