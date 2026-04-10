@@ -1096,12 +1096,12 @@ window.removeTinyMceAndMelisEditorScripts = function(doc) {
     $(doc).find("script").each(function () {
         var scriptId = (this.getAttribute("id") || "").toLowerCase();
         var src = (this.getAttribute("src") || "").toLowerCase();
+            console.log({src});
         var txt = (this.textContent || "").toLowerCase();
             if (
                 scriptId === "jquery-checker" ||
                 src.indexOf("tinymce") !== -1 ||
                 src.indexOf("melistinymce") !== -1 ||
-                src.indexOf("melis_tinymce") !== -1 ||
                 src.indexOf("melis-tinymce") !== -1 ||
                 src.indexOf("/meliscore/js/tinymce/") !== -1 ||
                 src.indexOf("/melisfront/plugins/js/") !== -1 ||
