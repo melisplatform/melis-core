@@ -1097,27 +1097,34 @@ window.removeTinyMceAndMelisEditorScripts = function(doc) {
         var scriptId = (this.getAttribute("id") || "").toLowerCase();
         var src = (this.getAttribute("src") || "").toLowerCase();
         var txt = (this.textContent || "").toLowerCase();
-        if (
-            scriptId === "jquery-checker" ||
-            src.indexOf("tinymce") !== -1 ||
-            src.indexOf("melistinymce") !== -1 ||
-            src.indexOf("/meliscms/") !== -1 ||
-            src.indexOf("dragndrop") !== -1 ||
-            src.indexOf("findpage.tool.js") !== -1 ||
-            src.indexOf("plugins.edition.js") !== -1 ||
-            src.indexOf("front.pagelock.js") !== -1 ||
-            src.indexOf("plugin.melisdragdropzone.js") !== -1 ||
-            src.indexOf("plugin.melistaghtml.init.js") !== -1 ||
-            src.indexOf("plugin.cmsslider.init.js") !== -1 ||
-            src.indexOf("plugin.melisgdprbanner.init.js") !== -1 ||
-            src.indexOf("plugin.related.data.js") !== -1 ||
-            txt.indexOf("tinymce.init") !== -1 ||
-            txt.indexOf("melistinymce") !== -1 ||
-            txt.indexOf("melisdragn") !== -1 ||
-            txt.indexOf("melispluginedition") !== -1
-        ) {
-            $(this).remove();
-        }
+            if (
+                scriptId === "jquery-checker" ||
+                src.indexOf("tinymce") !== -1 ||
+                src.indexOf("melistinymce") !== -1 ||
+                src.indexOf("melis_tinymce") !== -1 ||
+                src.indexOf("melis-tinymce") !== -1 ||
+                src.indexOf("/meliscore/js/tinymce/") !== -1 ||
+                src.indexOf("/melisfront/plugins/js/") !== -1 ||
+                src.indexOf("/meliscms/") !== -1 ||
+                src.indexOf("dragndrop") !== -1 ||
+                src.indexOf("findpage.tool.js") !== -1 ||
+                src.indexOf("plugins.edition.js") !== -1 ||
+                src.indexOf("front.pagelock.js") !== -1 ||
+                src.indexOf("plugin.melisdragdropzone.js") !== -1 ||
+                src.indexOf("plugin.melistagHTML.init.js") !== -1 ||
+                src.indexOf("plugin.cmsslider.init.js") !== -1 ||
+                src.indexOf("plugin.melisgdprbanner.init.js") !== -1 ||
+                src.indexOf("plugin.related.data.js") !== -1 ||
+                txt.indexOf("tinymce.init") !== -1 ||
+                txt.indexOf("melistinymce") !== -1 ||
+                txt.indexOf("melis_tinymce") !== -1 ||
+                txt.indexOf("/meliscore/js/tinymce/") !== -1 ||
+                txt.indexOf("/melisfront/plugins/js/") !== -1 ||
+                txt.indexOf("melisdragdropzone") !== -1 ||
+                txt.indexOf("melispluginedition") !== -1
+            ) {
+                $(this).remove();
+            }
     });
 };
 
