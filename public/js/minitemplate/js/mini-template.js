@@ -946,6 +946,7 @@ window.renderTemplateWithSiteShell = function(previewIframeEl, templateHtml, sit
 
             return;
         }
+
         if (shellUrl) {
             $.ajax({
                 type: "GET",
@@ -959,6 +960,7 @@ window.renderTemplateWithSiteShell = function(previewIframeEl, templateHtml, sit
                 // fallback if shell fetch fails
                 renderStandaloneMiniTemplatePreview(previewIframeEl, extractTemplateBodyHtml(templateHtml));
             });
+            
             return;
         }
 
@@ -966,6 +968,7 @@ window.renderTemplateWithSiteShell = function(previewIframeEl, templateHtml, sit
 };
 
 window.renderTemplateWithFetchedShell = function(previewIframeEl, templateHtml, shellHtml) {
+    console.log(`renderTemplateWithFetchedShell() ...`);
     var parser = new DOMParser();
     var shellDoc = parser.parseFromString(shellHtml, "text/html");
     var tplBodyHtml = extractTemplateBodyHtml(templateHtml);
