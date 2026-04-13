@@ -460,10 +460,10 @@
                         else {
                             var $siteCategoryChildBtn   = $("#accordion-mini-template > .site-category.ui-accordion-content-active > .mini-template-button:first-child");
                                 miniTemplateBtnDataUrl  = $siteCategoryChildBtn.data("url");
+                                miniTemplateBtnDataModule = $siteCategoryChildBtn.data("module");
                         }
 
                         if (miniTemplateBtnDataUrl) {
-                            console.log('getSelectedMiniTemplate(), miniTemplateBtnDataModule: ', miniTemplateBtnDataModule);
                             previewMiniTemplate(miniTemplateBtnDataUrl, miniTemplateBtnDataModule);
                         }
                 }
@@ -502,7 +502,6 @@
                     e.stopPropagation();
                     e.stopImmediatePropagation();
 
-                    console.log('inside click event...');
                     var url         = $btn.data("url") || $btn.attr("data-url") || "",
                         siteModule  = $btn.data("module") || $btn.attr("data-module") || "";
                         if (url) {
@@ -519,7 +518,6 @@
                             var $btn = $(this);
                             var url         = $btn.data("url") || $btn.attr("data-url") || "",
                                 siteModule  = $btn.data("module") || $btn.attr("data-module") || "";
-                                console.log('hard-stop accordion inside click event...');
                                 if (url) {
                                     previewMiniTemplate(url, siteModule);
                                 }
@@ -532,8 +530,6 @@
 
     // displays mini template in iframe
     function previewMiniTemplate(url, siteModule) {
-        console.log('inside previewMiniTemplate...');
-        console.log('url: ', url);
         var $preview    = $("#preview-mini-template"),
             $prevIframe = $preview.find(".preview-iframe");
 
@@ -700,16 +696,16 @@
 
     // Insert html content mini template into tinymce editor
     function insertMiniTemplate() {
-        var $iframeDoc = $("#preview-mini-template iframe").contents();
-        var miniTemplate = "";
-        var $previewContent = $iframeDoc.find(".mini-template-preview-content").first();
+        var $iframeDoc      = $("#preview-mini-template iframe").contents(),
+            miniTemplate    = "",
+            $previewContent = $iframeDoc.find(".mini-template-preview-content").first();
 
         if ($previewContent.length) {
             miniTemplate = $previewContent.html();
         } else {
             // Fallback for older preview markup
             var bodyEl = $iframeDoc.find("body")[0];
-            miniTemplate = bodyEl ? bodyEl.innerHTML : "";
+                miniTemplate = bodyEl ? bodyEl.innerHTML : "";
         }
 
         if (miniTemplate) {
@@ -758,23 +754,24 @@
 }(jQuery));
 
 window.extractTemplateBodyHtml = function(templateHtml) {
-    var parser = new DOMParser();
-    var tplDoc = parser.parseFromString(templateHtml, "text/html");
+    var parser = new DOMParser(),
+        tplDoc = parser.parseFromString(templateHtml, "text/html");
+
         $(tplDoc).find("link[rel='stylesheet'], style, script").remove();
     
         return tplDoc.body ? tplDoc.body.innerHTML : templateHtml;
 };
 
 window.resolvePreviewSourceDoc = function() {
-        var isTextareaMode = false;
+    var isTextareaMode = false;
 
         // 1) page edition mode (iframe in active tab)
         try {
             if (window.parent && parent.activeTabId && window.parent.$) {
                 var $frame = window.parent.$("#" + parent.activeTabId).find(".melis-iframe").first();
-                if ($frame.length && $frame[0].contentDocument) {
-                    return $frame[0].contentDocument;
-                }
+                    if ($frame.length && $frame[0].contentDocument) {
+                        return $frame[0].contentDocument;
+                    }
             }
         } catch (e) {
             console.error(e);
@@ -787,11 +784,12 @@ window.resolvePreviewSourceDoc = function() {
                     isTextareaMode = true;
                     return null;
                 }
+
                 if (typeof parent.tinymce.activeEditor.getDoc === "function") {
                     var editorDoc = parent.tinymce.activeEditor.getDoc();
-                    if (editorDoc && editorDoc.documentElement) {
-                        return editorDoc;
-                    }
+                        if (editorDoc && editorDoc.documentElement) {
+                            return editorDoc;
+                        }
                 }
             }
         } catch (e) {
@@ -846,21 +844,21 @@ window.resolvePreviewShellUrl = function(shellUrl, previewConfig) {
         return "";
     }
 
-    var resolvedSiteId = previewConfig.site_id || "";
-    var resolvedSiteModule = previewConfig.site_module || "";
+    var resolvedSiteId      = previewConfig.site_id || "",
+        resolvedSiteModule  = previewConfig.site_module || "";
 
     // Fallback: infer siteId from mini_templates_url query string if not provided in config.
     if (!resolvedSiteId && parent.tinymce && parent.tinymce.activeEditor && parent.tinymce.activeEditor.options) {
         var tinyTemplatesUrl = parent.tinymce.activeEditor.options.get("mini_templates_url") || "";
-        if (tinyTemplatesUrl && tinyTemplatesUrl.indexOf("?") !== -1) {
-            try {
-                var query = tinyTemplatesUrl.split("?")[1] || "";
-                var params = new URLSearchParams(query);
-                resolvedSiteId = params.get("siteId") || "";
-            } catch (e) {
-                console.error(e);
+            if (tinyTemplatesUrl && tinyTemplatesUrl.indexOf("?") !== -1) {
+                try {
+                    var query  = tinyTemplatesUrl.split("?")[1] || "",
+                        params = new URLSearchParams(query);
+                        resolvedSiteId = params.get("siteId") || "";
+                } catch (e) {
+                    console.error(e);
+                }
             }
-        }
     }
 
     return shellUrl
@@ -869,9 +867,9 @@ window.resolvePreviewShellUrl = function(shellUrl, previewConfig) {
 };
 
 window.renderTemplateWithRuntimeLayout = function(previewIframeEl, templateHtml) {
-        var sourceDoc = resolvePreviewSourceDoc();
-        var parser = new DOMParser();
-        var tplDoc = parser.parseFromString(templateHtml, "text/html");
+        var sourceDoc   = resolvePreviewSourceDoc(),
+            parser      = new DOMParser(),
+            tplDoc      = parser.parseFromString(templateHtml, "text/html");
 
             $(tplDoc).find("link[rel='stylesheet'], style, script").remove();
 
@@ -882,8 +880,8 @@ window.renderTemplateWithRuntimeLayout = function(previewIframeEl, templateHtml)
                 return;
             }
 
-        var pageDoc = parser.parseFromString(sourceDoc.documentElement.outerHTML, "text/html");
-        var dropzoneSelector = ".melis-dragdropzone:first";
+        var pageDoc             = parser.parseFromString(sourceDoc.documentElement.outerHTML, "text/html"),
+            dropzoneSelector    = ".melis-dragdropzone:first";
 
             if (parent.tinymce && parent.tinymce.activeEditor && parent.tinymce.activeEditor.options) {
                 dropzoneSelector = parent.tinymce.activeEditor.options.get("mini_template_dropzone_selector") || dropzoneSelector;
@@ -935,15 +933,15 @@ window.renderTemplateWithSiteShell = function(previewIframeEl, templateHtml, sit
             return;
         }
         if (mode === "standalone") {
-            renderStandaloneMiniTemplatePreview(previewIframeEl, extractTemplateBodyHtml(templateHtml));
+            // pass templateHtml without extractTemplateBodyHtml()
+            renderStandaloneMiniTemplatePreview(previewIframeEl, templateHtml);
             return;
         }
 
-    // auto or site_shell
+    // auto or site_shell, page edition mode
     var sourceDoc = resolvePreviewSourceDoc();
         if (sourceDoc && sourceDoc.documentElement && mode === "auto") {
             renderTemplateWithRuntimeLayout(previewIframeEl, templateHtml);
-
             return;
         }
 
@@ -957,33 +955,34 @@ window.renderTemplateWithSiteShell = function(previewIframeEl, templateHtml, sit
             }).done(function(shellHtml) {
                 renderTemplateWithFetchedShell(previewIframeEl, templateHtml, shellHtml);
             }).fail(function() {
-                // fallback if shell fetch fails
-                renderStandaloneMiniTemplatePreview(previewIframeEl, extractTemplateBodyHtml(templateHtml));
+                // fallback if shell fetch fails, no extractTemplateBodyHtml()
+                renderStandaloneMiniTemplatePreview(previewIframeEl, templateHtml);
             });
             
             return;
         }
-
-    renderStandaloneMiniTemplatePreview(previewIframeEl, extractTemplateBodyHtml(templateHtml));
+    
+    // no extractTemplateBodyHtml()
+    renderStandaloneMiniTemplatePreview(previewIframeEl, templateHtml);
 };
 
 window.renderTemplateWithFetchedShell = function(previewIframeEl, templateHtml, shellHtml) {
-    console.log(`renderTemplateWithFetchedShell() ...`);
-    var parser = new DOMParser();
-    var shellDoc = parser.parseFromString(shellHtml, "text/html");
-    var tplBodyHtml = extractTemplateBodyHtml(templateHtml);
-    var dropzoneSelector = ".melis-dragdropzone:first";
+    var parser              = new DOMParser(),
+        shellDoc            = parser.parseFromString(shellHtml, "text/html"),
+        tplBodyHtml         = extractTemplateBodyHtml(templateHtml),
+        dropzoneSelector    = ".melis-dragdropzone:first";
+
         if (parent.tinymce && parent.tinymce.activeEditor && parent.tinymce.activeEditor.options) {
             dropzoneSelector = parent.tinymce.activeEditor.options.get("mini_template_dropzone_selector") || dropzoneSelector;
         }
         
-    removePreviewEditorArtifacts(shellDoc);   
-    replaceOnlyPreviewDropzone(shellDoc, tplBodyHtml, dropzoneSelector);   
-    ensureHeaderSpacer(shellDoc);   
-    dedupeHeadStyles(shellDoc);    
-    removeTinyMceAndMelisEditorScripts(shellDoc);    
-    moveUniqueScriptsToFooter(shellDoc);    
-    enforcePreviewScrollStyles(shellDoc);
+        removePreviewEditorArtifacts(shellDoc);   
+        replaceOnlyPreviewDropzone(shellDoc, tplBodyHtml, dropzoneSelector);   
+        ensureHeaderSpacer(shellDoc);   
+        dedupeHeadStyles(shellDoc);    
+        removeTinyMceAndMelisEditorScripts(shellDoc);    
+        moveUniqueScriptsToFooter(shellDoc);    
+        enforcePreviewScrollStyles(shellDoc);
 
     var outDoc = previewIframeEl.contentWindow.document;
         outDoc.open();
@@ -1006,98 +1005,99 @@ window.removePreviewEditorArtifacts = function(doc) {
 
 window.ensureHeaderSpacer = function(doc) {
     var $existingSpacer = $(doc).find('div[style*="height: 93px"]').first();
-    if ($existingSpacer.length) {
-        return;
-    }
+        if ($existingSpacer.length) {
+            return;
+        }
 
-    var $header = $(doc).find("header:first");
-    var spacerHtml = '<div style="height: 93px"></div>';
+    var $header     = $(doc).find("header:first"),
+        spacerHtml  = '<div style="height: 93px"></div>';
 
-    if ($header.length) {
-        $(spacerHtml).insertAfter($header);
-    } else {
-        $(doc.body).prepend(spacerHtml);
-    }
+        if ($header.length) {
+            $(spacerHtml).insertAfter($header);
+        } else {
+            $(doc.body).prepend(spacerHtml);
+        }
 };
 
 window.replaceOnlyPreviewDropzone = function(doc, templateBodyHtml, dropzoneSelector) {
     var $targetZone = $(doc).find(dropzoneSelector).first();
-    if (!$targetZone.length) {
-        $targetZone = $(doc).find(".dnd-plugins-content .melis-dragdropzone:first").first();
-    }
-
-    if ($targetZone.length) {
-        $targetZone.removeClass("no-content highlight content-added ui-sortable");
-        $targetZone.removeAttr("data-dragdropzone-id");
-        $targetZone.html('<div class="mini-template-preview-content">' + templateBodyHtml + '</div>');
-    } else {
-        var $header = $(doc).find("header:first");
-        var $footer = $(doc).find("footer:first");
-        var replacementBlock = '<div class="melis-dragdropzone"><div class="mini-template-preview-content">' + templateBodyHtml + '</div></div>';
-        if ($header.length && $footer.length) {
-            $header.nextUntil($footer).remove();
-            $(replacementBlock).insertAfter($header);
-            return;
+        if (!$targetZone.length) {
+            $targetZone = $(doc).find(".dnd-plugins-content .melis-dragdropzone:first").first();
         }
 
-        var $contentTarget = $(doc).find("main:first, #content:first, .page-content:first, .content:first").first();
-        if ($contentTarget.length) {
-            $contentTarget.html(replacementBlock);
+        if ($targetZone.length) {
+            //$targetZone.removeClass("no-content highlight content-added ui-sortable");
+            //$targetZone.removeAttr("data-dragdropzone-id");
+            $targetZone.html('<div class="mini-template-preview-content">' + templateBodyHtml + '</div>');
         } else {
-            $(doc.body).html(replacementBlock);
+            var $header             = $(doc).find("header:first"),
+                $footer             = $(doc).find("footer:first"),
+                replacementBlock    = '<div class="melis-dragdropzone"><div class="mini-template-preview-content">' + templateBodyHtml + '</div></div>';       
+
+                if ($header.length && $footer.length) {
+                    $header.nextUntil($footer).remove();
+                    $(replacementBlock).insertAfter($header);
+                    return;
+                }
+
+            var $contentTarget = $(doc).find("main:first, #content:first, .page-content:first, .content:first").first();
+                if ($contentTarget.length) {
+                    $contentTarget.html(replacementBlock);
+                } else {
+                    $(doc.body).html(replacementBlock);
+                }
         }
-    }
 };
 
 window.dedupeHeadStyles = function(doc) {
     var seenHref = new Set();
-    $(doc.head).find("link[rel='stylesheet']").each(function () {
-        var href = (this.getAttribute("href") || "").trim();
-        if (!href) return;
-        var key = href.split("#")[0];
-        if (seenHref.has(key)) {
-            $(this).remove();
-        } else {
-            seenHref.add(key);
-        }
-    });
+        $(doc.head).find("link[rel='stylesheet']").each(function () {
+            var href = (this.getAttribute("href") || "").trim();
+                if (!href) return;
+            var key = href.split("#")[0];
+                if (seenHref.has(key)) {
+                    $(this).remove();
+                } else {
+                    seenHref.add(key);
+                }
+        });
 };
 
 window.moveUniqueScriptsToFooter = function(doc) {
-    var seenSrc = new Set();
-    var inlineSeen = new Set();
-    var $allScripts = $(doc).find("script");
-    var uniqueScripts = [];
+    var seenSrc         = new Set(),
+        inlineSeen      = new Set(),
+        $allScripts     = $(doc).find("script"),
+        uniqueScripts   = [];
 
-    $allScripts.each(function () {
-        var src = (this.getAttribute("src") || "").trim();
-        if (src) {
-            var key = src.split("#")[0];
-            if (!seenSrc.has(key)) {
-                seenSrc.add(key);
-                uniqueScripts.push(this.cloneNode(true));
-            }
-        } else {
-            var txt = (this.textContent || "").trim();
-            if (txt && !inlineSeen.has(txt)) {
-                inlineSeen.add(txt);
-                uniqueScripts.push(this.cloneNode(true));
-            }
-        }
-    });
+        $allScripts.each(function () {
+            var src = (this.getAttribute("src") || "").trim();
+                if (src) {
+                    var key = src.split("#")[0];
+                        if (!seenSrc.has(key)) {
+                            seenSrc.add(key);
+                            uniqueScripts.push(this.cloneNode(true));
+                        }
+                } else {
+                    var txt = (this.textContent || "").trim();
+                        if (txt && !inlineSeen.has(txt)) {
+                            inlineSeen.add(txt);
+                            uniqueScripts.push(this.cloneNode(true));
+                        }
+                }
+        });
 
-    $allScripts.remove();
+        $allScripts.remove();
 
-    var body = doc.body || doc.documentElement;
-    uniqueScripts.forEach(function (s) { body.appendChild(s); });
+        var body = doc.body || doc.documentElement;
+            uniqueScripts.forEach(function (s) { body.appendChild(s); });
 };
 
 window.removeTinyMceAndMelisEditorScripts = function(doc) {
     $(doc).find("script").each(function () {
-        var scriptId = (this.getAttribute("id") || "").toLowerCase();
-        var src = (this.getAttribute("src") || "").toLowerCase();
-            console.log({src});
-        var txt = (this.textContent || "").toLowerCase();
+        var scriptId    = (this.getAttribute("id") || "").toLowerCase(),
+            src         = (this.getAttribute("src") || "").toLowerCase(),
+            txt         = (this.textContent || "").toLowerCase();
+
             if (
                 scriptId === "jquery-checker" ||
                 src.indexOf("tinymce") !== -1 ||
@@ -1130,24 +1130,24 @@ window.removeTinyMceAndMelisEditorScripts = function(doc) {
 
 window.enforcePreviewScrollStyles = function(doc) {
     var styleId = "mini-template-preview-scroll-style";
-    if ($(doc.head).find("#" + styleId).length) {
-        return;
-    }
+        if ($(doc.head).find("#" + styleId).length) {
+            return;
+        }
 
     var style = doc.createElement("style");
-    style.id = styleId;
-    style.type = "text/css";
-    style.textContent = [
-        "html, body {",
-        "  height: auto !important;",
-        "  min-height: 100% !important;",
-        "  overflow-y: auto !important;",
-        "  overflow-x: hidden !important;",
-        "}",
-        "body {",
-        "  position: static !important;",
-        "}"
-    ].join("\n");
+        style.id = styleId;
+        style.type = "text/css";
+        style.textContent = [
+            "html, body {",
+            "  height: auto !important;",
+            "  min-height: 100% !important;",
+            "  overflow-y: auto !important;",
+            "  overflow-x: hidden !important;",
+            "}",
+            "body {",
+            "  position: static !important;",
+            "}"
+        ].join("\n");
 
-    doc.head.appendChild(style);
+        doc.head.appendChild(style);
 };
