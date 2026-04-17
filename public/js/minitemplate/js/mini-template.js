@@ -117,6 +117,8 @@
     // accordion
     function appendAccordion(data) {
         var $accordion = $("#accordion-mini-template");
+        /* var previewConfig = getPreviewConfig();
+        var fallbackSiteId = previewConfig.site_id || ""; */
             
             // template lists
             for ( var i = 0; i < data.length; i++ ) {
@@ -127,6 +129,7 @@
                     dType           = template.type,
                     dModule         = template.module,
                     dSiteName       = template.site_name,
+                    // dSiteId         = template.site_id || template.siteId || fallbackSiteId,
                     dImageSource    = template.imgSource,
                     dUrl            = template.url,
                     buttons         = '';
@@ -144,6 +147,7 @@
                             "data-parent"     : dParent,
                             "data-type"       : dType,
                             "data-site-name"  : dSiteName,
+                            //"data-site-id"    : dSiteId,
                             "data-url"        : dUrl
                         });
                     }
@@ -156,6 +160,7 @@
                             "class"             : 'mini-template-button category d-none',
                             "data-type"         : dType,
                             "data-site-name"    : dSiteName,
+                            //"data-site-id"      : dSiteId,
                             "data-id"           : dId
                         });
                     }
@@ -233,6 +238,7 @@
                              */
                             $btn.on("click", function(e) {
                                 var $this = $(this);
+                                var type = $this.data("type") || $this.attr("data-type");
 
                                     $this.toggleClass("active").siblings().removeClass("active");
 
@@ -240,7 +246,7 @@
                                      * For the issue on displaying all available mini templates.
                                      * Some button when clicked it closes the accordion
                                      */
-                                    if ( $this.hasClass( 'ui-accordion-header' ) ) {
+                                    if (type !== "mini-template" && $this.hasClass('ui-accordion-header')) {
                                         $this.closest(".site-category").prev(".ui-accordion-header").trigger("click");
                                     }
                             });
@@ -330,16 +336,27 @@
                     
                     // site category
                     if ( siteName != 'undefined' ) {
-                        siteHtml = siteNameHtml( siteName, index );
+                        var siteId = getSiteIdByName($miniTemplateButtons, siteName);
+                        siteHtml = siteNameHtml( siteName, index, siteId );
                         $accordion.prepend( siteHtml );
                     }      
             }
     }
 
+    function getSiteIdByName($miniTemplateButtons, siteName) {
+        var resolvedSiteId = "";
+        $.each($miniTemplateButtons, function(i, v) {
+            var $btn = $(v);
+            if ($btn.data("site-name") === siteName) {
+                resolvedSiteId = $btn.data("site-id") || $btn.attr("data-site-id") || "";
+                return false;
+            }
+        });
+        return resolvedSiteId;
+    }
+
     function appendMainCategoryToSiteCategory( $miniTemplateButtons ) {
-        var $accordion              = $("#accordion-mini-template"),
-            $siteCategory           = $(".site-category"),
-            siteCategorySiteName    = $siteCategory.data('site-name');
+        var $accordion = $("#accordion-mini-template");
 
             var countHashOccurrence = 0,
                 countCategoryOccurrence = 0;
@@ -362,24 +379,48 @@
                 // .main-category
                 if ( countCategoryOccurrence ) {
                     var uniqueSiteNames = getUniqueSiteName( $miniTemplateButtons );
-                        for ( var index = 0; index < uniqueSiteNames.length; index++ ) {
-                            var mainCategorySiteName    = uniqueSiteNames[index],
-                                mainCatHtml             = '';
+                    var uniqueMainCategoryText = getUniqueCategoryText( $miniTemplateButtons );
+                    var ids = uniqueTypeCategoryIds();
 
-                                var uniqueMainCategoryText = getUniqueCategoryText( $miniTemplateButtons );
-                                var ids = uniqueTypeCategoryIds();
-                                    for ( var i = 0; i < ids.length; i++ ) {
-                                        var mainCategoryText = uniqueMainCategoryText[i];
-                                            // categoryId, refer to comment {template lists} template.id
-                                            mainCatHtml = mainCategoryHtml( mainCategoryText, mainCategorySiteName, ids[i], i );
-    
-                                            // append .main-category to the right .site-category
-                                            if ( siteCategorySiteName === mainCategorySiteName ) {
-                                                $accordion.find('.site-category').append( mainCatHtml );
-                                            }
-                                    }
+                    for ( var index = 0; index < uniqueSiteNames.length; index++ ) {
+                        var mainCategorySiteName = uniqueSiteNames[index];
+
+                        for ( var i = 0; i < ids.length; i++ ) {
+                            var mainCategoryText = uniqueMainCategoryText[i];
+                            var categoryId = ids[i];
+
+                            if ( ! categoryHasMiniTemplates($miniTemplateButtons, categoryId, mainCategorySiteName) ) {
+                                continue;
+                            }
+
+                            $accordion.find('.site-category').each(function() {
+                                var $siteCategory = $(this);
+                                if ($siteCategory.data('site-name') === mainCategorySiteName) {
+                                    $siteCategory.append(
+                                        mainCategoryHtml(mainCategoryText, mainCategorySiteName, categoryId, i)
+                                    );
+                                }
+                            });
                         }
+                    }
                 }
+    }
+
+    function categoryHasMiniTemplates($miniTemplateButtons, categoryId, siteName) {
+        var hasMiniTemplates = false;
+            $.each($miniTemplateButtons, function(i, v) {
+                var $button = $(v);
+                if (
+                    $button.data("type") === "mini-template" &&
+                    $button.data("parent") === categoryId &&
+                    $button.data("site-name") === siteName
+                ) {
+                    hasMiniTemplates = true;
+                    return false;
+                }
+            });
+
+        return hasMiniTemplates;
     }
 
     // get the unique data-id of a data-type: category .mini-template-button
@@ -406,20 +447,25 @@
                
                 // preview mini template at first load without clicking of buttons
                 if ( $siteCategory.length ) {
-                    var $mainCategoryBtn = $("#accordion-mini-template > .site-category.ui-accordion-content-active .main-category > .mini-template-button:first-child"),
-                        miniTemplateBtnDataUrl = "";
+                    var $mainCategoryBtn            = $("#accordion-mini-template > .site-category.ui-accordion-content-active .main-category > .mini-template-button:first-child"),
+                        miniTemplateBtnDataUrl      = "",
+                        miniTemplateBtnDataModule   = "";
 
                         // with .main-category
                         if ( $mainCategoryBtn.length ) {
-                            miniTemplateBtnDataUrl = $mainCategoryBtn.data("url");
+                            miniTemplateBtnDataUrl      = $mainCategoryBtn.data("url");
+                            miniTemplateBtnDataModule   = $mainCategoryBtn.data("module");
                         }
                         // no .main-category
                         else {
-                            var $siteCategoryChildBtn = $("#accordion-mini-template > .site-category.ui-accordion-content-active > .mini-template-button:first-child");
-                                miniTemplateBtnDataUrl = $siteCategoryChildBtn.data("url");
+                            var $siteCategoryChildBtn   = $("#accordion-mini-template > .site-category.ui-accordion-content-active > .mini-template-button:first-child");
+                                miniTemplateBtnDataUrl  = $siteCategoryChildBtn.data("url");
+                                miniTemplateBtnDataModule = $siteCategoryChildBtn.data("module");
                         }
 
-                        previewMiniTemplate( miniTemplateBtnDataUrl );
+                        if (miniTemplateBtnDataUrl) {
+                            previewMiniTemplate(miniTemplateBtnDataUrl, miniTemplateBtnDataModule);
+                        }
                 }
                 
                 $.each($miniTemplateButtons, function(i, v) {
@@ -435,27 +481,111 @@
                                 });
                         }
 
-                        $btn.on("click", function() {
-                            previewMiniTemplate( $(this).data("url") );
-                        });
+                        // Ensure template buttons stay interactive after accordion/nicescroll mutations.
+                        $btn.removeClass("ui-state-disabled");
+                        $btn.prop("disabled", false);
+                        $btn.css("pointer-events", "auto");
                 });
+
+                // Delegated handler so all sites/categories (including dynamically moved nodes) are clickable.
+                $("body").off("click.miniTemplatePreview", ".mini-template-button");
+                $("body").on("click.miniTemplatePreview", ".mini-template-button", function(e) {
+                    var $btn = $(this);
+                    var type = $btn.data("type") || $btn.attr("data-type") || "";
+
+                    // Only mini-template items should trigger preview changes.
+                    if (type !== "mini-template") {
+                        return;
+                    }
+
+                    e.preventDefault();
+                    e.stopPropagation();
+                    e.stopImmediatePropagation();
+
+                    var url         = $btn.data("url") || $btn.attr("data-url") || "",
+                        siteModule  = $btn.data("module") || $btn.attr("data-module") || "";
+                        if (url) {
+                            previewMiniTemplate(url, siteModule);
+                        }
+                });
+
+                // Hard-stop accordion from toggling when selecting real mini-template buttons.
+                $("#accordion-mini-template")
+                    .off("mousedown.miniTemplatePreview mouseup.miniTemplatePreview click.miniTemplatePreview", ".mini-template-button[data-type='mini-template']")
+                    .on("mousedown.miniTemplatePreview mouseup.miniTemplatePreview click.miniTemplatePreview", ".mini-template-button[data-type='mini-template']", function(e) {
+                        e.stopPropagation();
+                        if (e.type === "click") {
+                            var $btn = $(this);
+                            var url         = $btn.data("url") || $btn.attr("data-url") || "",
+                                siteModule  = $btn.data("module") || $btn.attr("data-module") || "";
+                                if (url) {
+                                    previewMiniTemplate(url, siteModule);
+                                }
+                            e.preventDefault();
+                            e.stopImmediatePropagation();
+                        }
+                    });
         }, 1000);
     }
 
     // displays mini template in iframe
-    function previewMiniTemplate(url) {
+    function previewMiniTemplate(url, siteModule) {
         var $preview    = $("#preview-mini-template"),
             $prevIframe = $preview.find(".preview-iframe");
 
-            if ( $prevIframe.length ) {
-                $prevIframe.attr("src", url);
-
-                // melis-demo-cms or melis-demo-commerce
-                insertDemoMiniTemplateCss();
+            if (!$prevIframe.length || !url) {
+                return;
             }
+
+            $.ajax({
+                type: "GET",
+                url: url,
+                dataType: "html",
+                cache: false
+            })
+            .done(function(templateHtml) {
+                var site_module = siteModule ? siteModule : (getPreviewConfig().site_module || null);
+                    if (site_module) {
+                        renderTemplateWithSiteShell($prevIframe[0], templateHtml, site_module);
+                    } else {
+                        renderTemplateWithSiteShell($prevIframe[0], templateHtml);
+                    }
+            })
+            .fail(function() {
+                alert(parent.translations.tr_meliscore_error_message);
+            });
     }
 
-    // insertion of melis-demo-cms mini template css in iframe head
+    function getPreviewMode() {
+        return parent.tinymce.activeEditor.options.get("mini_template_preview_mode") || "auto";
+    }
+
+    function getActivePageEditionIframe() {
+        return window.parent.$("#" + parent.activeTabId).find(".melis-iframe").first();
+    }
+
+    function setupPreviewViewport() {
+        var $preview = $("#preview-mini-template");
+        var $iframe = $preview.find(".preview-iframe");
+
+        // keep preview usable for long pages/templates inside the TinyMCE dialog.
+        $preview.css({
+            "height": "85vh", // 70
+            "min-height": "420px",
+            "overflow": "auto"
+        });
+
+        $iframe.css({
+            "width": "100%",
+            "height": "100%",
+            "display": "block",
+            "overflow": "auto"
+        });
+
+        $iframe.attr("scrolling", "yes");
+    }
+
+    // insertion of melis-demo-cms mini template css in iframe head, disabled for now
     function insertDemoMiniTemplateCss() {
         setTimeout(function() {
             // https://mantis2.uat.melistechnology.fr/view.php?id=6103, detect if melis-demo-cms or melis-demo-commerce css files will be inserted on the preview iframe
@@ -515,9 +645,9 @@
         }, 1000);
     }
 
-    function siteNameHtml( siteName, index ) {
-        return '<h3>'+ siteName +'</h3>' +
-                '<div id="site-category-'+index+'" class="site-category accordion" data-site-name="'+ siteName +'"></div>';
+    function siteNameHtml( siteName, index, siteId ) {
+        return '<h3 data-site-id="'+ siteId +'">'+ siteName +'</h3>' +
+                '<div id="site-category-'+index+'" class="site-category accordion" data-site-name="'+ siteName +'" data-site-id="'+ siteId +'"></div>';
     }
 
     function mainCategoryHtml( mainCategoryText, mainCategorySiteName, mainCategoryId, index ) {
@@ -539,23 +669,6 @@
                 classList           = $btn.attr('class').split(/\s+/); // i
 
                 /**
-                 * Loop through the class lists and compare with classes to be removed
-                 */
-                /*  for ( var i = 0; i < classList.length; i++ ) {
-                    for ( var j = 0; j < classesToRemoved.length; j++ ) {
-                    if ( classList[i] == classesToRemoved[j] ) {
-                        $elem.removeClass( classList[i] ); */
-                        /**
-                         * Replace with classes to add
-                         */
-                        /* for ( var k = 0; k < classesToAdd.length; k++ ) {
-                        $elem.addClass( classesToAdd[k] );
-                        } */
-                    /* }
-                    }
-                } */
-
-                /**
                  * Remove this not needed element added by jquery ui accordion.
                  * <span class="ui-accordion-header-icon ui-icon fa fa-arrow-circle-right"></span>
                  */
@@ -566,6 +679,7 @@
                  */
                 $btn.on("click", function(e) {
                     var $this = $(this);
+                    var type = $this.data("type") || $this.attr("data-type");
 
                         $this.toggleClass("active").siblings().removeClass("active");
 
@@ -573,7 +687,7 @@
                          * For the issue on displaying all available mini templates.
                          * Some button when clicked it closes the accordion
                          */
-                        if ( $this.hasClass( 'ui-accordion-header' ) ) {
+                        if (type !== "mini-template" && $this.hasClass('ui-accordion-header')) {
                             $this.closest(".site-category").prev(".ui-accordion-header").trigger("click");
                         }
                 });
@@ -582,22 +696,37 @@
 
     // Insert html content mini template into tinymce editor
     function insertMiniTemplate() {
-        var miniTemplate = $("#preview-mini-template iframe").contents().find("body")[0].innerHTML;
-            if ( miniTemplate ) {
-                parent.tinymce.activeEditor.insertContent(miniTemplate);
+        var $iframeDoc      = $("#preview-mini-template iframe").contents(),
+            miniTemplate    = "",
+            $previewContent = $iframeDoc.find(".mini-template-preview-content").first();
+
+        if ($previewContent.length) {
+            miniTemplate = $previewContent.html();
+        } else {
+            // Fallback for older preview markup
+            var bodyEl = $iframeDoc.find("body")[0];
+                miniTemplate = bodyEl ? bodyEl.innerHTML : "";
+        }
+
+        if (miniTemplate) {
+            if (parent.tinymce && parent.tinymce.activeEditor) {
+                parent.tinymce.activeEditor.focus();
+                if (
+                    parent.tinymce.activeEditor.__miniTemplateBookmark &&
+                    parent.tinymce.activeEditor.selection &&
+                    typeof parent.tinymce.activeEditor.selection.moveToBookmark === "function"
+                ) {
+                    try {
+                        parent.tinymce.activeEditor.selection.moveToBookmark(parent.tinymce.activeEditor.__miniTemplateBookmark);
+                    } catch (e) {
+                        console.error(e);
+                    }
+                }
             }
-            parent.tinymce.activeEditor.windowManager.close();
+            parent.tinymce.activeEditor.insertContent(miniTemplate);
+        }
+        parent.tinymce.activeEditor.windowManager.close();
     }
-
-    // initialize
-    /* function initIframe() {
-        var $iframe = $("#preview-mini-template iframe");
-
-            // insertion of melis-demo-cms mini template css in iframe head
-            if ( $iframe.length ) {
-                insertMelisDemoCmsMiniTemplateCss();
-            }
-    } */
 
     /**
      * Init template with mustach
@@ -611,6 +740,7 @@
         // Use jQuery's get method to retrieve the contents of our template file, then render the template.
         $.get("view/content-section.html", function(template) {
             $("#template-container").append(Mustache.render(template, data));
+            setupPreviewViewport();
 
             processAjax();
 
@@ -622,3 +752,402 @@
         });
     });
 }(jQuery));
+
+window.extractTemplateBodyHtml = function(templateHtml) {
+    var parser = new DOMParser(),
+        tplDoc = parser.parseFromString(templateHtml, "text/html");
+
+        $(tplDoc).find("link[rel='stylesheet'], style, script").remove();
+    
+        return tplDoc.body ? tplDoc.body.innerHTML : templateHtml;
+};
+
+window.resolvePreviewSourceDoc = function() {
+    var isTextareaMode = false;
+
+        // 1) page edition mode (iframe in active tab)
+        try {
+            if (window.parent && parent.activeTabId && window.parent.$) {
+                var $frame = window.parent.$("#" + parent.activeTabId).find(".melis-iframe").first();
+                    if ($frame.length && $frame[0].contentDocument) {
+                        return $frame[0].contentDocument;
+                    }
+            }
+        } catch (e) {
+            console.error(e);
+        }
+
+        // 2) tinyMCE textarea/tool mode (inline false)
+        try {
+            if (window.parent && parent.tinymce && parent.tinymce.activeEditor) {
+                if (parent.tinymce.activeEditor.inline === false) {
+                    isTextareaMode = true;
+                    return null;
+                }
+
+                if (typeof parent.tinymce.activeEditor.getDoc === "function") {
+                    var editorDoc = parent.tinymce.activeEditor.getDoc();
+                        if (editorDoc && editorDoc.documentElement) {
+                            return editorDoc;
+                        }
+                }
+            }
+        } catch (e) {
+            console.error(e);
+        }
+
+        // Prevent preview leakage from parent textarea/document context.
+        if (isTextareaMode) {
+            return null;
+        }
+
+        // 3) last fallback: parent document
+        try {
+            if (window.parent && window.parent.document && window.parent.document.documentElement) {
+                return window.parent.document;
+            }
+        } catch (e) {
+            console.error(e);
+        }
+
+        return null;
+};
+
+window.renderStandaloneMiniTemplatePreview = function(previewIframeEl, templateBodyHtml) {
+    var outDoc = previewIframeEl.contentWindow.document;
+    var standaloneHtml = [
+        "<!DOCTYPE html>",
+        "<html>",
+        "<head>",
+        '<meta charset="utf-8">',
+        '<meta name="viewport" content="width=device-width, initial-scale=1.0">',
+        "<style>",
+        "html, body { height: auto; min-height: 100%; overflow-y: auto; overflow-x: hidden; margin: 0; padding: 0; background: #fff; }",
+        "body { padding: 1rem; box-sizing: border-box; }",
+        ".mini-template-preview-content { width: 100%; }",
+        "img { max-width: 100%; height: auto; }",
+        "</style>",
+        "</head>",
+        "<body>",
+        '<div class="mini-template-preview-content">' + templateBodyHtml + "</div>",
+        "</body>",
+        "</html>"
+    ].join("");
+
+    outDoc.open();
+    outDoc.write(standaloneHtml);
+    outDoc.close();
+};
+
+window.resolvePreviewShellUrl = function(shellUrl, previewConfig) {
+    if (!shellUrl) {
+        return "";
+    }
+
+    var resolvedSiteId      = previewConfig.site_id || "",
+        resolvedSiteModule  = previewConfig.site_module || "";
+
+    // Fallback: infer siteId from mini_templates_url query string if not provided in config.
+    if (!resolvedSiteId && parent.tinymce && parent.tinymce.activeEditor && parent.tinymce.activeEditor.options) {
+        var tinyTemplatesUrl = parent.tinymce.activeEditor.options.get("mini_templates_url") || "";
+            if (tinyTemplatesUrl && tinyTemplatesUrl.indexOf("?") !== -1) {
+                try {
+                    var query  = tinyTemplatesUrl.split("?")[1] || "",
+                        params = new URLSearchParams(query);
+                        resolvedSiteId = params.get("siteId") || "";
+                } catch (e) {
+                    console.error(e);
+                }
+            }
+    }
+
+    return shellUrl
+        .replace("{siteId}", resolvedSiteId)
+        .replace("{siteModule}", resolvedSiteModule);
+};
+
+window.renderTemplateWithRuntimeLayout = function(previewIframeEl, templateHtml) {
+        var sourceDoc   = resolvePreviewSourceDoc(),
+            parser      = new DOMParser(),
+            tplDoc      = parser.parseFromString(templateHtml, "text/html");
+
+            $(tplDoc).find("link[rel='stylesheet'], style, script").remove();
+
+        var tplBodyHtml = tplDoc.body ? tplDoc.body.innerHTML : templateHtml;
+
+            if (!sourceDoc || !sourceDoc.documentElement) {
+                renderStandaloneMiniTemplatePreview(previewIframeEl, tplBodyHtml);
+                return;
+            }
+
+        var pageDoc             = parser.parseFromString(sourceDoc.documentElement.outerHTML, "text/html"),
+            dropzoneSelector    = ".melis-dragdropzone:first";
+
+            if (parent.tinymce && parent.tinymce.activeEditor && parent.tinymce.activeEditor.options) {
+                dropzoneSelector = parent.tinymce.activeEditor.options.get("mini_template_dropzone_selector") || dropzoneSelector;
+            }
+
+            removePreviewEditorArtifacts(pageDoc);           
+            replaceOnlyPreviewDropzone(pageDoc, tplBodyHtml, dropzoneSelector);           
+            ensureHeaderSpacer(pageDoc);            
+            dedupeHeadStyles(pageDoc);          
+            removeTinyMceAndMelisEditorScripts(pageDoc);           
+            moveUniqueScriptsToFooter(pageDoc);
+            enforcePreviewScrollStyles(pageDoc);           
+
+        var outDoc = previewIframeEl.contentWindow.document;
+            outDoc.open();
+            outDoc.write("<!DOCTYPE html>\n" + pageDoc.documentElement.outerHTML);
+            outDoc.close();
+};
+
+window.getPreviewConfig = function() {
+    var miniTemplateConfig      = {},
+        editorOptions           = null,
+        siteModuleFromButton    = null;
+
+        if (parent.tinymce && parent.tinymce.activeEditor && parent.tinymce.activeEditor.options) {
+            editorOptions = parent.tinymce.activeEditor.options;
+            miniTemplateConfig = editorOptions.get("melis_minitemplate") || {};
+        }
+
+        siteModuleFromButton = $("#accordion-mini-template .mini-template-button.active[data-type='mini-template']").first().data("module") ||
+            $("#accordion-mini-template .mini-template-button[data-type='mini-template']").first().data("module") ||
+            null;
+
+        return {
+            preview_mode: editorOptions ? (editorOptions.get("mini_template_preview_mode") || "auto") : "auto",
+            preview_shell_url: editorOptions ? (editorOptions.get("mini_template_preview_shell_url") || "") : "",
+            site_module: editorOptions ? (editorOptions.get("mini_template_site_module") || siteModuleFromButton) : siteModuleFromButton,
+            site_id: miniTemplateConfig.site_id || null
+        };
+};
+
+window.renderTemplateWithSiteShell = function(previewIframeEl, templateHtml, siteModule = null) {
+    var previewConfig   = getPreviewConfig(),
+        mode            = previewConfig.preview_mode || "auto",
+        shellUrl        = resolvePreviewShellUrl(previewConfig.preview_shell_url || "", previewConfig);
+
+        if (mode === "page_layout") {
+            renderTemplateWithRuntimeLayout(previewIframeEl, templateHtml);
+            return;
+        }
+        if (mode === "standalone") {
+            // pass templateHtml without extractTemplateBodyHtml()
+            renderStandaloneMiniTemplatePreview(previewIframeEl, templateHtml);
+            return;
+        }
+
+    // auto or site_shell, page edition mode
+    var sourceDoc = resolvePreviewSourceDoc();
+        if (sourceDoc && sourceDoc.documentElement && mode === "auto") {
+            renderTemplateWithRuntimeLayout(previewIframeEl, templateHtml);
+            return;
+        }
+
+        if (shellUrl) {
+            $.ajax({
+                type: "GET",
+                url: shellUrl,
+                dataType: "html",
+                data: {siteModule: siteModule},
+                cache: false
+            }).done(function(shellHtml) {
+                renderTemplateWithFetchedShell(previewIframeEl, templateHtml, shellHtml);
+            }).fail(function() {
+                // fallback if shell fetch fails, no extractTemplateBodyHtml()
+                renderStandaloneMiniTemplatePreview(previewIframeEl, templateHtml);
+            });
+            
+            return;
+        }
+    
+    // no extractTemplateBodyHtml()
+    renderStandaloneMiniTemplatePreview(previewIframeEl, templateHtml);
+};
+
+window.renderTemplateWithFetchedShell = function(previewIframeEl, templateHtml, shellHtml) {
+    var parser              = new DOMParser(),
+        shellDoc            = parser.parseFromString(shellHtml, "text/html"),
+        tplBodyHtml         = extractTemplateBodyHtml(templateHtml),
+        dropzoneSelector    = ".melis-dragdropzone:first";
+
+        if (parent.tinymce && parent.tinymce.activeEditor && parent.tinymce.activeEditor.options) {
+            dropzoneSelector = parent.tinymce.activeEditor.options.get("mini_template_dropzone_selector") || dropzoneSelector;
+        }
+        
+        removePreviewEditorArtifacts(shellDoc);   
+        replaceOnlyPreviewDropzone(shellDoc, tplBodyHtml, dropzoneSelector);   
+        ensureHeaderSpacer(shellDoc);   
+        dedupeHeadStyles(shellDoc);    
+        removeTinyMceAndMelisEditorScripts(shellDoc);    
+        moveUniqueScriptsToFooter(shellDoc);    
+        enforcePreviewScrollStyles(shellDoc);
+
+    var outDoc = previewIframeEl.contentWindow.document;
+        outDoc.open();
+        outDoc.write("<!DOCTYPE html>\n" + shellDoc.documentElement.outerHTML);
+        outDoc.close();
+};
+
+// remove preview editor artifacts
+window.removePreviewEditorArtifacts = function(doc) {
+    $(doc).find(".melis-plugin-tools-box, .m-plugin-sub-tools, .tox, .tox-tinymce-aux, .mce-tinymce").remove();
+    $(doc).find(".melis-cms-dnd-box, #cmsPluginsMenuContent, #melisPluginBtn").remove();
+    $(doc).find("textarea.tool-editable-selector, textarea.html-editable-selector").removeClass("tool-editable-selector html-editable-selector");
+    $(doc).find("[contenteditable='true']").removeAttr("contenteditable");
+
+    // remove editor classes
+    $(doc).find(".melis-ui-outlined").removeClass("melis-ui-outlined");
+    $(doc).find(".melis-plugin-indicator").remove();
+    $(doc).find(".html-editable, .melis-editable").removeClass("html-editable, melis-editable");
+};
+
+window.ensureHeaderSpacer = function(doc) {
+    var $existingSpacer = $(doc).find('div[style*="height: 93px"]').first();
+        if ($existingSpacer.length) {
+            return;
+        }
+
+    var $header     = $(doc).find("header:first"),
+        spacerHtml  = '<div style="height: 93px"></div>';
+
+        if ($header.length) {
+            $(spacerHtml).insertAfter($header);
+        } else {
+            $(doc.body).prepend(spacerHtml);
+        }
+};
+
+window.replaceOnlyPreviewDropzone = function(doc, templateBodyHtml, dropzoneSelector) {
+    var $targetZone = $(doc).find(dropzoneSelector).first();
+        if (!$targetZone.length) {
+            $targetZone = $(doc).find(".dnd-plugins-content .melis-dragdropzone:first").first();
+        }
+
+        if ($targetZone.length) {
+            //$targetZone.removeClass("no-content highlight content-added ui-sortable");
+            //$targetZone.removeAttr("data-dragdropzone-id");
+            $targetZone.html('<div class="mini-template-preview-content">' + templateBodyHtml + '</div>');
+        } else {
+            var $header             = $(doc).find("header:first"),
+                $footer             = $(doc).find("footer:first"),
+                replacementBlock    = '<div class="melis-dragdropzone"><div class="mini-template-preview-content">' + templateBodyHtml + '</div></div>';       
+
+                if ($header.length && $footer.length) {
+                    $header.nextUntil($footer).remove();
+                    $(replacementBlock).insertAfter($header);
+                    return;
+                }
+
+            var $contentTarget = $(doc).find("main:first, #content:first, .page-content:first, .content:first").first();
+                if ($contentTarget.length) {
+                    $contentTarget.html(replacementBlock);
+                } else {
+                    $(doc.body).html(replacementBlock);
+                }
+        }
+};
+
+window.dedupeHeadStyles = function(doc) {
+    var seenHref = new Set();
+        $(doc.head).find("link[rel='stylesheet']").each(function () {
+            var href = (this.getAttribute("href") || "").trim();
+                if (!href) return;
+            var key = href.split("#")[0];
+                if (seenHref.has(key)) {
+                    $(this).remove();
+                } else {
+                    seenHref.add(key);
+                }
+        });
+};
+
+window.moveUniqueScriptsToFooter = function(doc) {
+    var seenSrc         = new Set(),
+        inlineSeen      = new Set(),
+        $allScripts     = $(doc).find("script"),
+        uniqueScripts   = [];
+
+        $allScripts.each(function () {
+            var src = (this.getAttribute("src") || "").trim();
+                if (src) {
+                    var key = src.split("#")[0];
+                        if (!seenSrc.has(key)) {
+                            seenSrc.add(key);
+                            uniqueScripts.push(this.cloneNode(true));
+                        }
+                } else {
+                    var txt = (this.textContent || "").trim();
+                        if (txt && !inlineSeen.has(txt)) {
+                            inlineSeen.add(txt);
+                            uniqueScripts.push(this.cloneNode(true));
+                        }
+                }
+        });
+
+        $allScripts.remove();
+
+        var body = doc.body || doc.documentElement;
+            uniqueScripts.forEach(function (s) { body.appendChild(s); });
+};
+
+window.removeTinyMceAndMelisEditorScripts = function(doc) {
+    $(doc).find("script").each(function () {
+        var scriptId    = (this.getAttribute("id") || "").toLowerCase(),
+            src         = (this.getAttribute("src") || "").toLowerCase(),
+            txt         = (this.textContent || "").toLowerCase();
+
+            if (
+                scriptId === "jquery-checker" ||
+                src.indexOf("tinymce") !== -1 ||
+                src.indexOf("melistinymce") !== -1 ||
+                src.indexOf("melis-tinymce") !== -1 ||
+                src.indexOf("/meliscore/js/tinymce/") !== -1 ||
+                src.indexOf("/melisfront/plugins/js/") !== -1 ||
+                src.indexOf("/meliscms/") !== -1 ||
+                src.indexOf("dragndrop") !== -1 ||
+                src.indexOf("findpage.tool.js") !== -1 ||
+                src.indexOf("plugins.edition.js") !== -1 ||
+                src.indexOf("front.pagelock.js") !== -1 ||
+                src.indexOf("plugin.melisdragdropzone.js") !== -1 ||
+                src.indexOf("plugin.melistagHTML.init.js") !== -1 ||
+                src.indexOf("plugin.cmsslider.init.js") !== -1 ||
+                src.indexOf("plugin.melisgdprbanner.init.js") !== -1 ||
+                src.indexOf("plugin.related.data.js") !== -1 ||
+                txt.indexOf("tinymce.init") !== -1 ||
+                txt.indexOf("melistinymce") !== -1 ||
+                txt.indexOf("melis_tinymce") !== -1 ||
+                txt.indexOf("/meliscore/js/tinymce/") !== -1 ||
+                txt.indexOf("/melisfront/plugins/js/") !== -1 ||
+                txt.indexOf("melisdragdropzone") !== -1 ||
+                txt.indexOf("melispluginedition") !== -1
+            ) {
+                $(this).remove();
+            }
+    });
+};
+
+window.enforcePreviewScrollStyles = function(doc) {
+    var styleId = "mini-template-preview-scroll-style";
+        if ($(doc.head).find("#" + styleId).length) {
+            return;
+        }
+
+    var style = doc.createElement("style");
+        style.id = styleId;
+        style.type = "text/css";
+        style.textContent = [
+            "html, body {",
+            "  height: auto !important;",
+            "  min-height: 100% !important;",
+            "  overflow-y: auto !important;",
+            "  overflow-x: hidden !important;",
+            "}",
+            "body {",
+            "  position: static !important;",
+            "}"
+        ].join("\n");
+
+        doc.head.appendChild(style);
+};

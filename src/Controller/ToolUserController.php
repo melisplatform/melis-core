@@ -1212,6 +1212,7 @@ class ToolUserController extends MelisAbstractActionController
                     foreach ($userTable->getEntryById($userId) as $user) {
                         $userInfo = [
                             'usr_login' => $user->usr_login,
+                            'usr_status' => $user->usr_status,
                             'usr_password' => $user->usr_password,
                             'usr_lang_id' => $user->usr_lang_id,
                             'usr_rights' => $user->usr_rights,
@@ -1402,6 +1403,16 @@ class ToolUserController extends MelisAbstractActionController
                             }
 
                             $userTable->save($data, $userId);
+
+                            if ((int) $userInfo['usr_status'] === 0 && (int) $data['usr_status'] === 1) {
+                                $this->getEventManager()->trigger('meliscore_login_attempt_end', $this, [
+                                    'success' => true,
+                                    'textTitle' => 'Account unlocked',
+                                    'textMessage' => 'Account unlocked',
+                                    'typeCode' => 'ACCOUNT_UNLOCKED',
+                                    'itemId' => $userId,
+                                ]);
+                            }
 
                             $isMyInfo = false;
                             $loadProfile = null;
