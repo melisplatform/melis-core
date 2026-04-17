@@ -14,10 +14,14 @@ var themeSwitcher = (function($) {
         currentUiStyle          = 'flat',
         uiStorageKey            = 'preferred-ui-style',
         themeControlsObserver   = null,
-        themeControlsPollId     = null;
+        themeControlsPollId     = null,
+        isInitialized           = false;
 
         // private methods
         function init() {
+            if (isInitialized) return;
+            isInitialized = true;
+
             loadSavedTheme(); // theme
             loadSavedUiStyle(); // ui style
             setupEventListeners();
@@ -36,18 +40,6 @@ var themeSwitcher = (function($) {
         }
 
         function setupEventListeners() {
-            // theme option clicks (delegated for dynamically injected markup)
-            $(document).on('click', '#color-themes .theme-option', function(e) {
-                e.preventDefault();
-
-                var theme = $(this).data("theme");
-                    themeSwitcher.setTheme(theme);
-                    themeSwitcher.toggleTheme;
-
-                    setTheme(theme);
-                    saveTheme(theme);
-            });
-
             // ui style handler
             $(document).on('click', '#ui-style .theme-option', function(e) {
                 e.preventDefault();

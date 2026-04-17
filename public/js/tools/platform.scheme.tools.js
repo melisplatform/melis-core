@@ -183,19 +183,6 @@ $(function() {
             //rangeDecimalSlider.setRangeDecimalSlider();
         });
 
-        // theme switcher
-        const initializeThemeSwitcher = function() {
-            if (window.themeSwitcher && typeof window.themeSwitcher.init === "function") {
-                window.themeSwitcher.init();
-            } else {
-                console.warn("themeSwitcher is not yet available when DOM is ready");
-            }
-        };
-
-        // defer execution to make sure the module definition (located later in this file)
-        // has finished evaluating even when this ready callback runs synchronously
-        setTimeout(initializeThemeSwitcher, 0);
-
         // helper to sync card selection with the current theme
         const syncThemeCardsWithCurrentTheme = function () {
             let theme = 'default';
@@ -211,8 +198,6 @@ $(function() {
             let cardTheme;
             if (theme === 'dark') {
                 cardTheme = 'dark';
-            } else if (theme === 'custom') {
-                cardTheme = 'custom';
             } else {
                 cardTheme = 'default';
             }
@@ -223,12 +208,8 @@ $(function() {
             const $activeCard = $options.filter('[data-theme="' + cardTheme + '"]');
             $activeCard.addClass('active');
 
-            // show/hide custom controls
-            if (cardTheme === 'custom') {
-                $activeCard.find('.custom-theme-controls').removeClass('d-none');
-            } else {
-                $('#color-themes .custom-theme-controls').addClass('d-none');
-            }
+            // two-theme setup only (default/dark)
+            $('#color-themes .custom-theme-controls').addClass('d-none');
         };
 
         // give themeSwitcher a moment to apply the saved theme, then sync the cards
@@ -259,35 +240,20 @@ $(function() {
             }
         }); */
 
-        // handle clicks on the Default / Dark / Custom cards
+        // handle clicks on the Default / Dark cards
         $body.on("click", "#color-themes .theme-option", function (e) {
             e.preventDefault();
 
             const $option = $(this);
             const cardTheme = $option.data('theme'); // "default" | "dark"
-            let theme;
-
-            // map card values to themeSwitcher values
-            if (cardTheme === "default") {
-                theme = "default"; // your current default in themeSwitcher
-            } else if (cardTheme === "dark") {
-                theme = "dark";
-            } /* else if (cardTheme === "custom") {
-                theme = "custom"; // only if you've added "custom" support in themeSwitcher
-            } else */ {
-                theme = "default";
-            }
+            const theme = cardTheme === "dark" ? "dark" : "default";
 
             // visually highlight the selected card
             $("#color-themes .theme-option").removeClass("active");
             $option.addClass("active");
 
-            // show/hide custom color controls
-            /* if (cardTheme === "custom") {
-                $option.closest("#color-themes").find(".custom-theme-controls").removeClass("d-none");
-            } else {
-                $("#color-themes .custom-theme-controls").addClass("d-none");
-            } */
+            // two-theme setup only (default/dark)
+            $("#color-themes .custom-theme-controls").addClass("d-none");
 
             // call the existing theme switcher
             if (window.themeSwitcher && typeof window.themeSwitcher.setTheme === "function") {
