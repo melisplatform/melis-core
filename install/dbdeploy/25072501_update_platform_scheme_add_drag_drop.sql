@@ -1,11 +1,11 @@
 ALTER TABLE `melis_core_platform_scheme` ADD `pscheme_drag_drop` TEXT NULL AFTER `pscheme_datepicker`;
 
 UPDATE `melis_core_platform_scheme` SET `pscheme_drag_drop` = '{"melis_core_platform_theme_dnd_plugins_box_bg_color": "#373737", 
-        "melis_core_platform_theme_dnd_plugins_box_border_width": "12", 
+        "melis_core_platform_theme_dnd_plugins_box_border_width": "4", 
         "melis_core_platform_theme_dnd_plugins_box_border_bottom_and_left_color": "#e61c23", 
         "melis_core_platform_theme_dnd_plugins_box_title_bg_color": "#e61c23", 
         "melis_core_platform_theme_dnd_plugins_box_title_text_color": "#fff", 
-        "melis_core_platform_theme_dnd_plugins_box_title_line_height": "12", 
+        "melis_core_platform_theme_dnd_plugins_box_title_line_height": "47", 
         "melis_core_platform_theme_dnd_plugins_box_title_text_font_styles": "", 
         "melis_core_platform_theme_dnd_plugins_box_title_letter_spacing": "0", 
         "melis_core_platform_theme_dnd_plugins_box_title_text_align": "center", 

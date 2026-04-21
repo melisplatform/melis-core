@@ -27,6 +27,8 @@ var themeSwitcher = (function($) {
             setupEventListeners();
             ensureThemeControlsState();
             watchThemeControls();
+            
+            startIframeStartupSync();
         }
 
         function loadSavedTheme() {
@@ -47,6 +49,37 @@ var themeSwitcher = (function($) {
                 var style = $(this).data("style");
                     setUiStyle(style);
                     saveUiStyle(style);
+            });
+
+            // keep page-edition iframe in sync with selected theme
+            bindPageEditionIframeLoadListeners();
+
+            // page opener trigger from nav menu
+            $(document).on("click", "#melis-id-nav-bar-tabs [data-tool-meliskey='meliscms_page'] .tab-element", function () {
+                // bind the load listeners to the page edition iframes
+                bindPageEditionIframeLoadListeners();
+            });
+
+            // tabs are created/updated dynamically; only rebind on page-edition related tabs
+            $(document).on("shown.bs.tab", "a[data-bs-toggle='tab']", function (e) {
+                var $tab = $(e.target),
+                    targetSelector = $tab.attr("href"),
+                    isPageTabTrigger = $tab.closest("[data-tool-meliskey='meliscms_page']").length > 0,
+                    isPageTabPane = false;
+
+                    if (targetSelector && targetSelector.charAt(0) === "#") {
+                        var $targetPane = $(targetSelector);
+                        isPageTabPane =
+                            $targetPane.is('[data-meliskey="meliscms_page"]') ||
+                            $targetPane.find('[data-meliskey="meliscms_page"], .meliscms-page-tab-edition, .melis-iframe').length > 0;
+                    }
+
+                    if (!isPageTabTrigger && !isPageTabPane) {
+                        return;
+                    }
+
+                    // bind the load listeners to the page edition iframes
+                    bindPageEditionIframeLoadListeners();
             });
         }
 
@@ -95,6 +128,9 @@ var themeSwitcher = (function($) {
             } else {
                 $targets.removeClass('rounded').addClass('flat');
             }
+
+            // apply the ui style to the page edition iframe
+            applyUiStyleToPageEditionIframe(style);
         }
         
         function updateUiStyleUI() {
@@ -135,9 +171,216 @@ var themeSwitcher = (function($) {
                 $defaultTheme.prop('disabled', false); // default
                 $darkTheme.prop('disabled', true);
             }
+
+            applyThemeToPageEditionIframe(theme);
             
             // trigger custom event for other components
             $(document).trigger('themeChanged', [theme]);
+        }
+
+        // apply the theme to the page edition iframe
+        function applyThemeToPageEditionIframe(theme, iframeEl) {
+            var $iframes = getPageEditionIframes(iframeEl);
+                if (!$iframes.length) {
+                    return;
+                }
+                //console.log('applyThemeToPageEditionIframe() $iframes: ', $iframes);
+                $iframes.each(function() {
+                    var iframe = this,
+                        iframeDoc = iframe && iframe.contentDocument;
+                        //console.log('applyThemeToPageEditionIframe() iframeDoc: ', iframeDoc);
+                        if (!iframeDoc) {
+                            return;
+                        }
+
+                        try {
+                            ensureThemeStylesheetsInIframe(iframeDoc);
+
+                            var $iframeDefaultTheme = $(iframeDoc).find('#default-theme'),
+                                $iframeDarkTheme = $(iframeDoc).find('#dark-theme'),
+                                $iframeHtml = $(iframeDoc.documentElement),
+                                $iframeBody = $(iframeDoc.body);
+
+                                $iframeHtml.removeAttr('data-bs-theme').attr('data-theme', theme);
+                                $iframeBody.attr('data-theme', theme);
+
+                                if (theme === 'dark') {
+                                    $iframeDefaultTheme.prop('disabled', true);
+                                    $iframeDarkTheme.prop('disabled', false);
+                                } else {
+                                    $iframeDefaultTheme.prop('disabled', false);
+                                    $iframeDarkTheme.prop('disabled', true);
+                                }
+
+                                $(iframeDoc).trigger('themeChanged', [theme]);
+                        } catch (e) {
+                            // ignore cross-origin or not-ready iframe documents
+                        }
+                });
+        }
+
+        // apply the ui style to the page edition iframe
+        function applyUiStyleToPageEditionIframe(style, iframeEl) {
+            var uiStyle = (style || currentUiStyle || 'flat').toString().toLowerCase(),
+                $iframes = getPageEditionIframes(iframeEl);
+                if (!$iframes.length) {
+                    return;
+                }
+
+                $iframes.each(function() {
+                    var iframe = this,
+                        iframeDoc = iframe && iframe.contentDocument;
+                        if (!iframeDoc) {
+                            return;
+                        }
+
+                        try {
+                            var $iframeHtml = $(iframeDoc.documentElement),
+                                $targets = $(iframeDoc).find(
+                                    '.widget, .panel, .card, .modal-content, .sidebar, .dropdown-menu, .table,' +
+                                    '.panel-heading, .panel-body, .card-header, .card-body, .form-control, .input-group-text,' +
+                                    '.btn, .list-group-item, .well, .nav-link, .dropdown-item, .modal-header, .modal-body, .modal-footer,' +
+                                    'input:not(.theme-radio), select, textarea,' +
+                                    '.melis-dragdrop-zone, .melis-dragdrop-box, .melis-draggable-item, .ui-sortable, .ui-sortable-handle'
+                                );
+
+                                $iframeHtml.attr('data-style', uiStyle);
+
+                                if (uiStyle === 'rounded') {
+                                    $targets.removeClass('flat').addClass('rounded');
+                                } else {
+                                    $targets.removeClass('rounded').addClass('flat');
+                                }
+                        } catch (e) {
+                            // ignore cross-origin or not-ready iframe documents
+                        }
+                });
+        }
+
+        // bind the load listeners to the page edition iframes
+        function bindPageEditionIframeLoadListeners() {
+            var $iframes = getPageEditionIframes();
+                if (!$iframes.length) {
+                    return;
+                }
+                //console.log('bindPageEditionIframeLoadListeners() $iframes: ', $iframes);
+                $iframes.each(function() {
+                    var iframe = this;
+                        $(iframe)
+                            .off('load.themeSwitcher')
+                            .on('load.themeSwitcher', function() {
+                                applyThemeToPageEditionIframe(currentTheme, this);
+                                applyUiStyleToPageEditionIframe(currentUiStyle, this);
+                            });
+
+                        // If iframe is already loaded before binding, sync immediately.
+                        try {
+                            var iframeDoc = iframe.contentDocument;
+                                if (iframeDoc && iframeDoc.documentElement) {
+                                    applyThemeToPageEditionIframe(currentTheme, iframe);
+                                    applyUiStyleToPageEditionIframe(currentUiStyle, iframe);
+                                }
+                        } catch (e) {
+                            // ignore cross-origin or not-ready iframe documents
+                        }
+
+                        scheduleIframeSyncRetries(iframe);
+                });
+        }
+
+        // get the page edition iframes
+        function getPageEditionIframes(iframeEl) {
+            if (iframeEl) {
+                return $(iframeEl);
+            }
+
+            var $iframes = $(
+                '.meliscms-page-tab-edition .melis-iframe, ' +
+                '[data-meliskey="meliscms_page"] .melis-iframe'
+            );
+
+            // Fallback for restored tabs where wrapper classes are attached later.
+            if (!$iframes.length) {
+                $iframes = $('.melis-iframe');
+            }
+
+            return $iframes;
+        }
+
+        // when page is refreshed, the iframe is not loaded immediately, so we need to schedule retries
+        function scheduleIframeSyncRetries(iframe) {
+            var retryDelays = [100, 300, 700, 1200, 2000, 3000, 5000, 7000, 10000];
+                retryDelays.forEach(function(delay) {
+                    setTimeout(function() {
+                        try {
+                            var iframeDoc = iframe && iframe.contentDocument;
+                                if (!iframeDoc || !iframeDoc.documentElement) {
+                                    return;
+                                }
+
+                                if (iframeDoc.readyState === 'loading') {
+                                    return;
+                                }
+
+                                applyThemeToPageEditionIframe(currentTheme, iframe);
+                                applyUiStyleToPageEditionIframe(currentUiStyle, iframe);
+                        } catch (e) {
+                            // ignore cross-origin or not-ready iframe documents
+                        }
+                    }, delay);
+                });
+        }
+
+        // when page is loaded, the iframe is not loaded immediately, so we need to start a timer to sync the theme/ui style
+        function startIframeStartupSync() {
+            var attempts = 0,
+                maxAttempts = 12,
+                intervalMs = 1000,
+                timer = setInterval(function() {
+                    attempts += 1;
+                    syncPageEditionIframes();
+                    if (attempts >= maxAttempts) {
+                        clearInterval(timer);
+                    }
+                }, intervalMs);
+        }
+
+        // sync the theme/ui style to the iframe
+        function syncPageEditionIframes() {
+            bindPageEditionIframeLoadListeners();
+            applyThemeToPageEditionIframe(currentTheme);
+            applyUiStyleToPageEditionIframe(currentUiStyle);
+        }
+
+        // added for page edition iframe, schemes.css and dark.css
+        function ensureThemeStylesheetsInIframe(iframeDoc) {
+            var head = iframeDoc.head || iframeDoc.getElementsByTagName('head')[0];
+                if (!head) {
+                    return;
+                }
+
+            var defaultHref = $defaultTheme.attr('href') || '/assets/css/schemes.css',
+                darkHref = $darkTheme.attr('href') || '/assets/css/dark.css';
+
+                // Create <link> nodes with the iframe's document — jQuery-created nodes
+                // belong to the parent document and can end up appended to <body> when
+                // moved into another document.
+                function appendStylesheetLink(id, href) {
+                    if (iframeDoc.getElementById(id)) {
+                        return;
+                    }
+
+                    var link = iframeDoc.createElement('link');
+                        link.id = id;
+                        link.href = href;
+                        link.media = 'screen';
+                        link.rel = 'stylesheet';
+                        link.type = 'text/css';
+                        head.appendChild(link);
+                }
+
+                appendStylesheetLink('default-theme', defaultHref);
+                appendStylesheetLink('dark-theme', darkHref);
         }
 
         function saveTheme(theme) {
@@ -154,6 +397,7 @@ var themeSwitcher = (function($) {
                 $('#currentTheme').text(config.displayName);
         }
     
+        // watch for new theme controls
         function watchThemeControls() {
             if (typeof MutationObserver !== 'undefined') {
                 if (!themeControlsObserver) {
@@ -242,6 +486,7 @@ var themeSwitcher = (function($) {
             setTheme        : setTheme,
             toggleTheme     : toggleTheme,
             loadSavedTheme  : loadSavedTheme,
+            syncPageEditionIframes : syncPageEditionIframes,
             reApplyUiStyle  : function () { applyUiStyle(); }
         };
 })(jQuery);
@@ -250,10 +495,16 @@ $(function() {
     // init theme switcher
     themeSwitcher.init();
 
-    // on tab shown, reapply ui style
+    // on tab shown, re-sync theme/ui style (supports restored/reopened tabs)
     $(document).on("shown.bs.tab", "a[data-bs-toggle='tab']", function () {
-        if (window.themeSwitcher && typeof themeSwitcher.reApplyUiStyle === 'function') {
-            themeSwitcher.reApplyUiStyle();
+        if (window.themeSwitcher) {
+            if (typeof themeSwitcher.syncPageEditionIframes === 'function') {
+                themeSwitcher.syncPageEditionIframes();
+            }
+
+            if (typeof themeSwitcher.reApplyUiStyle === 'function') {
+                themeSwitcher.reApplyUiStyle();
+            }
         }
     });
 });

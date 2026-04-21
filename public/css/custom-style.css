@@ -2436,9 +2436,11 @@ table.dataTable.dtr-inline.collapsed>tbody>tr.dtr-expanded>th.dtr-control:before
 }
 .platform-theme-options-block .accordion-item h3.accordion-header .accordion-button {
 	font-size: 1rem;
+	font-weight: normal;
 }
 .platform-theme-options-block .accordion-item h6.accordion-header .accordion-button {
 	font-size: 0.875rem;
+	font-weight: normal;
 }
 .platform-theme-options-block .accordion-item .accordion-body {
 	padding: 0 0 1rem;

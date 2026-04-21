@@ -6668,7 +6668,7 @@ return array(
                                     'category' => 'dragdrop',
                                     'sliderId' => 'plugins-box-border-width-range-slider-min',
                                     'sliderClass' => 'plugins-box-border-width-range-slider-min',
-                                    'default' => 12
+                                    'default' => 4
                                 ),
                             ),
                         ),
@@ -6748,7 +6748,7 @@ return array(
                                     'category' => 'dragdrop',
                                     'sliderId' => 'plugins-box-title-line-height-range-slider-min',
                                     'sliderClass' => 'plugins-box-title-line-height-range-slider-min',
-                                    'default' => 12
+                                    'default' => 47
                                 ),
                             ),
                         ),
