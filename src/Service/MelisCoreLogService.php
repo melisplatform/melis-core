@@ -4,33 +4,33 @@ namespace MelisCore\Service;
 
 class MelisCoreLogService  extends MelisGeneralService
 {
-    /**
-     * Common action log types
-     */
-    const ADD = 'ADD';
-    const UPDATE = 'UPDATE';
-    const DELETE= 'DELETE';
+	/**
+	 * Common action log types
+	 */
+	const ADD = 'ADD';
+	const UPDATE = 'UPDATE';
+	const DELETE = 'DELETE';
 
-    /**
-     * Saving action to logs using Melis Core Service
-     *
-     * @param $result - 1 or 0
-     * @param $title - log title
-     * @param $message - message
-     * @param $logCode - code of the log/log identifier
-     * @param $itemId - the ID of the item to save - null if no ID
-     */
-    public function logAction($result, $title, $message, $logCode, $itemId)
-    {
-        $flashMessenger = $this->getServiceManager()->get('MelisCoreFlashMessenger');
+	/**
+	 * Saving action to logs using Melis Core Service
+	 *
+	 * @param $result - 1 or 0
+	 * @param $title - log title
+	 * @param $message - message
+	 * @param $logCode - code of the log/log identifier
+	 * @param $itemId - the ID of the item to save - null if no ID
+	 */
+	public function logAction($result, $title, $message, $logCode, $itemId)
+	{
+		$flashMessenger = $this->getServiceManager()->get('MelisCoreFlashMessenger');
 
-        $icon = ($result) ? $flashMessenger::INFO:  $flashMessenger::WARNING;
+		$icon = ($result) ? $flashMessenger::INFO :  $flashMessenger::WARNING;
 
-        $flashMessenger->addToFlashMessenger($title, $message, $icon);
+		$flashMessenger->addToFlashMessenger($title, $message, $icon);
 
-        $this->saveLog($title, $message, $result, $logCode, $itemId);
-    }
-	
+		$this->saveLog($title, $message, $result, $logCode, $itemId);
+	}
+
 	/**
 	 * This method will return the list of logs 
 	 * 
@@ -45,36 +45,102 @@ class MelisCoreLogService  extends MelisGeneralService
 	 * @param String $search if specified this will return data only that will match to the search value as keyword
 	 * @return Array
 	 */
-	public function getLogList($typeId = null, $itemId = null, $userId = null, $dateCreationMin = null, $dateCreationMax = null, 
-                                    $start = 0, $limit = null, $order = null, $search = null, $status = null)
-	{
-	    // Event parameters prepare
-	    $arrayParameters = $this->makeArrayFromParameters(__METHOD__, func_get_args());
-	    $results = array();
+	public function getLogList(
+		$typeId = null,
+		$itemId = null,
+		$userId = null,
+		$dateCreationMin = null,
+		$dateCreationMax = null,
+		$start = 0,
+		$limit = null,
+		$order = null,
+		$search = null,
+		$status = null
+	) {
+		$arrayParameters = $this->makeArrayFromParameters(__METHOD__, func_get_args());
+		$results = array();
 
-	    // Sending service start event
-	    $arrayParameters = $this->sendEvent('meliscore_log_list_start', $arrayParameters);
-	    // Service implementation end
+		$arrayParameters = $this->sendEvent('meliscore_log_list_start', $arrayParameters);
 
-	    // Retrieving the list of logs
-	    $melisCoreTableLog = $this->getServiceManager()->get('MelisCoreTableLog');
-	    $logList = $melisCoreTableLog->getLogList($arrayParameters['typeId'], $arrayParameters['itemId'], $arrayParameters['userId'], $arrayParameters['dateCreationMin'],
-	                                                $arrayParameters['dateCreationMax'], $arrayParameters['start'], $arrayParameters['limit'], $arrayParameters['order'], $arrayParameters['search'], $arrayParameters['status']);
-	    $logs = array();
-	    foreach ($logList As $key => $val)
-	    {
-	        // Using the getLog function this will return Log Entity and added to results
-	        array_push($results, $this->getLog($val->log_id));
-	    }
-	    
-	    // Adding results to parameters for events treatment if needed
-	    $arrayParameters['results'] = $results;
-	    // Sending service end event
-	    $arrayParameters = $this->sendEvent('meliscore_log_list_end', $arrayParameters);
-	     
-	    return $arrayParameters['results'];
+		$melisCoreTableLog = $this->getServiceManager()->get('MelisCoreTableLog');
+		$logList = $melisCoreTableLog->getLogList(
+			$arrayParameters['typeId'],
+			$arrayParameters['itemId'],
+			$arrayParameters['userId'],
+			$arrayParameters['dateCreationMin'],
+			$arrayParameters['dateCreationMax'],
+			$arrayParameters['start'],
+			$arrayParameters['limit'],
+			$arrayParameters['order'],
+			$arrayParameters['search'],
+			$arrayParameters['status']
+		);
+
+		// Collect rows and unique type IDs in one pass
+		$rows    = [];
+		$typeIds = [];
+		foreach ($logList as $row) {
+			$rows[]                    = $row;
+			$typeIds[$row->log_type_id] = true;
+		}
+
+		// Batch-load all log types used on this page (avoids 1 query per row)
+		$logTypesMap     = [];
+		$logTypeTransMap = [];
+		if (!empty($typeIds)) {
+			$logTypeTable      = $this->getServiceManager()->get('MelisCoreTableLogType');
+			$logTypeTransTable = $this->getServiceManager()->get('MelisCoreTableLogTypeTrans');
+
+			foreach (array_keys($typeIds) as $tid) {
+				$logType = $logTypeTable->getEntryById($tid)->current();
+				$logTypesMap[$tid] = $logType ?: null;
+
+				$transRows = [];
+				foreach ($logTypeTransTable->getLogTypeTranslations($tid, null) as $t) {
+					$transRows[] = $t;
+				}
+				$logTypeTransMap[$tid] = $transRows;
+			}
+		}
+
+		// Build entities from already-fetched rows — no per-row DB re-fetch
+		foreach ($rows as $row) {
+			$logEntity = new \MelisCore\Entity\MelisLog();
+			$logEntity->setId($row->log_id);
+			$logEntity->setLog($row);
+			$logEntity->setType($logTypesMap[$row->log_type_id] ?? null);
+			$logEntity->setTranslations($logTypeTransMap[$row->log_type_id] ?? []);
+			$results[] = $logEntity;
+		}
+
+		$arrayParameters['results'] = $results;
+		$arrayParameters = $this->sendEvent('meliscore_log_list_end', $arrayParameters);
+
+		return $arrayParameters['results'];
 	}
-	
+
+	public function getLogCount(
+		$typeId = null,
+		$itemId = null,
+		$userId = null,
+		$dateCreationMin = null,
+		$dateCreationMax = null,
+		$search = null,
+		$status = null
+	) {
+		$melisCoreTableLog = $this->getServiceManager()->get('MelisCoreTableLog');
+
+		return $melisCoreTableLog->getLogCount(
+			$typeId,
+			$itemId,
+			$userId,
+			$dateCreationMin,
+			$dateCreationMax,
+			$search,
+			$status
+		);
+	}
+
 	/**
 	 * This method will return the Log Entity
 	 * @param int $logId primary key of the log data
@@ -82,41 +148,39 @@ class MelisCoreLogService  extends MelisGeneralService
 	 */
 	public function getLog($logId)
 	{
-	    // Event parameters prepare
-	    $arrayParameters = $this->makeArrayFromParameters(__METHOD__, func_get_args());
-	    $results = array();
-	     
-	    // Sending service start event
-	    $arrayParameters = $this->sendEvent('meliscore_get_log_start', $arrayParameters);
-	    // Service implementation end
-	    
-	    $logEntity = new \MelisCore\Entity\MelisLog();
-	    $melisCoreTableLog = $this->getServiceManager()->get('MelisCoreTableLog');
-	    
-	    if (!empty($arrayParameters['logId']) && is_numeric($arrayParameters['logId']))
-	    {
-	        $log = $melisCoreTableLog->getEntryById($arrayParameters['logId'])->current();
-	        
-	        if (!empty($log))
-	        {
-	            // Log Entity setters
-	            $logEntity->setId($log->log_id);
-	            $logEntity->setLog($log);
-	            $logEntity->setType($this->getLogType($log->log_type_id));
-	            $logEntity->setTranslations($this->getLogTypeTranslations($log->log_type_id));
-	        }
-	    }
-	    
-	    $results = $logEntity;
-	    
-	    // Adding results to parameters for events treatment if needed
-	    $arrayParameters['results'] = $results;
-	    // Sending service end event
-	    $arrayParameters = $this->sendEvent('meliscore_get_log_end', $arrayParameters);
-	    
-	    return $arrayParameters['results'];
+		// Event parameters prepare
+		$arrayParameters = $this->makeArrayFromParameters(__METHOD__, func_get_args());
+		$results = array();
+
+		// Sending service start event
+		$arrayParameters = $this->sendEvent('meliscore_get_log_start', $arrayParameters);
+		// Service implementation end
+
+		$logEntity = new \MelisCore\Entity\MelisLog();
+		$melisCoreTableLog = $this->getServiceManager()->get('MelisCoreTableLog');
+
+		if (!empty($arrayParameters['logId']) && is_numeric($arrayParameters['logId'])) {
+			$log = $melisCoreTableLog->getEntryById($arrayParameters['logId'])->current();
+
+			if (!empty($log)) {
+				// Log Entity setters
+				$logEntity->setId($log->log_id);
+				$logEntity->setLog($log);
+				$logEntity->setType($this->getLogType($log->log_type_id));
+				$logEntity->setTranslations($this->getLogTypeTranslations($log->log_type_id));
+			}
+		}
+
+		$results = $logEntity;
+
+		// Adding results to parameters for events treatment if needed
+		$arrayParameters['results'] = $results;
+		// Sending service end event
+		$arrayParameters = $this->sendEvent('meliscore_get_log_end', $arrayParameters);
+
+		return $arrayParameters['results'];
 	}
-	
+
 	/**
 	 * This method will return the Type of the Log
 	 * @param int $logTypeId the primary key of the Log Type
@@ -124,33 +188,31 @@ class MelisCoreLogService  extends MelisGeneralService
 	 */
 	public function getLogType($logTypeId)
 	{
-	    // Event parameters prepare
-	    $arrayParameters = $this->makeArrayFromParameters(__METHOD__, func_get_args());
-	    $results = array();
-	    
-	    // Sending service start event
-	    $arrayParameters = $this->sendEvent('meliscore_get_log_type_start', $arrayParameters);
-	    // Service implementation end
+		// Event parameters prepare
+		$arrayParameters = $this->makeArrayFromParameters(__METHOD__, func_get_args());
+		$results = array();
 
-	    $melisCoreTableLogType = $this->getServiceManager()->get('MelisCoreTableLogType');
-	    
-	    if (!empty($arrayParameters['logTypeId']) && is_numeric($arrayParameters['logTypeId']))
-	    {
-	        $logType = $melisCoreTableLogType->getEntryById($arrayParameters['logTypeId'])->current();
-	        if (!empty($logType))
-	        {
-	            $results = $logType;
-	        }
-	    }
-	    
-	    // Adding results to parameters for events treatment if needed
-	    $arrayParameters['results'] = $results;
-	    // Sending service end event
-	    $arrayParameters = $this->sendEvent('meliscore_get_log_type_end', $arrayParameters);
-	     
-	    return $arrayParameters['results'];
+		// Sending service start event
+		$arrayParameters = $this->sendEvent('meliscore_get_log_type_start', $arrayParameters);
+		// Service implementation end
+
+		$melisCoreTableLogType = $this->getServiceManager()->get('MelisCoreTableLogType');
+
+		if (!empty($arrayParameters['logTypeId']) && is_numeric($arrayParameters['logTypeId'])) {
+			$logType = $melisCoreTableLogType->getEntryById($arrayParameters['logTypeId'])->current();
+			if (!empty($logType)) {
+				$results = $logType;
+			}
+		}
+
+		// Adding results to parameters for events treatment if needed
+		$arrayParameters['results'] = $results;
+		// Sending service end event
+		$arrayParameters = $this->sendEvent('meliscore_get_log_type_end', $arrayParameters);
+
+		return $arrayParameters['results'];
 	}
-	
+
 	/**
 	 * This method will return Log Type using typeCode of the Log Type
 	 * @param String $logTypeCode the type code of the Log Type
@@ -158,33 +220,31 @@ class MelisCoreLogService  extends MelisGeneralService
 	 */
 	public function getLogTypeByTypeCode($logTypeCode)
 	{
-	    // Event parameters prepare
-	    $arrayParameters = $this->makeArrayFromParameters(__METHOD__, func_get_args());
-	    $results = array();
-	    
-	    // Sending service start event
-	    $arrayParameters = $this->sendEvent('meliscore_get_log_type_by_code_start', $arrayParameters);
-	    // Service implementation end
-	    
-	    $melisCoreTableLogType = $this->getServiceManager()->get('MelisCoreTableLogType');
-	    
-	    if (!empty($arrayParameters['logTypeCode']))
-	    {
-	        $logType = $melisCoreTableLogType->getEntryByField('logt_code', $arrayParameters['logTypeCode'])->current();
-	        if (!empty($logType))
-	        {
-	            $results = $logType;
-	        }
-	    }
-	    
-	    // Adding results to parameters for events treatment if needed
-	    $arrayParameters['results'] = $results;
-	    // Sending service end event
-	    $arrayParameters = $this->sendEvent('meliscore_get_log_type_by_code_end', $arrayParameters);
-	     
-	    return $arrayParameters['results'];
+		// Event parameters prepare
+		$arrayParameters = $this->makeArrayFromParameters(__METHOD__, func_get_args());
+		$results = array();
+
+		// Sending service start event
+		$arrayParameters = $this->sendEvent('meliscore_get_log_type_by_code_start', $arrayParameters);
+		// Service implementation end
+
+		$melisCoreTableLogType = $this->getServiceManager()->get('MelisCoreTableLogType');
+
+		if (!empty($arrayParameters['logTypeCode'])) {
+			$logType = $melisCoreTableLogType->getEntryByField('logt_code', $arrayParameters['logTypeCode'])->current();
+			if (!empty($logType)) {
+				$results = $logType;
+			}
+		}
+
+		// Adding results to parameters for events treatment if needed
+		$arrayParameters['results'] = $results;
+		// Sending service end event
+		$arrayParameters = $this->sendEvent('meliscore_get_log_type_by_code_end', $arrayParameters);
+
+		return $arrayParameters['results'];
 	}
-	
+
 	/**
 	 * This method will return the Log Type Translations
 	 * @param int $logTypeId the primary key of the Log Type
@@ -193,34 +253,32 @@ class MelisCoreLogService  extends MelisGeneralService
 	 */
 	public function getLogTypeTranslations($logTypeId, $langId = null)
 	{
-	    // Event parameters prepare
-	    $arrayParameters = $this->makeArrayFromParameters(__METHOD__, func_get_args());
-	    $results = array();
-	     
-	    // Sending service start event
-	    $arrayParameters = $this->sendEvent('meliscore_get_log_type_start', $arrayParameters);
-	    // Service implementation end
-	     
-	    $melisCoreTableLogTypeTrans = $this->getServiceManager()->get('MelisCoreTableLogTypeTrans');
-	     
-	    if (!empty($arrayParameters['logTypeId']) && is_numeric($arrayParameters['logTypeId']))
-	    {
-	        $logTypeTrans = $melisCoreTableLogTypeTrans->getLogTypeTranslations($arrayParameters['logTypeId'], $arrayParameters['langId']);
+		// Event parameters prepare
+		$arrayParameters = $this->makeArrayFromParameters(__METHOD__, func_get_args());
+		$results = array();
 
-	        foreach ($logTypeTrans As $key => $val)
-	        {
-	            array_push($results, $val);
-	        }
-	    }
-	     
-	    // Adding results to parameters for events treatment if needed
-	    $arrayParameters['results'] = $results;
-	    // Sending service end event
-	    $arrayParameters = $this->sendEvent('meliscore_get_log_type_end', $arrayParameters);
-	    
-	    return $arrayParameters['results'];
+		// Sending service start event
+		$arrayParameters = $this->sendEvent('meliscore_get_log_type_start', $arrayParameters);
+		// Service implementation end
+
+		$melisCoreTableLogTypeTrans = $this->getServiceManager()->get('MelisCoreTableLogTypeTrans');
+
+		if (!empty($arrayParameters['logTypeId']) && is_numeric($arrayParameters['logTypeId'])) {
+			$logTypeTrans = $melisCoreTableLogTypeTrans->getLogTypeTranslations($arrayParameters['logTypeId'], $arrayParameters['langId']);
+
+			foreach ($logTypeTrans as $key => $val) {
+				array_push($results, $val);
+			}
+		}
+
+		// Adding results to parameters for events treatment if needed
+		$arrayParameters['results'] = $results;
+		// Sending service end event
+		$arrayParameters = $this->sendEvent('meliscore_get_log_type_end', $arrayParameters);
+
+		return $arrayParameters['results'];
 	}
-	
+
 	/**
 	 * This method will save the log
 	 * @param String $title, title of the log data
@@ -233,76 +291,69 @@ class MelisCoreLogService  extends MelisGeneralService
 	 */
 	public function saveLog($title, $message, $status, $typeCode, $itemId = null, $logId = null)
 	{
-	    // Event parameters prepare
-	    $arrayParameters = $this->makeArrayFromParameters(__METHOD__, func_get_args());
-	    $results = null;
-	     
-	    // Sending service start event
-	    $arrayParameters = $this->sendEvent('meliscore_save_log_start', $arrayParameters);
-	    // Service implementation end
-	     
-	    $melisCoreTableLog = $this->getServiceManager()->get('MelisCoreTableLog');
-	    
-	    // Get Current User ID
-	    $userId = null;
-	    $melisCoreAuth = $this->getServiceManager()->get('MelisCoreAuth');
-	    $userAuthDatas =  $melisCoreAuth->getStorage()->read();
-	    if ($userAuthDatas)
-	    {
-	        $userId = (int) $userAuthDatas->usr_id;
-	    }
+		// Event parameters prepare
+		$arrayParameters = $this->makeArrayFromParameters(__METHOD__, func_get_args());
+		$results = null;
+
+		// Sending service start event
+		$arrayParameters = $this->sendEvent('meliscore_save_log_start', $arrayParameters);
+		// Service implementation end
+
+		$melisCoreTableLog = $this->getServiceManager()->get('MelisCoreTableLog');
+
+		// Get Current User ID
+		$userId = null;
+		$melisCoreAuth = $this->getServiceManager()->get('MelisCoreAuth');
+		$userAuthDatas =  $melisCoreAuth->getStorage()->read();
+		if ($userAuthDatas) {
+			$userId = (int) $userAuthDatas->usr_id;
+		}
 
 		if (in_array($arrayParameters['typeCode'], ['WRONG_LOGIN_CREDENTIALS', 'ACCOUNT_LOCKED', 'ACCOUNT_UNLOCKED'])) {
 			$userId = $arrayParameters['itemId'];
 		}
 
-	    // Checking if the Typecode exist, else this will save as new TypeCode entry
-	    $logType = $this->getLogTypeByTypeCode($arrayParameters['typeCode']);
-	    $logTypeId = null;
-	    if (!empty($logType))
-	    {
-	        $logTypeId = $logType->logt_id;
-	    }
-	    else
-	    {
-	        try {
-	            // Save LogType as new Data
-	            $logTypeId = $this->saveLogType($arrayParameters['typeCode']);
-	        }
-	        catch(\Exception $e){}
-	    }
-	    
-	    if (!is_null($userId) && !is_null($logTypeId))
-	    {
-	        // Preparing the Log data for saving
-	        $log = array(
-	            'log_title' => $arrayParameters['title'],
-	            'log_message' => $arrayParameters['message'],
-	            'log_action_status' => ($arrayParameters['status']) ? 1 : 0,
-	            'log_type_id' => $logTypeId,
-	            'log_item_id' => $arrayParameters['itemId'],
-	            'log_user_id' => $userId,
-	            'log_date_added' => date('Y-m-d H:i:s'),
-	        );
-	         
-	        try
-	        {
-	            // Save Log
-	            $results = $melisCoreTableLog->save($log, $arrayParameters['logId']);
-	        }
-	        catch(\Exception $e){
-	            echo $e->getMessage();
-            }
-	    }
-	    
-	    // Adding results to parameters for events treatment if needed
-	    $arrayParameters['results'] = $results;
-	    // Sending service end event
-	    $arrayParameters = $this->sendEvent('meliscore_save_log_end', $arrayParameters);
-	    
-	    return $arrayParameters['results'];
+		// Checking if the Typecode exist, else this will save as new TypeCode entry
+		$logType = $this->getLogTypeByTypeCode($arrayParameters['typeCode']);
+		$logTypeId = null;
+		if (!empty($logType)) {
+			$logTypeId = $logType->logt_id;
+		} else {
+			try {
+				// Save LogType as new Data
+				$logTypeId = $this->saveLogType($arrayParameters['typeCode']);
+			} catch (\Exception $e) {
+			}
+		}
+
+		if (!is_null($userId) && !is_null($logTypeId)) {
+			// Preparing the Log data for saving
+			$log = array(
+				'log_title' => $arrayParameters['title'],
+				'log_message' => $arrayParameters['message'],
+				'log_action_status' => ($arrayParameters['status']) ? 1 : 0,
+				'log_type_id' => $logTypeId,
+				'log_item_id' => $arrayParameters['itemId'],
+				'log_user_id' => $userId,
+				'log_date_added' => date('Y-m-d H:i:s'),
+			);
+
+			try {
+				// Save Log
+				$results = $melisCoreTableLog->save($log, $arrayParameters['logId']);
+			} catch (\Exception $e) {
+				echo $e->getMessage();
+			}
+		}
+
+		// Adding results to parameters for events treatment if needed
+		$arrayParameters['results'] = $results;
+		// Sending service end event
+		$arrayParameters = $this->sendEvent('meliscore_save_log_end', $arrayParameters);
+
+		return $arrayParameters['results'];
 	}
-	
+
 	/**
 	 * This method will save Log type using the new LogTypeCode
 	 * @param String $logTypeCode, the TypeCode of the LogType
@@ -311,36 +362,35 @@ class MelisCoreLogService  extends MelisGeneralService
 	 */
 	public function saveLogType($logTypeCode, $logTypeId = null)
 	{
-	    // Event parameters prepare
-	    $arrayParameters = $this->makeArrayFromParameters(__METHOD__, func_get_args());
-	    $results = null;
-	     
-	    // Sending service start event
-	    $arrayParameters = $this->sendEvent('meliscore_save_log_type_start', $arrayParameters);
-	    // Service implementation end
-	     
-	    $melisCoreTableLogType = $this->getServiceManager()->get('MelisCoreTableLogType');
-	    
-	    if (!empty($arrayParameters['logTypeCode']))
-	    {
-	        $data = array(
-	            'logt_code' => $logTypeCode
-	        );
-	        
-	        try {
-	            $results = $melisCoreTableLogType->save($data, $arrayParameters['logTypeId']);
-	        }
-	        catch(\Exception $e){}
-	    }
-	    
-	    // Adding results to parameters for events treatment if needed
-	    $arrayParameters['results'] = $results;
-	    // Sending service end event
-	    $arrayParameters = $this->sendEvent('meliscore_save_log_type_end', $arrayParameters);
-	    
-	    return $arrayParameters['results'];
+		// Event parameters prepare
+		$arrayParameters = $this->makeArrayFromParameters(__METHOD__, func_get_args());
+		$results = null;
+
+		// Sending service start event
+		$arrayParameters = $this->sendEvent('meliscore_save_log_type_start', $arrayParameters);
+		// Service implementation end
+
+		$melisCoreTableLogType = $this->getServiceManager()->get('MelisCoreTableLogType');
+
+		if (!empty($arrayParameters['logTypeCode'])) {
+			$data = array(
+				'logt_code' => $logTypeCode
+			);
+
+			try {
+				$results = $melisCoreTableLogType->save($data, $arrayParameters['logTypeId']);
+			} catch (\Exception $e) {
+			}
+		}
+
+		// Adding results to parameters for events treatment if needed
+		$arrayParameters['results'] = $results;
+		// Sending service end event
+		$arrayParameters = $this->sendEvent('meliscore_save_log_type_end', $arrayParameters);
+
+		return $arrayParameters['results'];
 	}
-	
+
 	/**
 	 * This method will save the Log type Translations
 	 * 
@@ -350,51 +400,51 @@ class MelisCoreLogService  extends MelisGeneralService
 	 */
 	public function saveLogTypeTrans($logTypeTrans, $logTypeTransId = null)
 	{
-	    // Event parameters prepare
-	    $arrayParameters = $this->makeArrayFromParameters(__METHOD__, func_get_args());
-	    $results = null;
-	    
-	    // Sending service start event
-	    $arrayParameters = $this->sendEvent('meliscore_save_log_type_trans_start', $arrayParameters);
-	    // Service implementation end
-	    
-	    $melisCoreTableLogTypeTrans = $this->getServiceManager()->get('MelisCoreTableLogTypeTrans');
-	    
-	    try {
-	        $results = $melisCoreTableLogTypeTrans->save($arrayParameters['logTypeTrans'], $arrayParameters['logTypeTransId']);
-	    }
-	    catch(\Exception $e){}
-	    
-	    // Adding results to parameters for events treatment if needed
-	    $arrayParameters['results'] = $results;
-	    // Sending service end event
-	    $arrayParameters = $this->sendEvent('meliscore_save_log_type_trans_end', $arrayParameters);
-	     
-	    return $arrayParameters['results'];
+		// Event parameters prepare
+		$arrayParameters = $this->makeArrayFromParameters(__METHOD__, func_get_args());
+		$results = null;
+
+		// Sending service start event
+		$arrayParameters = $this->sendEvent('meliscore_save_log_type_trans_start', $arrayParameters);
+		// Service implementation end
+
+		$melisCoreTableLogTypeTrans = $this->getServiceManager()->get('MelisCoreTableLogTypeTrans');
+
+		try {
+			$results = $melisCoreTableLogTypeTrans->save($arrayParameters['logTypeTrans'], $arrayParameters['logTypeTransId']);
+		} catch (\Exception $e) {
+		}
+
+		// Adding results to parameters for events treatment if needed
+		$arrayParameters['results'] = $results;
+		// Sending service end event
+		$arrayParameters = $this->sendEvent('meliscore_save_log_type_trans_end', $arrayParameters);
+
+		return $arrayParameters['results'];
 	}
-	
+
 	public function deleteLogTypeTrans($logTypeTransId)
 	{
-	    // Event parameters prepare
-	    $arrayParameters = $this->makeArrayFromParameters(__METHOD__, func_get_args());
-	    $results = null;
-	     
-	    // Sending service start event
-	    $arrayParameters = $this->sendEvent('meliscore_save_log_type_trans_start', $arrayParameters);
-	    // Service implementation end
-	     
-	    $melisCoreTableLogTypeTrans = $this->getServiceManager()->get('MelisCoreTableLogTypeTrans');
-	     
-	    try {
-	        $results = $melisCoreTableLogTypeTrans->deleteById($arrayParameters['logTypeTransId']);
-	    }
-	    catch(\Exception $e){}
-	     
-	    // Adding results to parameters for events treatment if needed
-	    $arrayParameters['results'] = $results;
-	    // Sending service end event
-	    $arrayParameters = $this->sendEvent('meliscore_save_log_type_trans_end', $arrayParameters);
-	    
-	    return $arrayParameters['results'];
+		// Event parameters prepare
+		$arrayParameters = $this->makeArrayFromParameters(__METHOD__, func_get_args());
+		$results = null;
+
+		// Sending service start event
+		$arrayParameters = $this->sendEvent('meliscore_save_log_type_trans_start', $arrayParameters);
+		// Service implementation end
+
+		$melisCoreTableLogTypeTrans = $this->getServiceManager()->get('MelisCoreTableLogTypeTrans');
+
+		try {
+			$results = $melisCoreTableLogTypeTrans->deleteById($arrayParameters['logTypeTransId']);
+		} catch (\Exception $e) {
+		}
+
+		// Adding results to parameters for events treatment if needed
+		$arrayParameters['results'] = $results;
+		// Sending service end event
+		$arrayParameters = $this->sendEvent('meliscore_save_log_type_trans_end', $arrayParameters);
+
+		return $arrayParameters['results'];
 	}
 }
