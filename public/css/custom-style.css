@@ -2751,3 +2751,6 @@ table.dataTable.dtr-inline.collapsed>tbody>tr.dtr-expanded>th.dtr-control:before
 .melis-dashboard-bubble-plugin .front .widget {
 	border: 1px solid #e6e6e6;
 }
+.alert {
+	border-radius: 0;
+}
