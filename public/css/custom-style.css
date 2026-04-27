@@ -2754,3 +2754,6 @@ table.dataTable.dtr-inline.collapsed>tbody>tr.dtr-expanded>th.dtr-control:before
 .alert {
 	border-radius: 0;
 }
+.dtActionCls .btn {
+	min-width: 35px;
+}
