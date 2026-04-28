@@ -1100,7 +1100,7 @@ window.removeTinyMceAndMelisEditorScripts = function(doc) {
 
             if (
                 scriptId === "jquery-checker" ||
-                src.indexOf("tinymce") !== -1 ||
+                //src.indexOf("tinymce") !== -1 ||
                 src.indexOf("melistinymce") !== -1 ||
                 src.indexOf("melis-tinymce") !== -1 ||
                 src.indexOf("/meliscore/js/tinymce/") !== -1 ||
