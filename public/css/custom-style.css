@@ -2757,3 +2757,16 @@ table.dataTable.dtr-inline.collapsed>tbody>tr.dtr-expanded>th.dtr-control:before
 .dtActionCls .btn {
 	min-width: 35px;
 }
+.client-contact-address .card,
+.dt_orderdatepicker,
+.product-text-tab-form-content .prices-accordion .accordionTitle {
+	border-radius: 0 !important;
+}
+.prices-accordion .widget .widget-head,
+.product-text-tab-form-content .widget .widget-head {
+	border-left: 1px solid #e5e5e5;
+	border-radius: 0;
+}
+.prices-accordion .widget .widget-head h4 {
+	color: #fff;
+}
