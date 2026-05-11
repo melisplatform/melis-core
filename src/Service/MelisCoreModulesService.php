@@ -318,7 +318,7 @@ class MelisCoreModulesService extends MelisServiceManager
             $dependencies = $this->getDependencies($module, $convertPackageNameToNamespace);
 
             if ($dependencies) {
-                if (in_array($matchModule, $dependencies)) {
+                if (in_array(strtolower($matchModule), array_map('strtolower', $dependencies))) {
                     $dependents[] = $convertPackageNameToNamespace ? $module : $this->convertToPackageName($module);
                 }
             }
