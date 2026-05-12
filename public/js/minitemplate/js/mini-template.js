@@ -295,7 +295,6 @@
                         // adding of custom css class for spacing
                         $siteCategory.find(".main-category:last").prev(".ui-accordion-header").addClass("custom-last-child");
                         $siteCategory.find(".main-category:last").addClass("custom-last-child");
-                });
 
                 /**
                  * Turns lists of sites and categories into accordion
@@ -323,6 +322,7 @@
 
                 // get selected mini template form .mini-template-button
                 getSelectedMiniTemplate($miniTemplateButtons);
+                });
     }
 
     // create category section
