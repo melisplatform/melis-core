@@ -2770,3 +2770,39 @@ table.dataTable.dtr-inline.collapsed>tbody>tr.dtr-expanded>th.dtr-control:before
 .prices-accordion .widget .widget-head h4 {
 	color: #fff;
 }
+
+/* global overrides */
+.daterangepicker,
+.input-group-addon,
+.has-switch span.switch-right,
+.mainOrderStatus,
+#payNowBtn,
+#paymentForm input,
+#paymentForm select,
+.calendar-table .today,
+.calendar-table .active,
+.calendar-table .start-date,
+.calendar-table .end-date,
+.calendar-table .available,
+.daterangepicker .ranges ul li,
+.bootstrap-tagsinput .tag.label-info,
+.filter-dropdown .dropdown-menu,
+.filter-dropdown .dropdown-toggle,
+.commerce-toggle,
+.thumbnail {
+	border-radius: 0 !important;
+}
+.me-file-cont {
+	border: 1px solid #dbdbdb;
+}
+.me-file-cont p {
+	margin-bottom: 0 !important;
+	border-radius: 0 !important;
+}
+.filter-dropdown .dropdown-toggle {
+	height: 36px !important;
+}
+.dataTable .fa-star {
+	position: relative !important;
+	left: auto !important;
+}
