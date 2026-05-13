@@ -1125,6 +1125,7 @@ class MelisCoreModulesService extends MelisServiceManager
                 curl_setopt($ch, CURLOPT_URL, $fileStr);
                 curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, FALSE);
                 curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
+                curl_setopt($ch, CURLOPT_SSL_ENABLE_ALPN, false);
                 //to fixed problem on redirect
                 curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
                 $text = curl_exec($ch);
