@@ -240,6 +240,16 @@ return [
                         ],
                         'may_terminate' => true,
                         'child_routes' => [
+                            'mini-template-preview-shell' => [
+                                'type' => 'Literal',
+                                'options' => [
+                                    'route' => '/MelisTinyMce/getMiniTemplatePreviewShell',
+                                    'defaults' => [
+                                        'controller' => 'MelisTinyMce',
+                                        'action' => 'getMiniTemplatePreviewShell',
+                                    ],
+                                ],
+                            ],
                             'default' => [
                                 'type' => 'Segment',
                                 'options' => [

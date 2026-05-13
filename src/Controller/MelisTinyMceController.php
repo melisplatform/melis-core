@@ -262,6 +262,175 @@ class MelisTinyMceController extends MelisAbstractActionController
         return new JsonModel($tinyTemplates);
     }
 
+    /**
+     * Returns an HTML shell used by mini-template preview in TinyMCE dialogs.
+     */
+    public function getMiniTemplatePreviewShellAction()
+    {
+        $siteId = $this->params()->fromQuery('siteId', '');
+        $siteModule = $this->params()->fromQuery('siteModule', '');
+        $type = $this->params()->fromQuery('type', 'tool');
+
+        if (empty($siteModule) && !empty($siteId)) {
+            try {
+                $site = $this->getService('MelisEngineTableSite')->getEntryById($siteId)->current();
+                if ($site) {
+                    $siteModule = $site->site_name ?? '';
+                }
+            } catch (\Exception $e) {}
+        }
+
+        // if (empty($siteId) && !empty($siteModule)) {
+        //     try {
+        //         $site = $this->getService('MelisEngineTableSite')->getEntryByField('site_name', $siteModule)->current();
+        //         if ($site) {
+        //             $siteId = $site->site_id ?? '';
+        //         }
+        //     } catch (\Exception $e) {}
+        // }
+
+        if (empty($siteModule)) {
+            $tinyCfg = $this->getTinyMCEByType($type);
+            if (!empty($tinyCfg['mini_template_site_module'])) {
+                $siteModule = $tinyCfg['mini_template_site_module'];
+            } elseif (!empty($tinyCfg['melis_minitemplate']['site_id'])) {
+                try {
+                    $site = $this->getService('MelisEngineTableSite')->getEntryById($tinyCfg['melis_minitemplate']['site_id'])->current();
+                    if ($site) {
+                        $siteModule = $site->site_name ?? '';
+                    }
+                } catch (\Exception $e) {}
+            }
+        }
+
+        $targetUrl = '';
+
+        if (!empty($siteModule)) {
+            try {
+                $siteService = $this->getServiceManager()->get('MelisCmsSiteService');
+                $site = $siteService->getSiteByModule($siteModule);
+
+                if (!empty($site) && !empty($site->site_id)) {
+                    $siteDomainsService = $this->getServiceManager()->get('MelisCmsSitesDomainsService');
+                    $currentEnv = (string) (getenv('MELIS_PLATFORM') ?: 'development');
+                    $domainEntries = $siteDomainsService->getDomainBySiteIdAndEnv((int) $site->site_id, $currentEnv);
+
+                    if (empty($domainEntries)) {
+                        $domainEntries = $siteDomainsService->getDomainsBySiteId((int) $site->site_id);
+                    }
+
+                    $domain = $domainEntries[0]['sdom_domain'] ?? '';
+                    $scheme = $domainEntries[0]['sdom_scheme'] ?? 'http';
+
+                    if (!empty($domain)) {
+                        $targetUrl = rtrim($scheme . '://' . $domain, '/');
+                    }
+                }
+            } catch (\Exception $e) {}
+        }
+
+        if (empty($targetUrl)) {
+            $host = $_SERVER['HTTP_HOST'] ?? '';
+            $scheme = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
+
+            if (!empty($host)) {
+                $targetUrl = $scheme . '://' . $host . '/';
+            }
+        }
+
+        $html = '';
+        //echo 'targetUrl: ' . $targetUrl;
+        if (!empty($targetUrl)) {
+            $context = stream_context_create([
+                'http' => [
+                    'method' => 'GET',
+                    'timeout' => 5,
+                    'ignore_errors' => true,
+                ],
+                'ssl' => [
+                    'verify_peer' => false,
+                    'verify_peer_name' => false,
+                ],
+            ]);
+
+            $html = @file_get_contents($targetUrl, false, $context) ?: '';
+        }
+
+        // Fallback shell in case the target site cannot be reached.
+        if (empty($html)) {
+            $html = '<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><style>body{margin:0;font-family:Arial,sans-serif}.preview-shell-header,.preview-shell-footer{padding:12px 16px;background:#f5f5f5}.preview-shell-main{min-height:320px;padding:16px}.melis-dragdropzone{min-height:220px;border:1px dashed #d33;padding:10px}</style></head><body><header class="preview-shell-header">Preview Header</header><main class="preview-shell-main"><div class="melis-dragdropzone"></div></main><footer class="preview-shell-footer">Preview Footer</footer></body></html>';
+        }
+
+        $response = $this->getResponse();
+        $response->getHeaders()->addHeaderLine('Content-Type', 'text/html; charset=utf-8');
+        $response->setContent($html);
+
+        return $response;
+    }
+
+    private function resolvePreviewTargetUrl($siteId, $siteModule)
+    {
+        $host = $_SERVER['HTTP_HOST'] ?? '';
+        $currentHost = strtolower(preg_replace('/:\d+$/', '', $host));
+        $scheme = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
+
+        // 1) Prefer site domain table for multi-domain setups (best match by current host first).
+        if (!empty($siteId)) {
+            try {
+                $domains = $this->getService('MelisEngineTableSiteDomain')->getEntryByField('sdom_site_id', $siteId)->toArray();
+                if (!empty($domains)) {
+                    $selectedDomain = '';
+
+                    // Prefer exact host match with current request host.
+                    foreach ($domains as $domainRow) {
+                        $domain = $domainRow['sdom_domain'] ?? '';
+                        if (empty($domain)) {
+                            continue;
+                        }
+                        $domainHost = strtolower(parse_url(
+                            preg_match('#^https?://#i', $domain) ? $domain : ($scheme . '://' . $domain),
+                            PHP_URL_HOST
+                        ) ?: '');
+                        if (!empty($domainHost) && $domainHost === $currentHost) {
+                            $selectedDomain = $domain;
+                            break;
+                        }
+                    }
+
+                    // Otherwise fallback to first non-empty domain for the selected site.
+                    if (empty($selectedDomain)) {
+                        foreach ($domains as $domainRow) {
+                            $domain = $domainRow['sdom_domain'] ?? '';
+                            if (!empty($domain)) {
+                                $selectedDomain = $domain;
+                                break;
+                            }
+                        }
+                    }
+
+                    if (!empty($selectedDomain)) {
+                        if (!preg_match('#^https?://#i', $selectedDomain)) {
+                            $selectedDomain = $scheme . '://' . $selectedDomain;
+                        }
+                        return rtrim($selectedDomain, '/') . '/';
+                    }
+                }
+            } catch (\Exception $e) {}
+        }
+
+        // 2) Fallback to current host and optional site module path.
+        if (!empty($host) && !empty($siteModule)) {
+            return $scheme . '://' . $host . '/' . ltrim($siteModule, '/');
+        }
+
+        // 3) Last fallback: current host root.
+        if (!empty($host)) {
+            return $scheme . '://' . $host . '/';
+        }
+
+        return '';
+    }
+
      
 
     /**
@@ -389,38 +558,25 @@ class MelisTinyMceController extends MelisAbstractActionController
      */
     private function getTinyMCEByType($type)
     {
-        // prefix
-        $prefix = "";
-        // tinymce config
-        $configTinyMce = $this->getService('config')['tinyMCE'];
-        // config url path
+        $config = [];
+        $configTinyMce = $this->getService('config')['tinyMCE'] ?? [];
         $configDir = $configTinyMce[$type] ?? null;
-        // Getting the module name
-        $nameModuleTab = explode('/', $configDir);
-        // get module name
-        $nameModule = $nameModuleTab[0] ?? null;
-        // Getting the path of the Module
-        $path = $this->getService('ModulesService')->getModulePath($nameModule);
-        // Generating the directory of the requested TinyMCE configuration
-        $file  = $path . str_replace($nameModule, '', $configDir);
-        if (file_exists($file)) {
-            // include file
-            $config = include($file);
-            // for the melis_minitemplates configuration key
-            if (isset($config['melis_minitemplates']) && $config['melis_minitemplates']) {
-                // config
-                $miniTmpConfig = $config['melis_minitemplates'];
-                // prefix
-                if (isset($miniTmpConfig['prefix'])) {
-                    // set prefix
-                    $prefix = $miniTmpConfig['prefix']; 
-                }
-            }
+        
+        if (empty($configDir)) {
+            return $config;
         }
 
-        return $prefix;
+        $nameModuleTab = explode('/', $configDir);
+        $nameModule = $nameModuleTab[0] ?? null;
+        $path = $this->getService('ModulesService')->getModulePath($nameModule);
+        $file = $path . str_replace($nameModule, '', $configDir);
+        
+        if (file_exists($file)) {
+            $config = include($file);
+        }
+        
+        return is_array($config) ? $config : [];
     }
 
-    
 }
 

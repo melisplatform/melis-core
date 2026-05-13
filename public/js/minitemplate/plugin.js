@@ -22,6 +22,9 @@
         tooltip: 'Mini Template',
         title: 'Mini Template',
         onAction: () => {
+          if (editor.selection && typeof editor.selection.getBookmark === 'function') {
+            editor.__miniTemplateBookmark = editor.selection.getBookmark(2, true);
+          }
           dialogApi = editor.windowManager.openUrl(_urlDialogConfig);
 
           dialogApi.block('Loading...');
@@ -39,6 +42,9 @@
         tooltip: 'Mini Template',
         title: 'Mini Template',
         onAction: () => {
+          if (editor.selection && typeof editor.selection.getBookmark === 'function') {
+            editor.__miniTemplateBookmark = editor.selection.getBookmark(2, true);
+          }
           dialogApi = editor.windowManager.openUrl(_urlDialogConfig);
 
           dialogApi.block('Loading...');
@@ -47,6 +53,21 @@
             dialogApi.unblock();
           }, 2000);
         }
+      });
+
+      editor.options.register('mini_template_preview_mode', {
+        processor: 'string',
+        default: 'auto'
+      });
+
+      editor.options.register('mini_template_preview_shell_url', {
+        processor: 'string',
+        default: ''
+      });
+
+      editor.options.register('mini_template_site_module', {
+        processor: 'string',
+        default: ''
       });
 
       // Register the additional tinymce custom option
