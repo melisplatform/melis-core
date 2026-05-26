@@ -267,9 +267,9 @@ class MelisTinyMceController extends MelisAbstractActionController
      */
     public function getMiniTemplatePreviewShellAction()
     {
-        $siteId = $this->params()->fromQuery('siteId', '');
-        $siteModule = $this->params()->fromQuery('siteModule', '');
-        $type = $this->params()->fromQuery('type', 'tool');
+        $siteId = (string) $this->params()->fromQuery('siteId', '');
+        $siteModule = (string) $this->params()->fromQuery('siteModule', '');
+        $type = (string) $this->params()->fromQuery('type', 'tool');
 
         if (empty($siteModule) && !empty($siteId)) {
             try {
@@ -280,85 +280,44 @@ class MelisTinyMceController extends MelisAbstractActionController
             } catch (\Exception $e) {}
         }
 
-        // if (empty($siteId) && !empty($siteModule)) {
-        //     try {
-        //         $site = $this->getService('MelisEngineTableSite')->getEntryByField('site_name', $siteModule)->current();
-        //         if ($site) {
-        //             $siteId = $site->site_id ?? '';
-        //         }
-        //     } catch (\Exception $e) {}
-        // }
+        if (empty($siteId) && !empty($siteModule)) {
+            try {
+                $site = $this->getServiceManager()->get('MelisCmsSiteService')->getSiteByModule($siteModule);
+                if ($site && !empty($site->site_id)) {
+                    $siteId = (string) $site->site_id;
+                }
+            } catch (\Exception $e) {}
+        }
 
         if (empty($siteModule)) {
             $tinyCfg = $this->getTinyMCEByType($type);
             if (!empty($tinyCfg['mini_template_site_module'])) {
-                $siteModule = $tinyCfg['mini_template_site_module'];
+                $siteModule = (string) $tinyCfg['mini_template_site_module'];
             } elseif (!empty($tinyCfg['melis_minitemplate']['site_id'])) {
                 try {
                     $site = $this->getService('MelisEngineTableSite')->getEntryById($tinyCfg['melis_minitemplate']['site_id'])->current();
                     if ($site) {
                         $siteModule = $site->site_name ?? '';
+                        if (empty($siteId)) {
+                            $siteId = (string) ($site->site_id ?? '');
+                        }
                     }
                 } catch (\Exception $e) {}
             }
         }
 
-        $targetUrl = '';
-
-        if (!empty($siteModule)) {
-            try {
-                $siteService = $this->getServiceManager()->get('MelisCmsSiteService');
-                $site = $siteService->getSiteByModule($siteModule);
-
-                if (!empty($site) && !empty($site->site_id)) {
-                    $siteDomainsService = $this->getServiceManager()->get('MelisCmsSitesDomainsService');
-                    $currentEnv = (string) (getenv('MELIS_PLATFORM') ?: 'development');
-                    $domainEntries = $siteDomainsService->getDomainBySiteIdAndEnv((int) $site->site_id, $currentEnv);
-
-                    if (empty($domainEntries)) {
-                        $domainEntries = $siteDomainsService->getDomainsBySiteId((int) $site->site_id);
-                    }
-
-                    $domain = $domainEntries[0]['sdom_domain'] ?? '';
-                    $scheme = $domainEntries[0]['sdom_scheme'] ?? 'http';
-
-                    if (!empty($domain)) {
-                        $targetUrl = rtrim($scheme . '://' . $domain, '/');
-                    }
-                }
-            } catch (\Exception $e) {}
-        }
-
-        if (empty($targetUrl)) {
-            $host = $_SERVER['HTTP_HOST'] ?? '';
-            $scheme = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
-
-            if (!empty($host)) {
-                $targetUrl = $scheme . '://' . $host . '/';
-            }
-        }
-
         $html = '';
-        //echo 'targetUrl: ' . $targetUrl;
-        if (!empty($targetUrl)) {
-            $context = stream_context_create([
-                'http' => [
-                    'method' => 'GET',
-                    'timeout' => 5,
-                    'ignore_errors' => true,
-                ],
-                'ssl' => [
-                    'verify_peer' => false,
-                    'verify_peer_name' => false,
-                ],
-            ]);
-
-            $html = @file_get_contents($targetUrl, false, $context) ?: '';
+        foreach ($this->buildPreviewShellCandidateUrls($siteId, $siteModule) as $targetUrl) {
+            $html = $this->fetchPreviewShellHtml($targetUrl);
+            if ($this->isValidPreviewShellHtml($html)) {
+                break;
+            }
+            $html = '';
         }
 
         // Fallback shell in case the target site cannot be reached.
-        if (empty($html)) {
-            $html = '<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><style>body{margin:0;font-family:Arial,sans-serif}.preview-shell-header,.preview-shell-footer{padding:12px 16px;background:#f5f5f5}.preview-shell-main{min-height:320px;padding:16px}.melis-dragdropzone{min-height:220px;border:1px dashed #d33;padding:10px}</style></head><body><header class="preview-shell-header">Preview Header</header><main class="preview-shell-main"><div class="melis-dragdropzone"></div></main><footer class="preview-shell-footer">Preview Footer</footer></body></html>';
+        if (!$this->isValidPreviewShellHtml($html)) {
+            $html = $this->getPreviewShellFallbackHtml();
         }
 
         $response = $this->getResponse();
@@ -366,6 +325,134 @@ class MelisTinyMceController extends MelisAbstractActionController
         $response->setContent($html);
 
         return $response;
+    }
+
+    /**
+     * Current Melis platform environment (Dotenv may only populate $_ENV).
+     */
+    private function getMelisPlatformEnv(): string
+    {
+        $env = getenv('MELIS_PLATFORM');
+        if ($env === false || $env === '') {
+            $env = $_ENV['MELIS_PLATFORM'] ?? $_SERVER['MELIS_PLATFORM'] ?? '';
+        }
+
+        return $env !== '' ? (string) $env : 'development';
+    }
+
+    /**
+     * Ordered list of front-office URLs to try when building the preview shell.
+     */
+    private function buildPreviewShellCandidateUrls($siteId, $siteModule): array
+    {
+        $urls = [];
+        $resolvedUrl = $this->resolvePreviewTargetUrl($siteId, $siteModule);
+        if (!empty($resolvedUrl)) {
+            $urls[] = $resolvedUrl;
+        }
+
+        if (!empty($siteId)) {
+            try {
+                $siteDomainsService = $this->getServiceManager()->get('MelisCmsSitesDomainsService');
+                $domainEntries = $siteDomainsService->getDomainBySiteIdAndEnv((int) $siteId, $this->getMelisPlatformEnv());
+                if (empty($domainEntries)) {
+                    $domainEntries = $siteDomainsService->getDomainsBySiteId((int) $siteId);
+                }
+                foreach ($domainEntries as $domainRow) {
+                    $domain = $domainRow['sdom_domain'] ?? '';
+                    if (empty($domain)) {
+                        continue;
+                    }
+                    $scheme = $domainRow['sdom_scheme'] ?? 'http';
+                    $urls[] = rtrim($scheme . '://' . $domain, '/') . '/';
+                }
+            } catch (\Exception $e) {}
+        }
+
+        $host = $_SERVER['HTTP_HOST'] ?? '';
+        if (!empty($host)) {
+            $scheme = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
+            $urls[] = $scheme . '://' . $host . '/';
+        }
+
+        return array_values(array_unique(array_filter($urls)));
+    }
+
+    /**
+     * Fetches front-office HTML for the preview shell.
+     */
+    private function fetchPreviewShellHtml(string $targetUrl): string
+    {
+        if ($targetUrl === '') {
+            return '';
+        }
+
+        $context = stream_context_create([
+            'http' => [
+                'method' => 'GET',
+                'timeout' => 8,
+                'ignore_errors' => true,
+                'header' => "User-Agent: MelisMiniTemplatePreview/1.0\r\n",
+            ],
+            'ssl' => [
+                'verify_peer' => false,
+                'verify_peer_name' => false,
+            ],
+        ]);
+
+        $html = @file_get_contents($targetUrl, false, $context);
+        if ($html !== false && $html !== '') {
+            return $html;
+        }
+
+        if (!function_exists('curl_init')) {
+            return '';
+        }
+
+        $ch = curl_init($targetUrl);
+        if ($ch === false) {
+            return '';
+        }
+
+        curl_setopt_array($ch, [
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_MAXREDIRS => 5,
+            CURLOPT_CONNECTTIMEOUT => 5,
+            CURLOPT_TIMEOUT => 8,
+            CURLOPT_SSL_VERIFYPEER => false,
+            CURLOPT_SSL_VERIFYHOST => false,
+            CURLOPT_USERAGENT => 'MelisMiniTemplatePreview/1.0',
+        ]);
+
+        $html = curl_exec($ch);
+        curl_close($ch);
+
+        return is_string($html) ? $html : '';
+    }
+
+    /**
+     * Rejects empty responses and the built-in placeholder shell.
+     */
+    private function isValidPreviewShellHtml($html): bool
+    {
+        if (!is_string($html) || strlen($html) < 500) {
+            return false;
+        }
+
+        if (stripos($html, 'preview-shell-header') !== false || stripos($html, 'Preview Header') !== false) {
+            return false;
+        }
+
+        return stripos($html, '<body') !== false;
+    }
+
+    /**
+     * Last-resort markup when the front site cannot be fetched.
+     */
+    private function getPreviewShellFallbackHtml(): string
+    {
+        return '<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><style>body{margin:0;font-family:Arial,sans-serif}.preview-shell-header,.preview-shell-footer{padding:12px 16px;background:#f5f5f5}.preview-shell-main{min-height:320px;padding:16px}.melis-dragdropzone{min-height:220px;border:1px dashed #d33;padding:10px}</style></head><body><header class="preview-shell-header">Preview Header</header><main class="preview-shell-main"><div class="melis-dragdropzone"></div></main><footer class="preview-shell-footer">Preview Footer</footer></body></html>';
     }
 
     private function resolvePreviewTargetUrl($siteId, $siteModule)
@@ -418,12 +505,7 @@ class MelisTinyMceController extends MelisAbstractActionController
             } catch (\Exception $e) {}
         }
 
-        // 2) Fallback to current host and optional site module path.
-        if (!empty($host) && !empty($siteModule)) {
-            return $scheme . '://' . $host . '/' . ltrim($siteModule, '/');
-        }
-
-        // 3) Last fallback: current host root.
+        // 2) Last fallback: current host root (Melis front sites are served at domain root).
         if (!empty($host)) {
             return $scheme . '://' . $host . '/';
         }

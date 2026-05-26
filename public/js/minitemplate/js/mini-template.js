@@ -847,20 +847,6 @@ window.resolvePreviewShellUrl = function(shellUrl, previewConfig) {
     var resolvedSiteId      = previewConfig.site_id || "",
         resolvedSiteModule  = previewConfig.site_module || "";
 
-    // Fallback: infer siteId from mini_templates_url query string if not provided in config.
-    if (!resolvedSiteId && parent.tinymce && parent.tinymce.activeEditor && parent.tinymce.activeEditor.options) {
-        var tinyTemplatesUrl = parent.tinymce.activeEditor.options.get("mini_templates_url") || "";
-            if (tinyTemplatesUrl && tinyTemplatesUrl.indexOf("?") !== -1) {
-                try {
-                    var query  = tinyTemplatesUrl.split("?")[1] || "",
-                        params = new URLSearchParams(query);
-                        resolvedSiteId = params.get("siteId") || "";
-                } catch (e) {
-                    console.error(e);
-                }
-            }
-    }
-
     return shellUrl
         .replace("{siteId}", resolvedSiteId)
         .replace("{siteModule}", resolvedSiteModule);
@@ -901,25 +887,94 @@ window.renderTemplateWithRuntimeLayout = function(previewIframeEl, templateHtml)
             outDoc.close();
 };
 
-window.getPreviewConfig = function() {
-    var miniTemplateConfig      = {},
-        editorOptions           = null,
-        siteModuleFromButton    = null;
+/**
+ * Resolves site context for shell-based preview (tools, mini-template manager, etc.).
+ * CMS page edition uses resolvePreviewSourceDoc() + renderTemplateWithRuntimeLayout() instead.
+ */
+window.parseSiteIdFromMiniTemplatesUrl = function() {
+    try {
+        if (parent.tinymce && parent.tinymce.activeEditor && parent.tinymce.activeEditor.options) {
+            var templatesUrl = parent.tinymce.activeEditor.options.get("mini_templates_url") || "";
+            if (templatesUrl && templatesUrl.indexOf("?") !== -1) {
+                var params = new URLSearchParams(templatesUrl.split("?")[1] || "");
+                return params.get("siteId") || "";
+            }
+        }
+    } catch (e) {
+        console.error(e);
+    }
 
+    return "";
+};
+
+window.getPreviewSiteContext = function() {
+    var siteId = "",
+        siteModule = "",
+        editorOptions = null,
+        miniTemplateConfig = {};
+
+    try {
         if (parent.tinymce && parent.tinymce.activeEditor && parent.tinymce.activeEditor.options) {
             editorOptions = parent.tinymce.activeEditor.options;
             miniTemplateConfig = editorOptions.get("melis_minitemplate") || {};
+            siteId = miniTemplateConfig.site_id || "";
+            siteModule = editorOptions.get("mini_template_site_module") || "";
         }
+    } catch (e) {
+        console.error(e);
+    }
 
-        siteModuleFromButton = $("#accordion-mini-template .mini-template-button.active[data-type='mini-template']").first().data("module") ||
-            $("#accordion-mini-template .mini-template-button[data-type='mini-template']").first().data("module") ||
-            null;
+    if (!siteId) {
+        siteId = parseSiteIdFromMiniTemplatesUrl();
+    }
+
+    // Mini Template Manager and other Melis tools (textarea / inline: false).
+    try {
+        if (window.parent && window.parent.$) {
+            var $parent = window.parent.$,
+                $siteIdField = $parent("#mini-template-manager-site-id").first(),
+                $siteModuleField = $parent("#miniTemplateSiteModule").first();
+
+            if (!siteId && $siteIdField.length && $siteIdField.val()) {
+                siteId = $siteIdField.val();
+            }
+
+            if (!siteModule && $siteModuleField.length && $siteModuleField.val()) {
+                siteModule = $siteModuleField.val();
+            }
+        }
+    } catch (e) {
+        console.error(e);
+    }
+
+    siteModule = siteModule ||
+        $("#accordion-mini-template .mini-template-button.active[data-type='mini-template']").first().data("module") ||
+        $("#accordion-mini-template .mini-template-button[data-type='mini-template']").first().data("module") ||
+        "";
+
+    return {
+        siteId: siteId ? String(siteId) : "",
+        siteModule: siteModule ? String(siteModule) : ""
+    };
+};
+
+window.getMiniTemplateManagerSiteId = function() {
+    return getPreviewSiteContext().siteId;
+};
+
+window.getPreviewConfig = function() {
+    var previewSiteContext  = getPreviewSiteContext(),
+        editorOptions       = null;
+
+        if (parent.tinymce && parent.tinymce.activeEditor && parent.tinymce.activeEditor.options) {
+            editorOptions = parent.tinymce.activeEditor.options;
+        }
 
         return {
             preview_mode: editorOptions ? (editorOptions.get("mini_template_preview_mode") || "auto") : "auto",
             preview_shell_url: editorOptions ? (editorOptions.get("mini_template_preview_shell_url") || "") : "",
-            site_module: editorOptions ? (editorOptions.get("mini_template_site_module") || siteModuleFromButton) : siteModuleFromButton,
-            site_id: miniTemplateConfig.site_id || null
+            site_module: previewSiteContext.siteModule,
+            site_id: previewSiteContext.siteId || null
         };
 };
 
@@ -938,19 +993,24 @@ window.renderTemplateWithSiteShell = function(previewIframeEl, templateHtml, sit
             return;
         }
 
-    // auto or site_shell, page edition mode
+    // CMS page edition (inline + melis-iframe): clone the live page layout with header/footer.
     var sourceDoc = resolvePreviewSourceDoc();
         if (sourceDoc && sourceDoc.documentElement && mode === "auto") {
             renderTemplateWithRuntimeLayout(previewIframeEl, templateHtml);
             return;
         }
 
+        // Tools (Mini Template Manager, news, etc.): fetch front-office shell server-side.
         if (shellUrl) {
+            var previewSiteContext = getPreviewSiteContext();
             $.ajax({
                 type: "GET",
                 url: shellUrl,
                 dataType: "html",
-                data: {siteModule: siteModule},
+                data: {
+                    siteModule: siteModule || previewSiteContext.siteModule,
+                    siteId: previewSiteContext.siteId
+                },
                 cache: false
             }).done(function(shellHtml) {
                 renderTemplateWithFetchedShell(previewIframeEl, templateHtml, shellHtml);
