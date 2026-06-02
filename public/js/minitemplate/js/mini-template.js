@@ -261,19 +261,19 @@
                         $mainCategory       = $siteCategory.find(".main-category"),
                         $mainCategoryBtns   = $mainCategory.find(".mini-template-button"); // .mini-template-button(s) under a .main-category
 
-                        $.each($siteCategoryBtns, function(i, v) {
-                            var $btn = $(v);
-                                // removes style attribute with display: none; height: 115px;
-                                $btn.removeAttr("style");
+                        // $.each($siteCategoryBtns, function(i, v) {
+                        //     var $btn = $(v);
+                        //         // removes style attribute with display: none; height: 115px;
+                        //         $btn.removeAttr("style");
 
-                            // removes all accordion related classes
-                            const clsList = $btn[0].classList;
-                                clsList.forEach((clsName) => {
-                                    if ( clsName.startsWith("ui-") ) {
-                                        $btn[0].classList.remove(clsName);
-                                    }
-                                });
-                        });
+                        //     // removes all accordion related classes
+                        //     const clsList = $btn[0].classList;
+                        //         clsList.forEach((clsName) => {
+                        //             if ( clsName.startsWith("ui-") ) {
+                        //                 $btn[0].classList.remove(clsName);
+                        //             }
+                        //         });
+                        // });
 
                         $.each($mainCategoryBtns, function(i, v) {
                             var $btn = $(v);
@@ -309,6 +309,23 @@
                     autoHeight: true,
                     collapsible: true,
                     icons: icons
+                });
+
+                //cleanup accordion generated styles and classes for better display of buttons
+                 var $siteCategory     = $accordion.find(".site-category"),
+                     $siteCategoryBtns   = $siteCategory.find(".mini-template-button");
+                $.each($siteCategoryBtns, function(i, v) {
+                    var $btn = $(v);
+                        // removes style attribute with display: none; height: 115px;
+                        $btn.removeAttr("style");
+
+                    // removes all accordion related classes
+                    const clsList = $btn[0].classList;
+                        clsList.forEach((clsName) => {
+                            if ( clsName.startsWith("ui-") ) {
+                                $btn[0].classList.remove(clsName);
+                            }
+                        });
                 });
 
                 $(".accordion").niceScroll({cursorcolor:"#CB4040", cursorborder: "#CB4040"});
