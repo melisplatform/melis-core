@@ -39,7 +39,7 @@ class MelisUser
         return $this->unfilteredDataCount;
     }
 
-    public function setUnfilteredDataCount(int $count = null)
+    public function setUnfilteredDataCount(?int $count = null)
     {
         $this->unfilteredDataCount = $count;
     }
