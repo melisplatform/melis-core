@@ -10,7 +10,7 @@ class MelisFieldCollection extends FormCollection
     protected $shouldWrap = false;
     protected $defaultElementHelper = 'MelisFieldRow';
 
-    public function __invoke(ElementInterface $element = null, $wrap = false)
+    public function __invoke(?ElementInterface $element = null, $wrap = false)
     {
         $wrap = $this->shouldWrap;
 
