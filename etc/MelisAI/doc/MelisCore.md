@@ -383,34 +383,113 @@ $sm->get('SharedEventManager')->attach('MelisMyModule', 'melismymodule_get_thing
     function ($e) { $p = $e->getParams(); /* alter $p['results'] */ }, 50);
 ```
 
-## B0d. Add a menu entry / a tab (the interface tree)
+## B0d. `app.interface.php` — the interface tree (the backbone of the whole back-office)
 
-`config/app.interface.php` merges your entry into the platform menu. To add a left-menu tool under
-the CMS tools section, with a `forward` to the action that renders it:
+**This is the single most important concept to understand about MelisCore.** The entire
+back-office — the header, the left menu, the tools tree, every tool, every page-editor tab, every
+modal — is described as **one giant nested tree** of "interface nodes". MelisCore walks that tree to
+render the back-office. You don't build screens imperatively; you **declare nodes** in
+`config/app.interface.php` and MelisCore renders them.
+
+### One shared tree, assembled from every module (the modularity)
+
+There is **no single file** that contains the whole tree. Each module ships a *fragment* of it in
+its own `config/app.interface.php`, and the platform **deep-merges all of them into one array** (via
+`Laminas\Stdlib\ArrayUtils::merge`, done in each `Module::getConfig()` and again across modules).
+
+Because the merge is **recursive and key-based**, two modules can contribute to the **same branch**
+just by using the **same keys** down to their insertion point. That's the whole extensibility model:
 
 ```php
-return ['plugins' => ['meliscore' => ['interface' => ['meliscore_leftmenu' => ['interface' => [
-    'meliscms_toolstree_section' => ['interface' => [
-        'melismymodule_tool' => [
-            'conf' => [
-                'id'       => 'id_melismymodule_tool',
-                'melisKey' => 'melismymodule_tool',     // the key used for rights (B0f) and zoneReload
-                'name'     => 'tr_melismymodule_tool',   // translation key
-                'icon'     => 'fa-star',
-            ],
-            'forward' => [
-                'module'     => 'MelisMyModule',
-                'controller' => 'Tool',
-                'action'     => 'render-tool',            // ToolController::renderToolAction()
-                'jscallback' => 'myModule.init();',
-            ],
-        ],
-    ]],
-]]]]]];
+// melis-cms declares the page-editor tab container:
+['plugins'=>['meliscms'=>['interface'=>['meliscms_page'=>['interface'=>['meliscms_tabs'=>['interface'=>[
+    'meliscms_tab_properties' => [ /* … */ ],
+]]]]]]]];
+
+// melis-cms-page-historic, a totally separate module, ADDS a tab to that same container
+// just by repeating the path keys — the merge slots it in next to Properties:
+['plugins'=>['meliscms'=>['interface'=>['meliscms_page'=>['interface'=>['meliscms_tabs'=>['interface'=>[
+    'melispagehistoric_historic' => [ 'conf'=>[/*…*/], 'forward'=>[/*…*/] ],
+]]]]]]]];
 ```
 
-Page-editor tabs are added the same way under `meliscms_page` → `meliscms_tabs` (this is how the
-*Historic* and *Scripts* tabs attach — see those modules' docs).
+So a module extends the back-office **without touching MelisCore or any other module** — it just
+merges a node into the right place in the tree. The top-level branches you merge into are usually
+`meliscore` (`meliscore_header`, `meliscore_leftmenu`, `meliscore_center`…), `meliscms`
+(`meliscms_page`, the CMS tools tree), or a `*_toolstree_section`.
+
+### Anatomy of an interface node
+
+```php
+'melismymodule_tool' => [
+    'conf' => [
+        'id'                       => 'id_melismymodule_tool', // DOM id
+        'melisKey'                 => 'melismymodule_tool',     // the node's unique key (see below)
+        'name'                     => 'tr_melismymodule_tool',  // tr_* translation key for the label
+        'icon'                     => 'fa-star',                // menu icon
+        'rightsDisplay'            => 'referencesonly',         // how it appears in the rights tree (below)
+        'dashboard'                => false,
+        'follow_regular_rendering' => false,                    // render directly vs. via parent zone
+    ],
+    'forward' => [                  // WHAT renders this node (a controller action returning a ViewModel)
+        'module'     => 'MelisMyModule',
+        'controller' => 'Tool',
+        'action'     => 'render-tool',           // ToolController::renderToolAction()
+        'jscallback' => 'myModule.init();',      // JS run after the zone is injected
+        'jsdatas'    => [],
+    ],
+    'cache' => [                    // optional: cache the rendered zone
+        'activated' => true,
+        'name'      => 'meliscore_leftmenu',
+        'add'       => ['userId'],              // vary the cache key per user
+    ],
+    'interface' => [                // CHILDREN — the same structure, recursively
+        'melismymodule_tool_header'  => [ /* … */ ],
+        'melismymodule_tool_content' => [ /* … */ ],
+    ],
+]
+```
+
+- **`conf`** — metadata about the node (id, melisKey, label, icon, rights display, flags).
+- **`forward`** — the controller action that **renders** this node into a zone (returns a
+  `ViewModel`). This is the seam between the declarative tree and your PHP. `jscallback` is JS run
+  after the zone is injected (e.g. to boot a DataTable).
+- **`cache`** — optional per-zone caching (the left menu is cached per `userId`, for instance).
+- **`interface`** — the node's **children**, same shape, nested as deep as you like. Rendering is
+  recursive: a parent zone renders, then its children render into it.
+- **`type`** — instead of inlining children, a node can point at another branch:
+  `'conf' => ['type' => '/meliscmsslider/interface/meliscmsslider_select_slider']` reuses an
+  existing subtree (how the slider picker is embedded into News).
+
+### `melisKey` — what it is and why it matters
+
+The **`melisKey`** is the node's **stable, unique identifier across the whole platform**. It is the
+single thread that ties the tree together; almost everything keys off it:
+
+- **Rights** — a user's permissions are a list of `melisKey`s they may access. `MelisCoreRights::canAccess('melismymodule_tool')` checks exactly this key (B0f). If a key isn't granted, that node (and its menu entry) is hidden.
+- **Rendering / refresh** — the JS helper `melisHelper.zoneReload('melismymodule_tool', params)`
+  re-renders just that node's zone by its melisKey (re-invoking its `forward` action).
+- **Targeting** — modals, tabs and AJAX callbacks reference zones by melisKey; the DOM ids derive
+  from it.
+- **Merging** — because melisKeys are unique, two modules merging into the same branch never
+  collide; each node is addressable.
+
+Rule: **every node needs a melisKey, and it must be unique platform-wide** — prefix it with your
+module name (e.g. `melismymodule_*`). `rightsDisplay` controls how the node shows in the rights
+editor: `'none'` (not shown / always-on framework zone), `'referencesonly'` (shown but not directly
+toggleable), default (a normal grantable item).
+
+### Where the common branches live
+
+- `meliscore_header`, `meliscore_leftmenu` (with `meliscore_leftmenu_dashboard`, the identity/
+  profile subtree, and the **tools tree** `meliscore_toolstree_section`), `meliscore_center`,
+  `meliscore_footer` — the shell (MelisCore).
+- `*_toolstree_section` (`meliscore_`, `meliscms_`, `melismarketing_`, `meliscommerce_`…) — the
+  grouped tool sections you add tools under.
+- `meliscms_page` → `meliscms_tabs` — the page-editor tabs (MelisCms).
+
+> **Mental model:** the back-office is a tree; modules merge branches into it by key; MelisCore walks
+> the tree and renders each node via its `forward`; rights and refresh address nodes by `melisKey`.
 
 ## B0e. Create a back-office tool (a DataTable) — end to end
 
@@ -592,6 +671,73 @@ melisHelper.createModal(
   `zoneReload(melisKey, params)` (re-render a zone via AJAX), `createModal(...)`,
   `melisOkNotification(title, msg)` / `melisKoNotification(...)`, `tabOpen/tabClose/tabSwitch`,
   `loadingZone(sel)` / `removeLoadingZone(sel)`. WYSIWYG: `melisTinyMCE.createTinyMCE('tool', sel, {})`.
+
+## B0i. The platform configuration (the project `config/` folder & per-platform config)
+
+There are **two layers of configuration** — don't confuse them:
+
+1. **Module config** — the `config/app.*.php` files **inside each module** (interface tree, tools,
+   forms…). These are merged into the application config by every `Module::getConfig()` and exposed
+   through `MelisCoreConfig` (below). This is what B0c–B0h dealt with.
+2. **Platform config** — the **project-level `config/` folder** at the root of the installed
+   platform (the skeleton), which configures *the installation itself*: which modules are enabled,
+   the database credentials, secrets, and per-environment settings.
+
+### The project `config/` folder (the installation)
+
+| File / folder | Role |
+|---|---|
+| `config/application.config.php` | Laminas application config — bootstraps the module manager. |
+| `config/modules.config.php` | **The list of enabled modules** (and their load order). Installing/removing a module via the Modules tool / marketplace edits this. A module is only active if listed here. |
+| `config/autoload/global.php` | Shared, committed config (non-secret platform settings). |
+| `config/autoload/local.php` | **Per-environment, secret config** — notably the **database credentials** and mail/SMTP. Git-ignored, different on each server. |
+| `config/melis.modules.path.php` | The **module → filesystem path map**, written by **MelisAssetManager** at load (so assets and module files resolve). The `config/` folder must be **writable** for this. |
+| `module/MelisModuleConfig/` | The **project override module** — per-platform **translation overrides** (`languages/<Module>/<locale>.interface.php`) and the **asset build/bundle** (webpack) configuration. Use it to customise the platform **without editing vendor modules**. |
+
+### Platforms (environments) & per-platform config
+
+A Melis install can behave differently per **environment** (dev / staging / production). The current
+environment is named by the **`MELIS_PLATFORM` environment variable** (set in the vhost / server
+env), which is matched against the **`melis_core_platform`** table (`plf_name`) — managed in the
+Platforms tool (§A6).
+
+Config can then be **overridden per platform** under a `datas` key, with a `default` plus
+per-platform branches:
+
+```php
+// e.g. in a module's app.interface.php under 'meliscore' => ['datas' => [...]]
+'datas' => [
+    'default' => ['auto_logout' => ['after' => 86400], 'pwd_expiry' => 720],
+    'dev'     => ['auto_logout' => ['after' => 3600]],     // overrides on the "dev" platform
+    'prod'    => ['pwd_expiry'  => 1440],
+],
+```
+
+Read it in code via `MelisCoreConfig`:
+
+```php
+$config   = $sm->get('MelisCoreConfig');
+$platform = getenv('MELIS_PLATFORM');                              // e.g. 'dev'
+$datas    = $config->getItem('meliscore/datas/' . $platform);      // this platform's branch
+$merged   = $config->getItemPerPlatform('/meliscore/datas/');      // default + platform, merged
+```
+
+### MelisCoreConfig — the runtime config tree
+
+`MelisCoreConfig` (`MelisCoreConfigService`, alias `MelisCoreConfig`) is the **runtime counterpart**
+of the design-time `ArrayUtils::merge`: it holds the **fully merged config of every module**
+(interface, tools, forms, datas…), resolves `tr_*` translation keys, applies platform overrides, and
+serves any node **by path**:
+
+```php
+$node = $config->getItem('/meliscore/interface/meliscore_header/');   // any interface/tool node
+$form = $config->getFormMergedAndOrdered('myModule/forms/x', 'x');     // a form config, merged+ordered
+$form = $config->setFormFieldRequired($form, 'field', true);           // tweak a form programmatically
+```
+
+So: **module `config/app.*.php` files** declare fragments → `Module::getConfig()` merges them →
+`MelisCoreConfig` serves the merged tree (with per-platform overrides) at runtime; the **project
+`config/` folder** decides which modules are merged in and how the install connects to its database.
 
 ---
 
