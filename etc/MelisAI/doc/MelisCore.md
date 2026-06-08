@@ -837,19 +837,8 @@ $form    = $tool->getForm('mymodule_tool_x_form_new');
 
 ## B5. The interface / menu tree (`app.interface.php`)
 
-Modules add menu entries, tools and **page/editor tabs** by merging into the interface tree. Each
-node has a `conf` (id, `melisKey`, `name` translation key, `icon`, `rightsDisplay`), a `forward`
-(module/controller/action to render it + a `jscallback`), optional `cache`, and nested `interface`
-children. Example — add a tool under the CMS tools section:
-
-```php
-'plugins' => ['meliscore' => ['interface' => ['meliscore_leftmenu' => ['interface' =>
-    ['meliscms_toolstree_section' => ['interface' => ['my_tool' => [
-        'conf'    => ['id'=>'id_my_tool','melisKey'=>'my_tool','name'=>'tr_my_tool','icon'=>'fa-star'],
-        'forward' => ['module'=>'MyModule','controller'=>'…','action'=>'render-…'],
-    ]]]]]
-]]]]
-```
+See **§B0d** for the full treatment — the interface tree is the backbone of the back-office (one
+recursive tree, deep-merged from every module's fragment, addressed by `melisKey`).
 
 ## B6. Config, dispatch & translation services
 
@@ -867,34 +856,148 @@ children. Example — add a tool under the CMS tools section:
   in MelisCms).
 - **`MelisCoreTranslation`** — loads `tr_*` interface/forms translations per locale.
 
-## B7. Email & notifications
+## B7. Sending email through the back-office email system
 
-`MelisCoreBOEmailService` sends a templated transactional email by code (templates managed in the
-Emails tool, table `melis_core_bo_emails*`):
+Don't build emails by hand — use the **BO email system** so the wording stays editable (by
+non-developers, per language) in the **Emails management** tool (§A6). The flow is: a **template**
+is stored under a **code name** (with `[TAG]` placeholders); you call **`sendBoEmailByCode()`** with
+the recipient and the tag values; MelisCore loads the right-language template, substitutes the tags,
+and sends it.
+
+**1) Have a template.** Templates live in `melis_core_bo_emails` (properties: code, from, reply-to,
+accepted tags) + `melis_core_bo_emails_details` (per-language subject + HTML/text body). Core ships
+some (account creation, lost password…) seeded from `config/app.emails.php`; create your own in the
+**Emails management** tool, or programmatically:
 
 ```php
-$sm->get('MelisCoreBOEmailService')->sendBoEmailByCode(
-    'ACCOUNTCREATION', ['USER_NAME' => 'John'], 'john@doe.com', 'John Doe', $langId
+$boEmail = $sm->get('MelisCoreBOEmailService');
+$boEmail->saveBoEmailByCode('MYMODULE_WELCOME', [/* properties + per-language details */]);
+```
+
+**2) Send it by code** — the one call you'll use most:
+
+```php
+$boEmail->sendBoEmailByCode(
+    'MYMODULE_WELCOME',                         // the template code name
+    ['USER_NAME' => 'John', 'SITE_NAME' => 'Acme'], // tag => value (replaces [USER_NAME], [SITE_NAME])
+    'john@doe.com',                             // recipient email
+    'John Doe',                                 // recipient name
+    $langId                                     // which language version of the template
 );
 ```
 
-## B8. GDPR framework
+Under the hood `sendBoEmailByCode()` calls `getBoEmailByCode($code, $langId)` to fetch the template,
+replaces the tags, then hands off to **`MelisCoreEmailSendingService`**, the low-level sender, which
+you can also call directly for a one-off email (bypassing templates):
 
-`MelisCoreGdprService` + three platform events let every module declare/extract/delete the personal
-data it holds:
+```php
+$sm->get('MelisCoreEmailSendingService')->sendEmail(
+    $fromEmail, $fromName, $toEmail, $toName, $replyTo, $subject, $htmlBody, $textBody, $transportConfig
+);
+```
 
-- `melis_core_gdpr_user_info_event` — search: a module returns the data it has on a person.
-- `melis_core_gdpr_user_extract_event` — export that data (XML).
-- `melis_core_gdpr_user_delete_event` — delete it.
+The SMTP/transport settings come from the platform config (and the GDPR tool exposes its own SMTP
+tab, §B8). Other `MelisCoreBOEmailService` methods: `getBoEmailByCode`, `saveBoEmailByCode`,
+`deleteEmail`.
+
+## B8. GDPR framework (a closer look)
+
+MelisCore provides a **platform-wide GDPR framework** so personal data is handled compliantly even
+though it's scattered across many modules. It has **two distinct halves**:
+
+### 8.1 On-demand subject access / erasure (the GDPR tool)
+
+The **GDPR tool** (§A6) lets an operator search a person and, **across every module at once**, see /
+extract / delete their data. MelisCore can't know what each module stores — so it **broadcasts three
+events** and each module **answers for its own tables**. `MelisCoreGdprService` drives it:
+
+| Service method | Event broadcast | What modules do |
+|---|---|---|
+| `getUserInfo($formInputs)` | `melis_core_gdpr_user_info_event` | return the rows they hold on the person (for the results grid) |
+| `extractSelected($ids)` | `melis_core_gdpr_user_extract_event` | return that data as XML for export |
+| `deleteSelected($ids)` | `melis_core_gdpr_user_delete_event` | delete the selected rows |
+
+A module participates by hooking the events — return its data in the agreed shape:
 
 ```php
 $sharedEvents->attach('MyModule', 'melis_core_gdpr_user_info_event', function ($e) {
     $search = $e->getParam('search');   // ['user_name'=>…, 'user_email'=>…, 'site'=>…]
-    // return ['results' => ['MyModule' => ['icon'=>…, 'values' => ['columns'=>…, 'datas'=>…]]]]
+    // find this person's rows in your tables, then return:
+    return ['results' => ['MyModule' => [
+        'icon'      => 'fa fa-user',
+        'moduleName'=> 'MyModule',
+        'values'    => [
+            'columns' => ['name' => ['id'=>'col_name','text'=>'Name']],
+            'datas'   => ['13' => ['name' => 'Doe', 'email' => 'doe@john.com']],  // keyed by row id
+        ],
+    ]]];
 });
+// the extract/delete events receive ['selected' => ['MyModule' => [13,15], …]]
 ```
 
-The MelisCmsProspects doc shows a full consumer implementation.
+(MelisCmsProspects is a complete worked example — see its doc / `config/app.gdpr.php` + its GDPR
+listeners.)
+
+### 8.2 Scheduled auto-delete (data retention)
+
+Separately, MelisCore can **automatically anonymise stale user data** on a schedule — the
+*GDPR auto-delete* / data-retention engine. Configured in the GDPR tool (which modules, after how
+many days, alert emails, SMTP), it runs as a **cron** (route `/melis/gdprautodelete`).
+
+- `MelisCoreGdprAutoDeleteService` — the engine: `run()` (the cron entry point), `getFirstAlertUsers()`
+  / `getSecondAlertUsers()` (who to warn), `getModuleTags()`, `saveEmailsSentData()`,
+  `getSmtpConfigData()`. It emails users a **first** and **second warning** before anonymising.
+- `MelisCoreGdprAutoDeleteToolService` — the back-office config (the DataTables of delete-configs and
+  email logs, and the add/edit forms). Tables: `melis_core_gdpr_delete_config` (the rules) and
+  `melis_core_gdpr_delete_emails_logs` (audit trail).
+- **Modules opt in** by implementing `MelisCoreGdprAutoDeleteInterface`: `getListOfTags()`,
+  `getWarningListOfUsers()`, `getSecondWarningListOfUsers()`, `getUserPerValidationKey($key)`,
+  `updateGdprUserStatus($key)`, `removeOldUnvalidatedUsers($config)` — so the engine knows that
+  module's users, can warn them, and can delete the unvalidated ones. The auto-delete events
+  (`melis_core_gdpr_auto_delete*`) coordinate the cycle. (MelisCmsProspects again is a full example.)
+
+> **In short:** §8.1 = *"show/erase everything we have on this person, now"* (event-driven,
+> operator-triggered); §8.2 = *"automatically purge data older than X, with warnings"* (cron-driven,
+> per-module retention rules).
+
+## B8b. Users, passwords & crypting
+
+**Hashing.** Passwords are hashed with PHP's **`password_hash($password, PASSWORD_DEFAULT)`** and
+verified with **`password_verify()`** (in `MelisCoreAuthService`):
+
+```php
+$auth = $sm->get('MelisCoreAuth');
+$hash = $auth->encryptPassword($plain);                 // password_hash(…, PASSWORD_DEFAULT)
+$ok   = $auth->isPasswordCorrect($provided, $stored);   // password_verify(…)
+```
+
+There is **no custom cost/salt to configure**: `PASSWORD_DEFAULT` means MelisCore deliberately uses
+**PHP's current best default algorithm** (bcrypt today; may move to a stronger one in future PHP) —
+so hashes are forward-compatible and you should never hand-roll crypto here. Stored in
+`melis_core_user.usr_password`.
+
+**Password policy** (set in *System Configuration → Other config*, stored under `meliscore/datas`
+per platform):
+- `pwd_expiry` — password **lifetime**; after it, the user must change their password.
+- `pwd_request_expiry` — how long a **lost-password reset link** stays valid.
+- **Account lock** — after too many failed logins (threshold + lock duration), the account is locked.
+- **Password history** — `melis_user_password_history` + `MelisUpdatePasswordHistoryService` (and a
+  bootstrap listener) **prevent reusing a recent password** (`password_verify` is run against the
+  history on change).
+
+**Lost / set password flow** (`MelisCoreLostPasswordService`, `MelisCoreCreatePasswordService`):
+
+```php
+$lost = $sm->get(\MelisCore\Service\MelisCoreLostPasswordService::class);
+$lost->addLostPassRequest($login, $email);              // creates a hashed request (melis_core_lost_password)
+                                                        // + emails the reset link via the BO email system (B7)
+// …user clicks the link with $hash…
+$valid = $lost->hashExists($hash) && /* not expired */ true;
+$lost->processUpdatePassword($hash, $newPassword);      // checks history, hashes, saves
+```
+
+`MelisPasswordSettingsService` exposes the policy; the login screen and account lock are handled by
+`MelisCoreAuthService` + the auth listeners.
 
 ## B9. Micro-services bus
 
