@@ -11,6 +11,7 @@ var themeSwitcher = (function($) {
         $html                   = $('html'),
         $defaultTheme           = $('#default-theme'), // light = system colors, default
         $darkTheme              = $('#dark-theme'),
+        $rounded                = $('#rounded'),
         currentUiStyle          = 'flat',
         uiStorageKey            = 'preferred-ui-style',
         themeControlsObserver   = null,
@@ -116,7 +117,7 @@ var themeSwitcher = (function($) {
             $html.attr('data-style', style);
 
             // target the back-office UI elements you want styled
-            var $targets = $(
+            /* var $targets = $(
                 '.widget, .panel, .card, .modal-content, .sidebar, .dropdown-menu, .table,' +
                 '.panel-heading, .panel-body, .card-header, .card-body, .form-control, .input-group-text,' +
                 '.btn, .list-group-item, .well, .nav-link, .dropdown-item, .modal-header, .modal-body, .modal-footer,' +
@@ -127,7 +128,7 @@ var themeSwitcher = (function($) {
                 $targets.removeClass('flat').addClass('rounded');
             } else {
                 $targets.removeClass('rounded').addClass('flat');
-            }
+            } */
 
             // apply the ui style to the page edition iframe
             applyUiStyleToPageEditionIframe(style);
@@ -235,22 +236,22 @@ var themeSwitcher = (function($) {
                         }
 
                         try {
-                            var $iframeHtml = $(iframeDoc.documentElement),
-                                $targets = $(iframeDoc).find(
+                            var $iframeHtml = $(iframeDoc.documentElement);
+                                /* $targets = $(iframeDoc).find(
                                     '.widget, .panel, .card, .modal-content, .sidebar, .dropdown-menu, .table,' +
                                     '.panel-heading, .panel-body, .card-header, .card-body, .form-control, .input-group-text,' +
                                     '.btn, .list-group-item, .well, .nav-link, .dropdown-item, .modal-header, .modal-body, .modal-footer,' +
                                     'input:not(.theme-radio), select, textarea,' +
                                     '.melis-dragdrop-zone, .melis-dragdrop-box, .melis-draggable-item, .ui-sortable, .ui-sortable-handle'
-                                );
+                                ); */
 
                                 $iframeHtml.attr('data-style', uiStyle);
 
-                                if (uiStyle === 'rounded') {
+                                /* if (uiStyle === 'rounded') {
                                     $targets.removeClass('flat').addClass('rounded');
                                 } else {
                                     $targets.removeClass('rounded').addClass('flat');
-                                }
+                                } */
                         } catch (e) {
                             // ignore cross-origin or not-ready iframe documents
                         }
@@ -360,7 +361,8 @@ var themeSwitcher = (function($) {
                 }
 
             var defaultHref = $defaultTheme.attr('href') || '/assets/css/schemes.css',
-                darkHref = $darkTheme.attr('href') || '/assets/css/dark.css';
+                darkHref = $darkTheme.attr('href') || '/assets/css/dark.css',
+                roundedHref = $rounded.attr('href') || '/assets/css/rounded.css';
 
                 // Create <link> nodes with the iframe's document — jQuery-created nodes
                 // belong to the parent document and can end up appended to <body> when
@@ -381,6 +383,7 @@ var themeSwitcher = (function($) {
 
                 appendStylesheetLink('default-theme', defaultHref);
                 appendStylesheetLink('dark-theme', darkHref);
+                appendStylesheetLink('rounded', roundedHref);
         }
 
         function saveTheme(theme) {
@@ -487,7 +490,7 @@ var themeSwitcher = (function($) {
             toggleTheme     : toggleTheme,
             loadSavedTheme  : loadSavedTheme,
             syncPageEditionIframes : syncPageEditionIframes,
-            reApplyUiStyle  : function () { applyUiStyle(); }
+            //reApplyUiStyle  : function () { applyUiStyle(); }
         };
 })(jQuery);
 
@@ -502,9 +505,9 @@ $(function() {
                 themeSwitcher.syncPageEditionIframes();
             }
 
-            if (typeof themeSwitcher.reApplyUiStyle === 'function') {
+            /* if (typeof themeSwitcher.reApplyUiStyle === 'function') {
                 themeSwitcher.reApplyUiStyle();
-            }
+            } */
         }
     });
 });

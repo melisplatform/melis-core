@@ -1,0 +1,19 @@
+/*
+ * Add border radius to the following elements when the data-style is "rounded"
+ * .widget, .panel, .card, .modal-content
+ * .panel-heading, .panel-body, .card-header, .card-body
+ * .form-control, .input-group-text
+ * .btn, .list-group-item, .well
+ * .nav-link, .dropdown-item
+ * .modal-header, .modal-body, .modal-footer
+ * input:not(.theme-radio), select, textarea
+ * 
+ * Using this rather than jQuery to add the class to the elements is more efficient and easier to maintain.
+ */
+
+html[data-style="rounded"] .widget,
+html[data-style="rounded"] .panel, 
+html[data-style="rounded"] .card, 
+html[data-style="rounded"] .modal-content {
+    border-radius: 10px;
+}

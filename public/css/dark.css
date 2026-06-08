@@ -1,0 +1,1584 @@
+/*
+    Melis Platform - Dark theme overrides
+    Scope all rules under html[data-theme="dark"] to avoid affecting light mode.
+
+    Edit this file in d:/Local files/work/platform-scheme-evolution
+*/
+/* root variables for dark theme — only edit these */
+html[data-theme="dark"] {
+    --bg: #121212;
+    --text: #ffffff;
+
+    --active-bg: #ffffff;
+    --active-text: #121212;
+
+    --menu-hover: #373737;
+
+    --submenu-bg: #1d1d1d;
+    --submenu-text: #5a5a5a;
+    --submenu-hover-text: #ffffff;
+
+    --highlight-grey: #ededed;
+
+    --border-white: #ffffff;
+    --border-black: #121212;
+    --border-grey: #2c2c2c;
+
+    --cms-text: #686868;
+}
+
+/* global base rule, bg / text / border */
+html[data-theme="dark"] body,
+html[data-theme="dark"] .widget,
+html[data-theme="dark"] .panel,
+html[data-theme="dark"] .card,
+html[data-theme="dark"] .modal-content,
+html[data-theme="dark"] .sidebar,
+html[data-theme="dark"] .dropdown-menu,
+html[data-theme="dark"] .table {
+    background-color: var(--active-bg) !important;
+    color: var(--active-text) !important;
+    border-color: var(--border-grey) !important;
+}
+
+html[data-theme="dark"] .back .widget {
+    background-color: transparent !important;
+}
+
+/* text-only elements, icons, links and labels */
+/* html[data-theme="dark"] a,
+html[data-theme="dark"] .navbar a,
+html[data-theme="dark"] .sidebar a {
+    color: var(--text) !important;
+} */
+
+/* active state, hover state */
+html[data-theme="dark"] .active,
+html[data-theme="dark"] .active a,
+html[data-theme="dark"] .dropdown-menu li.active a,
+html[data-theme="dark"] .nav-tabs .nav-link.active,
+html[data-theme="dark"] .list-group-item.active {
+    /* background-color: var(--active-bg) !important; */
+    color: var(--active-text) !important;
+}
+html[data-theme="dark"] a:hover,
+html[data-theme="dark"] .dropdown-menu li a:hover,
+html[data-theme="dark"] .nav > li > a:hover {
+    /* background-color: var(--active-bg) !important; */
+    color: var(--active-text) !important;
+}
+html[data-theme="dark"] .dropdown .dropdown-menu li.active span.active {
+    background-color: transparent !important;
+}
+
+/* sidebar + menu */
+html[data-theme="dark"] .sidebar {
+    background-color: var(--bg) !important;
+}
+html[data-theme="dark"] .sidebar ul li {
+    border-color: var(--bg) !important;
+}
+html[data-theme="dark"] .sidebar ul li a:hover {
+    background-color: var(--menu-hover) !important;
+}
+
+/* submenu */
+html[data-theme="dark"] .sidebar ul li ul li a {
+    background-color: var(--submenu-bg) !important;
+    color: var(--submenu-text) !important;
+}
+html[data-theme="dark"] .sidebar ul li ul li a:hover {
+    color: var(--submenu-hover-text) !important;
+}
+
+/* scrollbars */
+html[data-theme="dark"] ::-webkit-scrollbar-track {
+    background: var(--active-bg) !important;
+}
+html[data-theme="dark"] ::-webkit-scrollbar-thumb {
+    background: var(--active-text) !important;
+}
+
+/* generic */
+html[data-theme="dark"] body {
+    background-color: var(--active-bg) !important;
+    color: var(--active-text) !important;
+}
+
+/* color theme switch / dropdown-menu */
+html[data-theme="dark"] .dropdown-menu .dropdown-item.active, 
+html[data-theme="dark"] .dropdown-menu .dropdown-item:active {
+    background-color: var(--active-bg) !important;
+    color: var(--active-text) !important;
+}
+
+/* top navigation and tabs */
+html[data-theme="dark"] .navbar.main,
+html[data-theme="dark"] .navbar.main.navbar-primary,
+html[data-theme="dark"] .navbar.main .nav.navbar-right,
+html[data-theme="dark"] .tabsbar .nav-tabs > li.active > a {
+    background-color: var(--bg) !important;
+    border-color: var(--border-grey) !important;
+}
+html[data-theme="dark"] .navbar.main .nav > li > a,
+html[data-theme="dark"] .tabsbar .tab-element,
+html[data-theme="dark"] .tabsbar .tab-element i:before,
+html[data-theme="dark"] .navbar.main .nav > li > a .fa:before {
+    color: var(--text) !important;
+}
+html[data-theme="dark"] .nav-tabs:not(.product-text-tab) .nav-item.active .nav-link.active span, 
+html[data-theme="dark"] .nav-tabs:not(.product-text-tab) .nav-link.active span, 
+html[data-theme="dark"] .nav.nav-tabs:not(.product-text-tab) .nav-item .nav-link.active span {
+    color: var(--active-text) !important;
+}
+
+/* widgets, panels, cards */
+html[data-theme="dark"] :not(.back) .widget,
+html[data-theme="dark"] :not(.back) .widget > .widget-head,
+html[data-theme="dark"] :not(.back) .widget > .widget-body,
+html[data-theme="dark"] .panel,
+html[data-theme="dark"] .panel-default,
+html[data-theme="dark"] .panel-heading,
+html[data-theme="dark"] .panel-body,
+html[data-theme="dark"] .card,
+html[data-theme="dark"] .card-header,
+html[data-theme="dark"] .card-body {
+    background-color: var(--active-bg) !important;
+    border-color: var(--border-grey) !important;
+    color: var(--active-text) !important;
+}
+html[data-theme="dark"] :not(.back) .widget > .widget-head {
+    border: 1px solid var(--border-grey) !important;
+}
+html[data-theme="dark"] :not(.back) .widget > .widget-head {
+    border-left: 0 !important;
+}
+html[data-theme="dark"] .container-level-a .widget.widget-tabs.widget-tabs-responsive > .widget-head ul li.active,
+html[data-theme="dark"] :not(.back).widget > .widget-head ul li.active {
+    border-bottom: 1px solid var(--border-white) !important;
+}
+html[data-theme="dark"] .user-account-picture,
+html[data-theme="dark"] .container-level-a .widget.widget-tabs.widget-tabs-responsive > .widget-head ul li.active > a, 
+html[data-theme="dark"] .container-level-a .widget.widget-tabs.widget-tabs-responsive > .widget-head ul li:last-child.active > a {
+    border-color: var(--border-black) !important;
+}
+html[data-theme="dark"] .back .widget > .widget-head {
+    border-top-width: 0 !important;
+    border-left-width: 0 !important;
+    border-right-width: 0 !important;
+    border-bottom-width: 1px !important
+}
+html[data-theme="dark"] .back .widget > .widget-head .heading {
+    color: var(--active-text) !important;
+}
+
+/* dropdowns & menus */
+html[data-theme="dark"] .dropdown-menu {
+    background-color: var(--bg) !important;
+    border-color: var(--border-grey) !important;
+}
+html[data-theme="dark"] .dropdown-menu > li > a,
+html[data-theme="dark"] .dropdown-menu > li > a .fa:before {
+    color: var(--text) !important;
+}
+
+/* tables */
+html[data-theme="dark"] table,
+html[data-theme="dark"] .table,
+html[data-theme="dark"] .table > thead > tr > th {
+    background-color: var(--bg) !important;
+    border-color: var(--border-white) !important;
+    color: var(--text) !important;
+}
+html[data-theme="dark"] .table > tbody > tr > td {
+    border-color: var(--border-grey) !important;
+}
+html[data-theme="dark"] .table-striped > tbody > tr:nth-of-type(odd) {
+    background-color: var(--bg) !important;
+}
+
+/* forms */
+html[data-theme="dark"] form .form-group input[type="text"],
+html[data-theme="dark"] input:not(.theme-radio),
+html[data-theme="dark"] select,
+html[data-theme="dark"] textarea,
+html[data-theme="dark"] #dt_bsdatepicker,
+html[data-theme="dark"] .filter-bar .dt-date-range-picker,
+html[data-theme="dark"] .MultiCheckBox,
+html[data-theme="dark"] .form-control,
+html[data-theme="dark"] .input-group-text,
+html[data-theme="dark"] .btn-default,
+html[data-theme="dark"] .select2-container--default .select2-selection--single {
+    background-color: var(--active-bg) !important;
+    border-color: var(--border-grey) !important;
+    color: var(--active-text) !important;
+    border-radius: 0 !important;
+}
+
+html[data-theme="dark"] .select2-container--default .select2-selection--single,
+html[data-theme="dark"] .form-control,
+html[data-theme="dark"] .MultiCheckBox,
+html[data-theme="dark"] #dt_bsdatepicker,
+html[data-theme="dark"] .filter-bar .dt-date-range-picker,
+html[data-theme="dark"] form .form-group input[type="text"],
+html[data-theme="dark"] textarea,
+html[data-theme="dark"] select,
+html[data-theme="dark"] input[type="email"],
+html[data-theme="dark"] input[type="password"],
+html[data-theme="dark"] input[type="number"],
+html[data-theme="dark"] input[type="tel"],
+html[data-theme="dark"] input[type="url"],
+html[data-theme="dark"] input[type="search"],
+html[data-theme="dark"] input[type="date"],
+html[data-theme="dark"] input[type="time"],
+html[data-theme="dark"] input[type="datetime-local"],
+html[data-theme="dark"] input[type="text"] {
+    background-color: var(--highlight-grey) !important;
+}
+
+/* modals */
+html[data-theme="dark"] .modal-content,
+html[data-theme="dark"] .modal-header,
+html[data-theme="dark"] .modal-body,
+html[data-theme="dark"] .modal-footer {
+    background-color: var(--active-bg) !important;
+    border-color: var(--border-white) !important;
+    color: var(--active-text) !important;
+}
+
+/* sidebar, lists */
+html[data-theme="dark"] .sidebar,
+html[data-theme="dark"] .well,
+html[data-theme="dark"] .list-group-item {
+    background-color: var(--bg) !important;
+    border-color: var(--border-grey) !important;
+    color: var(--text) !important;
+}
+
+/* links, top nav and primary accents still white/text friendly */
+html[data-theme="dark"] #melis-navtabs-container-inner .nav-tabs .nav-item .nav-link .fa,
+html[data-theme="dark"] #melis-navtabs-container-inner .nav-tabs .nav-item .nav-link span,
+html[data-theme="dark"] .melis-primary-bg,
+html[data-theme="dark"] .melis-primary-txt
+/* html[data-theme="dark"] a,
+html[data-theme="dark"] a:hover */ {
+    color: var(--text) !important;
+}
+
+/* active tab */
+html[data-theme="dark"] #melis-navtabs-container-inner .nav-tabs .nav-item .nav-link:hover span,
+html[data-theme="dark"] #melis-navtabs-container-inner .nav-tabs .nav-item.active .nav-link .fa:before,
+html[data-theme="dark"] #melis-navtabs-container-inner .nav-tabs .nav-item.active .nav-link .fa,
+html[data-theme="dark"] #melis-navtabs-container-inner .nav-tabs .nav-item.active .nav-link span {
+    color: var(--active-text) !important;
+}
+html[data-theme="dark"] .navbar.main .nav.navbar-right, 
+html[data-theme="dark"] body .navbar.main.navbar-primary, 
+html[data-theme="dark"] .navbar.main.navbar-primary .dropdown-toggle {
+    background-color: var(--bg) !important;
+}
+html[data-theme="dark"] .navbar.main.navbar-primary .dropdown:hover .dropdown-toggle {
+    background-color: transparent !important;
+    transition: none !important;
+}
+html[data-theme="dark"] .navbar.main .nav.navbar-right li,
+html[data-theme="dark"] #id_meliscore_header_flash_messenger,
+html[data-theme="dark"] .navbar.main .nav.navbar-right li:first-child,
+html[data-theme="dark"] .navbar.main .nav.navbar-right > li,
+html[data-theme="dark"] .navbar #melis-id-nav-bar-tabs > li {
+    border-color: var(--border-grey) !important;
+}
+
+/* hover */
+html[data-theme="dark"] .navbar.main .nav.navbar-right .dropdown-menu li.active a:hover,
+html[data-theme="dark"] .dropdown-menu li.active a:hover, 
+html[data-theme="dark"] .dropdown-menu li.active:hover a:hover,
+html[data-theme="dark"] #module-status:hover,
+html[data-theme="dark"] #id_meliscore_header_logout a:hover .fa:before,
+html[data-theme="dark"] .navbar.main .nav.navbar-right .dropdown-menu li a:hover,
+html[data-theme="dark"] .navbar.main.navbar-primary .nav > li.has-sub > .nav-group-dropdown li .dropdown-toggle:hover, 
+html[data-theme="dark"] .navbar.main.navbar-primary .nav > li.has-sub.active-parent.on > .nav-group-dropdown li .dropdown-toggle:hover, 
+html[data-theme="dark"] .navbar.main.navbar-primary .nav > li.active > .dropdown-toggle,
+html[data-theme="dark"] #flash-messenger:hover,
+html[data-theme="dark"] #clearNotifBtn:hover,
+html[data-theme="dark"] #melis-messenger-messages:hover,
+html[data-theme="dark"] .navbar.main.navbar-primary .nav > li .dropdown-toggle:hover .fa:before,
+html[data-theme="dark"] .navbar.main.navbar-primary .nav > li .dropdown-toggle:hover, 
+html[data-theme="dark"] .navbar.main.navbar-primary .nav > li .dropdown-toggle:hover .fa {
+    background-color: var(--active-bg) !important;
+    color: var(--active-text) !important;
+    transition: none;
+}
+html[data-theme="dark"] #flash-messenger:hover a {
+    color: var(--active-text) !important;
+}
+html[data-theme="dark"] #module-status,
+html[data-theme="dark"] #flash-messenger,
+html[data-theme="dark"] #melis-messenger-messages {
+    color: var(--text) !important;
+}
+html[data-theme="dark"] #melis-navtabs-container-inner .tabsbar .has-sub > .dropdown-toggle:before {
+    color: var(--text) !important;
+}
+html[data-theme="dark"] #melis-navtabs-container-inner .tabsbar > li.has-sub.active-parent.on > .nav-group-dropdown > li.has-sub > .dropdown-toggle:hover:before,
+html[data-theme="dark"] #melis-navtabs-container-inner .tabsbar > li.has-sub.active-parent.on > .nav-group-dropdown > li.has-sub > .dropdown-toggle:hover > span,
+html[data-theme="dark"] #melis-navtabs-container-inner .tabsbar > li.has-sub.active-parent.on > .nav-group-dropdown > li.has-sub > .dropdown-toggle:hover > .fa:before,
+html[data-theme="dark"] #melis-navtabs-container-inner .tabsbar > li.has-sub.active-parent.on > .nav-group-dropdown > .nav-item.active > .dropdown-toggle > .fa:before,
+html[data-theme="dark"] #melis-navtabs-container-inner .tabsbar > li.has-sub.active-parent.on > .nav-group-dropdown > .nav-item.active > .dropdown-toggle > span,
+html[data-theme="dark"] #melis-navtabs-container-inner .tabsbar > li.has-sub.active-parent.on > .dropdown-toggle:before,
+html[data-theme="dark"] #melis-navtabs-container-inner .tabsbar > li.has-sub.active-parent.on > .dropdown-toggle > .fa:before,
+html[data-theme="dark"] #melis-navtabs-container-inner .tabsbar > li.has-sub.active-parent.on > .dropdown-toggle > span,
+html[data-theme="dark"] .tabsbar .has-sub.active-parent > .tab-element:before,
+html[data-theme="dark"] .tabsbar .has-sub.active > .tab-element:before {
+    color: var(--active-text) !important;
+}
+html[data-theme="dark"] #melis-navtabs-container-inner .tabsbar > li.has-sub.active-parent.on > .nav-group-dropdown > li.has-sub > .dropdown-toggle:hover,
+html[data-theme="dark"] #melis-navtabs-container-inner .tabsbar > li.has-sub.active-parent.on > .nav-group-dropdown > .nav-item.active > .dropdown-toggle,
+html[data-theme="dark"] #melis-navtabs-container-inner .tabsbar > li.has-sub.active-parent.on > .dropdown-toggle {
+    background-color: var(--active-bg) !important;
+    color: var(--active-text) !important;
+}
+html[data-theme="dark"] #melis-navtabs-container-inner .tabsbar > li.has-sub.active-parent.on > .nav-group-dropdown > .nav-item:first-child {
+    border-left: 0 !important;
+}
+html[data-theme="dark"] #melis-navtabs-container-inner .tabsbar > li.has-sub.active-parent.on > .nav-group-dropdown > .nav-item > .dropdown-toggle:hover {
+    background-color: var(--bg) !important;
+    color: var(--text) !important;
+}
+html[data-theme="dark"] #melis-navtabs-container-inner .tabsbar > li.has-sub.active-parent.on > .nav-group-dropdown > .nav-item > .dropdown-toggle:hover > .fa {
+    background-color: var(--bg) !important;
+}
+html[data-theme="dark"] #melis-navtabs-container-inner .tabsbar > li.has-sub.active-parent.on > .nav-group-dropdown > .nav-item > .dropdown-toggle:hover > span {
+    color: var(--text) !important;
+}
+html[data-theme="dark"] #melis-navtabs-container-inner .tabsbar > li.has-sub.active-parent.on > .nav-group-dropdown > .nav-item > .dropdown-toggle:hover > .fa:before {
+    background-color: var(--bg) !important;
+    color: var(--text) !important;
+}
+html[data-theme="dark"] #melis-navtabs-container-inner .tabsbar > li.has-sub.active-parent.on:hover > .nav-group-dropdown > .nav-item > .dropdown-toggle:hover > span {
+    color: var(--text) !important;
+}
+html[data-theme="dark"] #melis-navtabs-container-inner .tabsbar > li.has-sub.active-parent.on:hover > .nav-group-dropdown > .nav-item:hover > .close-tab {
+    background-color: var(--bg) !important;
+    color: var(--text) !important;
+}
+html[data-theme="dark"] #melis-navtabs-container-inner .tabsbar > li.has-sub.active-parent.on:hover > .nav-group-dropdown > .nav-item:hover > .close-tab:before {
+    color: var(--text) !important;
+}
+html[data-theme="dark"] .navbar.main.navbar-primary .tabsbar .nav-item.has-sub:hover > .nav-group-dropdown .dropdown-toggle {
+    background-color: var(--active-bg) !important;
+    color: var(--active-text) !important;
+}
+
+/* default */
+html[data-theme="dark"] .navbar.main .nav.navbar-right .dropdown-menu li a {
+    color: var(--text) !important;
+}
+html[data-theme="dark"] .navbar.main .nav.navbar-right .dropdown-menu li.active a, 
+html[data-theme="dark"] .dropdown-menu li.active a, 
+html[data-theme="dark"] .dropdown-menu li.active:hover a {
+    background-color: var(--bg) !important;
+    color: var(--text) !important;
+}
+html[data-theme="dark"] #clearNotifBtn {
+    background-color: var(--bg) !important;
+    color: var(--text) !important;
+}
+
+/* side nav */
+html[data-theme="dark"] .navbar.main.navbar-primary .left-menu .navbar-brand {
+    background-color: var(--bg) !important;
+    border-color: var(--border-grey) !important;
+}
+html[data-theme="dark"] .navbar.main.navbar-primary .toggle-button i,
+html[data-theme="dark"] .navbar.main.navbar-primary .appbrand {
+    color: var(--text) !important;
+}
+html[data-theme="dark"] .navbar.main.navbar-primary .toggle-button i {
+    opacity: 0.7;
+}
+html[data-theme="dark"] .navbar.main.navbar-primary .toggle-button:hover i {
+    opacity: 1;
+}
+html[data-theme="dark"] #id_meliscore_leftmenu_identity,
+html[data-theme="dark"] #id_meliscore_leftmenu {
+    background-color: var(--bg) !important;
+}
+html[data-theme="dark"] .sidebar .user-profile .media-body p,
+html[data-theme="dark"] .sidebar.sidebar-inverse .user-profile a {
+    color: var(--text) !important;
+}
+html[data-theme="dark"] #id_meliscore_leftmenu_identity ul li a:hover,
+html[data-theme="dark"] #id_meliscore_leftmenu_identity ul li.active a#btnUserInfoEdit {
+    background-color: var(--active-bg) !important;
+    color: var(--active-text) !important;
+}
+html[data-theme="dark"] #id_meliscore_leftmenu_identity ul li.active a#btnUserInfoEdit .fa {
+    color: var(--active-text) !important;
+}
+html[data-theme="dark"] #id_meliscore_leftmenu_identity ul li.active a#btnUserInfoEdit:hover .fa {
+    color: var(--text) !important;
+}
+html[data-theme="dark"] #id_meliscore_leftmenu_identity ul li.active a#btnUserInfoEdit:hover,
+html[data-theme="dark"] #id_meliscore_leftmenu_identity ul li a {
+    background-color: var(--bg) !important;
+    color: var(--text) !important;
+}
+
+/* profile*/
+html[data-theme="dark"] .profile-photo .image-tool-tip {
+    background-color: var(--bg) !important;
+    color: var(--text) !important;
+}
+html[data-theme="dark"] .u-lists .fa,
+html[data-theme="dark"] .u-username {
+    color: var(--active-text) !important;
+}
+html[data-theme="dark"] .widget-user .widget.widget-tabs-double-2 > .widget-head {
+    border-top: 1px solid var(--border-grey) !important;
+}
+html[data-theme="dark"] .container-level-a .widget.widget-tabs.widget-tabs-responsive > .widget-head ul li {
+    border-right-color: var(--border-grey) !important;
+    border-bottom: 1px solid var(--border-grey) !important;
+}
+html[data-theme="dark"] .profile-photo:hover .photo-overlay {
+    background-color: var(--bg) !important;
+    opacity: 0.7 !important;
+}
+
+/* menus */
+html[data-theme="dark"] .sidebar.sidebar-inverse>.sidebarMenuWrapper>ul li {
+    border-color: var(--border-grey) !important;
+}
+html[data-theme="dark"] .sidebar>.sidebarMenuWrapper {
+    background-color: var(--bg) !important;
+}
+html[data-theme="dark"] .sidebar.sidebar-inverse>.sidebarMenuWrapper>ul li a:hover {
+    background-color: var(--menu-hover) !important;
+    color: var(--text) !important;
+}
+html[data-theme="dark"] #flash-messenger .media-body a:hover {
+    background-color: transparent !important;
+}
+
+/* side nav - menu - submenu */
+html[data-theme="dark"] .sidebar.sidebar-inverse>.sidebarMenuWrapper>ul li.active-menu.hasSubmenu ul li a {
+    background-color: var(--bg) !important;
+}
+html[data-theme="dark"] .active-menu .fa:before,
+html[data-theme="dark"] .active-menu i,
+html[data-theme="dark"] .sidebar.sidebar-inverse>.sidebarMenuWrapper>ul li.active-menu.hasSubmenu ul li a,
+html[data-theme="dark"] .sidebar.sidebar-inverse>.sidebarMenuWrapper>ul li.active.hasSubmenu .hasSubmenu.active ul li a {
+    color: var(--submenu-text) !important;
+}
+html[data-theme="dark"] .sidebar.sidebar-inverse>.sidebarMenuWrapper>ul li.active.hasSubmenu .hasSubmenu.active ul li a:hover .fa:before,
+html[data-theme="dark"] .sidebar.sidebar-inverse>.sidebarMenuWrapper>ul li.active.hasSubmenu .hasSubmenu.active ul li a:hover i,
+html[data-theme="dark"] .sidebar.sidebar-inverse>.sidebarMenuWrapper>ul li.active.hasSubmenu .hasSubmenu.active ul li a:hover {
+    color: var(--submenu-hover-text) !important;
+}
+html[data-theme="dark"] .sidebar.sidebar-inverse > .sidebarMenuWrapper > ul li.active-menu.hasSubmenu ul li.active-menu > a[data-bs-toggle="collapse"], 
+html[data-theme="dark"] .sidebar.sidebar-inverse > .sidebarMenuWrapper > ul > li.active.hasSubmenu > a[data-bs-toggle="collapse"] {
+    background-color: var(--active-bg) !important;
+    color: var(--active-text) !important;
+}
+html[data-theme="dark"] .sidebar.sidebar-inverse > .sidebarMenuWrapper > ul > li.active-menu.hasSubmenu > ul > li > a:hover > i {
+    background-color: transparent !important;
+    color: var(--text) !important;
+}
+html[dark-theme="dark"] #treeview-container {
+    background-color: var(--bg) !important;
+    color: var(--text) !important;
+}
+html[data-theme="dark"] .unpublish {
+    background-color: var(--active-bg) !important;
+}
+html[data-theme="dark"] .sidebar.sidebar-inverse > .sidebarMenuWrapper > ul li.active-menu.hasSubmenu > ul li a:hover,
+html[data-theme="dark"] .sidebar.sidebar-inverse > .sidebarMenuWrapper > ul li.active-menu.hasSubmenu .hasSubmenu a:hover {
+    background-color: var(--menu-hover) !important;
+    color: var(--submenu-hover-text) !important;
+}
+html[data-theme="dark"] .sidebar.sidebar-inverse>.sidebarMenuWrapper>ul li.hasSubmenu.active.active-menu>.collapse.show>li.hasSubmenu.active.active-menu>a i:before {
+    color: var(--active-text) !important;
+}
+html[data-theme="dark"] .sidebar.sidebar-inverse>.sidebarMenuWrapper>ul li.hasSubmenu.active.active-menu>.collapse.show>li.hasSubmenu>a:hover i:before {
+    color: var(--text) !important;
+}
+html[data-theme="dark"] .sidebar.sidebar-inverse>.sidebarMenuWrapper>ul li.active-menu.hasSubmenu .hasSubmenu a:hover .fa:before,
+html[data-theme="dark"] .sidebar.sidebar-inverse>.sidebarMenuWrapper>ul li.active-menu.hasSubmenu .hasSubmenu a:hover i:before {
+    color: var(--submenu-hover-text) !important;
+}
+html[data-theme="dark"] .hasSubmenu.active.active-menu > .collapse.show .hasSubmenu.active-menu > a:hover > .fa:before,
+html[data-theme="dark"] .hasSubmenu.active.active-menu > .collapse.show .hasSubmenu.active-menu > a > .fa:before {
+    color: var(--active-text) !important;
+}
+.sidebar.sidebar-inverse > .sidebarMenuWrapper > ul li.active-menu.hasSubmenu > a[data-bs-toggle="collapse"] {
+    background-color: var(--active-bg) !important;
+}
+
+/* footer */
+html[data-theme="dark"] #id_meliscore_footer {
+    background-color: var(--bg) !important;
+    border-color: var(--border-grey) !important;
+}
+html[data-theme="dark"] #id_meliscore_footer .footer p,
+html[data-theme="dark"] #id_meliscore_footer .footer a,
+html[data-theme="dark"] #id_meliscore_footer .footer {
+    color: var(--text) !important;
+}
+
+/* dashboard tab */
+html[data-theme="dark"] .text-danger,
+html[data-theme="dark"] .text-info,
+html[data-theme="dark"] .text-success,
+html[data-theme="dark"] .text-warning,
+html[data-theme="dark"] .text-primary,
+html[data-theme="dark"] .text-secondary,
+html[data-theme="dark"] .alert,
+html[data-theme="dark"] .btn-primary,
+html[data-theme="dark"] .btn-danger,
+html[data-theme="dark"] .btn-info.btn-regular,
+html[data-theme="dark"] .btn-inverse,
+html[data-theme="dark"] .btn-info,
+html[data-theme="dark"] .btn-default,
+html[data-theme="dark"] .btn-success {
+    background-color: var(--active-bg) !important;
+    border-color: var(--border-black) !important;
+    color: var(--active-text) !important;
+}
+html[data-theme="dark"] .text-info:hover,
+html[data-theme="dark"] .text-success:hover,
+html[data-theme="dark"] .text-warning:hover,
+html[data-theme="dark"] .text-primary:hover,
+html[data-theme="dark"] .text-secondary:hover,
+html[data-theme="dark"] .text-danger:hover,
+html[data-theme="dark"] .btn-primary:hover,
+html[data-theme="dark"] .btn-danger:hover,
+html[data-theme="dark"] .btn-default:hover,
+html[data-theme="dark"] .btn-info:hover,
+html[data-theme="dark"] .btn-info.btn-regular:hover,
+html[data-theme="dark"] .btn-success:hover > i.fa.fa-download,
+html[data-theme="dark"] .btn-success:hover {
+    background-color: var(--bg) !important;
+    border-color: var(--border-white) !important;
+    color: var(--text) !important;
+}
+html[data-theme="dark"] .text-danger,
+html[data-theme="dark"] .text-info,
+html[data-theme="dark"] .text-success,
+html[data-theme="dark"] .text-warning,
+html[data-theme="dark"] .text-primary,
+html[data-theme="dark"] .text-secondary {
+    background-color: transparent !important;
+}
+html[data-theme="dark"] i.fa.fa-download {
+    color: var(--text) !important;
+}
+html[data-theme="dark"] .btn-success > i.fa.fa-download {
+    color: var(--active-text) !important;
+}
+html[data-theme="dark"] .tab-panel-dashboard .bg-info,
+html[data-theme="dark"] .tab-panel-dashboard .bg-success,
+html[data-theme="dark"] .tab-panel-dashboard .bg-default,
+html[data-theme="dark"] .tab-panel-dashboard .bg-inverse {
+    background-color: var(--bg) !important;
+    color: var(--text) !important;
+}
+html[data-theme="dark"] body::-webkit-scrollbar,
+html[data-theme="dark"]::-webkit-scrollbar,
+html[data-theme="dark"] .sidebar::-webkit-scrollbar {
+    width: 12px;
+}
+html[data-theme="dark"] body::-webkit-scrollbar-track,
+html[data-theme="dark"]::-webkit-scrollbar-track,
+html[data-theme="dark"] .sidebar::-webkit-scrollbar-track {
+    background: var(--active-bg) !important;
+}
+html[data-theme="dark"] body::-webkit-scrollbar-thumb,
+html[data-theme="dark"]::-webkit-scrollbar-thumb,
+html[data-theme="dark"] .sidebar::-webkit-scrollbar-thumb {
+    background: var(--active-text) !important;
+    border-radius: 8px;
+}
+html[data-theme="dark"] .nicescroll-cursors {
+    background-color: var(--bg) !important;
+}
+
+/* dashboard plugins menu */
+html[data-theme="dark"] .melis-core-dashboard-plugin-snippets, 
+html[data-theme="dark"] .melis-core-dashboard-category-plugins,
+html[data-theme="dark"] .melis-core-dashboard-ps-box .melis-core-dashboard-filter-btn, 
+html[data-theme="dark"] .melis-core-dashboard-category-btn,
+html[data-theme="dark"] .melis-core-dashboard-plugin-delete-all #dashboard-plugin-delete-all,
+html[data-theme="dark"] .melis-core-dashboard-dnd-box #melisDashBoardPluginBtn,
+html[data-theme="dark"] .melis-core-dashboard-dnd-title {
+    background-color: var(--bg) !important;
+    color: var(--text) !important;
+}
+html[data-theme="dark"] .melis-core-dashboard-dnd-box {
+    background-color: var(--bg) !important;
+}
+html[data-theme="dark"] .melis-core-dashboard-plugin-snippets:hover {
+    background-color: var(--text) !important;
+    color: var(--bg) !important;
+}
+html[data-theme="dark"] .melis-core-dashboard-plugin-snippets:hover .melis-core-dashboard-plugin-title {
+    color: var(--bg) !important;
+}
+html[data-theme="dark"] .melis-core-dashboard-plugin-delete-all #dashboard-plugin-delete-all { 
+    border-color: var(--bg) !important;
+}
+html[data-theme="dark"] .melis-core-dashboard-plugin-filter-box .melis-core-dashboard-ps-box:first-child {
+    border-top-color: var(--border-grey) !important;
+}
+html[data-theme="dark"] .melis-core-dashboard-ps-box .melis-core-dashboard-filter-btn, 
+html[data-theme="dark"] .melis-core-dashboard-category-btn,
+html[data-theme="dark"] .melis-core-dashboard-dnd-box {
+    border-bottom-color: var(--bg) !important;
+}
+html[data-theme="dark"] .melis-core-dashboard-dnd-box {
+    border-left-color: var(--bg) !important;
+}
+html[data-theme="dark"] .navbar #melis-id-nav-bar-tabs > li:hover > a:before {
+    color: var(--active-text) !important;
+}
+
+/* modules */
+html[data-theme="dark"] .has-switch span.switch-right,
+html[data-theme="dark"] .has-switch span.switch-left,
+html[data-theme="dark"] .module-settings .ms-heading {
+    background-color: var(--bg) !important;
+    border-color: var(--border-grey) !important;
+    color: var(--text) !important;
+}
+html[data-theme="dark"] .has-switch label {
+    background-color: var(--active-bg) !important;
+    border-color: var(--border-white) !important;
+    color: var(--active-text) !important;
+}
+
+/* modal */
+html[data-theme="dark"] .confirm-modal-header.bootstrap-dialog.type-warning .modal-header {
+    background-color: var(--bg) !important;
+    border-color: var(--border-grey) !important;
+    color: var(--text) !important;
+}
+html[data-theme="dark"] .bootstrap-dialog-close-button .btn-close {
+    filter: var(--bs-btn-close-white-filter);
+}
+
+/* platforms */
+html[data-theme="dark"] .pagination > .page-item.active > .page-link, 
+html[data-theme="dark"] .pagination > .page-item.active > .page-link:focus, 
+html[data-theme="dark"] .pagination > .page-item.active > .page-link:hover {
+    background-color: var(--bg) !important;
+    border-color: var(--border-grey) !important;
+    color: var(--text) !important;
+}
+
+/* login page */
+html[data-theme="dark"] .login-page .navbar.main.navbar-primary {
+    background-color: var(--bg) !important;
+    border-color: var(--border-grey) !important;
+    color: var(--text) !important;
+}
+html[data-theme="dark"] .login-page .forgot-password a,
+html[data-theme="dark"] .login-page .forgot-password a:hover,
+html[data-theme="dark"] .login-page .login form label,
+html[data-theme="dark"] .login-page h4.innerAll {
+    color: var(--active-text) !important;
+}
+html[data-theme="dark"] .login-page .card-body {
+    background-color: transparent !important;
+}
+html[data-theme="dark"] .login-page #login_submit {
+    background-color: var(--bg) !important;
+    border-color: var(--border-white) !important;
+    color: var(--text) !important;
+}
+html[data-theme="dark"] .login-page #login_submit:hover {
+    background-color: var(--active-bg) !important;
+    border-color: var(--border-grey) !important;
+    color: var(--active-text) !important;
+}
+html[data-theme="dark"] .login-page .cb-cont .cbmask-outer {
+    border-color: var(--border-black) !important;
+}
+html[data-theme="dark"] .login-page #id_meliscore_login_footer .copy.footer a:hover {
+    text-decoration: underline !important;
+}
+html[data-theme="dark"] .login-page #id_meliscore_header_language:hover .dropdown-menu li a span.active {
+    color: var(--text) !important;
+}
+html[data-theme="dark"] .login-page #id_meliscore_header_language:hover .dropdown-menu li a:hover span.active {
+    color: var(--active-text) !important;
+}
+
+/* email management */
+html[data-theme="dark"] .dt-paging .pagination .dt-paging-button.active .page-link,
+html[data-theme="dark"] .dt-paging .pagination .dt-paging-button .page-link,
+html[data-theme="dark"] .dt-paging .pagination .dt-paging-button.disabled .page-link {
+    color: var(--active-text) !important;
+}
+html[data-theme="dark"] .dt-paging .pagination .dt-paging-button .page-link {
+    background-color: var(--active-bg) !important;
+}
+html[data-theme="dark"] .dt-paging .pagination .dt-paging-button.active .page-link,
+html[data-theme="dark"] .dt-paging .pagination .dt-paging-button .page-link:hover {
+    background-color: var(--bg) !important;
+    color: var(--text) !important;
+}
+
+/* email management */
+html[data-theme="dark"] .remove-tag {
+    text-decoration: none !important;
+}
+html[data-theme="dark"] .fa-info-circle,
+html[data-theme="dark"] .form-group .tip-info,
+html[data-theme="dark"] .remove-tag {
+    color: var(--active-text) !important;
+}
+html[data-theme="dark"] .remove-tag:hover {
+    text-decoration: underline !important;
+}
+html[data-theme="dark"] .bs-tooltip-auto[data-popper-placement^=left] .tooltip-arrow::before, 
+html[data-theme="dark"] .bs-tooltip-start .tooltip-arrow::before {
+    border-left-color: var(--bg) !important;
+}
+html[data-theme="dark"] .bs-tooltip-auto[data-popper-placement^=right] .tooltip-arrow::before, 
+html[data-theme="dark"] .bs-tooltip-end .tooltip-arrow::before {
+    border-right-color: var(--bg) !important;
+}
+html[data-theme="dark"] .bs-tooltip-auto[data-popper-placement^=top] .tooltip-arrow::before, 
+html[data-theme="dark"] .bs-tooltip-top .tooltip-arrow::before {
+    border-top-color: var(--bg) !important;
+}
+html[data-theme="dark"] .bs-tooltip-auto[data-popper-placement^=bottom] .tooltip-arrow::before, 
+html[data-theme="dark"] .bs-tooltip-bottom .tooltip-arrow::before {
+    border-bottom-color: var(--bg) !important;
+}
+html[data-theme="dark"] .nav-tabs.product-text-tab li.active a, 
+html[data-theme="dark"] .nav-tabs.product-text-tab li.active:focus a, 
+html[data-theme="dark"] .nav-tabs.product-text-tab li.active:active a, 
+html[data-theme="dark"] .nav-tabs.product-text-tab li a:hover {
+    background-color: var(--bg) !important;
+    color: var(--text) !important;
+}
+
+/* logs */
+html[data-theme="dark"] .modal-content .widget .widget-head {
+    background-color: var(--bg) !important;
+    border-left: 0 !important;
+}
+html[data-theme="dark"] .widget.widget-tabs > .widget-head ul li.active a.glyphicons {
+    background-color: var(--active-bg) !important;
+    color: var(--active-text) !important;
+}
+html[data-theme="dark"] .widget.widget-tabs>.widget-head ul li.active a.f-awesome i:before,
+html[data-theme="dark"] .widget.widget-tabs-double>.widget-head ul li a.f-awesome .fa-sitemap, 
+html[data-theme="dark"] .widget.widget-tabs-double>.widget-head ul li.active a.f-awesome .fa-sitemap,
+html[data-theme="dark"] .widget.widget-tabs-double .widget-head ul li.active a:hover i:before,
+html[data-theme="dark"] .widget.widget-tabs-double .widget-head ul li a.glyphicons,
+html[data-theme="dark"] #melis-modals-container .widget-head ul li.active a i::before,
+html[data-theme="dark"] #melis-modals-container .widget-head ul li.active a.active i::before, /* form tool */
+html[data-theme="dark"] .widget.widget-tabs-double .widget-head ul li.active a.glyphicons.active i:before, /* form tool */
+html[data-theme="dark"] .widget.widget-tabs-double .widget-head ul li a.glyphicons i:before {
+    color: var(--active-text) !important;
+}
+html[data-theme="dark"] .tooltabmodal .widget.widget-tabs-double > .widget-head ul li:not(.active) a.glyphicons,
+html[data-theme="dark"] .tooltabmodal .widget.widget-tabs-double > .widget-head ul li:not(.active) a.glyphicons i:before,
+html[data-theme="dark"] .tooltabmodal .widget.widget-tabs-double .widget-head ul li a.glyphicons,
+html[data-theme="dark"] .tooltabmodal .widget.widget-tabs-double .widget-head ul li a.glyphicons i:before {
+    color: var(--text) !important;
+}
+html[data-theme="dark"] .select2-container--default .select2-results__option--highlighted[aria-selected] {
+    background-color: var(--bg) !important;
+    color: var(--text) !important;
+}
+html[data-theme="dark"] .daterangepicker .ranges li {
+    background-color: var(--active-bg) !important;
+    color: var(--active-text) !important;
+    border-color: var(--border-grey) !important;
+}
+html[data-theme="dark"] .daterangepicker .ranges li.active, 
+html[data-theme="dark"] .daterangepicker .ranges li:hover {
+    background-color: var(--bg) !important;
+    color: var(--text) !important;
+    border-color: var(--border-grey) !important;
+}
+html[data-theme="dark"] .calendar-table table {
+    background-color: var(--active-bg) !important;
+    color: var(--active-text) !important;
+    border-color: var(--border-grey) !important;
+}
+html[data-theme="dark"] .daterangepicker td.active, 
+html[data-theme="dark"] .daterangepicker td.active:hover {
+    background-color: var(--bg) !important;
+    color: var(--text) !important;
+}
+html[data-theme="dark"] .daterangepicker td.in-range {
+    background-color: var(--highlight-grey) !important;
+    color: var(--active-text) !important;
+}
+
+/* platform scheme */
+html[data-theme="dark"] .input-group .input-group-addon, 
+html[data-theme="dark"] .input-append .input-group-addon {
+    border-color: var(--border-black) !important;
+}
+html[data-theme="dark"] .melis-primary-bg {
+    background-color: var(--bg) !important;
+}
+html[data-theme="dark"] #id_meliscore_tool_platform_scheme_tool_content .bootstrap-filestyle .form-control {
+    background-color: var(--highlight-grey) !important;
+    border-right: 0;
+}
+html[data-theme="dark"] .platform-theme-options-tools-info .ui-widget-header,
+html[data-theme="dark"] .platform-theme-options-detail .platform-theme-options-block .active-header,
+html[data-theme="dark"] .platform-theme-options .platform-theme-options-toggle {
+    background-color: var(--bg) !important;
+}
+html[data-theme="dark"] .platform-theme-options-block .accordion-item .active-header .accordion-button {
+    color: var(--cms-text) !important;
+    font-weight: normal !important;
+}
+html[data-theme="dark"] .platform-theme-options-detail .platform-theme-options-block .active-header,
+html[data-theme="dark"] .platform-theme-options-toggle .overlay-loader {
+    color: var(--text) !important;
+}
+/* html[data-theme="dark"] .platform-theme-options-block .accordion-item .active-header .accordion-button::after {
+    filter: brightness(0) invert(1);
+} */
+html[data-theme="dark"] .platform-theme-options-tools-info,
+html[data-theme="dark"] .platform-theme-options-tools-info .btn-group .btn-check:checked+.btn .bi::before {
+    color: var(--active-text) !important;
+}
+html[data-theme="dark"] .platform-theme-options-tools-info .btn-group .btn-check:checked+.btn:hover .bi::before,
+html[data-theme="dark"] .platform-theme-options-tools-info .btn-group .btn-default:hover > .bi::before {
+    color: var(--text) !important;
+}
+html[data-theme="dark"] .platform-theme-options-tools-info .theme-switcher .form-check-input:checked {
+    background-color: var(--bg) !important;
+    border-color: var(--border-black) !important;
+}
+html[data-theme="dark"] .platform-theme-options-block .accordion-item h3.accordion-header .accordion-button.collapsed,
+html[data-theme="dark"] .platform-theme-options-block .accordion-item h3.accordion-header .accordion-button {
+    font-weight: normal !important;
+}
+
+/* other config */
+html[data-theme="dark"] .widget.widget-tabs-double-2>.widget-head ul li.active a.glyphicons,
+html[data-theme="dark"] .widget.widget-tabs-double-2>.widget-head ul li a.glyphicons:hover,
+html[data-theme="dark"] .widget.widget-tabs-double-2>.widget-head ul li.active a:hover,
+html[data-theme="dark"] .widget.widget-tabs-double-2>.widget-head ul li.active a {
+    background-color: var(--active-bg) !important;
+    color: var(--active-text) !important;
+}
+html[data-theme="dark"] .widget.widget-tabs-double-2>.widget-head ul li a.glyphicons:hover i:before,
+html[data-theme="dark"] .widget.widget-tabs-double-2>.widget-head ul li.active a.glyphicons i:before {
+    color: var(--active-text) !important;
+}
+html[data-theme="dark"] .widget.widget-tabs-double-2>.widget-head ul li a.glyphicons {
+    background-color: var(--bg) !important;
+    color: var(--text) !important;
+}
+html[data-theme="dark"] .widget.widget-tabs-double-2>.widget-head ul li a.glyphicons i:before {
+    color: var(--text) !important;
+    text-shadow: none !important;
+}
+html[data-theme="dark"] label > input[type="radio"]:checked + *::before {
+    background: radial-gradient(var(--bg) 0%, var(--bg) 40%, transparent 50%, transparent) !important;
+    border-color: var(--bg) !important;
+}
+html[data-theme="dark"] .cb-cont .cbmask-outer {
+    border-color: var(--border-black) !important;
+}
+html[data-theme="dark"] .cb-cont .cbmask-inner.cb-active {
+    background: var(--bg) !important;
+}
+html[data-theme="dark"] .checkbox label, 
+html[data-theme="dark"] .radio label {
+    color: var(--active-text) !important;   
+}
+
+/* roles */
+html[data-theme="dark"] .tooltabmodal ul.ui-fancytree > li:not(:first-child) .parent-with-child-selected .fancytree-title,
+html[data-theme="dark"] .tooltabmodal .fancytree-expanded.fancytree-has-children .fancytree-title,
+html[data-theme="dark"] .tooltabmodal .parent-with-child-selected .fancytree-title,
+html[data-theme="dark"] .tooltabmodal .fancytree-selected .rights-custom-checkbox,
+html[data-theme="dark"] .tooltabmodal .fancytree-selected .fancytree-title {
+    color: var(--active-text) !important;
+}
+html[data-theme="dark"] .tooltabmodal .widget.widget-tabs-double .widget-head ul li a.glyphicons:hover i:before,
+html[data-theme="dark"] .tooltabmodal .widget.widget-tabs-double .widget-head ul li a.glyphicons:hover,
+html[data-theme="dark"] .tooltabmodal .widget.widget-tabs > .widget-head ul li.active a.glyphicons i:before,
+html[data-theme="dark"] .tooltabmodal .widget.widget-tabs > .widget-head ul li.active a.glyphicons {
+    color: var(--active-text) !important;
+}
+html[data-theme="dark"] .tooltabmodal .widget.widget-tabs-double .widget-head ul li a.glyphicons:hover {
+    background-color: var(--active-bg) !important;
+}
+html[data-theme="dark"] .datepicker .datepicker-years .year.active,
+html[data-theme="dark"] .datepicker .datepicker-days .day.active,
+html[data-theme="dark"] .datepicker .datepicker-months .month.active,
+html[data-theme="dark"] .datepicker thead th.dow,
+html[data-theme="dark"] .datepicker-days .day.active,
+html[data-theme="dark"] .datepicker-months .month.active,
+html[data-theme="dark"] .datepicker thead th.dow,
+html[data-theme="dark"] .modal-dialog .datepicker-days .day.active,
+html[data-theme="dark"] .modal-dialog .bootstrap-datetimepicker-widget thead th.dow,
+html[data-theme="dark"] .modal-dialog .datepicker-months .month.active {
+    background-color: var(--bg) !important;
+    color: var(--text) !important;
+}
+html[data-theme="dark"] .datepicker,
+html[data-theme="dark"] .datepicker table,
+html[data-theme="dark"] .modal-dialog .timepicker-seconds table,
+html[data-theme="dark"] .modal-dialog .timepicker-hours table,
+html[data-theme="dark"] .modal-dialog .timepicker-minutes table,
+html[data-theme="dark"] .modal-dialog .timepicker-picker table,
+html[data-theme="dark"] .modal-dialog .picker-switch table,
+html[data-theme="dark"] .modal-dialog .bootstrap-datetimepicker-widget,
+html[data-theme="dark"] .modal-dialog .datepicker,
+html[data-theme="dark"] .modal-dialog .datepicker table {
+    background-color: var(--active-bg) !important;
+    border: 0 !important;
+}
+html[data-theme="dark"] .datepicker .next,
+html[data-theme="dark"] .datepicker .prev,
+html[data-theme="dark"] .datepicker .datepicker-switch,
+html[data-theme="dark"] .datepicker .datepicker-days, 
+html[data-theme="dark"] .datepicker .datepicker-months, 
+html[data-theme="dark"] .datepicker .datepicker-years,
+html[data-theme="dark"] .datepicker table tr td,
+html[data-theme="dark"] .modal-dialog .timepicker table tr td,
+html[data-theme="dark"] .modal-dialog .bootstrap-datetimepicker-widget .timepicker-hour, 
+html[data-theme="dark"] .modal-dialog .bootstrap-datetimepicker-widget .timepicker-minute, 
+html[data-theme="dark"] .modal-dialog .bootstrap-datetimepicker-widget .timepicker-second {
+    color: var(--active-text) !important;
+}
+
+/* user management */
+html[data-theme="dark"] #idnewusermanagement .bootstrap-filestyle .group-span-filestyle .btn {
+    padding-top: 0 !important;
+}
+
+/* gdpr */
+html[data-theme="dark"] .gdpr-auto-delete-multi-tabs .nav-pills .nav-link:hover,
+html[data-theme="dark"] .nav-pills .show>.nav-link:hover,
+html[data-theme="dark"] .gdpr-auto-delete-multi-tabs .nav-pills .nav-link.active, 
+html[data-theme="dark"] .nav-pills .show>.nav-link {
+    background-color: var(--bg) !important;
+    color: var(--text) !important;
+    border-radius: 0 !important;
+}
+
+/* tool - creator, templating plugin and dashboard plugin */
+html[data-theme="dark"] .wizard-head li.active:after,
+html[data-theme="dark"] .melis-toolcreator-steps li.active:after {
+    border-left-color: var(--border-black) !important;
+}
+html[data-theme="dark"] .wizard-head li:before,
+html[data-theme="dark"] .melis-toolcreator-steps li:before {
+    border-color: var(--border-black) !important;
+}
+html[data-theme="dark"] .wizard-head .bwizard-steps li.active,
+html[data-theme="dark"] .wizard-head .bwizard-steps li.active span,
+html[data-theme="dark"] .melis-toolcreator-steps .bwizard-steps li.active,
+html[data-theme="dark"] .melis-toolcreator-steps .bwizard-steps li.active span {
+    background-color: var(--bg) !important;
+}
+html[data-theme="dark"] .wizard-head .bwizard-steps li.active span,
+html[data-theme="dark"] .melis-toolcreator-steps .bwizard-steps li.active span {
+    color: var(--text) !important;
+}
+html[data-theme="dark"] .melis-radio-box .melis-radio-box-circle {
+    border-color: var(--border-black) !important;
+}
+html[data-theme="dark"] .melis-radio-box input:checked ~ .melis-radio-box-circle:after { 
+    background-color: var(--bg) !important; 
+}
+html[data-theme="dark"] .modal-error-cont span .fa {
+    color: var(--active-text) !important;
+}
+html[data-theme="dark"] .steps-content .text-success:hover,
+html[data-theme="dark"] .steps-content .text-success,
+html[data-theme="dark"] .melis-toolcreator-steps-content .text-success:hover,
+html[data-theme="dark"] .melis-toolcreator-steps-content .text-success {
+    background-color: transparent !important;
+}
+html[data-theme="dark"] .steps-content .fa-thumbs-o-up,
+html[data-theme="dark"] .steps-content .text-success:hover,
+html[data-theme="dark"] .melis-toolcreator-steps-content .melis-tc-final .fa-thumbs-o-up,
+html[data-theme="dark"] .melis-toolcreator-steps-content .text-success:hover {   
+    color: var(--active-text) !important;
+}
+html[data-theme="dark"].tabsbar .nav-group-dropdown li.active > a.tab-element {
+    background-color: var(--bg) !important;
+    color: var(--text) !important;
+}
+html[data-theme="dark"] .tabsbar .has-sub.active-parent.on > .tab-element:before,
+html[data-theme="dark"] .steps-content .widget .widget-head h4,
+html[data-theme="dark"] #melis-navtabs-container-inner .nav-tabs .nav-item.has-sub.active-parent .nav-group-dropdown .nav-item.active .nav-link span {
+    color: var(--text) !important;
+}
+html[data-theme="dark"] .progress .progress-bar.progress-bar-danger,
+html[data-theme="dark"] .melis-templating-plugin-creator-steps-content .label.label-info {
+    background-color: var(--bg) !important;
+}
+html[data-theme="dark"] .field-accordion .widget .widget-head {
+    background-color: var(--bg) !important;
+    color: var(--text) !important;
+}
+
+/* melis-cms */
+html[data-theme="dark"] .meliscms-search-box .sbox-icon:hover {
+    background-color: var(--bg) !important;
+    color: var(--text) !important;
+}
+html[data-theme="dark"] .meliscms-search-box .sbox-icon i:before,
+html[data-theme="dark"] .meliscms-search-box .sbox-icon i {
+    color: var(--text) !important;
+}
+html[data-theme="dark"] #id-mod-menu-dynatree .fancytree-node .fancytree-expander:before,
+html[data-theme="dark"] #id-mod-menu-dynatree .fancytree-node .fa:before,
+html[data-theme="dark"] #id-mod-menu-dynatree .fancytree-node .fa,
+html[data-theme="dark"] #id-mod-menu-dynatree .fancytree-node .fancytree-title {
+    color: var(--cms-text) !important;
+}
+html[data-theme="dark"] #id-mod-menu-dynatree .fancytree-node.fancytree-expanded .fancytree-expander:before,
+html[data-theme="dark"] #id-mod-menu-dynatree .fancytree-node.fancytree-expanded .fa:before,
+html[data-theme="dark"] #id-mod-menu-dynatree .fancytree-node.fancytree-expanded .fa,
+html[data-theme="dark"] #id-mod-menu-dynatree .fancytree-node.fancytree-expanded .fancytree-title,
+html[data-theme="dark"] #id-mod-menu-dynatree .fancytree-node.fancytree-active .fancytree-expander:before,
+html[data-theme="dark"] #id-mod-menu-dynatree .fancytree-node.fancytree-active .fa:before,
+html[data-theme="dark"] #id-mod-menu-dynatree .fancytree-node.fancytree-active .fa,
+html[data-theme="dark"] #id-mod-menu-dynatree .fancytree-node.fancytree-active .fancytree-title {
+    color: var(--text) !important;
+}
+html[data-theme="dark"] #id-mod-menu-dynatree .fancytree-node .unpublish {
+    background-color: var(--cms-text) !important;
+}
+html[data-theme="dark"] #id-mod-menu-dynatree .fancytree-node.fancytree-active .unpublish {
+    background-color: var(--active-text) !important;
+}
+
+/* group down nav */
+html[data-theme="dark"] #melis-id-nav-bar-tabs.tabsbar .active-parent:hover > .nav-group-dropdown li > a.tab-element .fa:before,
+html[data-theme="dark"] #melis-id-nav-bar-tabs.tabsbar .active-parent:hover > .nav-group-dropdown li > a.tab-element .fa,
+html[data-theme="dark"] #melis-id-nav-bar-tabs.tabsbar .active-parent:hover > .nav-group-dropdown li > a.tab-element,
+html[data-theme="dark"] #melis-id-nav-bar-tabs.tabsbar .active-parent:hover > .nav-group-dropdown li.active > a.tab-element .fa:before,
+html[data-theme="dark"] #melis-id-nav-bar-tabs.tabsbar .active-parent:hover > .nav-group-dropdown li.active > a.tab-element .fa {
+    color: var(--text) !important;
+}
+html[data-theme="dark"] #melis-id-nav-bar-tabs.tabsbar .active-parent:hover > .nav-group-dropdown li.active:hover > a.close-tab,
+html[data-theme="dark"] #melis-id-nav-bar-tabs.tabsbar .active-parent:hover > .nav-group-dropdown li.active > a.tab-element:hover,
+html[data-theme="dark"] #melis-id-nav-bar-tabs.tabsbar .active-parent:hover > .nav-group-dropdown li.active > a.tab-element:hover span.navtab-pagename,
+html[data-theme="dark"] #melis-id-nav-bar-tabs.tabsbar .active-parent:hover > .nav-group-dropdown li.active > a.tab-element:hover .fa:before,
+html[data-theme="dark"] #melis-id-nav-bar-tabs.tabsbar .active-parent:hover > .nav-group-dropdown li.active > a.tab-element:hover .fa {
+    color: var(--active-text) !important;
+}
+html[data-theme="dark"] #melis-id-nav-bar-tabs.tabsbar .active-parent:hover > .nav-group-dropdown li.active:hover > a.close-tab:hover,
+html[data-theme="dark"] #melis-id-nav-bar-tabs.tabsbar .active-parent:hover > .nav-group-dropdown li.active:hover > a.close-tab:hover ~ .tab-element,
+html[data-theme="dark"] #melis-id-nav-bar-tabs.tabsbar .active-parent:hover > .nav-group-dropdown li.active:hover > a.close-tab:hover + .tab-element {
+    background-color: var(--active-bg) !important;
+    color: var(--active-text) !important;
+    border-radius: 100% !important;
+    cursor: pointer !important;
+}
+html[data-theme="dark"] #melis-id-nav-bar-tabs.tabsbar .active-parent:hover > .nav-group-dropdown li.active:hover > a.close-tab:hover:before {
+    background-color: transparent !important;
+    color: var(--active-text) !important;
+}
+html[data-theme="dark"] #melis-id-nav-bar-tabs.tabsbar .nav-item.has-sub:hover > .nav-group-dropdown .nav-item .nav-link i::before,
+html[data-theme="dark"] #melis-id-nav-bar-tabs.tabsbar .nav-item.has-sub:hover > .nav-group-dropdown .nav-item .nav-link span {
+    color: var(--active-text) !important;
+}
+
+/* sites */
+html[data-theme="dark"] #melis-modals-container .widget-head .status {
+    color: var(--text) !important;
+}
+html[data-theme="dark"] #melis-modals-container .widget-head ul li:not(.status) a {
+    background-color: var(--bg) !important; /* --highlight-grey*/
+    color: var(--text) !important;
+    border-color: var(--border-black) !important;
+    border-width: 0 !important;
+    border-radius: 0 !important;
+}
+html[data-theme="dark"] #melis-modals-container .widget-head ul li:not(.status) a i::before {
+    color: var(--text) !important;
+}
+html[data-theme="dark"] #melis-modals-container .widget-head ul li:not(.status).active a {
+    background-color: var(--active-bg) !important;
+    color: var(--active-text) !important; /* added */
+}
+html[data-theme="dark"] #melis-modals-container .widget-head ul li:not(.status).active a:hover {
+    color: var(--active-text) !important;
+}
+html[data-theme="dark"] .gritter-item {
+    background-color: var(--bg) !important;
+}
+html[data-theme="dark"] .melis-publishpage .fa-circle::before {
+    color: var(--active-text) !important;
+}
+
+/* comments tab */
+html[data-theme="dark"] .melisToolContainer .widget .layout-timeline .widget-head {
+    background-color: var(--bg) !important;
+    color: var(--text) !important;
+}
+html[data-theme="dark"] .layout-timeline ul.timeline > li.active .type {
+    color: var(--active-text) !important;
+}
+html[data-theme="dark"] .layout-timeline ul.timeline > li.active .type i::before {
+    color: var(--active-text) !important;
+}
+html[data-theme="dark"] .layout-timeline ul.timeline > li.active .type::before,
+html[data-theme="dark"] .layout-timeline ul.timeline > li.active .type::after,
+html[data-theme="dark"] .layout-timeline ul.timeline > li.active::before {
+    background-color: var(--bg) !important;
+}
+
+/* slider */
+html[data-theme="dark"] .bootstrap-filestyle .group-span-filestyle .btn {
+    padding-top: 0 !important;
+}
+
+/* categories */
+html[data-theme="dark"] #id_melis_cms_categories_v2 .accordion-group .card {
+    border: 0 !important;
+}
+html[data-theme="dark"] .language-list .c-page,
+html[data-theme="dark"] .language-list .site-origin,
+html[data-theme="dark"] .language-list .site i,
+html[data-theme="dark"] .cms-category-checkbox .fa-check-square-o {
+    color: var(--active-text) !important;
+}
+
+/* link checker */
+html[data-theme="dark"] .light-tree span.fancytree-active .fancytree-title,
+html[data-theme="dark"] .light-tree .fancytree-node.fancytree-active {
+    background-color: var(--bg) !important;
+    color: var(--text) !important;
+}
+
+/* users fo */
+html[data-theme="dark"] .styled-input-single label:before {
+    border-color: var(--border-black) !important;
+}
+html[data-theme="dark"] .styled-input-single label:after {
+    background-color: var(--bg) !important;
+}
+
+/* melis marketing - calendar */
+html[data-theme="dark"] .recently-added .widget .widget-head,
+html[data-theme="dark"] .create-new-event .widget .widget-head {
+    background-color: var(--bg) !important;
+    color: var(--text) !important;
+    border-left-width: 1px !important;
+}
+html[data-theme="dark"] .create-new-event .widget .widget-body .melis-draggable-input .bg-primary {
+    background-color: var(--bg) !important;
+    color: var(--text) !important;
+}
+html[data-theme="dark"] .create-new-event .widget .widget-body .melis-draggable-input .bg-primary .fa::before {
+    color: var(--text) !important;
+}
+html[data-theme="dark"] .fc-view table tbody .fc-scroller table,
+html[data-theme="dark"] .fc-view table {
+    background-color: var(--active-bg) !important;
+    border-color: var(--bs-gray-400) !important;
+    color: var(--active-text) !important;
+}
+html[data-theme="dark"] #calendar-tool .btn-group .btn + .btn:not(.btn-block) {
+    margin-left: 1px !important;
+}
+html[data-theme="dark"] #calendar-tool .fc-header-toolbar .btn-group .fc-prev-button,
+html[data-theme="dark"] #calendar-tool .fc-header-toolbar .btn-group .fc-next-button {
+    background-color: var(--bg) !important;
+    color: var(--text) !important;
+}
+html[data-theme="dark"] #calendar-tool .fc-header-toolbar .btn-group .fc-prev-button:hover,
+html[data-theme="dark"] #calendar-tool .fc-header-toolbar .btn-group .fc-next-button:hover {
+    background-color: var(--active-bg) !important;
+    color: var(--active-text) !important;
+    border-color: var(--border-black) !important;
+}
+html[data-theme="dark"] #calendar-tool .fc-header-toolbar .btn-group .fc-prev-button:hover .bi::before,
+html[data-theme="dark"] #calendar-tool .fc-header-toolbar .btn-group .fc-next-button:hover .bi::before {
+    color: var(--active-text) !important;
+}
+html[data-theme="dark"] .fc-event,
+html[data-theme="dark"] .event-icon {
+    background-color: var(--bg) !important;
+    color: var(--text) !important;
+}
+
+/* form creator */
+html[data-theme="dark"] #melis-modals-container .widget-head ul li a.active {
+    background-color: var(--active-bg) !important;
+}
+html[data-theme="dark"] .form-creator .checkbox-custom {
+    color: var(--active-text) !important;
+}
+html[data-theme="dark"] .form-version-container .version:after,
+html[data-theme="dark"] .form-version-container .version:before {
+    background-color: var(--bg) !important;
+}
+html[data-theme="dark"] .menu-icon .badge-success {
+    background-color: var(--active-bg) !important;
+    color: var(--active-text) !important;
+}
+html[data-theme="dark"] .form-step-accordion .widget > .widget-head {
+    background-color: var(--bg) !important;
+    color: var(--text) !important;
+    border-left: 1px solid var(--border-grey) !important;
+}
+html[data-theme="dark"] .form-step-accordion .widget .accordionTitle a {
+    background-color: var(--bg) !important;
+    color: var(--text) !important;
+}
+html[data-theme="dark"] .form-step-accordion .widget .accordionTitle a:hover {
+    background-color: var(--active-bg) !important;
+    color: var(--active-text) !important;
+}
+html[data-theme="dark"] #melis-modals-container .widget-head ul.nav-tabs li.nav-item.active a.nav-link.active i::before {
+    color: var(--active-text) !important;
+}
+html[data-theme="dark"] #melis-modals-container .tt-suggestion.tt-cursor {
+    background-color: var(--bg) !important;
+    color: var(--text) !important;
+}
+html[data-theme="dark"] .form-step-accordion .stepFieldTable > tbody > tr > td:nth-child(2), 
+html[data-theme="dark"] .form-step-accordion .stepFieldTable > tbody > tr > td:first-child {
+    line-height: 18px !important;
+}
+html[data-theme="dark"] .checkbox-custom i.checked {
+    color: var(--active-text) !important;
+}
+html[data-theme="dark"] #tableToolFormToolAdmin .btnInstructForm {
+    background-color: var(--active-bg) !important;
+    color: var(--active-text) !important;
+    border-color: var(--border-black) !important;
+}
+html[data-theme="dark"] #tableToolFormToolAdmin .btnInstructForm:hover {
+    background-color: var(--bg) !important;
+    color: var(--text) !important;
+    border-color: var(--border-black) !important;
+}
+
+/* form tool */
+html[data-theme="dark"] .answers-tab-container .pagecomment .media-body .text-danger:hover {
+    background-color: transparent !important;
+    color: var(--active-text) !important;
+}
+html[data-theme="dark"] .answers-tab-container .event_type:after,
+html[data-theme="dark"] .answers-tab-container .event_type:before {
+    background-color: var(--bg) !important;
+}
+html[data-theme="dark"] .answers-tab-container .field_comment, 
+html[data-theme="dark"] .answers-tab-container .comment {
+    color: var(--active-text) !important;
+}
+html[data-theme="dark"] .step-fields-div .form-group label {
+    color: var(--active-text) !important;
+}
+
+/* newsletter tool */
+html[data-theme="dark"] #id_melis_newsletter_tool_content .btn-success,
+html[data-theme="dark"] #id_melis_newsletter_tool_content .tab-hdr-btns .btn-success {
+    background-color: var(--active-bg) !important;
+    border-color: var(--border-black) !important;
+    color: var(--active-text) !important;
+}
+html[data-theme="dark"] #id_melis_newsletter_tool_content .btn-success:hover,
+html[data-theme="dark"] #id_melis_newsletter_tool_content .tab-hdr-btns .btn-success:hover {
+    background-color: var(--bg) !important;
+    color: var(--text) !important;
+    border-color: var(--border-black) !important;
+}
+html[data-theme="dark"] #newsletter_transport_config_form_form .form-group label {
+    color: var(--active-text) !important;
+}
+html[data-theme="dark"] .font-awesome-checkbox:checked+label:before {
+    color: var(--active-text) !important;
+}
+
+/* tabs */
+html[data-theme="dark"] .page-content-container .widget.widget-tabs-double-2>.widget-head ul li, 
+html[data-theme="dark"] .page-content-container .widget.widget-tabs-double-2>.widget-head ul li a,
+html[data-theme="dark"] .widget.widget-tabs-double-2>.widget-head ul li {
+    height: 70px !important;
+}
+
+/* link checkers */
+html[data-theme="dark"] #melis-modals-container .widget-head ul li.active a i::before {
+    color: var(--active-text) !important;
+}
+html[data-theme="dark"] .filter-bar label {
+    color: var(--active-text) !important;
+}
+
+/* mcq */
+html[data-theme="dark"] .widget.widget-tabs.widget-tabs-responsive>.widget-head ul li.active > a.active, 
+html[data-theme="dark"] .widget.widget-tabs-double-2 > .widget-head ul li:last-child.active a {
+    border-color: var(--border-black) !important;
+}
+html[data-theme="dark"] .sidebar-header.search, 
+html[data-theme="dark"] .sidebar-header.basket {
+    background-color: var(--bg) !important;
+    color: var(--text) !important;
+}
+html[data-theme="dark"] .link-danger {
+    text-decoration-color: var(--active-text) !important;
+}
+
+/* prospect */
+html[data-theme="dark"] #id_MelisCmsProspects_tool_prospects .widget.widget-inverse>.widget-head {
+    background-color: var(--bg) !important;
+    color: var(--text) !important;
+}
+
+/* calendar */
+html[data-theme="dark"] .fc-event-dragging [class*="bg-primary"],
+html[data-theme="dark"] .ui-draggable-dragging .bg-primary,
+html[data-theme="dark"] .fc-event.fc-event-mirror .bg-primary,
+html[data-theme="dark"] .fc-event.fc-dragging .bg-primary,
+html[data-theme="dark"] .fc-event.fc-event-mirror,
+html[data-theme="dark"] .fc-event.fc-dragging {
+    background: var(--bg) !important;
+    border-color: var(--border-black) !important;
+}
+html[data-theme="dark"] .delete-event:hover,
+html[data-theme="dark"] .update-event:hover {
+    background-color: var(--active-bg) !important;
+    color: var(--active-text) !important;
+}
+
+/* catalogs */
+html[data-theme="dark"] .jstree-default .jstree-hovered,
+html[data-theme="dark"] .jstree-default .jstree-clicked {
+    background-color: var(--highlight-grey) !important;
+}
+html[data-theme="dark"] .prices-accordion [data-toggle="collapse-widget"] .collapse-toggle:before,
+html[data-theme="dark"] .product-text-tab-form-content .widget .widget-head .heading,
+html[data-theme="dark"] .ecom-coutries-checkbox .fa-check-square-o {
+    color: var(--active-text) !important;
+}
+html[data-theme="dark"] .product-text-tab-form-content .widget .widget-head {
+    border-left: 1px solid var(--border-black) !important;
+}
+
+/* melis-ai - chat */
+html[data-theme="dark"] #module-chat .error-box {
+    background-color: var(--bg) !important;
+    color: var(--text) !important;
+    border-color: var(--border-black) !important;
+}
+html[data-theme="dark"] .meliscms-search-box .sbox-icon {
+    background-color: var(--bg) !important;
+    color: var(--text) !important;
+}
+html[data-theme="dark"] .meliscms-search-box .sbox-icon:hover {
+    background-color: var(--active-bg) !important;
+    color: var(--active-text) !important;
+}
+html[data-theme="dark"] .meliscms-search-box .sbox-icon:hover i:before,
+html[data-theme="dark"] .meliscms-search-box .sbox-icon:hover i {
+    color: var(--active-text) !important;
+}
+
+/* melis-commerce */
+html[data-theme="dark"] .order-list-page .widget .widget-head,
+html[data-theme="dark"] #id_meliscommerce_clients_list_widgets .widget .widget-head,
+html[data-theme="dark"] .prices-accordion .widget .widget-head {
+    border-left: 1px solid var(--border-black) !important;
+}
+html[data-theme="dark"] .prices-accordion .widget .widget-head .heading {
+    color: var(--active-text) !important;
+}
+html[data-theme="dark"] #melis-modals-container .duplication-table {
+    background-color: var(--active-bg) !important;
+    color: var(--active-text) !important;
+    border-color: var(--border-black) !important;
+}
+html[data-theme="dark"] .order-list-page .widget .widget-head,
+html[data-theme="dark"] #id_meliscommerce_clients_list_widgets .widget .widget-head {
+    background-color: var(--bg) !important;
+    color: var(--text) !important;
+}
+html[data-theme="dark"] .product-text-tab-container .label-success {
+    background-color: var(--active-bg) !important;
+    color: var(--active-text) !important;
+}
+html[data-theme="dark"] .order-list-table-filter-date .orderDateFiler {
+    background-color: var(--highlight-grey) !important;
+    border-color: var(--border-grey) !important;
+    color: var(--active-text) !important;
+}
+html[data-theme="dark"] input:not(.theme-radio).form-check-input {
+    border-radius: 50% !important;
+}
+html[data-theme="dark"] input:not(.theme-radio).form-check-input:checked {
+    background-color: var(--bg) !important;
+    border-color: var(--border-black) !important;   
+    color: var(--text) !important;
+}
+html[data-theme="dark"] .order-checkout-steps .nav-item {
+    border-color: var(--border-black) !important;
+}
+html[data-theme="dark"] .order-checkout-steps .nav-item.active {
+    background-color: var(--bg) !important;
+}
+html[data-theme="dark"] .order-checkout-steps .nav-item.active .nav-link i:before,
+html[data-theme="dark"] .order-checkout-steps .nav-item.active .nav-link {
+    color: var(--text) !important;
+}
+html[data-theme="dark"] .order-checkout-steps .nav-item .nav-link {
+    background-color: var(--active-bg) !important;
+    color: var(--active-text) !important;
+}
+html[data-theme="dark"] .order-checkout-steps .nav-item .nav-link i:before {
+    color: var(--active-text) !important;
+}
+html[data-theme="dark"] .label-info,
+html[data-theme="dark"] .client-contact-address .card-header {
+    background-color: var(--bg) !important;
+    color: var(--text) !important;
+}
+html[data-theme="dark"] .client-contact-address .card-title .accordion-toggle {
+    color: var(--text) !important;
+}
+
+/* products */
+html[data-theme="dark"] .modal-dialog .widget-body .thumbnail {
+    border-color: var(--border-black) !important;
+}
+html[data-theme="dark"] .modal-dialog .widget-body .tab-pane.active .commerce-toggle .card-title .accordion-toggle {
+    background-color: var(--bg) !important;
+    color: var(--text) !important;
+}
+html[data-theme="dark"] .filter-dropdown .dropdown-toggle {
+    border: 1px solid var(--border-black) !important;
+}
+html[data-theme="dark"] .red-box-panel h3 {
+    border-bottom-color: var(--border-black) !important;
+    background-color: var(--bg) !important;
+    color: var(--text) !important;
+}
+html[data-theme="dark"] .order-basket-variant-qty-btn {
+    background-color: transparent !important;
+}
+html[data-theme="dark"] #payNowBtn {
+    background-color: var(--bg) !important;
+    color: var(--text) !important;
+}
+html[data-theme="dark"] #id_meliscommerce_order_checkout_payment_step_content .text-success {
+    color: var(--text) !important;
+}
+html[data-theme="dark"] .dt_orderdatepicker {
+    background-color: var(--highlight-grey) !important;
+    border-color: var(--border-black) !important;
+}
+html[data-theme="dark"] #id_meliscommerce_order_status_form_container .input-group-addon,
+html[data-theme="dark"] .daterangepicker {
+    border-color: var(--border-black) !important;
+}
+html[data-theme="dark"] .daterangepicker:after {
+    border-right: 6px solid transparent !important;
+    border-bottom: 6px solid var(--border-black) !important;
+    border-left: 6px solid transparent !important;
+}
+html[data-theme="dark"] .daterangepicker:before {
+    border-right: 7px solid transparent !important;
+    border-left: 7px solid transparent !important;
+    border-bottom: 7px solid var(--border-black) !important;;
+}
+
+/* marketplace */
+html[data-theme="dark"] .melis-store h3 {
+    color: var(--active-text) !important;
+}
+html[data-theme="dark"] .melis-store .product:hover {
+    box-shadow: 0 0 8px var(--bg) !important;
+}
+html[data-theme="dark"] .melis-store .product:after,
+html[data-theme="dark"] .melis-store .product:before {
+    border-color: var(--border-black) !important;
+}
+html[data-theme="dark"] .pagination > li > a:hover {
+    background-color: var(--bg) !important;
+    color: var(--text) !important;
+}
+
+/* platform theme options */
+html[data-theme="dark"] .platform-theme-options .platform-theme-options-toggle {
+    background-color: var(--bg) !important;
+}
+html[data-theme="dark"] .platform-theme-options-toggle .overlay-loader {
+    color: var(--text) !important;
+}
+html[data-theme="dark"] .platform-theme-options-tools-info .theme-option.active {
+    border-color: var(--border-black) !important;
+}
+html[data-theme="dark"] .global-options .theme-option[data-theme=default]:hover,
+html[data-theme="dark"] #ui-style .options-grid .theme-option:hover,
+html[data-theme="dark"] .global-options .theme-option:hover {
+    background-color: var(--bg) !important;
+    border-color: var(--border-black) !important;
+    color: var(--text) !important;
+}
+html[data-theme="dark"] .platform-theme-options-title .close-tools:hover {
+    color: var(--active-text) !important;
+}
+
+/* page edition iframe */
+html[data-theme="dark"] .melis-plugin-tools-box .melis-plugin-tools-box-title,
+html[data-theme="dark"] .melis-plugin-tools-box,
+html[data-theme="dark"] .melis-plugin-indicator {
+    background-color: var(--bg) !important;
+    color: var(--text) !important;
+}
+html[data-theme="dark"] .m-options-handle,
+html[data-theme="dark"] .melis-module-title {
+    color: var(--text) !important;
+}
+html[data-theme="dark"] .melis-cms-dnd-box,
+html[data-theme="dark"] .melis-cms-ps-box .melis-cms-filter-btn,
+html[data-theme="dark"] .m-plugin-sub-tools {
+    background-color: var(--bg) !important;
+}
+html[data-theme="dark"] .melis-ui-outlined:hover {
+    outline: 1px solid var(--border-black) !important;
+    box-shadow: 0 0 0 1px var(--border-black) !important;
+    -webkit-box-shadow: 0 0 0 1px var(--border-black) !important;
+}
+html[data-theme="dark"] .melis-dragdropzone-container > .dnd-layout-wrapper {
+    outline: 1px dashed var(--border-black) !important;
+}
+html[data-theme="dark"] .melis-cms-category-plugins-box,
+html[data-theme="dark"] .melis-cms-dnd-box,
+html[data-theme="dark"] .melis-cms-dnd-title,
+html[data-theme="dark"] .melis-editable:hover,
+html[data-theme="dark"] .melis-dragdropzone:hover,
+html[data-theme="dark"] .melis-dragdropzone {
+    border-color: var(--border-black) !important;
+}
+html[data-theme="dark"] .melis-cms-dnd-box #melisPluginBtn {
+    background-color: var(--bg) !important;
+    color: var(--text) !important;
+}
+html[data-theme="dark"] .melis-cms-dnd-title {
+    background-color: var(--bg) !important;
+    text-transform: uppercase !important;
+}
+html[data-theme="dark"] .melis-cms-filter-btn-sub-category.active,
+html[data-theme="dark"] .melis-cms-ps-box .melis-cms-filter-btn.active,
+html[data-theme="dark"] .melis-cms-category-btn.active {
+    background-color: var(--bg) !important;
+    border-color: var(--border-black) !important;
+    color: var(--text) !important;
+}
+html[data-theme="dark"] .melis-cms-plugin-snippets:hover {
+    background-color: var(--bg) !important;
+}

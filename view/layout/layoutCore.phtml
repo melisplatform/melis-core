@@ -94,7 +94,8 @@
     ?>
     
     <link id="default-theme" href="/assets/css/schemes.css<?= $schemeTime; ?>" media="screen" rel="stylesheet" type="text/css">
-    <link id="dark-theme" href="/assets/css/dark.css<?= $schemeTime; ?>" media="screen" rel="stylesheet" type="text/css">
+    <link id="dark-theme" href="<?= $this->basePath('/MelisCore/css/dark.css') . $schemeTime; ?>" media="screen" rel="stylesheet" type="text/css">
+    <link id="rounded" href="<?= $this->basePath('/MelisCore/css/rounded.css') . $schemeTime; ?>" media="screen" rel="stylesheet" type="text/css">
 
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
