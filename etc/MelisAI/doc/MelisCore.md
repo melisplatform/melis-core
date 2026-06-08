@@ -83,12 +83,19 @@ attempts and can auto-log-out after inactivity (both are configurable — see Ot
 
 ## A3. Finding your way — the back-office shell
 
-- **Header** (top bar) — notifications, the **language switch**, your **user profile**, a
-  "close all tabs" button, and **logout**.
+- **Header** (top bar) — its right-side icons hold **notifications**, the **language switch**,
+  your **user profile**, a "close all tabs" button, and **logout**.
+
+  ![Header right icons](./images/meliscore-header-righticons.png)
+  *The header's right-side icons — notifications, language, profile, logout.*
+
 - **Left menu** — the **Dashboard** link and the **Tools tree**: every administration tool you're
   allowed to use, grouped into sections (e.g. *System Configuration*). Other modules add their
   tools here too.
 - **Center** — the work area where the Dashboard and the tools open (as tabs).
+- **Footer** — shows the platform/MelisCore **version**, handy when reporting an issue.
+
+  ![Footer version](./images/meliscore-footer-version-meliscore.png)
 
 What you see in the menu depends on your **rights** — you only see tools you're allowed to use.
 
@@ -96,51 +103,138 @@ What you see in the menu depends on your **rights** — you only see tools you'r
 
 Your landing page after login. It shows **widgets** (dashboard plugins): recent activity, platform
 news/announcements, notifications, and any widgets added by other modules (e.g. pages indicators,
-prospect statistics). Widgets can be **arranged by drag-and-drop**, and which ones you see depends
-on your rights.
+prospect statistics).
+
+![The dashboard](./images/meliscore-dashboard-empty.png)
+*The Dashboard — a fresh one, ready to receive widgets.*
+
+You add widgets from the dashboard's **plugin menu**, and arrange them by **drag-and-drop**; which
+ones are available depends on your rights.
+
+![Dashboard plugin menu](./images/meliscore-dashboardplugins-menu.png)
+*The dashboard plugin menu — pick the widgets to place.*
 
 ## A5. Users, roles & rights — controlling access
 
 **Where:** Tools tree → *System Configuration* → **Users**.
 
-This is where you manage who can use the back-office and what they can do:
+This is where you manage who can use the back-office and what they can do.
 
-- **Create a user** — login, name, email, password, language, and whether they're an
-  administrator. New users get a rights assignment step.
-- **Edit / delete users**, see their **login history**, and manage **API keys** (for
-  micro-services).
-- **Rights** — each user (or role) has an **access tree**: you tick which tools/sections they may
-  use. Anything not granted is **hidden from their menus**. This is how you give, say, an editor
-  access to the CMS but not to user administration.
-- **Roles** — define a set of rights once (a "role"/group) and assign it to many users, instead of
-  setting rights per person.
+![Users list](./images/meliscore-tool-users-list.png)
+*The Users tool — every back-office account, with their status and last login.*
+
+Opening a user gives you tabs:
+
+- **Information** — login, name, email, password, language, administrator flag.
+
+  ![User — Information tab](./images/meliscore-tool-users-edit-tab-information.png)
+
+- **Rights** — the **access tree**: tick which tools/sections this user may use. Anything not
+  granted is **hidden from their menus** — this is how you give an editor the CMS but not user
+  administration.
+
+  ![User — Rights tab](./images/meliscore-tool-users-edit-tab-rights.png)
+  *The rights tree — grant access tool by tool.*
+
+  There's also an **exclusions** view, to hide specific interface items even within a granted area.
+
+  ![User — Rights exclusions](./images/meliscore-tool-users-edit-tab-rights-exclusions.png)
+
+- **Connections** — the user's **login history**.
+
+  ![User — Connections tab](./images/meliscore-tool-users-edit-tab-connections.png)
+
+- **Micro-services** — generate **API keys** so the user can call the platform's micro-service
+  endpoints.
+
+  ![User — generate an API key](./images/meliscore-tool-users-edit-tab-microservices-generate.png)
+  ![User — API key generated](./images/meliscore-tool-users-edit-tab-microservices-generated.png)
+
+**Roles** let you define a set of rights once and assign it to many users (instead of setting
+rights person by person).
 
 > Rights are powerful and exact: if someone "can't see a tool", it's almost always because their
-> rights tree doesn't grant it (Users → edit the user/role → rights).
+> rights tree doesn't grant it (Users → edit the user/role → **Rights**).
 
 ## A6. System configuration tools
 
-Under the Tools tree → *System Configuration*:
+Under the Tools tree → *System Configuration*. These are the platform-wide settings — the least
+obvious tools, so here's what each is for.
 
-- **Platforms** — manage your **environments** (dev / staging / production); some config differs
-  per platform.
-- **Languages** — the back-office/platform **languages** (locale + name) available to users.
-- **Emails management** — create and edit the platform's **transactional emails** (e.g. account
-  creation, lost password): sender, reply-to, and the HTML/text body **per language**, with
-  replaceable tags like `[USER_NAME]`.
-- **Logs** — a searchable **action log** (page publishes, user add/delete…), filterable by type,
-  user and date.
-- **Other config** — security policy: **password expiry**, **account lock** after failed logins,
-  password history, and GDPR auto-delete settings.
-- **GDPR** — search a person by name/email, **see all data** the modules hold on them, **extract**
-  it, or **delete** it across modules (plus scheduled auto-deletion).
-- **Modules / Marketplace** — install, update or remove **modules** (features) without a terminal.
-- **Announcements** — platform announcements shown on the dashboard.
+### Platforms — your environments
+
+Manage the **environments** the platform runs in (dev / staging / production). Some configuration
+differs per platform, and this is where you declare them.
+
+![Platforms — list](./images/meliscore-tool-platforms-list.png)
+![Platforms — edit](./images/meliscore-tool-platforms-edit.png)
+
+You can also pick the back-office **colour scheme/theme** per platform — a quick visual cue for
+"which environment am I on".
+
+![Platform colour scheme](./images/meliscore-tool-platformscheme-1.png)
+![Platform colour scheme (alt)](./images/meliscore-tool-platformscheme-2.png)
+
+### Languages — the back-office languages
+
+The **languages** (locale + name) available to back-office users and to the interface.
+
+![Languages — list](./images/meliscore-tool-bolanguages-list.png)
+
+### Emails management — transactional emails
+
+Create and edit the platform's **transactional emails** (account creation, lost password…): the
+email's properties (code, sender, reply-to) and its **HTML/text body per language**, with
+replaceable tags like `[USER_NAME]`.
+
+![Emails — list](./images/meliscore-tool-emailsmanagement-list.png)
+![Emails — properties](./images/meliscore-tool-emailsmanagement-edit-properties.png)
+![Emails — per-language body](./images/meliscore-tool-emailsmanagement-edit-language.png)
+
+### Logs — the action log
+
+A searchable **log of actions** (page publishes, user add/delete…), filterable by type, user and
+date — useful for auditing and troubleshooting.
+
+![Logs — list](./images/meliscore-tool-logs-list.png)
+
+### Other config — security policy
+
+Password and login security: **password expiry**, **account lock** after failed logins, password
+history, and related settings.
+
+![Other config](./images/meliscore-tool-other-config.png)
+
+### GDPR — personal-data tooling
+
+Search a person by name/email and, across all modules: **see the data** held on them, **anonymise**
+it, and configure the **SMTP** used for GDPR notifications.
+
+![GDPR — data](./images/meliscore-tool-gdpr-tab-data.png)
+![GDPR — anonymisation](./images/meliscore-tool-gdpr-tab-anonymization.png)
+![GDPR — SMTP](./images/meliscore-tool-gdpr-tab-smtp.png)
+
+### Modules / Marketplace — features on/off
+
+Install, update or remove **modules** (features) without a terminal, and manage the production
+**asset bundle**.
+
+![Modules — list](./images/meliscore-tool-modules-list.png)
+![Modules — bundle](./images/meliscore-tool-modules-bundle.png)
+
+### Announcements — dashboard messages
+
+Create platform **announcements** shown to users on the dashboard.
+
+![Announcements — list](./images/meliscore-tool-announcement-list.png)
+![Announcements — edit](./images/meliscore-tool-announcement-edit.png)
 
 ## A7. Your profile
 
-From the header, open your **profile** to edit your own details, change your **password**, set your
-**interface language**, and (depending on the platform) your avatar.
+From the header, open your **profile** to edit your own details, change your **password**, and set
+your **interface language**.
+
+![Your profile](./images/meliscore-tool-profile-tab-profile.png)
 
 ## A8. Common tasks — "How do I…?"
 
@@ -148,16 +242,16 @@ From the header, open your **profile** to edit your own details, change your **p
 - **Add a back-office user** → Tools → System Configuration → **Users** → add → fill details →
   assign rights.
 - **Give someone access to a tool (or hide one)** → Users → edit the user (or their **role**) →
-  the **rights** tree → tick/untick the tool.
+  the **Rights** tree → tick/untick the tool.
 - **Change the password policy / lock settings** → System Configuration → **Other config**.
 - **Edit the "account created" email** → System Configuration → **Emails management**.
 - **Add a language** → System Configuration → **Languages**.
 - **Install/remove a feature** → System Configuration → **Modules / Marketplace**.
-- **Handle a GDPR request** → System Configuration → **GDPR** → search the person → extract/delete.
+- **Handle a GDPR request** → System Configuration → **GDPR** → search the person → see / anonymise.
+- **Give a colleague API access** → Users → edit the user → **Micro-services** → generate a key.
+- **Tell which environment I'm on** → the header **colour scheme** (set in Platforms) and the
+  **footer version**.
 - **Change my own password** → header → **profile**.
-
-> **Screenshots** (recommended, to add under `./images/` later): the login screen, the dashboard,
-> the Users tool + the rights tree, and the System Configuration tools. None are captured yet.
 
 ---
 ---
@@ -384,6 +478,44 @@ melis-core/
 ├── public/ (BO JS/CSS, TinyMCE) · language/ · install/ (SQL)
 └── etc/   MarketPlace + MelisAI/doc (this doc)
 ```
+
+---
+
+## Screenshot index
+
+Filename → content lookup for the MelisAI MCP. All under `./images/`.
+
+| Image file | Content |
+|---|---|
+| `meliscore-header-righticons.png` | Header right icons (notifications, language, profile, logout) |
+| `meliscore-footer-version-meliscore.png` | Footer — MelisCore/platform version |
+| `meliscore-dashboard-empty.png` | The Dashboard |
+| `meliscore-dashboardplugins-menu.png` | Dashboard plugin menu (pick widgets) |
+| `meliscore-tool-users-list.png` | Users tool — list of accounts |
+| `meliscore-tool-users-edit-tab-information.png` | User edit — Information tab |
+| `meliscore-tool-users-edit-tab-rights.png` | User edit — Rights tree |
+| `meliscore-tool-users-edit-tab-rights-exclusions.png` | User edit — Rights exclusions |
+| `meliscore-tool-users-edit-tab-connections.png` | User edit — Connections (login history) |
+| `meliscore-tool-users-edit-tab-microservices-generate.png` | User edit — generate an API key |
+| `meliscore-tool-users-edit-tab-microservices-generated.png` | User edit — API key generated |
+| `meliscore-tool-platforms-list.png` | Platforms tool — list |
+| `meliscore-tool-platforms-edit.png` | Platforms tool — edit |
+| `meliscore-tool-platformscheme-1.png` | Platform colour scheme |
+| `meliscore-tool-platformscheme-2.png` | Platform colour scheme (alt) |
+| `meliscore-tool-bolanguages-list.png` | Languages tool — list |
+| `meliscore-tool-emailsmanagement-list.png` | Emails management — list |
+| `meliscore-tool-emailsmanagement-edit-properties.png` | Emails management — properties |
+| `meliscore-tool-emailsmanagement-edit-language.png` | Emails management — per-language body |
+| `meliscore-tool-logs-list.png` | Logs tool — list |
+| `meliscore-tool-other-config.png` | Other config (security policy) |
+| `meliscore-tool-gdpr-tab-data.png` | GDPR tool — data |
+| `meliscore-tool-gdpr-tab-anonymization.png` | GDPR tool — anonymisation |
+| `meliscore-tool-gdpr-tab-smtp.png` | GDPR tool — SMTP |
+| `meliscore-tool-modules-list.png` | Modules tool — list |
+| `meliscore-tool-modules-bundle.png` | Modules tool — asset bundle |
+| `meliscore-tool-announcement-list.png` | Announcements — list |
+| `meliscore-tool-announcement-edit.png` | Announcements — edit |
+| `meliscore-tool-profile-tab-profile.png` | Your profile |
 
 ---
 
