@@ -9,14 +9,20 @@ var themeSwitcher = (function($) {
     var currentTheme            = 'default',
         storageKey              = 'preferred-theme',
         $html                   = $('html'),
-        $defaultTheme           = $('#default-theme'), // light = system colors, default
-        $darkTheme              = $('#dark-theme'),
-        $rounded                = $('#rounded'),
         currentUiStyle          = 'flat',
         uiStorageKey            = 'preferred-ui-style',
         themeControlsObserver   = null,
         themeControlsPollId     = null,
+        pageEditionIframeObserver = null,
         isInitialized           = false;
+
+        function getThemeLinks() {
+            return {
+                defaultTheme : $('#default-theme'),
+                darkTheme    : $('#dark-theme'),
+                rounded      : $('#rounded')
+            };
+        }
 
         // private methods
         function init() {
@@ -28,7 +34,9 @@ var themeSwitcher = (function($) {
             setupEventListeners();
             ensureThemeControlsState();
             watchThemeControls();
-            
+            watchPageEditionIframes();
+            bindDeferredIframeSyncEvents();
+
             startIframeStartupSync();
         }
 
@@ -157,6 +165,8 @@ var themeSwitcher = (function($) {
         }
 
         function applyTheme(theme) {
+            var themeLinks = getThemeLinks();
+
             // remove existing theme attributes
             $html.removeAttr('data-bs-theme');
             
@@ -165,12 +175,12 @@ var themeSwitcher = (function($) {
             
             // enable/disable CSS files based on theme
             if (theme === 'dark') {
-                $defaultTheme.prop('disabled', true);
-                $darkTheme.prop('disabled', false);
+                themeLinks.defaultTheme.prop('disabled', true);
+                themeLinks.darkTheme.prop('disabled', false);
             } else {
                 // default stylesheet as base
-                $defaultTheme.prop('disabled', false); // default
-                $darkTheme.prop('disabled', true);
+                themeLinks.defaultTheme.prop('disabled', false); // default
+                themeLinks.darkTheme.prop('disabled', true);
             }
 
             applyThemeToPageEditionIframe(theme);
@@ -236,22 +246,10 @@ var themeSwitcher = (function($) {
                         }
 
                         try {
+                            ensureThemeStylesheetsInIframe(iframeDoc);
+
                             var $iframeHtml = $(iframeDoc.documentElement);
-                                /* $targets = $(iframeDoc).find(
-                                    '.widget, .panel, .card, .modal-content, .sidebar, .dropdown-menu, .table,' +
-                                    '.panel-heading, .panel-body, .card-header, .card-body, .form-control, .input-group-text,' +
-                                    '.btn, .list-group-item, .well, .nav-link, .dropdown-item, .modal-header, .modal-body, .modal-footer,' +
-                                    'input:not(.theme-radio), select, textarea,' +
-                                    '.melis-dragdrop-zone, .melis-dragdrop-box, .melis-draggable-item, .ui-sortable, .ui-sortable-handle'
-                                ); */
-
-                                $iframeHtml.attr('data-style', uiStyle);
-
-                                /* if (uiStyle === 'rounded') {
-                                    $targets.removeClass('flat').addClass('rounded');
-                                } else {
-                                    $targets.removeClass('rounded').addClass('flat');
-                                } */
+                            $iframeHtml.attr('data-style', uiStyle);
                         } catch (e) {
                             // ignore cross-origin or not-ready iframe documents
                         }
@@ -335,7 +333,7 @@ var themeSwitcher = (function($) {
         // when page is loaded, the iframe is not loaded immediately, so we need to start a timer to sync the theme/ui style
         function startIframeStartupSync() {
             var attempts = 0,
-                maxAttempts = 12,
+                maxAttempts = 30,
                 intervalMs = 1000,
                 timer = setInterval(function() {
                     attempts += 1;
@@ -353,16 +351,63 @@ var themeSwitcher = (function($) {
             applyUiStyleToPageEditionIframe(currentUiStyle);
         }
 
-        // added for page edition iframe, schemes.css and dark.css
+        function watchPageEditionIframes() {
+            if (typeof MutationObserver === 'undefined' || pageEditionIframeObserver) {
+                return;
+            }
+
+            pageEditionIframeObserver = new MutationObserver(function(mutations) {
+                var hasNewIframe = mutations.some(function(mutation) {
+                    return Array.from(mutation.addedNodes || []).some(function(node) {
+                        if (!node || node.nodeType !== 1) {
+                            return false;
+                        }
+
+                        var $node = $(node);
+                        return $node.is('.melis-iframe') || $node.find('.melis-iframe').length > 0;
+                    });
+                });
+
+                if (hasNewIframe) {
+                    scheduleDeferredIframeSync();
+                }
+            });
+
+            pageEditionIframeObserver.observe(document.body, { childList: true, subtree: true });
+        }
+
+        function bindDeferredIframeSyncEvents() {
+            $(document).ajaxComplete(function(event, xhr, settings) {
+                var url = (settings && settings.url) ? settings.url : '';
+
+                if (url.indexOf('/melis/zoneview') !== -1 ||
+                    url.indexOf('getUserTabsOpened') !== -1) {
+                    scheduleDeferredIframeSync();
+                }
+            });
+        }
+
+        function scheduleDeferredIframeSync() {
+            var delays = [0, 100, 300, 700, 1500, 3000, 5000, 8000, 12000, 15000, 20000];
+
+            delays.forEach(function(delay) {
+                setTimeout(function() {
+                    syncPageEditionIframes();
+                }, delay);
+            });
+        }
+
+        // added for page edition iframe, schemes.css, dark.css and rounded.css
         function ensureThemeStylesheetsInIframe(iframeDoc) {
             var head = iframeDoc.head || iframeDoc.getElementsByTagName('head')[0];
                 if (!head) {
                     return;
                 }
 
-            var defaultHref = $defaultTheme.attr('href') || '/assets/css/schemes.css',
-                darkHref = $darkTheme.attr('href') || '/assets/css/dark.css',
-                roundedHref = $rounded.attr('href') || '/assets/css/rounded.css';
+            var themeLinks = getThemeLinks(),
+                defaultHref = themeLinks.defaultTheme.attr('href') || '/assets/css/schemes.css',
+                darkHref = themeLinks.darkTheme.attr('href') || '/MelisCore/css/dark.css',
+                roundedHref = themeLinks.rounded.attr('href') || '/MelisCore/css/rounded.css';
 
                 // Create <link> nodes with the iframe's document — jQuery-created nodes
                 // belong to the parent document and can end up appended to <body> when
@@ -493,6 +538,8 @@ var themeSwitcher = (function($) {
             //reApplyUiStyle  : function () { applyUiStyle(); }
         };
 })(jQuery);
+
+window.themeSwitcher = themeSwitcher;
 
 $(function() {
     // init theme switcher
