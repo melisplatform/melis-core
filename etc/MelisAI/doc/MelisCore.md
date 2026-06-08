@@ -259,7 +259,341 @@ your **interface language**.
 # PART B — Technical Reference
 
 *MelisCore is the framework every other module builds on. The conventions below — services, the
-tool & menu config, the event system — are used everywhere.*
+tool & menu config, the event system — are used everywhere. Sections B0a–B0g are a hands-on
+newcomer's guide; B1+ is the reference catalogue.*
+
+## B0a. How a Melis module is organised
+
+Every Melis module is a Laminas MVC module with a fixed skeleton. Copy this layout:
+
+```
+melis-mymodule/
+├── composer.json            // name "melisplatform/melis-mymodule", "extra":{ "module-name":"MelisMyModule",
+│                            //   "melis-module-category":"cms", "dbdeploy":true }, autoload PSR-4 "MelisMyModule\\":"src/"
+├── config/
+│   ├── module.config.php    // routes, service_manager aliases, controllers, form_elements, view_helpers, view_manager
+│   ├── app.interface.php    // back-office menu entries / tool tabs (the "interface tree")  → B0d
+│   ├── app.tools.php        // DataTable tools: columns, filters, action buttons, modals, forms  → B0e
+│   └── app.microservice.php // (optional) expose service methods as JSON endpoints  → B9
+├── src/
+│   ├── Module.php           // getConfig() merges the config/*.php; onBootstrap() wires listeners
+│   ├── Controller/          // back-office controllers (render actions + AJAX data/save actions)
+│   ├── Service/             // business logic; services extend MelisGeneralService  → B0c
+│   ├── Model/Tables/        // table gateways (if the module owns DB tables)
+│   ├── Listener/            // event listeners (hook the platform / your own events)
+│   └── Form/Factory/        // custom form elements (selects, pickers…)
+├── view/melis-mymodule/...  // .phtml templates
+├── public/{css,js,images}/  // assets, served by MelisAssetManager at /MelisMyModule/css/…
+├── language/                // en_EN.interface.php, fr_FR.interface.php (tr_* keys)
+├── install/                 // setup_structure.sql + dbdeploy/*.sql migrations (if dbdeploy:true)
+└── etc/MarketPlace/...       // marketplace metadata
+```
+
+`src/Module.php` is the entry point — it merges the config files and wires bootstrap listeners:
+
+```php
+namespace MelisMyModule;
+use Laminas\Mvc\MvcEvent;
+use Laminas\Stdlib\ArrayUtils;
+
+class Module
+{
+    public function getConfig()
+    {
+        $config = [];
+        foreach ([
+            include __DIR__ . '/../config/module.config.php',
+            include __DIR__ . '/../config/app.interface.php',
+            include __DIR__ . '/../config/app.tools.php',
+        ] as $file) {
+            $config = ArrayUtils::merge($config, $file);
+        }
+        return $config;
+    }
+
+    public function onBootstrap(MvcEvent $e)
+    {
+        $events = $e->getApplication()->getEventManager();
+        // attach only on the back-office route:
+        // (new \MelisMyModule\Listener\MyListener())->attach($events);
+    }
+
+    public function getAutoloaderConfig() { return []; }
+}
+```
+
+Then register the module in the platform's `config/modules.config.php` (the Modules tool does this
+for you when you install via the marketplace — see [MelisComposerDeploy](../../../melis-composerdeploy/etc/MelisAI/doc/MelisComposerDeploy.md)).
+
+## B0b. Controllers
+
+Back-office controllers extend `MelisCore\Controller\MelisAbstractActionController`, which gives you
+`$this->getServiceManager()`, `$this->getEventManager()`, `$this->getRequest()`, etc. A controller
+typically has **render actions** (return a `ViewModel` for a zone) and **AJAX actions** (return a
+`JsonModel`). Register them in `module.config.php`:
+
+```php
+'controllers' => ['invokables' => [
+    'MelisMyModule\Controller\Tool' => \MelisMyModule\Controller\ToolController::class,
+]],
+```
+
+## B0c. Create a service (with events)
+
+Business logic lives in services that extend `MelisGeneralService`, so each method automatically
+fires `*_start` / `*_end` events other modules can hook.
+
+```php
+namespace MelisMyModule\Service;
+use MelisCore\Service\MelisGeneralService;
+
+class MyThingService extends MelisGeneralService
+{
+    public function getThing($id)
+    {
+        $params  = $this->makeArrayFromParameters(__METHOD__, func_get_args());
+        $params  = $this->sendEvent('melismymodule_get_thing_start', $params);   // before
+
+        $table   = $this->getServiceManager()->get('MelisMyModuleTable');
+        $results = $table->getEntryById($params['id'])->current();
+
+        $params['results'] = $results;
+        $params = $this->sendEvent('melismymodule_get_thing_end', $params);      // after
+        return $params['results'];
+    }
+}
+```
+
+Register and use it:
+
+```php
+// module.config.php
+'service_manager' => ['aliases' => [
+    'MelisMyModuleService' => \MelisMyModule\Service\MyThingService::class,
+]],
+
+// anywhere with the service manager:
+$thing = $sm->get('MelisMyModuleService')->getThing(42);
+```
+
+Hook another module's event (shared event manager, keyed by the firing module's identifier):
+
+```php
+$sm->get('SharedEventManager')->attach('MelisMyModule', 'melismymodule_get_thing_end',
+    function ($e) { $p = $e->getParams(); /* alter $p['results'] */ }, 50);
+```
+
+## B0d. Add a menu entry / a tab (the interface tree)
+
+`config/app.interface.php` merges your entry into the platform menu. To add a left-menu tool under
+the CMS tools section, with a `forward` to the action that renders it:
+
+```php
+return ['plugins' => ['meliscore' => ['interface' => ['meliscore_leftmenu' => ['interface' => [
+    'meliscms_toolstree_section' => ['interface' => [
+        'melismymodule_tool' => [
+            'conf' => [
+                'id'       => 'id_melismymodule_tool',
+                'melisKey' => 'melismymodule_tool',     // the key used for rights (B0f) and zoneReload
+                'name'     => 'tr_melismymodule_tool',   // translation key
+                'icon'     => 'fa-star',
+            ],
+            'forward' => [
+                'module'     => 'MelisMyModule',
+                'controller' => 'Tool',
+                'action'     => 'render-tool',            // ToolController::renderToolAction()
+                'jscallback' => 'myModule.init();',
+            ],
+        ],
+    ]],
+]]]]]];
+```
+
+Page-editor tabs are added the same way under `meliscms_page` → `meliscms_tabs` (this is how the
+*Historic* and *Scripts* tabs attach — see those modules' docs).
+
+## B0e. Create a back-office tool (a DataTable) — end to end
+
+This is the single most common thing you build. Four pieces:
+
+**1) Declare the table in `config/app.tools.php`:**
+
+```php
+return ['plugins' => ['melismymodule' => ['tools' => [
+    'melismymodule_tool' => [
+        'conf'  => ['title' => 'tr_melismymodule_tool', 'id' => 'id_melismymodule_tool'],
+        'table' => [
+            'target'  => '#myThingTable',                       // the <table> id in the view
+            'ajaxUrl' => '/melis/MelisMyModule/Tool/getData',   // the JSON data endpoint
+            'dataFunction' => '',
+            'filters' => [
+                'left'   => [/* limit, site filter… render actions */],
+                'center' => [/* search */],
+                'right'  => [/* refresh, export… */],
+            ],
+            'columns' => [
+                'thing_id'   => ['text' => 'tr_..._id',   'sortable' => true],
+                'thing_name' => ['text' => 'tr_..._name', 'sortable' => true],
+            ],
+            'searchables'   => ['thing_id', 'thing_name'],
+            'actionButtons' => [
+                'edit'   => ['module'=>'MelisMyModule','controller'=>'Tool','action'=>'render-action-edit'],
+                'delete' => ['module'=>'MelisMyModule','controller'=>'Tool','action'=>'render-action-delete'],
+            ],
+        ],
+        'modals' => [/* see B0g */],
+        'forms'  => [/* Laminas form configs used by the modals */],
+    ],
+]]]];
+```
+
+**2) The container action (renders the view, passing the DataTable JS config):**
+
+```php
+use Laminas\View\Model\ViewModel;
+
+private function getTool()
+{
+    $tool = $this->getServiceManager()->get('MelisCoreTool');
+    $tool->setMelisToolKey('melismymodule', 'melismymodule_tool');   // <plugin>, <tool key>
+    return $tool;
+}
+
+public function renderToolAction()
+{
+    $view = new ViewModel();
+    $view->setTemplate('melis-mymodule/tool/render-tool');
+    $view->tableColumns = $this->getTool()->getColumns();
+    // builds the DataTables init JS for the table id, sortable, with default order:
+    $view->getToolDataTableConfig =
+        $this->getTool()->getDataTableConfiguration('#myThingTable', true, false, ['order' => '[[0,"desc"]]']);
+    return $view;
+}
+```
+
+**3) The data action (returns the DataTables JSON):** reads the DataTables POST params
+(`draw`, `start`, `length`, `order`, `search`), pulls a page of rows, returns the JSON shape
+DataTables expects.
+
+```php
+use Laminas\View\Model\JsonModel;
+
+public function getDataAction()
+{
+    $tool = $this->getTool();
+    $colId   = array_keys($tool->getColumns());
+    $draw    = (int) $this->params()->fromPost('draw');
+    $start   = (int) $this->params()->fromPost('start');
+    $length  = (int) $this->params()->fromPost('length');
+    $order   = $this->params()->fromPost('order');                  // [['column'=>0,'dir'=>'asc']]
+    $search  = $this->params()->fromPost('search')['value'] ?? '';
+    $selCol  = $colId[$order[0]['column']];
+    $dir     = $order[0]['dir'];
+
+    $table = $this->getServiceManager()->get('MelisMyModuleTable');
+    $rows  = $table->getPagedData([
+        'search'  => ['value' => $search, 'columns' => $tool->getSearchableColumns()],
+        'order'   => ['key' => $selCol, 'dir' => $dir],
+        'start'   => $start, 'limit' => $length,
+    ])->toArray();
+
+    return new JsonModel([
+        'draw'            => $draw,
+        'recordsTotal'    => $table->getTotalData(),
+        'recordsFiltered' => $table->getTotalData($search),
+        'data'            => $rows,           // each row keyed by column name
+    ]);
+}
+```
+
+**4) The view (`view/melis-mymodule/tool/render-tool.phtml`):** drop the table and echo the config
+the controller built — that one line boots the DataTable:
+
+```php
+<table id="myThingTable" class="table table-striped"></table>
+<?php echo $this->getToolDataTableConfig; ?>
+```
+
+Each **action button** (edit/delete) points to a small render action that returns the button HTML
+for that row; its click handler opens a modal (next) or calls an AJAX action.
+
+## B0f. Check a user's rights in custom code
+
+Use `MelisCoreRights`. The simplest check — "may the current user reach this tool/menu key?":
+
+```php
+$rights = $sm->get('MelisCoreRights');
+if (! $rights->canAccess('melismymodule_tool')) {
+    // not allowed — hide the tool / refuse the action
+}
+```
+
+`canAccess($melisKey)` internally fetches the current user's rights XML via `MelisCoreAuth` and
+checks both the **tools tree** and the **interface** (exclusions). For a lower-level check against a
+specific section/item, or for a user other than the logged-in one:
+
+```php
+$auth = $sm->get('MelisCoreAuth');
+$xml  = $auth->getAuthRights();                                  // logged-in user's rights XML
+$ok   = $rights->isAccessible($xml, 'meliscore_leftmenu', 'melismymodule_tool');
+
+$user = $auth->getIdentity();                                    // melis_core_user row (id, login…)
+```
+
+Rights are an XML tree (granted tools under `meliscore_leftmenu`/`*_toolstree_section`, plus an
+exclusion list under `meliscore_interface`); helpers: `getRightsValues($id, $isRole)`,
+`createXmlRightsValues(...)`, `getToolSectionMap()`.
+
+## B0g. Create a modal
+
+A modal is declared in the tool's `modals` config and rendered by a controller action that returns
+a form view; you open it from JS.
+
+```php
+// app.tools.php → tools.melismymodule_tool.modals
+'modals' => [
+    'melismymodule_edit_modal' => [
+        'id'        => 'id_melismymodule_edit_modal',
+        'tab-text'  => 'tr_melismymodule_edit',
+        'content'   => ['module'=>'MelisMyModule','controller'=>'Tool','action'=>'render-edit-form'],
+    ],
+],
+```
+
+```php
+// the render action returns the modal body (a form):
+public function renderEditFormAction()
+{
+    $form = $this->getTool()->getForm('melismymodule_tool_form');   // Laminas form from app.tools.php
+    $view = new ViewModel(['form' => $form]);
+    $view->setTerminal(true);
+    return $view;
+}
+```
+
+```javascript
+// open it from JS (MelisCore's helper, available as melisHelper):
+melisHelper.createModal(
+    zoneId,                 // the zone hosting the modal
+    'melismymodule_edit_modal',
+    false,
+    { thingId: id },        // params passed to the render action
+    modalUrl,
+    function () { /* onClose */ }
+);
+```
+
+## B0h. View & JS helpers you'll use
+
+- **View helpers** (in `.phtml`): `MelisDataTable` (the table builder behind
+  `getToolDataTableConfig`), plus the form/translation helpers. From other layers, the CMS/front
+  helpers (`MelisTag`, `MelisLink`, `MelisMenu`…) live in MelisFront.
+- **JS helpers** (`MelisCore/js/core/melisHelper.js`, global `melisHelper`):
+  `zoneReload(melisKey, params)` (re-render a zone via AJAX), `createModal(...)`,
+  `melisOkNotification(title, msg)` / `melisKoNotification(...)`, `tabOpen/tabClose/tabSwitch`,
+  `loadingZone(sel)` / `removeLoadingZone(sel)`. WYSIWYG: `melisTinyMCE.createTinyMCE('tool', sel, {})`.
+
+---
 
 ## B1. Metadata & dependencies
 
