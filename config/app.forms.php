@@ -3816,7 +3816,7 @@ return array(
                                     'category' => 'modal',
                                     'sliderId' => 'modal-border-width-range-slider-min',
                                     'sliderClass' => 'modal-border-width-range-slider-min',
-                                    'default' => 14
+                                    'default' => 0
                                 ),
                             ),
                         ),

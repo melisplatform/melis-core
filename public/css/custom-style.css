@@ -483,6 +483,9 @@ a:not([href]).btn-danger:hover {
 .widget .widget-body {
 	width: 100%;
 }
+#modal-user-management div.widget {
+	max-width: 100%;
+}
 .btn {
 	cursor: pointer;
 	/* padding-left: .5rem;
@@ -2427,6 +2430,7 @@ table.dataTable.dtr-inline.collapsed>tbody>tr.dtr-expanded>th.dtr-control:before
 }
 .platform-theme-options-block .accordion-item:last-child {
 	border-bottom: 0;
+	padding-bottom: 0;
 }
 .platform-theme-options-block .accordion-item .accordion-button {
 	background-color: transparent;
@@ -2454,6 +2458,9 @@ table.dataTable.dtr-inline.collapsed>tbody>tr.dtr-expanded>th.dtr-control:before
 }
 .platform-theme-options-block .accordion-collapse .accordion-body > .accordion .accordion-item .accordion-body .form-group {
 	padding-left: 0.5rem;
+}
+.platform-theme-options-block .accordion-collapse .accordion-body .accordion {
+	margin-bottom: 0;
 }
 /* end accordion */
 
@@ -2512,7 +2519,7 @@ table.dataTable.dtr-inline.collapsed>tbody>tr.dtr-expanded>th.dtr-control:before
     text-decoration: none;
     -webkit-box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    border-radius: 5px;
+    /* border-radius: 5px; */
 }
 .platform-theme-options-toggle .overlay-loader {
 	color: #fff;
@@ -2581,7 +2588,8 @@ table.dataTable.dtr-inline.collapsed>tbody>tr.dtr-expanded>th.dtr-control:before
 	margin-top: 1rem;
 }
 .platform-theme-options-tools-info .ui-widget-content {
-	border-radius: 10px;
+	/* border-radius: 10px; */
+	border-radius: 0;
 	height: 0.6em;
 }
 .platform-theme-options-tools-info .ui-slider-handle {

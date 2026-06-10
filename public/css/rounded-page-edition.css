@@ -1,0 +1,54 @@
+/*
+ * Page edition iframe only — injected by platform-theme-switcher.js
+ * (ensureThemeStylesheetsInIframe). Back office uses rounded.css instead.
+ *
+ * Targets drag-and-drop editor elements when html[data-style="rounded"].
+* .rounded-1 = --bs-border-radius-sm = 0.25rem = 4px
+ * .rounded-2 = --bs-border-radius = 0.375rem = 6px 
+ * .rounded-3 = --bs-border-radius-lg = 0.5rem = 8px
+ * .rounded-4 = --bs-border-radius-xl = 1rem = 16px
+ * .rounded-5 = --bs-border-radius-xxl = 2rem = 32px
+ */
+
+html[data-style="rounded"] .melis-cms-dnd-box {
+    border-bottom-left-radius: var(--bs-border-radius-lg);
+    border-top-left-radius: var(--bs-border-radius-lg);
+}
+
+html[data-style="rounded"] .melis-cms-dnd-box #melisPluginBtn {
+    border-top-left-radius: var(--bs-border-radius-lg);
+    border-bottom-left-radius: var(--bs-border-radius-lg);
+}
+
+html[data-style="rounded"] .melis-cms-dnd-title,
+html[data-style="rounded"] .melis-cms-plugin-snippets,
+html[data-style="rounded"] .melis-cms-category-plugins,
+html[data-style="rounded"] .melis-cms-category-btn {
+    border-radius: var(--bs-border-radius-lg);
+}
+
+html[data-style="rounded"] .melis-cms-plugin-snippets img,
+html[data-style="rounded"] .melis-cms-category-plugins img {
+    border-radius: var(--bs-border-radius);
+}
+
+html[data-style="rounded"] .melis-plugin-tools-box,
+html[data-style="rounded"] .melis-plugin-title-box,
+html[data-style="rounded"] .melis-ui-outlined {
+    border-radius: var(--bs-border-radius-lg);
+}
+
+html[data-style="rounded"] .melis-dragdropzone,
+html[data-style="rounded"] .melis-dragdropzone.no-content,
+html[data-style="rounded"] .melis-dragdropzone-container > .dnd-layout-wrapper {
+    border-radius: var(--bs-border-radius-lg);
+}
+
+html[data-style="rounded"] .dnd-layout-buttons,
+html[data-style="rounded"] .dnd-layout-buttons-popover,
+html[data-style="rounded"] .dnd-layout-buttons .btn,
+html[data-style="rounded"] button.column-icon,
+html[data-style="rounded"] button.column-icon .icon-col-bg,
+html[data-style="rounded"] .m-plugin-sub-tools div {
+    border-radius: var(--bs-border-radius);
+}

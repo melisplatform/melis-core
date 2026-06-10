@@ -1,6 +1,11 @@
 /**  
  * Theme Switcher Module using jQuery Modular Pattern
- * Included UI styles: flat, rounded as its almost the same implementation
+ * Included UI styles: flat, rounded
+ *
+ * Theme/UI styles are split by context:
+ * - dark.css / rounded.css — back office (loaded in layoutCore.phtml)
+ * - dark-page-edition.css / rounded-page-edition.css — page edition iframe only
+ *   (injected via ensureThemeStylesheetsInIframe)
  */
 var themeSwitcher = (function($) {
     'use strict';
@@ -397,7 +402,8 @@ var themeSwitcher = (function($) {
             });
         }
 
-        // added for page edition iframe, schemes.css, dark.css and rounded.css
+        // Page edition iframe only: schemes.css, dark-page-edition.css, rounded-page-edition.css
+        // (dark.css and rounded.css are back-office only — not injected here)
         function ensureThemeStylesheetsInIframe(iframeDoc) {
             var head = iframeDoc.head || iframeDoc.getElementsByTagName('head')[0];
                 if (!head) {
@@ -406,29 +412,44 @@ var themeSwitcher = (function($) {
 
             var themeLinks = getThemeLinks(),
                 defaultHref = themeLinks.defaultTheme.attr('href') || '/assets/css/schemes.css',
-                darkHref = themeLinks.darkTheme.attr('href') || '/MelisCore/css/dark.css',
-                roundedHref = themeLinks.rounded.attr('href') || '/MelisCore/css/rounded.css';
+                darkPageEditionHref = '/MelisCore/css/dark-page-edition.css',
+                roundedPageEditionHref = '/MelisCore/css/rounded-page-edition.css';
+
+                // Remove legacy iframe links that loaded back-office stylesheets
+                var legacyRounded = iframeDoc.getElementById('rounded');
+                if (legacyRounded) {
+                    legacyRounded.remove();
+                }
+
+                var legacyDarkTheme = iframeDoc.getElementById('dark-theme');
+                if (legacyDarkTheme) {
+                    var legacyDarkHref = legacyDarkTheme.getAttribute('href') || '';
+                    if (legacyDarkHref.indexOf('dark-page-edition.css') === -1) {
+                        legacyDarkTheme.remove();
+                    }
+                }
 
                 // Create <link> nodes with the iframe's document — jQuery-created nodes
                 // belong to the parent document and can end up appended to <body> when
                 // moved into another document.
-                function appendStylesheetLink(id, href) {
-                    if (iframeDoc.getElementById(id)) {
-                        return;
-                    }
+                function ensureStylesheetLink(id, href) {
+                    var link = iframeDoc.getElementById(id);
 
-                    var link = iframeDoc.createElement('link');
+                    if (!link) {
+                        link = iframeDoc.createElement('link');
                         link.id = id;
-                        link.href = href;
                         link.media = 'screen';
                         link.rel = 'stylesheet';
                         link.type = 'text/css';
                         head.appendChild(link);
+                    }
+
+                    link.href = href;
                 }
 
-                appendStylesheetLink('default-theme', defaultHref);
-                appendStylesheetLink('dark-theme', darkHref);
-                appendStylesheetLink('rounded', roundedHref);
+                ensureStylesheetLink('default-theme', defaultHref);
+                ensureStylesheetLink('dark-theme', darkPageEditionHref);
+                ensureStylesheetLink('rounded-page-edition', roundedPageEditionHref);
         }
 
         function saveTheme(theme) {

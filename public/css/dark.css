@@ -1,6 +1,7 @@
 /*
-    Melis Platform - Dark theme overrides
+    Melis Platform - Dark theme overrides (back office only)
     Scope all rules under html[data-theme="dark"] to avoid affecting light mode.
+    Page edition iframe uses dark-page-edition.css instead.
 
     Edit this file in d:/Local files/work/platform-scheme-evolution
 */
@@ -212,7 +213,7 @@ html[data-theme="dark"] .select2-container--default .select2-selection--single {
     background-color: var(--active-bg) !important;
     border-color: var(--border-grey) !important;
     color: var(--active-text) !important;
-    border-radius: 0 !important;
+    /* border-radius: 0 !important; */
 }
 
 html[data-theme="dark"] .select2-container--default .select2-selection--single,
@@ -608,11 +609,28 @@ html[data-theme="dark"] .melis-core-dashboard-plugin-snippets,
 html[data-theme="dark"] .melis-core-dashboard-category-plugins,
 html[data-theme="dark"] .melis-core-dashboard-ps-box .melis-core-dashboard-filter-btn, 
 html[data-theme="dark"] .melis-core-dashboard-category-btn,
-html[data-theme="dark"] .melis-core-dashboard-plugin-delete-all #dashboard-plugin-delete-all,
+/* html[data-theme="dark"] .melis-core-dashboard-plugin-delete-all #dashboard-plugin-delete-all, */
 html[data-theme="dark"] .melis-core-dashboard-dnd-box #melisDashBoardPluginBtn,
 html[data-theme="dark"] .melis-core-dashboard-dnd-title {
     background-color: var(--bg) !important;
     color: var(--text) !important;
+}
+html[data-theme="dark"] .melis-core-dashboard-plugin-delete-all #dashboard-plugin-delete-all {
+    background-color: var(--active-bg) !important;
+    color: var(--active-text) !important;
+}
+html[data-theme="dark"] .melis-core-dashboard-plugin-delete-all #dashboard-plugin-delete-all:hover {
+    background-color: var(--bg) !important;
+    color: var(--text) !important;
+}
+html[data-theme="dark"] .bubble-plugin-flip-cards .front .widget {
+    border: 0 !important;
+}
+html[data-theme="dark"] .bubble-plugin-flip-cards .front .widget .innerAll:last-child {
+    border-top: 0 !important;
+    border-bottom: 1px solid var(--border-grey) !important;
+    border-left: 1px solid var(--border-grey) !important;
+    border-right: 1px solid var(--border-grey) !important;
 }
 html[data-theme="dark"] .melis-core-dashboard-dnd-box {
     background-color: var(--bg) !important;
@@ -763,6 +781,9 @@ html[data-theme="dark"] .nav-tabs.product-text-tab li a:hover {
     background-color: var(--bg) !important;
     color: var(--text) !important;
 }
+html[data-theme="dark"] .module-settings .fa-info-circle {
+    color: var(--text) !important;
+}
 
 /* logs */
 html[data-theme="dark"] .modal-content .widget .widget-head {
@@ -833,7 +854,7 @@ html[data-theme="dark"] #id_meliscore_tool_platform_scheme_tool_content .bootstr
     border-right: 0;
 }
 html[data-theme="dark"] .platform-theme-options-tools-info .ui-widget-header,
-html[data-theme="dark"] .platform-theme-options-detail .platform-theme-options-block .active-header,
+/* html[data-theme="dark"] .platform-theme-options-detail .platform-theme-options-block .active-header, */
 html[data-theme="dark"] .platform-theme-options .platform-theme-options-toggle {
     background-color: var(--bg) !important;
 }
@@ -1383,6 +1404,7 @@ html[data-theme="dark"] .meliscms-search-box .sbox-icon:hover {
     background-color: var(--active-bg) !important;
     color: var(--active-text) !important;
 }
+html[data-theme="dark"] .widget.widget-tabs > .widget-head ul li.active a .fa:before,
 html[data-theme="dark"] .meliscms-search-box .sbox-icon:hover i:before,
 html[data-theme="dark"] .meliscms-search-box .sbox-icon:hover i {
     color: var(--active-text) !important;
@@ -1530,55 +1552,4 @@ html[data-theme="dark"] .global-options .theme-option:hover {
 }
 html[data-theme="dark"] .platform-theme-options-title .close-tools:hover {
     color: var(--active-text) !important;
-}
-
-/* page edition iframe */
-html[data-theme="dark"] .melis-plugin-tools-box .melis-plugin-tools-box-title,
-html[data-theme="dark"] .melis-plugin-tools-box,
-html[data-theme="dark"] .melis-plugin-indicator {
-    background-color: var(--bg) !important;
-    color: var(--text) !important;
-}
-html[data-theme="dark"] .m-options-handle,
-html[data-theme="dark"] .melis-module-title {
-    color: var(--text) !important;
-}
-html[data-theme="dark"] .melis-cms-dnd-box,
-html[data-theme="dark"] .melis-cms-ps-box .melis-cms-filter-btn,
-html[data-theme="dark"] .m-plugin-sub-tools {
-    background-color: var(--bg) !important;
-}
-html[data-theme="dark"] .melis-ui-outlined:hover {
-    outline: 1px solid var(--border-black) !important;
-    box-shadow: 0 0 0 1px var(--border-black) !important;
-    -webkit-box-shadow: 0 0 0 1px var(--border-black) !important;
-}
-html[data-theme="dark"] .melis-dragdropzone-container > .dnd-layout-wrapper {
-    outline: 1px dashed var(--border-black) !important;
-}
-html[data-theme="dark"] .melis-cms-category-plugins-box,
-html[data-theme="dark"] .melis-cms-dnd-box,
-html[data-theme="dark"] .melis-cms-dnd-title,
-html[data-theme="dark"] .melis-editable:hover,
-html[data-theme="dark"] .melis-dragdropzone:hover,
-html[data-theme="dark"] .melis-dragdropzone {
-    border-color: var(--border-black) !important;
-}
-html[data-theme="dark"] .melis-cms-dnd-box #melisPluginBtn {
-    background-color: var(--bg) !important;
-    color: var(--text) !important;
-}
-html[data-theme="dark"] .melis-cms-dnd-title {
-    background-color: var(--bg) !important;
-    text-transform: uppercase !important;
-}
-html[data-theme="dark"] .melis-cms-filter-btn-sub-category.active,
-html[data-theme="dark"] .melis-cms-ps-box .melis-cms-filter-btn.active,
-html[data-theme="dark"] .melis-cms-category-btn.active {
-    background-color: var(--bg) !important;
-    border-color: var(--border-black) !important;
-    color: var(--text) !important;
-}
-html[data-theme="dark"] .melis-cms-plugin-snippets:hover {
-    background-color: var(--bg) !important;
 }

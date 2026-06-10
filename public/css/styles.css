@@ -3985,11 +3985,14 @@ div.dataTables_wrapper div.dataTables_length select.new_filter {
 * Added by: Junry @ 09/26/2018
 */
 .melis-core-dashboard-plugin-delete-all {
-	bottom: 0;
 	display: block;
-	position: absolute;
 	height: 34px;
 	width: 100%;
+	padding: 0 15px;
+
+	position: absolute;
+	bottom: 0.5rem;
+	top: auto;
 	/*  width: 164px; fix for issue: http://mantis.melistechnology.fr/view.php?id=3805 */
 }
 

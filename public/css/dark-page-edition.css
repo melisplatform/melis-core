@@ -1,0 +1,62 @@
+/*
+ * Page edition iframe only — injected by platform-theme-switcher.js
+ * (ensureThemeStylesheetsInIframe). Back office uses dark.css instead.
+ *
+ * Scope all rules under html[data-theme="dark"] to avoid affecting light mode.
+ */
+
+html[data-theme="dark"] {
+    --bg: #121212;
+    --text: #ffffff;
+    --border-black: #121212;
+}
+
+html[data-theme="dark"] .melis-plugin-tools-box .melis-plugin-tools-box-title,
+html[data-theme="dark"] .melis-plugin-tools-box,
+html[data-theme="dark"] .melis-plugin-indicator {
+    background-color: var(--bg) !important;
+    color: var(--text) !important;
+}
+html[data-theme="dark"] .m-options-handle,
+html[data-theme="dark"] .melis-module-title {
+    color: var(--text) !important;
+}
+html[data-theme="dark"] .melis-cms-dnd-box,
+html[data-theme="dark"] .melis-cms-ps-box .melis-cms-filter-btn,
+html[data-theme="dark"] .m-plugin-sub-tools {
+    background-color: var(--bg) !important;
+}
+html[data-theme="dark"] .melis-ui-outlined:hover {
+    outline: 1px solid var(--border-black) !important;
+    box-shadow: 0 0 0 1px var(--border-black) !important;
+    -webkit-box-shadow: 0 0 0 1px var(--border-black) !important;
+}
+html[data-theme="dark"] .melis-dragdropzone-container > .dnd-layout-wrapper {
+    outline: 1px dashed var(--border-black) !important;
+}
+html[data-theme="dark"] .melis-cms-category-plugins-box,
+html[data-theme="dark"] .melis-cms-dnd-box,
+html[data-theme="dark"] .melis-cms-dnd-title,
+html[data-theme="dark"] .melis-editable:hover,
+html[data-theme="dark"] .melis-dragdropzone:hover,
+html[data-theme="dark"] .melis-dragdropzone {
+    border-color: var(--border-black) !important;
+}
+html[data-theme="dark"] .melis-cms-dnd-box #melisPluginBtn {
+    background-color: var(--bg) !important;
+    color: var(--text) !important;
+}
+html[data-theme="dark"] .melis-cms-dnd-title {
+    background-color: var(--bg) !important;
+    text-transform: uppercase !important;
+}
+html[data-theme="dark"] .melis-cms-filter-btn-sub-category.active,
+html[data-theme="dark"] .melis-cms-ps-box .melis-cms-filter-btn.active,
+html[data-theme="dark"] .melis-cms-category-btn.active {
+    background-color: var(--bg) !important;
+    border-color: var(--border-black) !important;
+    color: var(--text) !important;
+}
+html[data-theme="dark"] .melis-cms-plugin-snippets:hover {
+    background-color: var(--bg) !important;
+}
