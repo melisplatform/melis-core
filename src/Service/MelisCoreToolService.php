@@ -229,10 +229,11 @@ class MelisCoreToolService extends MelisServiceManager implements MelisCoreToolS
         $renderer = $this->getServiceManager()->get('Laminas\View\Renderer\RendererInterface');
         $html = new \Laminas\Mime\Part($renderer->render($viewModel));
 
-        // since it will return an object with private properties, change the accessibility so we can get the content data we want.
+        // Read the private "content" property via reflection. ReflectionProperty::getValue()
+        // reads private/protected properties directly since PHP 8.1, so setAccessible() is a
+        // no-op (and deprecated on 8.5) — omitted.
         $reflection = new ReflectionClass($html);
         $property = $reflection->getProperty('content');
-        $property->setAccessible(true);
 
         $content = $property->getValue($html);
 
