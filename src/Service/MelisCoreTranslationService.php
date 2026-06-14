@@ -62,10 +62,11 @@ class MelisCoreTranslationService extends Translator implements MelisCoreTransla
         $translation = $translator->getTranslator();
         $messages = array();
 
-        // process to access the private properties of translation service
+        // Access the private "files" property. ReflectionProperty::getValue() reads
+        // private/protected properties directly since PHP 8.1, so setAccessible() is a
+        // no-op (and deprecated on 8.5) — omitted.
         $reflector = new \ReflectionObject($translation);
         $property = $reflector->getProperty('files');
-        $property->setAccessible(true);
         $files = (array)$property->getValue($translation);
 
         if($files) {
