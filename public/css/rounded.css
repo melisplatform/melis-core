@@ -24,6 +24,7 @@
  * buttons and inputs
  */
 html[data-style="rounded"] #sidebar_header_text,
+html[data-style="rounded"] form > .form-control,
 html[data-style="rounded"] form .form-group > .form-control,
 html[data-style="rounded"] .make-switch,
 html[data-style="rounded"] select,
@@ -66,14 +67,20 @@ html[data-style="rounded"] .btn-danger.bootstrap4-dialog-button,
 html[data-style="rounded"] .btn-success.bootstrap4-dialog-button {
     border-radius: var(--bs-border-radius) !important;
 }
+html[data-style="rounded"] .modal-content .widget.widget-tabs.widget-tabs-responsive > .widget-head,
+html[data-style="rounded"] .modal-content .modal-body .widget-head,
 html[data-style="rounded"] #modal-user-management .modal-content .modal-body .widget-head {
     border-top-left-radius: var(--bs-border-radius-lg) !important;
     border-top-right-radius: var(--bs-border-radius-lg) !important;
 }
+html[data-style="rounded"] .modal-content .modal-body,
+html[data-style="rounded"] .modal-content,
 html[data-style="rounded"] #modal-user-management .modal-content .modal-body,
 html[data-style="rounded"] #modal-user-management .modal-content {
     border-radius: var(--bs-border-radius-lg) !important;
 }
+html[data-style="rounded"] #id_meliscore_logs_tool_export_modal_content_container .widget.widget-tabs-double > .widget-head ul li:first-child,
+html[data-style="rounded"] .widget.widget-tabs-double > .widget-head ul li:first-child a.glyphicons,
 html[data-style="rounded"] #modal-user-management .widget.widget-tabs-double > .widget-head ul li:first-child a.glyphicons {
     border-top-left-radius: var(--bs-border-radius-lg) !important;
 }
@@ -117,6 +124,21 @@ html[data-style="rounded"] .table > tbody > tr:nth-of-type(odd),
 html[data-style="rounded"] table > tbody > tr:nth-of-type(odd) {
     background-color: transparent !important;
 }
+html[data-style="rounded"] #log_date_range-button {
+    border-top-left-radius: 0 !important;
+    border-bottom-left-radius: 0 !important;
+    border-top-right-radius: var(--bs-border-radius) !important;
+    border-bottom-right-radius: var(--bs-border-radius) !important;
+}
+html[data-style="rounded"] .modal .modal-dialog form .form-group .form-control.dt-date-range-picker {
+    border-top-left-radius: var(--bs-border-radius) !important;
+    border-bottom-left-radius: var(--bs-border-radius) !important;
+    border-top-right-radius: 0 !important;
+    border-bottom-right-radius: 0 !important;
+}
+html[data-style="rounded"] #login-lock-form .form-group .form-control {
+    border-radius: var(--bs-border-radius) !important;
+}
 
 /* platform scheme */
 html[data-style="rounded"] .platform-theme-options-toggle {
@@ -145,4 +167,9 @@ html[data-style="rounded"] .global-options .theme-option {
 }
 html[data-style="rounded"] .platform-theme-options-tools-info .ui-widget-content {
     border-radius: var(--bs-border-radius) !important;
+}
+
+/* Bootstrap 5.3 tooltips */
+html[data-style="rounded"] .tooltip {
+    --bs-tooltip-border-radius: var(--bs-border-radius-sm) !important;
 }

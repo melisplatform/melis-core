@@ -236,6 +236,41 @@ var melisHelper = (function () {
 		}, 1000);
 	}
 
+	function initTooltips(container) {
+		if (typeof bootstrap === "undefined" || !bootstrap.Tooltip) {
+			return;
+		}
+
+		var $container = container ? $(container) : $body;
+
+		$container.find('[data-bs-toggle="tooltip"]').each(function () {
+			var el = this;
+			var title =
+				el.getAttribute("data-bs-title") ||
+				el.getAttribute("title") ||
+				el.getAttribute("data-original-title");
+
+			if (!title) {
+				return;
+			}
+
+			if (!el.getAttribute("data-bs-title")) {
+				el.setAttribute("data-bs-title", title);
+			}
+
+			var instance = bootstrap.Tooltip.getInstance(el);
+			if (instance) {
+				instance.dispose();
+			}
+
+			var htmlEnabled =
+				el.getAttribute("data-bs-html") === "true" ||
+				el.getAttribute("data-html") === "true";
+
+			new bootstrap.Tooltip(el, htmlEnabled ? { html: true } : undefined);
+		});
+	}
+
 	function initSwitch(selector) {
 		var targetInput = $(selector);
 		if (targetInput.length) {
@@ -248,7 +283,7 @@ var melisHelper = (function () {
 				var attribTooltip = "";
 				if (typeof $(this).data("tooltip") != "undefined") {
 					attribTooltip =
-						'<i class="fa fa-info-circle fa-lg" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-original-title="' +
+						'<i class="fa fa-info-circle fa-lg" data-bs-toggle="tooltip" data-bs-placement="left" data-bs-title="' +
 						$(this).data("tooltip") +
 						'"></i>';
 				}
@@ -277,6 +312,7 @@ var melisHelper = (function () {
 
 			$(".user-admin-switch").bootstrapSwitch("destroy", true);
 			$(".user-admin-switch").bootstrapSwitch();
+			initTooltips(targetInput.closest(".form-group"));
 		}
 	}
 
@@ -717,6 +753,7 @@ var melisHelper = (function () {
 						melisCoreTool.removeOverflowHidden();
 
 						$("#" + zoneId).html(data.html).children().unwrap();
+						initTooltips("#" + zoneId);
 
 						// set the current active tab based from 'activeTabId' value
 						tabSwitch(activeTabId);
@@ -1197,6 +1234,17 @@ var melisHelper = (function () {
 		$(this).closest(".input-group").find("input").val("");
 	});
 
+	$(function () {
+		initTooltips();
+
+		$body.on("shown.bs.tab", 'a[data-bs-toggle="tab"]', function () {
+			var target = $(this).attr("href");
+			if (target) {
+				initTooltips(target);
+			}
+		});
+	});
+
 	/*
 	 * RETURN ========================================================================================================================
 	 * include your newly created functions inside the array so it will be accessable in the outside scope
@@ -1222,6 +1270,9 @@ var melisHelper = (function () {
 
 		// initialize bootstrap switch
 		initSwitch: initSwitch,
+
+		// initialize bootstrap 5 tooltips
+		initTooltips: initTooltips,
 
 		// tabs
 		tabSwitch: tabSwitch,

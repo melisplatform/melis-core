@@ -181,6 +181,8 @@ $(function() {
 
             // range decimal step
             //rangeDecimalSlider.setRangeDecimalSlider();
+
+            melisHelper.initTooltips(".platform-theme-options-tools-info");
         });
 
         // helper to sync card selection with the current theme
