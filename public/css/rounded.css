@@ -1,15 +1,6 @@
 /*
  * Back office only — loaded via layoutCore.phtml (#rounded).
  * Page edition iframe uses rounded-page-edition.css instead.
- *
- * Add border radius to the following elements when the data-style is "rounded"
- * .widget, .panel, .card, .modal-content
- * .panel-heading, .panel-body, .card-header, .card-body
- * .form-control, .input-group-text
- * .btn, .list-group-item, .well
- * .nav-link, .dropdown-item
- * .modal-header, .modal-body, .modal-footer
- * input:not(.theme-radio), select, textarea
  * 
  * Using this rather than jQuery to add the class to the elements is more efficient and easier to maintain.
  * 
