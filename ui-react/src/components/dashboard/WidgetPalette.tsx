@@ -1,0 +1,145 @@
+import { useEffect, useRef } from 'react'
+import { GripVertical, Plus, X } from 'lucide-react'
+import { GridStack } from 'gridstack'
+
+import { cn } from '@/lib/utils'
+import { useI18n } from '@/i18n/i18n-context'
+import { WIDGETS, WIDGET_SECTIONS, WIDGET_MAP, type WidgetDef } from './widget-registry'
+
+/** Panneau latéral listant les widgets disponibles à ajouter (clic ou drag).
+ *  Équivalent du panneau de plugins Melis (dashboard-menu-content.phtml). */
+export function WidgetPalette({
+  present,
+  onAdd,
+  onClose,
+}: {
+  present: Set<string>
+  onAdd: (widgetId: string) => void
+  onClose: () => void
+}) {
+  const { t } = useI18n()
+  // Refs sur les wrappers draggables, indexés par widgetId.
+  const wrapperRefs = useRef<Map<string, HTMLDivElement>>(new Map())
+
+  // Configure le drag-in GridStack pour les items non encore dans le dashboard.
+  useEffect(() => {
+    const els: HTMLElement[] = []
+    const widgets: import('gridstack').GridStackWidget[] = []
+
+    wrapperRefs.current.forEach((el, widgetId) => {
+      if (present.has(widgetId)) return
+      const def = WIDGET_MAP[widgetId]
+      if (!def) return
+      els.push(el)
+      widgets.push({ id: widgetId, w: def.w, h: def.h, minW: def.minW, minH: def.minH })
+    })
+
+    if (els.length) {
+      GridStack.setupDragIn(els, { helper: 'clone', appendTo: 'body' }, widgets)
+    }
+  }, [present])
+
+  return (
+    <aside className="flex w-72 shrink-0 flex-col border-l border-border bg-card">
+      <div className="flex items-center justify-between border-b border-border px-4 py-3">
+        <h2 className="font-[var(--font-display)] text-sm font-semibold">{t('widget.add')}</h2>
+        <button
+          type="button"
+          onClick={onClose}
+          className="grid size-7 place-items-center rounded text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
+          aria-label={t('widget.done')}
+        >
+          <X className="size-4" />
+        </button>
+      </div>
+
+      <p className="px-4 py-2.5 text-xs text-muted-foreground">{t('widget.palette_hint')}</p>
+
+      <div className="flex-1 space-y-5 overflow-y-auto px-3 pb-4">
+        {WIDGET_SECTIONS.map((sectionKey) => {
+          const items = WIDGETS.filter((w) => w.sectionKey === sectionKey)
+          if (!items.length) return null
+          return (
+            <div key={sectionKey}>
+              <div className="mb-1.5 px-1 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground/70">
+                {t(sectionKey)}
+              </div>
+              <div className="space-y-1.5">
+                {items.map((w) => (
+                  <PaletteItem
+                    key={w.id}
+                    widget={w}
+                    added={present.has(w.id)}
+                    onAdd={() => onAdd(w.id)}
+                    wrapperRef={(el) => {
+                      if (el) wrapperRefs.current.set(w.id, el)
+                      else wrapperRefs.current.delete(w.id)
+                    }}
+                  />
+                ))}
+              </div>
+            </div>
+          )
+        })}
+      </div>
+    </aside>
+  )
+}
+
+function PaletteItem({
+  widget,
+  added,
+  onAdd,
+  wrapperRef,
+}: {
+  widget: WidgetDef
+  added: boolean
+  onAdd: () => void
+  wrapperRef: (el: HTMLDivElement | null) => void
+}) {
+  const { t } = useI18n()
+  const Icon = widget.icon
+
+  return (
+    <div
+      ref={wrapperRef}
+      className={cn(
+        'flex items-center gap-1 rounded-md border border-border/70 bg-background transition-colors',
+        added ? 'opacity-50' : 'hover:border-primary/40 hover:bg-accent',
+      )}
+    >
+      {/* Poignée de drag — visible uniquement si pas encore ajouté */}
+      <div
+        className={cn(
+          'grid h-full w-7 shrink-0 place-items-center self-stretch text-muted-foreground/40',
+          added ? 'cursor-not-allowed' : 'cursor-grab hover:text-muted-foreground/80',
+        )}
+        title={added ? undefined : 'Glisser vers le dashboard'}
+      >
+        <GripVertical className="size-3.5" />
+      </div>
+
+      {/* Bouton d'ajout au clic */}
+      <button
+        type="button"
+        disabled={added}
+        onClick={onAdd}
+        className={cn(
+          'group flex min-w-0 flex-1 items-center gap-3 py-2.5 pr-3 text-left',
+          added ? 'cursor-not-allowed' : 'cursor-pointer',
+        )}
+      >
+        <div className="grid size-8 shrink-0 place-items-center rounded-md bg-[color-mix(in_srgb,var(--color-primary)_12%,transparent)] text-primary">
+          <Icon className="size-4" />
+        </div>
+        <div className="min-w-0 flex-1">
+          <div className="truncate text-sm font-medium text-foreground">{t(widget.titleKey)}</div>
+          {added && <div className="text-[11px] text-muted-foreground">{t('widget.in_dashboard')}</div>}
+        </div>
+        {!added && (
+          <Plus className="size-4 shrink-0 text-muted-foreground transition-colors group-hover:text-primary" />
+        )}
+      </button>
+    </div>
+  )
+}

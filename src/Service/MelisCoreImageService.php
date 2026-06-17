@@ -13,6 +13,7 @@ class MelisCoreImageService extends MelisServiceManager implements MelisCoreImag
     const EXT_PNG = 'png';
     const EXT_GIF = 'gif';
     const EXT_JPG = 'jpg';
+    const EXT_JPEG = 'jpeg';
     
     /**
      * Creates a 200x200 image thumbnail
@@ -42,7 +43,7 @@ class MelisCoreImageService extends MelisServiceManager implements MelisCoreImag
         
         $fileImage = $image;
         $outputImg = null;
-        $ext = pathinfo($newImageName, PATHINFO_EXTENSION);
+        $ext = strtolower(pathinfo($newImageName, PATHINFO_EXTENSION));
 
         $thumb = imagecreatetruecolor($width, $height);
         list($w, $h) = getimagesize($fileImage);
@@ -69,6 +70,7 @@ class MelisCoreImageService extends MelisServiceManager implements MelisCoreImag
                 $outputImg = imagegif($thumb, $savePath.'/'.$newImageName);
                 break;
             case self::EXT_JPG:
+            case self::EXT_JPEG:
                 $outputImg = imagejpeg($thumb, $savePath.'/'.$newImageName, 100);
                 break;
         }
