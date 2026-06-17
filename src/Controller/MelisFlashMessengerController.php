@@ -91,11 +91,11 @@ class MelisFlashMessengerController extends MelisAbstractActionController
         $flashMessenger = $this->getServiceManager()->get('MelisCoreFlashMessenger');
         
         $flashMessages = Json::decode($flashMessenger->getFlashMessengerMessages());
-        
+
         // flashMessages array, re-stored so we can apply translation to its content
         $fmArray = array();
         $fmCtr = 0;
-        
+
         if($flashMessages)
         {
             foreach($flashMessages as $fmKey => $fmValues) {

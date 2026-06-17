@@ -355,3 +355,54 @@ export async function fetchMe(): Promise<MeUser | null> {
     return null
   }
 }
+
+// ─── Notifications (FlashMessenger, session-only) ─────────────────────────────
+
+export interface FlashNotification {
+  title: string
+  message: string
+  /** Pre-translated relative time ("il y a X") from the server. */
+  dateTrans: string
+  time: string
+}
+
+/**
+ * The persistent session notification list (the bell dropdown), from MelisCore's
+ * FlashMessenger: GET /melis/MelisCore/MelisFlashMessenger/getflashMessage
+ * → { flashMessage: [{ title, message, date_trans, time, ... }] }.
+ */
+export async function fetchNotifications(): Promise<FlashNotification[]> {
+  try {
+    const res = await fetch('/melis/MelisCore/MelisFlashMessenger/getflashMessage', {
+      headers: { ...XHR_HEADER },
+      credentials: 'include',
+    })
+    if (!res.ok) return []
+    const data = (await res.json()) as {
+      flashMessage?: Array<{ title?: string; message?: string; date_trans?: string; time?: string }>
+    }
+    if (!Array.isArray(data.flashMessage)) return []
+    return data.flashMessage.map((f) => ({
+      title: f.title ?? '',
+      message: f.message ?? '',
+      dateTrans: f.date_trans ?? '',
+      time: f.time ?? '',
+    }))
+  } catch {
+    return []
+  }
+}
+
+/** Clears the session notification list (same as the legacy "Clear notifications" button). */
+export async function clearNotifications(): Promise<boolean> {
+  try {
+    const res = await fetch('/melis/MelisCore/MelisFlashMessenger/clearFlashMessage', {
+      headers: { ...XHR_HEADER },
+      credentials: 'include',
+    })
+    const data = (await res.json()) as { flashMessage?: boolean }
+    return !!data.flashMessage
+  } catch {
+    return false
+  }
+}

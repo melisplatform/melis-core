@@ -25,6 +25,8 @@ const fr = {
 
   'topbar.search': 'Rechercher…',
   'topbar.notifications': 'Notifications',
+  'topbar.no_notifications': 'Aucune notification',
+  'topbar.clear_notifications': 'Effacer les notifications',
   'topbar.profile': 'Profil',
   'topbar.account': 'Mon compte',
   'topbar.logout': 'Déconnexion',
@@ -92,6 +94,8 @@ const en: Record<I18nKey, string> = {
 
   'topbar.search': 'Search…',
   'topbar.notifications': 'Notifications',
+  'topbar.no_notifications': 'No notifications',
+  'topbar.clear_notifications': 'Clear notifications',
   'topbar.profile': 'Profile',
   'topbar.account': 'My account',
   'topbar.logout': 'Log out',

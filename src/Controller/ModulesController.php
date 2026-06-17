@@ -171,7 +171,14 @@ class ModulesController extends MelisAbstractActionController
             'textMessage' => $translator->translate($textMessage),
         );
 
-        $this->getEventManager()->trigger('meliscore_module_management_save_end', $this, $response);
+        // Feed the flash/log listener the raw translation KEYS (not the translated text): the bell
+        // stores keys and re-translates them at read time, so the notification follows a language
+        // switch. The JSON response keeps the translated text for the immediate toast.
+        $this->getEventManager()->trigger('meliscore_module_management_save_end', $this, array(
+            'success'     => $success,
+            'textTitle'   => $textTitle,
+            'textMessage' => $textMessage,
+        ));
 
         return new JsonModel($response);
     }

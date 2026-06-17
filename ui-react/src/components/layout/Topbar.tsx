@@ -5,12 +5,11 @@ import { Bell, ChevronLeft, ChevronRight, LogOut, PanelLeft, User, X } from 'luc
 import { cn } from '@/lib/utils'
 import { useAuth } from '@/auth/auth-context'
 import { useI18n } from '@/i18n/i18n-context'
-import { formatRelativeHours } from '@/lib/format'
-import { CURRENT_USER, NOTIFICATIONS } from '@/lib/mocks'
+import { CURRENT_USER } from '@/lib/mocks'
 import { useTabs, type Tab } from '@/components/tabs/tab-store'
 import { LanguageSwitcher } from '@/components/LanguageSwitcher'
 import { ThemeSwitcher } from '@/components/ThemeSwitcher'
-import { fetchMe, type MeUser } from '@/lib/melis-api'
+import { fetchMe, fetchNotifications, clearNotifications, type MeUser, type FlashNotification } from '@/lib/melis-api'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -23,34 +22,56 @@ import {
 // ─── Notifications ────────────────────────────────────────────────────────────
 
 function NotificationsMenu() {
-  const { t, lang } = useI18n()
-  const unread = NOTIFICATIONS.some((n) => n.unread)
+  const { t } = useI18n()
+  const [items, setItems] = useState<FlashNotification[]>([])
+  const refresh = () => { void fetchNotifications().then(setItems) }
+  useEffect(() => { refresh() }, [])
+  const hasItems = items.length > 0
+
+  async function handleClear() {
+    if (await clearNotifications()) setItems([])
+  }
+
   return (
-    <DropdownMenu>
+    <DropdownMenu onOpenChange={(open) => { if (open) refresh() }}>
       <DropdownMenuTrigger
         className="relative inline-flex size-9 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-accent hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40"
         aria-label={t('topbar.notifications')}
       >
         <Bell className="size-[18px]" />
-        {unread && (
+        {hasItems && (
           <span className="absolute right-2 top-2 size-2 rounded-full bg-primary ring-2 ring-card" />
         )}
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-80">
         <DropdownMenuLabel>{t('topbar.notifications')}</DropdownMenuLabel>
         <DropdownMenuSeparator />
-        {NOTIFICATIONS.map((n) => (
-          <DropdownMenuItem key={n.id} className="flex-col items-start gap-0.5 py-2.5">
+        {!hasItems && (
+          <div className="px-2.5 py-3 text-xs text-muted-foreground">{t('topbar.no_notifications')}</div>
+        )}
+        {items.map((n, i) => (
+          <DropdownMenuItem key={i} className="flex-col items-start gap-0.5 py-2.5">
             <div className="flex w-full items-center gap-2">
-              {n.unread && <span className="size-1.5 rounded-full bg-primary" />}
+              <span className="size-1.5 rounded-full bg-primary" />
               <span className="font-medium text-foreground">{n.title}</span>
-              <span className="ml-auto text-xs text-muted-foreground">
-                {formatRelativeHours(n.hoursAgo, lang)}
+              <span className="ml-auto whitespace-nowrap text-xs text-muted-foreground">
+                {`${n.dateTrans} ${n.time}`.trim()}
               </span>
             </div>
-            <span className="text-xs text-muted-foreground">{n.detail}</span>
+            {n.message && <span className="text-xs text-muted-foreground">{n.message}</span>}
           </DropdownMenuItem>
         ))}
+        {hasItems && (
+          <>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem
+              onSelect={(e) => { e.preventDefault(); void handleClear() }}
+              className="justify-center text-xs font-medium text-primary"
+            >
+              {t('topbar.clear_notifications')}
+            </DropdownMenuItem>
+          </>
+        )}
       </DropdownMenuContent>
     </DropdownMenu>
   )
@@ -59,8 +80,6 @@ function NotificationsMenu() {
 // ─── User menu ────────────────────────────────────────────────────────────────
 
 const ACCOUNT_MELISKEY = 'meliscore_user_profile'
-// MelisCore's default profile picture (served by MelisAssetManager) — used when the user has none.
-const DEFAULT_PROFILE_PIC = '/MelisCore/images/profile/default_picture.jpg'
 
 function initialsOf(name?: string, login?: string): string {
   const src = (name || login || '').trim()
@@ -70,18 +89,25 @@ function initialsOf(name?: string, login?: string): string {
   return src.slice(0, 2).toUpperCase()
 }
 
-/** Round avatar: the profile photo (if any) with the initials kept ON TOP. */
-function UserAvatar({ picture, initials, className }: { picture: string | null; initials: string; className?: string }) {
+/**
+ * Round avatar — three cases:
+ *  1. a profile photo → show the photo alone (no initials)
+ *  2. no photo but known user → initials on the blue (primary) background
+ *  3. still loading (initials null) → empty placeholder, nothing shown
+ */
+function UserAvatar({ picture, initials, className }: { picture: string | null; initials: string | null; className?: string }) {
+  if (picture) {
+    return (
+      <div className={cn('shrink-0 overflow-hidden rounded-full', className)}>
+        <img src={picture} alt="" className="size-full object-cover" />
+      </div>
+    )
+  }
+  // Nothing while the user is unknown — keep the size to avoid a layout shift.
+  if (!initials) return <div className={cn('shrink-0 rounded-full', className)} aria-hidden />
   return (
-    <div className={cn('relative shrink-0 overflow-hidden rounded-full bg-primary', className)}>
-      {picture && <img src={picture} alt="" className="absolute inset-0 size-full object-cover" />}
-      <span
-        className="absolute inset-0 flex items-center justify-center text-sm font-bold text-white"
-        // Black outline around the letters so they stay readable over a light photo.
-        style={{ textShadow: '-1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000, 0 1px 2px rgba(0,0,0,.6)' }}
-      >
-        {initials}
-      </span>
+    <div className={cn('flex shrink-0 items-center justify-center rounded-full bg-primary text-sm font-bold text-white', className)}>
+      {initials}
     </div>
   )
 }
@@ -96,9 +122,10 @@ function UserMenu() {
 
   const name = me?.name?.trim() || CURRENT_USER.name
   const email = me?.email || CURRENT_USER.email
-  const initials = me ? initialsOf(me.name, me.login) : CURRENT_USER.initials
-  // Real photo if any, else MelisCore's default picture (never the bare blue circle).
-  const picture = me?.picture ?? DEFAULT_PROFILE_PIC
+  // null while loading → avatar shows nothing until the user is known.
+  const initials = me ? initialsOf(me.name, me.login) : null
+  // Real photo if any → show it alone; otherwise fall back to initials on the blue circle.
+  const picture = me?.picture ?? null
 
   async function handleLogout() {
     await signOut()
