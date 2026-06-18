@@ -12,8 +12,9 @@ import { ZonePoolProvider } from '@/components/zone/zone-pool'
 import { ZoneFrames } from '@/components/zone/ZoneFrames'
 import { SubTabProvider } from '@/components/tabs/sub-tab-store'
 import { ToolTabBridgeProvider } from '@/components/tabs/tool-tab-bridge'
-import { useBricks } from '@/lib/bricks'
+import { useBricks, brickRoute } from '@/lib/bricks'
 import { PERSISTENT_MODULES } from '@/lib/module-registry'
+import { melisKeyForRoute, routeForForward, useToolRoutesVersion } from '@/lib/tool-routes'
 
 function PageLoader() {
   return (
@@ -27,6 +28,7 @@ function ShellInner() {
   const [collapsed, setCollapsed] = useState(false)
   const location = useLocation()
   const bricks = useBricks()
+  useToolRoutesVersion() // re-resolve the active zone once the tool-routes registry populates
 
   // When a tab is closed, destroy the persistent iframe of a brick tool (singleton kept in
   // <body> as #melis-brick-frame-<id> to avoid reload on tab switch) — so reopening reloads it
@@ -34,19 +36,22 @@ function ShellInner() {
   useEffect(() => {
     const onClosed = (e: Event) => {
       const path = (e as CustomEvent<{ path?: string }>).detail?.path ?? ''
-      const brick = bricks.find((b) => b.route && (path === b.route || path.startsWith(b.route + '/')))
+      const brick = bricks.find((b) => {
+        const r = brickRoute(b)
+        return r && (path === r || path.startsWith(r + '/'))
+      })
       if (brick) document.getElementById('melis-brick-frame-' + brick.id)?.remove()
     }
     window.addEventListener('melis:tab-closed', onClosed)
     return () => window.removeEventListener('melis:tab-closed', onClosed)
   }, [bricks])
 
-  const zoneMatch = location.pathname.match(/^\/zone\/([^/]+)/)
-  const activeZoneKey = zoneMatch ? decodeURIComponent(zoneMatch[1]) : null
+  // Active iframe-tool key from the tree-derived route /[section]/[tool] (resolved via registry).
+  const activeZoneKey = melisKeyForRoute(location.pathname)
 
   // Modules persistants : liste montée en permanence pour ne jamais détruire
-  // leur iframe Melis (toggle New/Old). Active quand on est sur leur route racine.
-  const activePersistent = PERSISTENT_MODULES.find((m) => location.pathname === m.route)
+  // leur iframe Melis (toggle New/Old). Active quand on est sur leur route d'arbre dérivée.
+  const activePersistent = PERSISTENT_MODULES.find((m) => location.pathname === routeForForward(m.forwardKey))
 
   return (
     <div className="flex h-screen overflow-hidden bg-background">

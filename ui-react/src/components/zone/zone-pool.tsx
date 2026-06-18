@@ -6,6 +6,7 @@ import {
   useState,
   type ReactNode,
 } from 'react'
+import { melisKeyForRoute } from '@/lib/tool-routes'
 
 export type LoadState = 'loading' | 'ready' | 'error'
 
@@ -75,8 +76,8 @@ export function ZonePoolProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     const onClosed = (e: Event) => {
       const path = (e as CustomEvent<{ path?: string }>).detail?.path ?? ''
-      const m = path.match(/^\/zone\/([^/]+)/)
-      if (m) unregister(decodeURIComponent(m[1]))
+      const key = melisKeyForRoute(path)
+      if (key) unregister(key)
     }
     window.addEventListener('melis:tab-closed', onClosed)
     return () => window.removeEventListener('melis:tab-closed', onClosed)

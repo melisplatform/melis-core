@@ -32,6 +32,7 @@ import {
 import * as melisApi from '@/lib/melis-api'
 import { REACT_ROUTES } from '@/lib/module-registry'
 import { BRICK_ROUTES, useBricks } from '@/lib/bricks'
+import { sectionSlug, toolSlug, registerTool } from '@/lib/tool-routes'
 import { NAV_SECTIONS, type NavSection } from '@/components/layout/nav'
 import { useI18n } from '@/i18n/i18n-context'
 import type { I18nKey } from '@/i18n/dictionaries'
@@ -217,30 +218,44 @@ function getMelisIcon(name: string): LucideIcon {
 // Le mapping "Module/Controller" → route est dérivé du registre de modules
 // (source de vérité unique). Cf. `@/lib/module-registry`.
 
-function getToolRoute(node: melisApi.ApiMenuNode): string {
+function getToolRoute(node: melisApi.ApiMenuNode, section: string): string {
   if (!node.isTool) return ''
   const key = `${node.forward?.module ?? ''}/${node.forward?.controller ?? ''}`
-  // Static native modules first, then runtime-loaded module bricks, else iframe fallback.
-  return REACT_ROUTES[key] ?? BRICK_ROUTES[key] ?? `/zone/${encodeURIComponent(node.melisKey)}`
+  // Tree-derived URL /[section]/[tool] for EVERY tool (native, brick, iframe).
+  const route = `/${section}/${toolSlug(node.key, section)}`
+  // Native & brick tools render a dedicated React route → not an iframe zone (melisKey null),
+  // but we still register forward→route so App can mount them at the derived URL. Iframe tools
+  // register their melisKey so ZonePage/Shell resolve the iframe.
+  const isReact = !!(REACT_ROUTES[key] || BRICK_ROUTES[key])
+  registerTool({ route, melisKey: isReact ? null : node.melisKey, forwardKey: key })
+  return route
 }
 
 // ─── API → NavNode[] ─────────────────────────────────────────────────────────
 
-function apiNodeToNavNode(node: melisApi.ApiMenuNode, depth = 0): NavNode {
+function apiNodeToNavNode(node: melisApi.ApiMenuNode, depth = 0, section = ''): NavNode {
   const isMelisModule = depth === 0 && /melis/i.test(node.name)
+  // The URL prefix = the TOP-LEVEL section the tool appears under (kebab of its name),
+  // regardless of which code module owns the tool. Captured at depth 0 and threaded down.
+  const sec = depth === 0 ? sectionSlug(node.name) : section
   // A leaf with a melisKey but NO forward (isTool=false) — e.g. a tool declared via a `type`
   // reference (MelisCmsProspects "Themes") — is still an openable tool: route it to the zone
   // pool by its melisKey instead of rendering an empty, expandable, dead-end section.
   const isZoneLeaf = !node.isTool && node.children.length === 0 && !!node.melisKey
+  let zoneLeafRoute: string | null = null
+  if (isZoneLeaf) {
+    zoneLeafRoute = `/${sec}/${toolSlug(node.key, sec)}`
+    registerTool({ route: zoneLeafRoute, melisKey: node.melisKey, forwardKey: null })
+  }
   return {
     key:         node.key,
     label:       node.name,
     icon:        isMelisModule ? getMelisIcon(node.name) : faToLucide(node.icon || 'fa-cube'),
-    to:          node.isTool ? getToolRoute(node) : (isZoneLeaf ? `/zone/${encodeURIComponent(node.melisKey)}` : null),
+    to:          node.isTool ? getToolRoute(node, sec) : zoneLeafRoute,
     isTool:      node.isTool || isZoneLeaf,
     hasNavChild: node.hasNavChild,
     forward:     node.isTool ? node.forward : null,
-    children:    node.children.map(child => apiNodeToNavNode(child, depth + 1)),
+    children:    node.children.map(child => apiNodeToNavNode(child, depth + 1, sec)),
   }
 }
 

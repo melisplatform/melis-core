@@ -8,6 +8,7 @@ import { useTheme } from '@/theme/theme-context'
 import { useNavMenu, type NavNode } from '@/hooks/useNavMenu'
 import { useBricks, sidebarBrickForModules } from '@/lib/bricks'
 import { useTabs } from '@/components/tabs/tab-store'
+import { melisKeyForRoute } from '@/lib/tool-routes'
 import wordmark from '@/assets/melis-wordmark.svg'
 import wordmarkWhite from '@/assets/melis-wordmark-white.svg'
 
@@ -48,9 +49,11 @@ function NavNodeItem({ node, depth, collapsed, defaultOpen = false, sidebarPanel
   const indent = depth === 0 ? '' : depth === 1 ? 'pl-3' : depth === 2 ? 'pl-5' : 'pl-7'
 
   // Tool node — opens a tab.
-  // React routes (!zone) are always leaves even with nav-children (PHP sub-sections ignored).
-  // Zone routes follow the original !hasChildren rule (section headers stay collapsible).
-  if (node.to && (!hasChildren || !node.to.startsWith('/zone/'))) {
+  // React routes (native/brick) are always leaves even with nav-children (PHP sub-sections
+  // ignored). Iframe (zone) routes — those resolving to a melisKey — follow the original
+  // !hasChildren rule, so a section header that also carries a tool route stays collapsible.
+  const isZoneRoute = !!node.to && !!melisKeyForRoute(node.to)
+  if (node.to && (!hasChildren || !isZoneRoute)) {
     const isActive = activeId === node.to
     return (
       <button

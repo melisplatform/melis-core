@@ -9,27 +9,19 @@ import { I18nProvider } from '@/i18n/I18nProvider'
 import { TabProvider, useTabs } from '@/components/tabs/tab-store'
 import { Shell } from '@/components/layout/Shell'
 import { MODULES } from '@/lib/module-registry'
-import { useBricks } from '@/lib/bricks'
+import { useBricks, brickRoute } from '@/lib/bricks'
+import { routeForForward, useToolRoutesVersion } from '@/lib/tool-routes'
 import LoginPage from '@/pages/LoginPage'
 
 /** Fallback label for a route that opens a tab without one (e.g. a deep link). */
 function deriveTabLabel(path: string): string {
   if (path === '/') return 'Dashboard'
-  const m = path.match(/^\/cms\/(\d+)/)
+  const m = path.match(/^\/melis-cms\/page\/(\d+)/)
   if (m) return `Page ${m[1]}`
-  // Zone tools: prettify the melisKey (strip the melis*_tool_ prefix, title-case) instead of
-  // showing the raw key. Restored tabs keep their real label via persistence; this is just the
-  // fallback for deep-links / first reload.
-  const z = path.match(/^\/zone\/(.+)/)
-  if (z) {
-    return decodeURIComponent(z[1])
-      .replace(/^melis(core|sb|cms)?_tool_?/i, '')
-      .replace(/_/g, ' ')
-      .replace(/\b\w/g, (c) => c.toUpperCase())
-      .trim() || z[1]
-  }
+  // Fallback label = the last path segment, prettified. Restored/opened tabs keep their real
+  // label via persistence / the openTab call; this is only for deep-links / first reload.
   const seg = path.split('/').filter(Boolean).pop() ?? path
-  return seg.charAt(0).toUpperCase() + seg.slice(1)
+  return decodeURIComponent(seg).replace(/[-_]/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase())
 }
 
 /**
@@ -68,6 +60,9 @@ function PageLoader() {
 export default function App() {
   // React bricks of active modules, discovered + loaded at runtime (modular UI).
   const bricks = useBricks()
+  // Re-render once the tool-routes registry (menu-derived /[section]/[tool]) is populated,
+  // so native/brick routes are mounted at their tree URL.
+  useToolRoutesVersion()
   return (
     <ThemeProvider>
       <I18nProvider>
@@ -93,16 +88,18 @@ export default function App() {
                       </Suspense>
                     }
                   />
-                  {/* Modules natifs — routes générées depuis le registre.
-                      Liste : rendue par Shell si `persistent`, sinon ici.
+                  {/* Modules natifs — montés à leur URL d'arbre /[section]/[tool] (dérivée du
+                      menu via forwardKey). Liste : rendue par Shell si `persistent`, sinon ici.
                       Formulaire : /x/new et /x/:id. */}
                   {MODULES.map((m) => {
+                    const route = routeForForward(m.forwardKey)
+                    if (!route) return null
                     const List = m.list
                     const Form = m.form
                     return (
                       <Route key={m.id}>
                         <Route
-                          path={m.route}
+                          path={route}
                           element={
                             m.persistent
                               ? null
@@ -112,11 +109,11 @@ export default function App() {
                         {Form && (
                           <>
                             <Route
-                              path={`${m.route}/new`}
+                              path={`${route}/new`}
                               element={<Suspense fallback={<PageLoader />}><Form /></Suspense>}
                             />
                             <Route
-                              path={`${m.route}/:id`}
+                              path={`${route}/:id`}
                               element={<Suspense fallback={<PageLoader />}><Form /></Suspense>}
                             />
                           </>
@@ -124,24 +121,28 @@ export default function App() {
                       </Route>
                     )
                   })}
-                  {/* Briques React modulaires — routes des modules actifs qui livrent
-                      leur propre UI (chargées au runtime, cf. lib/bricks.ts). */}
-                  {bricks.filter((b) => b.Component && b.route).flatMap((b) => {
+                  {/* Briques React modulaires — montées à leur URL d'arbre /[section]/[tool]
+                      (forwardKey → route dérivée ; sinon route du manifeste, ex. CMS page). */}
+                  {bricks.filter((b) => b.Component).flatMap((b) => {
+                    const route = brickRoute(b)
+                    if (!route) return []
                     const Brick = b.Component!
                     const el = (
                       <Suspense fallback={<PageLoader />}>
                         <Brick />
                       </Suspense>
                     )
-                    // Sibling routes (no pathless wrapper): /cms and /cms/:id selection.
                     return [
-                      <Route key={b.id} path={b.route} element={el} />,
-                      <Route key={`${b.id}:id`} path={`${b.route}/:id`} element={el} />,
+                      <Route key={b.id} path={route} element={el} />,
+                      <Route key={`${b.id}:id`} path={`${route}/:id`} element={el} />,
                     ]
                   })}
-                  {/* Outils Melis via zoneview — tous les outils sans page React dédiée */}
+                  {/* Outils Melis via zoneview — tous les outils sans page React dédiée.
+                      URL = /[section]/[tool] (dérivée de l'arbre) ; ZonePage résout le melisKey
+                      via le registre tool-routes. Routes natives/briques (1 segment ou préfixe
+                      statique /x/:id) priment grâce au ranking de React Router. */}
                   <Route
-                    path="/zone/:melisKey"
+                    path="/:section/:tool/*"
                     element={<Suspense fallback={<PageLoader />}><ZonePage /></Suspense>}
                   />
                   {/* Toute autre route → placeholder */}

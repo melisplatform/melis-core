@@ -1,8 +1,10 @@
+import { useEffect } from 'react'
 import { useLocation } from 'react-router-dom'
 import { X } from 'lucide-react'
 import { cn } from '@/lib/utils'
-import { useBricks } from '@/lib/bricks'
+import { useBricks, brickRoute } from '@/lib/bricks'
 import { useToolTabs } from '@/components/tabs/tool-tab-bridge'
+import { melisKeyForRoute, toolBaseRoute, parseToolTabId, subtoolName, useToolRoutesVersion } from '@/lib/tool-routes'
 
 /**
  * Sub-tab bar under the topbar showing the open screens of the active legacy tool (brick) —
@@ -13,6 +15,9 @@ import { useToolTabs } from '@/components/tabs/tool-tab-bridge'
  * records follow, each with a × that closes ONLY that record (classic tabClose). Shown only once
  * at least one record is open.
  */
+// Router basename (same as App's BrowserRouter): prod serves under /melis-react, dev at root.
+const BASENAME = import.meta.env.PROD ? '/melis-react' : ''
+
 function formatKey(key: string): string {
   return key
     .replace(/^melis(core|sb|cms)?_tool_?/i, '')
@@ -24,19 +29,48 @@ function formatKey(key: string): string {
 export function ToolTabBar() {
   const { pathname } = useLocation()
   const bricks = useBricks()
+  useToolRoutesVersion()
   const { tabsFor, activate, close } = useToolTabs()
 
-  // The active tool's melisKey: from a brick route, OR from a generic /zone/:melisKey route
-  // (classic tools rendered in the zone pool — e.g. the Sites tool — also publish their tabs).
-  const brick = bricks.find(
-    (b) => b.route && (pathname === b.route || pathname.startsWith(b.route + '/')),
-  )
-  const zoneMatch = pathname.match(/^\/zone\/([^/]+)/)
-  const melisKey = brick?.melisKey ?? (zoneMatch ? decodeURIComponent(zoneMatch[1]) : null)
-  const listLabel = brick?.label ?? (zoneMatch ? formatKey(decodeURIComponent(zoneMatch[1])) : 'Liste')
+  // The active tool's melisKey: from a brick route, OR from a tree-derived /[section]/[tool]
+  // route (classic tools in the zone pool — e.g. the Sites tool — also publish their tabs).
+  const brick = bricks.find((b) => {
+    const r = brickRoute(b)
+    return r && (pathname === r || pathname.startsWith(r + '/'))
+  })
+  const zoneKey = melisKeyForRoute(pathname)
+  const melisKey = brick?.melisKey ?? zoneKey
+  const listLabel = brick?.label ?? (zoneKey ? formatKey(zoneKey) : 'Liste')
   const tabs = tabsFor(melisKey)
   const primary = tabs.find((t) => t.primary)
   const secondary = tabs.filter((t) => !t.primary)
+
+  // Reflect the active record drill-down in the URL: /[section]/[tool]/[id]/[subtool]/[id]…
+  // Cosmetic only (history.replaceState) — it never spawns a top tab nor touches React Router,
+  // so the tab system is untouched. The deep URL is rebuilt from the open sub-tabs' data-ids
+  // ("<entityId>_id_<targetMelisKey>"): the first record level is just its id, deeper levels add
+  // the sub-entity name. (Forward reflection; a deep-link reload opens the tool at its list.)
+  useEffect(() => {
+    if (!melisKey) return
+    const base = toolBaseRoute(pathname)
+    const nonPrimary = tabs.filter((t) => !t.primary)
+    const activeIdx = nonPrimary.findIndex((t) => t.active)
+    let target = base
+    if (activeIdx >= 0) {
+      const segs = nonPrimary.slice(0, activeIdx + 1).map((t, i) => {
+        const p = parseToolTabId(t.id)
+        const id = encodeURIComponent(p?.id ?? t.id)
+        return i === 0 ? id : `${subtoolName(p?.target ?? '')}/${id}`
+      })
+      target = base + '/' + segs.join('/')
+    }
+    // React Router paths are basename-relative; window.location is absolute → prepend the
+    // basename so the URL stays under /melis-react in prod.
+    const full = BASENAME + target
+    if (window.location.pathname !== full) {
+      window.history.replaceState(window.history.state, '', full)
+    }
+  }, [tabs, melisKey, pathname])
 
   // Show the sub-tab bar ONLY when at least one record (sub-screen) is open. With no record,
   // the tool is on its list and the main top tab already represents it — no redundant 2nd line.

@@ -1,40 +1,40 @@
 import { useEffect } from 'react'
-import { useParams } from 'react-router-dom'
+import { useLocation } from 'react-router-dom'
 import { useTabs } from '@/components/tabs/tab-store'
 import { useZonePool } from '@/components/zone/zone-pool'
+import { melisKeyForRoute, toolBaseRoute, useToolRoutesVersion } from '@/lib/tool-routes'
 
-function formatKey(key: string): string {
-  return key
-    .replace(/^melis(core|sb|cms)?_tool_?/i, '')
-    .replace(/_/g, ' ')
-    .replace(/\b\w/g, c => c.toUpperCase())
-    .trim() || key
+function formatSeg(path: string): string {
+  const seg = path.split('/').filter(Boolean).pop() ?? path
+  return decodeURIComponent(seg).replace(/[-_]/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase()).trim() || seg
 }
 
 /**
- * Composant route pour /zone/:melisKey.
+ * Route component for a tree-derived tool URL /[section]/[tool] (legacy tool in the iframe pool).
  *
- * Ne rend pas d'iframe directement — délègue au ZoneFrames rendu dans Shell.
- * Avantage : l'iframe reste montée quand l'utilisateur navigue vers une autre
- * page (display:none), donc la réouverture est instantanée sans rechargement.
+ * Renders no iframe itself — delegates to ZoneFrames (mounted in Shell) so the iframe stays
+ * mounted (display:none) across navigations → instant reopen, no reload. The melisKey is resolved
+ * from the tool-routes registry (built from the menu, persisted to sessionStorage for deep-links).
  */
 export default function ZonePage() {
-  const { melisKey }      = useParams<{ melisKey: string }>()
+  const { pathname }      = useLocation()
+  useToolRoutesVersion()  // re-resolve once the registry is populated (deep-link cold load)
   const { openTab, tabs } = useTabs()
   const { register }      = useZonePool()
 
-  const tabLabel = tabs.find(t => t.id === `/zone/${melisKey}`)?.label
-  const title    = tabLabel && tabLabel !== melisKey ? tabLabel : formatKey(melisKey ?? '')
+  const melisKey = melisKeyForRoute(pathname)
+  // The top tab is the tool's BASE route /[section]/[tool]; deeper segments (record drill-down)
+  // are reflected in the URL by ToolTabBar but never spawn a new top tab.
+  const base     = toolBaseRoute(pathname)
+  const tabLabel = tabs.find((t) => t.id === base)?.label
+  const title    = tabLabel || formatSeg(base)
 
   useEffect(() => {
     if (!melisKey) return
-    // Ouvre l'onglet dans la topbar
-    openTab({ id: `/zone/${melisKey}`, label: title, path: `/zone/${melisKey}` })
-    // Enregistre l'iframe dans le pool (sans effet si déjà enregistrée)
+    openTab({ id: base, label: title, path: base })
     register(melisKey, `/melis/react-tool-page?key=${encodeURIComponent(melisKey)}`)
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [melisKey])
+  }, [melisKey, base])
 
-  // La page elle-même est vide : le contenu est rendu par ZoneFrames dans Shell
   return <div className="h-full w-full" />
 }

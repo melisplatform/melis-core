@@ -10,6 +10,7 @@ import { useTabs, type Tab } from '@/components/tabs/tab-store'
 import { LanguageSwitcher } from '@/components/LanguageSwitcher'
 import { ThemeSwitcher } from '@/components/ThemeSwitcher'
 import { fetchMe, fetchNotifications, clearNotifications, type MeUser, type FlashNotification } from '@/lib/melis-api'
+import { registerTool } from '@/lib/tool-routes'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -80,6 +81,9 @@ function NotificationsMenu() {
 // ─── User menu ────────────────────────────────────────────────────────────────
 
 const ACCOUNT_MELISKEY = 'meliscore_user_profile'
+// "My account" isn't a menu tool — give it a tree-style route under MelisCore and register its
+// melisKey so ZonePage can resolve + render it like any other iframe tool.
+const ACCOUNT_ROUTE = '/melis-core/account'
 
 function initialsOf(name?: string, login?: string): string {
   const src = (name || login || '').trim()
@@ -134,9 +138,9 @@ function UserMenu() {
 
   // Open the legacy "My account" (user profile) tool in the zone pool, like any other tool.
   function handleAccount() {
-    const path = `/zone/${encodeURIComponent(ACCOUNT_MELISKEY)}`
-    openTab({ id: path, label: t('topbar.account'), path })
-    navigate(path)
+    registerTool({ route: ACCOUNT_ROUTE, melisKey: ACCOUNT_MELISKEY, forwardKey: null })
+    openTab({ id: ACCOUNT_ROUTE, label: t('topbar.account'), path: ACCOUNT_ROUTE })
+    navigate(ACCOUNT_ROUTE)
   }
 
   return (

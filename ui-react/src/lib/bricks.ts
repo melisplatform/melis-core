@@ -14,6 +14,7 @@
 import { useEffect, useReducer, type ComponentType } from 'react'
 
 import * as melisApi from '@/lib/melis-api'
+import { routeForForward } from '@/lib/tool-routes'
 
 export interface BrickDef {
   id: string
@@ -66,6 +67,15 @@ function loadScript(url: string): Promise<void> {
 
 export function getBricks(): BrickDef[] {
   return bricks
+}
+
+/**
+ * Effective route a brick is mounted at: the tree-derived /[section]/[tool] (from the menu, via
+ * its forwardKey) when available, else the brick's own manifest route (e.g. the CMS page brick,
+ * which has no menu forward and ships a fixed route).
+ */
+export function brickRoute(b: BrickDef): string {
+  return (b.forwardKey ? routeForForward(b.forwardKey) : null) ?? b.route
 }
 
 /** First loaded brick with a Sidebar panel whose module is among `modules` (a nav section's modules). */
