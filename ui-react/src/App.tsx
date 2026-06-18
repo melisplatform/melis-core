@@ -32,11 +32,13 @@ function deriveTabLabel(path: string): string {
  *   openTab call is missed or on a deep-link reload.
  */
 function TabBridge() {
-  const { openTab, syncRoute } = useTabs()
+  const { openTab, closeTab, syncRoute } = useTabs()
   const location = useLocation()
   useEffect(() => {
-    ;(window as unknown as { __melisOpenTab?: typeof openTab }).__melisOpenTab = openTab
-  }, [openTab])
+    const w = window as unknown as { __melisOpenTab?: typeof openTab; __melisCloseTab?: typeof closeTab }
+    w.__melisOpenTab = openTab
+    w.__melisCloseTab = closeTab
+  }, [openTab, closeTab])
   useEffect(() => {
     const path = location.pathname
     if (path === '/login') return
