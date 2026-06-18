@@ -261,22 +261,45 @@ function apiNodeToNavNode(node: melisApi.ApiMenuNode, depth = 0, section = ''): 
 
 // ─── Collapse single-tool sections ──────────────────────────────────────────
 //
-// A section wrapping a single tool leaf (e.g. "SLIDER" → "Slider") is redundant — it shows
-// the tool on two levels. Promote the lone tool child into its parent so it renders as one
-// clickable entry. Applied recursively; multi-child sections are untouched.
+// Two redundant nestings show a tool on more than one level — flattened recursively here
+// (multi-child nodes are left untouched):
+//   1. A SECTION (non-tool) wrapping a single tool leaf (e.g. "SLIDER" → "Slider"): promote
+//      the lone tool into the section so it renders as one clickable entry.
+//   2. A TOOL wrapping its OWN single tool zone — same Module/Controller forward (e.g.
+//      MelisCalendar: "render-calendar-leftmenu" → "render-calendar"): the inner node is the
+//      tool's render zone, not a separate menu item, so drop the inner level and keep the
+//      inner tool's routing (the route registered in forwardToRoute / matched by the brick
+//      manifest melisKey). Combined with rule 1, MelisCalendar collapses to a single entry.
+
+/** Same logical tool? (same Melis Module/Controller forward). */
+function sameForwardTool(a: NavNode, b: NavNode): boolean {
+  return (
+    !!a.forward && !!b.forward &&
+    a.forward.module === b.forward.module &&
+    a.forward.controller === b.forward.controller
+  )
+}
+
 function collapseSingleTool(node: NavNode): NavNode {
   const children = node.children.map(collapseSingleTool)
-  if (!node.isTool && children.length === 1 && children[0].isTool && children[0].children.length === 0) {
+  if (children.length === 1 && children[0].isTool && children[0].children.length === 0) {
     const only = children[0]
-    return {
-      ...node,
-      label:       only.label,
-      icon:        only.icon,
-      to:          only.to,
-      isTool:      true,
-      hasNavChild: false,
-      forward:     only.forward,
-      children:    [],
+    // Rule 1: section wrapping a single tool leaf.
+    if (!node.isTool) {
+      return {
+        ...node,
+        label:       only.label,
+        icon:        only.icon,
+        to:          only.to,
+        isTool:      true,
+        hasNavChild: false,
+        forward:     only.forward,
+        children:    [],
+      }
+    }
+    // Rule 2: tool wrapping its own tool zone (same Module/Controller).
+    if (sameForwardTool(node, only)) {
+      return { ...node, to: only.to, forward: only.forward, hasNavChild: false, children: [] }
     }
   }
   return { ...node, children }
