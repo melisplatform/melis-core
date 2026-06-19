@@ -95,14 +95,16 @@ export async function loadBricks(): Promise<void> {
     const list = await melisApi.fetchReactModules()
     const registry = componentRegistry()
 
-    for (const m of list) {
-      if (!m.bundleUrl) continue
-      try {
-        await loadScript(m.bundleUrl)
-      } catch {
-        /* skip a brick that fails to load; the rest still work */
-      }
-    }
+    // Load every brick bundle in PARALLEL (not sequentially): a sequential await-loop made the
+    // LAST modules in the list register seconds after boot, leaving a race window where their
+    // route hadn't been registered as a brick yet (so it fell back to the iframe zone view, which
+    // reloads on tab switch). Loading concurrently means all bricks register together, before the
+    // menu/routes finalise — no race, no late "reloading" tool. A failed bundle is skipped.
+    await Promise.all(
+      list
+        .filter((m) => m.bundleUrl)
+        .map((m) => loadScript(m.bundleUrl).catch(() => { /* skip a brick that fails to load */ })),
+    )
 
     const next: BrickDef[] = []
     for (const m of list) {
