@@ -49,8 +49,10 @@ export function sectionSlug(name: string): string {
  */
 export function toolSlug(nodeKey: string, section: string): string {
   let s = kebab(nodeKey)
-  // Strip trailing menu/layout noise repeatedly (e.g. "...-left-menu" → "...").
-  const NOISE = /-(tool|tools|section|leftmenu|menu|left|right)$/
+  // Strip trailing menu/layout noise repeatedly (e.g. "...-left-menu" → "...", "...-tool-config"
+  // → "..."). `config` is the wrapper suffix on tool-config nodes (e.g. the category v2 /
+  // page-analytics menu leaves are "..._tool_config").
+  const NOISE = /-(tool|tools|section|leftmenu|menu|left|right|config)$/
   while (NOISE.test(s)) s = s.replace(NOISE, '')
   const dashed = section
   const flat = section.replace(/-/g, '')
