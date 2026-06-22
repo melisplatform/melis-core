@@ -9,6 +9,7 @@ import { CURRENT_USER } from '@/lib/mocks'
 import { useTabs, type Tab } from '@/components/tabs/tab-store'
 import { LanguageSwitcher } from '@/components/LanguageSwitcher'
 import { ThemeSwitcher } from '@/components/ThemeSwitcher'
+import { headerBricks, useBricks } from '@/lib/bricks'
 import { fetchMe, fetchNotifications, clearNotifications, type MeUser, type FlashNotification } from '@/lib/melis-api'
 import { registerTool } from '@/lib/tool-routes'
 import {
@@ -19,6 +20,26 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
+
+// ─── Brick topbar widgets ─────────────────────────────────────────────────────
+//
+// Modules can ship a topbar widget (a brick's `Header`) shown next to the language switcher,
+// present ONLY when the module is active (e.g. the messenger notification icon). Generic — no
+// per-module code here. Re-renders via useBricks() once the bricks finish loading.
+
+function BrickHeaderWidgets() {
+  useBricks()
+  const widgets = headerBricks()
+  if (widgets.length === 0) return null
+  return (
+    <>
+      {widgets.map((b) => {
+        const Widget = b.Header!
+        return <Widget key={b.id} />
+      })}
+    </>
+  )
+}
 
 // ─── Notifications ────────────────────────────────────────────────────────────
 
@@ -123,6 +144,9 @@ function UserMenu() {
   const { openTab } = useTabs()
   const [me, setMe] = useState<MeUser | null>(null)
   useEffect(() => { fetchMe().then(setMe) }, [])
+  // Register the "My account" route on mount (not only when the menu item is clicked) so other
+  // entry points — e.g. a brick's topbar widget (the messenger icon) — can open the profile too.
+  useEffect(() => { registerTool({ route: ACCOUNT_ROUTE, melisKey: ACCOUNT_MELISKEY, forwardKey: null }) }, [])
 
   const name = me?.name?.trim() || CURRENT_USER.name
   const email = me?.email || CURRENT_USER.email
@@ -376,6 +400,7 @@ export function Topbar({ onToggleSidebar }: { onToggleSidebar: () => void }) {
       <div className="flex shrink-0 items-center gap-1 border-l border-border px-3">
         <ThemeSwitcher className="hidden sm:inline-flex" />
         <LanguageSwitcher />
+        <BrickHeaderWidgets />
         <NotificationsMenu />
         <UserMenu />
       </div>

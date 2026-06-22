@@ -28,6 +28,8 @@ export interface BrickDef {
   Component?: ComponentType
   /** Left-sidebar panel rendered under the module's nav section (optional). */
   Sidebar?: ComponentType
+  /** Topbar widget (e.g. the messenger notification icon), rendered next to the language switcher (optional). */
+  Header?: ComponentType
 }
 
 /** `Module/Controller` → React route, fed to the menu so legacy entries link to bricks. */
@@ -42,7 +44,7 @@ function notify() {
 }
 
 /** Where brick bundles self-register their components, keyed by brick id. */
-type RegisteredBrick = { Component?: ComponentType; Sidebar?: ComponentType }
+type RegisteredBrick = { Component?: ComponentType; Sidebar?: ComponentType; Header?: ComponentType }
 function componentRegistry(): Record<string, RegisteredBrick> {
   const w = window as unknown as { __MELIS_BRICK_COMPONENTS__?: Record<string, RegisteredBrick> }
   return (w.__MELIS_BRICK_COMPONENTS__ ??= {})
@@ -83,6 +85,11 @@ export function sidebarBrickForModules(modules: Set<string>): BrickDef | undefin
   return bricks.find((b) => b.Sidebar && b.module && modules.has(b.module))
 }
 
+/** All loaded bricks that ship a topbar widget (rendered next to the language switcher). */
+export function headerBricks(): BrickDef[] {
+  return bricks.filter((b) => b.Header)
+}
+
 /**
  * Fetches the active modules' bricks and loads their bundles. Idempotent:
  * a second call while loading/loaded is a no-op (use `resetBricks` to force a reload
@@ -111,7 +118,8 @@ export async function loadBricks(): Promise<void> {
       const reg = registry[m.id]
       const Component = reg?.Component
       const Sidebar = reg?.Sidebar
-      if (!Component && !Sidebar) continue
+      const Header = reg?.Header
+      if (!Component && !Sidebar && !Header) continue
       // Only routed bricks map a menu entry to a React route.
       if (m.forwardKey && m.route && Component) BRICK_ROUTES[m.forwardKey] = m.route
       next.push({
@@ -123,6 +131,7 @@ export async function loadBricks(): Promise<void> {
         melisKey: m.melisKey,
         Component,
         Sidebar,
+        Header,
       })
     }
     bricks = next
