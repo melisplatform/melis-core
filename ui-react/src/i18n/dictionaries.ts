@@ -38,7 +38,7 @@ const fr = {
   'dash.welcome_sub': 'Voici ce qui se passe sur votre plateforme aujourd’hui.',
   'dash.kpi.sites': 'Sites',
   'dash.kpi.pages': 'Pages',
-  'dash.kpi.media': 'Médias',
+  'dash.kpi.languages': 'Langues',
   'dash.kpi.users': 'Utilisateurs',
   'dash.vs_last_month': 'vs mois dernier',
   'dash.recent_pages': 'Pages récemment modifiées',
@@ -60,6 +60,8 @@ const fr = {
   'act.created': 'a créé',
   'act.uploaded': 'a importé',
   'act.commented': 'a commenté',
+  'act.connected': 's\'est connecté(e)',
+  'dash.last_login': 'Dernière connexion',
 
   'widget.traffic': 'Trafic du site',
   'widget.announcement': 'Annonces',
@@ -74,6 +76,7 @@ const fr = {
   'widget.sec.content': 'Contenu',
   'widget.sec.comm': 'Communication',
   'widget.sec.analytics': 'Analytique',
+  'widget.sec.legacy': 'Plugins hérités',
 
   'common.coming_soon': 'Bientôt disponible',
   'common.coming_soon_sub': 'Cet écran fait partie des prochains jalons du prototype.',
@@ -107,7 +110,7 @@ const en: Record<I18nKey, string> = {
   'dash.welcome_sub': 'Here’s what’s happening on your platform today.',
   'dash.kpi.sites': 'Sites',
   'dash.kpi.pages': 'Pages',
-  'dash.kpi.media': 'Media',
+  'dash.kpi.languages': 'Languages',
   'dash.kpi.users': 'Users',
   'dash.vs_last_month': 'vs last month',
   'dash.recent_pages': 'Recently edited pages',
@@ -129,6 +132,8 @@ const en: Record<I18nKey, string> = {
   'act.created': 'created',
   'act.uploaded': 'uploaded',
   'act.commented': 'commented on',
+  'act.connected': 'logged in',
+  'dash.last_login': 'Last login',
 
   'widget.traffic': 'Site traffic',
   'widget.announcement': 'Announcements',
@@ -143,6 +148,7 @@ const en: Record<I18nKey, string> = {
   'widget.sec.content': 'Content',
   'widget.sec.comm': 'Communication',
   'widget.sec.analytics': 'Analytics',
+  'widget.sec.legacy': 'Legacy Plugins',
 
   'common.coming_soon': 'Coming soon',
   'common.coming_soon_sub': 'This screen is part of the prototype’s next milestones.',

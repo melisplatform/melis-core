@@ -11,7 +11,7 @@
  * (see `main.tsx`); brick bundles consume them as externals, so hooks, context and
  * the host Router all work across the boundary.
  */
-import { useEffect, useReducer, type ComponentType } from 'react'
+import { lazy, useEffect, useReducer, type ComponentType, type LazyExoticComponent } from 'react'
 
 import * as melisApi from '@/lib/melis-api'
 import { routeForForward } from '@/lib/tool-routes'
@@ -24,8 +24,8 @@ export interface BrickDef {
   label: string
   forwardKey: string | null
   melisKey: string | null
-  /** Routed page rendered in the content area (optional). */
-  Component?: ComponentType
+  /** Routed page rendered in the content area (optional). May be a React.lazy exotic. */
+  Component?: ComponentType | LazyExoticComponent<ComponentType>
   /** Left-sidebar panel rendered under the module's nav section (optional). */
   Sidebar?: ComponentType
   /** Topbar widget (e.g. the messenger notification icon), rendered next to the language switcher (optional). */
@@ -91,50 +91,113 @@ export function headerBricks(): BrickDef[] {
 }
 
 /**
- * Fetches the active modules' bricks and loads their bundles. Idempotent:
- * a second call while loading/loaded is a no-op (use `resetBricks` to force a reload
- * after a session change).
+ * Fetches the manifest of active bricks and registers their routes — WITHOUT loading any bundle.
+ * Each brick's IIFE is downloaded lazily, only when its route is first visited (React.lazy +
+ * Suspense). This avoids pulling down several MB of JS at boot when the user may never visit
+ * most brick pages (a 10-module instance was downloading ~2 MB eagerly on every page load).
+ *
+ * Trade-off: Sidebar and Header components (e.g. the Messenger bell) are part of the IIFE, so
+ * they are unavailable until the user visits the brick's route for the first time; they then
+ * appear via notify(). If a Header must be visible from boot, mark the bundle "eager" in its
+ * manifest and handle it here — that optimisation is deferred until needed.
+ *
+ * Idempotent: a second call while loading/loaded is a no-op (use `resetBricks` to force a
+ * re-fetch, e.g. after logout/login).
  */
 export async function loadBricks(): Promise<void> {
   if (status !== 'idle') return
   status = 'loading'
   try {
     const list = await melisApi.fetchReactModules()
-    const registry = componentRegistry()
-
-    // Load every brick bundle in PARALLEL (not sequentially): a sequential await-loop made the
-    // LAST modules in the list register seconds after boot, leaving a race window where their
-    // route hadn't been registered as a brick yet (so it fell back to the iframe zone view, which
-    // reloads on tab switch). Loading concurrently means all bricks register together, before the
-    // menu/routes finalise — no race, no late "reloading" tool. A failed bundle is skipped.
-    await Promise.all(
-      list
-        .filter((m) => m.bundleUrl)
-        .map((m) => loadScript(m.bundleUrl).catch(() => { /* skip a brick that fails to load */ })),
-    )
-
     const next: BrickDef[] = []
+
     for (const m of list) {
-      const reg = registry[m.id]
-      const Component = reg?.Component
-      const Sidebar = reg?.Sidebar
-      const Header = reg?.Header
-      if (!Component && !Sidebar && !Header) continue
-      // Only routed bricks map a menu entry to a React route.
-      if (m.forwardKey && m.route && Component) BRICK_ROUTES[m.forwardKey] = m.route
+      if (!m.bundleUrl) continue
+
+      // Register the menu→route mapping immediately so useNavMenu can resolve legacy menu
+      // entries to React routes even before the brick bundle is downloaded.
+      if (m.forwardKey && m.route) BRICK_ROUTES[m.forwardKey] = m.route
+
+      const bundleUrl = m.bundleUrl
+      const brickId   = m.id
+
+      // React.lazy: the IIFE is fetched only on the first render of this route.
+      // The Suspense boundary already in App.tsx shows PageLoader while it loads.
+      // On error we return a no-op component rather than letting the promise reject
+      // (which would propagate to the nearest error boundary and crash the shell).
+      const LazyComponent = lazy(async (): Promise<{ default: ComponentType }> => {
+        await loadScript(bundleUrl).catch(() => {})
+        const reg = componentRegistry()[brickId]
+        const C   = reg?.Component
+
+        if (!C) {
+          // Bundle loaded but registered no Component (build error, Sidebar/Header-only, or
+          // failed script). Remove this brick from the route table so the catch-all ZonePage
+          // can handle the URL via its melisKey — same behaviour as the old eager loader which
+          // excluded non-registering bricks from bricks[] entirely.
+          const idx = bricks.findIndex((b) => b.id === brickId)
+          if (idx >= 0) {
+            bricks.splice(idx, 1)
+            if (m.forwardKey) delete BRICK_ROUTES[m.forwardKey]
+            // Sidebar/Header still valid even without a Component page (e.g. Messenger bell).
+            if (reg?.Sidebar || reg?.Header) {
+              bricks.push({
+                id: m.id, module: m.module, route: '', label: m.label,
+                forwardKey: m.forwardKey, melisKey: m.melisKey,
+                Component: undefined, Sidebar: reg.Sidebar, Header: reg.Header,
+              })
+            }
+            notify()
+          }
+          return { default: (() => null) as unknown as ComponentType }
+        }
+
+        // Bundle may also export Sidebar / Header — patch the BrickDef in-place so
+        // sidebarBrickForModules() / headerBricks() see them on the next render cycle.
+        const def = bricks.find((b) => b.id === brickId)
+        if (def && reg) {
+          def.Sidebar = reg.Sidebar
+          def.Header  = reg.Header
+          notify()
+        }
+        return { default: C }
+      })
+
       next.push({
-        id: m.id,
-        module: m.module,
-        route: m.route ?? '',
-        label: m.label,
+        id:         m.id,
+        module:     m.module,
+        route:      m.route ?? '',
+        label:      m.label,
         forwardKey: m.forwardKey,
-        melisKey: m.melisKey,
-        Component,
-        Sidebar,
-        Header,
+        melisKey:   m.melisKey,
+        Component:  LazyComponent,
+        // Sidebar and Header are unknown until the bundle executes — set lazily above.
+        Sidebar:    undefined,
+        Header:     undefined,
       })
     }
     bricks = next
+
+    // Background-prefetch: load all bundles in parallel so Sidebar/Header components
+    // register early (e.g. the CMS page-tree Sidebar, the Messenger bell — both need
+    // to appear from boot, not only after the user first visits the brick's route).
+    // Non-blocking: the loop fires-and-forgets; React.lazy benefits from the cache.
+    for (const m of list) {
+      if (!m.bundleUrl) continue
+      const bundleUrl = m.bundleUrl
+      const brickId   = m.id
+      loadScript(bundleUrl)
+        .then(() => {
+          const reg = componentRegistry()[brickId]
+          const def = bricks.find((b) => b.id === brickId)
+          if (def && reg) {
+            def.Sidebar = reg.Sidebar
+            def.Header  = reg.Header
+            if (reg.Sidebar || reg.Header) notify()
+          }
+        })
+        .catch(() => {})
+    }
   } catch {
     /* leave bricks empty on error */
   } finally {

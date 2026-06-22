@@ -31,7 +31,7 @@ export function defaultLayout(): GridItem[] {
   return [
     item('kpi-sites', 0, 0),
     item('kpi-pages', 3, 0),
-    item('kpi-media', 6, 0),
+    item('kpi-langs', 6, 0),
     item('kpi-users', 9, 0),
     item('traffic', 0, 3),
     item('messages', 8, 3),

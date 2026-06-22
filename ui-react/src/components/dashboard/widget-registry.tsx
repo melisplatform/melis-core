@@ -4,20 +4,23 @@ import {
   Bell,
   FileText,
   Globe,
-  Image,
+  Languages,
   LineChart,
   type LucideIcon,
   Mail,
   Megaphone,
   Package,
   Users,
+  Wrench,
 } from 'lucide-react'
 
 import type { I18nKey } from '@/i18n/dictionaries'
+import type { LegacyDashboardPlugin } from '@/lib/melis-api'
 import {
   ActivityContent,
   AnnouncementContent,
   KpiContent,
+  LegacyPluginContent,
   MessagesContent,
   NotificationsContent,
   RecentPagesContent,
@@ -30,9 +33,13 @@ import {
 export interface WidgetDef {
   id: string
   titleKey: I18nKey
+  /** Overrides titleKey for dynamic/legacy widgets where no i18n key exists. */
+  titleLabel?: string
   icon: LucideIcon
   /** Clé i18n de la section dans la palette. */
   sectionKey: I18nKey
+  /** Overrides sectionKey label for dynamic sections (e.g. legacy plugin groups). */
+  sectionLabel?: string
   /** Taille par défaut + minimale (unités de grille, 12 colonnes). */
   w: number
   h: number
@@ -46,7 +53,7 @@ export const WIDGETS: WidgetDef[] = [
   // Indicateurs (KPI)
   { id: 'kpi-sites', titleKey: 'dash.kpi.sites', icon: Globe, sectionKey: 'widget.sec.kpi', w: 3, h: 3, minW: 2, minH: 2, render: () => <KpiContent kpiKey="sites" /> },
   { id: 'kpi-pages', titleKey: 'dash.kpi.pages', icon: FileText, sectionKey: 'widget.sec.kpi', w: 3, h: 3, minW: 2, minH: 2, render: () => <KpiContent kpiKey="pages" /> },
-  { id: 'kpi-media', titleKey: 'dash.kpi.media', icon: Image, sectionKey: 'widget.sec.kpi', w: 3, h: 3, minW: 2, minH: 2, render: () => <KpiContent kpiKey="media" /> },
+  { id: 'kpi-langs', titleKey: 'dash.kpi.languages', icon: Languages, sectionKey: 'widget.sec.kpi', w: 3, h: 3, minW: 2, minH: 2, render: () => <KpiContent kpiKey="languages" /> },
   { id: 'kpi-users', titleKey: 'dash.kpi.users', icon: Users, sectionKey: 'widget.sec.kpi', w: 3, h: 3, minW: 2, minH: 2, render: () => <KpiContent kpiKey="users" /> },
 
   // Analytique
@@ -74,3 +81,21 @@ export const WIDGET_SECTIONS: I18nKey[] = [
   'widget.sec.content',
   'widget.sec.comm',
 ]
+
+/** Builds a WidgetDef for a legacy PHP dashboard plugin (rendered as an iframe). */
+export function buildLegacyWidgetDef(plugin: LegacyDashboardPlugin): WidgetDef {
+  const id = `legacy-${plugin.pluginName}`
+  return {
+    id,
+    titleKey: 'widget.sec.legacy',
+    titleLabel: plugin.title || plugin.pluginName,
+    icon: Wrench,
+    sectionKey: 'widget.sec.legacy',
+    sectionLabel: plugin.section || 'Plugins',
+    w: Math.min(plugin.w, 12),
+    h: Math.max(plugin.h, 2),
+    minW: 2,
+    minH: 2,
+    render: () => <LegacyPluginContent pluginName={plugin.pluginName} />,
+  }
+}

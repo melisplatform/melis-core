@@ -26,6 +26,7 @@ import {
   type Kpi,
   type PageStatus,
 } from '@/lib/mocks'
+import { useDashboardData } from './dashboard-data-context'
 
 const STATUS_VARIANT: Record<PageStatus, 'success' | 'muted' | 'warning'> = {
   published: 'success',
@@ -40,22 +41,29 @@ const STATUS_LABEL: Record<PageStatus, I18nKey> = {
 const KPI_LABEL: Record<Kpi['key'], I18nKey> = {
   sites: 'dash.kpi.sites',
   pages: 'dash.kpi.pages',
-  media: 'dash.kpi.media',
+  languages: 'dash.kpi.languages',
   users: 'dash.kpi.users',
 }
 
 /** Contenu d'un widget KPI (une métrique). */
 export function KpiContent({ kpiKey }: { kpiKey: Kpi['key'] }) {
   const { t, lang } = useI18n()
-  const kpi = KPIS.find((k) => k.key === kpiKey)!
-  const up = kpi.delta > 0
-  const flat = kpi.delta === 0
+  const { stats } = useDashboardData()
+
+  // Valeur réelle depuis l'API, sinon fallback mock.
+  const realValue: number | undefined = stats?.kpis[kpiKey]
+  const mockKpi = KPIS.find((k) => k.key === kpiKey)!
+  const value = realValue ?? mockKpi.value
+  // Delta n'est pas fourni par l'API (besoin d'historique) → pas affiché si données réelles.
+  const delta = stats ? 0 : mockKpi.delta
+  const up = delta > 0
+  const flat = delta === 0
   const Trend = up ? TrendingUp : TrendingDown
 
   return (
     <div className="flex h-full flex-col justify-center">
       <div className="flex items-center justify-between">
-        <span className="text-sm text-muted-foreground">{t(KPI_LABEL[kpi.key])}</span>
+        <span className="text-sm text-muted-foreground">{t(KPI_LABEL[kpiKey])}</span>
         {!flat && (
           <span
             className={cn(
@@ -64,12 +72,12 @@ export function KpiContent({ kpiKey }: { kpiKey: Kpi['key'] }) {
             )}
           >
             <Trend className="size-3.5" />
-            {Math.abs(kpi.delta)}%
+            {Math.abs(delta)}%
           </span>
         )}
       </div>
       <div className="mt-1 font-[var(--font-display)] text-3xl font-bold tracking-tight">
-        {formatNumber(kpi.value, lang)}
+        {formatNumber(value, lang)}
       </div>
     </div>
   )
@@ -109,6 +117,45 @@ export function RecentPagesContent() {
 
 export function ActivityContent() {
   const { t, lang } = useI18n()
+  const { stats } = useDashboardData()
+
+  // Données réelles : dernières connexions utilisateurs.
+  if (stats) {
+    if (!stats.activity.length) {
+      return <p className="text-sm text-muted-foreground">{t('dash.recent_activity')}</p>
+    }
+    return (
+      <ul className="space-y-4">
+        {stats.activity.map((a) => {
+          const hoursAgo = a.loginDate
+            ? Math.max(1, Math.round((Date.now() - new Date(a.loginDate).getTime()) / 3_600_000))
+            : 0
+          return (
+            <li key={a.id} className="flex items-start gap-3">
+              <Avatar className="size-8">
+                <AvatarFallback className="text-[11px]">
+                  {a.name.slice(0, 2).toUpperCase()}
+                </AvatarFallback>
+              </Avatar>
+              <div className="min-w-0 flex-1 text-sm">
+                <p className="text-muted-foreground">
+                  <span className="font-medium text-foreground">{a.name}</span>{' '}
+                  {t('act.connected')}
+                </p>
+                {hoursAgo > 0 && (
+                  <p className="text-xs text-muted-foreground/70">
+                    {formatRelativeHours(hoursAgo, lang)}
+                  </p>
+                )}
+              </div>
+            </li>
+          )
+        })}
+      </ul>
+    )
+  }
+
+  // Fallback mock pendant le chargement.
   return (
     <ul className="space-y-4">
       {ACTIVITY.map((a) => (
@@ -253,6 +300,19 @@ export function TrafficChartContent() {
         />
       </AreaChart>
     </ResponsiveContainer>
+  )
+}
+
+/** Renders a legacy Melis dashboard plugin (PHP) inside an iframe. */
+export function LegacyPluginContent({ pluginName }: { pluginName: string }) {
+  return (
+    <iframe
+      src={`/melis/react-dashboard-plugin?plugin=${encodeURIComponent(pluginName)}`}
+      className="h-full w-full border-0"
+      title={pluginName}
+      style={{ minHeight: 120 }}
+      sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-modals"
+    />
   )
 }
 

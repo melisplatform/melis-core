@@ -1,13 +1,56 @@
-import { useEffect, useRef, useState } from 'react'
+import { Component, useEffect, useMemo, useRef, useState, type ReactNode, type ErrorInfo } from 'react'
 import { createPortal } from 'react-dom'
 import { GridStack, type GridStackNode, type GridStackWidget } from 'gridstack'
+import { AlertTriangle, RotateCcw } from 'lucide-react'
 
 import 'gridstack/dist/gridstack.min.css'
 
 import { useI18n } from '@/i18n/i18n-context'
-import { WIDGET_MAP } from './widget-registry'
+import { WIDGET_MAP, type WidgetDef } from './widget-registry'
 import { WidgetFrame } from './WidgetFrame'
 import type { GridItem } from './dashboard-store'
+
+// ─── Error boundary per widget ────────────────────────────────────────────────
+
+interface EBState { error: Error | null }
+
+class WidgetErrorBoundary extends Component<{ children: ReactNode }, EBState> {
+  state: EBState = { error: null }
+
+  static getDerivedStateFromError(error: Error): EBState {
+    return { error }
+  }
+
+  componentDidCatch(error: Error, info: ErrorInfo) {
+    console.error('[Widget]', error, info.componentStack)
+  }
+
+  reset = () => this.setState({ error: null })
+
+  render() {
+    if (this.state.error) {
+      return (
+        <div className="flex h-full flex-col items-center justify-center gap-3 p-4 text-center">
+          <AlertTriangle className="size-8 text-destructive/70" />
+          <p className="max-w-[22ch] text-sm text-muted-foreground">
+            {this.state.error.message || 'Une erreur est survenue dans ce widget.'}
+          </p>
+          <button
+            type="button"
+            onClick={this.reset}
+            className="flex items-center gap-1.5 rounded-md border border-border bg-muted/50 px-3 py-1.5 text-xs font-medium text-foreground hover:bg-muted"
+          >
+            <RotateCcw className="size-3" />
+            Réessayer
+          </button>
+        </div>
+      )
+    }
+    return this.state.error === null ? this.props.children : null
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
 
 export const GRID_COLS = 12
 const CELL_HEIGHT = 46
@@ -22,11 +65,19 @@ export function DashboardGrid({
   layout,
   onChange,
   onRemove,
+  extraWidgetMap = {},
 }: {
   layout: GridItem[]
   onChange: (items: GridItem[]) => void
   onRemove: (widgetId: string) => void
+  extraWidgetMap?: Record<string, WidgetDef>
 }) {
+  const allWidgets = useMemo(
+    () => ({ ...WIDGET_MAP, ...extraWidgetMap }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [extraWidgetMap],
+  )
+
   const containerRef = useRef<HTMLDivElement>(null)
   const gridRef = useRef<GridStack | null>(null)
   const [slots, setSlots] = useState<Slot[]>([])
@@ -35,6 +86,8 @@ export function DashboardGrid({
   onChangeRef.current = onChange
   const layoutRef = useRef(layout)
   layoutRef.current = layout
+  const allWidgetsRef = useRef(allWidgets)
+  allWidgetsRef.current = allWidgets
 
   // --- Init GridStack (une seule fois) ---
   useEffect(() => {
@@ -56,7 +109,7 @@ export function DashboardGrid({
 
     grid.on('change', () => {
       if (mutating.current) return
-      onChangeRef.current(readLayout(grid))
+      onChangeRef.current(readLayout(grid, allWidgetsRef.current))
     })
 
     // Gère les widgets déposés depuis la palette externe (setupDragIn).
@@ -65,7 +118,7 @@ export function DashboardGrid({
       for (const node of items) {
         const id = node.id as string
         // Rejette les drops invalides ou en double.
-        if (!id || !WIDGET_MAP[id] || layoutRef.current.some((l) => l.i === id)) {
+        if (!id || !allWidgets[id] || layoutRef.current.some((l) => l.i === id)) {
           if (node.el) grid.removeWidget(node.el as HTMLElement, true)
           continue
         }
@@ -76,7 +129,7 @@ export function DashboardGrid({
       }
       // Reconstruit les slots et notifie le parent.
       setSlots(slotsFromGrid(grid))
-      onChangeRef.current(readLayout(grid))
+      onChangeRef.current(readLayout(grid, allWidgetsRef.current))
     })
 
     return () => {
@@ -132,20 +185,32 @@ export function DashboardGrid({
     <>
       <div ref={containerRef} className="grid-stack melis-dashboard-grid" />
       {slots.map((s) =>
-        WIDGET_MAP[s.id]
-          ? createPortal(<WidgetPortal widgetId={s.id} onRemove={() => onRemove(s.id)} />, s.el)
+        allWidgets[s.id]
+          ? createPortal(
+              <WidgetPortal widgetId={s.id} widgetDef={allWidgets[s.id]} onRemove={() => onRemove(s.id)} />,
+              s.el,
+              s.id, // key — prevents other portals from remounting when one widget is removed
+            )
           : null,
       )}
     </>
   )
 }
 
-function WidgetPortal({ widgetId, onRemove }: { widgetId: string; onRemove: () => void }) {
+function WidgetPortal({ widgetDef, onRemove }: { widgetId: string; widgetDef: WidgetDef; onRemove: () => void }) {
   const { t } = useI18n()
-  const def = WIDGET_MAP[widgetId]
+  const [refreshKey, setRefreshKey] = useState(0)
+  const title = widgetDef.titleLabel ?? t(widgetDef.titleKey)
   return (
-    <WidgetFrame title={t(def.titleKey)} icon={def.icon} onRemove={onRemove}>
-      {def.render()}
+    <WidgetFrame
+      title={title}
+      icon={widgetDef.icon}
+      onRemove={onRemove}
+      onReload={() => setRefreshKey((k) => k + 1)}
+    >
+      <WidgetErrorBoundary key={refreshKey}>
+        {widgetDef.render()}
+      </WidgetErrorBoundary>
     </WidgetFrame>
   )
 }
@@ -161,17 +226,17 @@ function slotsFromGrid(grid: GridStack): Slot[] {
   return next
 }
 
-function readLayout(grid: GridStack): GridItem[] {
+function readLayout(grid: GridStack, allWidgets: Record<string, WidgetDef>): GridItem[] {
   const saved = grid.save(false) as GridStackWidget[]
   return saved
-    .filter((w) => w.id && WIDGET_MAP[w.id])
+    .filter((w) => w.id && allWidgets[w.id])
     .map((w) => ({
       i: w.id as string,
       x: w.x ?? 0,
       y: w.y ?? 0,
       w: w.w ?? 1,
       h: w.h ?? 1,
-      minW: WIDGET_MAP[w.id as string].minW,
-      minH: WIDGET_MAP[w.id as string].minH,
+      minW: allWidgets[w.id as string].minW,
+      minH: allWidgets[w.id as string].minH,
     }))
 }

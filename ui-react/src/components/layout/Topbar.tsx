@@ -157,7 +157,10 @@ function UserMenu() {
 
   async function handleLogout() {
     await signOut()
-    navigate('/login', { replace: true })
+    // Full page reload — clears all React + iframe state; avoids any SPA navigation
+    // race (iframes, zone pool, ProtectedRoute) after the session is cleared.
+    const loginUrl = import.meta.env.PROD ? '/melis-react/login' : '/login'
+    window.location.replace(loginUrl)
   }
 
   // Open the legacy "My account" (user profile) tool in the zone pool, like any other tool.

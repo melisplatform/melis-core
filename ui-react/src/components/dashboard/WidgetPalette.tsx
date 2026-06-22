@@ -12,10 +12,12 @@ export function WidgetPalette({
   present,
   onAdd,
   onClose,
+  extraWidgets = [],
 }: {
   present: Set<string>
   onAdd: (widgetId: string) => void
   onClose: () => void
+  extraWidgets?: WidgetDef[]
 }) {
   const { t } = useI18n()
   // Refs sur les wrappers draggables, indexés par widgetId.
@@ -23,12 +25,13 @@ export function WidgetPalette({
 
   // Configure le drag-in GridStack pour les items non encore dans le dashboard.
   useEffect(() => {
+    const allWidgetMap = { ...WIDGET_MAP, ...Object.fromEntries(extraWidgets.map((w) => [w.id, w])) }
     const els: HTMLElement[] = []
     const widgets: import('gridstack').GridStackWidget[] = []
 
     wrapperRefs.current.forEach((el, widgetId) => {
       if (present.has(widgetId)) return
-      const def = WIDGET_MAP[widgetId]
+      const def = allWidgetMap[widgetId]
       if (!def) return
       els.push(el)
       widgets.push({ id: widgetId, w: def.w, h: def.h, minW: def.minW, minH: def.minH })
@@ -37,7 +40,7 @@ export function WidgetPalette({
     if (els.length) {
       GridStack.setupDragIn(els, { helper: 'clone', appendTo: 'body' }, widgets)
     }
-  }, [present])
+  }, [present, extraWidgets])
 
   return (
     <aside className="flex w-72 shrink-0 flex-col border-l border-border bg-card">
@@ -81,6 +84,37 @@ export function WidgetPalette({
             </div>
           )
         })}
+
+        {/* Sections dynamiques : plugins legacy PHP (par groupe) */}
+        {extraWidgets.length > 0 && (() => {
+          const groups = new Map<string, WidgetDef[]>()
+          for (const w of extraWidgets) {
+            const label = w.sectionLabel ?? w.sectionKey
+            if (!groups.has(label)) groups.set(label, [])
+            groups.get(label)!.push(w)
+          }
+          return Array.from(groups.entries()).map(([label, items]) => (
+            <div key={label}>
+              <div className="mb-1.5 px-1 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground/70">
+                {label}
+              </div>
+              <div className="space-y-1.5">
+                {items.map((w) => (
+                  <PaletteItem
+                    key={w.id}
+                    widget={w}
+                    added={present.has(w.id)}
+                    onAdd={() => onAdd(w.id)}
+                    wrapperRef={(el) => {
+                      if (el) wrapperRefs.current.set(w.id, el)
+                      else wrapperRefs.current.delete(w.id)
+                    }}
+                  />
+                ))}
+              </div>
+            </div>
+          ))
+        })()}
       </div>
     </aside>
   )
@@ -133,7 +167,9 @@ function PaletteItem({
           <Icon className="size-4" />
         </div>
         <div className="min-w-0 flex-1">
-          <div className="truncate text-sm font-medium text-foreground">{t(widget.titleKey)}</div>
+          <div className="truncate text-sm font-medium text-foreground">
+            {widget.titleLabel ?? t(widget.titleKey)}
+          </div>
           {added && <div className="text-[11px] text-muted-foreground">{t('widget.in_dashboard')}</div>}
         </div>
         {!added && (

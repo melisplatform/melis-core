@@ -46,7 +46,9 @@ function NavNodeItem({ node, depth, collapsed, defaultOpen = false, sidebarPanel
   const Icon = node.icon
   const hasChildren = node.children.length > 0
 
-  const indent = depth === 0 ? '' : depth === 1 ? 'pl-3' : depth === 2 ? 'pl-5' : 'pl-7'
+  // Inline padding so the indentation is never dependent on Tailwind class generation.
+  // depth 0 = 12px (px-3 base), depth 1 = 20px, depth 2 = 32px, depth 3+ = 44px
+  const indentStyle = collapsed || depth === 0 ? undefined : { paddingLeft: `${12 + depth * 10}px` }
 
   // Tool node — opens a tab.
   // React routes (native/brick) are always leaves even with nav-children (PHP sub-sections
@@ -59,13 +61,14 @@ function NavNodeItem({ node, depth, collapsed, defaultOpen = false, sidebarPanel
       <button
         type="button"
         title={collapsed ? node.label : undefined}
+        style={indentStyle}
         onClick={() => {
           openTab({ id: node.to!, label: node.label, path: node.to!, icon: node.icon })
           navigate(node.to!)
         }}
         className={cn(
           'flex w-full items-center gap-2.5 rounded-md py-1.5 text-sm font-medium transition-colors',
-          collapsed ? 'justify-center px-0' : `px-3 ${indent}`,
+          collapsed ? 'justify-center px-0' : 'px-3',
           isActive
             ? 'bg-[color-mix(in_srgb,var(--color-primary)_12%,transparent)] text-primary'
             : 'text-muted-foreground hover:bg-accent hover:text-foreground',
@@ -84,9 +87,10 @@ function NavNodeItem({ node, depth, collapsed, defaultOpen = false, sidebarPanel
         type="button"
         onClick={() => setOpen((v) => !v)}
         title={collapsed ? node.label : undefined}
+        style={indentStyle}
         className={cn(
           'flex w-full items-center gap-2.5 rounded-md py-2 transition-colors hover:bg-accent hover:text-foreground',
-          collapsed ? 'justify-center px-0' : `px-3 ${indent}`,
+          collapsed ? 'justify-center px-0' : 'px-3',
           depth === 0
             ? 'text-sm font-semibold text-foreground/90'
             : depth === 1

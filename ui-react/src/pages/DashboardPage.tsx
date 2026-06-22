@@ -8,13 +8,14 @@ import { CURRENT_USER } from '@/lib/mocks'
 import * as melisApi from '@/lib/melis-api'
 import { DashboardGrid } from '@/components/dashboard/DashboardGrid'
 import { WidgetPalette } from '@/components/dashboard/WidgetPalette'
-import { WIDGET_MAP } from '@/components/dashboard/widget-registry'
+import { WIDGET_MAP, buildLegacyWidgetDef, type WidgetDef } from '@/components/dashboard/widget-registry'
 import {
   loadLayout,
   resetLayout,
   saveLayout,
   type GridItem,
 } from '@/components/dashboard/dashboard-store'
+import { DashboardDataContext } from '@/components/dashboard/dashboard-data-context'
 
 const BUBBLES_HIDDEN_KEY = 'melis-dash-bubbles-hidden'
 
@@ -41,6 +42,20 @@ export default function DashboardPage() {
     melisApi.fetchDashboardBubbles().then(setBubbles)
   }, [])
 
+  // KPI stats + recent activity (données réelles).
+  const [stats, setStats] = useState<melisApi.DashboardStats | null>(null)
+  useEffect(() => {
+    melisApi.fetchDashboardStats().then(setStats)
+  }, [])
+
+  // Legacy PHP dashboard plugins (loaded once at mount).
+  const [legacyWidgets, setLegacyWidgets] = useState<WidgetDef[]>([])
+  useEffect(() => {
+    melisApi.fetchLegacyDashboardPlugins().then((plugins) => {
+      setLegacyWidgets(plugins.map(buildLegacyWidgetDef))
+    })
+  }, [])
+
   // Hide/show the top bubble bar, remembered across sessions (like the legacy cookie).
   const [bubblesHidden, setBubblesHidden] = useState<boolean>(() => {
     try {
@@ -64,11 +79,29 @@ export default function DashboardPage() {
   const [layout, setLayout] = useState<GridItem[]>(() => loadLayout())
   const [paletteOpen, setPaletteOpen] = useState(false)
 
+  // Priorité DB : au montage, charge depuis le serveur (écrase le cache localStorage si trouvé).
+  useEffect(() => {
+    melisApi.fetchDashboardLayout().then((dbLayout) => {
+      if (dbLayout && dbLayout.length > 0) {
+        setLayout(dbLayout)
+        saveLayout(dbLayout)
+      }
+    })
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  const extraWidgetMap = useMemo(
+    () => Object.fromEntries(legacyWidgets.map((w) => [w.id, w])),
+    [legacyWidgets],
+  )
+  const allWidgetMap = useMemo(() => ({ ...WIDGET_MAP, ...extraWidgetMap }), [extraWidgetMap])
+
   const present = useMemo(() => new Set(layout.map((l) => l.i)), [layout])
 
   const persist = useCallback((next: GridItem[]) => {
     setLayout(next)
     saveLayout(next)
+    melisApi.saveDashboardLayout(next)
   }, [])
 
   // Émis par GridStack après un déplacement / redimensionnement utilisateur.
@@ -77,7 +110,7 @@ export default function DashboardPage() {
   const addWidget = useCallback(
     (widgetId: string) => {
       if (present.has(widgetId)) return
-      const def = WIDGET_MAP[widgetId]
+      const def = allWidgetMap[widgetId]
       const maxY = layout.reduce((m, l) => Math.max(m, l.y + l.h), 0)
       persist([...layout, { i: widgetId, x: 0, y: maxY, w: def.w, h: def.h, minW: def.minW, minH: def.minH }])
     },
@@ -92,6 +125,7 @@ export default function DashboardPage() {
   const handleReset = useCallback(() => persist(resetLayout()), [persist])
 
   return (
+    <DashboardDataContext.Provider value={{ stats }}>
     <div className="flex h-full">
       <div className="flex min-w-0 flex-1 flex-col">
         {/* En-tête */}
@@ -176,7 +210,12 @@ export default function DashboardPage() {
               <div className="max-w-xs text-sm text-muted-foreground">{t('widget.empty')}</div>
             </div>
           ) : (
-            <DashboardGrid layout={layout} onChange={handleChange} onRemove={removeWidget} />
+            <DashboardGrid
+              layout={layout}
+              onChange={handleChange}
+              onRemove={removeWidget}
+              extraWidgetMap={extraWidgetMap}
+            />
           )}
         </div>
       </div>
@@ -187,8 +226,10 @@ export default function DashboardPage() {
           present={present}
           onAdd={addWidget}
           onClose={() => setPaletteOpen(false)}
+          extraWidgets={legacyWidgets}
         />
       )}
     </div>
+    </DashboardDataContext.Provider>
   )
 }

@@ -1,4 +1,4 @@
-import { Suspense, useEffect, useState } from 'react'
+import { lazy, Suspense, useEffect, useState } from 'react'
 import { Outlet, useLocation } from 'react-router-dom'
 import { Loader2 } from 'lucide-react'
 
@@ -15,6 +15,8 @@ import { ToolTabBridgeProvider } from '@/components/tabs/tool-tab-bridge'
 import { useBricks, brickRoute } from '@/lib/bricks'
 import { PERSISTENT_MODULES } from '@/lib/module-registry'
 import { melisKeyForRoute, routeForForward, useToolRoutesVersion } from '@/lib/tool-routes'
+
+const DashboardPage = lazy(() => import('@/pages/DashboardPage'))
 
 function PageLoader() {
   return (
@@ -49,6 +51,9 @@ function ShellInner() {
   // Active iframe-tool key from the tree-derived route /[section]/[tool] (resolved via registry).
   const activeZoneKey = melisKeyForRoute(location.pathname)
 
+  // Dashboard is always mounted so switching tabs never triggers a refetch.
+  const isDashboard = location.pathname === '/'
+
   // Modules persistants : liste montée en permanence pour ne jamais détruire
   // leur iframe Melis (toggle New/Old). Active quand on est sur leur route d'arbre dérivée.
   const activePersistent = PERSISTENT_MODULES.find((m) => location.pathname === routeForForward(m.forwardKey))
@@ -63,6 +68,13 @@ function ShellInner() {
         <ToolTabBar />
 
         <main className="relative flex-1 overflow-hidden">
+          {/* Dashboard — toujours monté pour éviter tout rechargement au retour sur l'onglet. */}
+          <div className={cn('h-full overflow-y-auto', !isDashboard && 'hidden')}>
+            <Suspense fallback={<PageLoader />}>
+              <DashboardPage />
+            </Suspense>
+          </div>
+
           {/* Listes persistantes — toujours dans le DOM, cachées hors de leur route */}
           {PERSISTENT_MODULES.map((m) => {
             const List = m.list
@@ -78,8 +90,8 @@ function ShellInner() {
             )
           })}
 
-          {/* Toutes les autres pages via Outlet (formulaires, News, Dashboard…) */}
-          <div className={cn('h-full overflow-y-auto', activePersistent && 'hidden')}>
+          {/* Toutes les autres pages via Outlet (formulaires, briques, zone…) */}
+          <div className={cn('h-full overflow-y-auto', (activePersistent || isDashboard) && 'hidden')}>
             <Outlet />
           </div>
 

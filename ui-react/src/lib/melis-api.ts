@@ -146,7 +146,9 @@ export async function fetchZoneView(melisKey: string): Promise<ZoneViewResult | 
 /** Déconnecte la session Melis courante. */
 export async function logout(): Promise<void> {
   try {
-    await fetch('/melis/logout', { headers: { ...XHR_HEADER }, credentials: 'include' })
+    // redirect:'manual' — do not follow the 302→/melis/login; the session is cleared
+    // server-side before the redirect fires, so we just need the request to land.
+    await fetch('/melis/logout', { headers: { ...XHR_HEADER }, credentials: 'include', redirect: 'manual' })
   } catch {
     /* best-effort */
   }
@@ -296,6 +298,100 @@ export async function fetchDashboardBubbles(): Promise<DashboardBubbles | null> 
     return data.success && data.data ? data.data : null
   } catch {
     return null
+  }
+}
+
+// ─── Dashboard KPI stats + recent activity ────────────────────────────────────
+
+export interface DashboardKpis {
+  users: number
+  sites: number
+  pages: number
+  languages: number
+}
+
+export interface DashboardActivityItem {
+  id: number
+  name: string
+  loginDate: string | null
+}
+
+export interface DashboardStats {
+  kpis: DashboardKpis
+  activity: DashboardActivityItem[]
+}
+
+/** KPI counts and recent login activity (GET /melis/react-api/dashboard/stats). */
+export async function fetchDashboardStats(): Promise<DashboardStats | null> {
+  try {
+    const res = await fetch('/melis/react-api/dashboard/stats', {
+      headers: { ...XHR_HEADER },
+      credentials: 'include',
+    })
+    if (!res.ok) return null
+    const data = (await res.json()) as { success: boolean; data?: DashboardStats }
+    return data.success && data.data ? data.data : null
+  } catch {
+    return null
+  }
+}
+
+// ─── Legacy dashboard plugins discovery ──────────────────────────────────────
+
+export interface LegacyDashboardPlugin {
+  pluginName: string
+  title: string
+  icon: string
+  section: string
+  w: number
+  h: number
+}
+
+/** Returns the list of active legacy Melis dashboard plugins (from PHP config). */
+export async function fetchLegacyDashboardPlugins(): Promise<LegacyDashboardPlugin[]> {
+  try {
+    const res = await fetch('/melis/react-api/dashboard/legacy-plugins', {
+      headers: { ...XHR_HEADER },
+      credentials: 'include',
+    })
+    if (!res.ok) return []
+    const data = (await res.json()) as { success: boolean; data?: LegacyDashboardPlugin[] }
+    return data.success && Array.isArray(data.data) ? data.data : []
+  } catch {
+    return []
+  }
+}
+
+// ─── Dashboard layout persistence (DB, melis_core_dashboards) ────────────────
+
+export interface DashboardGridItem { i: string; x: number; y: number; w: number; h: number }
+
+/** Returns the saved layout from the DB, or null if not yet saved. */
+export async function fetchDashboardLayout(): Promise<DashboardGridItem[] | null> {
+  try {
+    const res = await fetch('/melis/react-api/dashboard/layout', {
+      headers: { ...XHR_HEADER },
+      credentials: 'include',
+    })
+    if (!res.ok) return null
+    const data = (await res.json()) as { success: boolean; data?: DashboardGridItem[] | null }
+    return data.success && Array.isArray(data.data) && data.data.length > 0 ? data.data : null
+  } catch {
+    return null
+  }
+}
+
+/** Persists the layout to DB (fire-and-forget, errors are silently swallowed). */
+export async function saveDashboardLayout(items: DashboardGridItem[]): Promise<void> {
+  try {
+    await fetch('/melis/react-api/dashboard/layout', {
+      method: 'POST',
+      headers: { ...XHR_HEADER, 'Content-Type': 'application/json' },
+      credentials: 'include',
+      body: JSON.stringify(items),
+    })
+  } catch {
+    /* ignore */
   }
 }
 

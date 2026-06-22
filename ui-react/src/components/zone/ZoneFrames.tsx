@@ -50,6 +50,7 @@ export function ZoneFrames({ activeKey }: Props) {
                     className="h-full w-full border-0 flex-1"
                     onLoad={() => markReady(key)}
                     onError={() => markError(key)}
+                    sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-modals"
                   />
                   <button
                     onClick={() => reload(key)}

@@ -3,10 +3,10 @@
  *  Tout est typé pour que le câblage réel soit un simple swap de source. */
 
 export type PageStatus = 'published' | 'draft' | 'scheduled'
-export type ActivityType = 'published' | 'edited' | 'created' | 'uploaded' | 'commented'
+export type ActivityType = 'published' | 'edited' | 'created' | 'uploaded' | 'commented' | 'connected'
 
 export interface Kpi {
-  key: 'sites' | 'pages' | 'media' | 'users'
+  key: 'sites' | 'pages' | 'languages' | 'users'
   value: number
   /** Variation en % vs mois dernier (peut être négative). */
   delta: number
@@ -54,7 +54,7 @@ export interface UpdateItem {
 export const KPIS: Kpi[] = [
   { key: 'sites', value: 4, delta: 0 },
   { key: 'pages', value: 128, delta: 6.2 },
-  { key: 'media', value: 542, delta: 12.4 },
+  { key: 'languages', value: 2, delta: 0 },
   { key: 'users', value: 17, delta: -3.1 },
 ]
 
