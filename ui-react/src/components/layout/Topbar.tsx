@@ -166,6 +166,12 @@ function UserMenu() {
     openTab({ id: ACCOUNT_ROUTE, label: t('topbar.account'), path: ACCOUNT_ROUTE })
     navigate(ACCOUNT_ROUTE)
   }
+  // Expose opening "My account" to bricks (e.g. the messenger icon opens the profile + its tab),
+  // so they reuse the host's translated tab label instead of inventing their own.
+  useEffect(() => {
+    const w = window as unknown as { __melisOpenAccount?: () => void }
+    w.__melisOpenAccount = handleAccount
+  })
 
   return (
     <DropdownMenu>
@@ -398,7 +404,7 @@ export function Topbar({ onToggleSidebar }: { onToggleSidebar: () => void }) {
 
       {/* Right actions */}
       <div className="flex shrink-0 items-center gap-1 border-l border-border px-3">
-        <ThemeSwitcher className="hidden sm:inline-flex" />
+        <ThemeSwitcher />
         <LanguageSwitcher />
         <BrickHeaderWidgets />
         <NotificationsMenu />
