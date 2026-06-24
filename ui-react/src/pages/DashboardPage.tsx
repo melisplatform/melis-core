@@ -137,7 +137,7 @@ export default function DashboardPage() {
                   <circle cx="8.8" cy="57.7" r="8.8"/>
                 </svg>
               </div>
-              <h2 className="font-[var(--font-display)] text-2xl font-bold tracking-tight">
+              <h2 className="font-[var(--font-display)] text-xl font-bold tracking-tight sm:text-2xl">
                 {t('dash.welcome', { name: CURRENT_USER.name })}
               </h2>
             </div>
@@ -178,7 +178,7 @@ export default function DashboardPage() {
         </div>
 
         {!bubblesHidden && (
-          <div className="grid grid-cols-2 gap-4 px-5 pt-3 sm:px-8 lg:grid-cols-4">
+          <div className="grid grid-cols-2 gap-3 px-5 pt-3 sm:px-8 sm:grid-cols-4 sm:gap-4">
             {BUBBLES.map((b) => {
               const Icon = b.icon
               const count = bubbles ? bubbles[b.key].count : 0

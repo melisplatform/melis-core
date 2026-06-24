@@ -191,7 +191,7 @@ function ColManager({ cols, onChange, onClose }: {
   }
 
   return (
-    <div className="absolute right-0 top-full z-50 mt-1.5 w-[420px] rounded-xl border border-border bg-card shadow-xl">
+    <div className="absolute right-0 top-full z-50 mt-1.5 w-[420px] max-w-[calc(100vw-1rem)] rounded-xl border border-border bg-card shadow-xl">
       <div className="flex items-center justify-between border-b border-border px-3 py-2.5">
         <span className="text-sm font-semibold">Colonnes</span>
         <button onClick={onClose} className="text-muted-foreground hover:text-foreground transition-colors"><X className="size-4" /></button>
@@ -478,6 +478,13 @@ export default function UserListPage() {
   useEffect(() => {
     if (location.pathname === base) {
       openTab({ id: base, label: 'Utilisateurs', path: base })
+      // Un user vient d'être créé/édité dans le formulaire → la liste persistante est périmée :
+      // on revient à la page 1 et on refetch (liste + stats).
+      if (userApi.consumeUsersListStale()) {
+        setPage(1)
+        setRefreshKey(k => k + 1)
+        userApi.fetchUserStats().then(setStats).catch(() => null)
+      }
     }
   }, [location.pathname, openTab, base])
 
@@ -544,10 +551,14 @@ export default function UserListPage() {
     setDeleting(true)
     try {
       await userApi.deleteUser(toDelete.id)
+      // Retrait optimiste (instantané)…
       setItems((prev) => prev.filter((u) => u.id !== toDelete.id))
       setTotal((t) => t - 1)
-      if (stats) setStats({ ...stats, total: stats.total - 1, active: toDelete.status === 1 ? stats.active - 1 : stats.active, inactive: toDelete.status === 0 ? stats.inactive - 1 : stats.inactive })
       setToDelete(null)
+      // …puis refetch serveur (autoritatif) : liste à jour et stats correctes (dont le compteur Admins).
+      setPage(1)
+      setRefreshKey((k) => k + 1)
+      userApi.fetchUserStats().then(setStats).catch(() => null)
     } catch {
       /* silent */
     } finally {
@@ -685,7 +696,7 @@ export default function UserListPage() {
         </div>
 
         {/* Table */}
-        <div className="rounded-xl border border-border bg-card shadow-sm">
+        <div className="overflow-x-auto rounded-xl border border-border bg-card shadow-sm">
           <table className="w-full min-w-[640px] text-sm">
             <thead className="sticky top-0 border-b border-border bg-muted/60 text-xs uppercase tracking-wide text-muted-foreground">
               <tr>

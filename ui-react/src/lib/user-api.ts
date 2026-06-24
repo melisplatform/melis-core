@@ -1,5 +1,19 @@
 const XHR_HEADER = { 'X-Requested-With': 'XMLHttpRequest' } as const
 
+// ─── Signal « liste périmée » ───────────────────────────────────────────────────
+// La liste Users est montée en permanence (Shell) → elle ne se re-monte pas au retour
+// depuis le formulaire. Après un save (création/édition), le formulaire pose ce flag ;
+// la liste le consomme quand on revient sur sa route et refetch.
+let _usersListStale = false
+/** À appeler après création/édition/suppression d'un utilisateur. */
+export function markUsersListStale(): void { _usersListStale = true }
+/** Renvoie true UNE fois si la liste a été marquée périmée (puis remet à false). */
+export function consumeUsersListStale(): boolean {
+  const stale = _usersListStale
+  _usersListStale = false
+  return stale
+}
+
 // ─── Types ────────────────────────────────────────────────────────────────────
 
 export interface UserRole {

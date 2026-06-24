@@ -181,11 +181,12 @@ function makeSolidM(color: string): LucideIcon {
 }
 
 // Solid-color M icons per module
-const MelisCoreIcon     = makeSolidM('#f97316')  // orange
-const MelisCmsIcon      = makeSolidM('#22c55e')  // green
-const MelisMarketingIcon = makeSolidM('#a855f7') // purple
-const MelisCommerceIcon = makeSolidM('#3b82f6')  // blue
-const MelisDefaultIcon  = makeSolidM('currentColor')
+const MelisCoreIcon        = makeSolidM('#f97316')  // orange
+const MelisCmsIcon         = makeSolidM('#22c55e')  // green
+const MelisMarketingIcon   = makeSolidM('#a855f7')  // purple
+const MelisCommerceIcon    = makeSolidM('#3b82f6')  // blue
+const MelisMarketplaceIcon = makeSolidM('#ef4444')  // red
+const MelisDefaultIcon     = makeSolidM('currentColor')
 
 // Melis AI: pink → purple → cyan gradient (from melis-ai-hero.svg)
 const MelisAiIcon = (({ className }: { className?: string }) =>
@@ -203,13 +204,14 @@ const MelisAiIcon = (({ className }: { className?: string }) =>
   )
 ) as unknown as LucideIcon
 
-function getMelisIcon(name: string): LucideIcon {
-  const n = name.toLowerCase()
-  if (n.includes('ai'))         return MelisAiIcon
-  if (n.includes('core'))       return MelisCoreIcon
-  if (n.includes('cms'))        return MelisCmsIcon
-  if (n.includes('marketing'))  return MelisMarketingIcon
-  if (n.includes('commerce'))   return MelisCommerceIcon
+function getMelisIcon(name: string, key = ''): LucideIcon {
+  const n = (name + ' ' + key).toLowerCase()
+  if (n.includes('ai'))                                          return MelisAiIcon
+  if (n.includes('core'))                                        return MelisCoreIcon
+  if (n.includes('cms'))                                         return MelisCmsIcon
+  if (n.includes('marketing'))                                   return MelisMarketingIcon
+  if (n.includes('commerce'))                                    return MelisCommerceIcon
+  if (n.includes('marketplace') || n.includes('market_place'))  return MelisMarketplaceIcon
   return MelisDefaultIcon
 }
 
@@ -236,7 +238,7 @@ function getToolRoute(node: melisApi.ApiMenuNode, section: string): string {
 // ─── API → NavNode[] ─────────────────────────────────────────────────────────
 
 function apiNodeToNavNode(node: melisApi.ApiMenuNode, depth = 0, section = ''): NavNode {
-  const isMelisModule = depth === 0 && /melis/i.test(node.name)
+  const isMelisModule = depth === 0 && (/melis/i.test(node.name) || /melis/i.test(node.key))
   // The URL prefix = the TOP-LEVEL section the tool appears under (kebab of its name),
   // regardless of which code module owns the tool. Captured at depth 0 and threaded down.
   const sec = depth === 0 ? sectionSlug(node.name) : section
@@ -252,7 +254,7 @@ function apiNodeToNavNode(node: melisApi.ApiMenuNode, depth = 0, section = ''): 
   return {
     key:         node.key,
     label:       node.name,
-    icon:        isMelisModule ? getMelisIcon(node.name) : faToLucide(node.icon || 'fa-cube'),
+    icon:        isMelisModule ? getMelisIcon(node.name, node.key) : faToLucide(node.icon || 'fa-cube'),
     to:          node.isTool ? getToolRoute(node, sec) : zoneLeafRoute,
     isTool:      node.isTool || isZoneLeaf,
     hasNavChild: node.hasNavChild,

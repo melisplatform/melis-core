@@ -27,7 +27,13 @@ function PageLoader() {
 }
 
 function ShellInner() {
-  const [collapsed, setCollapsed] = useState(false)
+  // Start collapsed on narrow viewports; auto-collapse again if window shrinks below 768px.
+  const [collapsed, setCollapsed] = useState(() => window.innerWidth < 1024)
+  useEffect(() => {
+    const onResize = () => { if (window.innerWidth < 768) setCollapsed(true) }
+    window.addEventListener('resize', onResize, { passive: true })
+    return () => window.removeEventListener('resize', onResize)
+  }, [])
   const location = useLocation()
   const bricks = useBricks()
   useToolRoutesVersion() // re-resolve the active zone once the tool-routes registry populates

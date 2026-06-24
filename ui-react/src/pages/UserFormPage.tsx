@@ -383,6 +383,8 @@ export default function UserFormPage() {
       if (form.password) payload.password = form.password
       const res = await userApi.saveUser(payload)
       const savedId = res.id
+      // La liste (montée en permanence) doit se recharger au retour pour refléter ce save.
+      userApi.markUsersListStale()
       setSaved(true)
       if (!isEdit) closeSubTab(`${base}/new`)
       if (res.self) {

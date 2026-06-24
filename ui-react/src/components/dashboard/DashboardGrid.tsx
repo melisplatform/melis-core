@@ -100,6 +100,16 @@ export function DashboardGrid({
         float: false,
         animate: true,
         resizable: { handles: 'se' },
+        // Responsive : repli automatique des colonnes selon la largeur du conteneur.
+        // < 640px → 1 colonne (widgets empilés), < 1024px → 6 colonnes, sinon 12.
+        // GridStack mémorise le layout 12-col d'origine et le restaure en élargissant.
+        columnOpts: {
+          layout: 'moveScale',
+          breakpoints: [
+            { w: 640, c: 1 },
+            { w: 1024, c: 6 },
+          ],
+        },
         // Accepte les éléments internes du grid ET les items palette (setupDragIn).
         acceptWidgets: (el: Element) => !!(el as HTMLElement & { gridstackNode?: { id?: string } }).gridstackNode?.id,
       },
@@ -109,6 +119,9 @@ export function DashboardGrid({
 
     grid.on('change', () => {
       if (mutating.current) return
+      // Ne persiste QUE le layout en pleine largeur (12 col). Un reflow responsive
+      // (1 ou 6 col) ne doit pas écraser les positions desktop sauvegardées.
+      if (grid.getColumn() !== GRID_COLS) return
       onChangeRef.current(readLayout(grid, allWidgetsRef.current))
     })
 
@@ -127,9 +140,9 @@ export function DashboardGrid({
         ) as HTMLElement | null
         if (content) content.dataset.widgetId = id
       }
-      // Reconstruit les slots et notifie le parent.
+      // Reconstruit les slots et notifie le parent (sauf en mode responsive replié).
       setSlots(slotsFromGrid(grid))
-      onChangeRef.current(readLayout(grid, allWidgetsRef.current))
+      if (grid.getColumn() === GRID_COLS) onChangeRef.current(readLayout(grid, allWidgetsRef.current))
     })
 
     return () => {
