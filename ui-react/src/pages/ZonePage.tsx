@@ -1,8 +1,10 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useLocation } from 'react-router-dom'
+import { Loader2, ShieldAlert } from 'lucide-react'
 import { useTabs } from '@/components/tabs/tab-store'
 import { useZonePool } from '@/components/zone/zone-pool'
 import { melisKeyForRoute, toolBaseRoute, useToolRoutesVersion } from '@/lib/tool-routes'
+import { useI18n } from '@/i18n/i18n-context'
 
 function formatSeg(path: string): string {
   const seg = path.split('/').filter(Boolean).pop() ?? path
@@ -18,6 +20,7 @@ function formatSeg(path: string): string {
  */
 export default function ZonePage() {
   const { pathname }      = useLocation()
+  const { t }             = useI18n()
   useToolRoutesVersion()  // re-resolve once the registry is populated (deep-link cold load)
   const { openTab, tabs } = useTabs()
   const { register }      = useZonePool()
@@ -35,6 +38,34 @@ export default function ZonePage() {
     register(melisKey, `/melis/react-tool-page?key=${encodeURIComponent(melisKey)}`)
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [melisKey, base])
+
+  // The tool-routes registry is built from the menu, which the backend filters by RIGHTS. So an
+  // unresolvable melisKey on a /[section]/[tool] URL = a tool the current user can't access (or an
+  // unknown one) — block it instead of showing a blank shell. A short grace avoids flashing the
+  // message on a cold deep-link before the registry has finished loading.
+  const [graceOver, setGraceOver] = useState(false)
+  useEffect(() => {
+    setGraceOver(false)
+    const t = window.setTimeout(() => setGraceOver(true), 1200)
+    return () => window.clearTimeout(t)
+  }, [pathname])
+
+  if (!melisKey) {
+    if (!graceOver) {
+      return (
+        <div className="flex h-full w-full items-center justify-center">
+          <Loader2 className="size-6 animate-spin text-muted-foreground" />
+        </div>
+      )
+    }
+    return (
+      <div className="flex h-full w-full flex-col items-center justify-center gap-2 p-8 text-center">
+        <ShieldAlert className="size-8 text-muted-foreground/70" />
+        <p className="text-sm font-medium text-foreground/80">{t('access.denied')}</p>
+        <p className="max-w-md text-xs text-muted-foreground">{t('access.denied_sub')}</p>
+      </div>
+    )
+  }
 
   return <div className="h-full w-full" />
 }

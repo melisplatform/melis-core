@@ -12,7 +12,7 @@ import { ZonePoolProvider } from '@/components/zone/zone-pool'
 import { ZoneFrames } from '@/components/zone/ZoneFrames'
 import { SubTabProvider } from '@/components/tabs/sub-tab-store'
 import { ToolTabBridgeProvider } from '@/components/tabs/tool-tab-bridge'
-import { useBricks, brickRoute } from '@/lib/bricks'
+import { useBricks, brickRoute, refreshActiveModules } from '@/lib/bricks'
 import { PERSISTENT_MODULES } from '@/lib/module-registry'
 import { melisKeyForRoute, routeForForward, useToolRoutesVersion } from '@/lib/tool-routes'
 
@@ -31,6 +31,13 @@ function ShellInner() {
   const location = useLocation()
   const bricks = useBricks()
   useToolRoutesVersion() // re-resolve the active zone once the tool-routes registry populates
+
+  // Re-check which modules are active on each navigation (cheap no-store JSON), so a
+  // module toggled in the Modules tool is reflected when the user reopens a gated tool
+  // (e.g. the Users « Rôle » filter/column) — no full page reload needed. See refreshActiveModules.
+  useEffect(() => {
+    refreshActiveModules()
+  }, [location.pathname])
 
   // When a tab is closed, destroy the persistent iframe of a brick tool (singleton kept in
   // <body> as #melis-brick-frame-<id> to avoid reload on tab switch) — so reopening reloads it

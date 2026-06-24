@@ -113,8 +113,8 @@ export async function fetchUserById(id: number): Promise<UserDetail> {
   return apiFetch<UserDetail>(`/melis/react-api/users/${id}`)
 }
 
-export async function saveUser(payload: UserSavePayload): Promise<{ id: number }> {
-  return apiFetch<{ id: number }>('/melis/react-api/users/save', {
+export async function saveUser(payload: UserSavePayload): Promise<{ id: number; self?: boolean }> {
+  return apiFetch<{ id: number; self?: boolean }>('/melis/react-api/users/save', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(payload),

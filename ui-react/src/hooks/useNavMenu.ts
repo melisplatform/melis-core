@@ -50,6 +50,8 @@ export interface NavNode {
   hasNavChild: boolean
   /** Données de routage Melis pour charger l'outil. */
   forward: melisApi.ApiMenuNode['forward'] | null
+  /** Nombre d'enfants dans la config (non filtré par droits) — voir collapseSingleTool. */
+  configChildCount?: number
   children: NavNode[]
 }
 
@@ -255,6 +257,7 @@ function apiNodeToNavNode(node: melisApi.ApiMenuNode, depth = 0, section = ''): 
     isTool:      node.isTool || isZoneLeaf,
     hasNavChild: node.hasNavChild,
     forward:     node.isTool ? node.forward : null,
+    configChildCount: node.configChildCount,
     children:    node.children.map(child => apiNodeToNavNode(child, depth + 1, sec)),
   }
 }
@@ -284,8 +287,12 @@ function collapseSingleTool(node: NavNode): NavNode {
   const children = node.children.map(collapseSingleTool)
   if (children.length === 1 && children[0].isTool && children[0].children.length === 0) {
     const only = children[0]
-    // Rule 1: section wrapping a single tool leaf.
-    if (!node.isTool) {
+    // Rule 1: a wrapper that INHERENTLY holds a single tool (e.g. the "SLIDER" section → "Slider").
+    // Gate on configChildCount (unfiltered count from the backend): a multi-tool CATEGORY in which the
+    // user only has one tool granted (e.g. "Administration" with just "User management") must KEEP its
+    // header, not be replaced by its lone visible tool. `?? 1` preserves old behaviour for nodes without
+    // the field (static fallback nav).
+    if (!node.isTool && (node.configChildCount ?? 1) === 1) {
       return {
         ...node,
         label:       only.label,

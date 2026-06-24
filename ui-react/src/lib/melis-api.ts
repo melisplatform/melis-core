@@ -203,6 +203,9 @@ export interface ApiMenuNode {
     jsdatas?: Record<string, unknown>
   }
   hasNavChild: boolean
+  /** Unfiltered child count (before rights filtering) — lets the nav avoid collapsing a multi-tool
+   *  category in which the user only has a single tool granted. See collapseSingleTool. */
+  configChildCount?: number
   children: ApiMenuNode[]
 }
 
@@ -212,9 +215,13 @@ export interface ApiMenuNode {
  *
  * Retourne `null` en cas d'erreur (non-authentifié, serveur indisponible).
  */
-export async function fetchMenu(): Promise<ApiMenuNode[] | null> {
+/**
+ * Fetch the left-menu tool tree. `full=true` returns the UNFILTERED tree (every tool, not just the
+ * current user's) — used only by the user-rights editor (server restricts it to rights managers).
+ */
+export async function fetchMenu(full = false): Promise<ApiMenuNode[] | null> {
   try {
-    const res = await fetch('/melis/react-api/menu', {
+    const res = await fetch(`/melis/react-api/menu${full ? '?full=1' : ''}`, {
       headers: { ...XHR_HEADER },
       credentials: 'include',
     })

@@ -43,6 +43,43 @@ function notify() {
   listeners.forEach((l) => l())
 }
 
+// ── Active-module detection ───────────────────────────────────────────────────
+// The set of active Melis module names (those exposing a React brick). Kept
+// SEPARATE from `bricks` (which the lazy loader mutates by splicing entries) and
+// refreshable on its own — so module-gated UI (useModuleActive) can react to a
+// module being enabled/disabled WITHOUT a full page reload (see refreshActiveModules).
+let activeModules = new Set<string>()
+const activeModuleListeners = new Set<() => void>()
+
+function notifyActiveModules() {
+  activeModuleListeners.forEach((l) => l())
+}
+
+/** Replace the active-module set; notify consumers only when it actually changed. */
+function setActiveModules(names: string[]) {
+  const next = new Set(names)
+  const changed = next.size !== activeModules.size || [...next].some((n) => !activeModules.has(n))
+  if (changed) {
+    activeModules = next
+    notifyActiveModules()
+  }
+}
+
+/**
+ * Re-fetch ONLY the active-modules list (cheap, no-store JSON — no bundle loading)
+ * and update useModuleActive consumers. Called on navigation (see Shell) so toggling
+ * a module in the Modules tool is reflected when the user reopens a gated tool,
+ * instead of requiring a full page reload.
+ */
+export async function refreshActiveModules(): Promise<void> {
+  try {
+    const list = await melisApi.fetchReactModules()
+    setActiveModules(list.map((m) => m.module))
+  } catch {
+    /* keep the previous set on error */
+  }
+}
+
 /** Where brick bundles self-register their components, keyed by brick id. */
 type RegisteredBrick = { Component?: ComponentType; Sidebar?: ComponentType; Header?: ComponentType }
 function componentRegistry(): Record<string, RegisteredBrick> {
@@ -91,6 +128,40 @@ export function headerBricks(): BrickDef[] {
 }
 
 /**
+ * Is a given Melis module active? Detected via the presence of its React brick
+ * in the /react-modules list (a module is listed *only* when it is active).
+ *
+ * Lets a NATIVE page conditionally render UI contributed by an optional module —
+ * e.g. the « Rôle » filter/column of the Users tool, which is brought by
+ * MelisSmallBusiness and must not appear when that module is off.
+ *
+ * Reads the dedicated `activeModules` set (refreshed on navigation via
+ * {@link refreshActiveModules}), not `bricks` — so it stays correct even after a
+ * module is toggled mid-session, without a full reload.
+ *
+ * ⚠️ Reliable only for modules that ship a brick (`brick.manifest.json`). For a
+ * module without a brick, a different backend signal would be needed.
+ */
+export function isModuleActive(moduleName: string): boolean {
+  return activeModules.has(moduleName)
+}
+
+/**
+ * Reactive variant of {@link isModuleActive}: re-renders the caller whenever the
+ * active-modules set changes (initial load, or a refresh after a module toggle).
+ */
+export function useModuleActive(moduleName: string): boolean {
+  const [, force] = useReducer((x: number) => x + 1, 0)
+  useEffect(() => {
+    activeModuleListeners.add(force)
+    return () => {
+      activeModuleListeners.delete(force)
+    }
+  }, [])
+  return activeModules.has(moduleName)
+}
+
+/**
  * Fetches the manifest of active bricks and registers their routes — WITHOUT loading any bundle.
  * Each brick's IIFE is downloaded lazily, only when its route is first visited (React.lazy +
  * Suspense). This avoids pulling down several MB of JS at boot when the user may never visit
@@ -109,6 +180,7 @@ export async function loadBricks(): Promise<void> {
   status = 'loading'
   try {
     const list = await melisApi.fetchReactModules()
+    setActiveModules(list.map((m) => m.module))
     const next: BrickDef[] = []
 
     for (const m of list) {
@@ -211,6 +283,7 @@ export function resetBricks(): void {
   bricks = []
   for (const k of Object.keys(BRICK_ROUTES)) delete BRICK_ROUTES[k]
   status = 'idle'
+  setActiveModules([])
   notify()
 }
 

@@ -15,10 +15,14 @@
  */
 
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { CheckSquare, ChevronRight, Loader2, MinusSquare, Square } from 'lucide-react'
+import { Boxes, CheckSquare, ChevronRight, FileText, LayoutDashboard, Loader2, MinusSquare, Square } from 'lucide-react'
 import type { ApiMenuNode } from '@/lib/melis-api'
-import { fetchMenu } from '@/lib/melis-api'
+import { fetchMenu, fetchReactModules } from '@/lib/melis-api'
 import { cn } from '@/lib/utils'
+import { PagesRightsPanel } from '@/components/PagesRightsPanel'
+import { ALL_PAGES, parsePagesRights, pagesRightsIds } from '@/lib/pages-rights-api'
+import { DashboardPluginsRightsPanel } from '@/components/DashboardPluginsRightsPanel'
+import { DASHBOARD_ALL, dashboardRightsIds, fetchDashboardPluginRights, parseDashboardRights, type DashboardPluginRight } from '@/lib/dashboard-rights-api'
 
 // ─── Pure helpers ─────────────────────────────────────────────────────────────
 
@@ -92,6 +96,8 @@ function parseCheckedTools(xml: string, navTree: ApiMenuNode[]): Set<string> {
 function buildRightsXml(
   checkedTools: Set<string>,
   navTree: ApiMenuNode[],
+  checkedPages: Set<number>,
+  checkedDash: Set<string>,
   originalXml: string,
 ): string {
   // Extrait les <id> d'une section dans l'XML original
@@ -107,11 +113,11 @@ function buildRightsXml(
     } catch { return [] }
   }
 
-  const pagesIds = extractIds('meliscms_pages')
-  const dashIds  = extractIds('melis_dashboardplugin')
-  const defaultDash = dashIds.length
-    ? dashIds
-    : ['melis_dashboardplugin_root', 'MelisCoreDashboardAnnouncementPlugin']
+  // Editable sections write from their checked state (Pages, Dashboard plugins). Interface
+  // exclusions are not edited yet → preserved verbatim from the original so saving never wipes them.
+  const interfaceIds = extractIds('meliscore_interface')
+  const pagesIds = pagesRightsIds(checkedPages).map(String)
+  const dashIds  = dashboardRightsIds(checkedDash)
 
   const L: string[] = [
     '<?xml version="1.0" encoding="UTF-8"?><document type="MelisUserRights" author="MelisTechnology" version="2.0">',
@@ -119,6 +125,7 @@ function buildRightsXml(
     ...pagesIds.map((id) => `\t<id>${id}</id>`),
     '</meliscms_pages>',
     '<meliscore_interface>',
+    ...interfaceIds.map((id) => `\t<id>${id}</id>`),
     '</meliscore_interface>',
     '<meliscore_leftmenu>',
   ]
@@ -129,22 +136,29 @@ function buildRightsXml(
     const checkedHere = allTools.filter((t) => checkedTools.has(nodeKey(t)))
 
     L.push(`\t<${sk}>`)
-    if (checkedHere.length > 0) {
-      if (checkedHere.length === allTools.length) {
-        // Toute la section → root
-        L.push(`\t\t<id>${sk}_root</id>`)
-      } else {
-        for (const t of checkedHere) {
-          L.push(`\t\t<id>${nodeKey(t)}</id>`)
-        }
-      }
+    // Write EXPLICIT tool ids — NOT `<section>_root`. canAccess()/isAccessible() only grant a tool
+    // via its own id (or the global `meliscore_leftmenu_root`); a per-section `<section>_root` is
+    // NOT honored for tools nested in sub-categories (e.g. Users under "Administration"), so it
+    // produced rights that granted NOTHING → an empty menu. Listing each id is verified to work.
+    for (const t of checkedHere) {
+      // A node that is itself `isTool` AND has sub-tools (e.g. the section `meliscore_toolstree_section`,
+      // or the calendar wrapper `meliscalendar_leftnemu`) is a CONTAINER: writing its id makes the
+      // backend canAccess() grant its WHOLE subtree (isParentOf → grantAccess). That's only correct when
+      // the whole subtree is checked — otherwise unchecking one child has NO effect (it stays granted via
+      // the parent). So for a PARTIALLY-checked container, skip its own id and let the checked leaves below
+      // carry the grant. Fully-checked container (or a leaf) → write its id (its child also needs it, e.g.
+      // calendar's leaf is only granted when its `meliscalendar_leftnemu` parent is in the rights).
+      const subTools = getToolsFlat(t.children ?? [])
+      const partiallyChecked = subTools.length > 0 && !subTools.every((s) => checkedTools.has(nodeKey(s)))
+      if (partiallyChecked) continue
+      L.push(`\t\t<id>${nodeKey(t)}</id>`)
     }
     L.push(`\t</${sk}>`)
   }
 
   L.push('</meliscore_leftmenu>')
   L.push('<melis_dashboardplugin>')
-  defaultDash.forEach((id) => L.push(`\t<id>${id}</id>`))
+  dashIds.forEach((id) => L.push(`\t<id>${id}</id>`))
   L.push('</melis_dashboardplugin>')
   L.push('</document>')
 
@@ -360,6 +374,33 @@ function SectionPanel({
   )
 }
 
+// ─── Category (level-1 grouping: Outils, Pages, …) ───────────────────────────
+
+function CategoryHeader({ icon: Icon, title, accent }: { icon: React.ElementType; title: string; accent: string }) {
+  return (
+    <div className="flex items-center gap-2 px-0.5">
+      <span className="flex size-5 items-center justify-center rounded" style={{ backgroundColor: `${accent}22`, color: accent }}>
+        <Icon className="size-3.5" />
+      </span>
+      <span className="text-[11px] font-bold uppercase tracking-[0.08em] text-foreground/75">{title}</span>
+      <div className="ml-1 h-px flex-1" style={{ backgroundColor: `${accent}33` }} />
+    </div>
+  )
+}
+
+function Category({ icon, title, accent, children }: {
+  icon: React.ElementType; title: string; accent: string; children: React.ReactNode
+}) {
+  return (
+    <div className="space-y-2">
+      <CategoryHeader icon={icon} title={title} accent={accent} />
+      <div className="space-y-2 border-l-2 pl-3" style={{ borderColor: `${accent}33` }}>
+        {children}
+      </div>
+    </div>
+  )
+}
+
 // ─── RightsTreeView ──────────────────────────────────────────────────────────
 
 export interface RightsTreeViewProps {
@@ -371,18 +412,33 @@ export function RightsTreeView({ rights, onChange }: RightsTreeViewProps) {
   const [navTree, setNavTree] = useState<ApiMenuNode[] | null>(null)
   const [navLoading, setNavLoading] = useState(true)
   const [checkedTools, setCheckedTools] = useState<Set<string>>(new Set())
+  const [checkedPages, setCheckedPages] = useState<Set<number>>(new Set())
+  const [checkedDash, setCheckedDash] = useState<Set<string>>(new Set())
+  const [dashPlugins, setDashPlugins] = useState<DashboardPluginRight[]>([])
+  const [cmsActive, setCmsActive] = useState(false)
 
   // Tracks the last XML we ourselves emitted via onChange — to ignore those echoes
   const ownXmlRef = useRef('')
   // Stores the original XML (server-loaded) to preserve non-leftmenu sections on rebuild
   const originalXmlRef = useRef(rights)
 
-  // Load nav tree once
+  // Load the FULL tool tree (full=true) — the rights editor must show every tool to grant it,
+  // not only the editor's own accessible tools.
   useEffect(() => {
-    fetchMenu().then((tree) => {
+    fetchMenu(true).then((tree) => {
       setNavTree(tree)
       setNavLoading(false)
     })
+  }, [])
+
+  // Is the MelisCms module active? The "Pages" section is modular — shown only when CMS is present.
+  useEffect(() => {
+    fetchReactModules().then((mods) => setCmsActive(mods.some((m) => m.module === 'MelisCms')))
+  }, [])
+
+  // Dashboard plugins for the rights editor (authoritative, module-ordered).
+  useEffect(() => {
+    fetchDashboardPluginRights().then(setDashPlugins)
   }, [])
 
   // Re-parse whenever rights changes from OUTSIDE (server load), not from our own onChange
@@ -391,15 +447,55 @@ export function RightsTreeView({ rights, onChange }: RightsTreeViewProps) {
     if (rights === ownXmlRef.current) return // our own emit, ignore
     originalXmlRef.current = rights
     setCheckedTools(parseCheckedTools(rights, navTree))
+    setCheckedPages(parsePagesRights(rights))
+    setCheckedDash(parseDashboardRights(rights))
   }, [navTree, rights])
+
+  function emit(tools: Set<string>, pages: Set<number>, dash: Set<string>) {
+    if (!navTree) return
+    const xml = buildRightsXml(tools, navTree, pages, dash, originalXmlRef.current)
+    ownXmlRef.current = xml
+    onChange(xml)
+  }
 
   function updateChecked(next: Set<string>) {
     setCheckedTools(next)
-    if (navTree) {
-      const xml = buildRightsXml(next, navTree, originalXmlRef.current)
-      ownXmlRef.current = xml
-      onChange(xml)
-    }
+    emit(next, checkedPages, checkedDash)
+  }
+
+  function onTogglePage(pageId: number, v: boolean) {
+    const next = new Set(checkedPages)
+    if (v) next.add(pageId); else next.delete(pageId)
+    setCheckedPages(next)
+    emit(checkedTools, next, checkedDash)
+  }
+
+  function onToggleAll(v: boolean) {
+    const next = new Set(checkedPages)
+    if (v) next.add(ALL_PAGES); else next.delete(ALL_PAGES)
+    setCheckedPages(next)
+    emit(checkedTools, next, checkedDash)
+  }
+
+  function onToggleDash(key: string, v: boolean) {
+    const next = new Set(checkedDash)
+    if (v) next.add(key); else next.delete(key)
+    setCheckedDash(next)
+    emit(checkedTools, checkedPages, next)
+  }
+
+  function onToggleAllDash(v: boolean) {
+    const next = new Set(checkedDash)
+    if (v) next.add(DASHBOARD_ALL); else next.delete(DASHBOARD_ALL)
+    setCheckedDash(next)
+    emit(checkedTools, checkedPages, next)
+  }
+
+  function onToggleDashMany(keys: string[], v: boolean) {
+    const next = new Set(checkedDash)
+    keys.forEach((k) => (v ? next.add(k) : next.delete(k)))
+    setCheckedDash(next)
+    emit(checkedTools, checkedPages, next)
   }
 
   function onToggleTool(key: string, v: boolean) {
@@ -452,17 +548,44 @@ export function RightsTreeView({ rights, onChange }: RightsTreeViewProps) {
         </span>
       </div>
 
-      {/* Section panels */}
-      <div className="space-y-2">
-        {navTree.map((section) => (
-          <SectionPanel
-            key={nodeKey(section)}
-            section={section}
-            checkedTools={checkedTools}
-            onToggleTool={onToggleTool}
-            onToggleGroup={onToggleGroup}
-          />
-        ))}
+      {/* Level 1 = categories (Outils, Pages, …) ; level 2 = their sections/items. */}
+      <div className="space-y-4">
+        <Category icon={Boxes} title="Outils" accent="#16a34a">
+          {navTree.map((section) => (
+            <SectionPanel
+              key={nodeKey(section)}
+              section={section}
+              checkedTools={checkedTools}
+              onToggleTool={onToggleTool}
+              onToggleGroup={onToggleGroup}
+            />
+          ))}
+        </Category>
+
+        {/* Dashboard Plugins (core section). Plugins themselves come from every active module, in
+            module-merge order (MelisCore → MelisCms → …) — same order the backend returns. */}
+        {dashPlugins.length > 0 && (
+          <Category icon={LayoutDashboard} title="Dashboard Plugins" accent="#7c3aed">
+            <DashboardPluginsRightsPanel
+              plugins={dashPlugins}
+              checked={checkedDash}
+              onToggle={onToggleDash}
+              onToggleMany={onToggleDashMany}
+              onToggleAll={onToggleAllDash}
+            />
+          </Category>
+        )}
+
+        {/* Modular category: "Pages" — contributed by MelisCms, shown only when the module is active. */}
+        {cmsActive && (
+          <Category icon={FileText} title="Pages" accent="#2563eb">
+            <PagesRightsPanel
+              checkedPages={checkedPages}
+              onTogglePage={onTogglePage}
+              onToggleAll={onToggleAll}
+            />
+          </Category>
+        )}
       </div>
     </div>
   )

@@ -17,6 +17,7 @@ interface ListCache {
 }
 let _cache: ListCache | null = null
 import { useLocation, useNavigate } from 'react-router-dom'
+import { routeForForward } from '@/lib/tool-routes'
 import {
   ArrowDown, ArrowUp, ArrowUpDown, Columns3, Edit2, FileDown, FileText, GripVertical,
   Loader2, Pin, Plus, RotateCcw, Search, Shield, Trash2,
@@ -31,6 +32,8 @@ import * as userApi from '@/lib/user-api'
 import * as XLSX from 'xlsx'
 import { useTabs } from '@/components/tabs/tab-store'
 import { MelisClassicFrame, ViewModeToggle, type ViewMode } from '@/components/MelisClassicView'
+import { toolHasViewToggle } from '@/lib/module-registry'
+import { useModuleActive } from '@/lib/bricks'
 
 // ─── KPI card ─────────────────────────────────────────────────────────────────
 
@@ -384,10 +387,21 @@ export default function UserListPage() {
   const navigate = useNavigate()
   const location = useLocation()
   const { openTab } = useTabs()
+  // The module is mounted at a tree-derived route (App.tsx uses routeForForward), NOT the static
+  // '/users'. Navigate/openTab via the SAME derived route, else edit links hit a non-existent
+  // route → blank page (regression introduced when the BO switched to tree-driven URLs).
+  const base = routeForForward('MelisCore/ToolUser') ?? '/users'
 
   // ── View mode toggle ────────────────────────────────────────────────────────
   const [mode, setMode] = useState<ViewMode>(_cache?.mode ?? 'react')
   const [iframeLoaded, setIframeLoaded] = useState(_cache?.iframeLoaded ?? false)
+  // Flag par-outil (cf. module-registry.ts). Toggle désactivé → on masque le
+  // bouton ET on force la vue React, même si le cache était resté en legacy.
+  const showViewToggle = toolHasViewToggle('users')
+  const effectiveMode: ViewMode = showViewToggle ? mode : 'react'
+  // La notion de rôle (filtre + données /roles) est apportée par MelisSmallBusiness :
+  // n'afficher/charger le filtre Rôles que si ce module est actif.
+  const rolesModuleActive = useModuleActive('MelisSmallBusiness')
 
   // ── Data state ──────────────────────────────────────────────────────────────
   const [items, setItems]     = useState<userApi.UserItem[]>(_cache?.items ?? [])
@@ -423,7 +437,11 @@ export default function UserListPage() {
   const [deleting, setDeleting] = useState(false)
 
   // ── Columns + export ────────────────────────────────────────────────────────
-  const [cols, setCols]             = useState<ColDef[]>(loadUserCols)
+  const [rawCols, setCols]          = useState<ColDef[]>(loadUserCols)
+  // La colonne « Rôle » est apportée par MelisSmallBusiness : on la retire de
+  // partout (en-tête, cellules, gestionnaire de colonnes, export) quand le
+  // module est inactif. Auto-réparateur : loadUserCols la réinsère si réactivé.
+  const cols = rolesModuleActive ? rawCols : rawCols.filter(c => c.id !== 'role')
   const [showColMgr, setShowColMgr] = useState(false)
   const [showExport, setShowExport] = useState(false)
   const colMgrRef = useRef<HTMLDivElement>(null)
@@ -458,10 +476,10 @@ export default function UserListPage() {
   // Sauvegarde le state dans le cache au démontage (navigation vers /users/:id)
   // Enregistre l'onglet quand la page est active (pattern commun à DashboardPage, NewsListPage…)
   useEffect(() => {
-    if (location.pathname === '/users') {
-      openTab({ id: '/users', label: 'Utilisateurs', path: '/users' })
+    if (location.pathname === base) {
+      openTab({ id: base, label: 'Utilisateurs', path: base })
     }
-  }, [location.pathname, openTab])
+  }, [location.pathname, openTab, base])
 
   // UserListPage est toujours montée (Shell) — le cache n'est utile qu'au tout premier chargement
   const cacheRef = useRef({ items, total, page, search, searchInput, statusFilter, roleFilter, stats, roles, mode, iframeLoaded })
@@ -474,9 +492,10 @@ export default function UserListPage() {
     userApi.fetchUserStats().then(setStats).catch(() => null)
   }, [])
   useEffect(() => {
+    if (!rolesModuleActive) return
     if (_cache?.roles?.length) return
     userApi.fetchRoles().then(setRoles).catch(() => null)
-  }, [])
+  }, [rolesModuleActive])
 
   // Reload list on filter / page change
   useEffect(() => {
@@ -542,7 +561,7 @@ export default function UserListPage() {
   }
 
   return (
-    <div className={cn('flex flex-col gap-6 p-6', mode === 'iframe' ? 'h-full' : 'flex-1')}>
+    <div className={cn('flex flex-col gap-6 p-6', effectiveMode === 'iframe' ? 'h-full' : 'flex-1')}>
       {/* Header */}
       <div className="flex items-center justify-between gap-4">
         <div>
@@ -550,13 +569,15 @@ export default function UserListPage() {
           <p className="text-sm text-muted-foreground">Gestion des comptes back-office Melis</p>
         </div>
         <div className="flex items-center gap-2">
-          <ViewModeToggle
-            mode={mode}
-            onChange={(m) => {
-              setMode(m)
-              if (m === 'iframe') setIframeLoaded(true)
-            }}
-          />
+          {showViewToggle && (
+            <ViewModeToggle
+              mode={effectiveMode}
+              onChange={(m) => {
+                setMode(m)
+                if (m === 'iframe') setIframeLoaded(true)
+              }}
+            />
+          )}
 
           <button
             type="button"
@@ -566,7 +587,7 @@ export default function UserListPage() {
           >
             <RotateCcw className={cn('size-3.5', refreshing && 'animate-spin')} />
           </button>
-          <Button size="sm" onClick={() => navigate('/users/new')}>
+          <Button size="sm" onClick={() => navigate(`${base}/new`)}>
             <Plus className="size-4" />
             Nouvel utilisateur
           </Button>
@@ -577,12 +598,12 @@ export default function UserListPage() {
       <MelisClassicFrame
         melisKey="meliscore_tool_user"
         title="User Management — Vue Melis"
-        visible={mode === 'iframe'}
+        visible={effectiveMode === 'iframe'}
         loaded={iframeLoaded}
       />
 
       {/* React native view */}
-      <div className={cn('flex flex-1 flex-col gap-4', mode === 'react' ? 'flex' : 'hidden')}>
+      <div className={cn('flex flex-1 flex-col gap-4', effectiveMode === 'react' ? 'flex' : 'hidden')}>
         {/* KPI cards */}
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
           <KpiCard icon={Users}     label="Total"      value={stats?.total      ?? null} color="bg-primary/10 text-primary" />
@@ -636,7 +657,7 @@ export default function UserListPage() {
             ))}
           </div>
 
-          {roles.length > 0 && (
+          {rolesModuleActive && roles.length > 0 && (
             <select
               value={roleFilter ?? ''}
               onChange={(e) => { setRoleFilter(e.target.value ? parseInt(e.target.value) : undefined); setPage(1); setItems([]) }}
@@ -737,7 +758,7 @@ export default function UserListPage() {
                       <div className="flex items-center justify-end gap-1">
                         <button
                           type="button"
-                          onClick={() => navigate(`/users/${user.id}`)}
+                          onClick={() => navigate(`${base}/${user.id}`)}
                           className="rounded p-1.5 hover:bg-accent transition-colors"
                           title="Modifier"
                         >

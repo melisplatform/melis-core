@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useSubTabs } from '@/components/tabs/sub-tab-store'
+import { clearTools, routeForForward } from '@/lib/tool-routes'
 import {
   Activity, Calendar, Copy, Cpu, Eye, EyeOff,
   KeyRound, Loader2, RefreshCw, RotateCcw, Save, Shield, ShieldCheck,
@@ -14,6 +15,7 @@ import { Badge } from '@/components/ui/badge'
 import { cn } from '@/lib/utils'
 import * as userApi from '@/lib/user-api'
 import { RightsTreeView } from '@/components/RightsTreeView'
+import { useModuleActive } from '@/lib/bricks'
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
@@ -288,12 +290,15 @@ export default function UserFormPage() {
   const isEdit   = Boolean(id)
   const userId   = id ? parseInt(id) : null
 
-  const subTabPath = userId ? `/users/${userId}` : '/users/new'
-  const { openTab: openSubTab, closeTab: closeSubTab, updateLabel: updateSubLabel } = useSubTabs('/users')
+  // Same as UserListPage: the tool mounts at a tree-derived route (App.tsx routeForForward),
+  // not '/users'. All in-tool navigation (back, save redirect, sub-tabs) must use it.
+  const base = routeForForward('MelisCore/ToolUser') ?? '/users'
+  const subTabPath = userId ? `${base}/${userId}` : `${base}/new`
+  const { openTab: openSubTab, closeTab: closeSubTab, updateLabel: updateSubLabel } = useSubTabs(base)
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
-    if (userId) closeSubTab('/users/new')
+    if (userId) closeSubTab(`${base}/new`)
     openSubTab({ id: subTabPath, label: isEdit ? 'Chargement…' : 'Nouvel utilisateur', path: subTabPath })
   }, [])
 
@@ -305,11 +310,15 @@ export default function UserFormPage() {
   const [saveError, setSaveError] = useState<string | null>(null)
   const [saved, setSaved]     = useState(false)
   const [activeTab, setActiveTab] = useState<Tab>('profil')
+  // Le rôle est apporté par MelisSmallBusiness : ne charger /roles et n'afficher
+  // le bloc « Rôle » que si ce module est actif.
+  const rolesModuleActive = useModuleActive('MelisSmallBusiness')
 
   useEffect(() => {
+    if (!rolesModuleActive) return
     if (_rolesCache) { setRoles(_rolesCache); return }
     userApi.fetchRoles().then(r => { _rolesCache = r; setRoles(r) }).catch(() => null)
-  }, [])
+  }, [rolesModuleActive])
 
   useEffect(() => {
     if (!isEdit || !userId) return
@@ -323,7 +332,7 @@ export default function UserFormPage() {
         roleId: user.roleId, status: user.status, isAdmin: user.isAdmin,
         tags: user.tags, password: '', confirmPassword: '', rights: user.rights ?? '',
       }))
-      .catch(() => navigate('/users'))
+      .catch(() => navigate(base))
       .finally(() => setLoading(false))
   }, [userId, isEdit, navigate])
 
@@ -372,10 +381,19 @@ export default function UserFormPage() {
         ...(form.rights !== undefined ? { rights: form.rights } : {}),
       }
       if (form.password) payload.password = form.password
-      const { id: savedId } = await userApi.saveUser(payload)
+      const res = await userApi.saveUser(payload)
+      const savedId = res.id
       setSaved(true)
-      if (!isEdit) closeSubTab('/users/new')
-      setTimeout(() => navigate(isEdit ? `/users/${savedId}` : '/users'), 600)
+      if (!isEdit) closeSubTab(`${base}/new`)
+      if (res.self) {
+        // Edited MY OWN user → my rights (and so the left menu, routes and access checks) may have
+        // changed. The backend refreshed the session identity; drop the stale tool-routes registry
+        // and do a full reload so everything re-evaluates with the new rights.
+        clearTools()
+        setTimeout(() => window.location.reload(), 700)
+        return
+      }
+      setTimeout(() => navigate(isEdit ? `${base}/${savedId}` : base), 600)
     } catch (err) {
       setSaveError(err instanceof Error ? err.message : 'Erreur lors de la sauvegarde')
     } finally { setSaving(false) }
@@ -551,15 +569,17 @@ export default function UserFormPage() {
               </button>
             </div>
 
-            <div className="rounded-xl border border-border bg-card p-4 shadow-sm">
-              <h3 className="mb-3 flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-                <Shield className="size-3.5" />Rôle
-              </h3>
-              <select value={form.roleId} onChange={(e) => set('roleId', parseInt(e.target.value))}
-                className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-ring">
-                {roles.map((r) => <option key={r.id} value={r.id}>{r.name}</option>)}
-              </select>
-            </div>
+            {rolesModuleActive && (
+              <div className="rounded-xl border border-border bg-card p-4 shadow-sm">
+                <h3 className="mb-3 flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                  <Shield className="size-3.5" />Rôle
+                </h3>
+                <select value={form.roleId} onChange={(e) => set('roleId', parseInt(e.target.value))}
+                  className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-ring">
+                  {roles.map((r) => <option key={r.id} value={r.id}>{r.name}</option>)}
+                </select>
+              </div>
+            )}
 
             <div className="rounded-xl border border-border bg-card p-4 shadow-sm">
               <h3 className="mb-3 flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wide text-muted-foreground">

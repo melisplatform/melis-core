@@ -80,6 +80,9 @@ const fr = {
 
   'common.coming_soon': 'Bientôt disponible',
   'common.coming_soon_sub': 'Cet écran fait partie des prochains jalons du prototype.',
+
+  'access.denied': 'Accès refusé',
+  'access.denied_sub': 'Vous n’avez pas les droits pour accéder à cet outil.',
 } as const
 
 export type I18nKey = keyof typeof fr
@@ -152,6 +155,9 @@ const en: Record<I18nKey, string> = {
 
   'common.coming_soon': 'Coming soon',
   'common.coming_soon_sub': 'This screen is part of the prototype’s next milestones.',
+
+  'access.denied': 'Access denied',
+  'access.denied_sub': 'You don’t have permission to access this tool.',
 }
 
 export const DICTIONARIES: Record<Lang, Record<I18nKey, string>> = { fr, en }

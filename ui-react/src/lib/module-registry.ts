@@ -45,6 +45,18 @@ export interface ReactModuleDef {
    * une iframe Melis vivante via le toggle — sinon l'iframe se recharge.
    */
   persistent?: boolean
+  /**
+   * Affiche le toggle « New (React) / Old (iframe) » pour CET outil.
+   *
+   * Temporaire (transition) : chaque outil garde son toggle tant que sa vue
+   * React n'est pas validée. Une fois l'outil validé, passer ce flag à `false`
+   * (outil par outil, indépendamment des autres) → le bouton disparaît et la
+   * page force la vue React. À retirer (avec `melisKey`/l'iframe) quand le
+   * legacy de l'outil sera définitivement supprimé.
+   *
+   * Absent = `true` (toggle affiché). N'a de sens que si `melisKey` est défini.
+   */
+  viewToggle?: boolean
 }
 
 export const MODULES: ReactModuleDef[] = [
@@ -58,6 +70,9 @@ export const MODULES: ReactModuleDef[] = [
     list: lazy(() => import('@/pages/UserListPage')),
     form: lazy(() => import('@/pages/UserFormPage')),
     persistent: true,
+    // Toggle encore actif tant que la vue React Utilisateurs n'est pas validée.
+    // Le jour venu : passer à `false` (puis retirer le mécanisme iframe).
+    viewToggle: true,
   },
 ]
 
@@ -68,3 +83,14 @@ export const PERSISTENT_MODULES = MODULES.filter((m) => m.persistent)
 export const REACT_ROUTES: Record<string, string> = Object.fromEntries(
   MODULES.map((m) => [m.forwardKey, m.route]),
 )
+
+/**
+ * Le toggle « New (React) / Old (iframe) » est-il actif pour cet outil natif ?
+ *
+ * Lit le flag `viewToggle` de l'entrée du registre (défaut `true` si absent).
+ * Une page native appelle ce helper avec son propre `id` pour décider d'afficher
+ * le bouton et de forcer (ou non) la vue React.
+ */
+export function toolHasViewToggle(id: string): boolean {
+  return MODULES.find((m) => m.id === id)?.viewToggle ?? true
+}

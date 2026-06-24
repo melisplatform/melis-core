@@ -104,6 +104,15 @@ export function registerTool(e: ToolRouteEntry): void {
   }
 }
 
+/** Drop the whole registry (in-memory + persisted). Used when the user's rights change so stale
+ *  tool→route mappings (tools the user no longer has) don't keep routing after a menu refresh. */
+export function clearTools(): void {
+  routeToMelisKey = {}
+  forwardToRoute = {}
+  try { sessionStorage.removeItem(STORAGE_KEY) } catch { /* ignore */ }
+  listeners.forEach((l) => l())
+}
+
 /** Resolve the melisKey for a /[section]/[tool] route (its first two segments). */
 export function melisKeyForRoute(pathname: string): string | null {
   const base = '/' + pathname.split('/').filter(Boolean).slice(0, 2).join('/')
@@ -113,6 +122,11 @@ export function melisKeyForRoute(pathname: string): string | null {
 /** Route for a Melis `Module/Controller` forward key, if a tool maps to it. */
 export function routeForForward(forwardKey: string): string | null {
   return forwardToRoute[forwardKey] ?? null
+}
+
+/** Has the registry been populated yet? (false on a cold load before the menu/registry loads). */
+export function hasToolRoutes(): boolean {
+  return Object.keys(forwardToRoute).length > 0
 }
 
 // ─── Recursion (sub-tab URL reflection) ──────────────────────────────────────
@@ -143,8 +157,10 @@ export function subscribeToolRoutes(fn: () => void): () => void {
   return () => { listeners.delete(fn) }
 }
 
-/** Re-render a component when the tool-routes registry changes (e.g. after the menu loads). */
-export function useToolRoutesVersion(): void {
-  const [, force] = useReducer((x: number) => x + 1, 0)
+/** Re-render a component when the tool-routes registry changes (e.g. after the menu loads).
+ *  Returns a version number that increments on each change — usable as an effect dependency. */
+export function useToolRoutesVersion(): number {
+  const [version, force] = useReducer((x: number) => x + 1, 0)
   useEffect(() => subscribeToolRoutes(force), [])
+  return version
 }

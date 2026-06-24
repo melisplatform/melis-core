@@ -3,14 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom'
 import { cn } from '@/lib/utils'
 import { useSubTabs } from '@/components/tabs/sub-tab-store'
 import { MODULES } from '@/lib/module-registry'
-
-// Derived from the MelisCore native-tools registry — no hardcoded module list.
-const SECTIONS = MODULES.map((m) => ({
-  key: m.route,
-  listPath: m.route,
-  listLabel: m.label,
-  tabIcon: m.icon ?? FileText,
-}))
+import { routeForForward, useToolRoutesVersion } from '@/lib/tool-routes'
 
 function SubTabBarInner({
   sectionKey, listPath, tabIcon: TabIcon,
@@ -78,14 +71,15 @@ function SubTabBarInner({
 }
 
 export function SubTabBar() {
+  // Re-render once tool routes register so the derived routes become available.
+  useToolRoutesVersion()
   const { pathname } = useLocation()
-  const section = SECTIONS.find(s => pathname === s.key || pathname.startsWith(s.key + '/'))
+  // Sections keyed by the tree-DERIVED route (App.tsx mounts tools there via routeForForward),
+  // NOT the static registry m.route — else the bar never matches /[section]/[tool]/:id and the
+  // sub-tab navigation (← retour + named tabs) never appears.
+  const section = MODULES
+    .map((m) => ({ key: routeForForward(m.forwardKey) ?? m.route, icon: m.icon ?? FileText }))
+    .find((s) => pathname === s.key || pathname.startsWith(s.key + '/'))
   if (!section) return null
-  return (
-    <SubTabBarInner
-      sectionKey={section.key}
-      listPath={section.listPath}
-      tabIcon={section.tabIcon}
-    />
-  )
+  return <SubTabBarInner sectionKey={section.key} listPath={section.key} tabIcon={section.icon} />
 }

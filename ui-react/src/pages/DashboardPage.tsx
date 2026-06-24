@@ -3,7 +3,6 @@ import { Bell, ChevronDown, ChevronUp, Download, LayoutGrid, MessageSquare, News
 
 import { Button } from '@/components/ui/button'
 import { useI18n } from '@/i18n/i18n-context'
-import { useTabs } from '@/components/tabs/tab-store'
 import { CURRENT_USER } from '@/lib/mocks'
 import * as melisApi from '@/lib/melis-api'
 import { DashboardGrid } from '@/components/dashboard/DashboardGrid'
@@ -29,12 +28,11 @@ const BUBBLES = [
 
 export default function DashboardPage() {
   const { t } = useI18n()
-  const { openTab } = useTabs()
 
-  useEffect(() => {
-    openTab({ id: '/', label: 'Dashboard', path: '/' })
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  // NOTE: do NOT openTab('/') here. DashboardPage is kept mounted (Shell) and lazy-loaded, so its
+  // mount effect runs AFTER TabBridge's route-sync and would re-activate the Dashboard tab on EVERY
+  // page (the tab content then shows under the wrong, Dashboard-highlighted tab). The Dashboard tab
+  // always exists (initial state + the CLOSE guards); TabBridge activates it when the route is '/'.
 
   // Top bubble counts (News / Updates / Notifications / Messages).
   const [bubbles, setBubbles] = useState<melisApi.DashboardBubbles | null>(null)

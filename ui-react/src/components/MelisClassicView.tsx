@@ -8,6 +8,10 @@ export type ViewMode = 'react' | 'iframe'
  *
  * Bouton segmenté réutilisable par toute page liste d'un module natif.
  * L'état `mode` est géré par la page hôte (pour le persister dans son cache).
+ *
+ * L'affichage est décidé par la page hôte (flag `viewToggle` par outil dans le
+ * registre, cf. `lib/module-registry.ts`) : la page ne monte ce composant que
+ * si le toggle est encore actif pour cet outil.
  */
 export function ViewModeToggle({
   mode,
