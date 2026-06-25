@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import {
-  ArrowDown, ArrowUp, ArrowUpDown, CheckCircle2, Circle, Columns3, Megaphone,
+  ArrowDown, ArrowUp, ArrowUpDown, CheckCircle2, Circle, Columns3, FileDown, Megaphone,
   Pencil, Plus, RotateCcw, Search, Trash2, X, type LucideIcon,
 } from 'lucide-react'
 
@@ -17,6 +17,7 @@ import { routeForForward } from '@/lib/tool-routes'
 import { useI18n } from '@/i18n/i18n-context'
 import type { I18nKey } from '@/i18n/dictionaries'
 import { ColumnManager, visibleCols, type ColDef } from '@/components/ColumnManager'
+import { ExportModal } from '@/components/ExportModal'
 
 // ─── Cache module-level — survit au démontage (la page est montée en permanence) ──
 interface ListCache {
@@ -113,7 +114,19 @@ function textPreview(html: string, max = 60): string {
   return txt.length > max ? txt.slice(0, max) + '…' : txt
 }
 
-const selectCls = 'h-9 rounded-md border border-input bg-card px-2 text-sm text-foreground shadow-sm focus-visible:outline-none focus-visible:border-primary focus-visible:ring-2 focus-visible:ring-ring/30'
+/** Valeur traduite d'une cellule pour l'EXPORT (texte complet, pas de troncature). */
+function getCellExport(
+  a: annApi.AnnouncementItem, id: string,
+  t: (k: I18nKey, v?: Record<string, string | number>) => string, dateLocale: string,
+): string | number {
+  if (id === 'id')     return a.id
+  if (id === 'status') return a.status ? t('ann.status.active') : t('ann.status.inactive')
+  if (id === 'title')  return a.title
+  if (id === 'text')   return a.text.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim()
+  if (id === 'date')   return fmtDate(a.date, dateLocale)
+  if (id === 'user')   return a.userName
+  return ''
+}
 
 // ─── Page ──────────────────────────────────────────────────────────────────────────
 export default function AnnouncementListPage() {
@@ -143,6 +156,7 @@ export default function AnnouncementListPage() {
 
   const [cols, setCols]         = useState<ColDef[]>(loadCols)
   const [showColMgr, setShowColMgr] = useState(false)
+  const [showExport, setShowExport] = useState(false)
   const colMgrRef = useRef<HTMLDivElement>(null)
 
   const [sortCol, setSortCol] = useState<string | null>(null)
@@ -268,18 +282,33 @@ export default function AnnouncementListPage() {
             {searchInput && <button onClick={clearSearch}
               className="absolute right-2.5 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"><X className="size-4" /></button>}
           </div>
-          <select className={selectCls} value={status} onChange={e => setStatus(e.target.value as '' | '0' | '1')}>
-            <option value="">{t('ann.filter.status_all')}</option>
-            <option value="1">{t('ann.status.active')}</option>
-            <option value="0">{t('ann.status.inactive')}</option>
-          </select>
-          <div ref={colMgrRef} className="relative">
-            <Button variant="outline" size="sm" className="gap-1.5" onClick={() => setShowColMgr(v => !v)}>
-              <Columns3 className="size-3.5" />{t('common.columns')}
+          <div className="flex items-center rounded-lg border border-border bg-muted/40 p-1 gap-1">
+            {([
+              { val: '' as const,  label: t('ann.filter.all'),      dot: null },
+              { val: '1' as const, label: t('ann.status.active'),   dot: 'bg-emerald-500' },
+              { val: '0' as const, label: t('ann.status.inactive'), dot: 'bg-red-500' },
+            ]).map(({ val, label, dot }) => (
+              <button key={val} type="button" onClick={() => setStatus(val)}
+                className={cn('flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-medium transition-colors',
+                  status === val ? 'bg-card shadow-sm text-foreground' : 'text-muted-foreground hover:text-foreground')}>
+                {dot && <span className={cn('size-1.5 rounded-full', dot)} />}
+                {label}
+              </button>
+            ))}
+          </div>
+
+          <div className="ml-auto flex items-center gap-2">
+            <div ref={colMgrRef} className="relative">
+              <Button variant="outline" size="sm" className="gap-1.5" onClick={() => setShowColMgr(v => !v)}>
+                <Columns3 className="size-3.5" />{t('common.columns')}
+              </Button>
+              {showColMgr && <ColumnManager cols={cols} labelFor={(id) => t(COL_LABEL[id])}
+                onChange={(c) => { setCols(c); saveCols(c) }} onClose={() => setShowColMgr(false)}
+                onReset={() => { setCols(DEFAULT_COLS); saveCols(DEFAULT_COLS) }} />}
+            </div>
+            <Button variant="outline" size="sm" className="gap-1.5" onClick={() => setShowExport(true)}>
+              <FileDown className="size-3.5" />{t('common.export')}
             </Button>
-            {showColMgr && <ColumnManager cols={cols} labelFor={(id) => t(COL_LABEL[id])}
-              onChange={(c) => { setCols(c); saveCols(c) }} onClose={() => setShowColMgr(false)}
-              onReset={() => { setCols(DEFAULT_COLS); saveCols(DEFAULT_COLS) }} />}
           </div>
         </div>
 
@@ -348,6 +377,18 @@ export default function AnnouncementListPage() {
       </div>
 
       {toDelete && <DeleteConfirm announcement={toDelete} onConfirm={confirmDelete} onCancel={() => setToDelete(null)} />}
+      {showExport && (
+        <ExportModal
+          cols={cols}
+          labelFor={(id) => t(COL_LABEL[id])}
+          fetchAll={async () => (await annApi.fetchAnnouncements({ limit: 9999, search, status })).items}
+          getCell={(a, id) => getCellExport(a, id, t, dateLocale)}
+          filename={t('ann.export.filename')}
+          sheetName={t('ann.title')}
+          total={total}
+          onClose={() => setShowExport(false)}
+        />
+      )}
     </div>
   )
 }

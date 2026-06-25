@@ -8,6 +8,7 @@ import * as React from 'react'
 import * as ReactDOM from 'react-dom'
 import * as ReactJsxRuntime from 'react/jsx-runtime'
 import * as ReactRouterDOM from 'react-router-dom'
+import * as XLSX from 'xlsx'
 
 import './index.css'
 import App from './App.tsx'
@@ -17,6 +18,7 @@ const w = window as unknown as {
   MelisReactDOM?: unknown
   MelisReactJsxRuntime?: unknown
   MelisReactRouterDOM?: unknown
+  MelisXLSX?: unknown
   __MELIS_BRICK_COMPONENTS__?: Record<string, { Component?: ComponentType; Sidebar?: ComponentType; Header?: ComponentType }>
   __melisRegisterBrick?: (b: { id: string; Component?: ComponentType; Sidebar?: ComponentType; Header?: ComponentType }) => void
 }
@@ -24,6 +26,9 @@ w.MelisReact = React
 w.MelisReactDOM = ReactDOM
 w.MelisReactJsxRuntime = ReactJsxRuntime
 w.MelisReactRouterDOM = ReactRouterDOM
+// Exposé pour les briques de module : elles réutilisent l'instance XLSX de l'hôte
+// (export Excel/CSV identique à l'outil de référence) sans la rebundler.
+w.MelisXLSX = XLSX
 w.__MELIS_BRICK_COMPONENTS__ = w.__MELIS_BRICK_COMPONENTS__ ?? {}
 w.__melisRegisterBrick = (b) => {
   // A brick may register a routed page (Component), a left-sidebar panel (Sidebar) and/or a
