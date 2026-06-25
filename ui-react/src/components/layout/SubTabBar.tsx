@@ -4,12 +4,14 @@ import { cn } from '@/lib/utils'
 import { useSubTabs } from '@/components/tabs/sub-tab-store'
 import { MODULES } from '@/lib/module-registry'
 import { routeForForward, useToolRoutesVersion } from '@/lib/tool-routes'
+import { useI18n } from '@/i18n/i18n-context'
 
 function SubTabBarInner({
   sectionKey, listPath, tabIcon: TabIcon,
 }: { sectionKey: string; listPath: string; tabIcon: React.ElementType }) {
   const navigate = useNavigate()
   const { pathname } = useLocation()
+  const { t } = useI18n()
   const { tabs, closeTab } = useSubTabs(sectionKey)
 
   if (tabs.length === 0) return null
@@ -34,7 +36,7 @@ function SubTabBarInner({
         onClick={() => navigate(listPath)}
         className="mr-1 shrink-0 flex items-center px-2 py-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors whitespace-nowrap"
       >
-        ← retour
+        ← {t('common.back')}
       </button>
       {tabs.map(tab => {
         const isActive = pathname === tab.path

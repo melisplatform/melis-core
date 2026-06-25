@@ -1,5 +1,5 @@
 import { lazy, type LazyExoticComponent, type ComponentType } from 'react'
-import { Users, type LucideIcon } from 'lucide-react'
+import { Languages, Megaphone, ScrollText, Server, Users, type LucideIcon } from 'lucide-react'
 
 /**
  * Registre des outils React natifs **de MelisCore**.
@@ -72,6 +72,54 @@ export const MODULES: ReactModuleDef[] = [
     persistent: true,
     // Toggle encore actif tant que la vue React Utilisateurs n'est pas validée.
     // Le jour venu : passer à `false` (puis retirer le mécanisme iframe).
+    viewToggle: true,
+  },
+  {
+    id: 'platforms',
+    route: '/platforms',
+    label: 'Plateformes',
+    icon: Server,
+    forwardKey: 'MelisCore/Platforms',
+    melisKey: 'meliscore_tool_platform',
+    list: lazy(() => import('@/pages/PlatformListPage')),
+    form: lazy(() => import('@/pages/PlatformFormPage')),
+    persistent: true,
+    viewToggle: true,
+  },
+  {
+    id: 'languages',
+    route: '/languages',
+    label: 'Langues',
+    icon: Languages,
+    forwardKey: 'MelisCore/Language',
+    melisKey: 'meliscore_tool_language',
+    list: lazy(() => import('@/pages/LanguageListPage')),
+    form: lazy(() => import('@/pages/LanguageFormPage')),
+    persistent: true,
+    viewToggle: true,
+  },
+  {
+    id: 'logs',
+    route: '/logs',
+    label: 'Logs',
+    icon: ScrollText,
+    forwardKey: 'MelisCore/Log',
+    melisKey: 'meliscore_logs_tool',
+    list: lazy(() => import('@/pages/LogListPage')),
+    // Outil EN LECTURE SEULE : pas de formulaire (pas de route /new ni /:id).
+    persistent: true,
+    viewToggle: true,
+  },
+  {
+    id: 'announcements',
+    route: '/announcements',
+    label: 'Annonces',
+    icon: Megaphone,
+    forwardKey: 'MelisCore/Announcement',
+    melisKey: 'melis_core_announcement_tool',
+    list: lazy(() => import('@/pages/AnnouncementListPage')),
+    form: lazy(() => import('@/pages/AnnouncementFormPage')),
+    persistent: true,
     viewToggle: true,
   },
 ]
