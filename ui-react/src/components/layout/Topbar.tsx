@@ -11,6 +11,7 @@ import { LanguageSwitcher } from '@/components/LanguageSwitcher'
 import { ThemeSwitcher } from '@/components/ThemeSwitcher'
 import { headerBricks, useBricks } from '@/lib/bricks'
 import { fetchMe, fetchNotifications, clearNotifications, type MeUser, type FlashNotification } from '@/lib/melis-api'
+import { setCapabilitiesFromMe } from '@/lib/capabilities'
 import { registerTool } from '@/lib/tool-routes'
 import {
   DropdownMenu,
@@ -143,7 +144,7 @@ function UserMenu() {
   const navigate = useNavigate()
   const { openTab } = useTabs()
   const [me, setMe] = useState<MeUser | null>(null)
-  useEffect(() => { fetchMe().then(setMe) }, [])
+  useEffect(() => { fetchMe().then((m) => { setMe(m); setCapabilitiesFromMe(m) }) }, [])
   // Register the "My account" route on mount (not only when the menu item is clicked) so other
   // entry points — e.g. a brick's topbar widget (the messenger icon) — can open the profile too.
   useEffect(() => { registerTool({ route: ACCOUNT_ROUTE, melisKey: ACCOUNT_MELISKEY, forwardKey: null }) }, [])

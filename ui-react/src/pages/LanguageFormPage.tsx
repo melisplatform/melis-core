@@ -9,6 +9,9 @@ import * as languageApi from '@/lib/language-api'
 import { useSubTabs } from '@/components/tabs/sub-tab-store'
 import { routeForForward } from '@/lib/tool-routes'
 import { useI18n } from '@/i18n/i18n-context'
+import { useCan } from '@/lib/capabilities'
+
+const TOOL_KEY = 'meliscore_tool_language'
 
 interface FormData { name: string; locale: string }
 const EMPTY_FORM: FormData = { name: '', locale: '' }
@@ -26,6 +29,10 @@ export default function LanguageFormPage() {
   const base = routeForForward('MelisCore/Language') ?? '/languages'
   const subTabPath = languageId ? `${base}/${languageId}` : `${base}/new`
   const { openTab: openSubTab, closeTab: closeSubTab, updateLabel: updateSubLabel } = useSubTabs(base)
+
+  // Capacité requise pour ce formulaire : edit en édition, create en création.
+  const canForm = useCan(TOOL_KEY, isEdit ? 'edit' : 'create')
+  useEffect(() => { if (!canForm) navigate(base) }, [canForm, navigate, base])
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {

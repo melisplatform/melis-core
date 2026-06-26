@@ -17,6 +17,9 @@ import { routeForForward } from '@/lib/tool-routes'
 import { useI18n } from '@/i18n/i18n-context'
 import type { I18nKey } from '@/i18n/dictionaries'
 import { ColumnManager, visibleCols, type ColDef } from '@/components/ColumnManager'
+import { useCan } from '@/lib/capabilities'
+
+const TOOL_KEY = 'meliscore_tool_platform'
 
 // ─── Cache module-level — survit au démontage (la page est montée en permanence) ──
 interface ListCache {
@@ -108,6 +111,12 @@ export default function PlatformListPage() {
   const [mode, setMode] = useState<ViewMode>(_cache?.mode ?? 'react')
   const [iframeLoaded, setIframeLoaded] = useState(_cache?.iframeLoaded ?? false)
   const effectiveMode: ViewMode = showViewToggle ? mode : 'react'
+
+  // Capacités (droits avancés) : masque les composants internes selon les droits de l'user.
+  const canList   = useCan(TOOL_KEY, 'list')
+  const canCreate = useCan(TOOL_KEY, 'create')
+  const canEdit   = useCan(TOOL_KEY, 'edit')
+  const canDelete = useCan(TOOL_KEY, 'delete')
 
   const [items, setItems]   = useState<platformApi.PlatformItem[]>(_cache?.items ?? [])
   const [total, setTotal]   = useState(_cache?.total ?? 0)
@@ -222,9 +231,11 @@ export default function PlatformListPage() {
             className="inline-flex size-8 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-accent hover:text-foreground">
             <RotateCcw className={cn('size-3.5', refreshing && 'animate-spin')} />
           </button>
-          <Button size="sm" onClick={() => navigate(`${base}/new`)}>
-            <Plus className="size-4" />{t('platforms.new')}
-          </Button>
+          {canCreate && (
+            <Button size="sm" onClick={() => navigate(`${base}/new`)}>
+              <Plus className="size-4" />{t('platforms.new')}
+            </Button>
+          )}
         </div>
       </div>
 
@@ -234,6 +245,9 @@ export default function PlatformListPage() {
 
       {/* Vue React */}
       <div className={cn('flex flex-1 flex-col gap-4', effectiveMode === 'react' ? 'flex' : 'hidden')}>
+        {!canList ? (
+          <p className="text-sm text-muted-foreground">{t('platforms.no_list')}</p>
+        ) : (<>
         {/* KPI */}
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
           <KpiCard icon={Server}      label={t('platforms.kpi.total')}       value={stats?.total       ?? null} color="bg-primary/10 text-primary" />
@@ -302,11 +316,13 @@ export default function PlatformListPage() {
                   ))}
                   <td className="px-4 py-2.5">
                     <div className="flex items-center justify-end gap-1">
-                      <button onClick={() => navigate(`${base}/${p.id}`)} title={t('common.edit')}
-                        className="inline-flex size-7 items-center justify-center rounded-md text-muted-foreground hover:bg-accent hover:text-foreground">
-                        <Pencil className="size-3.5" />
-                      </button>
-                      {!p.isCurrent && (
+                      {canEdit && (
+                        <button onClick={() => navigate(`${base}/${p.id}`)} title={t('common.edit')}
+                          className="inline-flex size-7 items-center justify-center rounded-md text-muted-foreground hover:bg-accent hover:text-foreground">
+                          <Pencil className="size-3.5" />
+                        </button>
+                      )}
+                      {canDelete && !p.isCurrent && (
                         <button onClick={() => setToDelete(p)} title={t('common.delete')}
                           className="inline-flex size-7 items-center justify-center rounded-md text-red-500 hover:bg-red-50 dark:hover:bg-red-950/20">
                           <Trash2 className="size-3.5" />
@@ -322,6 +338,7 @@ export default function PlatformListPage() {
             {loading ? t('common.loading') : t('platforms.count', { n: total })}
           </div>
         </div>
+        </>)}
       </div>
 
       {toDelete && <DeleteConfirm platform={toDelete} onConfirm={confirmDelete} onCancel={() => setToDelete(null)} />}

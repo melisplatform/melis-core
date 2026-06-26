@@ -17,6 +17,9 @@ import { routeForForward } from '@/lib/tool-routes'
 import { useI18n } from '@/i18n/i18n-context'
 import type { I18nKey } from '@/i18n/dictionaries'
 import { ColumnManager, visibleCols, type ColDef } from '@/components/ColumnManager'
+import { useCan } from '@/lib/capabilities'
+
+const TOOL_KEY = 'meliscore_logs_tool'
 
 // ─── Cache module-level — survit au démontage (la page est montée en permanence) ──
 interface ListCache {
@@ -100,6 +103,9 @@ export default function LogListPage() {
   const { t, lang } = useI18n()
   const dateLocale = lang === 'fr' ? 'fr-FR' : 'en-GB'
   const base = routeForForward('MelisCore/Log') ?? '/logs'
+
+  // Capacité (droits avancés) : Logs est read-only → seule la liste est gardée.
+  const canList = useCan(TOOL_KEY, 'list')
 
   const showViewToggle = toolHasViewToggle('logs')
   const [mode, setMode] = useState<ViewMode>(_cache?.mode ?? 'react')
@@ -221,6 +227,9 @@ export default function LogListPage() {
 
       {/* Vue React */}
       <div className={cn('flex flex-1 flex-col gap-4', effectiveMode === 'react' ? 'flex' : 'hidden')}>
+        {!canList ? (
+          <p className="text-sm text-muted-foreground">{t('logs.no_list')}</p>
+        ) : (<>
         {/* KPI */}
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
           <KpiCard icon={Activity}     label={t('logs.kpi.total')} value={stats?.total ?? null} color="bg-primary/10 text-primary" />
@@ -318,6 +327,7 @@ export default function LogListPage() {
             {loading ? t('common.loading') : t('logs.count', { n: total })}
           </div>
         </div>
+        </>)}
       </div>
     </div>
   )

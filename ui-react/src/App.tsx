@@ -138,20 +138,15 @@ export default function App() {
                       </Route>
                     )
                   })}
-                  {/* Briques React modulaires — montées à leur URL d'arbre /[section]/[tool]
-                      (forwardKey → route dérivée ; sinon route du manifeste, ex. CMS page). */}
+                  {/* Briques React modulaires — Shell les rend directement hors Outlet (persistent
+                      mount, display:none quand inactives). Les routes sont déclarées ici sans element
+                      pour empêcher le fallback /:section/:tool/* (ZonePage) de les attraper. */}
                   {bricks.filter((b) => b.Component).flatMap((b) => {
                     const route = brickRoute(b)
                     if (!route) return []
-                    const Brick = b.Component!
-                    const el = (
-                      <Suspense fallback={<PageLoader />}>
-                        <Brick />
-                      </Suspense>
-                    )
                     return [
-                      <Route key={b.id} path={route} element={el} />,
-                      <Route key={`${b.id}:id`} path={`${route}/:id`} element={el} />,
+                      <Route key={b.id} path={route} element={null} />,
+                      <Route key={`${b.id}:id`} path={`${route}/:id`} element={null} />,
                     ]
                   })}
                   {/* Outils Melis via zoneview — tous les outils sans page React dédiée.

@@ -446,6 +446,22 @@ export interface MeUser {
   email: string
   /** Profile picture as a data URI, or null. */
   picture: string | null
+  /** Administrateur : bypass des capacités d'outils. */
+  isAdmin?: boolean
+  /** Capacités d'outils PERMISES pour l'user courant : { melisKey: ['list','create',…] }. */
+  capabilities?: Record<string, string[]>
+}
+
+/** Capacités d'outils DÉCLARÉES par les modules : { melisKey: ['list','create',…] } (éditeur de droits). */
+export async function fetchDeclaredCapabilities(): Promise<Record<string, string[]>> {
+  try {
+    const res = await fetch('/melis/react-api/rights/capabilities', { headers: { ...XHR_HEADER }, credentials: 'include' })
+    if (!res.ok) return {}
+    const data = (await res.json()) as { success: boolean; data?: Record<string, string[]> }
+    return data.success && data.data ? data.data : {}
+  } catch {
+    return {}
+  }
 }
 
 export async function fetchMe(): Promise<MeUser | null> {

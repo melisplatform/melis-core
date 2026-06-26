@@ -8,6 +8,7 @@ import { cn } from '@/lib/utils'
 import * as platformApi from '@/lib/platform-api'
 import { useSubTabs } from '@/components/tabs/sub-tab-store'
 import { routeForForward } from '@/lib/tool-routes'
+import { useCan } from '@/lib/capabilities'
 import { useI18n } from '@/i18n/i18n-context'
 
 interface FormData { name: string; marketplace: boolean; cache: boolean }
@@ -35,6 +36,11 @@ export default function PlatformFormPage() {
   const platformId = id ? parseInt(id) : null
 
   const base = routeForForward('MelisCore/Platforms') ?? '/platforms'
+
+  // Garde de capacité : accès direct au formulaire (URL) bloqué si l'action n'est pas permise.
+  const canForm = useCan('meliscore_tool_platform', isEdit ? 'edit' : 'create')
+  useEffect(() => { if (!canForm) navigate(base) }, [canForm, navigate, base])
+
   const subTabPath = platformId ? `${base}/${platformId}` : `${base}/new`
   const { openTab: openSubTab, closeTab: closeSubTab, updateLabel: updateSubLabel } = useSubTabs(base)
 

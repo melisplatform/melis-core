@@ -45,9 +45,8 @@ function ShellInner() {
     refreshActiveModules()
   }, [location.pathname])
 
-  // When a tab is closed, destroy the persistent iframe of a brick tool (singleton kept in
-  // <body> as #melis-brick-frame-<id> to avoid reload on tab switch) — so reopening reloads it
-  // fresh instead of restoring its previous state (open sub-tabs, etc.).
+  // When a tab is closed: destroy any brick frame singleton AND remove the brick from
+  // visitedBricks so reopening it mounts fresh (not hidden-but-stale).
   useEffect(() => {
     const onClosed = (e: Event) => {
       const path = (e as CustomEvent<{ path?: string }>).detail?.path ?? ''
@@ -55,7 +54,15 @@ function ShellInner() {
         const r = brickRoute(b)
         return r && (path === r || path.startsWith(r + '/'))
       })
-      if (brick) document.getElementById('melis-brick-frame-' + brick.id)?.remove()
+      if (brick) {
+        document.getElementById('melis-brick-frame-' + brick.id)?.remove()
+        setVisitedBricks((prev) => {
+          if (!prev.has(brick.id)) return prev
+          const next = new Set(prev)
+          next.delete(brick.id)
+          return next
+        })
+      }
     }
     window.addEventListener('melis:tab-closed', onClosed)
     return () => window.removeEventListener('melis:tab-closed', onClosed)
@@ -70,6 +77,39 @@ function ShellInner() {
   // Modules persistants : liste montée en permanence pour ne jamais détruire
   // leur iframe Melis (toggle New/Old). Active quand on est sur leur route d'arbre dérivée.
   const activePersistent = PERSISTENT_MODULES.find((m) => location.pathname === routeForForward(m.forwardKey))
+
+  // Lazy-init : un module persistant n'est monté (et ne fetche) qu'à la première visite.
+  // Ensuite il reste en DOM (hidden) pour que son iframe survive aux navigations.
+  const [visitedModules, setVisitedModules] = useState<Set<string>>(new Set())
+  const activePersistentId = activePersistent?.id
+  useEffect(() => {
+    if (activePersistentId) {
+      setVisitedModules((prev) => {
+        if (prev.has(activePersistentId)) return prev
+        return new Set([...prev, activePersistentId])
+      })
+    }
+  }, [activePersistentId])
+
+  // Brique active : brique React dont la route correspond à l'URL courante.
+  const activeBrick = bricks.find((b) => {
+    if (!b.Component) return false
+    const r = brickRoute(b)
+    return r && (location.pathname === r || location.pathname.startsWith(r + '/'))
+  })
+
+  // Lazy-init briques : même pattern que visitedModules. Monté à la 1re visite,
+  // gardé en DOM. Supprimé de l'ensemble quand l'onglet est fermé (fresh reload).
+  const [visitedBricks, setVisitedBricks] = useState<Set<string>>(new Set())
+  const activeBrickId = activeBrick?.id
+  useEffect(() => {
+    if (activeBrickId) {
+      setVisitedBricks((prev) => {
+        if (prev.has(activeBrickId)) return prev
+        return new Set([...prev, activeBrickId])
+      })
+    }
+  }, [activeBrickId])
 
   return (
     <div className="flex h-screen overflow-hidden bg-background">
@@ -88,7 +128,8 @@ function ShellInner() {
             </Suspense>
           </div>
 
-          {/* Listes persistantes — toujours dans le DOM, cachées hors de leur route */}
+          {/* Listes persistantes — montées à la 1re visite, puis gardées en DOM (hidden).
+              Jamais montées au boot : évite de fetcher des données pour des outils non visités. */}
           {PERSISTENT_MODULES.map((m) => {
             const List = m.list
             return (
@@ -96,15 +137,36 @@ function ShellInner() {
                 key={m.id}
                 className={cn('h-full overflow-y-auto', activePersistent?.id !== m.id && 'hidden')}
               >
-                <Suspense fallback={<PageLoader />}>
-                  <List />
-                </Suspense>
+                {visitedModules.has(m.id) && (
+                  <Suspense fallback={<PageLoader />}>
+                    <List />
+                  </Suspense>
+                )}
               </div>
             )
           })}
 
-          {/* Toutes les autres pages via Outlet (formulaires, briques, zone…) */}
-          <div className={cn('h-full overflow-y-auto', (activePersistent || isDashboard) && 'hidden')}>
+          {/* Briques React — montées à la 1re visite, gardées en DOM (hidden).
+              Rendues hors Outlet pour éviter le démontage/remontage (et donc le refetch)
+              lors des switch d'onglets. Voir aussi App.tsx : leurs routes ont element={null}. */}
+          {bricks.filter((b) => b.Component).map((b) => {
+            const Brick = b.Component!
+            return (
+              <div
+                key={b.id}
+                className={cn('h-full overflow-y-auto', activeBrick?.id !== b.id && 'hidden')}
+              >
+                {visitedBricks.has(b.id) && (
+                  <Suspense fallback={<PageLoader />}>
+                    <Brick />
+                  </Suspense>
+                )}
+              </div>
+            )
+          })}
+
+          {/* Outlet : zone tools (ZonePage) et formulaires — contenu éphémère ou trivial à remonter. */}
+          <div className={cn('h-full overflow-y-auto', (activePersistent || activeBrick || isDashboard) && 'hidden')}>
             <Outlet />
           </div>
 

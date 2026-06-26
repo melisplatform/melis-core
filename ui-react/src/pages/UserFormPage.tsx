@@ -16,6 +16,7 @@ import { cn } from '@/lib/utils'
 import * as userApi from '@/lib/user-api'
 import { RightsTreeView } from '@/components/RightsTreeView'
 import { useModuleActive } from '@/lib/bricks'
+import { useCan } from '@/lib/capabilities'
 import { useI18n } from '@/i18n/i18n-context'
 import type { I18nKey } from '@/i18n/dictionaries'
 
@@ -227,6 +228,11 @@ export default function UserFormPage() {
   const userId   = id ? parseInt(id) : null
 
   const base = routeForForward('MelisCore/ToolUser') ?? '/users'
+
+  // Garde de capacité : accès direct au formulaire (URL) bloqué si l'action n'est pas permise.
+  const canForm = useCan('meliscore_tool_user', isEdit ? 'edit' : 'create')
+  useEffect(() => { if (!canForm) navigate(base) }, [canForm, navigate, base])
+
   const subTabPath = userId ? `${base}/${userId}` : `${base}/new`
   const { openTab: openSubTab, closeTab: closeSubTab, updateLabel: updateSubLabel } = useSubTabs(base)
 

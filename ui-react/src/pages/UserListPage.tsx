@@ -34,8 +34,11 @@ import { useTabs } from '@/components/tabs/tab-store'
 import { MelisClassicFrame, ViewModeToggle, type ViewMode } from '@/components/MelisClassicView'
 import { toolHasViewToggle } from '@/lib/module-registry'
 import { useModuleActive } from '@/lib/bricks'
+import { useCan } from '@/lib/capabilities'
 import { useI18n } from '@/i18n/i18n-context'
 import type { I18nKey } from '@/i18n/dictionaries'
+
+const TOOL_KEY = 'meliscore_tool_user'
 
 // ─── KPI card ─────────────────────────────────────────────────────────────────
 
@@ -380,6 +383,13 @@ export default function UserListPage() {
   const effectiveMode: ViewMode = showViewToggle ? mode : 'react'
   const rolesModuleActive = useModuleActive('MelisSmallBusiness')
 
+  // Capacités (droits avancés) : masque les composants internes selon les droits de l'user.
+  const canList   = useCan(TOOL_KEY, 'list')
+  const canCreate = useCan(TOOL_KEY, 'create')
+  const canEdit   = useCan(TOOL_KEY, 'edit')
+  const canDelete = useCan(TOOL_KEY, 'delete')
+  const canExport = useCan(TOOL_KEY, 'export')
+
   const [items, setItems]     = useState<userApi.UserItem[]>(_cache?.items ?? [])
   const [total, setTotal]     = useState(_cache?.total ?? 0)
   const [page, setPage]       = useState(_cache?.page ?? 1)
@@ -531,9 +541,11 @@ export default function UserListPage() {
             className="inline-flex size-8 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-accent hover:text-foreground">
             <RotateCcw className={cn('size-3.5', refreshing && 'animate-spin')} />
           </button>
-          <Button size="sm" onClick={() => navigate(`${base}/new`)}>
-            <Plus className="size-4" />{t('users.new')}
-          </Button>
+          {canCreate && (
+            <Button size="sm" onClick={() => navigate(`${base}/new`)}>
+              <Plus className="size-4" />{t('users.new')}
+            </Button>
+          )}
         </div>
       </div>
 
@@ -541,6 +553,9 @@ export default function UserListPage() {
         visible={effectiveMode === 'iframe'} loaded={iframeLoaded} />
 
       <div className={cn('flex flex-1 flex-col gap-4', effectiveMode === 'react' ? 'flex' : 'hidden')}>
+        {!canList ? (
+          <p className="text-sm text-muted-foreground">{t('users.no_list')}</p>
+        ) : (<>
         {/* KPI */}
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
           <KpiCard icon={Users}     label={t('users.kpi.total')}    value={stats?.total      ?? null} color="bg-primary/10 text-primary" />
@@ -596,9 +611,11 @@ export default function UserListPage() {
               </Button>
               {showColMgr && <ColManager cols={cols} onChange={setCols} onClose={() => setShowColMgr(false)} />}
             </div>
-            <Button variant="outline" size="sm" className="gap-1.5" onClick={() => setShowExport(true)}>
-              <FileDown className="size-3.5" />{t('users.export')}
-            </Button>
+            {canExport && (
+              <Button variant="outline" size="sm" className="gap-1.5" onClick={() => setShowExport(true)}>
+                <FileDown className="size-3.5" />{t('users.export')}
+              </Button>
+            )}
           </div>
         </div>
 
@@ -654,14 +671,18 @@ export default function UserListPage() {
                     {cols.find(c => c.id === 'lastLogin')?.visible && <td className="px-4 py-2.5 text-xs text-muted-foreground tabular-nums">{fmtDate(user.lastLoginDate)}</td>}
                     <td className="px-4 py-2.5">
                       <div className="flex items-center justify-end gap-1">
-                        <button type="button" onClick={() => navigate(`${base}/${user.id}`)} title={t('common.edit')}
-                          className="rounded p-1.5 hover:bg-accent transition-colors">
-                          <Edit2 className="size-3.5 text-muted-foreground" />
-                        </button>
-                        <button type="button" onClick={() => handleDelete(user)} title={t('common.delete')}
-                          className="rounded p-1.5 hover:bg-destructive/10 transition-colors">
-                          <Trash2 className="size-3.5 text-destructive/70" />
-                        </button>
+                        {canEdit && (
+                          <button type="button" onClick={() => navigate(`${base}/${user.id}`)} title={t('common.edit')}
+                            className="rounded p-1.5 hover:bg-accent transition-colors">
+                            <Edit2 className="size-3.5 text-muted-foreground" />
+                          </button>
+                        )}
+                        {canDelete && (
+                          <button type="button" onClick={() => handleDelete(user)} title={t('common.delete')}
+                            className="rounded p-1.5 hover:bg-destructive/10 transition-colors">
+                            <Trash2 className="size-3.5 text-destructive/70" />
+                          </button>
+                        )}
                       </div>
                     </td>
                   </tr>
@@ -680,6 +701,7 @@ export default function UserListPage() {
             <div className="py-4 text-center text-xs text-muted-foreground">{t('users.count', { n: total })}</div>
           )}
         </div>
+        </>)}
       </div>
 
       {toDelete && <DeleteConfirm user={toDelete} onConfirm={confirmDelete} onCancel={() => !deleting && setToDelete(null)} />}

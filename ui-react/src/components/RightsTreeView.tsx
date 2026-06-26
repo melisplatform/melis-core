@@ -17,8 +17,10 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { Boxes, CheckSquare, ChevronRight, FileText, LayoutDashboard, Loader2, MinusSquare, Square } from 'lucide-react'
 import type { ApiMenuNode } from '@/lib/melis-api'
-import { fetchMenu, fetchReactModules } from '@/lib/melis-api'
+import { fetchMenu, fetchReactModules, fetchDeclaredCapabilities } from '@/lib/melis-api'
 import { cn } from '@/lib/utils'
+import { useI18n } from '@/i18n/i18n-context'
+import type { I18nKey } from '@/i18n/dictionaries'
 import { PagesRightsPanel } from '@/components/PagesRightsPanel'
 import { ALL_PAGES, parsePagesRights, pagesRightsIds } from '@/lib/pages-rights-api'
 import { DashboardPluginsRightsPanel } from '@/components/DashboardPluginsRightsPanel'
@@ -38,6 +40,31 @@ function getToolsFlat(nodes: ApiMenuNode[]): ApiMenuNode[] {
 
 function nodeKey(n: ApiMenuNode) {
   return n.melisKey || n.key
+}
+
+// ─── Capacités d'outils (droits avancés) ──────────────────────────────────────
+// `DeniedCaps` = { melisKey: [capacités RETIRÉES] }. Default-allow : absence = tout permis.
+type DeniedCaps = Record<string, string[]>
+// Libellés des capacités via i18n (le BO suit la locale EN/FR). Clé inconnue → on retombe sur le brut.
+const CAP_I18N: Record<string, I18nKey> = {
+  list: 'caps.list', create: 'caps.create', edit: 'caps.edit', delete: 'caps.delete', export: 'caps.export',
+}
+
+/** Parse la section <meliscore_tool_capabilities> du XML en { melisKey: [caps retirées] }. */
+function parseDeniedCaps(xml: string): DeniedCaps {
+  const out: DeniedCaps = {}
+  try {
+    const doc = new DOMParser().parseFromString(xml, 'text/xml')
+    doc.querySelectorAll('meliscore_tool_capabilities > tool').forEach((tool) => {
+      const key = tool.getAttribute('key')
+      if (!key) return
+      const denied = Array.from(tool.querySelectorAll('deny'))
+        .map((d) => d.textContent?.trim() ?? '')
+        .filter(Boolean)
+      if (denied.length) out[key] = denied
+    })
+  } catch { /* ignore */ }
+  return out
 }
 
 /**
@@ -99,6 +126,7 @@ function buildRightsXml(
   checkedPages: Set<number>,
   checkedDash: Set<string>,
   originalXml: string,
+  deniedCaps: DeniedCaps,
 ): string {
   // Extrait les <id> d'une section dans l'XML original
   const extractIds = (tag: string): string[] => {
@@ -132,6 +160,12 @@ function buildRightsXml(
 
   for (const section of navTree) {
     const sk = nodeKey(section)
+    // Seules les VRAIES sections d'outils (`*_toolstree_section`) portent des grants de leftmenu.
+    // On saute un nœud top qui est lui-même un OUTIL (ex. Marketplace `melis_market_place_tool_display`) :
+    // le resolver legacy `isAccessible` rejette un élément non-`*_toolstree_section` sous
+    // <meliscore_leftmenu> et refuse alors TOUS les outils → l'éditeur faisait perdre tous les droits
+    // à la sauvegarde. Correspond au format legacy valide (seules les *_toolstree_section apparaissent).
+    if (!sk.endsWith('_toolstree_section')) continue
     const allTools = getToolsFlat([section])
     const checkedHere = allTools.filter((t) => checkedTools.has(nodeKey(t)))
 
@@ -156,10 +190,45 @@ function buildRightsXml(
     L.push(`\t</${sk}>`)
   }
 
+  // ⚠️ Le resolver legacy `isAccessible` itère TOUTES les sections toolstree connues
+  // (`getMelisKeyPaths()`, 7 fixes) et fait `count($xml->meliscore_leftmenu->$section->id)` :
+  // une section ABSENTE du XML le fait PLANTER (PHP 8 : count(null) → TypeError → ancien BO en 500).
+  // Le menu React n'expose que les sections des modules INSTALLÉS, donc on émet ici les sections
+  // connues manquantes (modules non installés) avec leur `_root` (format prouvé) → ancien BO OK,
+  // sans réel grant (ces sections n'ont aucun outil).
+  const KNOWN_TOOLSTREE_SECTIONS = [
+    'meliscore_toolstree_section', 'meliscms_toolstree_section', 'melismarketing_toolstree_section',
+    'meliscommerce_toolstree_section', 'melisothers_toolstree_section', 'meliscustom_toolstree_section',
+    'melismarketplace_toolstree_section',
+  ]
+  const emittedSections = new Set(
+    navTree.map(nodeKey).filter((k) => k.endsWith('_toolstree_section')),
+  )
+  for (const sk of KNOWN_TOOLSTREE_SECTIONS) {
+    if (emittedSections.has(sk)) continue
+    L.push(`\t<${sk}>`)
+    L.push(`\t\t<id>${sk}_root</id>`)
+    L.push(`\t</${sk}>`)
+  }
+
   L.push('</meliscore_leftmenu>')
   L.push('<melis_dashboardplugin>')
   dashIds.forEach((id) => L.push(`\t<id>${id}</id>`))
   L.push('</melis_dashboardplugin>')
+
+  // Capacités d'outils (droits avancés) — section ÉDITABLE, écrite depuis l'état (deny-list).
+  // Émise seulement pour les outils ayant ≥1 capacité retirée (default-allow). Cf. react.capabilities.php.
+  const capKeys = Object.keys(deniedCaps).filter((k) => (deniedCaps[k]?.length ?? 0) > 0)
+  if (capKeys.length) {
+    L.push('<meliscore_tool_capabilities>')
+    for (const k of capKeys) {
+      L.push(`\t<tool key="${k}">`)
+      for (const c of deniedCaps[k]) L.push(`\t\t<deny>${c}</deny>`)
+      L.push('\t</tool>')
+    }
+    L.push('</meliscore_tool_capabilities>')
+  }
+
   L.push('</document>')
 
   return L.join('\n')
@@ -207,33 +276,66 @@ function ToolRow({
   checked,
   onToggle,
   depth,
+  declaredCaps,
+  deniedCaps,
+  onToggleCap,
 }: {
   node: ApiMenuNode
   checked: boolean
   onToggle: (key: string, v: boolean) => void
   depth: number
+  declaredCaps: Record<string, string[]>
+  deniedCaps: DeniedCaps
+  onToggleCap: (toolKey: string, cap: string, allowed: boolean) => void
 }) {
+  const { t } = useI18n()
   const pl = depth === 0 ? 'pl-2' : depth === 1 ? 'pl-7' : 'pl-12'
+  const capPl = depth === 0 ? 'pl-9' : depth === 1 ? 'pl-14' : 'pl-[4.75rem]'
+  const key = nodeKey(node)
+  const caps = declaredCaps[key] ?? []
+  const denied = deniedCaps[key] ?? []
   return (
-    <label
-      className={cn(
-        'flex cursor-pointer items-center gap-2 py-1 pr-3 rounded hover:bg-muted/40 transition-colors',
-        pl,
+    <div>
+      <label
+        className={cn(
+          'flex cursor-pointer items-center gap-2 py-1 pr-3 rounded hover:bg-muted/40 transition-colors',
+          pl,
+        )}
+      >
+        <input
+          type="checkbox"
+          className="sr-only"
+          checked={checked}
+          onChange={(e) => onToggle(key, e.target.checked)}
+        />
+        <TriCheckbox
+          state={checked ? 'all' : 'none'}
+          onChange={(v) => onToggle(key, v)}
+        />
+        <span className="text-sm text-foreground/90">{node.name}</span>
+        <span className="ml-auto text-[10px] text-muted-foreground/50 font-mono">{key}</span>
+      </label>
+
+      {/* Capacités (droits avancés) : visibles seulement si l'outil les déclare ET est autorisé. */}
+      {checked && caps.length > 0 && (
+        <div className={cn('flex flex-wrap items-center gap-x-3 gap-y-1 pb-1.5 pt-0.5', capPl)}>
+          {caps.map((cap) => {
+            const allowed = !denied.includes(cap)
+            return (
+              <label key={cap} className="flex cursor-pointer items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors">
+                <input
+                  type="checkbox"
+                  className="size-3 accent-primary"
+                  checked={allowed}
+                  onChange={(e) => onToggleCap(key, cap, e.target.checked)}
+                />
+                {CAP_I18N[cap] ? t(CAP_I18N[cap]) : cap}
+              </label>
+            )
+          })}
+        </div>
       )}
-    >
-      <input
-        type="checkbox"
-        className="sr-only"
-        checked={checked}
-        onChange={(e) => onToggle(nodeKey(node), e.target.checked)}
-      />
-      <TriCheckbox
-        state={checked ? 'all' : 'none'}
-        onChange={(v) => onToggle(nodeKey(node), v)}
-      />
-      <span className="text-sm text-foreground/90">{node.name}</span>
-      <span className="ml-auto text-[10px] text-muted-foreground/50 font-mono">{nodeKey(node)}</span>
-    </label>
+    </div>
   )
 }
 
@@ -245,12 +347,18 @@ function CategoryGroup({
   onToggleTool,
   onToggleGroup,
   depth,
+  declaredCaps,
+  deniedCaps,
+  onToggleCap,
 }: {
   node: ApiMenuNode
   checkedTools: Set<string>
   onToggleTool: (key: string, v: boolean) => void
   onToggleGroup: (keys: string[], v: boolean) => void
   depth: number
+  declaredCaps: Record<string, string[]>
+  deniedCaps: DeniedCaps
+  onToggleCap: (toolKey: string, cap: string, allowed: boolean) => void
 }) {
   const [open, setOpen] = useState(true)
   const tools = getToolsFlat([node])
@@ -264,6 +372,9 @@ function CategoryGroup({
         checked={checkedTools.has(nodeKey(node))}
         onToggle={onToggleTool}
         depth={depth}
+        declaredCaps={declaredCaps}
+        deniedCaps={deniedCaps}
+        onToggleCap={onToggleCap}
       />
     )
   }
@@ -304,6 +415,9 @@ function CategoryGroup({
               onToggleTool={onToggleTool}
               onToggleGroup={onToggleGroup}
               depth={depth + 1}
+              declaredCaps={declaredCaps}
+              deniedCaps={deniedCaps}
+              onToggleCap={onToggleCap}
             />
           ))}
         </div>
@@ -319,11 +433,17 @@ function SectionPanel({
   checkedTools,
   onToggleTool,
   onToggleGroup,
+  declaredCaps,
+  deniedCaps,
+  onToggleCap,
 }: {
   section: ApiMenuNode
   checkedTools: Set<string>
   onToggleTool: (key: string, v: boolean) => void
   onToggleGroup: (keys: string[], v: boolean) => void
+  declaredCaps: Record<string, string[]>
+  deniedCaps: DeniedCaps
+  onToggleCap: (toolKey: string, cap: string, allowed: boolean) => void
 }) {
   const [open, setOpen] = useState(false)
   const tools = useMemo(() => getToolsFlat([section]), [section])
@@ -366,6 +486,9 @@ function SectionPanel({
               onToggleTool={onToggleTool}
               onToggleGroup={onToggleGroup}
               depth={0}
+              declaredCaps={declaredCaps}
+              deniedCaps={deniedCaps}
+              onToggleCap={onToggleCap}
             />
           ))}
         </div>
@@ -417,6 +540,11 @@ export function RightsTreeView({ rights, onChange }: RightsTreeViewProps) {
   const [dashPlugins, setDashPlugins] = useState<DashboardPluginRight[]>([])
   const [cmsActive, setCmsActive] = useState(false)
 
+  // Capacités d'outils (droits avancés) : déclarées par module + retirées par user (deny-list).
+  const [declaredCaps, setDeclaredCaps] = useState<Record<string, string[]>>({})
+  const [deniedCaps, setDeniedCaps] = useState<DeniedCaps>({})
+  const deniedCapsRef = useRef<DeniedCaps>({})
+
   // Tracks the last XML we ourselves emitted via onChange — to ignore those echoes
   const ownXmlRef = useRef('')
   // Stores the original XML (server-loaded) to preserve non-leftmenu sections on rebuild
@@ -441,6 +569,11 @@ export function RightsTreeView({ rights, onChange }: RightsTreeViewProps) {
     fetchDashboardPluginRights().then(setDashPlugins)
   }, [])
 
+  // Capacités déclarées par les modules (carte melisKey → [caps]) pour afficher les cases par outil.
+  useEffect(() => {
+    fetchDeclaredCapabilities().then(setDeclaredCaps)
+  }, [])
+
   // Re-parse whenever rights changes from OUTSIDE (server load), not from our own onChange
   useEffect(() => {
     if (!navTree) return
@@ -449,13 +582,27 @@ export function RightsTreeView({ rights, onChange }: RightsTreeViewProps) {
     setCheckedTools(parseCheckedTools(rights, navTree))
     setCheckedPages(parsePagesRights(rights))
     setCheckedDash(parseDashboardRights(rights))
+    const denied = parseDeniedCaps(rights)
+    setDeniedCaps(denied)
+    deniedCapsRef.current = denied
   }, [navTree, rights])
 
-  function emit(tools: Set<string>, pages: Set<number>, dash: Set<string>) {
+  function emit(tools: Set<string>, pages: Set<number>, dash: Set<string>, denied: DeniedCaps = deniedCapsRef.current) {
     if (!navTree) return
-    const xml = buildRightsXml(tools, navTree, pages, dash, originalXmlRef.current)
+    const xml = buildRightsXml(tools, navTree, pages, dash, originalXmlRef.current, denied)
     ownXmlRef.current = xml
     onChange(xml)
+  }
+
+  // Toggle d'une capacité d'un outil (checked = permise). Met à jour la deny-list + ré-émet le XML.
+  function onToggleCap(toolKey: string, cap: string, allowed: boolean) {
+    const next: DeniedCaps = { ...deniedCapsRef.current }
+    const set = new Set(next[toolKey] ?? [])
+    if (allowed) set.delete(cap); else set.add(cap)
+    if (set.size) next[toolKey] = [...set]; else delete next[toolKey]
+    setDeniedCaps(next)
+    deniedCapsRef.current = next
+    emit(checkedTools, checkedPages, checkedDash, next)
   }
 
   function updateChecked(next: Set<string>) {
@@ -558,6 +705,9 @@ export function RightsTreeView({ rights, onChange }: RightsTreeViewProps) {
               checkedTools={checkedTools}
               onToggleTool={onToggleTool}
               onToggleGroup={onToggleGroup}
+              declaredCaps={declaredCaps}
+              deniedCaps={deniedCaps}
+              onToggleCap={onToggleCap}
             />
           ))}
         </Category>

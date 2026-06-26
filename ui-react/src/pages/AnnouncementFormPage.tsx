@@ -8,6 +8,7 @@ import { cn } from '@/lib/utils'
 import * as annApi from '@/lib/announcement-api'
 import { useSubTabs } from '@/components/tabs/sub-tab-store'
 import { routeForForward } from '@/lib/tool-routes'
+import { useCan } from '@/lib/capabilities'
 import { useI18n } from '@/i18n/i18n-context'
 
 interface FormData { title: string; text: string; status: boolean; date: string }
@@ -44,6 +45,11 @@ export default function AnnouncementFormPage() {
   const annId    = id ? parseInt(id) : null
 
   const base = routeForForward('MelisCore/Announcement') ?? '/announcements'
+
+  // Garde de capacité : accès direct au formulaire (URL) bloqué si l'action n'est pas permise.
+  const canForm = useCan('melis_core_announcement_tool', isEdit ? 'edit' : 'create')
+  useEffect(() => { if (!canForm) navigate(base) }, [canForm, navigate, base])
+
   const subTabPath = annId ? `${base}/${annId}` : `${base}/new`
   const { openTab: openSubTab, closeTab: closeSubTab, updateLabel: updateSubLabel } = useSubTabs(base)
 

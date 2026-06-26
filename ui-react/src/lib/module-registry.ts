@@ -1,5 +1,5 @@
 import { lazy, type LazyExoticComponent, type ComponentType } from 'react'
-import { Languages, Megaphone, ScrollText, Server, Users, type LucideIcon } from 'lucide-react'
+import { Languages, Mail, Megaphone, Puzzle, ScrollText, Server, ShieldCheck, Users, type LucideIcon } from 'lucide-react'
 
 /**
  * Registre des outils React natifs **de MelisCore**.
@@ -119,6 +119,44 @@ export const MODULES: ReactModuleDef[] = [
     melisKey: 'melis_core_announcement_tool',
     list: lazy(() => import('@/pages/AnnouncementListPage')),
     form: lazy(() => import('@/pages/AnnouncementFormPage')),
+    persistent: true,
+    viewToggle: true,
+  },
+  {
+    id: 'modules',
+    route: '/modules',
+    label: 'Modules',
+    icon: Puzzle,
+    forwardKey: 'MelisCore/Modules',
+    melisKey: 'meliscore_tool_user_module_management',
+    // Outil SPÉCIAL (pas liste/formulaire) : activation + ordre des modules.
+    list: lazy(() => import('@/pages/ModulesPage')),
+    persistent: true,
+    viewToggle: true,
+  },
+  {
+    id: 'gdpr',
+    route: '/gdpr',
+    label: 'GDPR',
+    icon: ShieldCheck,
+    forwardKey: 'MelisCore/MelisCoreGdpr',
+    melisKey: 'melis_core_gdpr',
+    // Outil SPÉCIAL (pas liste/formulaire) : recherche → extraction/suppression des
+    // données personnelles à travers les modules. L'Auto-Delete reste en vue « Old ».
+    list: lazy(() => import('@/pages/GdprPage')),
+    persistent: true,
+    viewToggle: true,
+  },
+  {
+    id: 'emails',
+    route: '/emails',
+    label: 'Emails',
+    icon: Mail,
+    forwardKey: 'MelisCore/EmailsManagement',
+    melisKey: 'meliscore_tool_emails_mngt',
+    // CRUD multilingue des emails transactionnels (liste + formulaire à onglets de langue).
+    list: lazy(() => import('@/pages/EmailListPage')),
+    form: lazy(() => import('@/pages/EmailFormPage')),
     persistent: true,
     viewToggle: true,
   },
