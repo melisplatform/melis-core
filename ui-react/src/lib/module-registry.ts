@@ -1,5 +1,5 @@
 import { lazy, type LazyExoticComponent, type ComponentType } from 'react'
-import { Languages, Mail, Megaphone, Puzzle, ScrollText, Server, ShieldCheck, Users, type LucideIcon } from 'lucide-react'
+import { Languages, Mail, Megaphone, Palette, Puzzle, ScrollText, Server, Settings2, ShieldCheck, Users, type LucideIcon } from 'lucide-react'
 
 /**
  * Registre des outils React natifs **de MelisCore**.
@@ -157,6 +157,30 @@ export const MODULES: ReactModuleDef[] = [
     // CRUD multilingue des emails transactionnels (liste + formulaire à onglets de langue).
     list: lazy(() => import('@/pages/EmailListPage')),
     form: lazy(() => import('@/pages/EmailFormPage')),
+    persistent: true,
+    viewToggle: true,
+  },
+  {
+    id: 'otherconfig',
+    route: '/otherconfig',
+    label: 'Autres Configurations',
+    icon: Settings2,
+    forwardKey: 'MelisCore/MelisCoreOtherConfig',
+    melisKey: 'meliscore_tool_other_config',
+    // Outil SPÉCIAL (page unique de réglages) : politique connexion / mot de passe (app.login.php).
+    list: lazy(() => import('@/pages/OtherConfigPage')),
+    persistent: true,
+    viewToggle: true,
+  },
+  {
+    id: 'platformscheme',
+    route: '/platform-scheme',
+    label: 'Thème de la plateforme',
+    icon: Palette,
+    forwardKey: 'MelisCore/PlatformScheme',
+    melisKey: 'meliscore_tool_platform_scheme',
+    // Outil SPÉCIAL (page unique de réglages) : couleurs + logos/favicon du BO (schemes.css).
+    list: lazy(() => import('@/pages/PlatformSchemePage')),
     persistent: true,
     viewToggle: true,
   },

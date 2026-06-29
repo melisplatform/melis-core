@@ -21,6 +21,8 @@ return [
         'meliscore_tool_platform'      => ['list', 'create', 'edit', 'delete'],
         'meliscore_tool_language'      => ['list', 'create', 'edit', 'delete'],
         'meliscore_tool_emails_mngt'   => ['list', 'create', 'edit', 'delete'],
+        'meliscore_tool_other_config'  => ['list', 'edit'], // page de réglages (voir / enregistrer)
+        'meliscore_tool_platform_scheme' => ['list', 'edit'], // thème : voir / enregistrer
         'meliscore_logs_tool'          => ['list'], // viewer read-only
     ],
 ];

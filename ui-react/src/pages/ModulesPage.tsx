@@ -312,7 +312,7 @@ export default function ModulesPage() {
                         <div className="flex items-center gap-2">
                           <span className="truncate font-medium">{m.name}</span>
                           {m.version && (
-                            <Badge variant="muted" className="px-1.5 py-0 text-[10px] tabular-nums">v{m.version}</Badge>
+                            <Badge variant="muted" className="px-1.5 py-0 text-[10px] tabular-nums">v{m.version.replace(/^v/i, '')}</Badge>
                           )}
                         </div>
                         <div className="flex items-center gap-2 text-xs text-muted-foreground">
