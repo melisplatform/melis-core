@@ -7,7 +7,8 @@ import { X } from 'lucide-react'
  * AND any tool action answering JSON {success,textMessage} are forwarded here via postMessage
  * (de-duped) so they appear over the React shell instead of inside the tool iframe.
  */
-interface Toast { id: number; kind: 'ok' | 'ko'; title: string; message: string }
+interface ErrorField { label: string; messages: string[] }
+interface Toast { id: number; kind: 'ok' | 'ko'; title: string; message: string; fields?: ErrorField[] }
 
 let seq = 0
 // De-dup window: a tool may both call melisOkNotification AND answer JSON {success,textMessage}
@@ -21,11 +22,14 @@ export function Notifications() {
 
   useEffect(() => {
     const onMsg = (e: MessageEvent) => {
-      const d = e.data as { __melisNotif?: boolean; kind?: string; title?: string; message?: string } | null
+      const d = e.data as { __melisNotif?: boolean; kind?: string; title?: string; message?: string; fields?: ErrorField[] } | null
       if (!d || !d.__melisNotif) return
       const kind: Toast['kind'] = d.kind === 'ko' ? 'ko' : 'ok'
       const title = (d.title ?? '').trim()
       const message = (d.message ?? '').trim()
+      const fields = Array.isArray(d.fields) ? d.fields.filter(f => f && f.label) : []
+      // The XHR bridge and melisKoNotification both fire for the same save with an identical
+      // payload (same kind/title/message/fields) → de-dup on that key collapses them to one.
       const key = `${kind}|${title}|${message}`
       const now = Date.now()
       if (key === lastKey && now - lastAt < DEDUP_MS) return
@@ -33,7 +37,7 @@ export function Notifications() {
       lastAt = now
       const id = ++seq
       // Keep only the most recent few — never replay a history of toasts.
-      setToasts((ts) => [...ts, { id, kind, title, message }].slice(-4))
+      setToasts((ts) => [...ts, { id, kind, title, message, fields }].slice(-4))
       // Success toasts auto-dismiss; errors stay until closed.
       if (kind === 'ok') {
         window.setTimeout(() => setToasts((ts) => ts.filter((t) => t.id !== id)), 4000)
@@ -59,6 +63,16 @@ export function Notifications() {
           <div className="min-w-0 flex-1">
             {t.title && <div className="font-semibold leading-tight">{t.title}</div>}
             {t.message && <div className="leading-snug opacity-95">{t.message}</div>}
+            {t.fields && t.fields.length > 0 && (
+              <ul className="mt-1.5 space-y-1 border-t border-white/25 pt-1.5 text-xs">
+                {t.fields.map((f, i) => (
+                  <li key={i} className="leading-snug">
+                    <span className="font-semibold">{f.label}:</span>{' '}
+                    <span className="opacity-95">{f.messages.join(' ')}</span>
+                  </li>
+                ))}
+              </ul>
+            )}
           </div>
           <button
             type="button"
