@@ -13,6 +13,7 @@ import { ZoneFrames } from '@/components/zone/ZoneFrames'
 import { SubTabProvider } from '@/components/tabs/sub-tab-store'
 import { ToolTabBridgeProvider } from '@/components/tabs/tool-tab-bridge'
 import { useBricks, brickRoute, refreshActiveModules } from '@/lib/bricks'
+import { loadReactTheme } from '@/lib/react-theme'
 import { PERSISTENT_MODULES } from '@/lib/module-registry'
 import { melisKeyForRoute, routeForForward, useToolRoutesVersion } from '@/lib/tool-routes'
 
@@ -37,6 +38,9 @@ function ShellInner() {
   const location = useLocation()
   const bricks = useBricks()
   useToolRoutesVersion() // re-resolve the active zone once the tool-routes registry populates
+
+  // Charge le thème du BO React (logo d'en-tête configurable) une fois, après login.
+  useEffect(() => { loadReactTheme() }, [])
 
   // Re-check which modules are active on each navigation (cheap no-store JSON), so a
   // module toggled in the Modules tool is reflected when the user reopens a gated tool

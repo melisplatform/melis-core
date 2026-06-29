@@ -1,6 +1,6 @@
-import { useState, type FormEvent } from 'react'
+import { useEffect, useRef, useState, type FormEvent } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { AlertCircle, ArrowRight, Eye, EyeOff, Loader2, Lock, User } from 'lucide-react'
+import { AlertCircle, ArrowRight, Check, Eye, EyeOff, Loader2, Lock, User } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -9,30 +9,83 @@ import { Checkbox } from '@/components/ui/checkbox'
 import { ThemeSwitcher } from '@/components/ThemeSwitcher'
 import { useAuth } from '@/auth/auth-context'
 import { useTheme } from '@/theme/theme-context'
+import { useI18n } from '@/i18n/i18n-context'
+import { LANGS, LANG_LABELS, type Lang } from '@/i18n/dictionaries'
+import { useReactTheme, loadReactTheme } from '@/lib/react-theme'
+import { cn } from '@/lib/utils'
 import wordmark from '@/assets/melis-wordmark.svg'
 import wordmarkWhite from '@/assets/melis-wordmark-white.svg'
 
-/** Accroche du panneau de marque, déclinée par thème. */
-const BRAND_COPY = {
-  platform: {
-    title: ['Le backoffice Melis,', 'nouvelle génération.'],
-    subtitle:
-      'Gérez vos sites, pages et contenus depuis une interface moderne, rapide et pensée pour 2026.',
-  },
-  studio: {
-    title: ['L’IA fait le job.', 'L’humain garde le contrôle.'],
-    subtitle:
-      'Le backoffice Melis Studio : vos contenus augmentés par l’IA, toujours sous votre contrôle.',
-  },
-} as const
+/** Locale (= nom du PNG de drapeau) par langue de l'UI. Images servies par MelisAssetManager
+ *  depuis melis-core/public/images/lang/<locale>.png (cross-platform, contrairement aux emoji
+ *  drapeaux non rendus sous Windows). */
+const LANG_LOCALE: Record<Lang, string> = { fr: 'fr_FR', en: 'en_EN' }
+const flagSrc = (l: Lang) => `/MelisCore/images/lang/${LANG_LOCALE[l]}.png`
+const Flag = ({ l }: { l: Lang }) => (
+  <img src={flagSrc(l)} alt="" className="h-3.5 w-auto rounded-[2px] object-cover" />
+)
+
+/** Sélecteur de langue du login : bascule la langue de l'UI React en LOCAL (avant authentification,
+ *  pas de session) via setLang. Le reste du BO suivra la locale de session une fois connecté. */
+function LoginLangSwitcher({ className }: { className?: string }) {
+  const { lang, setLang, t } = useI18n()
+  const [open, setOpen] = useState(false)
+  const ref = useRef<HTMLDivElement>(null)
+  useEffect(() => {
+    function onDoc(e: MouseEvent) { if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false) }
+    document.addEventListener('mousedown', onDoc)
+    return () => document.removeEventListener('mousedown', onDoc)
+  }, [])
+  return (
+    <div ref={ref} className={cn('relative', className)}>
+      <button
+        type="button"
+        onClick={() => setOpen((o) => !o)}
+        title={t('login.language')}
+        className="inline-flex h-9 items-center gap-1.5 rounded-md px-2 text-muted-foreground transition-colors hover:bg-accent hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40"
+      >
+        <Flag l={lang} />
+        <span className="text-xs font-semibold uppercase">{lang}</span>
+      </button>
+      {open && (
+        <div className="absolute right-0 top-10 z-30 min-w-[150px] overflow-hidden rounded-md border border-border bg-card py-1 shadow-lg">
+          {LANGS.map((l) => (
+            <button
+              key={l}
+              type="button"
+              onClick={() => { setLang(l); setOpen(false) }}
+              className={cn(
+                'flex w-full items-center gap-2.5 px-3 py-1.5 text-sm transition-colors hover:bg-accent',
+                l === lang ? 'font-medium text-primary' : 'text-foreground',
+              )}
+            >
+              <Flag l={l} />
+              <span className="flex-1 text-left">{LANG_LABELS[l]}</span>
+              {l === lang && <Check className="size-3.5" />}
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  )
+}
 
 export default function LoginPage() {
   const { signIn } = useAuth()
   const { theme } = useTheme()
+  const { t, lang } = useI18n()
   const navigate = useNavigate()
 
   const dark = theme === 'studio'
-  const copy = BRAND_COPY[theme]
+
+  // Branding du panneau gauche (thème React, lisible AVANT auth via l'endpoint public).
+  const brand = useReactTheme()
+  useEffect(() => { loadReactTheme() }, [])
+
+  // Titre/sous-titre traduits : on résout la langue React (fr/en) → locale → langId du BO.
+  const brandLangId = brand.languages.find((l) => l.locale === LANG_LOCALE[lang])?.id
+  const brandTitle = (brandLangId != null ? brand.translations.loginTitle[String(brandLangId)] : '') || ''
+  const brandSubtitle = (brandLangId != null ? brand.translations.loginSubtitle[String(brandLangId)] : '') || ''
 
   const [login, setLogin] = useState('')
   const [password, setPassword] = useState('')
@@ -57,48 +110,54 @@ export default function LoginPage() {
 
   return (
     <div className="relative grid min-h-screen lg:grid-cols-2">
-      {/* Sélecteur de thème — flottant en haut à droite */}
-      <ThemeSwitcher className="absolute right-5 top-5 z-20" />
+      {/* Sélecteurs (langue + thème) — flottants en haut à droite */}
+      <div className="absolute right-5 top-5 z-20 flex items-center gap-1">
+        <LoginLangSwitcher />
+        <ThemeSwitcher />
+      </div>
 
-      {/* Panneau de marque — masqué sur mobile */}
+      {/* Panneau de marque — masqué sur mobile. Les couleurs suivent le thème (clair/sombre) ;
+          seule l'accroche est figée sur l'identité "platform" (cf. `copy` ci-dessus). */}
       <aside
         className="relative hidden overflow-hidden lg:flex lg:flex-col lg:justify-between lg:p-12"
         style={{ color: 'var(--brand-foreground)' }}
       >
+        {/* Fond : image configurée (avec voile pour la lisibilité) sinon dégradé du thème. */}
         <div
-          className="pointer-events-none absolute inset-0"
-          style={{ background: 'var(--brand-gradient)' }}
+          className="pointer-events-none absolute inset-0 bg-cover bg-center"
+          style={brand.loginBackground
+            ? { backgroundImage: `linear-gradient(rgba(0,0,0,.30), rgba(0,0,0,.45)), url(${JSON.stringify(brand.loginBackground)})` }
+            : { background: 'var(--brand-gradient)' }}
         />
-        {/* Halos décoratifs (couleurs pilotées par le thème) */}
-        <div
-          className="pointer-events-none absolute -right-24 -top-24 size-96 rounded-full blur-3xl"
-          style={{ background: 'var(--brand-halo-1)' }}
-        />
-        <div
-          className="pointer-events-none absolute -bottom-32 -left-16 size-96 rounded-full blur-3xl"
-          style={{ background: 'var(--brand-halo-2)' }}
-        />
+        {/* Halos décoratifs (uniquement sans image de fond personnalisée) */}
+        {!brand.loginBackground && (
+          <>
+            <div
+              className="pointer-events-none absolute -right-24 -top-24 size-96 rounded-full blur-3xl"
+              style={{ background: 'var(--brand-halo-1)' }}
+            />
+            <div
+              className="pointer-events-none absolute -bottom-32 -left-16 size-96 rounded-full blur-3xl"
+              style={{ background: 'var(--brand-halo-2)' }}
+            />
+          </>
+        )}
 
         <div className="relative flex items-center gap-3">
-          <img src={wordmarkWhite} alt="Melis" className="h-6 w-auto" />
-          {dark && (
-            <span className="font-[var(--font-mono)] rounded-full border border-white/20 px-2 py-0.5 text-[11px] uppercase tracking-widest text-white/70">
-              Studio · AI
-            </span>
-          )}
+          <img src={brand.loginLogo || wordmarkWhite} alt="Melis" className="h-6 w-auto max-w-[220px] object-contain" />
         </div>
 
         <div className="relative max-w-md">
           <h1 className="font-[var(--font-display)] text-4xl font-bold leading-tight tracking-tight">
-            {copy.title[0]}
-            <br />
-            {copy.title[1]}
+            {brandTitle
+              ? <span className="whitespace-pre-line">{brandTitle}</span>
+              : <>{t('login.brand_title1')}<br />{t('login.brand_title2')}</>}
           </h1>
           <p
             className="mt-4 text-base leading-relaxed"
             style={{ color: 'var(--brand-muted)' }}
           >
-            {copy.subtitle}
+            {brandSubtitle || t('login.brand_subtitle')}
           </p>
         </div>
 
@@ -106,7 +165,11 @@ export default function LoginPage() {
           className="font-[var(--font-mono)] relative text-xs"
           style={{ color: 'var(--brand-faint)' }}
         >
-          © {new Date().getFullYear()} Melis Technology — Aperçu interne
+          © {new Date().getFullYear()} {t('footer.by')}{' '}
+          <a href={`https://www.melisplatform.com/${lang}`} target="_blank" rel="noopener noreferrer" className="hover:underline">
+            Melis Technology
+          </a>{' '}- {t('footer.rights')}
+          {brand.version && <> - {t('footer.version')}: {brand.version}</>}
         </div>
       </aside>
 
@@ -120,10 +183,10 @@ export default function LoginPage() {
               className="h-7 w-auto"
             />
             <h2 className="mt-7 font-[var(--font-display)] text-2xl font-semibold tracking-tight">
-              Connexion
+              {t('login.title')}
             </h2>
             <p className="mt-1.5 text-sm text-muted-foreground">
-              Accédez à votre espace d'administration
+              {t('login.subtitle')}
             </p>
           </div>
 
@@ -139,7 +202,7 @@ export default function LoginPage() {
 
           <form onSubmit={handleSubmit} className="space-y-5" noValidate>
             <div className="space-y-2">
-              <Label htmlFor="usr_login">Identifiant ou e-mail</Label>
+              <Label htmlFor="usr_login">{t('login.username')}</Label>
               <div className="relative">
                 <User className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
                 <Input
@@ -158,13 +221,13 @@ export default function LoginPage() {
 
             <div className="space-y-2">
               <div className="flex items-center justify-between">
-                <Label htmlFor="usr_password">Mot de passe</Label>
+                <Label htmlFor="usr_password">{t('login.password')}</Label>
                 <a
                   href="/melis/lost-password"
                   tabIndex={-1}
                   className="text-sm font-medium text-primary hover:underline"
                 >
-                  Mot de passe oublié ?
+                  {t('login.forgot')}
                 </a>
               </div>
               <div className="relative">
@@ -184,7 +247,7 @@ export default function LoginPage() {
                   type="button"
                   onClick={() => setShowPassword((v) => !v)}
                   className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground transition-colors hover:text-foreground"
-                  aria-label={showPassword ? 'Masquer le mot de passe' : 'Afficher le mot de passe'}
+                  aria-label={showPassword ? t('login.hide_password') : t('login.show_password')}
                   tabIndex={-1}
                 >
                   {showPassword ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
@@ -197,18 +260,18 @@ export default function LoginPage() {
                 checked={remember}
                 onCheckedChange={(v) => setRemember(v === true)}
               />
-              Se souvenir de moi
+              {t('login.remember')}
             </label>
 
             <Button type="submit" size="lg" className="w-full" disabled={submitting}>
               {submitting ? (
                 <>
                   <Loader2 className="size-4 animate-spin" />
-                  Connexion…
+                  {t('login.submitting')}
                 </>
               ) : (
                 <>
-                  Se connecter
+                  {t('login.submit')}
                   <ArrowRight className="size-4" />
                 </>
               )}
@@ -216,7 +279,7 @@ export default function LoginPage() {
           </form>
 
           <p className="mt-8 text-center text-xs text-muted-foreground/70">
-            Prototype React — chantier 3. L'interface historique reste disponible sur{' '}
+            {t('login.legacy_before')}
             <a href="/melis/login" className="underline hover:text-foreground">
               /melis/login
             </a>

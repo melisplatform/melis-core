@@ -9,6 +9,7 @@ import { useNavMenu, type NavNode } from '@/hooks/useNavMenu'
 import { useBricks, sidebarBrickForModules } from '@/lib/bricks'
 import { useTabs } from '@/components/tabs/tab-store'
 import { melisKeyForRoute } from '@/lib/tool-routes'
+import { useReactTheme } from '@/lib/react-theme'
 import wordmark from '@/assets/melis-wordmark.svg'
 import wordmarkWhite from '@/assets/melis-wordmark-white.svg'
 
@@ -175,11 +176,13 @@ function NavSkeleton({ collapsed }: { collapsed: boolean }) {
 // ─── Sidebar ─────────────────────────────────────────────────────────────────
 
 export function Sidebar({ collapsed }: { collapsed: boolean }) {
-  const { t } = useI18n()
+  const { t, lang } = useI18n()
   const { theme } = useTheme()
   const { openTab, activeId } = useTabs()
   const navigate = useNavigate()
   const mark = theme === 'studio' ? wordmarkWhite : wordmark
+  // Logo d'en-tête configurable (outil "Platform theme" React). Vide = logo Melis par défaut.
+  const { headerLogo, version } = useReactTheme()
   const { nodes: navNodes, loading: navLoading } = useNavMenu()
   // Re-render when module bricks load so their sidebar panels (e.g. CMS page tree) appear.
   const bricks = useBricks()
@@ -200,7 +203,13 @@ export function Sidebar({ collapsed }: { collapsed: boolean }) {
           collapsed ? 'justify-center px-2' : 'px-5',
         )}
       >
-        {collapsed ? <BrandMark /> : <img src={mark} alt="Melis Platform" className="h-6 w-auto" />}
+        {collapsed
+          ? (headerLogo
+              ? <img src={headerLogo} alt="Melis Platform" className="size-9 shrink-0 rounded-lg object-contain" />
+              : <BrandMark />)
+          : (headerLogo
+              ? <img src={headerLogo} alt="Melis Platform" className="h-7 w-auto max-w-[180px] object-contain" />
+              : <img src={mark} alt="Melis Platform" className="h-6 w-auto" />)}
       </div>
 
       {/* Dashboard */}
@@ -252,6 +261,20 @@ export function Sidebar({ collapsed }: { collapsed: boolean }) {
           })
         )}
       </nav>
+
+      {/* Footer : © année courante + version (sur une seule ligne ; sans "tous droits réservés"). */}
+      {!collapsed && (
+        <div
+          className="overflow-hidden text-ellipsis whitespace-nowrap border-t border-border px-4 py-3 text-[10px] text-muted-foreground/70"
+          title={`© ${new Date().getFullYear()} ${t('footer.by')} Melis Technology${version ? ` - ${t('footer.version')}: ${version}` : ''}`}
+        >
+          © {new Date().getFullYear()} {t('footer.by')}{' '}
+          <a href={`https://www.melisplatform.com/${lang}`} target="_blank" rel="noopener noreferrer" className="hover:underline hover:text-foreground">
+            Melis Technology
+          </a>
+          {version && <> - {t('footer.version')}: {version}</>}
+        </div>
+      )}
     </aside>
   )
 }
