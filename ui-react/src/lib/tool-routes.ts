@@ -90,8 +90,15 @@ function persist() {
 /** Register one tool's route mapping (called while building the nav tree). */
 export function registerTool(e: ToolRouteEntry): void {
   let changed = false
-  if (e.melisKey && routeToMelisKey[e.route] !== e.melisKey) {
+  if (e.melisKey != null) {
+    if (routeToMelisKey[e.route] !== e.melisKey) {
     routeToMelisKey[e.route] = e.melisKey
+      changed = true
+    }
+  } else if (e.route in routeToMelisKey) {
+    // React brick routes have no melisKey — clear any stale iframe key so ZoneFrames
+    // doesn't overlay the brick with the legacy tool loaded in a previous render pass.
+    delete routeToMelisKey[e.route]
     changed = true
   }
   if (e.forwardKey && forwardToRoute[e.forwardKey] !== e.route) {
