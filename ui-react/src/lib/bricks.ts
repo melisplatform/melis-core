@@ -24,6 +24,13 @@ export interface BrickDef {
   label: string
   forwardKey: string | null
   melisKey: string | null
+  /**
+   * Opt-in to the host sub-tab pattern (native "User Management" look). When true, the host
+   * TabBridge collapses /[section]/[tool]/:id to ONE tool top tab and the host SubTabBar renders
+   * the opened records (the brick registers them via window.__melisOpenSubTab). When false (default)
+   * the brick keeps a separate top tab per opened entity (e.g. the News brick).
+   */
+  subTabs: boolean
   /** Routed page rendered in the content area (optional). May be a React.lazy exotic. */
   Component?: ComponentType | LazyExoticComponent<ComponentType>
   /** Left-sidebar panel rendered under the module's nav section (optional). */
@@ -215,7 +222,7 @@ export async function loadBricks(): Promise<void> {
             if (reg?.Sidebar || reg?.Header) {
               bricks.push({
                 id: m.id, module: m.module, route: '', label: m.label,
-                forwardKey: m.forwardKey, melisKey: m.melisKey,
+                forwardKey: m.forwardKey, melisKey: m.melisKey, subTabs: m.subTabs ?? false,
                 Component: undefined, Sidebar: reg.Sidebar, Header: reg.Header,
               })
             }
@@ -242,6 +249,7 @@ export async function loadBricks(): Promise<void> {
         label:      m.label,
         forwardKey: m.forwardKey,
         melisKey:   m.melisKey,
+        subTabs:    m.subTabs ?? false,
         Component:  LazyComponent,
         // Sidebar and Header are unknown until the bundle executes — set lazily above.
         Sidebar:    undefined,

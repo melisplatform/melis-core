@@ -8,6 +8,12 @@ import tailwindcss from '@tailwindcss/vite'
 // Surchargeable via MELIS_TARGET (ex: MELIS_TARGET=http://localhost npm run dev).
 const MELIS_TARGET = process.env.MELIS_TARGET ?? 'http://dev.local'
 
+// Optional: override the outgoing Host header sent to the backend. Needed when proxying to a
+// Melis instance served on a NON-standard port (e.g. a parallel stack on :8081): Melis' domain
+// routing infinite-redirects when the Host carries a port, so we present a port-less host
+// (e.g. MELIS_PROXY_HOST=localhost). Unset → default behaviour (changeOrigin sets Host = target).
+const MELIS_PROXY_HOST = process.env.MELIS_PROXY_HOST
+
 // Root of the Melis project. ui-react now lives at
 // vendor/melisplatform/melis-core/ui-react/, so the skeleton root is 4 levels up
 // (ui-react → melis-core → melisplatform → vendor → root).
@@ -100,6 +106,18 @@ function melisModuleAssetsPlugin(): any {
   }
 }
 
+// When MELIS_PROXY_HOST is set, force the outgoing Host header on every proxy rule (overrides
+// changeOrigin, which would otherwise set Host to target host:port). No-op when unset.
+const hostOverride = MELIS_PROXY_HOST
+  ? {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      configure: (proxy: any) => {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        proxy.on('proxyReq', (proxyReq: any) => proxyReq.setHeader('host', MELIS_PROXY_HOST))
+      },
+    }
+  : {}
+
 // https://vite.dev/config/
 export default defineConfig(({ command }) => ({
   // Dev server runs at localhost root (base '/'). The production build is served
@@ -138,11 +156,12 @@ export default defineConfig(({ command }) => ({
         target: MELIS_TARGET,
         changeOrigin: true,
         headers: { 'X-Requested-With': 'XMLHttpRequest' },
+        ...hostOverride,
       },
-      '/melis': { target: MELIS_TARGET, changeOrigin: true },
-      '/assets': { target: MELIS_TARGET, changeOrigin: true },
-      '^/Melis[A-Z]': { target: MELIS_TARGET, changeOrigin: true },
-      '^/melis-': { target: MELIS_TARGET, changeOrigin: true },
+      '/melis': { target: MELIS_TARGET, changeOrigin: true, ...hostOverride },
+      '/assets': { target: MELIS_TARGET, changeOrigin: true, ...hostOverride },
+      '^/Melis[A-Z]': { target: MELIS_TARGET, changeOrigin: true, ...hostOverride },
+      '^/melis-': { target: MELIS_TARGET, changeOrigin: true, ...hostOverride },
     },
   },
 }))

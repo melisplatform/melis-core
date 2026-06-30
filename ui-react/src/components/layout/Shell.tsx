@@ -10,7 +10,7 @@ import { ToolTabBar } from './ToolTabBar'
 import { Notifications } from '@/components/Notifications'
 import { ZonePoolProvider } from '@/components/zone/zone-pool'
 import { ZoneFrames } from '@/components/zone/ZoneFrames'
-import { SubTabProvider } from '@/components/tabs/sub-tab-store'
+import { SubTabProvider, SubTabWindowBridge } from '@/components/tabs/sub-tab-store'
 import { ToolTabBridgeProvider } from '@/components/tabs/tool-tab-bridge'
 import { useBricks, brickRoute, refreshActiveModules } from '@/lib/bricks'
 import { loadReactTheme } from '@/lib/react-theme'
@@ -117,6 +117,7 @@ function ShellInner() {
 
   return (
     <div className="flex h-screen overflow-hidden bg-background">
+      <SubTabWindowBridge />
       <Notifications />
       <Sidebar collapsed={collapsed} />
       <div className="flex min-w-0 flex-1 flex-col">

@@ -36,6 +36,7 @@ function deriveTabLabel(path: string): string {
 function TabBridge() {
   const { openTab, closeTab, syncRoute } = useTabs()
   const location = useLocation()
+  const bricks = useBricks()
   // Re-run the route→tab sync once the tool-routes registry (re)loads, so a cold deep-link to a
   // tool sub-route resolves to the right top tab (e.g. /melis-core/user/2 → "Utilisateurs") instead
   // of staying on a raw fallback tab.
@@ -50,17 +51,27 @@ function TabBridge() {
     if (path === '/login') return
     // Native tools (MODULES) use ONE top tab + a sub-tab bar for their entities, so an edit
     // sub-route (/[tool]/:id) must sync to the TOOL's top tab — not spawn a per-id tab ("2").
-    // Bricks (e.g. CMS pages) keep one top tab per entity and are intentionally NOT collapsed.
+    // Bricks WITHOUT subTabs (e.g. CMS pages, News) keep one top tab per entity (handled below);
+    // bricks WITH subTabs:true are collapsed just like native tools (see subTabBrick below).
     const tool = MODULES
       .map((m) => ({ route: routeForForward(m.forwardKey), label: m.label }))
       .find((m) => m.route && path.startsWith(m.route + '/'))
     if (tool?.route) { syncRoute({ id: tool.route, label: tool.label, path: tool.route }); return }
+    // Bricks that opted into the native sub-tab pattern (manifest subTabs:true) behave like the
+    // native tools above: collapse /[section]/[tool]/:id to the ONE tool top tab (the opened
+    // records live in the host SubTabBar) — instead of spawning a stray per-id tab labelled "6".
+    const subTabBrick = bricks.find((b) => {
+      if (!b.subTabs) return false
+      const r = brickRoute(b)
+      return r && (path === r || path.startsWith(r + '/'))
+    })
+    if (subTabBrick) { const r = brickRoute(subTabBrick); syncRoute({ id: r, label: subTabBrick.label, path: r }); return }
     // No native module matched. If the registry isn't loaded yet, a tool sub-route would here spawn a
     // raw "/section/tool/:id" tab (label "2"); skip until the registry loads (this effect re-runs on
     // toolRoutesVersion). Once loaded, an unknown route is a genuine zone/brick tab → create it.
     if (path !== '/' && !hasToolRoutes()) return
     syncRoute({ id: path, label: deriveTabLabel(path), path })
-  }, [location.pathname, syncRoute, toolRoutesVersion])
+  }, [location.pathname, syncRoute, toolRoutesVersion, bricks])
   return null
 }
 

@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom'
 import { cn } from '@/lib/utils'
 import { useSubTabs } from '@/components/tabs/sub-tab-store'
 import { MODULES } from '@/lib/module-registry'
+import { useBricks, brickRoute } from '@/lib/bricks'
 import { routeForForward, useToolRoutesVersion } from '@/lib/tool-routes'
 import { useI18n } from '@/i18n/i18n-context'
 
@@ -76,12 +77,17 @@ export function SubTabBar() {
   // Re-render once tool routes register so the derived routes become available.
   useToolRoutesVersion()
   const { pathname } = useLocation()
+  const bricks = useBricks()
   // Sections keyed by the tree-DERIVED route (App.tsx mounts tools there via routeForForward),
   // NOT the static registry m.route — else the bar never matches /[section]/[tool]/:id and the
-  // sub-tab navigation (← retour + named tabs) never appears.
-  const section = MODULES
-    .map((m) => ({ key: routeForForward(m.forwardKey) ?? m.route, icon: m.icon ?? FileText }))
-    .find((s) => pathname === s.key || pathname.startsWith(s.key + '/'))
+  // sub-tab navigation (← retour + named tabs) never appears. Native MelisCore tools (MODULES)
+  // PLUS module bricks that opted in (manifest subTabs:true) both use this SAME bar — a brick
+  // registers its opened records through window.__melisOpenSubTab keyed by its route.
+  const sections = [
+    ...MODULES.map((m) => ({ key: routeForForward(m.forwardKey) ?? m.route, icon: m.icon ?? FileText })),
+    ...bricks.filter((b) => b.subTabs).map((b) => ({ key: brickRoute(b), icon: FileText as React.ElementType })),
+  ]
+  const section = sections.find((s) => s.key && (pathname === s.key || pathname.startsWith(s.key + '/')))
   if (!section) return null
   return <SubTabBarInner sectionKey={section.key} listPath={section.key} tabIcon={section.icon} />
 }

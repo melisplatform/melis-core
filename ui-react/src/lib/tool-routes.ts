@@ -92,7 +92,7 @@ export function registerTool(e: ToolRouteEntry): void {
   let changed = false
   if (e.melisKey != null) {
     if (routeToMelisKey[e.route] !== e.melisKey) {
-    routeToMelisKey[e.route] = e.melisKey
+      routeToMelisKey[e.route] = e.melisKey
       changed = true
     }
   } else if (e.route in routeToMelisKey) {

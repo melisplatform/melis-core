@@ -310,6 +310,9 @@ export interface ApiReactBrick {
   forwardKey: string | null
   /** melisKey de l'outil legacy (toggle New/Old), si applicable. */
   melisKey: string | null
+  /** Opt-in au pattern de sous-onglets natif (look « User Management ») : l'hôte replie
+   *  /[section]/[tool]/:id sur UN seul onglet outil + rend la SubTabBar des enregistrements ouverts. */
+  subTabs?: boolean
   /** URL du bundle IIFE de la brique, servi par MelisAssetManager. */
   bundleUrl: string
 }

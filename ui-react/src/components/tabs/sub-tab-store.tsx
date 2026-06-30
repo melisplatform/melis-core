@@ -1,4 +1,4 @@
-import { createContext, useCallback, useContext, useReducer } from 'react'
+import { createContext, useCallback, useContext, useEffect, useReducer } from 'react'
 
 export interface SubTab { id: string; label: string; path: string }
 
@@ -33,6 +33,29 @@ const SubTabContext = createContext<{ state: SubTabState; dispatch: React.Dispat
 export function SubTabProvider({ children }: { children: React.ReactNode }) {
   const [state, dispatch] = useReducer(reducer, { sections: {} })
   return <SubTabContext.Provider value={{ state, dispatch }}>{children}</SubTabContext.Provider>
+}
+
+/**
+ * Exposes the sub-tab store imperatively on `window` so module React bricks (separate bundles that
+ * cannot import this context) can drive the SAME native sub-tab bar as core tools — the "User
+ * Management" look — instead of re-implementing it. The `section` is the brick's tree route
+ * (/[section]/[tool]); SubTabBar reads the open records for that section. A brick opts in via its
+ * manifest `subTabs: true` (see lib/bricks.ts). Mounted once inside SubTabProvider (Shell).
+ */
+export function SubTabWindowBridge() {
+  const ctx = useContext(SubTabContext)
+  useEffect(() => {
+    if (!ctx) return
+    const w = window as unknown as {
+      __melisOpenSubTab?: (section: string, tab: SubTab) => void
+      __melisCloseSubTab?: (section: string, id: string) => void
+      __melisUpdateSubTabLabel?: (section: string, id: string, label: string) => void
+    }
+    w.__melisOpenSubTab = (section, tab) => ctx.dispatch({ type: 'OPEN', section, tab })
+    w.__melisCloseSubTab = (section, id) => ctx.dispatch({ type: 'CLOSE', section, id })
+    w.__melisUpdateSubTabLabel = (section, id, label) => ctx.dispatch({ type: 'UPDATE_LABEL', section, id, label })
+  }, [ctx])
+  return null
 }
 
 export function useSubTabs(section: string) {
