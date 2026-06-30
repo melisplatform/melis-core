@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, type FormEvent } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { AlertCircle, ArrowRight, Check, Eye, EyeOff, Loader2, Lock, User } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
@@ -10,16 +10,11 @@ import { ThemeSwitcher } from '@/components/ThemeSwitcher'
 import { useAuth } from '@/auth/auth-context'
 import { useTheme } from '@/theme/theme-context'
 import { useI18n } from '@/i18n/i18n-context'
-import { LANGS, LANG_LABELS, type Lang } from '@/i18n/dictionaries'
+import { LANGS, LANG_LABELS, LANG_LOCALE, type Lang } from '@/i18n/dictionaries'
 import { useReactTheme, loadReactTheme } from '@/lib/react-theme'
 import { cn } from '@/lib/utils'
 import wordmark from '@/assets/melis-wordmark.svg'
 import wordmarkWhite from '@/assets/melis-wordmark-white.svg'
-
-/** Locale (= nom du PNG de drapeau) par langue de l'UI. Images servies par MelisAssetManager
- *  depuis melis-core/public/images/lang/<locale>.png (cross-platform, contrairement aux emoji
- *  drapeaux non rendus sous Windows). */
-const LANG_LOCALE: Record<Lang, string> = { fr: 'fr_FR', en: 'en_EN' }
 const flagSrc = (l: Lang) => `/MelisCore/images/lang/${LANG_LOCALE[l]}.png`
 const Flag = ({ l }: { l: Lang }) => (
   <img src={flagSrc(l)} alt="" className="h-3.5 w-auto rounded-[2px] object-cover" />
@@ -67,6 +62,24 @@ function LoginLangSwitcher({ className }: { className?: string }) {
         </div>
       )}
     </div>
+  )
+}
+
+/** Bandeau "Version bêta React" en bas du formulaire de login.
+ *  Le domaine est résolu dynamiquement (window.location.origin) ; l'URL legacy est cliquable. */
+function LegacyNotice() {
+  const { t } = useI18n()
+  const origin = window.location.origin
+  const legacyUrl = `${origin}/melis`
+  // La traduction contient {domain} — on l'interpole, puis on split sur legacyUrl pour insérer un <a>.
+  const notice = t('login.legacy_notice', { domain: origin })
+  const [before, after] = notice.split(legacyUrl)
+  return (
+    <p className="mt-8 text-center text-xs text-muted-foreground/70">
+      {before}
+      <a href={legacyUrl} className="underline hover:text-foreground">{legacyUrl}</a>
+      {after ?? ''}
+    </p>
   )
 }
 
@@ -222,13 +235,13 @@ export default function LoginPage() {
             <div className="space-y-2">
               <div className="flex items-center justify-between">
                 <Label htmlFor="usr_password">{t('login.password')}</Label>
-                <a
-                  href="/melis/lost-password"
+                <Link
+                  to="/forgot-password"
                   tabIndex={-1}
                   className="text-sm font-medium text-primary hover:underline"
                 >
                   {t('login.forgot')}
-                </a>
+                </Link>
               </div>
               <div className="relative">
                 <Lock className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
@@ -278,13 +291,7 @@ export default function LoginPage() {
             </Button>
           </form>
 
-          <p className="mt-8 text-center text-xs text-muted-foreground/70">
-            {t('login.legacy_before')}
-            <a href="/melis/login" className="underline hover:text-foreground">
-              /melis/login
-            </a>
-            .
-          </p>
+          <LegacyNotice />
         </div>
       </main>
     </div>

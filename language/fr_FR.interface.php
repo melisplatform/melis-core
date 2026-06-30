@@ -235,6 +235,7 @@ return [
 
     'tr_meliscore_login_remember_me' => 'Se rappeler de moi',
     'tr_meliscore_login_header' => 'Connexion à votre compte',
+    'tr_meliscore_react_beta_login_notice' => 'Version bêta React — L\'interface historique reste disponible sur {domain}/melis.',
     
     'tr_meliscore_common_choose' => 'Choisissez',
 

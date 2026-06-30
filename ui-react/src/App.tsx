@@ -12,6 +12,8 @@ import { MODULES } from '@/lib/module-registry'
 import { useBricks, brickRoute } from '@/lib/bricks'
 import { hasToolRoutes, routeForForward, useToolRoutesVersion } from '@/lib/tool-routes'
 import LoginPage from '@/pages/LoginPage'
+import ForgotPasswordPage from '@/pages/ForgotPasswordPage'
+import ResetPasswordPage from '@/pages/ResetPasswordPage'
 
 /** Fallback label for a route that opens a tab without one (e.g. a deep link). */
 function deriveTabLabel(path: string): string {
@@ -93,6 +95,8 @@ export default function App() {
             <Routes>
               {/* Public */}
               <Route path="/login" element={<LoginPage />} />
+              <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+              <Route path="/reset-password/:hash" element={<ResetPasswordPage />} />
 
               {/* Authentifié — Shell (sidebar + topbar) */}
               <Route element={<ProtectedRoute />}>

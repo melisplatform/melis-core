@@ -1,4 +1,4 @@
-/** Dictionnaires i18n. `fr` est la source de vérité ; `en` doit en couvrir les clés.
+﻿/** Dictionnaires i18n. `fr` est la source de vérité ; `en` doit en couvrir les clés.
  *  i18n volontairement minimale (pas de lib) — suffisant pour le prototype et
  *  100 % typé. Interpolation simple via {tokens}. */
 
@@ -24,12 +24,39 @@ const fr = {
   'login.submitting': 'Connexion…',
   'login.show_password': 'Afficher le mot de passe',
   'login.hide_password': 'Masquer le mot de passe',
-  'login.legacy_before': 'Prototype React — chantier 3. L’interface historique reste disponible sur ',
+  'login.legacy_notice': "Version bêta React — L'interface historique reste disponible sur {domain}/melis.",
   'login.language': 'Langue',
   'login.brand_title1': 'Le backoffice Melis,',
   'login.brand_title2': 'nouvelle génération.',
   'login.brand_subtitle': 'Gérez vos sites, pages et contenus depuis une interface moderne, rapide et pensée pour 2026.',
   'login.brand_footer': '© {year} Melis Technology — Aperçu interne',
+
+  // ── Mot de passe oublié ──
+  'forgot.title': 'Mot de passe oublié',
+  'forgot.subtitle': 'Saisissez votre login et votre email pour recevoir un lien de réinitialisation.',
+  'forgot.login': 'Login',
+  'forgot.email': 'Adresse email',
+  'forgot.submit': 'Envoyer le lien',
+  'forgot.submitting': 'Envoi…',
+  'forgot.back_login': 'Retour à la connexion',
+  'forgot.success_title': 'Email envoyé',
+  'forgot.success_msg': 'Si un compte correspond à ces informations, vous recevrez un lien de réinitialisation dans quelques minutes.',
+  'forgot.err_required': 'Login et email sont obligatoires.',
+  'forgot.err_server': 'Erreur lors de l’envoi. Réessayez.',
+
+  // ── Réinitialisation du mot de passe ──
+  'reset.title': 'Nouveau mot de passe',
+  'reset.subtitle': 'Choisissez un mot de passe robuste pour votre compte.',
+  'reset.password': 'Nouveau mot de passe',
+  'reset.confirm': 'Confirmation',
+  'reset.submit': 'Réinitialiser',
+  'reset.submitting': 'Réinitialisation…',
+  'reset.success_msg': 'Votre mot de passe a été mis à jour. Redirection vers la connexion…',
+  'reset.go_login': 'Se connecter',
+  'reset.err_match': 'Les mots de passe ne correspondent pas.',
+  'reset.err_length': 'Minimum 8 caractères.',
+  'reset.err_invalid': 'Lien invalide ou expiré.',
+  'reset.err_server': 'Erreur lors de la réinitialisation.',
   // Footer plateforme (wording legacy melis-core) : © {year} {by} Melis Technology - {rights} - {version_label}: {version}
   'footer.by': 'par',
   'footer.rights': 'Tous droits réservés.',
@@ -617,12 +644,39 @@ const en: Record<I18nKey, string> = {
   'login.submitting': 'Signing in…',
   'login.show_password': 'Show password',
   'login.hide_password': 'Hide password',
-  'login.legacy_before': 'React prototype — phase 3. The legacy interface is still available at ',
+  'login.legacy_notice': 'React beta version — The legacy interface remains available at {domain}/melis.',
   'login.language': 'Language',
   'login.brand_title1': 'The Melis backoffice,',
   'login.brand_title2': 'next generation.',
   'login.brand_subtitle': 'Manage your sites, pages and content from a modern, fast interface built for 2026.',
   'login.brand_footer': '© {year} Melis Technology — Internal preview',
+
+  // ── Forgot password ──
+  'forgot.title': 'Forgot password',
+  'forgot.subtitle': 'Enter your login and email to receive a reset link.',
+  'forgot.login': 'Login',
+  'forgot.email': 'Email address',
+  'forgot.submit': 'Send reset link',
+  'forgot.submitting': 'Sending…',
+  'forgot.back_login': 'Back to sign in',
+  'forgot.success_title': 'Email sent',
+  'forgot.success_msg': 'If an account matches these details, you will receive a reset link in a few minutes.',
+  'forgot.err_required': 'Login and email are required.',
+  'forgot.err_server': 'Failed to send. Please try again.',
+
+  // ── Reset password ──
+  'reset.title': 'New password',
+  'reset.subtitle': 'Choose a strong password for your account.',
+  'reset.password': 'New password',
+  'reset.confirm': 'Confirmation',
+  'reset.submit': 'Reset password',
+  'reset.submitting': 'Resetting…',
+  'reset.success_msg': 'Your password has been updated. Redirecting to sign in…',
+  'reset.go_login': 'Sign in',
+  'reset.err_match': 'Passwords do not match.',
+  'reset.err_length': 'Minimum 8 characters.',
+  'reset.err_invalid': 'Invalid or expired link.',
+  'reset.err_server': 'Error during reset.',
   'footer.by': 'by',
   'footer.rights': 'All rights reserved.',
   'footer.version': 'Version',
@@ -1200,6 +1254,9 @@ export const DICTIONARIES: Record<Lang, Record<I18nKey, string>> = { fr, en }
 export function isLang(value: unknown): value is Lang {
   return LANGS.includes(value as Lang)
 }
+
+/** Map React UI lang → platform locale string (pour les appels API côté PHP). */
+export const LANG_LOCALE: Record<Lang, string> = { fr: 'fr_FR', en: 'en_EN' }
 
 /** Map a platform locale ("en_EN", "fr_FR") to the React UI dictionary lang; fallback default. */
 export function localeToLang(locale: string | null | undefined): Lang {

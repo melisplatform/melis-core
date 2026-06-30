@@ -5,12 +5,13 @@ import {
   DEFAULT_LANG,
   DICTIONARIES,
   LANG_STORAGE_KEY,
+  LANG_LOCALE,
   isLang,
   localeToLang,
   type I18nKey,
   type Lang,
 } from './dictionaries'
-import { fetchLangs, changeLanguage, type BoLang } from '@/lib/melis-api'
+import { fetchLangs, fetchI18n, changeLanguage, type BoLang } from '@/lib/melis-api'
 
 const LOCALE_STORAGE_KEY = 'melis-ui-locale'
 
@@ -32,6 +33,17 @@ export function I18nProvider({ children }: { children: ReactNode }) {
   const [langs, setLangs] = useState<BoLang[]>([])
   const [currentLocale, setCurrentLocale] = useState('')
   const [currentLangId, setCurrentLangId] = useState(0)
+  // Traductions serveur (melis-core PHP) : priment sur les valeurs statiques de dictionaries.ts.
+  const [serverTr, setServerTr] = useState<Record<string, string>>({})
+
+  // Charge les traductions PHP pour la langue active. Route publique → disponible dès le login.
+  useEffect(() => {
+    let cancelled = false
+    fetchI18n(LANG_LOCALE[lang]).then((data) => {
+      if (!cancelled) setServerTr(data)
+    })
+    return () => { cancelled = true }
+  }, [lang])
 
   // The session locale is authoritative. Fetch it on load, derive the React-UI lang from it,
   // and load the available languages for the switcher.
@@ -75,9 +87,10 @@ export function I18nProvider({ children }: { children: ReactNode }) {
     })
   }, [langs])
 
+  // serverTr (valeurs PHP) priment sur le dictionnaire statique (fallback offline/erreur).
   const t = useCallback<I18nState['t']>(
     (key: I18nKey, vars) => {
-      let str = DICTIONARIES[lang][key] ?? key
+      let str = serverTr[key] ?? DICTIONARIES[lang][key] ?? key
       if (vars) {
         for (const [k, v] of Object.entries(vars)) {
           str = str.replaceAll(`{${k}}`, String(v))
@@ -85,7 +98,7 @@ export function I18nProvider({ children }: { children: ReactNode }) {
       }
       return str
     },
-    [lang],
+    [lang, serverTr],
   )
 
   const value = useMemo<I18nState>(

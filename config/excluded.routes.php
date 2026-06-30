@@ -29,6 +29,10 @@ return [
                     'melis-backoffice/get-css-bundles',
                     'melis-backoffice/get-login-js-bundles',
                     'melis-backoffice/get-login-css-bundles',
+                    // Routes publiques React API (i18n + mot de passe oublié)
+                    'melis-backoffice/melis-react-api/auth-i18n',
+                    'melis-backoffice/melis-react-api/auth-forgot-password',
+                    'melis-backoffice/melis-react-api/auth-reset-password',
                 ]
             ]
         ]

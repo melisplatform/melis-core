@@ -143,6 +143,63 @@ export async function fetchZoneView(melisKey: string): Promise<ZoneViewResult | 
   }
 }
 
+// ─── Password reset (routes publiques) ───────────────────────────────────────
+
+export interface PasswordResetResult {
+  success: boolean
+  message?: string
+}
+
+/**
+ * Demande un email de réinitialisation de mot de passe.
+ * POST /melis/react-api/forgot-password — route publique (sans auth).
+ * Le serveur retourne toujours success=true pour ne pas révéler l'existence d'un compte.
+ */
+export async function requestPasswordReset(
+  login: string,
+  email: string,
+): Promise<PasswordResetResult> {
+  try {
+    const body = new URLSearchParams({ usr_login: login, usr_email: email })
+    const res = await fetch('/melis/react-api/forgot-password', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded', ...XHR_HEADER },
+      body,
+    })
+    if (!res.ok) return { success: false, message: `Erreur serveur (${res.status}).` }
+    return (await res.json()) as PasswordResetResult
+  } catch {
+    return { success: false, message: 'Serveur Melis injoignable.' }
+  }
+}
+
+/**
+ * Réinitialise le mot de passe via le hash du lien email.
+ * POST /melis/react-api/reset-password — route publique (sans auth).
+ */
+export async function resetPassword(
+  hash: string,
+  password: string,
+  confirmPassword: string,
+): Promise<PasswordResetResult> {
+  try {
+    const body = new URLSearchParams({
+      rhash: hash,
+      usr_pass: password,
+      usr_pass_confirm: confirmPassword,
+    })
+    const res = await fetch('/melis/react-api/reset-password', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded', ...XHR_HEADER },
+      body,
+    })
+    if (!res.ok) return { success: false, message: `Erreur serveur (${res.status}).` }
+    return (await res.json()) as PasswordResetResult
+  } catch {
+    return { success: false, message: 'Serveur Melis injoignable.' }
+  }
+}
+
 /** Déconnecte la session Melis courante. */
 export async function logout(): Promise<void> {
   try {
@@ -434,6 +491,23 @@ export async function changeLanguage(langId: number): Promise<boolean> {
     return !!data.success
   } catch {
     return false
+  }
+}
+
+/**
+ * Traductions des pages publiques (login / forgot / reset) depuis les fichiers PHP de melis-core.
+ * Route publique — utilisable avant authentification. Retourne un objet clé-React → valeur traduite.
+ */
+export async function fetchI18n(locale: string): Promise<Record<string, string>> {
+  try {
+    const res = await fetch(`/melis/react-api/i18n?locale=${encodeURIComponent(locale)}`, {
+      headers: { ...XHR_HEADER },
+    })
+    if (!res.ok) return {}
+    const data = (await res.json()) as { success: boolean; data?: Record<string, string> }
+    return data.success && data.data ? data.data : {}
+  } catch {
+    return {}
   }
 }
 

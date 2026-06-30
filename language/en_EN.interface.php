@@ -234,6 +234,7 @@ return [
 
     'tr_meliscore_login_remember_me' => 'Remember my details',
     'tr_meliscore_login_header' => 'Login to your Account',
+    'tr_meliscore_react_beta_login_notice' => 'React beta version — The legacy interface remains available at {domain}/melis.',
 
     'tr_meliscore_common_choose' => 'Choose',
 
