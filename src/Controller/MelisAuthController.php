@@ -1088,6 +1088,16 @@ class MelisAuthController extends MelisAbstractActionController
     }
 
     /**
+     * Whether the current request is served over HTTPS.
+     *
+     * @return bool
+     */
+    protected function isHttps()
+    {
+        return $this->getRequest()->getUri()->getScheme() === 'https';
+    }
+
+    /**
      * Remember me function creation cookie
      *
      * @param string $username
@@ -1098,13 +1108,15 @@ class MelisAuthController extends MelisAbstractActionController
         $melisCoreConfig = $this->getServiceManager()->get('MelisCoreConfig');
         $authCookieConfig = $melisCoreConfig->getItem('meliscore/datas/default/auth_cookies');
         $remember = $authCookieConfig['remember'];
+        $isSecure = $this->isHttps();
 
-        $user = new SetCookie('cookie1', $this->crypt($username), strtotime($remember), null, null, false, false, null, null , SetCookie::SAME_SITE_STRICT );
-        $pass = new SetCookie('cookie2', $this->crypt($password), strtotime($remember), null, null, false, false, null, null , SetCookie::SAME_SITE_STRICT );
-        $remember = new SetCookie('remember', 1, strtotime($remember), null, null, false, false, null, null , SetCookie::SAME_SITE_STRICT );
+        // Never store the password in a cookie, even encrypted: it is not
+        // read back anywhere (only cookie1/remember are), and keeping it
+        // around only widens the attack surface for no functional benefit.
+        $user = new SetCookie('cookie1', $this->crypt($username), strtotime($remember), null, null, $isSecure, true, null, null , SetCookie::SAME_SITE_STRICT );
+        $remember = new SetCookie('remember', 1, strtotime($remember), null, null, $isSecure, true, null, null , SetCookie::SAME_SITE_STRICT );
 
         $this->getResponse()->getHeaders()->addHeader($user);
-        $this->getResponse()->getHeaders()->addHeader($pass);
         $this->getResponse()->getHeaders()->addHeader($remember);
 
         // add code here for the session
@@ -1129,10 +1141,11 @@ class MelisAuthController extends MelisAbstractActionController
         $melisCoreConfig = $this->getServiceManager()->get('MelisCoreConfig');
         $authCookieConfig = $melisCoreConfig->getItem('meliscore/datas/default/auth_cookies');
         $expire = $authCookieConfig['remember'];
+        $isSecure = $this->isHttps();
 
         // include same site attribute
-        $user = new SetCookie('cookie1', $this->crypt($username), strtotime($expire, time()),null, null, false, false, null, null , SetCookie::SAME_SITE_STRICT );
-        $remember = new SetCookie('remember', 0, strtotime($expire, time()),null, null, false, false, null, null , SetCookie::SAME_SITE_STRICT );
+        $user = new SetCookie('cookie1', $this->crypt($username), strtotime($expire, time()),null, null, $isSecure, true, null, null , SetCookie::SAME_SITE_STRICT );
+        $remember = new SetCookie('remember', 0, strtotime($expire, time()),null, null, $isSecure, true, null, null , SetCookie::SAME_SITE_STRICT );
 
         $this->getResponse()->getHeaders()->addHeader($user);
         $this->getResponse()->getHeaders()->addHeader($remember);
