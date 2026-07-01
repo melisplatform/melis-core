@@ -11,6 +11,10 @@ import { routeForForward } from '@/lib/tool-routes'
 import { useCan } from '@/lib/capabilities'
 import { useI18n } from '@/i18n/i18n-context'
 
+function notify(kind: 'ok' | 'ko', title: string, message: string) {
+  window.postMessage({ __melisNotif: true, kind, title, message }, '*')
+}
+
 interface FormData { title: string; text: string; status: boolean; date: string }
 const EMPTY_FORM: FormData = { title: '', text: '', status: true, date: '' }
 
@@ -111,6 +115,7 @@ export default function AnnouncementFormPage() {
       })
       annApi.markAnnouncementsListStale()
       setSaved(true)
+      notify('ok', t('ann.title'), t('ann.form.saved'))
       if (!isEdit) closeSubTab(`${base}/new`)
       setTimeout(() => navigate(base), 600)
     } catch (err) {

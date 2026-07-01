@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useSubTabs } from '@/components/tabs/sub-tab-store'
-import { clearTools, routeForForward } from '@/lib/tool-routes'
+import { routeForForward } from '@/lib/tool-routes'
 import {
   Activity, Calendar, Copy, Cpu, Eye, EyeOff,
   KeyRound, Loader2, RefreshCw, RotateCcw, Save, Shield, ShieldCheck,
@@ -21,6 +21,10 @@ import { useI18n } from '@/i18n/i18n-context'
 import type { I18nKey } from '@/i18n/dictionaries'
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
+
+function notify(kind: 'ok' | 'ko', title: string, message: string) {
+  window.postMessage({ __melisNotif: true, kind, title, message }, '*')
+}
 
 function fmtDate(d: string | null) {
   if (!d) return '—'
@@ -322,9 +326,12 @@ export default function UserFormPage() {
       const savedId = res.id
       userApi.markUsersListStale()
       setSaved(true)
+      notify('ok', t('users.title'), t('users.form.saved'))
       if (!isEdit) closeSubTab(`${base}/new`)
       if (res.self) {
-        clearTools()
+        // Full reload refreshes the session identity (rights, menu). clearTools() is NOT called
+        // here — it immediately unmounts UserFormPage (route gone) causing a blank flash.
+        // The reload reinitialises the tool-routes registry from the menu API anyway.
         setTimeout(() => window.location.reload(), 700)
         return
       }

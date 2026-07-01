@@ -13,6 +13,10 @@ import { useCan } from '@/lib/capabilities'
 
 const TOOL_KEY = 'meliscore_tool_language'
 
+function notify(kind: 'ok' | 'ko', title: string, message: string) {
+  window.postMessage({ __melisNotif: true, kind, title, message }, '*')
+}
+
 interface FormData { name: string; locale: string }
 const EMPTY_FORM: FormData = { name: '', locale: '' }
 
@@ -93,6 +97,7 @@ export default function LanguageFormPage() {
       await languageApi.saveLanguage({ id: languageId, name: form.name.trim(), locale: form.locale.trim() })
       languageApi.markLanguagesListStale()
       setSaved(true)
+      notify('ok', t('languages.title'), t('languages.form.saved'))
       if (!isEdit) closeSubTab(`${base}/new`)
       setTimeout(() => navigate(base), 600)
     } catch (err) {

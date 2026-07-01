@@ -11,6 +11,10 @@ import { routeForForward } from '@/lib/tool-routes'
 import { useCan } from '@/lib/capabilities'
 import { useI18n } from '@/i18n/i18n-context'
 
+function notify(kind: 'ok' | 'ko', title: string, message: string) {
+  window.postMessage({ __melisNotif: true, kind, title, message }, '*')
+}
+
 interface FormData { name: string; marketplace: boolean; cache: boolean }
 const EMPTY_FORM: FormData = { name: '', marketplace: true, cache: true }
 
@@ -100,6 +104,7 @@ export default function PlatformFormPage() {
       })
       platformApi.markPlatformsListStale()
       setSaved(true)
+      notify('ok', t('platforms.title'), t('platforms.form.saved'))
       if (!isEdit) closeSubTab(`${base}/new`)
       setTimeout(() => navigate(base), 600)
     } catch (err) {
