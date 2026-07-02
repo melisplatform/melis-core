@@ -12,7 +12,6 @@ import * as XLSX from 'xlsx'
 
 import './index.css'
 import App from './App.tsx'
-import { isModuleActive } from '@/lib/bricks'
 
 const w = window as unknown as {
   MelisReact?: unknown
@@ -22,8 +21,6 @@ const w = window as unknown as {
   MelisXLSX?: unknown
   __MELIS_BRICK_COMPONENTS__?: Record<string, { Component?: ComponentType; Sidebar?: ComponentType; Header?: ComponentType }>
   __melisRegisterBrick?: (b: { id: string; Component?: ComponentType; Sidebar?: ComponentType; Header?: ComponentType }) => void
-  /** Exposed for brick IIFE bundles that cannot import from the host. */
-  __melisIsModuleActive?: (id: string) => boolean
 }
 w.MelisReact = React
 w.MelisReactDOM = ReactDOM
@@ -33,7 +30,6 @@ w.MelisReactRouterDOM = ReactRouterDOM
 // (export Excel/CSV identique à l'outil de référence) sans la rebundler.
 w.MelisXLSX = XLSX
 w.__MELIS_BRICK_COMPONENTS__ = w.__MELIS_BRICK_COMPONENTS__ ?? {}
-w.__melisIsModuleActive = isModuleActive
 w.__melisRegisterBrick = (b) => {
   // A brick may register a routed page (Component), a left-sidebar panel (Sidebar) and/or a
   // topbar widget (Header, e.g. the messenger notification icon) — all optional, all modular.

@@ -68,14 +68,18 @@ function NavNodeItem({ node, depth, collapsed, defaultOpen = false, sidebarPanel
           navigate(node.to!)
         }}
         className={cn(
-          'flex w-full items-center gap-2.5 rounded-md py-1.5 text-sm font-medium transition-colors',
+          'flex w-full items-center gap-2.5 rounded-md text-sm transition-colors',
           collapsed ? 'justify-center px-0' : 'px-3',
+          // Un tool de 1er niveau (ex. Marketplace) doit ressembler à une section principale.
+          depth === 0 ? 'py-2 font-semibold' : 'py-1.5 font-medium',
           isActive
             ? 'bg-[color-mix(in_srgb,var(--color-primary)_12%,transparent)] text-primary'
-            : 'text-muted-foreground hover:bg-accent hover:text-foreground',
+            : depth === 0
+              ? 'text-foreground/90 hover:bg-accent hover:text-foreground'
+              : 'text-muted-foreground hover:bg-accent hover:text-foreground',
         )}
       >
-        <Icon className="size-[15px] shrink-0" />
+        <Icon className={cn('shrink-0', depth === 0 ? 'size-[18px]' : 'size-[15px]')} />
         {!collapsed && <span className="truncate">{node.label}</span>}
       </button>
     )
