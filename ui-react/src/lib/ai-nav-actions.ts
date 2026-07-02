@@ -245,18 +245,34 @@ function findButton(root: Document | HTMLElement, match: string): Element | null
   return best
 }
 
-/** Set an input's value the React-controlled way, in the element's own realm, and fire events. */
-function setSearchValue(input: HTMLInputElement, value: string): void {
-  const w = realmWindow(input.ownerDocument) as Window & {
-    HTMLInputElement: typeof HTMLInputElement; Event: typeof Event
-  }
-  const proto = w.HTMLInputElement?.prototype ?? HTMLInputElement.prototype
+type FormControl = HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+
+/**
+ * Set a form control's value the React-controlled way, in the element's OWN realm.
+ * React overrides the value setter on the element instance, so writing `.value`
+ * directly is swallowed; we must call the prototype's native setter (from the
+ * element's own window — parent vs zone iframe) then dispatch bubbling events.
+ */
+function nativeSetValue(el: FormControl, value: string): void {
+  const w = realmWindow(el.ownerDocument) as Window & Record<string, unknown>
+  const ctor =
+    el.tagName === 'SELECT' ? 'HTMLSelectElement'
+      : el.tagName === 'TEXTAREA' ? 'HTMLTextAreaElement'
+        : 'HTMLInputElement'
+  const proto = (w[ctor] as { prototype?: object } | undefined)?.prototype ?? Object.getPrototypeOf(el)
   const setter = Object.getOwnPropertyDescriptor(proto, 'value')?.set
-  if (setter) setter.call(input, value)
-  else input.value = value
+  if (setter) setter.call(el, value)
+  else (el as { value: string }).value = value
+  const EventCtor = (w.Event as typeof Event) ?? Event
+  el.dispatchEvent(new EventCtor('input', { bubbles: true }))
+  el.dispatchEvent(new EventCtor('change', { bubbles: true }))
+}
+
+/** Set a list-search input the React-controlled way (adds keyup for DataTables live filter). */
+function setSearchValue(input: HTMLInputElement, value: string): void {
+  nativeSetValue(input, value)
+  const w = realmWindow(input.ownerDocument) as Window & { Event: typeof Event }
   const EventCtor = w.Event ?? Event
-  input.dispatchEvent(new EventCtor('input', { bubbles: true }))
-  input.dispatchEvent(new EventCtor('change', { bubbles: true }))
   input.dispatchEvent(new EventCtor('keyup', { bubbles: true }))
 }
 
@@ -364,4 +380,180 @@ export async function doEditRow(step: { recordId?: string; query?: string }): Pr
   realClick(findRowEdit(row))
   await settle(700)
   return observationText(`opened record ${recId || `"${query}"`} for editing`, true, captureSnapshot(''))
+}
+
+// ─── Form editing (setField / submitForm / describeForm) ──────────────────────
+//
+// Once a record's form/modal is open (via editRow or a "New" button), the model
+// needs to READ its fields (describeForm), FILL them (setField) and SAVE
+// (submitForm). All operate on the active tool root, realm-aware so React-controlled
+// inputs update and events land in the right window (parent <main> vs zone iframe).
+
+/** Editable controls that carry a user value (excludes hidden/submit/button/search). */
+function editableControls(root: Document | HTMLElement): FormControl[] {
+  const out: FormControl[] = []
+  root.querySelectorAll('input, select, textarea').forEach(el => {
+    const type = (el.getAttribute('type') || '').toLowerCase()
+    if (['hidden', 'submit', 'button', 'reset', 'image', 'search'].includes(type)) return
+    if (!isVisible(el)) return
+    out.push(el as FormControl)
+  })
+  return out
+}
+
+/** Resolve a human-readable label for a control (for/wrapping label, form-group, aria, name…). */
+function controlLabel(el: Element): string {
+  const doc = el.ownerDocument
+  const id = el.getAttribute('id')
+  if (id) {
+    try {
+      const lab = doc.querySelector(`label[for="${CSS?.escape ? CSS.escape(id) : id}"]`)
+      const t = lab?.textContent?.trim()
+      if (t) return t
+    } catch { /* invalid id for a selector — fall through */ }
+  }
+  const wrap = el.closest('label')
+  const wt = wrap?.textContent?.trim()
+  if (wt) return wt
+  const aria = el.getAttribute('aria-label')
+  if (aria) return aria.trim()
+  const labelledby = el.getAttribute('aria-labelledby')
+  if (labelledby) {
+    const parts = labelledby.split(/\s+/).map(i => doc.getElementById(i)?.textContent?.trim() || '').filter(Boolean)
+    if (parts.length) return parts.join(' ')
+  }
+  // Melis forms wrap each control in a form-group / row with a sibling label.
+  const group = el.closest('.form-group, .mb-3, .form-row, .field, .row, tr, li')
+  const groupLab = group?.querySelector('label, .control-label, th')
+  const gt = groupLab?.textContent?.trim()
+  if (gt) return gt
+  return (el.getAttribute('placeholder') || el.getAttribute('name') || el.getAttribute('title') || '').trim()
+}
+
+/** Human-readable current value of a control (masked password, checkbox state, select text). */
+function controlValue(el: FormControl): string {
+  const type = (el.getAttribute('type') || '').toLowerCase()
+  if (el.tagName === 'SELECT') {
+    const sel = el as HTMLSelectElement
+    return sel.selectedOptions[0]?.textContent?.trim() || sel.value || ''
+  }
+  if (type === 'checkbox' || type === 'radio') return (el as HTMLInputElement).checked ? 'checked' : 'unchecked'
+  if (type === 'password') return el.value ? '••••' : ''
+  return (el.value || '').trim().slice(0, 60)
+}
+
+/** Best-matching editable control for `field` (by label, name, placeholder). */
+function findField(root: Document | HTMLElement, field: string): FormControl | null {
+  let best: FormControl | null = null
+  let bestScore = 24
+  for (const el of editableControls(root)) {
+    const sc = Math.max(
+      scoreMatch(controlLabel(el), field),
+      scoreMatch(el.getAttribute('name') || '', field),
+      scoreMatch(el.getAttribute('placeholder') || '', field),
+    )
+    if (sc > bestScore) { bestScore = sc; best = el }
+  }
+  return best
+}
+
+/** Choose a matching <option>, click a checkbox/radio, or type into a text control. */
+function applyFieldValue(root: Document | HTMLElement, el: FormControl, value: string): string | null {
+  const type = (el.getAttribute('type') || '').toLowerCase()
+
+  if (el.tagName === 'SELECT') {
+    const sel = el as HTMLSelectElement
+    const opts = Array.from(sel.options)
+    let opt = opts.find(o => norm(o.textContent) === norm(value) || norm(o.value) === norm(value))
+    if (!opt) opt = opts.find(o => scoreMatch(o.textContent || '', value) >= 60 || scoreMatch(o.value, value) >= 60)
+    if (!opt) return null
+    nativeSetValue(sel, opt.value)
+    return opt.textContent?.trim() || opt.value
+  }
+
+  if (type === 'checkbox') {
+    const cb = el as HTMLInputElement
+    const truthy = /^(1|true|yes|on|checked|oui)$/i.test(String(value).trim())
+    if (cb.checked !== truthy) realClick(cb) // click drives React + fires proper events
+    return truthy ? 'checked' : 'unchecked'
+  }
+
+  if (type === 'radio') {
+    const name = el.getAttribute('name')
+    const group = name
+      ? Array.from(root.querySelectorAll(`input[type="radio"][name="${CSS?.escape ? CSS.escape(name) : name}"]`)) as HTMLInputElement[]
+      : [el as HTMLInputElement]
+    let pick = group.find(r => norm(controlLabel(r)) === norm(value) || norm(r.value) === norm(value))
+    if (!pick) pick = group.find(r => scoreMatch(controlLabel(r), value) >= 60 || scoreMatch(r.value, value) >= 60)
+    const target = pick ?? (el as HTMLInputElement)
+    realClick(target)
+    return controlLabel(target) || target.value
+  }
+
+  nativeSetValue(el, String(value))
+  return String(value)
+}
+
+/** Fill the form control matching `field` with `value`. Resolves with an observation. */
+export async function doSetField(field: string, value: string): Promise<string> {
+  const root = activeToolRoot()
+  try { await waitFor('input, select, textarea, form', root, 6000) } catch {
+    return observationText('no editable form is open to set a field in', false, captureSnapshot(''))
+  }
+  const el = findField(root, field)
+  if (!el) {
+    const known = editableControls(root).map(c => controlLabel(c)).filter(Boolean).slice(0, 12)
+    return observationText(
+      `no field matching "${field}" in the open form${known.length ? ` (fields: ${known.join(', ')})` : ''}`,
+      false, captureSnapshot(''),
+    )
+  }
+  const label = controlLabel(el) || field
+  const applied = applyFieldValue(root, el, value)
+  await settle(300)
+  if (applied === null) {
+    const sel = el as HTMLSelectElement
+    const opts = Array.from(sel.options || []).map(o => o.textContent?.trim()).filter(Boolean).slice(0, 12)
+    return observationText(
+      `"${value}" is not a valid option for "${label}"${opts.length ? ` (options: ${opts.join(', ')})` : ''}`,
+      false, captureSnapshot(''),
+    )
+  }
+  return observationText(`set "${label}" to "${applied}"`, true, captureSnapshot(''))
+}
+
+/** Save/submit the open form or modal. `match` optionally names the button. Observation returned. */
+export async function doSubmitForm(match = ''): Promise<string> {
+  const root = activeToolRoot()
+  try { await waitFor('form, .modal, button, .btn', root, 6000) } catch { /* snapshot anyway */ }
+  // Prefer an explicitly-named save/submit control; else a type=submit; else a primary button.
+  const wanted = match.trim() || 'save'
+  let btn = findButton(root, wanted)
+  if (!btn) {
+    const fallbacks = Array.from(root.querySelectorAll(
+      'button[type="submit"], input[type="submit"], .modal-footer .btn-primary, .btn-primary, button.save, .btn.save',
+    )) as HTMLElement[]
+    btn = fallbacks.find(el => isVisible(el) && !isDestructive(el)) ?? null
+  }
+  if (!btn) return observationText('no save/submit button found in the open form', false, captureSnapshot(''))
+  const label = (btn.textContent || '').trim() || match || 'Save'
+  realClick(btn)
+  await settle(800)
+  return observationText(`submitted the form via "${label}"`, true, captureSnapshot(''))
+}
+
+/** Read the open form's fields and current values so the model can decide what to edit. */
+export async function doDescribeForm(): Promise<string> {
+  const root = activeToolRoot()
+  try { await waitFor('input, select, textarea, form', root, 6000) } catch {
+    return observationText('no editable form is open', false, captureSnapshot(''))
+  }
+  const controls = editableControls(root)
+  if (!controls.length) return observationText('no editable form is open', false, captureSnapshot(''))
+  const fields = controls.slice(0, 25).map(el => {
+    const label = controlLabel(el) || '(unlabeled)'
+    const val = controlValue(el)
+    return val ? `${label}: ${val}` : label
+  })
+  return 'OK: open form fields — ' + fields.join('; ')
 }
