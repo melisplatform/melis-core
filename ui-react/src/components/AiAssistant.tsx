@@ -15,6 +15,9 @@ import {
   doClickButton,
   doFilterList,
   doEditRow,
+  doSetField,
+  doSubmitForm,
+  doDescribeForm,
   type NavTool,
 } from '@/lib/ai-nav-actions'
 
@@ -116,6 +119,12 @@ export function AiAssistant() {
           return doFilterList(step.query ?? '')
         case 'editRow':
           return doEditRow({ recordId: step.recordId, query: step.query })
+        case 'setField':
+          return doSetField(step.match ?? '', step.query ?? '')
+        case 'submitForm':
+          return doSubmitForm(step.match ?? '')
+        case 'describeForm':
+          return doDescribeForm()
         default:
           return Promise.resolve(observationText(`unknown navigation action "${step.action ?? ''}"`, false))
       }
