@@ -159,7 +159,7 @@ export default function LanguageListPage() {
   useEffect(() => {
     setLoading(true)
     languageApi.fetchLanguages({ limit: 9999, search })
-      .then(res => { setItems(res.items); setTotal(res.total) })
+      .then(res => { setItems(res?.items ?? []); setTotal(res?.total ?? 0) })
       .catch(() => null)
       .finally(() => setLoading(false))
   }, [search, refreshKey])

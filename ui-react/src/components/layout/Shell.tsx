@@ -16,6 +16,7 @@ import { ToolTabBridgeProvider } from '@/components/tabs/tool-tab-bridge'
 import { useBricks, brickRoute, refreshActiveModules } from '@/lib/bricks'
 import { loadReactTheme } from '@/lib/react-theme'
 import { PERSISTENT_MODULES } from '@/lib/module-registry'
+import { ToolErrorBoundary } from '@/components/ToolErrorBoundary'
 import { melisKeyForRoute, routeForForward, useToolRoutesVersion } from '@/lib/tool-routes'
 
 const DashboardPage = lazy(() => import('@/pages/DashboardPage'))
@@ -131,9 +132,11 @@ function ShellInner() {
         <main className="relative flex-1 overflow-hidden">
           {/* Dashboard — toujours monté pour éviter tout rechargement au retour sur l'onglet. */}
           <div className={cn('h-full overflow-y-auto', !isDashboard && 'hidden')}>
-            <Suspense fallback={<PageLoader />}>
-              <DashboardPage />
-            </Suspense>
+            <ToolErrorBoundary label="Dashboard">
+              <Suspense fallback={<PageLoader />}>
+                <DashboardPage />
+              </Suspense>
+            </ToolErrorBoundary>
           </div>
 
           {/* Listes persistantes — montées à la 1re visite, puis gardées en DOM (hidden).
@@ -146,9 +149,11 @@ function ShellInner() {
                 className={cn('h-full overflow-y-auto', activePersistent?.id !== m.id && 'hidden')}
               >
                 {visitedModules.has(m.id) && (
-                  <Suspense fallback={<PageLoader />}>
-                    <List />
-                  </Suspense>
+                  <ToolErrorBoundary label={m.label}>
+                    <Suspense fallback={<PageLoader />}>
+                      <List />
+                    </Suspense>
+                  </ToolErrorBoundary>
                 )}
               </div>
             )
@@ -165,9 +170,11 @@ function ShellInner() {
                 className={cn('h-full overflow-y-auto', activeBrick?.id !== b.id && 'hidden')}
               >
                 {visitedBricks.has(b.id) && (
-                  <Suspense fallback={<PageLoader />}>
-                    <Brick />
-                  </Suspense>
+                  <ToolErrorBoundary label={b.label}>
+                    <Suspense fallback={<PageLoader />}>
+                      <Brick />
+                    </Suspense>
+                  </ToolErrorBoundary>
                 )}
               </div>
             )
@@ -175,7 +182,9 @@ function ShellInner() {
 
           {/* Outlet : zone tools (ZonePage) et formulaires — contenu éphémère ou trivial à remonter. */}
           <div className={cn('h-full overflow-y-auto', (activePersistent || activeBrick || isDashboard) && 'hidden')}>
-            <Outlet />
+            <ToolErrorBoundary label={activePersistent?.label ?? activeBrick?.label}>
+              <Outlet />
+            </ToolErrorBoundary>
           </div>
 
           {/* Pool d'iframes Melis zone — toujours monté, jamais détruit. */}
