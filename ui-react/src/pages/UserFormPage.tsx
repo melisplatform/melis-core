@@ -466,10 +466,10 @@ export default function UserFormPage() {
               <ToggleRight className="size-3.5" />{t('users.form.status')}
             </h3>
             <button type="button" onClick={() => set('status', form.status === 1 ? 0 : 1)} className="flex items-center gap-3">
-              <div className={cn('relative h-5 w-9 rounded-full transition-colors', form.status === 1 ? 'bg-emerald-500' : 'bg-border')}>
+              <div className={cn('relative h-5 w-9 rounded-full transition-colors', form.status === 1 ? 'bg-emerald-500' : 'bg-red-500')}>
                 <div className={cn('absolute top-0.5 size-4 rounded-full bg-white shadow transition-transform', form.status === 1 ? 'translate-x-4' : 'translate-x-0.5')} />
               </div>
-              <span className={cn('text-sm font-medium', form.status === 1 ? 'text-emerald-600' : 'text-muted-foreground')}>
+              <span className={cn('text-sm font-medium', form.status === 1 ? 'text-emerald-600' : 'text-red-600')}>
                 {form.status === 1 ? t('users.status.active') : t('users.status.inactive')}
               </span>
             </button>
