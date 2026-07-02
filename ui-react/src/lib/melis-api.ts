@@ -109,6 +109,31 @@ export async function isLoggedIn(): Promise<boolean> {
   }
 }
 
+/** Résultat détaillé de la vérification de session : `active` (connecté),
+ *  `expired` (déconnecté côté serveur), `error` (réseau/serveur injoignable). */
+export type SessionStatus = 'active' | 'expired' | 'error'
+
+/**
+ * Variante de {@link isLoggedIn} qui DISTINGUE une session expirée d'une erreur
+ * réseau transitoire — utilisée par le polling périodique pour ne PAS déconnecter
+ * l'utilisateur à tort en cas de coupure momentanée (on ne déconnecte que sur
+ * une réponse serveur explicite `login:false`).
+ */
+export async function checkSession(): Promise<SessionStatus> {
+  try {
+    const res = await fetch('/melis/islogin', {
+      headers: { ...XHR_HEADER, 'Cache-Control': 'no-cache' },
+      credentials: 'include',
+      cache: 'no-store',
+    })
+    if (!res.ok) return 'error'
+    const data = (await res.json()) as { login?: boolean }
+    return data.login === true ? 'active' : 'expired'
+  } catch {
+    return 'error'
+  }
+}
+
 export interface ZoneViewResult {
   html: string
   jsCallbacks: string[]
