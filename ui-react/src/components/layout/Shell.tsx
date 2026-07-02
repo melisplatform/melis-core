@@ -8,6 +8,7 @@ import { Topbar } from './Topbar'
 import { SubTabBar } from './SubTabBar'
 import { ToolTabBar } from './ToolTabBar'
 import { Notifications } from '@/components/Notifications'
+import { AiAssistant } from '@/components/AiAssistant'
 import { ZonePoolProvider } from '@/components/zone/zone-pool'
 import { ZoneFrames } from '@/components/zone/ZoneFrames'
 import { SubTabProvider, SubTabWindowBridge } from '@/components/tabs/sub-tab-store'
@@ -119,6 +120,8 @@ function ShellInner() {
     <div className="flex h-screen overflow-hidden bg-background">
       <SubTabWindowBridge />
       <Notifications />
+      {/* Global AI assistant: floating chat + shell-side closed-loop navigation handlers. */}
+      <AiAssistant />
       <Sidebar collapsed={collapsed} />
       <div className="flex min-w-0 flex-1 flex-col">
         <Topbar onToggleSidebar={() => setCollapsed((c) => !c)} />

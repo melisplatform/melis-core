@@ -127,7 +127,18 @@ export default defineConfig(({ command }) => ({
   resolve: {
     alias: {
       '@': path.resolve(import.meta.dirname, 'src'),
+      // Source library: the AI chat React components (AiChatContainer…) live in the
+      // melis-ai-engine module. The shell composes them (like a brick) to offer a global
+      // assistant; the chat's own logic stays in the engine. No separate build — imported
+      // at build time (engine ui-react has no external deps beyond React).
+      '@melis-ai-engine': path.resolve(import.meta.dirname, '../../melis-ai-engine/ui-react/src'),
+      // The engine source lives outside this project's node_modules tree, so its bare
+      // `react` imports can't resolve upward. Pin react/react-dom to THIS app's copy so the
+      // composed engine files bundle against the same single React instance as the shell.
+      react: path.resolve(import.meta.dirname, 'node_modules/react'),
+      'react-dom': path.resolve(import.meta.dirname, 'node_modules/react-dom'),
     },
+    dedupe: ['react', 'react-dom'],
   },
   build: {
     // Emit straight into MelisCore's public/ so MelisAssetManager serves the SPA
