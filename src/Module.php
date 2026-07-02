@@ -35,6 +35,7 @@ use MelisCore\Listener\MelisCoreUserRecentLogsListener;
 use MelisCore\Listener\MelisCoreUrlPlatformSchemeListener;
 use MelisCore\Listener\MelisCoreOtherConfigListener;
 use MelisCore\Listener\MelisCoreUpdatePasswordHistoryListener;
+use MelisCore\Listener\MelisReactApiCapabilityPreserveUserListener;
 use Laminas\ModuleManager\ModuleManager;
 use Laminas\Mvc\ModuleRouteListener;
 use Laminas\Mvc\MvcEvent;
@@ -98,6 +99,9 @@ class Module
             (new MelisCoreTableColumnDisplayListener())->attach($eventManager);
             (new MelisCoreClearCacheListenerListener())->attach($eventManager);
             (new MelisCoreInsertDashboardPluginListener())->attach($eventManager);
+            // Préserve la section <meliscore_tool_capabilities> (droits avancés React) d'un USER
+            // quand l'ancien BO reconstruit usr_rights (event meliscore_tooluser_save_start).
+            (new MelisReactApiCapabilityPreserveUserListener())->attach($eventManager);
         }
     }
 
@@ -370,6 +374,7 @@ class Module
         $config = [];
         $configFiles = [
             include __DIR__ . '/../config/module.config.php',
+            include __DIR__ . '/../config/react-api.php',
             include __DIR__ . '/../config/react.capabilities.php',
             include __DIR__ . '/../config/app.interface.php',
             include __DIR__ . '/../config/app.toolstree.php',

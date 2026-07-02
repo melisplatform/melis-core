@@ -1,0 +1,524 @@
+<?php
+
+namespace MelisCore\Controller;
+
+use MelisReactApi\Controller\CapabilityGuardTrait;
+
+use Laminas\Http\PhpEnvironment\Response as HttpResponse;
+use MelisCore\Controller\MelisAbstractActionController;
+
+/**
+ * API REST pour la gestion des utilisateurs Melis.
+ *
+ * Routes :
+ *   GET    /melis/react-api/users              → liste paginée + filtres
+ *   GET    /melis/react-api/users/:id          → détail utilisateur
+ *   POST   /melis/react-api/users/save         → créer / mettre à jour
+ *   DELETE /melis/react-api/users/delete/:id   → supprimer
+ *   GET    /melis/react-api/users/stats        → statistiques
+ *   GET    /melis/react-api/roles              → liste des rôles
+ */
+class MelisReactApiUserController extends MelisAbstractActionController
+{
+    use CapabilityGuardTrait;
+
+    /** melisKey de l'outil — utilisé par les gardes de droits (accès + capacité). */
+    private const MELIS_KEY = 'meliscore_tool_user';
+
+    // ─── GET /users ──────────────────────────────────────────────────────────
+
+    public function listAction(): HttpResponse
+    {
+        if ($deny = $this->denyUnlessAccess()) { return $deny; }
+        if ($denyCap = $this->denyUnlessCan('list')) { return $denyCap; }
+
+        try {
+            $page      = max(1, (int) $this->params()->fromQuery('page', 1));
+            $limit     = min(9999, max(1, (int) $this->params()->fromQuery('limit', 25)));
+            $search    = trim((string) ($this->params()->fromQuery('search', '') ?? ''));
+            $rawStatus = $this->params()->fromQuery('status', '');
+            $status    = ($rawStatus !== '' && $rawStatus !== null) ? (int) $rawStatus : null;
+            $rawRole   = $this->params()->fromQuery('roleId', '');
+            $roleId    = ($rawRole !== '' && $rawRole !== null) ? (int) $rawRole : null;
+            $offset    = ($page - 1) * $limit;
+
+            $db = $this->getServiceManager()->get('Laminas\Db\Adapter\AdapterInterface');
+
+            $where  = [];
+            $params = [];
+
+            if ($status !== null) {
+                $where[]  = 'u.usr_status = ?';
+                $params[] = $status;
+            }
+            if ($roleId !== null) {
+                $where[]  = 'u.usr_role_id = ?';
+                $params[] = $roleId;
+            }
+            if ($search !== '') {
+                $like     = '%' . $search . '%';
+                $where[]  = '(u.usr_login LIKE ? OR u.usr_email LIKE ? OR u.usr_firstname LIKE ? OR u.usr_lastname LIKE ?)';
+                $params   = array_merge($params, [$like, $like, $like, $like]);
+            }
+
+            $whereClause = $where ? 'WHERE ' . implode(' AND ', $where) : '';
+
+            $countRow = iterator_to_array(
+                $db->query("SELECT COUNT(*) AS total FROM melis_core_user u $whereClause", $params)
+            );
+            $total = (int) ($countRow[0]['total'] ?? 0);
+
+            $dataSql  = "
+                SELECT u.usr_id, u.usr_status, u.usr_login, u.usr_email,
+                       u.usr_firstname, u.usr_lastname, u.usr_role_id,
+                       u.usr_admin, u.usr_tags, u.usr_creation_date,
+                       u.usr_last_login_date, u.usr_is_online,
+                       r.urole_name
+                FROM melis_core_user u
+                LEFT JOIN melis_core_user_role r ON r.urole_id = u.usr_role_id
+                $whereClause
+                ORDER BY u.usr_id DESC
+                LIMIT ? OFFSET ?
+            ";
+            $rows = $db->query($dataSql, array_merge($params, [$limit, $offset]));
+
+            $items = [];
+            foreach ($rows as $row) {
+                $r       = (array) $row;
+                $items[] = $this->formatUser($r);
+            }
+
+            return $this->jsonResponse([
+                'success' => true,
+                'data'    => ['items' => $items, 'total' => $total, 'page' => $page, 'limit' => $limit],
+            ]);
+        } catch (\Throwable $e) {
+            return $this->errorResponse($e);
+        }
+    }
+
+    // ─── GET /users/:id ──────────────────────────────────────────────────────
+
+    public function getAction(): HttpResponse
+    {
+        if ($deny = $this->denyUnlessAccess()) { return $deny; }
+        if ($denyCap = $this->denyUnlessCan('edit')) { return $denyCap; }
+
+        $id = (int) $this->params()->fromRoute('id', 0);
+        if ($id <= 0) {
+            return $this->jsonResponse(['success' => false, 'error' => 'Invalid ID'], 400);
+        }
+
+        try {
+            $db   = $this->getServiceManager()->get('Laminas\Db\Adapter\AdapterInterface');
+            $rows = iterator_to_array($db->query(
+                "SELECT u.usr_id, u.usr_status, u.usr_login, u.usr_email,
+                        u.usr_firstname, u.usr_lastname, u.usr_lang_id, u.usr_role_id,
+                        u.usr_admin, u.usr_tags, u.usr_rights, u.usr_creation_date,
+                        u.usr_last_login_date, u.usr_is_online, r.urole_name
+                 FROM melis_core_user u
+                 LEFT JOIN melis_core_user_role r ON r.urole_id = u.usr_role_id
+                 WHERE u.usr_id = ?
+                 LIMIT 1",
+                [$id]
+            ));
+
+            if (empty($rows)) {
+                return $this->jsonResponse(['success' => false, 'error' => 'User not found'], 404);
+            }
+
+            return $this->jsonResponse(['success' => true, 'data' => $this->formatUser((array) $rows[0], true)]);
+        } catch (\Throwable $e) {
+            return $this->errorResponse($e);
+        }
+    }
+
+    // ─── POST /users/save ────────────────────────────────────────────────────
+
+    public function saveAction(): HttpResponse
+    {
+        if ($deny = $this->denyUnlessAccess()) { return $deny; }
+
+        try {
+            $body      = json_decode($this->getRequest()->getContent(), true) ?? [];
+            $id        = isset($body['id']) && $body['id'] ? (int) $body['id'] : null;
+            if ($denyCap = $this->denyUnlessCan($id ? 'edit' : 'create')) { return $denyCap; }
+            $login     = trim((string) ($body['login']     ?? ''));
+            $email     = trim((string) ($body['email']     ?? ''));
+            $firstname = trim((string) ($body['firstname'] ?? ''));
+            $lastname  = trim((string) ($body['lastname']  ?? ''));
+            $roleId    = (int) ($body['roleId']  ?? 1);
+            $status    = (int) ($body['status']  ?? 1);
+            $isAdmin   = (int) (bool) ($body['isAdmin'] ?? false);
+            $langId    = (int) ($body['langId']  ?? 1);
+            $tags      = trim((string) ($body['tags']     ?? ''));
+            $password  = trim((string) ($body['password'] ?? ''));
+            $rights    = isset($body['rights']) ? (string) $body['rights'] : null;
+
+            if (!$login || !$email || !$firstname || !$lastname) {
+                return $this->jsonResponse(
+                    ['success' => false, 'error' => 'Champs obligatoires manquants : login, email, prénom, nom'],
+                    400
+                );
+            }
+            if (!$id && !$password) {
+                return $this->jsonResponse(
+                    ['success' => false, 'error' => 'Le mot de passe est obligatoire pour un nouvel utilisateur'],
+                    400
+                );
+            }
+
+            $db   = $this->getServiceManager()->get('Laminas\Db\Adapter\AdapterInterface');
+            $auth = $this->getServiceManager()->get('MelisCoreAuth');
+
+            if ($id) {
+                // Update — mot de passe + droits optionnels
+                $rightsSql    = $rights !== null ? ', usr_rights=?' : '';
+                $rightsParams = $rights !== null ? [$rights] : [];
+
+                if ($password) {
+                    $db->query(
+                        "UPDATE melis_core_user
+                         SET usr_login=?, usr_email=?, usr_firstname=?, usr_lastname=?,
+                             usr_role_id=?, usr_status=?, usr_admin=?, usr_lang_id=?, usr_tags=?, usr_password=?
+                             $rightsSql
+                         WHERE usr_id=?",
+                        array_merge(
+                            [$login, $email, $firstname, $lastname, $roleId, $status, $isAdmin, $langId, $tags,
+                             $auth->encryptPassword($password)],
+                            $rightsParams,
+                            [$id]
+                        )
+                    );
+                } else {
+                    $db->query(
+                        "UPDATE melis_core_user
+                         SET usr_login=?, usr_email=?, usr_firstname=?, usr_lastname=?,
+                             usr_role_id=?, usr_status=?, usr_admin=?, usr_lang_id=?, usr_tags=?
+                             $rightsSql
+                         WHERE usr_id=?",
+                        array_merge(
+                            [$login, $email, $firstname, $lastname, $roleId, $status, $isAdmin, $langId, $tags],
+                            $rightsParams,
+                            [$id]
+                        )
+                    );
+                }
+
+                // Self-edit: if the updated user is the one currently logged in, refresh the
+                // SESSION identity (getAuthRights() reads usr_rights from the identity, not the DB).
+                // Without this the new rights — menu filtering, canAccess — only take effect after a
+                // re-login. Mirrors the legacy MelisAuthController->getStorage()->write($user).
+                try {
+                    $identity = $auth->getIdentity();
+                    if ($identity && (int) ($identity->usr_id ?? 0) === $id) {
+                        if ($rights !== null) { $identity->usr_rights = $rights; }
+                        $identity->usr_login     = $login;
+                        $identity->usr_email     = $email;
+                        $identity->usr_firstname = $firstname;
+                        $identity->usr_lastname  = $lastname;
+                        $identity->usr_role_id   = $roleId;
+                        $identity->usr_status    = $status;
+                        $identity->usr_admin     = $isAdmin;
+                        $identity->usr_lang_id   = $langId;
+                        $identity->usr_tags      = $tags;
+                        $auth->getStorage()->write($identity);
+                    }
+                } catch (\Throwable) {}
+
+                return $this->jsonResponse(['success' => true, 'data' => ['id' => $id, 'self' => isset($identity) && (int) ($identity->usr_id ?? 0) === $id]]);
+            }
+
+            // Insert (rights INCLUDED — a new user created with rights in the form must keep them,
+            // otherwise it would have zero access).
+            $db->query(
+                'INSERT INTO melis_core_user
+                    (usr_login, usr_email, usr_firstname, usr_lastname, usr_role_id, usr_status, usr_admin, usr_lang_id, usr_tags, usr_password, usr_rights)
+                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+                [$login, $email, $firstname, $lastname, $roleId, $status, $isAdmin, $langId, $tags,
+                 $auth->encryptPassword($password), $rights ?? '']
+            );
+            $newId = (int) iterator_to_array(
+                $db->query('SELECT LAST_INSERT_ID() AS id', [])
+            )[0]['id'];
+
+            return $this->jsonResponse(['success' => true, 'data' => ['id' => $newId]], 201);
+        } catch (\Throwable $e) {
+            return $this->errorResponse($e);
+        }
+    }
+
+    // ─── DELETE /users/delete/:id ─────────────────────────────────────────────
+
+    public function deleteAction(): HttpResponse
+    {
+        if ($deny = $this->denyUnlessAccess()) { return $deny; }
+        if ($denyCap = $this->denyUnlessCan('delete')) { return $denyCap; }
+
+        $id = (int) $this->params()->fromRoute('id', 0);
+        if ($id <= 0) {
+            return $this->jsonResponse(['success' => false, 'error' => 'Invalid ID'], 400);
+        }
+
+        try {
+            $db = $this->getServiceManager()->get('Laminas\Db\Adapter\AdapterInterface');
+            $db->query('DELETE FROM melis_core_user WHERE usr_id = ?', [$id]);
+            return $this->jsonResponse(['success' => true, 'data' => null]);
+        } catch (\Throwable $e) {
+            return $this->errorResponse($e);
+        }
+    }
+
+    // ─── GET /users/stats ─────────────────────────────────────────────────────
+
+    public function statsAction(): HttpResponse
+    {
+        if ($deny = $this->denyUnlessAccess()) { return $deny; }
+        if ($denyCap = $this->denyUnlessCan('list')) { return $denyCap; }
+
+        try {
+            $db  = $this->getServiceManager()->get('Laminas\Db\Adapter\AdapterInterface');
+            $row = (array) iterator_to_array($db->query(
+                'SELECT COUNT(*) AS total,
+                        SUM(usr_status = 1) AS active,
+                        SUM(usr_status = 0) AS inactive,
+                        SUM(usr_admin  = 1) AS adminCount
+                 FROM melis_core_user',
+                []
+            ))[0];
+
+            return $this->jsonResponse([
+                'success' => true,
+                'data'    => [
+                    'total'      => (int) ($row['total']      ?? 0),
+                    'active'     => (int) ($row['active']     ?? 0),
+                    'inactive'   => (int) ($row['inactive']   ?? 0),
+                    'adminCount' => (int) ($row['adminCount'] ?? 0),
+                ],
+            ]);
+        } catch (\Throwable $e) {
+            return $this->errorResponse($e);
+        }
+    }
+
+    // ─── GET /users/:id/connections ──────────────────────────────────────────
+
+    public function connectionsAction(): HttpResponse
+    {
+        if ($deny = $this->denyUnlessAccess()) { return $deny; }
+        if ($denyCap = $this->denyUnlessCan('edit')) { return $denyCap; }
+
+        $id = (int) $this->params()->fromRoute('id', 0);
+        if ($id <= 0) {
+            return $this->jsonResponse(['success' => false, 'error' => 'Invalid ID'], 400);
+        }
+
+        try {
+            $db   = $this->getServiceManager()->get('Laminas\Db\Adapter\AdapterInterface');
+            $rows = $db->query(
+                'SELECT usrcd_id, usrcd_last_login_date, usrcd_last_connection_time
+                 FROM melis_core_user_connection_date
+                 WHERE usrcd_usr_login = ?
+                 ORDER BY usrcd_last_login_date DESC
+                 LIMIT 100',
+                [$id]
+            );
+
+            $items = [];
+            foreach ($rows as $row) {
+                $r       = (array) $row;
+                $items[] = [
+                    'id'             => (int)    $r['usrcd_id'],
+                    'loginDate'      => $r['usrcd_last_login_date']      ?? null,
+                    'connectionTime' => $r['usrcd_last_connection_time'] ?? null,
+                ];
+            }
+
+            return $this->jsonResponse(['success' => true, 'data' => $items]);
+        } catch (\Throwable $e) {
+            return $this->errorResponse($e);
+        }
+    }
+
+    // ─── GET /users/:id/microservice ──────────────────────────────────────────
+
+    public function microserviceAction(): HttpResponse
+    {
+        if ($deny = $this->denyUnlessAccess()) { return $deny; }
+        if ($denyCap = $this->denyUnlessCan('edit')) { return $denyCap; }
+
+        $id = (int) $this->params()->fromRoute('id', 0);
+        if ($id <= 0) {
+            return $this->jsonResponse(['success' => false, 'error' => 'Invalid ID'], 400);
+        }
+
+        try {
+            $db   = $this->getServiceManager()->get('Laminas\Db\Adapter\AdapterInterface');
+            $rows = iterator_to_array($db->query(
+                'SELECT msoa_id, msoa_status, msoa_api_key
+                 FROM melis_core_microservice_auth
+                 WHERE msoa_user_id = ?
+                 LIMIT 1',
+                [$id]
+            ));
+
+            if (empty($rows)) {
+                return $this->jsonResponse(['success' => true, 'data' => null]);
+            }
+
+            $r = (array) $rows[0];
+            return $this->jsonResponse([
+                'success' => true,
+                'data'    => [
+                    'id'     => (int)  $r['msoa_id'],
+                    'status' => (bool) $r['msoa_status'],
+                    'apiKey' => (string) $r['msoa_api_key'],
+                ],
+            ]);
+        } catch (\Throwable $e) {
+            return $this->errorResponse($e);
+        }
+    }
+
+    // ─── POST /users/:id/microservice/save ────────────────────────────────────
+
+    public function microserviceSaveAction(): HttpResponse
+    {
+        if ($deny = $this->denyUnlessAccess()) { return $deny; }
+        if ($denyCap = $this->denyUnlessCan('edit')) { return $denyCap; }
+
+        $id = (int) $this->params()->fromRoute('id', 0);
+        if ($id <= 0) {
+            return $this->jsonResponse(['success' => false, 'error' => 'Invalid ID'], 400);
+        }
+
+        try {
+            $body      = json_decode($this->getRequest()->getContent(), true) ?? [];
+            $action    = (string) ($body['action'] ?? 'toggle'); // 'toggle' | 'generate'
+            $db        = $this->getServiceManager()->get('Laminas\Db\Adapter\AdapterInterface');
+
+            $existing = iterator_to_array($db->query(
+                'SELECT msoa_id, msoa_status, msoa_api_key FROM melis_core_microservice_auth WHERE msoa_user_id = ? LIMIT 1',
+                [$id]
+            ));
+
+            if ($action === 'generate') {
+                $newKey = bin2hex(random_bytes(16)); // 32-char hex
+                if (!empty($existing)) {
+                    $db->query('UPDATE melis_core_microservice_auth SET msoa_api_key=? WHERE msoa_user_id=?', [$newKey, $id]);
+                } else {
+                    $db->query('INSERT INTO melis_core_microservice_auth (msoa_user_id, msoa_status, msoa_api_key) VALUES (?,1,?)', [$id, $newKey]);
+                }
+                $status = !empty($existing) ? (bool) $existing[0]['msoa_status'] : true;
+                return $this->jsonResponse(['success' => true, 'data' => ['apiKey' => $newKey, 'status' => $status]]);
+            }
+
+            // toggle
+            if (empty($existing)) {
+                $newKey = bin2hex(random_bytes(16));
+                $db->query('INSERT INTO melis_core_microservice_auth (msoa_user_id, msoa_status, msoa_api_key) VALUES (?,1,?)', [$id, $newKey]);
+                return $this->jsonResponse(['success' => true, 'data' => ['apiKey' => $newKey, 'status' => true]]);
+            }
+
+            $r          = (array) $existing[0];
+            $newStatus  = $r['msoa_status'] ? 0 : 1;
+            $db->query('UPDATE melis_core_microservice_auth SET msoa_status=? WHERE msoa_user_id=?', [$newStatus, $id]);
+            return $this->jsonResponse(['success' => true, 'data' => ['apiKey' => (string) $r['msoa_api_key'], 'status' => (bool) $newStatus]]);
+        } catch (\Throwable $e) {
+            return $this->errorResponse($e);
+        }
+    }
+
+    // ─── GET /roles ───────────────────────────────────────────────────────────
+
+    public function rolesAction(): HttpResponse
+    {
+        if ($deny = $this->denyUnlessAccess()) { return $deny; }
+        if ($denyCap = $this->denyUnlessCan('list')) { return $denyCap; }
+
+        try {
+            $db    = $this->getServiceManager()->get('Laminas\Db\Adapter\AdapterInterface');
+            $rows  = $db->query('SELECT urole_id, urole_name FROM melis_core_user_role ORDER BY urole_id', []);
+            $roles = [];
+            foreach ($rows as $row) {
+                $r       = (array) $row;
+                $roles[] = ['id' => (int) $r['urole_id'], 'name' => (string) $r['urole_name']];
+            }
+            return $this->jsonResponse(['success' => true, 'data' => $roles]);
+        } catch (\Throwable $e) {
+            return $this->errorResponse($e);
+        }
+    }
+
+    // ─── Helpers ──────────────────────────────────────────────────────────────
+
+    private function formatUser(array $r, bool $withLang = false): array
+    {
+        $data = [
+            'id'            => (int)    $r['usr_id'],
+            'status'        => (int)    $r['usr_status'],
+            'login'         => (string) $r['usr_login'],
+            'email'         => (string) $r['usr_email'],
+            'firstname'     => (string) $r['usr_firstname'],
+            'lastname'      => (string) $r['usr_lastname'],
+            'roleId'        => (int)    $r['usr_role_id'],
+            'roleName'      => (string) ($r['urole_name'] ?? ''),
+            'isAdmin'       => (bool)   $r['usr_admin'],
+            'tags'          => (string) ($r['usr_tags'] ?? ''),
+            'creationDate'  => $r['usr_creation_date']   ?? null,
+            'lastLoginDate' => $r['usr_last_login_date'] ?? null,
+            'isOnline'      => (bool)   ($r['usr_is_online'] ?? false),
+        ];
+        if ($withLang) {
+            $data['langId'] = (int) ($r['usr_lang_id'] ?? 1);
+            $data['rights'] = (string) ($r['usr_rights'] ?? '');
+        }
+        return $data;
+    }
+
+    private function isAuthenticated(): bool
+    {
+        return $this->getServiceManager()->get('MelisCoreAuth')->hasIdentity();
+    }
+
+    /**
+     * Rights guard for the Users tool. Every endpoint here requires ACCESS to the tool
+     * (`meliscore_tool_user`), not merely an authenticated session — so a user whose rights
+     * don't include the tool can't read/write users by hitting the API directly (the left menu
+     * already hides it; this closes the API/URL back-doors). Returns the deny response or null.
+     */
+    private function denyUnlessAccess(): ?HttpResponse
+    {
+        if (!$this->isAuthenticated()) {
+            return $this->jsonResponse(['success' => false, 'error' => 'Unauthenticated'], 401);
+        }
+        try {
+            if (!$this->getServiceManager()->get('MelisCoreRights')->canAccess(self::MELIS_KEY)) {
+                return $this->jsonResponse(['success' => false, 'error' => 'Forbidden'], 403);
+            }
+        } catch (\Throwable) {}
+        return null;
+    }
+
+    private function jsonResponse(array $data, int $status = 200): HttpResponse
+    {
+        /** @var HttpResponse $response */
+        $response = $this->getResponse();
+        $response->setStatusCode($status);
+        $response->getHeaders()->addHeaders([
+            'Content-Type'           => 'application/json; charset=utf-8',
+            'X-Content-Type-Options' => 'nosniff',
+        ]);
+        $response->setContent(json_encode($data, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
+        return $response;
+    }
+
+    private function errorResponse(\Throwable $e, int $status = 500): HttpResponse
+    {
+        return $this->jsonResponse([
+            'success' => false,
+            'error'   => $e->getMessage(),
+            'file'    => basename($e->getFile()) . ':' . $e->getLine(),
+        ], $status);
+    }
+}
