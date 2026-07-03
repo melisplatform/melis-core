@@ -68,7 +68,7 @@ function NavNodeItem({ node, depth, collapsed, defaultOpen = false, sidebarPanel
           navigate(node.to!)
         }}
         className={cn(
-          'flex w-full items-center gap-2.5 rounded-md text-sm transition-colors',
+          'flex w-full items-center gap-2.5 rounded-md text-sm transition-colors cursor-pointer',
           collapsed ? 'justify-center px-0' : 'px-3',
           // Un tool de 1er niveau (ex. Marketplace) doit ressembler à une section principale.
           depth === 0 ? 'py-2 font-semibold' : 'py-1.5 font-medium',
@@ -94,7 +94,7 @@ function NavNodeItem({ node, depth, collapsed, defaultOpen = false, sidebarPanel
         title={collapsed ? node.label : undefined}
         style={indentStyle}
         className={cn(
-          'flex w-full items-center gap-2.5 rounded-md py-2 transition-colors hover:bg-accent hover:text-foreground',
+          'flex w-full items-center gap-2.5 rounded-md py-2 transition-colors cursor-pointer hover:bg-accent hover:text-foreground',
           collapsed ? 'justify-center px-0' : 'px-3',
           depth === 0
             ? 'text-sm font-semibold text-foreground/90'
