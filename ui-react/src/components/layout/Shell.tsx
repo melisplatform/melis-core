@@ -159,17 +159,20 @@ function ShellInner() {
             )
           })}
 
-          {/* Briques React — montées à la 1re visite, gardées en DOM (hidden).
-              Rendues hors Outlet pour éviter le démontage/remontage (et donc le refetch)
-              lors des switch d'onglets. Voir aussi App.tsx : leurs routes ont element={null}. */}
+          {/* Briques React — montées UNIQUEMENT quand actives (la route courante appartient à la
+              brique). Une brique montée mais inactive lit le `location`/`useParams` GLOBAL et peut
+              déclencher des effets de navigation (ex. MelisCommerce ProductPage : fetch d'un "id"
+              issu d'une route étrangère → `.catch(navigate(base))`), ce qui détourne la navigation
+              d'un AUTRE outil (le formulaire Users rebondissait vers sa liste). La persistance
+              intra-outil est conservée (activeBrick matche aussi les sous-routes /:id), et les
+              iframes legacy survivent car montées dans document.body, pas dans l'arbre React.
+              `visitedBricks` garde le lazy-init (pas de fetch avant la 1re visite). */}
           {bricks.filter((b) => b.Component).map((b) => {
             const Brick = b.Component!
+            const isActive = activeBrick?.id === b.id
             return (
-              <div
-                key={b.id}
-                className={cn('h-full overflow-y-auto', activeBrick?.id !== b.id && 'hidden')}
-              >
-                {visitedBricks.has(b.id) && (
+              <div key={b.id} className={cn('h-full overflow-y-auto', !isActive && 'hidden')}>
+                {isActive && visitedBricks.has(b.id) && (
                   <ToolErrorBoundary label={b.label}>
                     <Suspense fallback={<PageLoader />}>
                       <Brick />
