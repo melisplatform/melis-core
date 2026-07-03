@@ -10,8 +10,10 @@ import { WidgetPalette } from '@/components/dashboard/WidgetPalette'
 import { WIDGET_MAP, buildLegacyWidgetDef, type WidgetDef } from '@/components/dashboard/widget-registry'
 import {
   loadLayout,
+  makeInstanceId,
   resetLayout,
   saveLayout,
+  widgetIdOf,
   type GridItem,
 } from '@/components/dashboard/dashboard-store'
 import { DashboardDataContext } from '@/components/dashboard/dashboard-data-context'
@@ -94,7 +96,9 @@ export default function DashboardPage() {
   )
   const allWidgetMap = useMemo(() => ({ ...WIDGET_MAP, ...extraWidgetMap }), [extraWidgetMap])
 
-  const present = useMemo(() => new Set(layout.map((l) => l.i)), [layout])
+  // Ids de widget (pas d'instance) déjà présents — sert uniquement à afficher un
+  // indicateur "déjà sur le dashboard" dans la palette, pas à bloquer un ré-ajout.
+  const present = useMemo(() => new Set(layout.map((l) => widgetIdOf(l.i))), [layout])
 
   const persist = useCallback((next: GridItem[]) => {
     setLayout(next)
@@ -105,18 +109,22 @@ export default function DashboardPage() {
   // Émis par GridStack après un déplacement / redimensionnement utilisateur.
   const handleChange = useCallback((items: GridItem[]) => persist(items), [persist])
 
+  // Ajoute toujours une NOUVELLE instance — le même plugin peut être posé plusieurs fois.
   const addWidget = useCallback(
     (widgetId: string) => {
-      if (present.has(widgetId)) return
       const def = allWidgetMap[widgetId]
+      if (!def) return
+      const instanceId = present.has(widgetId) ? makeInstanceId(widgetId) : widgetId
       const maxY = layout.reduce((m, l) => Math.max(m, l.y + l.h), 0)
-      persist([...layout, { i: widgetId, x: 0, y: maxY, w: def.w, h: def.h, minW: def.minW, minH: def.minH }])
+      persist([...layout, { i: instanceId, x: 0, y: maxY, w: def.w, h: def.h, minW: def.minW, minH: def.minH }])
     },
-    [layout, present, persist],
+    [layout, present, allWidgetMap, persist],
   )
 
+  // `instanceId` = id complet de l'item de grille (l.i), pas l'id du widget —
+  // ne retire que l'instance ciblée, pas tous les exemplaires du même widget.
   const removeWidget = useCallback(
-    (widgetId: string) => persist(layout.filter((l) => l.i !== widgetId)),
+    (instanceId: string) => persist(layout.filter((l) => l.i !== instanceId)),
     [layout, persist],
   )
 

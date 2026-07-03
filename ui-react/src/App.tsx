@@ -75,7 +75,7 @@ function TabBridge() {
   return null
 }
 
-const DashboardPage   = lazy(() => import('@/pages/DashboardPage'))
+// DashboardPage : monté par Shell (persistent), plus par la route '/' — voir Route path="/" plus bas.
 const PlaceholderPage = lazy(() => import('@/pages/PlaceholderPage'))
 const ZonePage        = lazy(() => import('@/pages/ZonePage'))
 
@@ -112,14 +112,11 @@ export default function App() {
               {/* Authentifié — Shell (sidebar + topbar) */}
               <Route element={<ProtectedRoute />}>
                 <Route element={<Shell />}>
-                  <Route
-                    path="/"
-                    element={
-                      <Suspense fallback={<PageLoader />}>
-                        <DashboardPage />
-                      </Suspense>
-                    }
-                  />
+                  {/* Le Dashboard est monté de façon PERSISTANTE par Shell (Shell.tsx), comme les
+                      autres modules `persistent`. La route '/' ne doit donc rien rendre dans l'Outlet
+                      (sinon DashboardPage est monté 2× → 2 grilles GridStack, drag/drop et rendu des
+                      widgets ambigus). On garde la route pour le matching, mais element vide. */}
+                  <Route path="/" element={<></>} />
                   {/* Modules natifs — montés à leur URL d'arbre /[section]/[tool] (dérivée du
                       menu via forwardKey). Liste : rendue par Shell si `persistent`, sinon ici.
                       Formulaire : /x/new et /x/:id. */}

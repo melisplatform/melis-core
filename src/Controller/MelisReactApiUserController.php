@@ -324,13 +324,28 @@ class MelisReactApiUserController extends MelisAbstractActionController
                 [$id]
             );
 
+            /** @var \MelisCore\Service\MelisCoreUserService $userSvc */
+            $userSvc = $this->getServiceManager()->get('MelisCoreUser');
+
             $items = [];
             foreach ($rows as $row) {
-                $r       = (array) $row;
+                $r         = (array) $row;
+                $loginDate = $r['usrcd_last_login_date']      ?? null;
+                $connTime  = $r['usrcd_last_connection_time'] ?? null;
+
+                // Durée de session : réutilise la logique legacy (getUserSessionTime).
+                $duration = $loginDate
+                    ? $userSvc->getUserSessionTime($id, $loginDate, false)
+                    : null;
+
                 $items[] = [
-                    'id'             => (int)    $r['usrcd_id'],
-                    'loginDate'      => $r['usrcd_last_login_date']      ?? null,
-                    'connectionTime' => $r['usrcd_last_connection_time'] ?? null,
+                    'id'             => (int) $r['usrcd_id'],
+                    'loginDate'      => $loginDate,
+                    'connectionTime' => $connTime,
+                    // "Heure d'entrée" / "Heure de sortie" (partie horaire uniquement).
+                    'timeIn'         => $loginDate ? date('H:i:s', strtotime($loginDate)) : null,
+                    'timeOut'        => $connTime  ? date('H:i:s', strtotime($connTime))  : null,
+                    'duration'       => ($duration === null || $duration === '-') ? null : $duration,
                 ];
             }
 

@@ -6,9 +6,28 @@ import { WIDGET_MAP } from './widget-registry'
  * Équivalent React de la persistance Melis (`melis_core_dashboards.d_content`,
  * XML <Plugins><plugin x-axis/y-axis/width/height></Plugins>). Stockage local
  * isolé derrière load/save pour brancher l'endpoint Melis (`saveDashboardPlugins`)
- * plus tard sans toucher l'UI. `i` = id du widget (1 instance / widget).
+ * plus tard sans toucher l'UI.
+ *
+ * `i` = id d'INSTANCE (unique par item posé sur la grille), pas l'id du widget.
+ * Une première instance garde l'id "propre" (ex. `traffic`) pour rester compatible
+ * avec les layouts déjà sauvegardés ; toute instance supplémentaire du même widget
+ * (plugin posé plusieurs fois) reçoit un suffixe `__xxxxxx` (cf. makeInstanceId).
+ * Le suffixe est encodé DANS `i` (et non dans un champ à part) car le backend
+ * MelisReactApiController::dashboardLayoutAction ne persiste que `i/x/y/w/h` —
+ * un champ `widgetId` séparé ne survivrait pas à l'aller-retour XML.
  */
 const STORAGE_KEY = 'melis-dashboard-v2'
+const INSTANCE_SUFFIX_RE = /__[0-9a-z]{6}$/
+
+/** Extrait l'id du widget (type) à partir d'un id d'instance. */
+export function widgetIdOf(instanceId: string): string {
+  return instanceId.replace(INSTANCE_SUFFIX_RE, '')
+}
+
+/** Génère un id d'instance unique pour une nouvelle occurrence d'un widget. */
+export function makeInstanceId(widgetId: string): string {
+  return `${widgetId}__${Math.random().toString(36).slice(2, 8)}`
+}
 
 /** Un widget positionné sur la grille (unités de grille, 12 colonnes). */
 export interface GridItem {
@@ -47,10 +66,13 @@ export function loadLayout(): GridItem[] {
     const raw = localStorage.getItem(STORAGE_KEY)
     if (raw) {
       const parsed = JSON.parse(raw) as GridItem[]
-      const clean = parsed.filter((l) => WIDGET_MAP[l.i])
+      const clean = parsed.filter((l) => WIDGET_MAP[widgetIdOf(l.i)])
       if (clean.length) {
         // Réinjecte les contraintes min depuis le registre.
-        return clean.map((l) => ({ ...l, minW: WIDGET_MAP[l.i].minW, minH: WIDGET_MAP[l.i].minH }))
+        return clean.map((l) => {
+          const def = WIDGET_MAP[widgetIdOf(l.i)]
+          return { ...l, minW: def.minW, minH: def.minH }
+        })
       }
     }
   } catch {

@@ -36,6 +36,8 @@ export interface WidgetDef {
   /** Overrides titleKey for dynamic/legacy widgets where no i18n key exists. */
   titleLabel?: string
   icon: LucideIcon
+  /** Miniature legacy (PHP) à afficher dans la palette à la place de l'icône, si disponible. */
+  thumbnail?: string
   /** Clé i18n de la section dans la palette. */
   sectionKey: I18nKey
   /** Overrides sectionKey label for dynamic sections (e.g. legacy plugin groups). */
@@ -45,6 +47,8 @@ export interface WidgetDef {
   h: number
   minW: number
   minH: number
+  /** Nom du plugin legacy PHP (widgets legacy uniquement) → active le bouton config (engrenage). */
+  pluginName?: string
   /** Contenu du widget. */
   render: () => ReactNode
 }
@@ -60,9 +64,11 @@ export const WIDGETS: WidgetDef[] = [
   { id: 'traffic', titleKey: 'widget.traffic', icon: LineChart, sectionKey: 'widget.sec.analytics', w: 8, h: 5, minW: 4, minH: 4, render: () => <TrafficChartContent /> },
 
   // Contenu
-  { id: 'recent-pages', titleKey: 'dash.recent_pages', icon: FileText, sectionKey: 'widget.sec.content', w: 8, h: 6, minW: 4, minH: 4, render: () => <RecentPagesContent /> },
-  { id: 'activity', titleKey: 'dash.recent_activity', icon: Activity, sectionKey: 'widget.sec.content', w: 4, h: 6, minW: 3, minH: 4, render: () => <ActivityContent /> },
-  { id: 'announcement', titleKey: 'widget.announcement', icon: Megaphone, sectionKey: 'widget.sec.content', w: 4, h: 4, minW: 3, minH: 3, render: () => <AnnouncementContent /> },
+  // Ces 3 widgets natifs ont un équivalent plugin legacy PHP avec une vraie capture d'écran —
+  // on réutilise cette image plutôt que l'icône générique (cohérent avec la palette legacy).
+  { id: 'recent-pages', titleKey: 'dash.recent_pages', icon: FileText, thumbnail: '/MelisCmsPageHistoric/plugins/images/MelisCmsPageHistoricRecentUserActivityPlugin.jpg', sectionKey: 'widget.sec.content', w: 8, h: 6, minW: 4, minH: 4, render: () => <RecentPagesContent /> },
+  { id: 'activity', titleKey: 'dash.recent_activity', icon: Activity, thumbnail: '/MelisCore/plugins/images/MelisCoreDashboardRecentUserActivityPlugin.jpg', sectionKey: 'widget.sec.content', w: 4, h: 6, minW: 3, minH: 4, render: () => <ActivityContent /> },
+  { id: 'announcement', titleKey: 'widget.announcement', icon: Megaphone, thumbnail: '/MelisCore/plugins/images/MelisCoreDashboardAnnouncementPlugin.png', sectionKey: 'widget.sec.content', w: 4, h: 4, minW: 3, minH: 3, render: () => <AnnouncementContent /> },
 
   // Communication
   { id: 'messages', titleKey: 'dash.messages', icon: Mail, sectionKey: 'widget.sec.comm', w: 4, h: 5, minW: 3, minH: 3, render: () => <MessagesContent /> },
@@ -90,6 +96,8 @@ export function buildLegacyWidgetDef(plugin: LegacyDashboardPlugin): WidgetDef {
     titleKey: 'widget.sec.legacy',
     titleLabel: plugin.title || plugin.pluginName,
     icon: Wrench,
+    thumbnail: plugin.thumbnail || undefined,
+    pluginName: plugin.pluginName,
     sectionKey: 'widget.sec.legacy',
     sectionLabel: plugin.section || 'Plugins',
     w: Math.min(plugin.w, 12),

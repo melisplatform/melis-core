@@ -46,6 +46,9 @@ export interface UserConnection {
   id: number
   loginDate: string | null
   connectionTime: string | null
+  timeIn: string | null
+  timeOut: string | null
+  duration: string | null
 }
 
 export interface UserMicroservice {

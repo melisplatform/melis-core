@@ -7,7 +7,8 @@ import {
   XAxis,
   YAxis,
 } from 'recharts'
-import { Package, TrendingDown, TrendingUp } from 'lucide-react'
+import { useState } from 'react'
+import { Loader2, Package, TrendingDown, TrendingUp } from 'lucide-react'
 
 import { Badge } from '@/components/ui/badge'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
@@ -305,14 +306,26 @@ export function TrafficChartContent() {
 
 /** Renders a legacy Melis dashboard plugin (PHP) inside an iframe. */
 export function LegacyPluginContent({ pluginName }: { pluginName: string }) {
+  // Un widget plugin legacy est une iframe qui charge tout le bundle de la plateforme →
+  // ça peut prendre plusieurs secondes. On affiche un spinner tant que l'iframe n'a pas
+  // fini de charger (onLoad) : couvre le 1er affichage ET chaque rechargement (remontage).
+  const [loading, setLoading] = useState(true)
   return (
-    <iframe
-      src={`/melis/react-dashboard-plugin?plugin=${encodeURIComponent(pluginName)}`}
-      className="h-full w-full border-0"
-      title={pluginName}
-      style={{ minHeight: 120 }}
-      sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-modals"
-    />
+    <div className="relative h-full w-full">
+      {loading && (
+        <div className="absolute inset-0 z-10 grid place-items-center bg-card/70">
+          <Loader2 className="size-6 animate-spin text-muted-foreground" />
+        </div>
+      )}
+      <iframe
+        src={`/melis/react-dashboard-plugin?plugin=${encodeURIComponent(pluginName)}`}
+        className="h-full w-full border-0"
+        title={pluginName}
+        style={{ minHeight: 120 }}
+        sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-modals"
+        onLoad={() => setLoading(false)}
+      />
+    </div>
   )
 }
 

@@ -38,10 +38,10 @@ export function Notifications() {
       const id = ++seq
       // Keep only the most recent few — never replay a history of toasts.
       setToasts((ts) => [...ts, { id, kind, title, message, fields }].slice(-4))
-      // Success toasts auto-dismiss; errors stay until closed.
-      if (kind === 'ok') {
-        window.setTimeout(() => setToasts((ts) => ts.filter((t) => t.id !== id)), 4000)
-      }
+      // Auto-dismiss both kinds; errors linger longer so they can be read (and can still be
+      // closed early via the ✕). Field-error lists get extra time to scan.
+      const delay = kind === 'ok' ? 4000 : (fields.length ? 9000 : 7000)
+      window.setTimeout(() => setToasts((ts) => ts.filter((t) => t.id !== id)), delay)
     }
     window.addEventListener('message', onMsg)
     return () => window.removeEventListener('message', onMsg)

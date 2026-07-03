@@ -153,6 +153,12 @@ body {
 .melis-dashboard-grid.grid-stack {
   background: transparent;
 }
+/* Pendant un drag de widget : neutralise les iframes (widgets plugins legacy) pour
+   qu'elles n'avalent pas le mouseup — sinon GridStack ne retire jamais son clone
+   d'aide et il reste collé à l'écran (cf. DashboardGrid, classe posée au mousedown). */
+body.melis-widget-dragging iframe {
+  pointer-events: none !important;
+}
 /* Le contenu de cellule = simple conteneur transparent ; la carte (WidgetFrame)
    rendue dedans via portail porte le fond/bordure/ombre. */
 .melis-dashboard-grid .grid-stack-item-content {

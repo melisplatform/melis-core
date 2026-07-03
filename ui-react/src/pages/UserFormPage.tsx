@@ -26,9 +26,9 @@ function notify(kind: 'ok' | 'ko', title: string, message: string) {
   window.postMessage({ __melisNotif: true, kind, title, message }, '*')
 }
 
-function fmtDate(d: string | null) {
+function fmtDay(d: string | null) {
   if (!d) return '—'
-  try { return new Date(d).toLocaleString(undefined) } catch { return d }
+  try { return new Date(d).toLocaleDateString(undefined) } catch { return d }
 }
 
 function Field({ label, required, children, error }: {
@@ -80,19 +80,21 @@ function ConnectionsTab({ userId }: { userId: number }) {
         <table className="w-full text-sm">
           <thead className="border-b border-border bg-muted/60 text-xs uppercase tracking-wide text-muted-foreground">
             <tr>
-              <th className="px-4 py-3 text-left">#</th>
               <th className="px-4 py-3 text-left">{t('users.conn.login_date')}</th>
-              <th className="px-4 py-3 text-left">{t('users.conn.time')}</th>
+              <th className="px-4 py-3 text-left">{t('users.conn.time_in')}</th>
+              <th className="px-4 py-3 text-left">{t('users.conn.time_out')}</th>
+              <th className="px-4 py-3 text-left">{t('users.conn.duration')}</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-border">
             {rows?.length === 0 ? (
-              <tr><td colSpan={3} className="px-4 py-8 text-center text-muted-foreground">{t('users.conn.empty')}</td></tr>
+              <tr><td colSpan={4} className="px-4 py-8 text-center text-muted-foreground">{t('users.conn.empty')}</td></tr>
             ) : rows?.map((row) => (
               <tr key={row.id} className="hover:bg-muted/30 transition-colors">
-                <td className="px-4 py-2.5 tabular-nums text-muted-foreground">{row.id}</td>
-                <td className="px-4 py-2.5 tabular-nums">{fmtDate(row.loginDate)}</td>
-                <td className="px-4 py-2.5 tabular-nums text-muted-foreground">{fmtDate(row.connectionTime)}</td>
+                <td className="px-4 py-2.5 tabular-nums">{fmtDay(row.loginDate)}</td>
+                <td className="px-4 py-2.5 tabular-nums text-muted-foreground">{row.timeIn ?? '—'}</td>
+                <td className="px-4 py-2.5 tabular-nums text-muted-foreground">{row.timeOut ?? '—'}</td>
+                <td className="px-4 py-2.5 text-muted-foreground">{row.duration ?? '—'}</td>
               </tr>
             ))}
           </tbody>

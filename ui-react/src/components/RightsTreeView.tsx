@@ -310,25 +310,25 @@ function ToolRow({
   const hasCaps = (rootNode.actions?.length ?? 0) > 0 || (rootNode.tabs?.length ?? 0) > 0
   return (
     <div>
-      <label
+      <div
         className={cn(
-          'flex cursor-pointer items-center gap-2 py-1 pr-3 rounded hover:bg-muted/40 transition-colors',
+          'flex items-center gap-2 py-1 pr-3 rounded hover:bg-muted/40 transition-colors',
           pl,
         )}
       >
-        <input
-          type="checkbox"
-          className="sr-only"
-          checked={checked}
-          onChange={(e) => onToggle(key, e.target.checked)}
-        />
         <TriCheckbox
           state={checked ? 'all' : 'none'}
           onChange={(v) => onToggle(key, v)}
         />
-        <span className="text-sm text-foreground/90">{node.name}</span>
-        <span className="ml-auto text-[10px] text-muted-foreground/50 font-mono">{key}</span>
-      </label>
+        <button
+          type="button"
+          onClick={() => onToggle(key, !checked)}
+          className="flex flex-1 cursor-pointer items-center gap-2 min-w-0 text-left"
+        >
+          <span className="text-sm text-foreground/90">{node.name}</span>
+          <span className="ml-auto text-[10px] text-muted-foreground/50 font-mono">{key}</span>
+        </button>
+      </div>
 
       {/* Capacités (droits avancés) : visibles seulement si l'outil les déclare ET est autorisé. */}
       {checked && hasCaps && (
@@ -606,6 +606,7 @@ export interface RightsTreeViewProps {
 }
 
 export function RightsTreeView({ rights, onChange }: RightsTreeViewProps) {
+  const { t } = useI18n()
   const [navTree, setNavTree] = useState<ApiMenuNode[] | null>(null)
   const [navLoading, setNavLoading] = useState(true)
   const [checkedTools, setCheckedTools] = useState<Set<string>>(new Set())
@@ -734,6 +735,20 @@ export function RightsTreeView({ rights, onChange }: RightsTreeViewProps) {
   const allTools = useMemo(() => (navTree ? getToolsFlat(navTree) : []), [navTree])
   const totalChecked = allTools.filter((t) => checkedTools.has(nodeKey(t))).length
 
+  // « Tout sélectionner » = ABSOLUMENT tout : outils + pages (si CMS) + plugins dashboard.
+  // Distinct du « Sélectionner tous les outils » (outils uniquement) dans la catégorie Outils.
+  function toggleEverything(v: boolean) {
+    const tools = new Set<string>(v ? allTools.map(nodeKey) : [])
+    const pages = new Set(checkedPages)
+    if (cmsActive) { if (v) pages.add(ALL_PAGES); else pages.delete(ALL_PAGES) }
+    const dash = new Set(checkedDash)
+    if (dashPlugins.length) { if (v) dash.add(DASHBOARD_ALL); else dash.delete(DASHBOARD_ALL) }
+    setCheckedTools(tools)
+    setCheckedPages(pages)
+    setCheckedDash(dash)
+    emit(tools, pages, dash)
+  }
+
   if (navLoading) {
     return (
       <div className="flex flex-1 items-center justify-center p-8">
@@ -745,33 +760,54 @@ export function RightsTreeView({ rights, onChange }: RightsTreeViewProps) {
   if (!navTree || navTree.length === 0) {
     return (
       <div className="flex flex-1 items-center justify-center p-8 text-sm text-muted-foreground">
-        Impossible de charger l&apos;arbre de navigation.
+        {t('rights.load_error')}
       </div>
     )
   }
 
-  const allState: TriState =
+  const toolsState: TriState =
     totalChecked === 0 ? 'none' : totalChecked === allTools.length ? 'all' : 'some'
+
+  // État tri du « Tout sélectionner » global : combine outils + pages + dashboard (sections présentes).
+  const partStates: TriState[] = [toolsState]
+  if (cmsActive) {
+    partStates.push(checkedPages.has(ALL_PAGES) ? 'all' : checkedPages.size ? 'some' : 'none')
+  }
+  if (dashPlugins.length) {
+    partStates.push(checkedDash.has(DASHBOARD_ALL) ? 'all' : checkedDash.size ? 'some' : 'none')
+  }
+  const everythingState: TriState =
+    partStates.every((s) => s === 'all') ? 'all'
+    : partStates.every((s) => s === 'none') ? 'none'
+    : 'some'
 
   return (
     <div className="flex flex-1 flex-col gap-3 p-6 overflow-auto">
-      {/* Global header */}
+      {/* Global header — « Tout sélectionner » = outils + pages + dashboard. */}
       <div className="flex items-center gap-3">
         <div className="flex items-center gap-2">
           <TriCheckbox
-            state={allState}
-            onChange={(v) => onToggleGroup(allTools.map(nodeKey), v)}
+            state={everythingState}
+            onChange={toggleEverything}
           />
-          <span className="text-sm font-medium">Tout sélectionner</span>
+          <span className="text-sm font-medium">{t('rights.select_all')}</span>
         </div>
         <span className="ml-auto text-xs text-muted-foreground tabular-nums">
-          {totalChecked} / {allTools.length} outil{allTools.length !== 1 ? 's' : ''} autorisé{totalChecked !== 1 ? 's' : ''}
+          {t('rights.tools_count', { checked: totalChecked, total: allTools.length })}
         </span>
       </div>
 
       {/* Level 1 = categories (Outils, Pages, …) ; level 2 = their sections/items. */}
       <div className="space-y-4">
-        <Category icon={Boxes} title="Outils" accent="#16a34a">
+        <Category icon={Boxes} title={t('rights.tools')} accent="#16a34a">
+          {/* « Sélectionner tous les outils » — outils uniquement (distinct du global). */}
+          <div className="flex items-center gap-2 pb-1">
+            <TriCheckbox
+              state={toolsState}
+              onChange={(v) => onToggleGroup(allTools.map(nodeKey), v)}
+            />
+            <span className="text-xs font-medium text-muted-foreground">{t('rights.select_all_tools')}</span>
+          </div>
           {navTree.map((section) => (
             <SectionPanel
               key={nodeKey(section)}
@@ -789,7 +825,7 @@ export function RightsTreeView({ rights, onChange }: RightsTreeViewProps) {
         {/* Dashboard Plugins (core section). Plugins themselves come from every active module, in
             module-merge order (MelisCore → MelisCms → …) — same order the backend returns. */}
         {dashPlugins.length > 0 && (
-          <Category icon={LayoutDashboard} title="Dashboard Plugins" accent="#7c3aed">
+          <Category icon={LayoutDashboard} title={t('rights.dashboard_plugins')} accent="#7c3aed">
             <DashboardPluginsRightsPanel
               plugins={dashPlugins}
               checked={checkedDash}
@@ -802,7 +838,7 @@ export function RightsTreeView({ rights, onChange }: RightsTreeViewProps) {
 
         {/* Modular category: "Pages" — contributed by MelisCms, shown only when the module is active. */}
         {cmsActive && (
-          <Category icon={FileText} title="Pages" accent="#2563eb">
+          <Category icon={FileText} title={t('rights.pages')} accent="#2563eb">
             <PagesRightsPanel
               checkedPages={checkedPages}
               onTogglePage={onTogglePage}

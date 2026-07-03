@@ -160,6 +160,15 @@ const fr = {
   'caps.export': 'Export',
   'caps.tabs': 'Onglets',
 
+  // ── Droits (éditeur d'arbre) ──
+  'rights.select_all': 'Tout sélectionner',
+  'rights.select_all_tools': 'Sélectionner tous les outils',
+  'rights.tools': 'Outils',
+  'rights.dashboard_plugins': 'Plugins du tableau de bord',
+  'rights.pages': 'Pages',
+  'rights.tools_count': '{checked} / {total} outils autorisés',
+  'rights.load_error': 'Impossible de charger l’arbre de navigation.',
+
   // ── Plateformes ──
   'platforms.title': 'Plateformes',
   'platforms.subtitle': 'Gestion des plateformes Melis',
@@ -371,6 +380,9 @@ const fr = {
   'users.conn.empty': 'Aucun historique de connexion',
   'users.conn.login_date': 'Date de login',
   'users.conn.time': 'Heure de connexion',
+  'users.conn.time_in': 'Heure d’entrée',
+  'users.conn.time_out': 'Heure de sortie',
+  'users.conn.duration': 'Durée de connexion',
   'users.ms.title': 'Authentification microservice',
   'users.ms.subtitle': 'Clé API permettant aux services tiers de s’authentifier au nom de cet utilisateur.',
   'users.ms.status': 'Statut',
@@ -781,6 +793,15 @@ const en: Record<I18nKey, string> = {
   'caps.export': 'Export',
   'caps.tabs': 'Tabs',
 
+  // ── Rights (tree editor) ──
+  'rights.select_all': 'Select all',
+  'rights.select_all_tools': 'Select all tools',
+  'rights.tools': 'Tools',
+  'rights.dashboard_plugins': 'Dashboard Plugins',
+  'rights.pages': 'Pages',
+  'rights.tools_count': '{checked} / {total} tools allowed',
+  'rights.load_error': 'Unable to load the navigation tree.',
+
   // ── Platforms ──
   'platforms.title': 'Platforms',
   'platforms.subtitle': 'Manage Melis platforms',
@@ -992,6 +1013,9 @@ const en: Record<I18nKey, string> = {
   'users.conn.empty': 'No connection history',
   'users.conn.login_date': 'Login date',
   'users.conn.time': 'Connection time',
+  'users.conn.time_in': 'Time in',
+  'users.conn.time_out': 'Time out',
+  'users.conn.duration': 'Connection duration',
   'users.ms.title': 'Microservice authentication',
   'users.ms.subtitle': 'API key allowing third-party services to authenticate on behalf of this user.',
   'users.ms.status': 'Status',

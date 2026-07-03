@@ -434,6 +434,8 @@ export interface LegacyDashboardPlugin {
   pluginName: string
   title: string
   icon: string
+  /** Screenshot shown in the legacy plugin picker (module-relative URL, e.g. /Utilities/plugins/images/Foo.jpg). */
+  thumbnail: string
   section: string
   w: number
   h: number
