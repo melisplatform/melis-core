@@ -49,6 +49,42 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }, [authed])
 
+  // Vérification PÉRIODIQUE de la session (équivalent du legacy /melis/islogin
+  // appelé chaque minute) : si la session Melis a expiré côté serveur, on repasse
+  // `authed` à false → ProtectedRoute redirige TOUTE l'interface vers /login.
+  // On ne déconnecte que sur un `expired` explicite (pas sur une erreur réseau
+  // transitoire). On vérifie aussi immédiatement au retour de focus de l'onglet
+  // (session probablement expirée après une longue absence).
+  useEffect(() => {
+    if (demo || !authed) return
+    let active = true
+
+    const check = async () => {
+      if (document.visibilityState === 'hidden') return // inutile onglet caché
+      const status = await melis.checkSession()
+      if (active && status === 'expired') {
+        // Redirection PLEINE PAGE vers le login (comme le legacy), PAS un simple
+        // setAuthed(false) : une nav client-side garderait dans <head> les feuilles
+        // de style des briques déjà chargées (leur Tailwind entre en collision avec
+        // les utilitaires de l'hôte → ex. panneau gauche du login masqué). Le reload
+        // repart d'un DOM propre et réinitialise tout l'état.
+        active = false
+        window.location.assign(import.meta.env.PROD ? '/melis-react/login' : '/login')
+      }
+    }
+
+    const SESSION_POLL_MS = 60_000 // 1 min, comme le legacy
+    const id = window.setInterval(check, SESSION_POLL_MS)
+    const onVisible = () => { if (document.visibilityState === 'visible') check() }
+    document.addEventListener('visibilitychange', onVisible)
+
+    return () => {
+      active = false
+      window.clearInterval(id)
+      document.removeEventListener('visibilitychange', onVisible)
+    }
+  }, [demo, authed])
+
   const signIn = useCallback<AuthState['signIn']>(async (login, password, remember) => {
     const result = await melis.login(login, password, remember)
     if (result.success) {
