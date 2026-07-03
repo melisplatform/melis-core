@@ -28,6 +28,62 @@ class MelisCoreRightsService extends MelisServiceManager implements MelisCoreRig
     /** @var string|null - cache holder for section parents */
     private $sectionParent = null;
 
+    /** @var bool - request-scoped memo guard for the resolved rights (allow-set + caps). */
+    private $resolvedLoaded = false;
+    /** @var array|null - request-scoped resolved rights, or null when unavailable (→ live fallback). */
+    private $resolved = null;
+    /** @var string|null - request-scoped memo of the interface config version. */
+    private $configVersionMemo = null;
+    /** @var array|null - request-scoped memo of getMelisKeys() (pure config, invariant per request). */
+    private $melisKeysMemo = null;
+    /** @var array|null - request-scoped memo of getToolSectionMap() (pure config, invariant per request). */
+    private $toolSectionMapMemo = null;
+
+    /**
+     * getMelisKeys() mémoïsé pour la requête. Appelé en boucle par isAccessible()/getToolSectionMap() ;
+     * le résultat (parse de la config d'interface) est identique pour toute la requête. C'est l'un des
+     * deux invariants config dont la reconstruction répétée rendait le menu lent.
+     */
+    private function melisKeysCached(): array
+    {
+        if ($this->melisKeysMemo === null) {
+            $this->melisKeysMemo = $this->getConfig()->getMelisKeys();
+        }
+
+        return $this->melisKeysMemo;
+    }
+
+    /** @var array - request-scoped memo of getConfig()->getItem() by path (parse + traduction). */
+    private $itemMemo = [];
+
+    /**
+     * getItem() mémoïsé par chemin. getItem() recharge la config ET la traduit à CHAQUE appel : c'est
+     * le coût dominant restant dans isAccessible() (appelé ~2× par clé lors du build de l'allow-set).
+     */
+    private function getItemCached($pathString)
+    {
+        $k = (string) $pathString;
+        if (!array_key_exists($k, $this->itemMemo)) {
+            $this->itemMemo[$k] = $this->getConfig()->getItem($pathString);
+        }
+
+        return $this->itemMemo[$k];
+    }
+
+    /**
+     * Équivalent de MelisCoreConfig::isParentOf() mais basé sur le jeu de melisKeys mémoïsé — évite
+     * un re-parse complet de la config à chaque clé évaluée pendant le build.
+     */
+    private function configIsParentOf($itemId, $parentId): bool
+    {
+        $path = $this->melisKeysCached()[$itemId] ?? null;
+        if (empty($path)) {
+            return false;
+        }
+
+        return in_array($parentId, explode('/', $path), true);
+    }
+
     /**
      * Extends the functionality of $this->isAccessible method
      * but can only be used on tools
@@ -38,6 +94,17 @@ class MelisCoreRightsService extends MelisServiceManager implements MelisCoreRig
      */
     public function canAccess($key): bool
     {
+        // POINT UNIQUE d'accélération : si le cache de droits résolu de l'utilisateur courant est
+        // disponible, l'accès à un outil devient un simple lookup O(1) dans l'allow-set (au lieu de
+        // re-parser usr_rights + retraverser la config à CHAQUE appel). Tout ce qui passe par
+        // canAccess() (menu, denyUnlessAccess, …) en profite sans changer une ligne ailleurs.
+        $resolved = $this->getResolvedRights();
+        if ($resolved !== null) {
+            return isset($resolved['allow'][$key]);
+        }
+
+        // Fallback (pas d'utilisateur / droits vides = accès total / erreur cache) : calcul live,
+        // strictement le comportement historique — jamais de blocage à cause du cache.
         $melisCoreAuth = $this->getServiceManager()->get('MelisCoreAuth');
         $xmlRights = $melisCoreAuth->getAuthRights();
 
@@ -46,6 +113,188 @@ class MelisCoreRightsService extends MelisServiceManager implements MelisCoreRig
         $isInterfaceAccessible = $this->isAccessible($xmlRights, self::MELISCORE_PREFIX_INTERFACE, $key);
 
         return $isAccessible && $isInterfaceAccessible;
+    }
+
+    /**
+     * Résout — une seule fois par requête — les droits de l'utilisateur courant en une structure
+     * O(1) : `{ allow: { melisKey => 1 }, caps: { toolKey => [caps] } }`. Lu par canAccess() et /me.
+     *
+     * Source = colonne `usr_rights_cache` (générée à la sauvegarde). Validée par une SIGNATURE
+     * (md5(usr_rights) + version config) : toute modification des droits (user OU rôle propagé) ou
+     * de la config invalide le cache → reconstruction paresseuse. Retourne null (⇒ calcul live) si
+     * pas d'utilisateur, droits vides (accès total, déjà rapide) ou erreur : jamais de blocage.
+     */
+    public function getResolvedRights(): ?array
+    {
+        if ($this->resolvedLoaded) {
+            return $this->resolved;
+        }
+        $this->resolvedLoaded = true;
+
+        try {
+            $auth     = $this->getServiceManager()->get('MelisCoreAuth');
+            $identity = $auth->getIdentity();
+            $usrId    = (int) ($identity->usr_id ?? 0);
+            if ($usrId <= 0) {
+                return $this->resolved = null;
+            }
+
+            $xml = (string) $auth->getAuthRights();
+            if (trim($xml) === '') {
+                // Droits vides = accès total ; isAccessible() court-circuite déjà → inutile de cacher.
+                return $this->resolved = null;
+            }
+
+            $sig = $this->rightsSignature($xml);
+            $db  = $this->getServiceManager()->get('Laminas\Db\Adapter\AdapterInterface');
+
+            $rows = iterator_to_array($db->query(
+                'SELECT usr_rights_cache, usr_rights_cache_sig FROM melis_core_user WHERE usr_id = ?',
+                [$usrId]
+            ));
+            $row = $rows[0] ?? null;
+
+            if ($row && (string) $row['usr_rights_cache_sig'] === $sig && !empty($row['usr_rights_cache'])) {
+                $decoded = json_decode((string) $row['usr_rights_cache'], true);
+                if (is_array($decoded) && isset($decoded['allow']) && is_array($decoded['allow'])) {
+                    return $this->resolved = $decoded;
+                }
+            }
+
+            // Miss (jamais généré / droits changés hors save / config modifiée) → build + persist.
+            $resolved = $this->buildResolvedRights($xml);
+            try {
+                $db->query(
+                    'UPDATE melis_core_user SET usr_rights_cache = ?, usr_rights_cache_sig = ? WHERE usr_id = ?',
+                    [json_encode($resolved), $sig, $usrId]
+                );
+            } catch (\Throwable) {
+                // best-effort : on garde le résultat en mémoire même si la persistance échoue.
+            }
+
+            return $this->resolved = $resolved;
+        } catch (\Throwable) {
+            return $this->resolved = null;
+        }
+    }
+
+    /**
+     * Construit la structure résolue depuis un XML de droits : parcourt l'univers des melisKeys et
+     * évalue chacun UNE fois via la logique existante (isAccessible×2) → allow-set ; plus la carte
+     * des capacités d'outils (droits avancés React — dépendance douce à MelisReactApi via class_exists).
+     */
+    public function buildResolvedRights(string $xml): array
+    {
+        $allow = [];
+        foreach ($this->rightsKeyUniverse() as $key) {
+            if ($this->isAccessible($xml, self::MELIS_PLATFORM_TOOLS_PREFIX, $key)
+                && $this->isAccessible($xml, self::MELISCORE_PREFIX_INTERFACE, $key)) {
+                $allow[$key] = 1;
+            }
+        }
+
+        $caps      = [];
+        $capsClass = '\\MelisReactApi\\Service\\Capabilities';
+        if (class_exists($capsClass)) {
+            try {
+                $config = $this->getServiceManager()->get('config');
+                $caps   = $capsClass::allowedForUser($config, $xml);
+            } catch (\Throwable) {
+            }
+        }
+
+        return ['allow' => $allow, 'caps' => $caps];
+    }
+
+    /**
+     * (Re)génère et persiste le cache d'un utilisateur — appelé à la SAUVEGARDE (React + legacy).
+     * `$xml` null ⇒ relu en base. Droits vides ⇒ cache vidé (l'utilisateur repasse en fallback live).
+     */
+    public function regenerateUserCache(int $usrId, ?string $xml = null): void
+    {
+        if ($usrId <= 0) {
+            return;
+        }
+        try {
+            $db = $this->getServiceManager()->get('Laminas\Db\Adapter\AdapterInterface');
+            if ($xml === null) {
+                $rows = iterator_to_array($db->query('SELECT usr_rights FROM melis_core_user WHERE usr_id = ?', [$usrId]));
+                $xml  = (string) ($rows[0]['usr_rights'] ?? '');
+            }
+            if (trim((string) $xml) === '') {
+                $db->query('UPDATE melis_core_user SET usr_rights_cache = NULL, usr_rights_cache_sig = NULL WHERE usr_id = ?', [$usrId]);
+                return;
+            }
+            $resolved = $this->buildResolvedRights($xml);
+            $sig      = $this->rightsSignature($xml);
+            $db->query(
+                'UPDATE melis_core_user SET usr_rights_cache = ?, usr_rights_cache_sig = ? WHERE usr_id = ?',
+                [json_encode($resolved), $sig, $usrId]
+            );
+        } catch (\Throwable) {
+        }
+    }
+
+    /**
+     * Propage IMMÉDIATEMENT les droits d'un rôle à tous ses utilisateurs (`usr_rights = urole_rights`)
+     * et régénère leur cache — appelé à la sauvegarde d'un rôle. Rôle ≤ 1 (Custom) = droits par
+     * utilisateur → rien à propager.
+     */
+    public function propagateRoleToUsers(int $roleId, ?string $uroleRights = null): void
+    {
+        if ($roleId <= 1) {
+            return;
+        }
+        try {
+            $db = $this->getServiceManager()->get('Laminas\Db\Adapter\AdapterInterface');
+            if ($uroleRights === null) {
+                $rows        = iterator_to_array($db->query('SELECT urole_rights FROM melis_core_user_role WHERE urole_id = ?', [$roleId]));
+                $uroleRights = (string) ($rows[0]['urole_rights'] ?? '');
+            }
+            $users = iterator_to_array($db->query('SELECT usr_id FROM melis_core_user WHERE usr_role_id = ?', [$roleId]));
+            foreach ($users as $u) {
+                $usrId = (int) $u['usr_id'];
+                $db->query('UPDATE melis_core_user SET usr_rights = ? WHERE usr_id = ?', [$uroleRights, $usrId]);
+                $this->regenerateUserCache($usrId, $uroleRights);
+            }
+        } catch (\Throwable) {
+        }
+    }
+
+    /** Univers des clés évaluées pour l'allow-set : tous les melisKeys + sections/roots + dashboard. */
+    private function rightsKeyUniverse(): array
+    {
+        $keys = array_keys($this->melisKeysCached());
+        foreach ($this->getMelisKeyPaths() as $path) {
+            $keys[] = $path;
+            $keys[] = $path . '_root';
+        }
+        $keys[] = self::MELIS_PLATFORM_TOOLS_PREFIX . '_root';
+        $keys[] = self::MELISCORE_PREFIX_INTERFACE . '_root';
+        $keys[] = self::MELIS_DASHBOARD;
+
+        return array_values(array_unique($keys));
+    }
+
+    /** Signature d'invalidation : hash des droits effectifs + version de la config d'interface.
+     *  Empreinte unique de 32 caractères (tient dans usr_rights_cache_sig VARCHAR(64)) — la
+     *  concaténation md5(xml)+md5(config) ferait 65 caractères et serait tronquée en base → le
+     *  cache raterait à chaque requête. */
+    private function rightsSignature(string $xml): string
+    {
+        return md5($xml . '|' . $this->configVersion());
+    }
+
+    /** Version de la config d'interface (jeu de melisKeys) : bouge si un module est installé/activé. */
+    private function configVersion(): string
+    {
+        if ($this->configVersionMemo !== null) {
+            return $this->configVersionMemo;
+        }
+        $keys = array_keys($this->melisKeysCached());
+        sort($keys);
+
+        return $this->configVersionMemo = md5(implode(',', $keys));
     }
 
     /**
@@ -67,7 +316,7 @@ class MelisCoreRightsService extends MelisServiceManager implements MelisCoreRig
     {
         $rightsObj = simplexml_load_string(trim($xmlRights));
         $melisAppConfig = $this->getConfig();
-        $melisKeys = $melisAppConfig->getMelisKeys();
+        $melisKeys = $this->melisKeysCached();
 
         if (empty($rightsObj)) {
             return true;
@@ -116,7 +365,7 @@ class MelisCoreRightsService extends MelisServiceManager implements MelisCoreRig
 
                 // If it reaches here, it means tools are not directly checked, but maybe some sections are
                 $appconfigpath = $melisKeys['meliscore_toolstree'];
-                $appsConfig = $melisAppConfig->getItem($appconfigpath);
+                $appsConfig = $this->getItemCached($appconfigpath);
                 foreach ($appsConfig['interface'] as $keySection => $section) {
                     foreach ($section['interface'] as $keyTool => $tool) {
                         if ($keyTool == $itemId) {
@@ -173,7 +422,7 @@ class MelisCoreRightsService extends MelisServiceManager implements MelisCoreRig
                 $tooldIds = [];
 
                 $appconfigpath = $melisKeys[$toolSection] ?? null;
-                $appsConfig = $melisAppConfig->getItem($appconfigpath);
+                $appsConfig = $this->getItemCached($appconfigpath);
                 $tmpToolIds = $toolIds;
 
                 // include specified section parents
@@ -203,7 +452,7 @@ class MelisCoreRightsService extends MelisServiceManager implements MelisCoreRig
 
 
                     // if item ID is a parent, check if one of their children is in the rights
-                    if ($this->getConfig()->isParentOf($tool, $itemId)) {
+                    if ($this->configIsParentOf($tool, $itemId)) {
                         return $this->grantAccess($tool, $toolIds);
                     }
 
@@ -864,7 +1113,14 @@ class MelisCoreRightsService extends MelisServiceManager implements MelisCoreRig
      */
     public function getToolSectionMap()
     {
-        $melisKeys = $this->getConfig()->getMelisKeys();
+        // Mémoïsé pour la requête : dérivé pur de la config (identique pour tous les users/appels).
+        // C'était LE coût répété — getSectionParent()/isParentOf() le reconstruisaient à chaque
+        // isAccessible(), soit 7 getItem() + getMelisKeys() + getOrderInterfaceConfig() par appel.
+        if ($this->toolSectionMapMemo !== null) {
+            return $this->toolSectionMapMemo;
+        }
+
+        $melisKeys = $this->melisKeysCached();
 
         $appConfigPaths = $this->getMelisKeyPaths();
 
@@ -921,6 +1177,6 @@ class MelisCoreRightsService extends MelisServiceManager implements MelisCoreRig
             }
         }
 
-        return $tools;
+        return $this->toolSectionMapMemo = $tools;
     }
 }

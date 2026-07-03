@@ -36,6 +36,7 @@ use MelisCore\Listener\MelisCoreUrlPlatformSchemeListener;
 use MelisCore\Listener\MelisCoreOtherConfigListener;
 use MelisCore\Listener\MelisCoreUpdatePasswordHistoryListener;
 use MelisCore\Listener\MelisReactApiCapabilityPreserveUserListener;
+use MelisCore\Listener\MelisCoreRightsCacheListener;
 use Laminas\ModuleManager\ModuleManager;
 use Laminas\Mvc\ModuleRouteListener;
 use Laminas\Mvc\MvcEvent;
@@ -102,6 +103,8 @@ class Module
             // Préserve la section <meliscore_tool_capabilities> (droits avancés React) d'un USER
             // quand l'ancien BO reconstruit usr_rights (event meliscore_tooluser_save_start).
             (new MelisReactApiCapabilityPreserveUserListener())->attach($eventManager);
+            // Génère le cache de droits par utilisateur à la sauvegarde (user + rôle propagé).
+            (new MelisCoreRightsCacheListener())->attach($eventManager);
         }
     }
 

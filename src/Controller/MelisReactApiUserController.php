@@ -226,6 +226,12 @@ class MelisReactApiUserController extends MelisAbstractActionController
                     }
                 } catch (\Throwable) {}
 
+                // Régénère le cache de droits de l'utilisateur (colonne usr_rights_cache) UNIQUEMENT
+                // si les droits ont été modifiés — point de génération « à la sauvegarde » côté React.
+                if ($rights !== null) {
+                    try { $this->getServiceManager()->get('MelisCoreRights')->regenerateUserCache($id, $rights); } catch (\Throwable) {}
+                }
+
                 return $this->jsonResponse(['success' => true, 'data' => ['id' => $id, 'self' => isset($identity) && (int) ($identity->usr_id ?? 0) === $id]]);
             }
 
@@ -241,6 +247,9 @@ class MelisReactApiUserController extends MelisAbstractActionController
             $newId = (int) iterator_to_array(
                 $db->query('SELECT LAST_INSERT_ID() AS id', [])
             )[0]['id'];
+
+            // Génère le cache de droits du nouvel utilisateur (colonne usr_rights_cache).
+            try { $this->getServiceManager()->get('MelisCoreRights')->regenerateUserCache($newId, $rights ?? ''); } catch (\Throwable) {}
 
             return $this->jsonResponse(['success' => true, 'data' => ['id' => $newId]], 201);
         } catch (\Throwable $e) {
