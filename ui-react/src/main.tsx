@@ -13,6 +13,7 @@ import * as XLSX from 'xlsx'
 import './index.css'
 import App from './App.tsx'
 import { isModuleActive } from '@/lib/bricks'
+import { useCaps, type CapsApi } from '@/lib/caps'
 
 const w = window as unknown as {
   MelisReact?: unknown
@@ -24,6 +25,9 @@ const w = window as unknown as {
   __melisRegisterBrick?: (b: { id: string; Component?: ComponentType; Sidebar?: ComponentType; Header?: ComponentType }) => void
   /** Exposed for brick IIFE bundles that cannot import from the host. */
   __melisIsModuleActive?: (id: string) => boolean
+  /** Vérification CENTRALE des droits (capacités actions/onglets) — cf. lib/caps.ts. Les briques
+   *  l'utilisent au lieu de réimplémenter : un module déclare son react.capabilities.php + appelle can(). */
+  __melisUseCaps?: (melisKey: string) => CapsApi
 }
 w.MelisReact = React
 w.MelisReactDOM = ReactDOM
@@ -34,6 +38,7 @@ w.MelisReactRouterDOM = ReactRouterDOM
 w.MelisXLSX = XLSX
 w.__MELIS_BRICK_COMPONENTS__ = w.__MELIS_BRICK_COMPONENTS__ ?? {}
 w.__melisIsModuleActive = isModuleActive
+w.__melisUseCaps = useCaps
 w.__melisRegisterBrick = (b) => {
   // A brick may register a routed page (Component), a left-sidebar panel (Sidebar) and/or a
   // topbar widget (Header, e.g. the messenger notification icon) — all optional, all modular.

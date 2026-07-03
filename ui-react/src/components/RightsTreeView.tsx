@@ -16,7 +16,7 @@
 
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { Boxes, CheckSquare, ChevronRight, FileText, LayoutDashboard, Loader2, MinusSquare, Square } from 'lucide-react'
-import type { ApiMenuNode } from '@/lib/melis-api'
+import type { ApiMenuNode, CapTreeNode, DeclaredCapValue } from '@/lib/melis-api'
 import { fetchMenu, fetchReactModules, fetchDeclaredCapabilities } from '@/lib/melis-api'
 import { cn } from '@/lib/utils'
 import { useI18n } from '@/i18n/i18n-context'
@@ -47,7 +47,19 @@ function nodeKey(n: ApiMenuNode) {
 type DeniedCaps = Record<string, string[]>
 // Libellés des capacités via i18n (le BO suit la locale EN/FR). Clé inconnue → on retombe sur le brut.
 const CAP_I18N: Record<string, I18nKey> = {
-  list: 'caps.list', create: 'caps.create', edit: 'caps.edit', delete: 'caps.delete', export: 'caps.export',
+  list: 'caps.list', create: 'caps.create', edit: 'caps.edit', delete: 'caps.delete', duplicate: 'caps.duplicate', export: 'caps.export',
+}
+
+// `CapTreeNode`/`DeclaredCapValue` (liste plate OU arbre à onglets) importés de melis-api.ts —
+// c'est la forme exacte renvoyée par /rights/capabilities (voir react.capabilities.php).
+
+function capLabel(t: (k: I18nKey) => string, cap: string): string {
+  return CAP_I18N[cap] ? t(CAP_I18N[cap]) : cap
+}
+
+/** Chemin de capacité complet (ex. `variants.list`) pour la deny-list, à partir du préfixe du nœud parent. */
+function capPath(prefix: string, cap: string): string {
+  return prefix ? `${prefix}.${cap}` : cap
 }
 
 /** Parse la section <meliscore_tool_capabilities> du XML en { melisKey: [caps retirées] }. */
@@ -284,7 +296,7 @@ function ToolRow({
   checked: boolean
   onToggle: (key: string, v: boolean) => void
   depth: number
-  declaredCaps: Record<string, string[]>
+  declaredCaps: Record<string, DeclaredCapValue>
   deniedCaps: DeniedCaps
   onToggleCap: (toolKey: string, cap: string, allowed: boolean) => void
 }) {
@@ -292,8 +304,10 @@ function ToolRow({
   const pl = depth === 0 ? 'pl-2' : depth === 1 ? 'pl-7' : 'pl-12'
   const capPl = depth === 0 ? 'pl-9' : depth === 1 ? 'pl-14' : 'pl-[4.75rem]'
   const key = nodeKey(node)
-  const caps = declaredCaps[key] ?? []
+  const declared = declaredCaps[key]
   const denied = deniedCaps[key] ?? []
+  const rootNode: CapTreeNode = Array.isArray(declared) ? { actions: declared } : (declared ?? {})
+  const hasCaps = (rootNode.actions?.length ?? 0) > 0 || (rootNode.tabs?.length ?? 0) > 0
   return (
     <div>
       <label
@@ -317,25 +331,85 @@ function ToolRow({
       </label>
 
       {/* Capacités (droits avancés) : visibles seulement si l'outil les déclare ET est autorisé. */}
-      {checked && caps.length > 0 && (
-        <div className={cn('flex flex-wrap items-center gap-x-3 gap-y-1 pb-1.5 pt-0.5', capPl)}>
-          {caps.map((cap) => {
-            const allowed = !denied.includes(cap)
+      {checked && hasCaps && (
+        <div className={cn('pb-1.5', capPl)}>
+          <CapTree node={rootNode} pathPrefix="" toolKey={key} denied={denied} onToggleCap={onToggleCap} t={t} />
+        </div>
+      )}
+    </div>
+  )
+}
+
+/** Rend récursivement un nœud de capacités : sa ligne d'actions, puis son bloc « Tabs » (si présent). */
+function CapTree({ node, pathPrefix, toolKey, denied, onToggleCap, t }: {
+  node: CapTreeNode
+  pathPrefix: string
+  toolKey: string
+  denied: string[]
+  onToggleCap: (toolKey: string, cap: string, allowed: boolean) => void
+  t: (k: I18nKey) => string
+}) {
+  return (
+    <div className="flex flex-col gap-1">
+      {(node.actions?.length ?? 0) > 0 && (
+        <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
+          {node.actions!.map((cap) => {
+            const full = capPath(pathPrefix, cap)
             return (
-              <label key={cap} className="flex cursor-pointer items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors">
-                <input
-                  type="checkbox"
-                  className="size-3 accent-primary"
-                  checked={allowed}
-                  onChange={(e) => onToggleCap(key, cap, e.target.checked)}
-                />
-                {CAP_I18N[cap] ? t(CAP_I18N[cap]) : cap}
-              </label>
+              <CapCheckbox key={full} allowed={!denied.includes(full)} label={capLabel(t, cap)}
+                onChange={(v) => onToggleCap(toolKey, full, v)} />
             )
           })}
         </div>
       )}
+      {(node.tabs?.length ?? 0) > 0 && (
+        <div className="flex flex-col gap-1">
+          <span className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground/60">{t('caps.tabs')}</span>
+          <div className="flex flex-col gap-1.5 border-l border-border/60 pl-2.5">
+            {node.tabs!.map((tab, i) => {
+              if (typeof tab === 'string') {
+                return <span key={i} className="text-xs text-muted-foreground/80">{tab}</span>
+              }
+              const label = tab.label ?? tab.key ?? `#${i}`
+              const hasChildren = (tab.actions?.length ?? 0) > 0 || (tab.tabs?.length ?? 0) > 0
+              const tabPath = tab.key ? capPath(pathPrefix, tab.key) : ''
+              return (
+                <div key={tab.key ?? i} className="flex flex-col gap-1">
+                  {/* L'onglet lui-même est une capacité cochable (accès à l'onglet). Un onglet sans
+                      `key` (rétro-compat) reste un simple repère textuel. */}
+                  {tab.key
+                    ? <CapCheckbox allowed={!denied.includes(tabPath)} label={label} strong
+                        onChange={(v) => onToggleCap(toolKey, tabPath, v)} />
+                    : <span className="text-xs font-medium text-foreground/80">{label}</span>}
+                  {hasChildren && (
+                    <div className="ml-4 rounded-md bg-muted/30 px-2 py-1">
+                      <CapTree node={tab} pathPrefix={tabPath || pathPrefix} toolKey={toolKey} denied={denied} onToggleCap={onToggleCap} t={t} />
+                    </div>
+                  )}
+                </div>
+              )
+            })}
+          </div>
+        </div>
+      )}
     </div>
+  )
+}
+
+function CapCheckbox({ allowed, label, onChange, strong }: { allowed: boolean; label: string; onChange: (v: boolean) => void; strong?: boolean }) {
+  return (
+    <label className={cn(
+      'flex cursor-pointer items-center gap-1.5 text-xs transition-colors',
+      strong ? 'font-medium text-foreground/80 hover:text-foreground' : 'text-muted-foreground hover:text-foreground',
+    )}>
+      <input
+        type="checkbox"
+        className="size-3 accent-primary"
+        checked={allowed}
+        onChange={(e) => onChange(e.target.checked)}
+      />
+      {label}
+    </label>
   )
 }
 
@@ -356,7 +430,7 @@ function CategoryGroup({
   onToggleTool: (key: string, v: boolean) => void
   onToggleGroup: (keys: string[], v: boolean) => void
   depth: number
-  declaredCaps: Record<string, string[]>
+  declaredCaps: Record<string, DeclaredCapValue>
   deniedCaps: DeniedCaps
   onToggleCap: (toolKey: string, cap: string, allowed: boolean) => void
 }) {
@@ -441,7 +515,7 @@ function SectionPanel({
   checkedTools: Set<string>
   onToggleTool: (key: string, v: boolean) => void
   onToggleGroup: (keys: string[], v: boolean) => void
-  declaredCaps: Record<string, string[]>
+  declaredCaps: Record<string, DeclaredCapValue>
   deniedCaps: DeniedCaps
   onToggleCap: (toolKey: string, cap: string, allowed: boolean) => void
 }) {
@@ -541,7 +615,7 @@ export function RightsTreeView({ rights, onChange }: RightsTreeViewProps) {
   const [cmsActive, setCmsActive] = useState(false)
 
   // Capacités d'outils (droits avancés) : déclarées par module + retirées par user (deny-list).
-  const [declaredCaps, setDeclaredCaps] = useState<Record<string, string[]>>({})
+  const [declaredCaps, setDeclaredCaps] = useState<Record<string, DeclaredCapValue>>({})
   const [deniedCaps, setDeniedCaps] = useState<DeniedCaps>({})
   const deniedCapsRef = useRef<DeniedCaps>({})
 

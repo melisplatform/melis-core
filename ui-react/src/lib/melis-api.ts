@@ -529,12 +529,21 @@ export interface MeUser {
   capabilities?: Record<string, string[]>
 }
 
-/** Capacités d'outils DÉCLARÉES par les modules : { melisKey: ['list','create',…] } (éditeur de droits). */
-export async function fetchDeclaredCapabilities(): Promise<Record<string, string[]>> {
+/**
+ * Capacités d'outils DÉCLARÉES par les modules (éditeur de droits) : par melisKey, soit une
+ * liste plate historique (`['list','create',…]`), soit un arbre pour un outil dont certains
+ * onglets ont leurs propres actions (ex. "Variants" du produit — voir react.capabilities.php
+ * pour la forme exacte et melis-react-api/Service/Capabilities.php pour l'aplatissement).
+ */
+export interface CapTreeNode { key?: string; label?: string; actions?: string[]; tabs?: CapTabEntry[] }
+export type CapTabEntry = string | CapTreeNode
+export type DeclaredCapValue = string[] | CapTreeNode
+
+export async function fetchDeclaredCapabilities(): Promise<Record<string, DeclaredCapValue>> {
   try {
     const res = await fetch('/melis/react-api/rights/capabilities', { headers: { ...XHR_HEADER }, credentials: 'include' })
     if (!res.ok) return {}
-    const data = (await res.json()) as { success: boolean; data?: Record<string, string[]> }
+    const data = (await res.json()) as { success: boolean; data?: Record<string, DeclaredCapValue> }
     return data.success && data.data ? data.data : {}
   } catch {
     return {}

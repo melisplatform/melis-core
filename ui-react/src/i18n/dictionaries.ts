@@ -156,7 +156,9 @@ const fr = {
   'caps.create': 'Création',
   'caps.edit': 'Édition',
   'caps.delete': 'Suppression',
+  'caps.duplicate': 'Duplication',
   'caps.export': 'Export',
+  'caps.tabs': 'Onglets',
 
   // ── Plateformes ──
   'platforms.title': 'Plateformes',
@@ -775,7 +777,9 @@ const en: Record<I18nKey, string> = {
   'caps.create': 'Create',
   'caps.edit': 'Edit',
   'caps.delete': 'Delete',
+  'caps.duplicate': 'Duplicate',
   'caps.export': 'Export',
+  'caps.tabs': 'Tabs',
 
   // ── Platforms ──
   'platforms.title': 'Platforms',

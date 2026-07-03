@@ -806,7 +806,14 @@ class MelisCoreRightsService extends MelisServiceManager implements MelisCoreRig
      */
     public function getSectionParent($melisKey, $data = null)
     {
-        $data = is_null($data) ? $this->getToolSectionMap() : $data;
+        // Reset the shared accumulator on the top-level call. `sectionParent` is instance state
+        // written by BOTH this method and isParentOf(); without this reset a lookup for a key that
+        // is absent from the tool-section map returns the STALE value from a previous call, wrongly
+        // resolving an unrelated section (e.g. a commerce tool inheriting a marketing section).
+        if (is_null($data)) {
+            $this->sectionParent = null;
+            $data = $this->getToolSectionMap();
+        }
 
         foreach ($data as $idx => $tool) {
             if ($tool['key'] === $melisKey) {
@@ -829,7 +836,15 @@ class MelisCoreRightsService extends MelisServiceManager implements MelisCoreRig
      */
     public function isParentOf($toolKey, $parentKey, $data = null)
     {
-        $data = is_null($data) ? $this->getToolSectionMap() : $data;
+        // Reset the shared accumulator on the top-level call — see getSectionParent(). Without it, a
+        // toolKey that is absent from the map leaves `sectionParent` at its previous value, so e.g.
+        // isParentOf('meliscommerce_categories_page', 'melismarketing_toolstree_section') returns the
+        // stale marketing parent and wrongly grants access to every commerce tool for a user who only
+        // has a marketing grant.
+        if (is_null($data)) {
+            $this->sectionParent = null;
+            $data = $this->getToolSectionMap();
+        }
 
         foreach ($data as $idx => $tool) {
             if ($tool['key'] === $toolKey) {
