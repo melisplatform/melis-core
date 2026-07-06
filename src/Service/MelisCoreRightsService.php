@@ -33,6 +33,8 @@ class MelisCoreRightsService extends MelisServiceManager implements MelisCoreRig
     private $resolvedLoaded = false;
     /** @var array|null - request-scoped resolved rights, or null when unavailable (→ live fallback). */
     private $resolved = null;
+    /** @var bool|null - request-scoped memo of "current user is super-admin (usr_admin=1)". */
+    private $isAdminMemo = null;
     /** @var string|null - request-scoped memo of the interface config version. */
     private $configVersionMemo = null;
     /** @var array|null - request-scoped memo of getMelisKeys() (pure config, invariant per request). */
@@ -93,8 +95,32 @@ class MelisCoreRightsService extends MelisServiceManager implements MelisCoreRig
      *
      * @return bool
      */
+    /**
+     * L'utilisateur authentifié courant est-il super-administrateur (usr_admin=1) ? Mémoïsé pour la
+     * requête. Un admin court-circuite les vérifications de droits (accès total).
+     */
+    public function isCurrentUserAdmin(): bool
+    {
+        if ($this->isAdminMemo !== null) {
+            return $this->isAdminMemo;
+        }
+        try {
+            $identity = $this->getServiceManager()->get('MelisCoreAuth')->getIdentity();
+            return $this->isAdminMemo = (!empty($identity) && !empty($identity->usr_admin));
+        } catch (\Throwable $e) {
+            return $this->isAdminMemo = false;
+        }
+    }
+
     public function canAccess($key): bool
     {
+        // Super-administrateur (usr_admin=1) = accès TOTAL, sans dépendre de son usr_rights (dont le
+        // leftmenu peut être une liste positive incomplète, ex. sections Commerce/AI vides). Court-
+        // circuit AVANT le cache résolu (qui, lui, reflète la liste positive et masquerait ces outils).
+        if ($this->isCurrentUserAdmin()) {
+            return true;
+        }
+
         // POINT UNIQUE d'accélération : si le cache de droits résolu de l'utilisateur courant est
         // disponible, l'accès à un outil devient un simple lookup O(1) dans l'allow-set (au lieu de
         // re-parser usr_rights + retraverser la config à CHAQUE appel). Tout ce qui passe par
