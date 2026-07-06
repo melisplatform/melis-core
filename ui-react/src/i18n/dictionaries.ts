@@ -168,6 +168,8 @@ const fr = {
   'rights.pages': 'Pages',
   'rights.tools_count': '{checked} / {total} outils autorisés',
   'rights.load_error': 'Impossible de charger l’arbre de navigation.',
+  'rights.grant_to_configure': 'Cochez la case ci-dessus pour accorder l’accès — les fonctions ci-dessous ne font que l’affiner.',
+  'rights.no_caps': 'Aucune fonction spécifique à configurer.',
 
   // ── Plateformes ──
   'platforms.title': 'Plateformes',
@@ -801,6 +803,8 @@ const en: Record<I18nKey, string> = {
   'rights.pages': 'Pages',
   'rights.tools_count': '{checked} / {total} tools allowed',
   'rights.load_error': 'Unable to load the navigation tree.',
+  'rights.grant_to_configure': 'Tick the box above to grant access — the functions below only refine it.',
+  'rights.no_caps': 'No specific functions to configure.',
 
   // ── Platforms ──
   'platforms.title': 'Platforms',

@@ -62,6 +62,20 @@ function capPath(prefix: string, cap: string): string {
   return prefix ? `${prefix}.${cap}` : cap
 }
 
+/** Tous les chemins de capacité cochables d'un outil (actions + clés d'onglets, récursif) — sert à
+ *  savoir « au moins une fonction est-elle permise ? » (grant auto des sections is_parent_tool). */
+function allCapPaths(node: CapTreeNode, prefix = ''): string[] {
+  const out: string[] = []
+  for (const a of node.actions ?? []) out.push(capPath(prefix, a))
+  for (const tab of node.tabs ?? []) {
+    if (typeof tab === 'string') continue
+    const tp = tab.key ? capPath(prefix, tab.key) : prefix
+    if (tab.key) out.push(tp)
+    out.push(...allCapPaths(tab, tp || prefix))
+  }
+  return out
+}
+
 /** Parse la section <meliscore_tool_capabilities> du XML en { melisKey: [caps retirées] }. */
 function parseDeniedCaps(xml: string): DeniedCaps {
   const out: DeniedCaps = {}
@@ -106,7 +120,12 @@ function parseCheckedTools(xml: string, navTree: ApiMenuNode[]): Set<string> {
 
     // Nouveau format : parcourir chaque section
     for (const section of navTree) {
-      const sk = nodeKey(section)
+      // Cf. buildRightsXml : le tag de section = la `*_toolstree_section` (dans `key` pour une
+      // section is_parent_tool dont le melisKey est l'id d'outil, ex. Market Place).
+      const nk = nodeKey(section)
+      const sk = nk.endsWith('_toolstree_section')
+        ? nk
+        : ((section.key ?? '').endsWith('_toolstree_section') ? section.key! : nk)
       const sectionEl = leftmenu.querySelector(sk)
       if (!sectionEl) continue
 
@@ -171,13 +190,16 @@ function buildRightsXml(
   ]
 
   for (const section of navTree) {
-    const sk = nodeKey(section)
-    // Seules les VRAIES sections d'outils (`*_toolstree_section`) portent des grants de leftmenu.
-    // On saute un nœud top qui est lui-même un OUTIL (ex. Marketplace `melis_market_place_tool_display`) :
-    // le resolver legacy `isAccessible` rejette un élément non-`*_toolstree_section` sous
-    // <meliscore_leftmenu> et refuse alors TOUS les outils → l'éditeur faisait perdre tous les droits
-    // à la sauvegarde. Correspond au format legacy valide (seules les *_toolstree_section apparaissent).
-    if (!sk.endsWith('_toolstree_section')) continue
+    // Tag de section = la `*_toolstree_section` (seul élément valide sous <meliscore_leftmenu> pour
+    // le resolver legacy). Normalement = melisKey. Mais une section `is_parent_tool` (ex. Market Place)
+    // expose son nœud AVEC melisKey = l'id d'OUTIL (`melis_market_place_tool_display`) et la vraie
+    // section dans `key` (`melismarketplace_toolstree_section`) → on écrit l'outil SOUS ce tag, sinon
+    // le grant n'est jamais sauvé (l'éditeur rouvrait « rien de coché »).
+    const nk = nodeKey(section)
+    const sk = nk.endsWith('_toolstree_section')
+      ? nk
+      : ((section.key ?? '').endsWith('_toolstree_section') ? section.key! : '')
+    if (!sk) continue
     const allTools = getToolsFlat([section])
     const checkedHere = allTools.filter((t) => checkedTools.has(nodeKey(t)))
 
@@ -214,7 +236,10 @@ function buildRightsXml(
     'melismarketplace_toolstree_section',
   ]
   const emittedSections = new Set(
-    navTree.map(nodeKey).filter((k) => k.endsWith('_toolstree_section')),
+    navTree.map((s) => {
+      const nk = nodeKey(s)
+      return nk.endsWith('_toolstree_section') ? nk : ((s.key ?? '').endsWith('_toolstree_section') ? s.key! : '')
+    }).filter(Boolean),
   )
   for (const sk of KNOWN_TOOLSTREE_SECTIONS) {
     if (emittedSections.has(sk)) continue
@@ -510,6 +535,8 @@ function SectionPanel({
   declaredCaps,
   deniedCaps,
   onToggleCap,
+  onToggleLeafCap,
+  onToggleLeafGrant,
 }: {
   section: ApiMenuNode
   checkedTools: Set<string>
@@ -518,17 +545,41 @@ function SectionPanel({
   declaredCaps: Record<string, DeclaredCapValue>
   deniedCaps: DeniedCaps
   onToggleCap: (toolKey: string, cap: string, allowed: boolean) => void
+  onToggleLeafCap: (toolKey: string, cap: string, allowed: boolean) => void
+  onToggleLeafGrant: (toolKey: string, v: boolean) => void
 }) {
+  const { t } = useI18n()
   const [open, setOpen] = useState(false)
   const tools = useMemo(() => getToolsFlat([section]), [section])
   const state = getTriState(tools, checkedTools)
+
+  // Section « is_parent_tool » (ex. Market Place) : le nœud de section EST lui-même l'outil
+  // (isTool, aucun enfant). Pas de sous-outil « Marketplace » redondant : la case de l'EN-TÊTE
+  // vaut octroi de l'outil, et on rend SES capacités (list/download/…) directement sous l'en-tête.
+  const isLeafTool = section.isTool && section.children.length === 0
+  const leafKey = nodeKey(section)
+  const leafChecked = checkedTools.has(leafKey)
+  const leafDeclared = declaredCaps[leafKey]
+  const leafRoot: CapTreeNode = Array.isArray(leafDeclared) ? { actions: leafDeclared } : (leafDeclared ?? {})
+  const leafHasCaps = (leafRoot.actions?.length ?? 0) > 0 || (leafRoot.tabs?.length ?? 0) > 0
+  // En-tête d'un outil-feuille : tri-état sur ses FONCTIONS (pas sur « 1 outil ») — comme une section
+  // normale résume ses sous-outils. Au moins une décochée → tiret (some) ; toutes cochées → coché (all) ;
+  // aucune → vide (none) = outil non octroyé. Le compteur affiche fonctions permises / total.
+  const leafPaths = isLeafTool ? allCapPaths(leafRoot) : []
+  const leafDenied = deniedCaps[leafKey] ?? []
+  const leafAllowed = leafChecked ? leafPaths.filter((p) => !leafDenied.includes(p)).length : 0
+  const leafTotal = leafPaths.length
+  const useLeafCaps = isLeafTool && leafTotal > 0
+  const headerState: TriState = useLeafCaps
+    ? (leafAllowed === 0 ? 'none' : leafAllowed === leafTotal ? 'all' : 'some')
+    : state
 
   return (
     <div className="rounded-lg border border-border overflow-hidden">
       <div className="flex items-center gap-2 bg-muted/50 px-3 py-2">
         <TriCheckbox
-          state={state}
-          onChange={(v) => onToggleGroup(tools.map(nodeKey), v)}
+          state={headerState}
+          onChange={(v) => (useLeafCaps ? onToggleLeafGrant(leafKey, v) : onToggleGroup(tools.map(nodeKey), v))}
         />
         <button
           type="button"
@@ -539,7 +590,9 @@ function SectionPanel({
             {section.name}
           </span>
           <span className="ml-1 text-xs text-muted-foreground/60 tabular-nums">
-            {tools.filter((t) => checkedTools.has(nodeKey(t))).length}/{tools.length}
+            {useLeafCaps
+              ? `${leafAllowed}/${leafTotal}`
+              : `${tools.filter((tl) => checkedTools.has(nodeKey(tl))).length}/${tools.length}`}
           </span>
           <ChevronRight
             className={cn(
@@ -551,21 +604,32 @@ function SectionPanel({
       </div>
 
       {open && (
-        <div className="divide-y divide-border/50 bg-card py-1">
-          {section.children.map((child) => (
-            <CategoryGroup
-              key={nodeKey(child)}
-              node={child}
-              checkedTools={checkedTools}
-              onToggleTool={onToggleTool}
-              onToggleGroup={onToggleGroup}
-              depth={0}
-              declaredCaps={declaredCaps}
-              deniedCaps={deniedCaps}
-              onToggleCap={onToggleCap}
-            />
-          ))}
-        </div>
+        isLeafTool ? (
+          // Fonctions directement sous l'en-tête, TOUJOURS visibles à l'ouverture. Modèle allow-list :
+          // outil NON octroyé → toutes décochées (denied = tous les chemins) ; cocher ≥1 fonction
+          // octroie l'outil (onToggleLeafCap), tout décocher le retire. La case d'en-tête = octroi complet.
+          <div className="bg-card px-3 py-2">
+            {leafHasCaps
+              ? <CapTree node={leafRoot} pathPrefix="" toolKey={leafKey} denied={leafChecked ? leafDenied : leafPaths} onToggleCap={onToggleLeafCap} t={t} />
+              : <span className="text-xs text-muted-foreground/70">{t('rights.no_caps')}</span>}
+          </div>
+        ) : (
+          <div className="divide-y divide-border/50 bg-card py-1">
+            {section.children.map((child) => (
+              <CategoryGroup
+                key={nodeKey(child)}
+                node={child}
+                checkedTools={checkedTools}
+                onToggleTool={onToggleTool}
+                onToggleGroup={onToggleGroup}
+                depth={0}
+                declaredCaps={declaredCaps}
+                deniedCaps={deniedCaps}
+                onToggleCap={onToggleCap}
+              />
+            ))}
+          </div>
+        )
       )}
     </div>
   )
@@ -617,6 +681,9 @@ export function RightsTreeView({ rights, onChange }: RightsTreeViewProps) {
 
   // Capacités d'outils (droits avancés) : déclarées par module + retirées par user (deny-list).
   const [declaredCaps, setDeclaredCaps] = useState<Record<string, DeclaredCapValue>>({})
+  // On attend ce fetch avant le 1er rendu : sinon une section is_parent_tool (ex. Market Place) affiche
+  // brièvement le compteur d'OUTILS (1/1) puis bascule sur le compteur de FONCTIONS (3/3) → flicker.
+  const [capsLoaded, setCapsLoaded] = useState(false)
   const [deniedCaps, setDeniedCaps] = useState<DeniedCaps>({})
   const deniedCapsRef = useRef<DeniedCaps>({})
 
@@ -646,7 +713,10 @@ export function RightsTreeView({ rights, onChange }: RightsTreeViewProps) {
 
   // Capacités déclarées par les modules (carte melisKey → [caps]) pour afficher les cases par outil.
   useEffect(() => {
-    fetchDeclaredCapabilities().then(setDeclaredCaps)
+    fetchDeclaredCapabilities()
+      .then(setDeclaredCaps)
+      .catch(() => {})
+      .finally(() => setCapsLoaded(true))
   }, [])
 
   // Re-parse whenever rights changes from OUTSIDE (server load), not from our own onChange
@@ -678,6 +748,48 @@ export function RightsTreeView({ rights, onChange }: RightsTreeViewProps) {
     setDeniedCaps(next)
     deniedCapsRef.current = next
     emit(checkedTools, checkedPages, checkedDash, next)
+  }
+
+  // ── Sections « is_parent_tool » (ex. Market Place) : modèle ALLOW-LIST piloté par les fonctions ──
+  // L'octroi de l'outil SUIT les fonctions : cocher ≥1 fonction octroie l'outil, tout décocher le retire.
+  // Tant que l'outil n'est pas octroyé, les fonctions s'affichent décochées (deny = tous les chemins).
+
+  /** Toggle d'une fonction d'un outil-feuille : recalcule denies + octroi (add/remove du melisKey). */
+  function onToggleLeafCap(toolKey: string, cap: string, allowed: boolean) {
+    const declared = declaredCaps[toolKey]
+    const root: CapTreeNode = Array.isArray(declared) ? { actions: declared } : (declared ?? {})
+    const paths = allCapPaths(root)
+    const granted = checkedTools.has(toolKey)
+
+    // Ungranted → tout était affiché décoché (deny = tous) : cocher `cap` n'active QUE lui.
+    // Granted → toggle deny-list classique.
+    const set = granted ? new Set(deniedCapsRef.current[toolKey] ?? []) : new Set(paths)
+    if (allowed) set.delete(cap); else set.add(cap)
+
+    const anyAllowed = paths.some((p) => !set.has(p))
+    const nextDenied: DeniedCaps = { ...deniedCapsRef.current }
+    // Aucune fonction permise → on retire l'octroi ET on nettoie les denies (repart propre).
+    if (!anyAllowed) delete nextDenied[toolKey]
+    else if (set.size) nextDenied[toolKey] = [...set]
+    else delete nextDenied[toolKey]
+
+    const nextTools = new Set(checkedTools)
+    if (anyAllowed) nextTools.add(toolKey); else nextTools.delete(toolKey)
+
+    setDeniedCaps(nextDenied); deniedCapsRef.current = nextDenied
+    setCheckedTools(nextTools)
+    emit(nextTools, checkedPages, checkedDash, nextDenied)
+  }
+
+  /** Toggle de la case d'en-tête d'un outil-feuille : octroi = accès COMPLET (denies remis à zéro). */
+  function onToggleLeafGrant(toolKey: string, v: boolean) {
+    const nextTools = new Set(checkedTools)
+    if (v) nextTools.add(toolKey); else nextTools.delete(toolKey)
+    const nextDenied: DeniedCaps = { ...deniedCapsRef.current }
+    delete nextDenied[toolKey] // octroi → tout permis ; retrait → reset
+    setCheckedTools(nextTools)
+    setDeniedCaps(nextDenied); deniedCapsRef.current = nextDenied
+    emit(nextTools, checkedPages, checkedDash, nextDenied)
   }
 
   function updateChecked(next: Set<string>) {
@@ -749,7 +861,9 @@ export function RightsTreeView({ rights, onChange }: RightsTreeViewProps) {
     emit(tools, pages, dash)
   }
 
-  if (navLoading) {
+  // On attend AUSSI les capacités déclarées : évite le flicker du compteur d'une section is_parent_tool
+  // (Market Place) qui passerait de 1/1 (fallback outils) à 3/3 (fonctions) une fois les caps chargées.
+  if (navLoading || !capsLoaded) {
     return (
       <div className="flex flex-1 items-center justify-center p-8">
         <Loader2 className="size-5 animate-spin text-muted-foreground" />
@@ -818,6 +932,8 @@ export function RightsTreeView({ rights, onChange }: RightsTreeViewProps) {
               declaredCaps={declaredCaps}
               deniedCaps={deniedCaps}
               onToggleCap={onToggleCap}
+              onToggleLeafCap={onToggleLeafCap}
+              onToggleLeafGrant={onToggleLeafGrant}
             />
           ))}
         </Category>
