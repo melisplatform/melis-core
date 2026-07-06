@@ -1539,10 +1539,18 @@ class ToolUserController extends MelisAbstractActionController
         }
 
 
-        $success = $userTable->save(array('usr_rights' => $newXmlRights), $userId);
-        if ($success < 1) {
+        // NB: $userTable->save() returns the saved row id (e.g. the usr_id), NOT a 0/1 flag.
+        // The JSON contract expected by the front (and the React tool-iframe notification bridge)
+        // is success = 1/0 — see updateUserAction which normalises it. If we leaked the raw id here,
+        // `data.success` would be truthy but != 1: the XHR bridge classifies it as an ERROR (red)
+        // while resetUserRights()'s melisOkNotification fires a SUCCESS (green) → two toasts for one
+        // action. Normalise to 1/0 so both notifications match and the host de-dupes them to one.
+        $saveResult = $userTable->save(array('usr_rights' => $newXmlRights), $userId);
+        if (empty($saveResult)) {
+            $success = 0;
             $textMessage = 'tr_meliscore_tool_user_update_fail_info';
         } else {
+            $success = 1;
             $textMessage = 'tr_meliscore_tool_user_update_success_info';
         }
 
