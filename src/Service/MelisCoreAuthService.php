@@ -62,6 +62,14 @@ class MelisCoreAuthService
 
         // if (!empty($user) && is_object($user)) {
         if (!empty($user)) {
+            // Super-administrateur (usr_admin=1) = accès TOTAL : on renvoie des droits vides, que
+            // MelisCoreRightsService::isAccessible()/getResolvedRights() interprètent déjà comme
+            // "tout autorisé" (court-circuit). Sans ça, un admin voyait son menu filtré par un
+            // usr_rights partiel (ex. pas de section "Configuration système").
+            if (!empty($user->usr_admin)) {
+                return '';
+            }
+
             if (! $this->isRightsUpdated($user->usr_rights)) {
                 $user->usr_rights = $this->toNewXmlStructure($this->convertToNewRightsStructure());
             }

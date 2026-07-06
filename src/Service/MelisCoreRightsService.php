@@ -471,7 +471,12 @@ class MelisCoreRightsService extends MelisServiceManager implements MelisCoreRig
                 }
 
                 // direct rights access checking to tool section
+                // NB: isset() garde le count() — si l'outil ($itemId) est absent du XML de droits,
+                // `$rightsObj->$sectionId->$itemId->id` est null → count(null) = TypeError fatal en
+                // PHP 8 (cassait le menu legacy dès qu'un outil n'était pas listé, ex. droits vides
+                // convertis). isset() est null-safe et sans warning.
                 if (in_array($itemId, $this->getMelisKeyPaths())  &&
+                    isset($rightsObj->$sectionId->$itemId->id) &&
                     count($rightsObj->$sectionId->$itemId->id) > 1
                 ) {
                     return true;
