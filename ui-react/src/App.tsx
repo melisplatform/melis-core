@@ -14,6 +14,7 @@ import { hasToolRoutes, routeForForward, useToolRoutesVersion } from '@/lib/tool
 import LoginPage from '@/pages/LoginPage'
 import ForgotPasswordPage from '@/pages/ForgotPasswordPage'
 import ResetPasswordPage from '@/pages/ResetPasswordPage'
+import SetupWizardPage from '@/pages/setup/SetupWizardPage'
 
 /** Fallback label for a route that opens a tab without one (e.g. a deep link). */
 function deriveTabLabel(path: string): string {
@@ -48,7 +49,7 @@ function TabBridge() {
   }, [openTab, closeTab])
   useEffect(() => {
     const path = location.pathname
-    if (path === '/login') return
+    if (path === '/login' || path === '/setup') return
     // Native tools (MODULES) use ONE top tab + a sub-tab bar for their entities, so an edit
     // sub-route (/[tool]/:id) must sync to the TOOL's top tab — not spawn a per-id tab ("2").
     // Bricks WITHOUT subTabs (e.g. CMS pages, News) keep one top tab per entity (handled below);
@@ -108,6 +109,7 @@ export default function App() {
               <Route path="/login" element={<LoginPage />} />
               <Route path="/forgot-password" element={<ForgotPasswordPage />} />
               <Route path="/reset-password/:hash" element={<ResetPasswordPage />} />
+              <Route path="/setup" element={<SetupWizardPage />} />
 
               {/* Authentifié — Shell (sidebar + topbar) */}
               <Route element={<ProtectedRoute />}>

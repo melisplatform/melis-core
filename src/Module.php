@@ -310,9 +310,18 @@ class Module
             exit;
         }
 
-        // INFO: If method is GET and not authenticated, redirect to login
+        // INFO: If method is GET and not authenticated, redirect to login — sauf pour une requête
+        // AJAX/XHR (ex: polling Messenger, preload TinyMCE, i18n DataTable tournant en tâche de
+        // fond sur une page publique comme /melis/setup) : suivre une redirection vers du HTML
+        // casse le parsing JSON côté client (attend du JSON, reçoit la page de login) — 401 laisse
+        // le handler d'erreur AJAX échouer proprement au lieu de spammer des 302 dans le Network tab.
         if ($method === 'GET' && !$isAuthenticated) {
             $e->stopPropagation();
+            $xhrHeader = $request->getHeaders()->get('X-Requested-With');
+            if ($xhrHeader && strtolower($xhrHeader->getFieldValue()) === 'xmlhttprequest') {
+                header('HTTP/1.0 401 Unauthorized');
+                exit;
+            }
             header('Location: /melis/login');
             exit;
         }
