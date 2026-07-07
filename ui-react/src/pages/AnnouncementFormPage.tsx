@@ -1,9 +1,11 @@
 import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
-import { ArrowLeft, CalendarClock, Loader2, Megaphone, RotateCcw, Save } from 'lucide-react'
+import { CalendarClock, Loader2, Megaphone, RotateCcw, Save } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import { MelisToolEditor } from '@/components/ui/melis-tool-editor'
+import { DateTimeField } from '@/components/ui/datetime-field'
 import { cn } from '@/lib/utils'
 import * as annApi from '@/lib/announcement-api'
 import { useSubTabs } from '@/components/tabs/sub-tab-store'
@@ -44,7 +46,9 @@ function Toggle({ checked, onChange }: { checked: boolean; onChange: (v: boolean
 export default function AnnouncementFormPage() {
   const navigate = useNavigate()
   const { id }   = useParams<{ id: string }>()
-  const { t }    = useI18n()
+  const { t, currentLocale } = useI18n()
+  // Locale BO ("en_EN"/"fr_FR"…) → BCP-47 pour piloter le format d'affichage de la date (jj/mm vs mm/jj).
+  const boLocale = (currentLocale || 'en').replace(/_/g, '-')
   const isEdit   = Boolean(id)
   const annId    = id ? parseInt(id) : null
 
@@ -140,9 +144,6 @@ export default function AnnouncementFormPage() {
       {/* Header */}
       <div className="flex items-center justify-between gap-4">
         <div className="flex items-center gap-3">
-          <button onClick={() => navigate(base)} className="text-muted-foreground hover:text-foreground" title={t('common.back')}>
-            <ArrowLeft className="size-4" />
-          </button>
           <div className="grid size-10 place-items-center rounded-lg bg-primary/10 text-primary"><Megaphone className="size-5" /></div>
           <div>
             <h1 className="text-xl font-bold">{isEdit ? t('ann.form.edit_title') : t('ann.form.new_title')}</h1>
@@ -180,10 +181,8 @@ export default function AnnouncementFormPage() {
             {titleError && <p className="mt-1 text-xs text-destructive">{titleError}</p>}
 
             <label className="mb-1 mt-4 block text-sm font-medium">{t('ann.form.text')}</label>
-            <textarea value={form.text} onChange={e => set('text', e.target.value)}
-              placeholder={t('ann.form.text_ph')} rows={10}
-              className={cn('w-full rounded-md border border-input bg-card px-3 py-2 text-sm text-foreground shadow-sm transition-colors placeholder:text-muted-foreground/70 focus-visible:outline-none focus-visible:border-primary focus-visible:ring-2 focus-visible:ring-ring/30',
-                textError && 'border-destructive')} />
+            {/* Éditeur WYSIWYG TinyMCE avec la config 'tool' de melis-core (idem Emails management). */}
+            <MelisToolEditor value={form.text} onChange={html => set('text', html)} minHeight={300} />
             {textError
               ? <p className="mt-1 text-xs text-destructive">{textError}</p>
               : <p className="mt-1 text-xs text-muted-foreground">{t('ann.form.text_hint')}</p>}
@@ -203,8 +202,7 @@ export default function AnnouncementFormPage() {
               <label className="mb-1 flex items-center gap-1.5 text-sm font-medium">
                 <CalendarClock className="size-3.5 text-muted-foreground" />{t('ann.form.date')}
               </label>
-              <input type="datetime-local" value={form.date} onChange={e => set('date', e.target.value)}
-                className="h-11 w-full rounded-md border border-input bg-card px-3 text-sm text-foreground shadow-sm focus-visible:outline-none focus-visible:border-primary focus-visible:ring-2 focus-visible:ring-ring/30" />
+              <DateTimeField value={form.date} onChange={v => set('date', v)} locale={boLocale} />
               <p className="mt-1 text-xs text-muted-foreground">{t('ann.form.date_hint')}</p>
             </div>
           </div>
