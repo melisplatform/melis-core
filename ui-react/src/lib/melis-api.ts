@@ -288,7 +288,8 @@ export interface ApiMenuNode {
   /** Unfiltered child count (before rights filtering) — lets the nav avoid collapsing a multi-tool
    *  category in which the user only has a single tool granted. See collapseSingleTool. */
   configChildCount?: number
-  /** Backend flag: don't collapse this tool with its wrapper/child in the nav (see collapseSingleTool). */
+  /** Category opts out of the single-tool collapse (conf.no_collapse) — kept as an expandable
+   *  group even with one child, so tools can be added under it later. See collapseSingleTool. */
   noCollapse?: boolean
   children: ApiMenuNode[]
 }
