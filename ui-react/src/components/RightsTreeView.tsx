@@ -490,7 +490,7 @@ function CategoryGroup({
   // On rend UNE seule ligne (la feuille interne, qui porte les capacités + l'octroi), pas un
   // « Calendrier > Calendrier » redondant. Miroir de useNavMenu.collapseSingleTool (règle 2) → l'éditeur
   // de droits colle au menu de gauche.
-  if (node.isTool && node.children.length === 1) {
+  if (node.isTool && node.children.length === 1 && !node.noCollapse) {
     const only = node.children[0]
     if (only.isTool && !only.hasNavChild && sameForwardNode(node, only)) {
       return (

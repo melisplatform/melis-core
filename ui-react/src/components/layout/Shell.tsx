@@ -1,5 +1,12 @@
-import { lazy, Suspense, useEffect, useState } from 'react'
-import { Outlet, useLocation } from 'react-router-dom'
+import { lazy, Suspense, useEffect, useRef, useState, type ComponentType } from 'react'
+import {
+  Outlet,
+  Route,
+  Routes,
+  useLocation,
+  UNSAFE_RouteContext as RouteContext,
+  type Location,
+} from 'react-router-dom'
 import { Loader2 } from 'lucide-react'
 
 import { cn } from '@/lib/utils'
@@ -13,7 +20,7 @@ import { ZonePoolProvider } from '@/components/zone/zone-pool'
 import { ZoneFrames } from '@/components/zone/ZoneFrames'
 import { SubTabProvider, SubTabWindowBridge } from '@/components/tabs/sub-tab-store'
 import { ToolTabBridgeProvider } from '@/components/tabs/tool-tab-bridge'
-import { useBricks, brickRoute, refreshActiveModules } from '@/lib/bricks'
+import { useBricks, brickRoute, refreshActiveModules, type BrickDef } from '@/lib/bricks'
 import { loadReactTheme } from '@/lib/react-theme'
 import { PERSISTENT_MODULES } from '@/lib/module-registry'
 import { ToolErrorBoundary } from '@/components/ToolErrorBoundary'
@@ -25,6 +32,86 @@ function PageLoader() {
   return (
     <div className="flex min-h-[60vh] items-center justify-center">
       <Loader2 className="size-6 animate-spin text-primary" />
+    </div>
+  )
+}
+
+/**
+ * Rend UNE brique React dans la zone de contenu.
+ *
+ * Deux modes, selon le flag `persistent` du manifeste :
+ *
+ * • `persistent: false` (défaut) — la brique n'est montée que lorsqu'elle est ACTIVE. Simple, mais
+ *   chaque changement d'onglet outil détruit son sous-arbre : refetch, filtres perdus, iframe legacy
+ *   rechargée. C'est le comportement historique, conservé pour toutes les briques non migrées.
+ *
+ * • `persistent: true` — montée à la 1re visite, JAMAIS démontée (juste cachée en CSS). Son état,
+ *   ses données et son iframe legacy in-tree survivent aux navigations (`display:none` ne recharge
+ *   pas une iframe ; seuls le démontage / re-parentage le font).
+ *
+ * Pourquoi une brique montée-mais-inactive était dangereuse (et pourquoi ça ne l'est plus) :
+ * react-router partage UNE SEULE référence d'objet `params` entre tous les matchs d'une branche
+ * (`matchRouteBranch`), et `useParams()` lit `matches[matches.length - 1].params`. Le match de la
+ * route layout `<Route element={<Shell/>}>` porte donc le `:id` de la route la plus profonde →
+ * TOUTE brique rendue dans Shell voyait le `:id` de l'outil actif, même étranger (MelisCommerce
+ * ProductPage fetchait l'`id` du formulaire Users puis `navigate(base)` → navigation détournée).
+ *
+ * On isole donc chaque brique persistante dans son PROPRE contexte de routage :
+ *  1. `RouteContext` remis à `matches: []` → `parentParams` vide (`useRoutes` les fusionne sinon),
+ *     `parentPathnameBase` = '/' (et le warning « descendant <Routes> » disparaît) ;
+ *  2. `<Routes location={scopedLoc}>` → surcharge `LocationContext` et refait le matching sur la
+ *     route de la brique uniquement. `useParams()`/`useLocation()` ne voient plus que la sienne.
+ * `NavigationContext` n'est PAS touché : `useNavigate()` pilote toujours l'historique réel.
+ *
+ * `scopedLoc` = la dernière location globale pendant que la brique était active (donc figée quand
+ * elle est cachée : elle reste exactement dans l'état où l'utilisateur l'a laissée).
+ *
+ * Les `<Route>` frères rendent le MÊME type de composant à la même position : passer de `/cron` à
+ * `/cron/history` ne remonte donc pas la brique. Le splat final n'est qu'un filet de sécurité pour
+ * une éventuelle sous-route plus profonde (le classement de react-router donne la priorité à
+ * `/:id` sur `/*`, donc `useParams().id` reste renseigné) : sans lui, la brique serait active côté
+ * Shell mais ne matcherait aucune route ici → écran blanc.
+ *
+ * La brique reçoit EN PLUS un prop `active` : le scoping ci-dessus rend le gel manuel du route
+ * inutile, mais certaines briques s'en servent déjà (cf. CmsStylePage, CmsPage) et une brique qui
+ * lirait un signal GLOBAL (hors router) en a toujours besoin. Ceinture et bretelles.
+ *
+ * ⚠️ `UNSAFE_RouteContext` est une API interne de react-router (épinglé 7.17.0 dans package.json).
+ * Une montée de version majeure doit revérifier ce scoping.
+ */
+function BrickHost({ brick, isActive, visited }: { brick: BrickDef; isActive: boolean; visited: boolean }) {
+  const location = useLocation()
+  const Brick = brick.Component! as ComponentType<{ active?: boolean }>
+  const route = brickRoute(brick)
+
+  // Dernière location appartenant à cette brique (figée quand elle est cachée).
+  const scopedRef = useRef<Location | null>(null)
+  if (isActive) scopedRef.current = location
+  const scopedLoc: Location =
+    scopedRef.current ?? { pathname: route, search: '', hash: '', state: null, key: 'default' }
+
+  const mounted = brick.persistent ? visited : isActive && visited
+
+  const el = <Brick active={isActive} />
+  const body = brick.persistent && route
+    ? (
+      <RouteContext.Provider value={{ outlet: null, matches: [], isDataRoute: false }}>
+        <Routes location={scopedLoc}>
+          <Route path={route} element={el} />
+          <Route path={`${route}/:id`} element={el} />
+          <Route path={`${route}/*`} element={el} />
+        </Routes>
+      </RouteContext.Provider>
+    )
+    : el
+
+  return (
+    <div className={cn('h-full overflow-y-auto', !isActive && 'hidden')}>
+      {mounted && (
+        <ToolErrorBoundary label={brick.label}>
+          <Suspense fallback={<PageLoader />}>{body}</Suspense>
+        </ToolErrorBoundary>
+      )}
     </div>
   )
 }
@@ -104,8 +191,9 @@ function ShellInner() {
     return r && (location.pathname === r || location.pathname.startsWith(r + '/'))
   })
 
-  // Lazy-init briques : même pattern que visitedModules. Monté à la 1re visite,
-  // gardé en DOM. Supprimé de l'ensemble quand l'onglet est fermé (fresh reload).
+  // Lazy-init briques : même pattern que visitedModules. Une brique n'est montée (et ne fetche)
+  // qu'à la 1re visite ; les briques `persistent` restent ensuite en DOM (cf. BrickHost).
+  // Supprimée de l'ensemble quand l'onglet est fermé → remontage frais à la réouverture.
   const [visitedBricks, setVisitedBricks] = useState<Set<string>>(new Set())
   const activeBrickId = activeBrick?.id
   useEffect(() => {
@@ -159,29 +247,18 @@ function ShellInner() {
             )
           })}
 
-          {/* Briques React — montées UNIQUEMENT quand actives (la route courante appartient à la
-              brique). Une brique montée mais inactive lit le `location`/`useParams` GLOBAL et peut
-              déclencher des effets de navigation (ex. MelisCommerce ProductPage : fetch d'un "id"
-              issu d'une route étrangère → `.catch(navigate(base))`), ce qui détourne la navigation
-              d'un AUTRE outil (le formulaire Users rebondissait vers sa liste). La persistance
-              intra-outil est conservée (activeBrick matche aussi les sous-routes /:id), et les
-              iframes legacy survivent car montées dans document.body, pas dans l'arbre React.
-              `visitedBricks` garde le lazy-init (pas de fetch avant la 1re visite). */}
-          {bricks.filter((b) => b.Component).map((b) => {
-            const Brick = b.Component!
-            const isActive = activeBrick?.id === b.id
-            return (
-              <div key={b.id} className={cn('h-full overflow-y-auto', !isActive && 'hidden')}>
-                {isActive && visitedBricks.has(b.id) && (
-                  <ToolErrorBoundary label={b.label}>
-                    <Suspense fallback={<PageLoader />}>
-                      <Brick />
-                    </Suspense>
-                  </ToolErrorBoundary>
-                )}
-              </div>
-            )
-          })}
+          {/* Briques React — `visitedBricks` garde le lazy-init (pas de fetch avant la 1re visite).
+              Une brique `persistent` reste ensuite montée (cachée en CSS), isolée dans son propre
+              contexte de routage ; les autres ne sont montées que lorsqu'elles sont actives.
+              Tout est expliqué au-dessus de BrickHost. */}
+          {bricks.filter((b) => b.Component).map((b) => (
+            <BrickHost
+              key={b.id}
+              brick={b}
+              isActive={activeBrick?.id === b.id}
+              visited={visitedBricks.has(b.id)}
+            />
+          ))}
 
           {/* Outlet : zone tools (ZonePage) et formulaires — contenu éphémère ou trivial à remonter. */}
           <div className={cn('h-full overflow-y-auto', (activePersistent || activeBrick || isDashboard) && 'hidden')}>

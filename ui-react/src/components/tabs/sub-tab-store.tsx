@@ -8,6 +8,7 @@ interface SubTabState { sections: Record<string, SectionState> }
 type Action =
   | { type: 'OPEN';         section: string; tab: SubTab }
   | { type: 'CLOSE';        section: string; id: string }
+  | { type: 'CLOSE_ALL';    section: string }
   | { type: 'UPDATE_LABEL'; section: string; id: string; label: string }
 
 function reducer(state: SubTabState, action: Action): SubTabState {
@@ -21,6 +22,10 @@ function reducer(state: SubTabState, action: Action): SubTabState {
       const tabs = section.tabs.filter(t => t.id !== action.id)
       return { sections: { ...state.sections, [action.section]: { tabs } } }
     }
+    case 'CLOSE_ALL': {
+      if (section.tabs.length === 0) return state
+      return { sections: { ...state.sections, [action.section]: { tabs: [] } } }
+    }
     case 'UPDATE_LABEL': {
       const tabs = section.tabs.map(t => t.id === action.id ? { ...t, label: action.label } : t)
       return { sections: { ...state.sections, [action.section]: { tabs } } }
@@ -30,8 +35,36 @@ function reducer(state: SubTabState, action: Action): SubTabState {
 
 const SubTabContext = createContext<{ state: SubTabState; dispatch: React.Dispatch<Action> } | null>(null)
 
+/** Événement diffusé à chaque changement de la liste des sous-onglets ouverts. */
+export const SUBTABS_CHANGED = 'melis:subtabs-changed'
+
+interface SubTabWindow extends Window {
+  /** Sous-onglets ouverts, par section (route racine de l'outil). Lecture seule pour les briques. */
+  __melisSubTabs?: Record<string, SectionState>
+}
+
 export function SubTabProvider({ children }: { children: React.ReactNode }) {
   const [state, dispatch] = useReducer(reducer, { sections: {} })
+
+  // Publie la liste des sous-onglets ouverts (les globals __melisOpenSubTab/__melisCloseSubTab sont
+  // write-only : une brique ne pouvait pas voir une fermeture déclenchée par la croix de SubTabBar).
+  // Une brique `persistent` monte un formulaire par enregistrement ouvert et a besoin de cette liste.
+  useEffect(() => {
+    ;(window as SubTabWindow).__melisSubTabs = state.sections
+    window.dispatchEvent(new CustomEvent(SUBTABS_CHANGED))
+  }, [state])
+
+  // L'onglet principal d'un outil est fermé → ses sous-onglets d'enregistrement n'ont plus lieu
+  // d'être (sinon la brique, remontée à neuf à la réouverture, ressusciterait des formulaires).
+  useEffect(() => {
+    const onClosed = (e: Event) => {
+      const path = (e as CustomEvent<{ path?: string }>).detail?.path
+      if (path) dispatch({ type: 'CLOSE_ALL', section: path })
+    }
+    window.addEventListener('melis:tab-closed', onClosed)
+    return () => window.removeEventListener('melis:tab-closed', onClosed)
+  }, [])
+
   return <SubTabContext.Provider value={{ state, dispatch }}>{children}</SubTabContext.Provider>
 }
 
