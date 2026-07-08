@@ -288,6 +288,9 @@ export interface ApiMenuNode {
   /** Unfiltered child count (before rights filtering) — lets the nav avoid collapsing a multi-tool
    *  category in which the user only has a single tool granted. See collapseSingleTool. */
   configChildCount?: number
+  /** Category opts out of the single-tool collapse (conf.no_collapse) — kept as an expandable
+   *  group even with one child, so tools can be added under it later. See collapseSingleTool. */
+  noCollapse?: boolean
   children: ApiMenuNode[]
 }
 
@@ -338,10 +341,6 @@ export interface ApiReactBrick {
   /** Opt-in au pattern de sous-onglets natif (look « User Management ») : l'hôte replie
    *  /[section]/[tool]/:id sur UN seul onglet outil + rend la SubTabBar des enregistrements ouverts. */
   subTabs?: boolean
-  /** Opt-in au montage PERSISTANT : l'hôte garde la brique montée (cachée) au changement d'onglet
-   *  principal pour que son état/liste survive au lieu de se recharger. La brique doit accepter un prop
-   *  `active` et geler sa lecture du route quand inactive (cf. CmsStylePage). */
-  persistent?: boolean
   /** URL du bundle IIFE de la brique, servi par MelisAssetManager. */
   bundleUrl: string
 }

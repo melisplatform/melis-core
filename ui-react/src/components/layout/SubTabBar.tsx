@@ -21,10 +21,7 @@ function SubTabBarInner({
     e.stopPropagation()
     const idx = tabs.findIndex(t => t.id === tabId)
     closeTab(tabId)
-    // Prefix match (not strict ===), matching SubTabBar()'s own section-detection above: a record's
-    // sub-route can be deeper than its tab id (e.g. a nested editor), so strict equality silently
-    // skipped the navigate() and left the URL pointing at content that had just been unmounted.
-    if (pathname === tabId || pathname.startsWith(tabId + '/')) {
+    if (pathname === tabId) {
       const next = tabs[idx + 1] ?? tabs[idx - 1]
       navigate(next ? next.path : listPath)
     }

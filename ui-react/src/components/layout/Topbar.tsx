@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { useLocation, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { Bell, ChevronLeft, ChevronRight, LogOut, PanelLeft, User, X } from 'lucide-react'
 
 import { cn } from '@/lib/utils'
@@ -214,7 +214,6 @@ function TabStrip() {
   const { tabs, activeId, activateTab, closeTab, closeAllTabs } = useTabs()
   const { t } = useI18n()
   const navigate = useNavigate()
-  const { pathname } = useLocation()
   const scrollRef = useRef<HTMLDivElement>(null)
   // Activation history (most-recently-viewed first) so closing a tab returns to the last
   // displayed one, not just the left neighbour.
@@ -260,13 +259,8 @@ function TabStrip() {
   function handleClose(tab: Tab) {
     const remaining = tabs.filter((t) => t.id !== tab.id)
     // Closing the active tab must also switch the CONTENT away from it (the view is route-bound),
-    // landing on the last displayed tab still open — or a neighbour, or the dashboard. Check BOTH
-    // the tab-store's activeId AND the real browser pathname (prefix match, like SubTabBar) — a
-    // tool without sub-routes registers id===path===pathname exactly, so activeId alone should
-    // suffice there, but relying only on it left the URL stuck for at least one tool (Catalogues):
-    // the real location is the ground truth, so fall back to comparing against it directly too.
-    const onThisTab = tab.id === activeId || pathname === tab.path || pathname.startsWith(tab.path + '/')
-    if (onThisTab) {
+    // landing on the last displayed tab still open — or a neighbour, or the dashboard.
+    if (tab.id === activeId) {
       const idx = tabs.findIndex((t) => t.id === tab.id)
       const lastViewed = historyRef.current.find(
         (id) => id !== tab.id && remaining.some((t) => t.id === id),

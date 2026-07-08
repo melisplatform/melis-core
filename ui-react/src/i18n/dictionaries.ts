@@ -137,7 +137,9 @@ const fr = {
   'caps.delete': 'Suppression',
   'caps.duplicate': 'Duplication',
   'caps.export': 'Export',
-  'caps.order': 'Ordre',
+  'caps.download': 'Téléchargement',
+  'caps.remove': 'Suppression',
+  'caps.clear': 'Vidage du cache',
   'caps.tabs': 'Onglets',
 
   // ── Droits (éditeur d'arbre) ──
@@ -752,7 +754,9 @@ const en: Record<I18nKey, string> = {
   'caps.delete': 'Delete',
   'caps.duplicate': 'Duplicate',
   'caps.export': 'Export',
-  'caps.order': 'Order',
+  'caps.download': 'Download',
+  'caps.remove': 'Remove',
+  'caps.clear': 'Clear cache',
   'caps.tabs': 'Tabs',
 
   // ── Rights (tree editor) ──
