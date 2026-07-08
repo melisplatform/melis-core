@@ -89,20 +89,32 @@ function ImageField({ label, value, note, canEdit, onChange }: {
   )
 }
 
-/** Barre d'onglets de langue (drapeau + nom) pour éditer une langue à la fois. */
-function LangTabs({ langs, active, onChange }: { langs: ThemeLang[]; active: number; onChange: (id: number) => void }) {
+/**
+ * Sélecteur de langue en pastilles bordées (calqué sur l'outil Catégories) : la langue active
+ * ressort clairement (bordure primaire + fond card + texte foreground) au lieu d'un simple
+ * soulignement peu lisible. Un point de statut indique si la langue a du contenu saisi.
+ */
+function LangTabs({ langs, active, onChange, isFilled }: {
+  langs: ThemeLang[]; active: number; onChange: (id: number) => void; isFilled?: (id: number) => boolean
+}) {
   return (
-    <div className="flex items-stretch gap-1 border-b border-border">
+    <div className="flex flex-wrap gap-1.5">
       {langs.map((l) => {
         const isActive = l.id === active
+        const filled = isFilled?.(l.id) ?? false
         return (
           <button key={l.id} type="button" onClick={() => onChange(l.id)}
+            aria-pressed={isActive}
             className={cn(
-              'flex items-center gap-1.5 px-3 py-2 text-xs font-medium transition-colors -mb-px border-b-2',
-              isActive ? 'border-primary text-foreground' : 'border-transparent text-muted-foreground hover:text-foreground',
+              'inline-flex h-[30px] items-center gap-1.5 rounded-md border px-3 text-[13px] transition-colors',
+              isActive
+                ? 'border-primary bg-primary/10 text-foreground font-semibold ring-2 ring-primary/40'
+                : 'border-border bg-transparent font-medium text-muted-foreground hover:border-muted-foreground/40 hover:text-foreground',
             )}>
             <Flag locale={l.locale} />
-            {l.name || l.locale}
+            <span>{l.name || l.locale}</span>
+            <span aria-hidden
+              className={cn('size-1.5 shrink-0 rounded-full', filled ? 'bg-green-500' : 'bg-border')} />
           </button>
         )
       })}
@@ -221,7 +233,9 @@ export default function PlatformSchemePage() {
             {/* Textes traduisibles : édition par onglet de langue */}
             {scheme.languages.length > 0 && (
               <div>
-                <LangTabs langs={scheme.languages} active={curLang} onChange={setActiveLang} />
+                <LangTabs langs={scheme.languages} active={curLang} onChange={setActiveLang}
+                  isFilled={(id) => (scheme.translations.loginTitle[String(id)] ?? '').trim() !== ''
+                    || (scheme.translations.loginSubtitle[String(id)] ?? '').trim() !== ''} />
                 <div className="mt-4 flex flex-col gap-5">
                   <TextField label={t('scheme.login_title')} value={scheme.translations.loginTitle[String(curLang)] ?? ''}
                     canEdit={canEdit} onChange={(v) => setTrans('loginTitle', curLang, v)} />

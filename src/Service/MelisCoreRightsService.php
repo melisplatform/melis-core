@@ -15,6 +15,7 @@ class MelisCoreRightsService extends MelisServiceManager implements MelisCoreRig
     const MELISOTHERS_PREFIX_TOOLS = 'melisothers_toolstree_section';
     const MELISCUSTOM_PREFIX_TOOLS = 'meliscustom_toolstree_section';
     const MELISMARKETPLACE_PREFIX_TOOLS = 'melismarketplace_toolstree_section';
+    const MELISAI_PREFIX_TOOLS = 'melisai_toolstree_section';
     const MELIS_DASHBOARD = '/meliscore_dashboard';
     const MELIS_CMS_SITE_TOOLS = 'meliscms_site_tools';
 
@@ -32,6 +33,8 @@ class MelisCoreRightsService extends MelisServiceManager implements MelisCoreRig
     private $resolvedLoaded = false;
     /** @var array|null - request-scoped resolved rights, or null when unavailable (→ live fallback). */
     private $resolved = null;
+    /** @var bool|null - request-scoped memo of "current user is super-admin (usr_admin=1)". */
+    private $isAdminMemo = null;
     /** @var string|null - request-scoped memo of the interface config version. */
     private $configVersionMemo = null;
     /** @var array|null - request-scoped memo of getMelisKeys() (pure config, invariant per request). */
@@ -92,8 +95,32 @@ class MelisCoreRightsService extends MelisServiceManager implements MelisCoreRig
      *
      * @return bool
      */
+    /**
+     * L'utilisateur authentifié courant est-il super-administrateur (usr_admin=1) ? Mémoïsé pour la
+     * requête. Un admin court-circuite les vérifications de droits (accès total).
+     */
+    public function isCurrentUserAdmin(): bool
+    {
+        if ($this->isAdminMemo !== null) {
+            return $this->isAdminMemo;
+        }
+        try {
+            $identity = $this->getServiceManager()->get('MelisCoreAuth')->getIdentity();
+            return $this->isAdminMemo = (!empty($identity) && !empty($identity->usr_admin));
+        } catch (\Throwable $e) {
+            return $this->isAdminMemo = false;
+        }
+    }
+
     public function canAccess($key): bool
     {
+        // Super-administrateur (usr_admin=1) = accès TOTAL, sans dépendre de son usr_rights (dont le
+        // leftmenu peut être une liste positive incomplète, ex. sections Commerce/AI vides). Court-
+        // circuit AVANT le cache résolu (qui, lui, reflète la liste positive et masquerait ces outils).
+        if ($this->isCurrentUserAdmin()) {
+            return true;
+        }
+
         // POINT UNIQUE d'accélération : si le cache de droits résolu de l'utilisateur courant est
         // disponible, l'accès à un outil devient un simple lookup O(1) dans l'allow-set (au lieu de
         // re-parser usr_rights + retraverser la config à CHAQUE appel). Tout ce qui passe par
@@ -470,7 +497,12 @@ class MelisCoreRightsService extends MelisServiceManager implements MelisCoreRig
                 }
 
                 // direct rights access checking to tool section
+                // NB: isset() garde le count() — si l'outil ($itemId) est absent du XML de droits,
+                // `$rightsObj->$sectionId->$itemId->id` est null → count(null) = TypeError fatal en
+                // PHP 8 (cassait le menu legacy dès qu'un outil n'était pas listé, ex. droits vides
+                // convertis). isset() est null-safe et sans warning.
                 if (in_array($itemId, $this->getMelisKeyPaths())  &&
+                    isset($rightsObj->$sectionId->$itemId->id) &&
                     count($rightsObj->$sectionId->$itemId->id) > 1
                 ) {
                     return true;
@@ -952,6 +984,7 @@ class MelisCoreRightsService extends MelisServiceManager implements MelisCoreRig
             self::MELISOTHERS_PREFIX_TOOLS,
             self::MELISCUSTOM_PREFIX_TOOLS,
             self::MELISMARKETPLACE_PREFIX_TOOLS,
+            self::MELISAI_PREFIX_TOOLS,
         ];
     }
 
@@ -968,7 +1001,7 @@ class MelisCoreRightsService extends MelisServiceManager implements MelisCoreRig
             self::MELISOTHERS_PREFIX_TOOLS,
             self::MELISCUSTOM_PREFIX_TOOLS,
             self::MELISMARKETPLACE_PREFIX_TOOLS,
-
+            self::MELISAI_PREFIX_TOOLS,
         ];
     }
 

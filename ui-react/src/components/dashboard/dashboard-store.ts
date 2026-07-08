@@ -47,18 +47,7 @@ function item(widgetId: string, x: number, y: number): GridItem {
 
 /** Disposition par défaut au premier chargement. */
 export function defaultLayout(): GridItem[] {
-  return [
-    item('kpi-sites', 0, 0),
-    item('kpi-pages', 3, 0),
-    item('kpi-langs', 6, 0),
-    item('kpi-users', 9, 0),
-    item('traffic', 0, 3),
-    item('messages', 8, 3),
-    item('recent-pages', 0, 8),
-    item('notifications', 8, 8),
-    item('activity', 0, 14),
-    item('updates', 8, 12),
-  ]
+  return [item('activity', 0, 0)]
 }
 
 export function loadLayout(): GridItem[] {

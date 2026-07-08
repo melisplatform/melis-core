@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
-import { ArrowLeft, Database, Loader2, RotateCcw, Save, Server, ShoppingBag } from 'lucide-react'
+import { Database, Loader2, RotateCcw, Save, Server, ShoppingBag } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -129,9 +129,6 @@ export default function PlatformFormPage() {
       {/* Header */}
       <div className="flex items-center justify-between gap-4">
         <div className="flex items-center gap-3">
-          <button onClick={() => navigate(base)} className="text-muted-foreground hover:text-foreground" title={t('common.back')}>
-            <ArrowLeft className="size-4" />
-          </button>
           <div className="grid size-10 place-items-center rounded-lg bg-primary/10 text-primary"><Server className="size-5" /></div>
           <div>
             <h1 className="text-xl font-bold">{isEdit ? t('platforms.form.edit_title') : t('platforms.form.new_title')}</h1>

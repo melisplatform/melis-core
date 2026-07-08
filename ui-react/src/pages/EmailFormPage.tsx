@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
-import { ArrowLeft, Mail, Save } from 'lucide-react'
+import { Mail, Save } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -8,7 +8,7 @@ import { MelisToolEditor } from '@/components/ui/melis-tool-editor'
 import { cn } from '@/lib/utils'
 import * as emailsApi from '@/lib/emails-api'
 import type { EmailContent, EmailLang } from '@/lib/emails-api'
-import { useTabs } from '@/components/tabs/tab-store'
+import { useSubTabs } from '@/components/tabs/sub-tab-store'
 import { routeForForward } from '@/lib/tool-routes'
 import { useI18n } from '@/i18n/i18n-context'
 import { useCan } from '@/lib/capabilities'
@@ -42,10 +42,14 @@ function LangFlag({ locale }: { locale: string }) {
 export default function EmailFormPage() {
   const navigate = useNavigate()
   const { id } = useParams()
-  const { openTab } = useTabs()
   const { t } = useI18n()
   const base = routeForForward('MelisCore/EmailsManagement') ?? '/emails'
   const isNew = !id || id === 'new'
+
+  // Édition = sous-onglet DANS l'outil (façon Utilisateurs), pas un onglet de shell top-level.
+  // La SubTabBar (montée dans le Shell) matche la section `base` et rend la barre « ← retour | <nom> ».
+  const subTabPath = `${base}/${id}`
+  const { openTab: openSubTab, closeTab: closeSubTab, updateLabel: updateSubLabel } = useSubTabs(base)
 
   const canSave = useCan(TOOL_KEY, isNew ? 'create' : 'edit')
 
@@ -55,10 +59,10 @@ export default function EmailFormPage() {
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
-    const label = isNew ? t('emails.new') : (id ?? '')
-    openTab({ id: `${base}/${id}`, label, path: `${base}/${id}` })
-  }, [base, id, isNew, openTab, t])
+    openSubTab({ id: subTabPath, label: isNew ? t('emails.new') : (id ?? ''), path: subTabPath })
+  }, [])
 
   useEffect(() => {
     setLoading(true)
@@ -79,6 +83,11 @@ export default function EmailFormPage() {
     }
   }, [id, isNew]) // eslint-disable-line react-hooks/exhaustive-deps
 
+  // Une fois l'email chargé, le libellé du sous-onglet passe du codename au nom lisible.
+  useEffect(() => {
+    if (!isNew && form?.name) updateSubLabel(subTabPath, form.name)
+  }, [isNew, form?.name, subTabPath, updateSubLabel])
+
   function set<K extends keyof FormState>(key: K, value: FormState[K]) { setForm((f) => f ? { ...f, [key]: value } : f) }
   function setContent(langId: number, patch: Partial<EmailContent>) {
     setForm((f) => f ? { ...f, contents: { ...f.contents, [String(langId)]: { ...f.contents[String(langId)], ...patch } } } : f)
@@ -98,6 +107,7 @@ export default function EmailFormPage() {
       })
       emailsApi.markEmailsListStale()
       notify('ok', t('emails.title'), t('emails.saved'))
+      if (isNew) closeSubTab(`${base}/new`)
       navigate(base)
     } catch (e) { notify('ko', t('emails.title'), String((e as Error)?.message ?? e)) }
     finally { setSaving(false) }
@@ -116,7 +126,6 @@ export default function EmailFormPage() {
     <div className="flex flex-1 flex-col gap-6 p-6">
       <div className="flex items-center justify-between gap-4">
         <div className="flex items-center gap-3">
-          <button onClick={() => navigate(base)} className="inline-flex size-8 items-center justify-center rounded-md text-muted-foreground hover:bg-accent hover:text-foreground"><ArrowLeft className="size-4" /></button>
           <div>
             <h1 className="flex items-center gap-2 text-xl font-bold"><Mail className="size-5 text-primary" />{isNew ? t('emails.creation') : form.name}</h1>
             <p className="text-sm text-muted-foreground">{isNew ? t('emails.creation_sub') : t('emails.edition_sub')}</p>
