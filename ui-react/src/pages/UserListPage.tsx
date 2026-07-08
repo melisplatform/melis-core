@@ -529,9 +529,20 @@ export default function UserListPage() {
     <div className={cn('flex flex-col gap-6 p-6', effectiveMode === 'iframe' ? 'h-full' : 'flex-1')}>
       {/* Header */}
       <div className="flex items-center justify-between gap-4">
+<<<<<<< Updated upstream
         <div>
           <h1 className="text-xl font-bold">{t('users.title')}</h1>
           <p className="text-sm text-muted-foreground">{t('users.subtitle')}</p>
+=======
+        <div className="flex items-center gap-3">
+          <div className="grid size-10 shrink-0 place-items-center rounded-lg bg-primary/10 text-primary">
+            <Users className="size-5" />
+          </div>
+          <div>
+            <h1 className="text-xl font-bold">{t('users.title')}</h1>
+            <p className="text-sm text-muted-foreground">{t('users.subtitle')}</p>
+          </div>
+>>>>>>> Stashed changes
         </div>
         <div className="flex items-center gap-2">
           {showViewToggle && (
