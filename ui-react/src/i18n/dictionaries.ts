@@ -137,6 +137,7 @@ const fr = {
   'caps.delete': 'Suppression',
   'caps.duplicate': 'Duplication',
   'caps.export': 'Export',
+  'caps.order': 'Ordre',
   'caps.tabs': 'Onglets',
 
   // ── Droits (éditeur d'arbre) ──
@@ -751,6 +752,7 @@ const en: Record<I18nKey, string> = {
   'caps.delete': 'Delete',
   'caps.duplicate': 'Duplicate',
   'caps.export': 'Export',
+  'caps.order': 'Order',
   'caps.tabs': 'Tabs',
 
   // ── Rights (tree editor) ──

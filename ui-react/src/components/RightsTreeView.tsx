@@ -48,6 +48,7 @@ type DeniedCaps = Record<string, string[]>
 // Libellés des capacités via i18n (le BO suit la locale EN/FR). Clé inconnue → on retombe sur le brut.
 const CAP_I18N: Record<string, I18nKey> = {
   list: 'caps.list', create: 'caps.create', edit: 'caps.edit', delete: 'caps.delete', duplicate: 'caps.duplicate', export: 'caps.export',
+  order: 'caps.order',
 }
 
 // `CapTreeNode`/`DeclaredCapValue` (liste plate OU arbre à onglets) importés de melis-api.ts —

@@ -1,4 +1,4 @@
-import { lazy, Suspense, useEffect, useState } from 'react'
+import { lazy, Suspense, useEffect, useState, type ComponentType } from 'react'
 import { Outlet, useLocation } from 'react-router-dom'
 import { Loader2 } from 'lucide-react'
 
@@ -159,23 +159,26 @@ function ShellInner() {
             )
           })}
 
-          {/* Briques React — montées UNIQUEMENT quand actives (la route courante appartient à la
-              brique). Une brique montée mais inactive lit le `location`/`useParams` GLOBAL et peut
-              déclencher des effets de navigation (ex. MelisCommerce ProductPage : fetch d'un "id"
-              issu d'une route étrangère → `.catch(navigate(base))`), ce qui détourne la navigation
-              d'un AUTRE outil (le formulaire Users rebondissait vers sa liste). La persistance
-              intra-outil est conservée (activeBrick matche aussi les sous-routes /:id), et les
-              iframes legacy survivent car montées dans document.body, pas dans l'arbre React.
-              `visitedBricks` garde le lazy-init (pas de fetch avant la 1re visite). */}
+          {/* Briques React. Par défaut montées UNIQUEMENT quand actives : une brique montée mais
+              inactive lit le `location`/`useParams` GLOBAL et peut déclencher des effets de navigation
+              (ex. MelisCommerce ProductPage : fetch d'un "id" issu d'une route étrangère →
+              `.catch(navigate(base))`), ce qui détourne la navigation d'un AUTRE outil.
+              Une brique `persistent` (manifest) choisit de rester MONTÉE (cachée) au changement d'onglet
+              pour que son état/liste survive au lieu de se recharger — elle DOIT accepter le prop `active`
+              et geler sa lecture du route quand inactive (cf. CmsStylePage), sinon elle rejouerait ce
+              détournement. `visitedBricks` garde le lazy-init (pas de fetch avant la 1re visite) ; les
+              iframes legacy survivent car montées dans document.body, hors de l'arbre React. */}
           {bricks.filter((b) => b.Component).map((b) => {
-            const Brick = b.Component!
+            const Brick = b.Component! as ComponentType<{ active?: boolean }>
             const isActive = activeBrick?.id === b.id
+            // Persistante : reste montée dès qu'elle a été visitée. Non persistante : montée ssi active.
+            const mounted = visitedBricks.has(b.id) && (isActive || b.persistent)
             return (
               <div key={b.id} className={cn('h-full overflow-y-auto', !isActive && 'hidden')}>
-                {isActive && visitedBricks.has(b.id) && (
+                {mounted && (
                   <ToolErrorBoundary label={b.label}>
                     <Suspense fallback={<PageLoader />}>
-                      <Brick />
+                      <Brick active={isActive} />
                     </Suspense>
                   </ToolErrorBoundary>
                 )}
