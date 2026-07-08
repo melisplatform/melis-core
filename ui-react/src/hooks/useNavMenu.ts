@@ -52,6 +52,8 @@ export interface NavNode {
   forward: melisApi.ApiMenuNode['forward'] | null
   /** Nombre d'enfants dans la config (non filtré par droits) — voir collapseSingleTool. */
   configChildCount?: number
+  /** La catégorie refuse le collapse mono-outil (conf.no_collapse) — reste un groupe dépliable. */
+  noCollapse?: boolean
   children: NavNode[]
 }
 
@@ -260,6 +262,7 @@ function apiNodeToNavNode(node: melisApi.ApiMenuNode, depth = 0, section = ''): 
     hasNavChild: node.hasNavChild,
     forward:     node.isTool ? node.forward : null,
     configChildCount: node.configChildCount,
+    noCollapse:  node.noCollapse,
     children:    node.children.map(child => apiNodeToNavNode(child, depth + 1, sec)),
   }
 }
@@ -287,6 +290,9 @@ function sameForwardTool(a: NavNode, b: NavNode): boolean {
 
 function collapseSingleTool(node: NavNode): NavNode {
   const children = node.children.map(collapseSingleTool)
+  // Explicit opt-out (conf.no_collapse): keep the group expandable even with a lone tool
+  // (e.g. "Dev Tools" → "Melis Phpinfo"), so more tools can be added under it later.
+  if (node.noCollapse) return { ...node, children }
   if (children.length === 1 && children[0].isTool && children[0].children.length === 0) {
     const only = children[0]
     // Rule 1: a wrapper that INHERENTLY holds a single tool (e.g. the "SLIDER" section → "Slider").

@@ -51,20 +51,13 @@ export function ToolTabBar() {
   // ("<entityId>_id_<targetMelisKey>"): the first record level is just its id, deeper levels add
   // the sub-entity name. (Forward reflection; a deep-link reload opens the tool at its list.)
   useEffect(() => {
-    // Nothing to reflect (no legacy-iframe drill-down open for this brick) — bail out. Without
-    // this, a stale-closure re-run of this effect (its dependencies captured from the render
-    // BEFORE a `navigate()` elsewhere already changed window.location) could recompute `target`
-    // from the OLD pathname and force window.location back to it via replaceState — a raw
-    // History API write that bypasses React Router entirely, so closing a brick tool's tab
-    // (e.g. Products, Catalog) silently "undid" the navigation while leaving the tab visibly
-    // closed. Native MelisCore tools (Users, Logs…) never hit this: they're not in `bricks`, so
-    // `melisKey` is always null for them and this effect never ran for them in the first place.
-    if (!melisKey || secondary.length === 0) return
+    if (!melisKey) return
     const base = toolBaseRoute(pathname)
-    const activeIdx = secondary.findIndex((t) => t.active)
+    const nonPrimary = tabs.filter((t) => !t.primary)
+    const activeIdx = nonPrimary.findIndex((t) => t.active)
     let target = base
     if (activeIdx >= 0) {
-      const segs = secondary.slice(0, activeIdx + 1).map((t, i) => {
+      const segs = nonPrimary.slice(0, activeIdx + 1).map((t, i) => {
         const p = parseToolTabId(t.id)
         const id = encodeURIComponent(p?.id ?? t.id)
         return i === 0 ? id : `${subtoolName(p?.target ?? '')}/${id}`

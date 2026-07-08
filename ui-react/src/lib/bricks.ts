@@ -31,14 +31,6 @@ export interface BrickDef {
    * the brick keeps a separate top tab per opened entity (e.g. the News brick).
    */
   subTabs: boolean
-  /**
-   * Opt-in to persistent mounting. When true the host keeps the brick MOUNTED (hidden) across
-   * top-tab switches once visited — its state/list survives instead of reloading on return. The
-   * brick component MUST accept an `active` prop and freeze its route-reading when `active` is false
-   * (an always-mounted brick otherwise reads the GLOBAL router and could hijack another tool's
-   * navigation — see the Shell brick block). Off by default (mount only while active). Ref: CmsStylePage.
-   */
-  persistent: boolean
   /** Routed page rendered in the content area (optional). May be a React.lazy exotic. */
   Component?: ComponentType | LazyExoticComponent<ComponentType>
   /** Left-sidebar panel rendered under the module's nav section (optional). */
@@ -231,7 +223,6 @@ export async function loadBricks(): Promise<void> {
               bricks.push({
                 id: m.id, module: m.module, route: '', label: m.label,
                 forwardKey: m.forwardKey, melisKey: m.melisKey, subTabs: m.subTabs ?? false,
-                persistent: m.persistent ?? false,
                 Component: undefined, Sidebar: reg.Sidebar, Header: reg.Header,
               })
             }
@@ -259,7 +250,6 @@ export async function loadBricks(): Promise<void> {
         forwardKey: m.forwardKey,
         melisKey:   m.melisKey,
         subTabs:    m.subTabs ?? false,
-        persistent: m.persistent ?? false,
         Component:  LazyComponent,
         // Sidebar and Header are unknown until the bundle executes — set lazily above.
         Sidebar:    undefined,
