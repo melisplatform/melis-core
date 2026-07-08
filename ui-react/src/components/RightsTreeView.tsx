@@ -42,6 +42,13 @@ function nodeKey(n: ApiMenuNode) {
   return n.melisKey || n.key
 }
 
+/** Même outil logique ? (même Module/Controller forward) — cf. useNavMenu.sameForwardTool. */
+function sameForwardNode(a: ApiMenuNode, b: ApiMenuNode): boolean {
+  return !!a.forward && !!b.forward &&
+    a.forward.module === b.forward.module &&
+    a.forward.controller === b.forward.controller
+}
+
 // ─── Capacités d'outils (droits avancés) ──────────────────────────────────────
 // `DeniedCaps` = { melisKey: [capacités RETIRÉES] }. Default-allow : absence = tout permis.
 type DeniedCaps = Record<string, string[]>
@@ -477,6 +484,28 @@ function CategoryGroup({
         onToggleCap={onToggleCap}
       />
     )
+  }
+
+  // Collapse « outil enveloppant sa PROPRE zone d'outil » (même Module/Controller forward) — ex.
+  // MelisCalendar : meliscalendar_leftnemu (groupe) + meliscalendar_tool (feuille = zone de rendu).
+  // On rend UNE seule ligne (la feuille interne, qui porte les capacités + l'octroi), pas un
+  // « Calendrier > Calendrier » redondant. Miroir de useNavMenu.collapseSingleTool (règle 2) → l'éditeur
+  // de droits colle au menu de gauche.
+  if (node.isTool && node.children.length === 1) {
+    const only = node.children[0]
+    if (only.isTool && !only.hasNavChild && sameForwardNode(node, only)) {
+      return (
+        <ToolRow
+          node={only}
+          checked={checkedTools.has(nodeKey(only))}
+          onToggle={onToggleTool}
+          depth={depth}
+          declaredCaps={declaredCaps}
+          deniedCaps={deniedCaps}
+          onToggleCap={onToggleCap}
+        />
+      )
+    }
   }
 
   return (
