@@ -318,7 +318,7 @@ function getTriState(tools: ApiMenuNode[], checked: Set<string>): TriState {
 function ToolRow({
   node,
   checked,
-  onToggle,
+  onToggleGrant,
   depth,
   declaredCaps,
   deniedCaps,
@@ -326,7 +326,7 @@ function ToolRow({
 }: {
   node: ApiMenuNode
   checked: boolean
-  onToggle: (key: string, v: boolean) => void
+  onToggleGrant: (key: string, v: boolean) => void
   depth: number
   declaredCaps: Record<string, DeclaredCapValue>
   deniedCaps: DeniedCaps
@@ -340,6 +340,19 @@ function ToolRow({
   const denied = deniedCaps[key] ?? []
   const rootNode: CapTreeNode = Array.isArray(declared) ? { actions: declared } : (declared ?? {})
   const hasCaps = (rootNode.actions?.length ?? 0) > 0 || (rootNode.tabs?.length ?? 0) > 0
+
+  // Tri-état de la case de l'OUTIL : reflète l'état des sous-capacités quand il en a.
+  //   non octroyé            → none (case vide)
+  //   octroyé, toutes permises → all  (case pleine)
+  //   octroyé, ≥1 retirée     → some (tiret) ← distingue « droits partiels » de « tous les droits »
+  // Clic : some/none → octroi COMPLET (remet toutes les caps) ; all → retrait. (cf. onToggleLeafGrant)
+  const capPaths = hasCaps ? allCapPaths(rootNode) : []
+  const allowedCount = checked ? capPaths.filter((p) => !denied.includes(p)).length : 0
+  const triState: TriState = !checked
+    ? 'none'
+    : capPaths.length === 0 || allowedCount === capPaths.length
+      ? 'all'
+      : 'some'
   return (
     <div>
       <div
@@ -349,12 +362,12 @@ function ToolRow({
         )}
       >
         <TriCheckbox
-          state={checked ? 'all' : 'none'}
-          onChange={(v) => onToggle(key, v)}
+          state={triState}
+          onChange={(v) => onToggleGrant(key, v)}
         />
         <button
           type="button"
-          onClick={() => onToggle(key, !checked)}
+          onClick={() => onToggleGrant(key, !checked)}
           className="flex flex-1 cursor-pointer items-center gap-2 min-w-0 text-left"
         >
           <span className="text-sm text-foreground/90">{node.name}</span>
@@ -451,6 +464,7 @@ function CategoryGroup({
   node,
   checkedTools,
   onToggleTool,
+  onToggleToolGrant,
   onToggleGroup,
   depth,
   declaredCaps,
@@ -460,6 +474,7 @@ function CategoryGroup({
   node: ApiMenuNode
   checkedTools: Set<string>
   onToggleTool: (key: string, v: boolean) => void
+  onToggleToolGrant: (key: string, v: boolean) => void
   onToggleGroup: (keys: string[], v: boolean) => void
   depth: number
   declaredCaps: Record<string, DeclaredCapValue>
@@ -476,7 +491,7 @@ function CategoryGroup({
       <ToolRow
         node={node}
         checked={checkedTools.has(nodeKey(node))}
-        onToggle={onToggleTool}
+        onToggleGrant={onToggleToolGrant}
         depth={depth}
         declaredCaps={declaredCaps}
         deniedCaps={deniedCaps}
@@ -497,7 +512,7 @@ function CategoryGroup({
         <ToolRow
           node={only}
           checked={checkedTools.has(nodeKey(only))}
-          onToggle={onToggleTool}
+          onToggleGrant={onToggleToolGrant}
           depth={depth}
           declaredCaps={declaredCaps}
           deniedCaps={deniedCaps}
@@ -541,6 +556,7 @@ function CategoryGroup({
               node={child}
               checkedTools={checkedTools}
               onToggleTool={onToggleTool}
+              onToggleToolGrant={onToggleToolGrant}
               onToggleGroup={onToggleGroup}
               depth={depth + 1}
               declaredCaps={declaredCaps}
@@ -650,6 +666,7 @@ function SectionPanel({
                 node={child}
                 checkedTools={checkedTools}
                 onToggleTool={onToggleTool}
+                onToggleToolGrant={onToggleLeafGrant}
                 onToggleGroup={onToggleGroup}
                 depth={0}
                 declaredCaps={declaredCaps}
