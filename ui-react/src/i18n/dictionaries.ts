@@ -140,6 +140,7 @@ const fr = {
   'caps.download': 'Téléchargement',
   'caps.remove': 'Suppression',
   'caps.clear': 'Vidage du cache',
+  'caps.run': 'Exécution',
   'caps.tabs': 'Onglets',
 
   // ── Droits (éditeur d'arbre) ──
@@ -757,6 +758,7 @@ const en: Record<I18nKey, string> = {
   'caps.download': 'Download',
   'caps.remove': 'Remove',
   'caps.clear': 'Clear cache',
+  'caps.run': 'Run',
   'caps.tabs': 'Tabs',
 
   // ── Rights (tree editor) ──
