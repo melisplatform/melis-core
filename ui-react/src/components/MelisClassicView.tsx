@@ -82,7 +82,7 @@ export function MelisClassicFrame({
       <iframe
         src={`/melis/react-tool-page?key=${encodeURIComponent(melisKey)}`}
         className="h-full w-full border-0"
-        sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-modals"
+        sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox allow-downloads allow-modals"
         title={title}
       />
     </div>

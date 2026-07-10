@@ -58,10 +58,11 @@ function KpiCard({ icon: Icon, label, value, color }: {
 }
 
 // ─── Colonnes (sélection + ordre persistés en localStorage) ─────────────────────────
-const COL_ORDER = ['id', 'date', 'type', 'title', 'message', 'user'] as const
+const COL_ORDER = ['id', 'date', 'type', 'title', 'message', 'user', 'itemId'] as const
 const COL_LABEL: Record<string, I18nKey> = {
   id: 'logs.col.id', date: 'logs.col.date', type: 'logs.col.type',
   title: 'logs.col.title', message: 'logs.col.message', user: 'logs.col.user',
+  itemId: 'logs.col.itemId',
 }
 const DEFAULT_COLS: ColDef[] = COL_ORDER.map(id => ({ id, visible: id !== 'id' }))
 const COL_KEY = 'melis-log-cols-v1'
@@ -84,6 +85,7 @@ function getCellSortValue(l: logApi.LogItem, id: string): string | number {
   if (id === 'title')   return l.title
   if (id === 'message') return l.message
   if (id === 'user')    return l.userName
+  if (id === 'itemId')  return l.itemId ?? ''
   return ''
 }
 
@@ -300,7 +302,7 @@ export default function LogListPage() {
                 <tr key={l.id} className="group transition-colors hover:bg-muted/40">
                   {visibleCols(cols).map(({ id }) => (
                     <td key={id} className={cn('px-4 py-2.5',
-                      id === 'id' && 'tabular-nums text-muted-foreground',
+                      (id === 'id' || id === 'itemId') && 'tabular-nums text-muted-foreground',
                       (id === 'date' || id === 'user') && 'whitespace-nowrap',
                       id === 'message' && 'text-muted-foreground',
                       id === 'date' && 'text-muted-foreground')}>
@@ -317,6 +319,7 @@ export default function LogListPage() {
                       )}
                       {id === 'message' && l.message}
                       {id === 'user' && <Badge variant="muted" className="font-normal">{l.userName}</Badge>}
+                      {id === 'itemId' && (l.itemId ?? '—')}
                     </td>
                   ))}
                 </tr>
