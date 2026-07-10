@@ -628,6 +628,26 @@ const fr = {
   'scheme.img.login_bg': 'Fond de la page de connexion',
   'scheme.img.favicon': 'Favicon',
   'scheme.upload_hint': 'Chemins d’images. L’upload de fichiers reste pour l’instant dans la vue « Old ».',
+
+  // ── Mon compte ──
+  'account.title': 'Mon compte',
+  'account.subtitle': 'Gérez votre profil, votre mot de passe et votre langue.',
+  'account.tab.profile': 'Profil',
+  'account.role': 'Rôle',
+  'account.member_since': 'Membre depuis le',
+  'account.change_photo': 'Changer la photo',
+  'account.email': 'Email',
+  'account.password': 'Mot de passe',
+  'account.confirm_password': 'Confirmer le mot de passe',
+  'account.password_placeholder': 'Laisser vide pour conserver le mot de passe actuel',
+  'account.language': 'Langue',
+  'account.saved': 'Profil enregistré.',
+  'account.save_error': 'Erreur lors de l’enregistrement du profil.',
+  'account.err.email': 'Adresse email invalide.',
+  'account.err.lang': 'Veuillez choisir une langue.',
+  'account.err.pass_low': 'Le mot de passe doit contenir au moins 8 caractères.',
+  'account.err.pass_regex': 'Le mot de passe ne respecte pas les règles de complexité.',
+  'account.err.pass_match': 'Les deux mots de passe ne correspondent pas.',
 } as const
 
 export type I18nKey = keyof typeof fr
@@ -1247,6 +1267,26 @@ const en: Record<I18nKey, string> = {
   'scheme.img.login_bg': 'Login page background',
   'scheme.img.favicon': 'Favicon',
   'scheme.upload_hint': 'Image paths. File upload stays in the “Old” view for now.',
+
+  // ── My account ──
+  'account.title': 'My account',
+  'account.subtitle': 'Manage your profile, password and language.',
+  'account.tab.profile': 'Profile',
+  'account.role': 'Role',
+  'account.member_since': 'Member since',
+  'account.change_photo': 'Change photo',
+  'account.email': 'Email',
+  'account.password': 'Password',
+  'account.confirm_password': 'Confirm password',
+  'account.password_placeholder': 'Leave empty to keep the current password',
+  'account.language': 'Language',
+  'account.saved': 'Profile saved.',
+  'account.save_error': 'Error saving the profile.',
+  'account.err.email': 'Invalid email address.',
+  'account.err.lang': 'Please choose a language.',
+  'account.err.pass_low': 'The password must be at least 8 characters.',
+  'account.err.pass_regex': 'The password does not meet the complexity rules.',
+  'account.err.pass_match': 'The two passwords do not match.',
 }
 
 export const DICTIONARIES: Record<Lang, Record<I18nKey, string>> = { fr, en }

@@ -338,13 +338,11 @@ return array(
 
                     // lists of assets that will be loaded in the layout
                     'css' => [
-                        '/MelisCore/build/css/bundle.css?v=' . @filemtime(__DIR__ . '/../public/build/css/bundle.css'),
+                        '/MelisCore/build/css/bundle.css',
                     ],
                     'js' => [
                         '/melis/get-translations?locale=' . $locale,
-                        // ?v=filemtime : cache-bust auto du bundle core (max-age=86400 sinon
-                        // -> un simple F5 ressert un bundle.js perime et casse les tools).
-                        '/MelisCore/build/js/bundle.js?v=' . @filemtime(__DIR__ . '/../public/build/js/bundle.js'),
+                        '/MelisCore/build/js/bundle.js',
                     ]
                 ]
             ),

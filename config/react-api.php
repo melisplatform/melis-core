@@ -275,6 +275,29 @@ return [
                                 ],
                             ],
                             // ── Users (MelisCore tool) ────────────────────────
+                            // ── « Mon compte » (profil de l'utilisateur courant) ──
+                            'user-profile-save' => [
+                                'type'    => 'Segment',
+                                'options' => [
+                                    'route'    => '/user-profile/save[/]',
+                                    'defaults' => [
+                                        '__NAMESPACE__' => 'MelisCore\Controller',
+                                        'controller'    => 'MelisReactApiUserProfile',
+                                        'action'        => 'save',
+                                    ],
+                                ],
+                            ],
+                            'user-profile-get' => [
+                                'type'    => 'Segment',
+                                'options' => [
+                                    'route'    => '/user-profile[/]',
+                                    'defaults' => [
+                                        '__NAMESPACE__' => 'MelisCore\Controller',
+                                        'controller'    => 'MelisReactApiUserProfile',
+                                        'action'        => 'get',
+                                    ],
+                                ],
+                            ],
                             'users-list' => [
                                 'type'    => 'Segment',
                                 'options' => [
@@ -586,6 +609,7 @@ return [
     'controllers' => [
         'invokables' => [
             'MelisCore\Controller\MelisReactApiUser' => \MelisCore\Controller\MelisReactApiUserController::class,
+            'MelisCore\Controller\MelisReactApiUserProfile' => \MelisCore\Controller\MelisReactApiUserProfileController::class,
             'MelisCore\Controller\MelisReactApiModules' => \MelisCore\Controller\MelisReactApiModulesController::class,
             'MelisCore\Controller\MelisReactApiOtherConfig' => \MelisCore\Controller\MelisReactApiOtherConfigController::class,
             'MelisCore\Controller\MelisReactApiPlatformScheme' => \MelisCore\Controller\MelisReactApiPlatformSchemeController::class,

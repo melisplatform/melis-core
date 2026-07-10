@@ -79,6 +79,9 @@ function TabBridge() {
 // DashboardPage : monté par Shell (persistent), plus par la route '/' — voir Route path="/" plus bas.
 const PlaceholderPage = lazy(() => import('@/pages/PlaceholderPage'))
 const ZonePage        = lazy(() => import('@/pages/ZonePage'))
+// « Mon compte » : outil natif non-menu, ouvert depuis le Topbar (avatar) à /melis-core/account.
+// Route statique déclarée explicitement → prime sur le fallback ZonePage (/:section/:tool/*).
+const AccountPage     = lazy(() => import('@/pages/AccountPage'))
 
 function PageLoader() {
   return (
@@ -163,6 +166,11 @@ export default function App() {
                       <Route key={`${b.id}:id`} path={`${route}/:id`} element={null} />,
                     ]
                   })}
+                  {/* « Mon compte » — page native (route statique, prime sur ZonePage). */}
+                  <Route
+                    path="/melis-core/account"
+                    element={<Suspense fallback={<PageLoader />}><AccountPage /></Suspense>}
+                  />
                   {/* Outils Melis via zoneview — tous les outils sans page React dédiée.
                       URL = /[section]/[tool] (dérivée de l'arbre) ; ZonePage résout le melisKey
                       via le registre tool-routes. Routes natives/briques (1 segment ou préfixe
