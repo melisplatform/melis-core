@@ -716,7 +716,16 @@ var melisHelper = (function () {
 						// remove the inline style overflow for page edition
 						melisCoreTool.removeOverflowHidden();
 
-						$("#" + zoneId).html(data.html).children().unwrap();
+						$("#" + zoneId).html(data.html);
+
+						// Collapse a redundant nested tool pane (e.g. list tools whose
+						// top view keeps its own ".container-level-a tab-pane" wrapper, like
+						// News/Slider): flatten its content into the section wrapper (#zoneId).
+						// The section wrapper keeps id === activeTabId, so tabSwitch() can add
+						// ".active" to it and the content becomes visible. Removing the wrapper
+						// instead (the previous ".children().unwrap()") orphaned the inner pane,
+						// which never received ".active" -> blank tool.
+						$("#" + zoneId + " > .container-level-a.tab-pane").children().unwrap();
 
 						// set the current active tab based from 'activeTabId' value
 						tabSwitch(activeTabId);
