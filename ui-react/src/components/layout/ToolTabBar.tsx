@@ -72,6 +72,12 @@ export function ToolTabBar() {
     }
   }, [tabs, melisKey, pathname])
 
+  // Outils qui gèrent EUX-MÊMES leur barre de sous-onglets (vue React native) → ne PAS afficher
+  // le ToolTabBar hôte, sinon la vue « Old » (iframe legacy) publie ses onglets ici et une 2ᵉ barre
+  // s'empile au-dessus de la barre in-tool de l'outil. Ex. Sites (SitesPage.SiteSubTabBar).
+  const SELF_MANAGED_SUBTABS = new Set(['meliscms_tool_sites'])
+  if (melisKey && SELF_MANAGED_SUBTABS.has(melisKey)) return null
+
   // Show the sub-tab bar ONLY when at least one record (sub-screen) is open. With no record,
   // the tool is on its list and the main top tab already represents it — no redundant 2nd line.
   // When records are open: [list | record1 | record2 …]; closing the last record hides the bar
