@@ -195,3 +195,50 @@ body.melis-widget-dragging iframe {
   border: 1px dashed color-mix(in srgb, var(--color-primary) 55%, transparent);
   border-radius: var(--radius);
 }
+
+/* ============================================================================
+   Scrollbars — fines, arrondies, theme-aware (dark + light + schemas custom)
+   ----------------------------------------------------------------------------
+   Couleur derivee de --color-muted-foreground via color-mix -> s'adapte
+   automatiquement a chaque theme. Les barres de tabs qui posent
+   scrollbar-width:none en inline restent masquees (override local).
+   ========================================================================== */
+/* Firefox (pas de ::-webkit-scrollbar) : barre fine colorée standard.
+   ⚠ On ne pose PAS scrollbar-width globalement : dès qu'il vaut ≠ auto,
+   Chromium IGNORE les ::-webkit-scrollbar ci-dessous (pouce arrondi custom). */
+@supports not selector(::-webkit-scrollbar) {
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: color-mix(in srgb, var(--color-muted-foreground) 45%, transparent) transparent;
+  }
+}
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: color-mix(in srgb, var(--color-muted-foreground) 45%, transparent);
+  border-radius: 999px;
+  border: 2px solid transparent; /* liseré transparent -> pouce "flottant" (≈6px visibles) */
+  background-clip: padding-box;
+  transition: background-color 0.15s ease;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: color-mix(in srgb, var(--color-muted-foreground) 70%, transparent);
+  background-clip: padding-box;
+}
+::-webkit-scrollbar-thumb:active {
+  background: color-mix(in srgb, var(--color-muted-foreground) 85%, transparent);
+  background-clip: padding-box;
+}
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+/* ============================================================================
+   Scrollbars — fines, arrondies, thème-aware (dark + light + schémas custom)
+   ----------------------------------------------------------------------------
+   Couleur dérivée de --color-muted-foreground via color-mix → sadapte
