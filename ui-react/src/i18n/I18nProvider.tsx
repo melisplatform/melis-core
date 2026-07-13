@@ -73,18 +73,38 @@ export function I18nProvider({ children }: { children: ReactNode }) {
 
   // Switch the WHOLE platform: persist server-side, cache the locale for an instant correct
   // first paint, then hard-reload so the menu, tools and tool iframes all follow the new locale.
+  //
+  // ⚠️ Bug intermittent (résolu) : recharger IMMÉDIATEMENT après `changeLanguage` faisait que le
+  // `fetchLangs()` de la page rechargée pouvait lire la session serveur ENCORE PÉRIMÉE (race de
+  // settling de session, ou réponse capricieuse de change-language) et re-basculer l'UI dans la
+  // langue précédente — « le changement ne s'affiche pas, mais revient au reload (manuel) ».
+  // On CONFIRME donc que la session serveur reflète bien la nouvelle locale (poll `fetchLangs`,
+  // no-store) AVANT de recharger.
   const changeLocale = useCallback((langId: number) => {
     const target = langs.find((l) => l.id === langId)
-    changeLanguage(langId).then((ok) => {
-      if (!ok) return
+    const persist = () => {
       try {
         if (target) {
           localStorage.setItem(LOCALE_STORAGE_KEY, target.locale)
           localStorage.setItem(LANG_STORAGE_KEY, localeToLang(target.locale))
         }
       } catch { /* best-effort */ }
-      window.location.reload()
-    })
+    }
+    void (async () => {
+      const ok = await changeLanguage(langId)
+      // Attend la confirmation serveur (jusqu'à ~1s) : la locale active DOIT être langId.
+      let confirmed = false
+      for (let i = 0; i < 6 && !confirmed; i++) {
+        const d = await fetchLangs()
+        if (d && d.current.id === langId) confirmed = true
+        else await new Promise((r) => setTimeout(r, 160))
+      }
+      // Recharge si confirmé (cas nominal) ou, à défaut, si le POST s'est dit OK (fallback).
+      if (confirmed || ok) {
+        persist()
+        window.location.reload()
+      }
+    })()
   }, [langs])
 
   // serverTr (valeurs PHP) priment sur le dictionnaire statique (fallback offline/erreur).

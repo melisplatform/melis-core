@@ -355,7 +355,21 @@ export interface ApiReactBrick {
  * (GET /melis/react-api/react-modules). Un module n'apparaît que s'il est
  * chargé → l'UI React s'ajoute *si et seulement si* le module est activé.
  */
-export async function fetchReactModules(): Promise<ApiReactBrick[]> {
+// ⚡ Coalescence des appels CONCURRENTS. Au boot, loadBricks() ET refreshActiveModules() appellent
+// cette route en même temps → 2 requêtes sérialisées par le verrou de session PHP (l'une pouvait
+// prendre ~2,5s), ce qui retardait le prefetch du bundle messenger (la cloche topbar mettait du
+// temps à apparaître, de façon variable). On partage la requête EN VOL : un seul aller-retour tant
+// qu'une réponse n'est pas revenue. Effacée après résolution → une navigation ultérieure re-fetch.
+let _reactModulesInFlight: Promise<ApiReactBrick[]> | null = null
+export function fetchReactModules(): Promise<ApiReactBrick[]> {
+  if (_reactModulesInFlight) return _reactModulesInFlight
+  const pr = fetchReactModulesRaw()
+  _reactModulesInFlight = pr
+  void pr.finally(() => { if (_reactModulesInFlight === pr) _reactModulesInFlight = null })
+  return pr
+}
+
+async function fetchReactModulesRaw(): Promise<ApiReactBrick[]> {
   try {
     const res = await fetch('/melis/react-api/react-modules', {
       headers: { ...XHR_HEADER },
@@ -505,7 +519,7 @@ export interface BoLangs { current: { id: number; locale: string }; langs: BoLan
 /** Available back-office languages + the current session locale. */
 export async function fetchLangs(): Promise<BoLangs | null> {
   try {
-    const res = await fetch('/melis/react-api/langs', { headers: { ...XHR_HEADER }, credentials: 'include' })
+    const res = await fetch('/melis/react-api/langs', { headers: { ...XHR_HEADER }, credentials: 'include', cache: 'no-store' })
     if (!res.ok) return null
     const data = (await res.json()) as { success: boolean; data?: BoLangs }
     return data.success && data.data ? data.data : null

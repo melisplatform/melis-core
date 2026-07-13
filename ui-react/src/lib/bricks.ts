@@ -276,7 +276,17 @@ export async function loadBricks(): Promise<void> {
     // register early (e.g. the CMS page-tree Sidebar, the Messenger bell — both need
     // to appear from boot, not only after the user first visits the brick's route).
     // Non-blocking: the loop fires-and-forgets; React.lazy benefits from the cache.
-    for (const m of list) {
+    //
+    // ⚡ PRIORITÉ aux briques « widget-only » (route ET forwardKey nuls) : leur SEULE raison d'être
+    // est un widget visible au boot (ex. la cloche Messenger). On appende leur <script> EN PREMIER
+    // pour qu'elles arrivent avant les bundles de pages (que l'utilisateur n'ouvrira peut-être
+    // jamais) dans la file — utile car le service PHP sérialise les requêtes sur le verrou de session.
+    const prefetch = [...list].sort((a, b) => {
+      const wa = !a.route && !a.forwardKey ? 0 : 1
+      const wb = !b.route && !b.forwardKey ? 0 : 1
+      return wa - wb
+    })
+    for (const m of prefetch) {
       if (!m.bundleUrl) continue
       const bundleUrl = m.bundleUrl
       const brickId   = m.id
