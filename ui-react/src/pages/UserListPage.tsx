@@ -416,6 +416,24 @@ export default function UserListPage() {
     setTimeout(() => setRefreshing(false), 600)
   }
 
+  // Réinitialise recherche + filtres + tri, puis recharge. setItems([]) est obligatoire :
+  // sans ça les lignes déjà affichées restent à l'écran et le clic paraît sans effet.
+  function resetFilters() {
+    _cache = null
+    setSearchInput('')
+    setSearch('')
+    setStatusFilter('')
+    setRoleFilter(undefined)
+    setSortCol(null)
+    setSortDir('asc')
+    setItems([])
+    setPage(1)
+    setRefreshing(true)
+    setRefreshKey(k => k + 1)
+    userApi.fetchUserStats().then(setStats).catch(() => null)
+    setTimeout(() => setRefreshing(false), 600)
+  }
+
   const [toDelete, setToDelete] = useState<userApi.UserItem | null>(null)
   const [deleting, setDeleting] = useState(false)
 
@@ -610,6 +628,9 @@ export default function UserListPage() {
           )}
 
           <div className="ml-auto flex items-center gap-2">
+            <Button variant="outline" size="sm" className="gap-1.5" onClick={resetFilters} title={t('common.reset_filters')}>
+              <RotateCcw className={cn('size-3.5', refreshing && 'animate-spin')} />{t('common.reset_filters')}
+            </Button>
             <div ref={colMgrRef} className="relative">
               <Button variant="outline" size="sm" className="gap-1.5" onClick={() => setShowColMgr(v => !v)}>
                 <Columns3 className="size-3.5" />{t('common.columns')}

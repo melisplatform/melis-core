@@ -219,6 +219,22 @@ export default function AnnouncementListPage() {
     setTimeout(() => setRefreshing(false), 600)
   }
 
+  // Réinitialise recherche + filtre statut + tri, puis recharge. setItems([]) est obligatoire :
+  // sans ça les lignes déjà affichées restent à l'écran et le clic paraît sans effet.
+  function resetFilters() {
+    _cache = null
+    setSearchInput('')
+    setSearch('')
+    setStatus('')
+    setSortCol(null)
+    setSortDir('asc')
+    setItems([])
+    setRefreshing(true)
+    setRefreshKey(k => k + 1)
+    annApi.fetchAnnouncementStats().then(setStats).catch(() => null)
+    setTimeout(() => setRefreshing(false), 600)
+  }
+
   function toggleSort(id: string) {
     if (sortCol === id) setSortDir(d => d === 'asc' ? 'desc' : 'asc')
     else { setSortCol(id); setSortDir('asc') }
@@ -313,6 +329,9 @@ export default function AnnouncementListPage() {
           </div>
 
           <div className="ml-auto flex items-center gap-2">
+            <Button variant="outline" size="sm" className="gap-1.5" onClick={resetFilters} title={t('common.reset_filters')}>
+              <RotateCcw className={cn('size-3.5', refreshing && 'animate-spin')} />{t('common.reset_filters')}
+            </Button>
             <div ref={colMgrRef} className="relative">
               <Button variant="outline" size="sm" className="gap-1.5" onClick={() => setShowColMgr(v => !v)}>
                 <Columns3 className="size-3.5" />{t('common.columns')}

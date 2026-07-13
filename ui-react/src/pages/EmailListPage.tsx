@@ -78,6 +78,17 @@ export default function EmailListPage() {
 
   function handleRefresh() { _cache = null; setRefreshing(true); load(); setTimeout(() => setRefreshing(false), 500) }
 
+  // Réinitialise la recherche puis recharge. setItems([]) est obligatoire : sans ça les lignes
+  // déjà affichées restent à l'écran et le clic paraît sans effet.
+  function resetFilters() {
+    _cache = null
+    setSearch('')
+    setItems([])
+    setRefreshing(true)
+    load()
+    setTimeout(() => setRefreshing(false), 500)
+  }
+
   const filtered = useMemo(() => {
     const q = search.trim().toLowerCase()
     if (!q) return items
@@ -117,6 +128,11 @@ export default function EmailListPage() {
               <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
               <Input value={search} onChange={(e) => setSearch(e.target.value)} placeholder={t('emails.search')} className="pl-9" />
               {search && <button onClick={() => setSearch('')} className="absolute right-2.5 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"><X className="size-4" /></button>}
+            </div>
+            <div className="ml-auto flex items-center gap-2">
+              <Button variant="outline" size="sm" className="gap-1.5" onClick={resetFilters} title={t('common.reset_filters')}>
+                <RotateCcw className={cn('size-3.5', refreshing && 'animate-spin')} />{t('common.reset_filters')}
+              </Button>
             </div>
           </div>
 

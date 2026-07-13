@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { useLocation } from 'react-router-dom'
 import {
   AlertTriangle, GripVertical, Package, PackageCheck, PackageX, RotateCcw,
-  Save, Search, Sparkles, X,
+  Save, Search, Sparkles, Undo2, X,
 } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
@@ -104,6 +104,14 @@ export default function ModulesPage() {
       .finally(() => setLoading(false))
   }
   useEffect(() => { if (!_cache) load() }, []) // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Réinitialise la recherche puis recharge depuis le serveur. On ne vide pas `modules` :
+  // load() remplace la liste entière, et un setModules([]) rendrait la page « dirty » à tort.
+  function resetFilters() {
+    _cache = null
+    setSearch('')
+    load()
+  }
 
   // Index par nom + maps de dépendances dérivées de l'état courant.
   const byName = useMemo(() => {
@@ -265,9 +273,14 @@ export default function ModulesPage() {
             )}
             {dirty && (
               <Button variant="outline" size="sm" className="gap-1.5 text-amber-600" onClick={resetChanges}>
-                <RotateCcw className="size-3.5" />{t('modules.reset')}
+                <Undo2 className="size-3.5" />{t('modules.reset')}
               </Button>
             )}
+            <div className="ml-auto flex items-center gap-2">
+              <Button variant="outline" size="sm" className="gap-1.5" onClick={resetFilters} title={t('common.reset_filters')}>
+                <RotateCcw className={cn('size-3.5', loading && 'animate-spin')} />{t('common.reset_filters')}
+              </Button>
+            </div>
           </div>
 
           {/* Indice de réordonnancement */}

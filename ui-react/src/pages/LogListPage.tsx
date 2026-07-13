@@ -187,6 +187,26 @@ export default function LogListPage() {
     setTimeout(() => setRefreshing(false), 600)
   }
 
+  // Réinitialise recherche + filtres (type / utilisateur / dates) + tri, puis recharge.
+  // setItems([]) est obligatoire : sans ça les lignes déjà affichées restent à l'écran
+  // et le clic paraît sans effet.
+  function resetFilters() {
+    _cache = null
+    setSearchInput('')
+    setSearch('')
+    setType(null)
+    setUser(null)
+    setStartDate('')
+    setEndDate('')
+    setSortCol(null)
+    setSortDir('asc')
+    setItems([])
+    setRefreshing(true)
+    setRefreshKey(k => k + 1)
+    logApi.fetchLogStats().then(setStats).catch(() => null)
+    setTimeout(() => setRefreshing(false), 600)
+  }
+
   function toggleSort(id: string) {
     if (sortCol === id) setSortDir(d => d === 'asc' ? 'desc' : 'asc')
     else { setSortCol(id); setSortDir('asc') }
@@ -264,6 +284,10 @@ export default function LogListPage() {
 
           <input type="date" className={selectCls} title={t('logs.filter.from')} value={startDate} onChange={e => setStartDate(e.target.value)} />
           <input type="date" className={selectCls} title={t('logs.filter.to')} value={endDate} onChange={e => setEndDate(e.target.value)} />
+
+          <Button variant="outline" size="sm" className="gap-1.5" onClick={resetFilters} title={t('common.reset_filters')}>
+            <RotateCcw className={cn('size-3.5', refreshing && 'animate-spin')} />{t('common.reset_filters')}
+          </Button>
 
           <div ref={colMgrRef} className="relative">
             <Button variant="outline" size="sm" className="gap-1.5" onClick={() => setShowColMgr(v => !v)}>
