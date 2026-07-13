@@ -142,6 +142,7 @@ const fr = {
   'caps.clear': 'Vidage du cache',
   'caps.run': 'Exécution',
   'caps.tabs': 'Onglets',
+  'caps.test': 'Test',
 
   // ── Droits (éditeur d'arbre) ──
   'rights.select_all': 'Tout sélectionner',
@@ -781,6 +782,7 @@ const en: Record<I18nKey, string> = {
   'caps.clear': 'Clear cache',
   'caps.run': 'Run',
   'caps.tabs': 'Tabs',
+  'caps.test': 'Test',
 
   // ── Rights (tree editor) ──
   'rights.select_all': 'Select all',
