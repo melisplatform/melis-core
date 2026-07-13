@@ -18,11 +18,11 @@ import { melisKeyForRoute, toolBaseRoute, parseToolTabId, subtoolName, useToolRo
 // Router basename (same as App's BrowserRouter): prod serves under /melis-react, dev at root.
 const BASENAME = import.meta.env.PROD ? '/melis-react' : ''
 
-// Outils qui gèrent EUX-MÊMES leur barre de sous-onglets (vue React native, état local) → le host
-// ne rend PAS sa ToolTabBar ET ne touche PAS leur URL : chacun reflète lui-même son sous-onglet
-// actif dans l'URL (/[section]/[tool]/:id) via history.replaceState (cf. leur useEffect onMsg + URL).
-// Sinon la 2ᵉ barre s'empile et l'effet de réflexion d'URL ci-dessous remettrait l'URL à la base.
-const SELF_MANAGED_SUBTABS = new Set(['meliscms_tool_sites', 'MelisCmsSlider_left_menu', 'meliscmsnews_left_menu'])
+// Outils dont la vue React gère ELLE-MÊME ses sous-onglets ET son URL (état local, /[section]/[tool]/:id
+// reflété via history.replaceState) → le host ne réécrit PAS leur URL, sinon l'effet ci-dessous
+// la remettrait à la base. La ToolTabBar, elle, RESTE rendue : c'est elle qui pilote les onglets de
+// la vue « Old » (iframe legacy) — cf. commentaire du rendu plus bas.
+const SELF_MANAGED_URL = new Set(['meliscms_tool_sites', 'MelisCmsSlider_left_menu', 'meliscmsnews_left_menu'])
 
 function formatKey(key: string): string {
   return key
@@ -59,7 +59,7 @@ export function ToolTabBar() {
   useEffect(() => {
     if (!melisKey) return
     // Outils auto-gérés : ils possèdent leur URL (reflètent eux-mêmes /:id) → ne pas la réécrire.
-    if (SELF_MANAGED_SUBTABS.has(melisKey)) return
+    if (SELF_MANAGED_URL.has(melisKey)) return
     const base = toolBaseRoute(pathname)
     const nonPrimary = tabs.filter((t) => !t.primary)
     // ⚠️ Cet effet ne reflète QUE les sous-onglets publiés par un OUTIL IFRAME (tool-tab-bridge).
@@ -94,15 +94,17 @@ export function ToolTabBar() {
     }
   }, [tabs, melisKey, zoneKey, pathname])
 
-  // Outils auto-gérés (SELF_MANAGED_SUBTABS, défini au scope module) → ne PAS afficher la ToolTabBar
-  // hôte, sinon la vue « Old » (iframe legacy) publie ses onglets ici et une 2ᵉ barre s'empile
-  // au-dessus de la barre in-tool. Ex. Sites/Slider/News (chacun intercepte __melisToolTabs).
-  if (melisKey && SELF_MANAGED_SUBTABS.has(melisKey)) return null
-
   // Show the sub-tab bar ONLY when at least one record (sub-screen) is open. With no record,
   // the tool is on its list and the main top tab already represents it — no redundant 2nd line.
   // When records are open: [list | record1 | record2 …]; closing the last record hides the bar
   // (back to the list). Closing a record removes only it (the bridge switches content to `next`).
+  //
+  // Ces onglets viennent TOUJOURS d'une iframe legacy (tool-tab-bridge) — outil classique du pool
+  // de zones, ou vue « Old » d'un outil React (toggle New/Old). Dans les deux cas l'édition reste
+  // LEGACY, dans l'iframe : cette barre ne fait que la piloter (tabSwitch/tabClose). Un outil React
+  // n'a jamais d'onglet ici (ses écrans passent par React Router ou sa barre in-tool), donc pas de
+  // 2ᵉ barre empilée dans les faits — et surtout, ouvrir un enregistrement en vue Old ne doit PAS
+  // rebasculer sur l'éditeur React (les briques News/Sites/Slider détournaient ces messages).
   if (!melisKey || secondary.length === 0) return null
 
   return (
