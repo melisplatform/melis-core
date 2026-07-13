@@ -47,6 +47,36 @@ export function sectionSlug(name: string): string {
  * e.g. "melis_cms_slider_tool" (section melis-cms) → "slider";
  *      "meliscore_tool_user"  (section melis-core) → "user".
  */
+/**
+ * Slugs d'outils EXPLICITES (clé = forward « Module/Controller ») — prioritaires sur `toolSlug()`.
+ *
+ * Garantissent des URLs propres et stables `/[section]/[slug]` là où la dérivation heuristique
+ * produit un slug moche : nœud de menu PARENT/wrapper porteur du forward (ex. Page Analytics →
+ * `meliscms-site-tools-parent`), ou clé de nœud = melisKey brut (ex. Roles → `melis-sb-tool-userrole`).
+ * Modèle de référence : l'outil Utilisateurs (`/melis-core/user`). Une entrée ici = une URL propre.
+ */
+export const TOOL_SLUG_OVERRIDES: Record<string, string> = {
+  // ── Modules à subgit (cœur du périmètre) ──
+  'MelisCore/Modules':                              'modules',
+  'MelisCore/EmailsManagement':                     'emails',
+  'MelisSmallBusiness/ToolUserRole':                'roles',
+  'MelisCmsPageAnalytics/MelisCmsPageAnalyticsTool':'site-analytics',
+  'MelisCmsProspects/ToolProspects':                'prospects',
+  'MelisCalendar/Calendar':                         'calendar',
+  'MelisMarketPlace/MelisMarketPlace':              'marketplace',
+  'MelisCms/MiniTemplateManager':                   'mini-templates',
+  'MelisCms/MiniTemplateMenuManager':               'menu-manager',
+  'MelisCmsCategory2/MelisCmsCategoryList':         'category',
+  // NB : périmètre volontairement limité aux modules à SUBGIT. Des outils hors-subgit ont aussi
+  // des slugs moches (Tipimail dérive « meliscms », Newsletter, Sql, Cache, DocumentUpload, Cron) ;
+  // ne PAS les ajouter ici sans validation — ce serait modifier le comportement d'outils hors périmètre.
+}
+
+/** Slug d'outil pour un forward, en préférant l'override explicite puis la dérivation heuristique. */
+export function toolSlugForForward(forwardKey: string, nodeKey: string, section: string): string {
+  return TOOL_SLUG_OVERRIDES[forwardKey] ?? toolSlug(nodeKey, section)
+}
+
 export function toolSlug(nodeKey: string, section: string): string {
   let s = kebab(nodeKey)
   // Strip trailing menu/layout noise repeatedly (e.g. "...-left-menu" → "...", "...-tool-config"

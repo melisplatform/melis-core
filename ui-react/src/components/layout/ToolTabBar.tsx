@@ -18,6 +18,12 @@ import { melisKeyForRoute, toolBaseRoute, parseToolTabId, subtoolName, useToolRo
 // Router basename (same as App's BrowserRouter): prod serves under /melis-react, dev at root.
 const BASENAME = import.meta.env.PROD ? '/melis-react' : ''
 
+// Outils qui gèrent EUX-MÊMES leur barre de sous-onglets (vue React native, état local) → le host
+// ne rend PAS sa ToolTabBar ET ne touche PAS leur URL : chacun reflète lui-même son sous-onglet
+// actif dans l'URL (/[section]/[tool]/:id) via history.replaceState (cf. leur useEffect onMsg + URL).
+// Sinon la 2ᵉ barre s'empile et l'effet de réflexion d'URL ci-dessous remettrait l'URL à la base.
+const SELF_MANAGED_SUBTABS = new Set(['meliscms_tool_sites', 'MelisCmsSlider_left_menu', 'meliscmsnews_left_menu'])
+
 function formatKey(key: string): string {
   return key
     .replace(/^melis(core|sb|cms)?_tool_?/i, '')
@@ -52,8 +58,24 @@ export function ToolTabBar() {
   // the sub-entity name. (Forward reflection; a deep-link reload opens the tool at its list.)
   useEffect(() => {
     if (!melisKey) return
+    // Outils auto-gérés : ils possèdent leur URL (reflètent eux-mêmes /:id) → ne pas la réécrire.
+    if (SELF_MANAGED_SUBTABS.has(melisKey)) return
     const base = toolBaseRoute(pathname)
     const nonPrimary = tabs.filter((t) => !t.primary)
+    // ⚠️ Cet effet ne reflète QUE les sous-onglets publiés par un OUTIL IFRAME (tool-tab-bridge).
+    // Sans onglet bridge, l'URL est gérée par React Router (outil NATIF ou brique React, dont les
+    // briques `subTabs:true` qui `navigate(base/:id)`). La réécrire ici EFFACERAIT le /:id d'édition
+    // juste posé (tabsFor() renvoie un nouveau [] à chaque render → cet effet tourne à chaque render,
+    // d'où le /1 « immédiatement retiré »). On ne remet donc à la base QUE les vrais outils iframe
+    // (zoneKey non-null) ; pour un outil React (zoneKey null même si brick.melisKey existe), on ne
+    // touche pas à l'URL.
+    if (nonPrimary.length === 0) {
+      if (zoneKey) {
+        const full = BASENAME + base
+        if (window.location.pathname !== full) window.history.replaceState(window.history.state, '', full)
+      }
+      return
+    }
     const activeIdx = nonPrimary.findIndex((t) => t.active)
     let target = base
     if (activeIdx >= 0) {
@@ -70,12 +92,11 @@ export function ToolTabBar() {
     if (window.location.pathname !== full) {
       window.history.replaceState(window.history.state, '', full)
     }
-  }, [tabs, melisKey, pathname])
+  }, [tabs, melisKey, zoneKey, pathname])
 
-  // Outils qui gèrent EUX-MÊMES leur barre de sous-onglets (vue React native) → ne PAS afficher
-  // le ToolTabBar hôte, sinon la vue « Old » (iframe legacy) publie ses onglets ici et une 2ᵉ barre
-  // s'empile au-dessus de la barre in-tool de l'outil. Ex. Sites (SitesPage.SiteSubTabBar).
-  const SELF_MANAGED_SUBTABS = new Set(['meliscms_tool_sites'])
+  // Outils auto-gérés (SELF_MANAGED_SUBTABS, défini au scope module) → ne PAS afficher la ToolTabBar
+  // hôte, sinon la vue « Old » (iframe legacy) publie ses onglets ici et une 2ᵉ barre s'empile
+  // au-dessus de la barre in-tool. Ex. Sites/Slider/News (chacun intercepte __melisToolTabs).
   if (melisKey && SELF_MANAGED_SUBTABS.has(melisKey)) return null
 
   // Show the sub-tab bar ONLY when at least one record (sub-screen) is open. With no record,

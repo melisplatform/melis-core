@@ -32,7 +32,7 @@ import {
 import * as melisApi from '@/lib/melis-api'
 import { REACT_ROUTES } from '@/lib/module-registry'
 import { BRICK_ROUTES, useBricks } from '@/lib/bricks'
-import { sectionSlug, toolSlug, registerTool } from '@/lib/tool-routes'
+import { sectionSlug, toolSlug, toolSlugForForward, registerTool } from '@/lib/tool-routes'
 import { NAV_SECTIONS, type NavSection } from '@/components/layout/nav'
 import { useI18n } from '@/i18n/i18n-context'
 import type { I18nKey } from '@/i18n/dictionaries'
@@ -228,7 +228,8 @@ function getToolRoute(node: melisApi.ApiMenuNode, section: string): string {
   if (!node.isTool) return ''
   const key = `${node.forward?.module ?? ''}/${node.forward?.controller ?? ''}`
   // Tree-derived URL /[section]/[tool] for EVERY tool (native, brick, iframe).
-  const route = `/${section}/${toolSlug(node.key, section)}`
+  // Override explicite par forward (URLs propres) sinon dérivation heuristique depuis node.key.
+  const route = `/${section}/${toolSlugForForward(key, node.key, section)}`
   // Native & brick tools render a dedicated React route → not an iframe zone (melisKey null),
   // but we still register forward→route so App can mount them at the derived URL. Iframe tools
   // register their melisKey so ZonePage/Shell resolve the iframe.
