@@ -5,6 +5,7 @@ import { useSubTabs } from '@/components/tabs/sub-tab-store'
 import { MODULES } from '@/lib/module-registry'
 import { useBricks, brickRoute } from '@/lib/bricks'
 import { routeForForward, useToolRoutesVersion } from '@/lib/tool-routes'
+import { usePublishedToolView } from '@/lib/tool-view-mode'
 import { useI18n } from '@/i18n/i18n-context'
 
 function SubTabBarInner({
@@ -84,10 +85,17 @@ export function SubTabBar() {
   // PLUS module bricks that opted in (manifest subTabs:true) both use this SAME bar — a brick
   // registers its opened records through window.__melisOpenSubTab keyed by its route.
   const sections = [
-    ...MODULES.map((m) => ({ key: routeForForward(m.forwardKey) ?? m.route, icon: m.icon ?? FileText })),
-    ...bricks.filter((b) => b.subTabs).map((b) => ({ key: brickRoute(b), icon: FileText as React.ElementType })),
+    ...MODULES.map((m) => ({ key: routeForForward(m.forwardKey) ?? m.route, icon: m.icon ?? FileText, melisKey: m.melisKey })),
+    ...bricks.filter((b) => b.subTabs).map((b) => ({ key: brickRoute(b), icon: FileText as React.ElementType, melisKey: b.melisKey })),
   ]
   const section = sections.find((s) => s.key && (pathname === s.key || pathname.startsWith(s.key + '/')))
-  if (!section) return null
+  // Symétrique de la ToolTabBar : quand la vue « Old » (iframe legacy) d'un outil à toggle est
+  // affichée, c'est ELLE qui pilote les onglets (ToolTabBar) — les sous-onglets React ouverts
+  // avant la bascule doubleraient les siens (deux onglets « Nouveau »). On les masque sans les
+  // fermer : revenir en vue « New » les réaffiche tels quels. `usePublishedToolView` (et non
+  // `useToolView`, dont le défaut est `iframe`) : un outil SANS toggle ne publie rien et garde
+  // évidemment ses sous-onglets.
+  const publishedView = usePublishedToolView(section?.melisKey ?? null)
+  if (!section || publishedView === 'iframe') return null
   return <SubTabBarInner sectionKey={section.key} listPath={section.key} tabIcon={section.icon} />
 }

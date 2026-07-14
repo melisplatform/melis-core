@@ -36,3 +36,16 @@ export function useToolView(melisKey: string | null): ToolView {
     () => (melisKey ? modes[melisKey] ?? 'iframe' : 'iframe'),
   )
 }
+
+/**
+ * Vue RÉELLEMENT publiée par l'outil — `null` s'il n'en publie aucune (outil legacy sans toggle,
+ * ou brique qui n'appelle pas `__melisSetToolView`). À utiliser quand le défaut `iframe` serait
+ * faux : la SubTabBar masque les sous-onglets React d'un outil dont la vue « Old » est affichée,
+ * mais ne doit RIEN masquer pour un outil qui n'a pas de toggle du tout.
+ */
+export function usePublishedToolView(melisKey: string | null): ToolView | null {
+  return useSyncExternalStore(
+    (cb) => { listeners.add(cb); return () => { listeners.delete(cb) } },
+    () => (melisKey ? modes[melisKey] ?? null : null),
+  )
+}

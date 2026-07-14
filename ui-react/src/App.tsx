@@ -9,7 +9,7 @@ import { I18nProvider } from '@/i18n/I18nProvider'
 import { TabProvider, useTabs } from '@/components/tabs/tab-store'
 import { Shell } from '@/components/layout/Shell'
 import { MODULES } from '@/lib/module-registry'
-import { useBricks, brickRoute } from '@/lib/bricks'
+import { useBricks, useBricksVersion, bricksReady, brickRoute } from '@/lib/bricks'
 import { hasToolRoutes, routeForForward, useToolRoutesVersion } from '@/lib/tool-routes'
 import LoginPage from '@/pages/LoginPage'
 import ForgotPasswordPage from '@/pages/ForgotPasswordPage'
@@ -42,6 +42,9 @@ function TabBridge() {
   // tool sub-route resolves to the right top tab (e.g. /melis-core/user/2 → "Utilisateurs") instead
   // of staying on a raw fallback tab.
   const toolRoutesVersion = useToolRoutesVersion()
+  // Idem pour la liste des briques (/react-modules) : elle porte le flag `subTabs`, sans lequel une
+  // URL de sous-onglet est prise pour une route inconnue. Les deux fetches sont indépendants.
+  const bricksVersion = useBricksVersion()
   useEffect(() => {
     const w = window as unknown as { __melisOpenTab?: typeof openTab; __melisCloseTab?: typeof closeTab }
     w.__melisOpenTab = openTab
@@ -67,12 +70,15 @@ function TabBridge() {
       return r && (path === r || path.startsWith(r + '/'))
     })
     if (subTabBrick) { const r = brickRoute(subTabBrick); syncRoute({ id: r, label: subTabBrick.label, path: r }); return }
-    // No native module matched. If the registry isn't loaded yet, a tool sub-route would here spawn a
-    // raw "/section/tool/:id" tab (label "2"); skip until the registry loads (this effect re-runs on
-    // toolRoutesVersion). Once loaded, an unknown route is a genuine zone/brick tab → create it.
-    if (path !== '/' && !hasToolRoutes()) return
+    // No native module matched. If the registries aren't loaded yet, a tool sub-route would here
+    // spawn a raw "/section/tool/:id" tab (label "2"); skip until BOTH the menu-derived tool routes
+    // and the brick list (which carries `subTabs`) have loaded — this effect re-runs on their
+    // versions. Waiting on the menu alone was not enough: when it won the race against
+    // /react-modules, refreshing a brick's open sub-tab spawned a stray top tab labelled with the
+    // raw id. Once loaded, an unknown route is a genuine zone/brick tab → create it.
+    if (path !== '/' && (!hasToolRoutes() || !bricksReady())) return
     syncRoute({ id: path, label: deriveTabLabel(path), path })
-  }, [location.pathname, syncRoute, toolRoutesVersion, bricks])
+  }, [location.pathname, syncRoute, toolRoutesVersion, bricksVersion, bricks])
   return null
 }
 

@@ -56,9 +56,11 @@ export const BRICK_ROUTES: Record<string, string> = {}
 
 let bricks: BrickDef[] = []
 let status: 'idle' | 'loading' | 'done' = 'idle'
+let version = 0
 const listeners = new Set<() => void>()
 
 function notify() {
+  version += 1
   listeners.forEach((l) => l())
 }
 
@@ -329,4 +331,31 @@ export function useBricks(): BrickDef[] {
     }
   }, [])
   return bricks
+}
+
+/**
+ * Has the brick list been fetched? False during the cold load — a moment where a deep-linked
+ * tool URL (/[section]/[tool]/:id) cannot yet be recognised as belonging to a `subTabs` brick.
+ * Callers must WAIT for this (see TabBridge) instead of treating the URL as an unknown route:
+ * the menu (/menu) and the brick list (/react-modules) are two independent fetches, and when the
+ * menu won the race a refreshed sub-tab spawned a stray top tab labelled with the raw id ("4").
+ */
+export function bricksReady(): boolean {
+  return status === 'done'
+}
+
+/**
+ * Version counter of the brick registry — bumped on every change (load, lazy component
+ * registration, reset). Unlike {@link useBricks}, it changes even when the list ends up EMPTY
+ * (error / no brick), so an effect depending on it still re-runs once loading is over.
+ */
+export function useBricksVersion(): number {
+  const [, force] = useReducer((x: number) => x + 1, 0)
+  useEffect(() => {
+    listeners.add(force)
+    return () => {
+      listeners.delete(force)
+    }
+  }, [])
+  return version
 }
