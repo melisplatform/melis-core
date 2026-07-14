@@ -5,6 +5,7 @@ import { cn } from '@/lib/utils'
 import { useBricks, brickRoute } from '@/lib/bricks'
 import { useToolTabs } from '@/components/tabs/tool-tab-bridge'
 import { melisKeyForRoute, toolBaseRoute, parseToolTabId, subtoolName, useToolRoutesVersion } from '@/lib/tool-routes'
+import { useToolView } from '@/lib/tool-view-mode'
 
 /**
  * Sub-tab bar under the topbar showing the open screens of the active legacy tool (brick) —
@@ -50,6 +51,8 @@ export function ToolTabBar() {
   const tabs = tabsFor(melisKey)
   const primary = tabs.find((t) => t.primary)
   const secondary = tabs.filter((t) => !t.primary)
+  // Vue courante de l'outil (toggle New/Old d'une brique) — cf. lib/tool-view-mode.
+  const toolView = useToolView(melisKey)
 
   // Reflect the active record drill-down in the URL: /[section]/[tool]/[id]/[subtool]/[id]…
   // Cosmetic only (history.replaceState) — it never spawns a top tab nor touches React Router,
@@ -105,7 +108,12 @@ export function ToolTabBar() {
   // n'a jamais d'onglet ici (ses écrans passent par React Router ou sa barre in-tool), donc pas de
   // 2ᵉ barre empilée dans les faits — et surtout, ouvrir un enregistrement en vue Old ne doit PAS
   // rebasculer sur l'éditeur React (les briques News/Sites/Slider détournaient ces messages).
-  if (!melisKey || secondary.length === 0) return null
+  //
+  // ⚠️ Sauf que l'iframe de la vue « Old » RESTE montée (display:none) quand on repasse en vue React :
+  // elle continue de publier ses onglets, qui doublonnaient alors la barre de sous-onglets de la vue
+  // React (deux onglets pour le même enregistrement). Les onglets legacy ne sont donc rendus que
+  // lorsque la vue « Old » de l'outil est active (défaut pour un outil legacy sans toggle).
+  if (!melisKey || secondary.length === 0 || toolView === 'react') return null
 
   return (
     <div
