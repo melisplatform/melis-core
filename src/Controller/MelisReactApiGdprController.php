@@ -65,7 +65,7 @@ class MelisReactApiGdprController extends MelisAbstractActionController
                     foreach (($values['columns'] ?? []) as $colKey => $col) {
                         $columns[] = [
                             'key'  => (string) $colKey,
-                            'text' => (string) ($col['text'] ?? $colKey),
+                            'text' => $this->tr($col['text'] ?? $colKey),
                         ];
                     }
                     $rows = [];
@@ -197,14 +197,27 @@ class MelisReactApiGdprController extends MelisAbstractActionController
             $password = (string) ($b['password'] ?? '');
             $confirm  = (string) ($b['confirm'] ?? '');
 
-            if ($host === '' || $username === '') {
-                return $this->jsonResponse(['success' => false, 'error' => 'Hôte et nom d’utilisateur sont obligatoires.'], 400);
+            // Erreurs par champ (clés i18n traduites côté React), + message général.
+            $errors = [];
+            if ($host === '') {
+                $errors['host'] = 'gdpr.smtp.err_host';
+            }
+            if ($username === '') {
+                $errors['username'] = 'gdpr.smtp.err_username';
             }
             if (!$id && $password === '') {
-                return $this->jsonResponse(['success' => false, 'error' => 'Le mot de passe est obligatoire.'], 400);
+                $errors['password'] = 'gdpr.smtp.err_password';
             }
             if ($password !== '' && $password !== $confirm) {
-                return $this->jsonResponse(['success' => false, 'error' => 'Les mots de passe ne correspondent pas.'], 400);
+                $errors['confirm'] = 'gdpr.smtp.err_confirm';
+            }
+            if ($errors) {
+                return $this->jsonResponse([
+                    'success'  => false,
+                    'errorKey' => 'gdpr.smtp.err_form',
+                    'errors'   => $errors,
+                    'error'    => 'Validation failed.', // fallback non affiché par l'UI React
+                ], 400);
             }
 
             $data = ['mgdpr_smtp_host' => $host, 'mgdpr_smtp_username' => $username];
@@ -371,17 +384,29 @@ class MelisReactApiGdprController extends MelisAbstractActionController
             $resend      = (int) (bool) ($c['resend'] ?? false);
             $deleteDays  = (int) ($c['deleteDays'] ?? 0);
 
+            // Erreurs de validation : on renvoie des CLÉS i18n (traduites côté React selon la
+            // locale de session), jamais du texte figé — + la carte champ => clé pour l'affichage
+            // sous chaque champ.
+            $errors = [];
             if ($module === '') {
-                return $this->jsonResponse(['success' => false, 'error' => 'Un module est obligatoire.'], 400);
+                $errors['module'] = 'gdpr.ad.err_module';
             }
             if ($deleteDays <= 0) {
-                return $this->jsonResponse(['success' => false, 'error' => 'Le nombre de jours avant anonymisation est obligatoire.'], 400);
+                $errors['deleteDays'] = 'gdpr.ad.err_delete_days';
             }
-            if ($alertStatus && $alertDays > 0 && $alertDays >= $deleteDays) {
-                return $this->jsonResponse(['success' => false, 'error' => 'L’anonymisation doit avoir lieu après l’alerte.'], 400);
+            if ($alertStatus && $alertDays > 0 && $deleteDays > 0 && $alertDays >= $deleteDays) {
+                $errors['alertDays'] = 'gdpr.ad.err_alert_after';
             }
-            if ($alertStatus && $resend && ($deleteDays - $alertDays) < 7) {
-                return $this->jsonResponse(['success' => false, 'error' => 'Au moins 7 jours sont requis entre la 1ʳᵉ alerte et l’anonymisation.'], 400);
+            if ($alertStatus && $resend && $deleteDays > 0 && ($deleteDays - $alertDays) < 7) {
+                $errors['resend'] = 'gdpr.ad.err_resend_gap';
+            }
+            if ($errors) {
+                return $this->jsonResponse([
+                    'success'  => false,
+                    'errorKey' => 'gdpr.ad.err_form',
+                    'errors'   => $errors,
+                    'error'    => 'Validation failed.', // fallback non affiché par l'UI React
+                ], 400);
             }
 
             $now  = date('Y-m-d H:i:s');
@@ -395,12 +420,13 @@ class MelisReactApiGdprController extends MelisAbstractActionController
                 'mgdprc_email_conf_from_name'    => (string) ($c['fromName'] ?? ''),
                 'mgdprc_email_conf_from_email'   => (string) ($c['fromEmail'] ?? ''),
                 'mgdprc_email_conf_reply_to'     => (string) ($c['replyTo'] ?? ''),
+                'mgdprc_email_conf_layout'       => (string) ($c['layout'] ?? 'melis-core/view/layout/layoutEmail.phtml'),
                 'mgdprc_email_conf_layout_title' => (string) ($c['layoutTitle'] ?? ''),
                 'mgdprc_email_conf_layout_desc'  => (string) ($c['layoutDesc'] ?? ''),
                 'mgdprc_config_update_date'      => $now,
             ];
             $tool = $this->sm()->get('MelisCoreGdprAutoDeleteToolService');
-            if (!$id) { $data['mgdprc_config_create_date'] = $now; }
+            if (!$id) { $data['mgdprc_config_creation_date'] = $now; }
             $configId = (int) $tool->saveGdprAutoDeleteConfig($data, $id ?: null);
 
             // Emails d'alerte multilingues (type 1=alerte, 2=anonymisation).
@@ -453,14 +479,20 @@ class MelisReactApiGdprController extends MelisAbstractActionController
     {
         if ($deny = $this->denyUnlessAccess()) { return $deny; }
         try {
-            $logs = [];
+            // Filtres optionnels : logs d'une config précise (mêmes clés que le tab "Logs" legacy).
+            $module = trim((string) $this->params()->fromQuery('module', ''));
+            $siteId = (int) $this->params()->fromQuery('siteId', 0);
+            $logs   = [];
             if ($this->sm()->has('MelisGdprDeleteEmailsLogsTable')) {
                 foreach ((array) $this->sm()->get('MelisGdprDeleteEmailsLogsTable')->fetchAll()->toArray() as $row) {
                     $r = (array) $row;
+                    if ($module !== '' && (string) ($r['mgdprl_module_name'] ?? '') !== $module) { continue; }
+                    if ($siteId > 0 && (int) ($r['mgdprl_site_id'] ?? 0) !== $siteId) { continue; }
                     $logs[] = [
                         'id'        => (int) ($r['mgdprl_id'] ?? 0),
                         'date'      => (string) ($r['mgdprl_log_date'] ?? ''),
                         'module'    => (string) ($r['mgdprl_module_name'] ?? ''),
+                        'siteId'    => (int) ($r['mgdprl_site_id'] ?? 0),
                         'warning1Ok'=> (int) ($r['mgdprl_warning1_ok'] ?? 0),
                         'warning1Ko'=> (int) ($r['mgdprl_warning1_ko'] ?? 0),
                         'warning2Ok'=> (int) ($r['mgdprl_warning2_ok'] ?? 0),
@@ -474,11 +506,52 @@ class MelisReactApiGdprController extends MelisAbstractActionController
         } catch (\Throwable $e) { return $this->errorResponse($e); }
     }
 
+    /** Détail d'un log (listes d'emails ok/ko par catégorie) — équivalent du tab "Logs > détails" legacy. */
+    public function adLogDetailAction(): HttpResponse
+    {
+        if ($deny = $this->denyUnlessAccess()) { return $deny; }
+        try {
+            $id  = (int) $this->params()->fromQuery('id', $this->params()->fromRoute('id', 0));
+            $row = $id && $this->sm()->has('MelisGdprDeleteEmailsLogsTable')
+                ? $this->sm()->get('MelisGdprDeleteEmailsLogsTable')->getEntryById($id)
+                : null;
+            $r = $row ? (array) $row : [];
+            if (!$r) {
+                return $this->jsonResponse(['success' => false, 'error' => 'Log not found.'], 404);
+            }
+            $splitLog = static fn ($v) => array_values(array_filter(explode(';', (string) ($v ?? ''))));
+            return $this->jsonResponse(['success' => true, 'data' => [
+                'id'         => (int) ($r['mgdprl_id'] ?? 0),
+                'date'       => (string) ($r['mgdprl_log_date'] ?? ''),
+                'module'     => (string) ($r['mgdprl_module_name'] ?? ''),
+                'siteId'     => (int) ($r['mgdprl_site_id'] ?? 0),
+                'warning1Ok' => $splitLog($r['mgdprl_warning1_ok_log'] ?? ''),
+                'warning1Ko' => $splitLog($r['mgdprl_warning1_ko_log'] ?? ''),
+                'warning2Ok' => $splitLog($r['mgdprl_warning2_ok_log'] ?? ''),
+                'warning2Ko' => $splitLog($r['mgdprl_warning2_ko_log'] ?? ''),
+                'deleteOk'   => $splitLog($r['mgdprl_delete_ok_log'] ?? ''),
+                'deleteKo'   => $splitLog($r['mgdprl_delete_ko_log'] ?? ''),
+            ]]);
+        } catch (\Throwable $e) { return $this->errorResponse($e); }
+    }
+
     // ─── Helpers ──────────────────────────────────────────────────────────────
 
     private function sm()
     {
         return $this->getServiceManager();
+    }
+
+    /**
+     * Traduit une clé de traduction (TR_…) fournie par un module, comme le fait le helper de vue
+     * `translate()` du rendu legacy. Renvoie la valeur telle quelle si aucune traduction n'existe.
+     */
+    private function tr($value): string
+    {
+        $value = (string) $value;
+        if ($value === '') { return ''; }
+        try { return (string) $this->sm()->get('translator')->translate($value); }
+        catch (\Throwable) { return $value; }
     }
 
     /** Normalise une ligne de config auto-delete pour le front. */
@@ -525,9 +598,13 @@ class MelisReactApiGdprController extends MelisAbstractActionController
         if ($this->sm()->has('MelisEngineTableCmsLang')) {
             foreach ((array) $this->sm()->get('MelisEngineTableCmsLang')->fetchAll()->toArray() as $l) {
                 $l = (array) $l;
+                $locale = (string) ($l['lang_cms_locale'] ?? '');
                 $out[] = [
-                    'id'   => (int) ($l['lang_cms_id'] ?? 0),
-                    'name' => (string) ($l['lang_cms_name'] ?? ('Lang ' . ($l['lang_cms_id'] ?? ''))),
+                    'id'    => (int) ($l['lang_cms_id'] ?? 0),
+                    'name'  => (string) ($l['lang_cms_name'] ?? ('Lang ' . ($l['lang_cms_id'] ?? ''))),
+                    // lang_cms_locale is like "en_EN"/"fr_FR" ; les fichiers de drapeaux sont nommés
+                    // par le code langue 2 lettres en minuscule (en.png, fr.png).
+                    'short' => strtolower(strtok($locale, '_') ?: $locale),
                 ];
             }
         }
