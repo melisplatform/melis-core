@@ -13,14 +13,14 @@ import { useI18n } from '@/i18n/i18n-context'
 // Emoji flags don't render on Windows, so we use these real images.
 const flagSrc = (short: string) => `/MelisCore/assets/images/lang/${short.toLowerCase()}.png`
 
-function Flag({ short }: { short: string }) {
+export function Flag({ short, width = 18, height = 12 }: { short: string; width?: number; height?: number }) {
   return (
     <img
       src={flagSrc(short)}
       alt=""
-      width={18}
-      height={12}
-      className="inline-block rounded-[2px] object-cover shadow-sm"
+      width={width}
+      height={height}
+      className="inline-block shrink-0 rounded-[2px] object-cover shadow-sm"
       // Hide the image if the flag file is missing (keeps just the language code).
       onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = 'none' }}
     />

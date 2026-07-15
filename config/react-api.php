@@ -244,6 +244,10 @@ return [
                                 'type' => 'Segment',
                                 'options' => ['route' => '/gdpr/autodelete/logs[/]', 'defaults' => ['__NAMESPACE__' => 'MelisCore\Controller', 'controller' => 'MelisReactApiGdpr', 'action' => 'adLogs']],
                             ],
+                            'gdpr-ad-log-detail' => [
+                                'type' => 'Segment',
+                                'options' => ['route' => '/gdpr/autodelete/logs/:id[/]', 'constraints' => ['id' => '[0-9]+'], 'defaults' => ['__NAMESPACE__' => 'MelisCore\Controller', 'controller' => 'MelisReactApiGdpr', 'action' => 'adLogDetail']],
+                            ],
                             // ── Emails Management (MelisCore tool) ─────────────
                             'emails-list' => [
                                 'type' => 'Segment',

@@ -88,7 +88,7 @@ export function ColumnManager({ cols, labelFor, onChange, onClose, onReset }: {
       </div>
       <div className="grid grid-cols-2 gap-2 p-3">
         <div
-          className="flex flex-col gap-0.5 min-h-[140px] rounded-lg border border-dashed border-border p-1.5"
+          className="flex flex-col gap-0.5 min-h-[140px] max-h-[min(48vh,320px)] overflow-y-auto min-w-0 rounded-lg border border-dashed border-border p-1.5"
           onDragOver={(e) => { e.preventDefault(); if (overTarget?.id !== '__panel__' || overTarget?.panel !== 'hidden') setOverTarget({ id: '__panel__', panel: 'hidden' }) }}
           onDrop={(e) => { e.preventDefault(); handleDrop('hidden') }}
         >
@@ -98,7 +98,7 @@ export function ColumnManager({ cols, labelFor, onChange, onClose, onReset }: {
             : hiddenCols.map((col) => renderItem(col, 'hidden'))}
         </div>
         <div
-          className="flex flex-col gap-0.5 min-h-[140px] rounded-lg border border-dashed border-border p-1.5"
+          className="flex flex-col gap-0.5 min-h-[140px] max-h-[min(48vh,320px)] overflow-y-auto min-w-0 rounded-lg border border-dashed border-border p-1.5"
           onDragOver={(e) => { e.preventDefault(); if (overTarget?.id !== '__panel__' || overTarget?.panel !== 'visible') setOverTarget({ id: '__panel__', panel: 'visible' }) }}
           onDrop={(e) => { e.preventDefault(); handleDrop('visible') }}
         >

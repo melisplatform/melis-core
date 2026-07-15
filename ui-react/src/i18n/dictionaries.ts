@@ -465,6 +465,11 @@ const fr = {
   'gdpr.smtp.password_hint': 'Laisser vide pour conserver le mot de passe actuel.',
   'gdpr.smtp.confirm': 'Confirmer le mot de passe',
   'gdpr.smtp.saving': 'Enregistrement…',
+  'gdpr.smtp.err_form': 'Le formulaire contient des erreurs. Corrigez les champs signalés.',
+  'gdpr.smtp.err_host': 'L’hôte est obligatoire.',
+  'gdpr.smtp.err_username': 'Le nom d’utilisateur est obligatoire.',
+  'gdpr.smtp.err_password': 'Le mot de passe est obligatoire.',
+  'gdpr.smtp.err_confirm': 'Les mots de passe ne correspondent pas.',
 
   // ── GDPR · Bandeaux ──
   'gdpr.banner.title': 'Bandeau RGPD',
@@ -479,8 +484,11 @@ const fr = {
 
   // ── GDPR · Anonymisation (auto-delete) ──
   'gdpr.ad.title': 'Anonymisation automatique',
+  'gdpr.ad.err_form': 'Le formulaire contient des erreurs. Corrigez les champs signalés.',
   'gdpr.ad.err_module': 'Un module est obligatoire.',
   'gdpr.ad.err_delete_days': 'Le nombre de jours avant anonymisation est obligatoire.',
+  'gdpr.ad.err_alert_after': 'L’alerte doit avoir lieu avant l’anonymisation (moins de jours).',
+  'gdpr.ad.err_resend_gap': 'Au moins 7 jours sont requis entre la 1ʳᵉ alerte et l’anonymisation.',
   'gdpr.ad.saved': 'Configuration enregistrée.',
   'gdpr.ad.deleted': 'Configuration supprimée.',
   'gdpr.ad.run_done': 'Traitement exécuté.',
@@ -523,6 +531,16 @@ const fr = {
   'gdpr.ad.no_logs': 'Aucun journal.',
   'gdpr.ad.delete_title': 'Supprimer cette configuration ?',
   'gdpr.ad.delete_body': 'La configuration d’anonymisation du module « {module} » sera supprimée.',
+  'gdpr.ad.section_logs': 'Journaux',
+  'gdpr.ad.log_details': 'Détails',
+  'gdpr.ad.log_details_title': 'Détails du journal',
+  'gdpr.ad.log_warning1': '1ʳᵉ alerte',
+  'gdpr.ad.log_warning2': '2ᵉ alerte (relance)',
+  'gdpr.ad.log_delete_heading': 'Anonymisation',
+  'gdpr.ad.log_ok': 'OK',
+  'gdpr.ad.log_ko': 'KO',
+  'gdpr.ad.log_no_entries': 'Aucun email dans cette catégorie.',
+  'gdpr.ad.log_save_first': 'Enregistrez la configuration pour voir ses journaux.',
 
   // ── Emails Management ──
   'emails.title': 'Gestion des emails',
@@ -1106,6 +1124,11 @@ const en: Record<I18nKey, string> = {
   'gdpr.smtp.password_hint': 'Leave empty to keep the current password.',
   'gdpr.smtp.confirm': 'Confirm password',
   'gdpr.smtp.saving': 'Saving…',
+  'gdpr.smtp.err_form': 'The form contains errors. Please fix the highlighted fields.',
+  'gdpr.smtp.err_host': 'Host is required.',
+  'gdpr.smtp.err_username': 'Username is required.',
+  'gdpr.smtp.err_password': 'Password is required.',
+  'gdpr.smtp.err_confirm': 'Passwords do not match.',
 
   // ── GDPR · Banners ──
   'gdpr.banner.title': 'GDPR banner',
@@ -1120,8 +1143,11 @@ const en: Record<I18nKey, string> = {
 
   // ── GDPR · Anonymization (auto-delete) ──
   'gdpr.ad.title': 'Automatic anonymization',
+  'gdpr.ad.err_form': 'The form contains errors. Please fix the highlighted fields.',
   'gdpr.ad.err_module': 'A module is required.',
   'gdpr.ad.err_delete_days': 'The number of days before anonymization is required.',
+  'gdpr.ad.err_alert_after': 'The alert must happen before the anonymization (fewer days).',
+  'gdpr.ad.err_resend_gap': 'At least 7 days are required between the first alert and the anonymization.',
   'gdpr.ad.saved': 'Configuration saved.',
   'gdpr.ad.deleted': 'Configuration deleted.',
   'gdpr.ad.run_done': 'Processing executed.',
@@ -1164,6 +1190,16 @@ const en: Record<I18nKey, string> = {
   'gdpr.ad.no_logs': 'No logs.',
   'gdpr.ad.delete_title': 'Delete this configuration?',
   'gdpr.ad.delete_body': 'The anonymization configuration for module “{module}” will be deleted.',
+  'gdpr.ad.section_logs': 'Logs',
+  'gdpr.ad.log_details': 'Details',
+  'gdpr.ad.log_details_title': 'Log details',
+  'gdpr.ad.log_warning1': '1st alert',
+  'gdpr.ad.log_warning2': '2nd alert (resend)',
+  'gdpr.ad.log_delete_heading': 'Anonymization',
+  'gdpr.ad.log_ok': 'OK',
+  'gdpr.ad.log_ko': 'KO',
+  'gdpr.ad.log_no_entries': 'No email in this category.',
+  'gdpr.ad.log_save_first': 'Save the configuration to see its logs.',
 
   // ── Emails Management ──
   'emails.title': 'Emails management',

@@ -67,7 +67,7 @@ export default function GdprBannersTab() {
         <div className="mt-3 max-w-sm">
           <label className="mb-1 block text-xs font-medium text-muted-foreground">{t('gdpr.banner.site')}</label>
           <select value={siteId} onChange={(e) => onSiteChange(Number(e.target.value))}
-            className="h-9 w-full rounded-md border border-border bg-background px-3 text-sm">
+            className="h-9 w-full rounded-md border border-input bg-card px-3 text-sm">
             <option value={0}>{t('gdpr.banner.choose_site')}</option>
             {meta.sites.map((s) => <option key={s.id} value={s.id}>{s.label}</option>)}
           </select>
@@ -97,7 +97,7 @@ export default function GdprBannersTab() {
                   disabled={!canEdit}
                   rows={10}
                   placeholder={t('gdpr.banner.content_placeholder')}
-                  className="w-full resize-y rounded-md border border-border bg-background px-3 py-2 text-sm"
+                  className="w-full resize-y rounded-md border border-input bg-card px-3 py-2 text-sm"
                 />
               </div>
             ))

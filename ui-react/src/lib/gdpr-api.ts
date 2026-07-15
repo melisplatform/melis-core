@@ -33,23 +33,38 @@ export type GdprSelection = Record<string, string[]>
 
 // ─── Client HTTP ──────────────────────────────────────────────────────────────
 
+/**
+ * Erreur API structurée. `errorKey` = clé i18n du message général, `errors` = carte
+ * champ => clé i18n, pour un affichage sous chaque champ. Le serveur renvoie des CLÉS
+ * (pas du texte) : la traduction se fait côté React, dans la langue de la session.
+ */
+export class GdprApiError extends Error {
+  errorKey?: string
+  errors: Record<string, string>
+  constructor(message: string, errorKey?: string, errors: Record<string, string> = {}) {
+    super(message)
+    this.name = 'GdprApiError'
+    this.errorKey = errorKey
+    this.errors = errors
+  }
+}
+
+interface ApiEnvelope<T> { success: boolean; data?: T; error?: string; errorKey?: string; errors?: Record<string, string> }
+
 async function apiFetch<T>(url: string, opts?: RequestInit): Promise<T> {
   const res = await fetch(url, {
     ...opts,
     headers: { ...XHR_HEADER, ...(opts?.headers ?? {}) },
     credentials: 'include',
   })
-  if (!res.ok) {
-    let msg = `HTTP ${res.status}`
-    try {
-      const d = (await res.json()) as { error?: string }
-      if (d.error) msg = d.error
-    } catch { /* ignore */ }
-    throw new Error(msg)
+  let body: ApiEnvelope<T> | null = null
+  try { body = (await res.json()) as ApiEnvelope<T> } catch { /* réponse non-JSON */ }
+
+  if (!res.ok || !body || !body.success) {
+    const msg = body?.error ?? (res.ok ? 'API error' : `HTTP ${res.status}`)
+    throw new GdprApiError(msg, body?.errorKey, body?.errors ?? {})
   }
-  const data = (await res.json()) as { success: boolean; data?: T; error?: string }
-  if (!data.success) throw new Error(data.error ?? 'API error')
-  return data.data as T
+  return body.data as T
 }
 
 // ─── Endpoints ────────────────────────────────────────────────────────────────
@@ -84,7 +99,7 @@ export async function deleteGdpr(selected: GdprSelection): Promise<{ allDeleted:
 
 // ─── Types communs ──────────────────────────────────────────────────────────
 export interface SiteOption { id: number; label: string }
-export interface LangOption { id: number; name: string }
+export interface LangOption { id: number; name: string; short: string }
 
 // ═══ SMTP ═════════════════════════════════════════════════════════════════════
 export interface SmtpConfig { id: number | null; host: string; username: string; hasPassword: boolean }
@@ -130,8 +145,12 @@ export interface AdConfig {
 export interface AdEmail { id: number; subject: string; html: string; text: string; link: number }
 export interface AdEmails { warning: Record<string, AdEmail>; delete: Record<string, AdEmail> }
 export interface AdLog {
-  id: number; date: string; module: string
+  id: number; date: string; module: string; siteId: number
   warning1Ok: number; warning1Ko: number; warning2Ok: number; warning2Ko: number; deleteOk: number; deleteKo: number
+}
+export interface AdLogDetail {
+  id: number; date: string; module: string; siteId: number
+  warning1Ok: string[]; warning1Ko: string[]; warning2Ok: string[]; warning2Ko: string[]; deleteOk: string[]; deleteKo: string[]
 }
 
 export async function fetchAdMeta(): Promise<AdMeta> {
@@ -157,7 +176,14 @@ export async function deleteAdConfig(id: number): Promise<void> {
 export async function runAd(): Promise<{ status: boolean; message: string }> {
   return apiFetch<{ status: boolean; message: string }>('/melis/react-api/gdpr/autodelete/run', { method: 'POST' })
 }
-export async function fetchAdLogs(): Promise<AdLog[]> {
-  const d = await apiFetch<{ logs: AdLog[] }>('/melis/react-api/gdpr/autodelete/logs')
+export async function fetchAdLogs(filters?: { module?: string; siteId?: number }): Promise<AdLog[]> {
+  const q = new URLSearchParams()
+  if (filters?.module) q.set('module', filters.module)
+  if (filters?.siteId) q.set('siteId', String(filters.siteId))
+  const qs = q.toString()
+  const d = await apiFetch<{ logs: AdLog[] }>(`/melis/react-api/gdpr/autodelete/logs${qs ? `?${qs}` : ''}`)
   return d.logs
+}
+export async function fetchAdLogDetail(id: number): Promise<AdLogDetail> {
+  return apiFetch<AdLogDetail>(`/melis/react-api/gdpr/autodelete/logs/${id}`)
 }

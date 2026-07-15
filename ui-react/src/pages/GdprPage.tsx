@@ -39,6 +39,8 @@ export default function GdprPage() {
   const [mode, setMode] = useState<ViewMode>(_cache.mode)
   const [iframeLoaded, setIframeLoaded] = useState(_cache.iframeLoaded)
   const [tab, setTab] = useState<TabId>(_cache.tab)
+  /** Conteneur du header où l'onglet actif projette ses actions (Save…). */
+  const [actionsHost, setActionsHost] = useState<HTMLDivElement | null>(null)
   const effectiveMode: ViewMode = showViewToggle ? mode : 'react'
 
   useEffect(() => { _cache = { mode, iframeLoaded, tab } }, [mode, iframeLoaded, tab])
@@ -59,6 +61,8 @@ export default function GdprPage() {
           {showViewToggle && (
             <ViewModeToggle mode={effectiveMode} onChange={(m) => { setMode(m); if (m === 'iframe') setIframeLoaded(true) }} />
           )}
+          {/* Emplacement des actions de l'onglet actif (portail : cf. GdprSmtpTab). */}
+          <div ref={setActionsHost} className="flex items-center gap-2" />
         </div>
       </div>
 
@@ -86,7 +90,7 @@ export default function GdprPage() {
             {tab === 'data' && <GdprDataTab />}
             {tab === 'banners' && <GdprBannersTab />}
             {tab === 'autodelete' && <GdprAutoDeleteTab />}
-            {tab === 'smtp' && <GdprSmtpTab />}
+            {tab === 'smtp' && <GdprSmtpTab actionsHost={actionsHost} />}
           </Suspense>
         </>)}
       </div>
