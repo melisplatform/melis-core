@@ -1,5 +1,5 @@
 import { lazy, Suspense, useEffect } from 'react'
-import { BrowserRouter, Navigate, Route, Routes, useLocation } from 'react-router-dom'
+import { BrowserRouter, Navigate, Route, Routes, useLocation, useNavigate } from 'react-router-dom'
 import { Loader2 } from 'lucide-react'
 
 import { AuthProvider } from '@/auth/AuthProvider'
@@ -37,6 +37,7 @@ function deriveTabLabel(path: string): string {
 function TabBridge() {
   const { openTab, closeTab, syncRoute } = useTabs()
   const location = useLocation()
+  const navigate = useNavigate()
   const bricks = useBricks()
   // Re-run the route→tab sync once the tool-routes registry (re)loads, so a cold deep-link to a
   // tool sub-route resolves to the right top tab (e.g. /melis-core/user/2 → "Utilisateurs") instead
@@ -50,6 +51,24 @@ function TabBridge() {
     w.__melisOpenTab = openTab
     w.__melisCloseTab = closeTab
   }, [openTab, closeTab])
+  // A LEGACY TOOL RENDERED IN THE IFRAME POOL (melis-react-override) can't reach React Router —
+  // it's a separate window. When it needs to open a DIFFERENT tool as a genuine top-level tab
+  // (e.g. "edit account" from inside the Contacts tool's Association tab — melisHelper.tabOpen
+  // only manages tabs within that iframe's own document, it can't create one at the shell level),
+  // it posts { __melisOpenTool, forwardKey, id?, label? } to window.__melisRealParent (this
+  // window). We resolve forwardKey → route via the SAME tool-routes registry TabBridge itself
+  // uses below, then navigate — the existing route→tab sync effect takes it from there.
+  useEffect(() => {
+    const onMessage = (e: MessageEvent) => {
+      const d = e.data as { __melisOpenTool?: boolean; forwardKey?: string; id?: string | number; label?: string } | null
+      if (!d || !d.__melisOpenTool || !d.forwardKey) return
+      const route = routeForForward(d.forwardKey)
+      if (!route) return
+      navigate(d.id != null ? `${route}/${d.id}` : route)
+    }
+    window.addEventListener('message', onMessage)
+    return () => window.removeEventListener('message', onMessage)
+  }, [navigate])
   useEffect(() => {
     const path = location.pathname
     if (path === '/login' || path === '/setup') return
