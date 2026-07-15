@@ -2,7 +2,7 @@ import { useEffect } from 'react'
 import { useLocation } from 'react-router-dom'
 import { X } from 'lucide-react'
 import { cn } from '@/lib/utils'
-import { useBricks, brickRoute } from '@/lib/bricks'
+import { useBricks, brickRoute, bricksReady } from '@/lib/bricks'
 import { useToolTabs } from '@/components/tabs/tool-tab-bridge'
 import { melisKeyForRoute, toolBaseRoute, parseToolTabId, subtoolName, useToolRoutesVersion } from '@/lib/tool-routes'
 import { useToolView } from '@/lib/tool-view-mode'
@@ -63,6 +63,14 @@ export function ToolTabBar() {
     if (!melisKey) return
     // Outils auto-gérés : ils possèdent leur URL (reflètent eux-mêmes /:id) → ne pas la réécrire.
     if (SELF_MANAGED_URL.has(melisKey)) return
+    // ⚠️ Sur un cold load, `zoneKey` (melisKeyForRoute) peut se résoudre depuis une entrée PÉRIMÉE
+    // de sessionStorage (`melis-tool-routes`), hydratée en synchrone avant même le fetch du menu —
+    // ex. un outil devenu une brique React (`subTabs:true`) mais encore enregistré ici avec un
+    // vrai melisKey lors d'une session précédente. Tant que les briques n'ont pas fini de charger
+    // (bricksReady), on ne peut pas distinguer un vrai outil iframe d'une brique mal enregistrée :
+    // agir maintenant réécrirait l'URL (efface le /:id fraîchement posé par la brique) AVANT que
+    // useNavMenu ne corrige l'entrée à son prochain passage — dommage irréversible (replaceState).
+    if (!bricksReady()) return
     const base = toolBaseRoute(pathname)
     const nonPrimary = tabs.filter((t) => !t.primary)
     // ⚠️ Cet effet ne reflète QUE les sous-onglets publiés par un OUTIL IFRAME (tool-tab-bridge).
