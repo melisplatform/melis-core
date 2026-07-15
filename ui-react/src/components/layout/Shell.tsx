@@ -164,8 +164,15 @@ function ShellInner() {
   // Active iframe-tool key from the tree-derived route /[section]/[tool] (resolved via registry).
   const activeZoneKey = melisKeyForRoute(location.pathname)
 
-  // Dashboard is always mounted so switching tabs never triggers a refetch.
+  // Dashboard : monté à la 1re visite (comme les modules persistants), puis gardé en DOM
+  // (hidden) pour ne jamais re-fetcher au retour sur l'onglet. Le monter EAGER au boot
+  // chargeait ses plugins legacy en iframe (chacun tirant le bundle plateforme complet +
+  // dessinant des charts jqplot dans un conteneur 0×0 caché → « Invalid dimensions for plot »),
+  // ce qui saturait le thread principal et FIGEAIT le 1er outil ouvert quand on arrive
+  // directement sur une URL ≠ '/' (ex. /melis-core/gdpr → spinner infini).
   const isDashboard = location.pathname === '/'
+  const [dashboardVisited, setDashboardVisited] = useState(false)
+  useEffect(() => { if (isDashboard) setDashboardVisited(true) }, [isDashboard])
 
   // Modules persistants : liste montée en permanence pour ne jamais détruire
   // leur iframe Melis (toggle New/Old). Active quand on est sur leur route d'arbre dérivée.
@@ -218,13 +225,16 @@ function ShellInner() {
         <ToolTabBar />
 
         <main className="relative flex-1 overflow-hidden">
-          {/* Dashboard — toujours monté pour éviter tout rechargement au retour sur l'onglet. */}
+          {/* Dashboard — monté à la 1re visite puis gardé en DOM (hidden) : évite de charger
+              ses plugins legacy (iframes lourdes) tant qu'on n'a pas ouvert le tableau de bord. */}
           <div className={cn('h-full overflow-y-auto', !isDashboard && 'hidden')}>
-            <ToolErrorBoundary label="Dashboard">
-              <Suspense fallback={<PageLoader />}>
-                <DashboardPage />
-              </Suspense>
-            </ToolErrorBoundary>
+            {dashboardVisited && (
+              <ToolErrorBoundary label="Dashboard">
+                <Suspense fallback={<PageLoader />}>
+                  <DashboardPage />
+                </Suspense>
+              </ToolErrorBoundary>
+            )}
           </div>
 
           {/* Listes persistantes — montées à la 1re visite, puis gardées en DOM (hidden).

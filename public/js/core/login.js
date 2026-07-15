@@ -103,8 +103,7 @@ $(function() {
             
             // The core logic is simple: if success, run the command (which is redirect), 
             // otherwise, run the command (which is alert/redirect/notification).
-            if (data.command) {
-                console.log(data);
+            if (data.command) {               
                 try {
                     eval(data.command);
                 } catch (e) {
