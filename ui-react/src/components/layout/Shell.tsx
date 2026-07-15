@@ -24,6 +24,7 @@ import { useBricks, brickRoute, refreshActiveModules, type BrickDef } from '@/li
 import { loadReactTheme } from '@/lib/react-theme'
 import { PERSISTENT_MODULES } from '@/lib/module-registry'
 import { ToolErrorBoundary } from '@/components/ToolErrorBoundary'
+import { useTabs } from '@/components/tabs/tab-store'
 import { melisKeyForRoute, routeForForward, useToolRoutesVersion } from '@/lib/tool-routes'
 
 const DashboardPage = lazy(() => import('@/pages/DashboardPage'))
@@ -128,6 +129,13 @@ function ShellInner() {
   const bricks = useBricks()
   useToolRoutesVersion() // re-resolve the active zone once the tool-routes registry populates
 
+  // Onglets ouverts (ref stable pour le listener de fermeture) : une brique MULTI-ONGLETS (ex.
+  // éditeur de pages CMS : /melis-cms/page/:id — plusieurs onglets sur la MÊME route de brique) ne
+  // doit PAS être démontée quand on ferme UN de ses onglets alors que d'autres restent ouverts.
+  const { tabs } = useTabs()
+  const tabsRef = useRef(tabs)
+  tabsRef.current = tabs
+
   // Charge le thème du BO React (logo d'en-tête configurable) une fois, après login.
   useEffect(() => { loadReactTheme() }, [])
 
@@ -142,12 +150,19 @@ function ShellInner() {
   // visitedBricks so reopening it mounts fresh (not hidden-but-stale).
   useEffect(() => {
     const onClosed = (e: Event) => {
-      const path = (e as CustomEvent<{ path?: string }>).detail?.path ?? ''
+      const detail = (e as CustomEvent<{ path?: string; id?: string }>).detail ?? {}
+      const path = detail.path ?? ''
       const brick = bricks.find((b) => {
         const r = brickRoute(b)
         return r && (path === r || path.startsWith(r + '/'))
       })
       if (brick) {
+        const r = brickRoute(brick)!
+        // Reste-t-il d'AUTRES onglets ouverts (hors celui fermé) appartenant à cette brique ? (le store
+        // n'est pas encore rafraîchi quand l'évènement part → on exclut l'id fermé.) Si oui, NE PAS
+        // démonter : sinon fermer un onglet de page CMS viderait tous les autres onglets de pages.
+        const stillOpen = tabsRef.current.some((t) => t.id !== detail.id && (t.path === r || t.path.startsWith(r + '/')))
+        if (stillOpen) return
         document.getElementById('melis-brick-frame-' + brick.id)?.remove()
         setVisitedBricks((prev) => {
           if (!prev.has(brick.id)) return prev
