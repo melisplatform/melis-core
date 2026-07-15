@@ -725,7 +725,21 @@ var melisHelper = (function () {
 						// ".active" to it and the content becomes visible. Removing the wrapper
 						// instead (the previous ".children().unwrap()") orphaned the inner pane,
 						// which never received ".active" -> blank tool.
-						$("#" + zoneId + " > .container-level-a.tab-pane").children().unwrap();
+						var $section = $("#" + zoneId),
+							$toolPane = $section.children(".container-level-a.tab-pane");
+
+						if ($toolPane.length) {
+							// The view's own attributes/classes must survive the flattening:
+							// tools read them back through .closest(".container-level-a"),
+							// e.g. News reads data-newsId there to locate its Texts/SEO forms.
+							$.each($toolPane[0].attributes, function () {
+								if (this.name !== "id" && this.name !== "class") {
+									$section.attr(this.name, this.value);
+								}
+							});
+							$section.addClass($toolPane.attr("class"));
+							$toolPane.children().unwrap();
+						}
 
 						// set the current active tab based from 'activeTabId' value
 						tabSwitch(activeTabId);
