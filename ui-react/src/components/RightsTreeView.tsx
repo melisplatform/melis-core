@@ -73,7 +73,7 @@ function capPath(prefix: string, cap: string): string {
  *  savoir « au moins une fonction est-elle permise ? » (grant auto des sections is_parent_tool). */
 function allCapPaths(node: CapTreeNode, prefix = ''): string[] {
   const out: string[] = []
-  for (const a of node.actions ?? []) out.push(capPath(prefix, typeof a === 'string' ? a : a.key))
+  for (const a of node.actions ?? []) out.push(capPath(prefix, a))
   for (const tab of node.tabs ?? []) {
     if (typeof tab === 'string') continue
     const tp = tab.key ? capPath(prefix, tab.key) : prefix
@@ -371,6 +371,7 @@ function ToolRow({
           className="flex flex-1 cursor-pointer items-center gap-2 min-w-0 text-left"
         >
           <span className="text-sm text-foreground/90">{node.name}</span>
+          <span className="ml-auto text-[10px] text-muted-foreground/50 font-mono">{key}</span>
         </button>
       </div>
 
@@ -397,14 +398,10 @@ function CapTree({ node, pathPrefix, toolKey, denied, onToggleCap, t }: {
     <div className="flex flex-col gap-1">
       {(node.actions?.length ?? 0) > 0 && (
         <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
-          {node.actions!.map((a) => {
-            // Action labellisée `{key,label}` → label explicite (déjà traduit côté serveur) ; sinon
-            // chaîne simple → label i18n générique (CAP_I18N) ou brut.
-            const capKey = typeof a === 'string' ? a : a.key
-            const capLbl = typeof a === 'string' ? capLabel(t, a) : (a.label || capLabel(t, a.key))
-            const full = capPath(pathPrefix, capKey)
+          {node.actions!.map((cap) => {
+            const full = capPath(pathPrefix, cap)
             return (
-              <CapCheckbox key={full} allowed={!denied.includes(full)} label={capLbl}
+              <CapCheckbox key={full} allowed={!denied.includes(full)} label={capLabel(t, cap)}
                 onChange={(v) => onToggleCap(toolKey, full, v)} />
             )
           })}

@@ -584,11 +584,9 @@ export interface MeUser {
  * onglets ont leurs propres actions (ex. "Variants" du produit — voir react.capabilities.php
  * pour la forme exacte et melis-react-api/Service/Capabilities.php pour l'aplatissement).
  */
-export interface CapTreeNode { key?: string; label?: string; actions?: CapActionEntry[]; tabs?: CapTabEntry[] }
-/** Action d'un outil : soit une clé simple (label i18n générique), soit `{key,label}` (label explicite/traduit). */
-export type CapActionEntry = string | { key: string; label?: string }
+export interface CapTreeNode { key?: string; label?: string; actions?: string[]; tabs?: CapTabEntry[] }
 export type CapTabEntry = string | CapTreeNode
-export type DeclaredCapValue = CapActionEntry[] | CapTreeNode
+export type DeclaredCapValue = string[] | CapTreeNode
 
 export async function fetchDeclaredCapabilities(): Promise<Record<string, DeclaredCapValue>> {
   try {

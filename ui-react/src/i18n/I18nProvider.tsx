@@ -11,9 +11,36 @@ import {
   type I18nKey,
   type Lang,
 } from './dictionaries'
-import { fetchLangs, fetchI18n, changeLanguage, type BoLang } from '@/lib/melis-api'
+import { fetchLangs, fetchI18n, changeLanguage, type BoLang, type BoLangs } from '@/lib/melis-api'
 
 const LOCALE_STORAGE_KEY = 'melis-ui-locale'
+const LANGS_STORAGE_KEY = 'melis-ui-langs'
+
+/**
+ * Cache de la réponse /langs. Le switcher ne se rend que si `langs` est non vide : sans ce cache,
+ * un seul fetch raté (401 transitoire, hiccup réseau, contention du verrou de session PHP pendant
+ * le boot) fait DISPARAÎTRE le drapeau jusqu'au reload suivant.
+ */
+function readCachedLangs(): BoLangs | null {
+  try {
+    const raw = localStorage.getItem(LANGS_STORAGE_KEY)
+    if (!raw) return null
+    const data = JSON.parse(raw) as BoLangs
+    return Array.isArray(data?.langs) && data.langs.length > 0 && data.current ? data : null
+  } catch {
+    return null
+  }
+}
+
+/** Réessaie : la réponse est stable, un échec est transitoire — mieux vaut attendre que masquer. */
+async function fetchLangsWithRetry(attempts = 4): Promise<BoLangs | null> {
+  for (let i = 0; i < attempts; i++) {
+    const data = await fetchLangs()
+    if (data && data.langs.length > 0) return data
+    if (i < attempts - 1) await new Promise((r) => setTimeout(r, 300 * 2 ** i))
+  }
+  return null
+}
 
 function readInitialLang(): Lang {
   try {
@@ -29,10 +56,11 @@ function readInitialLang(): Lang {
 }
 
 export function I18nProvider({ children }: { children: ReactNode }) {
+  const cached = readCachedLangs()
   const [lang, setLangState] = useState<Lang>(readInitialLang)
-  const [langs, setLangs] = useState<BoLang[]>([])
-  const [currentLocale, setCurrentLocale] = useState('')
-  const [currentLangId, setCurrentLangId] = useState(0)
+  const [langs, setLangs] = useState<BoLang[]>(cached?.langs ?? [])
+  const [currentLocale, setCurrentLocale] = useState(cached?.current.locale ?? '')
+  const [currentLangId, setCurrentLangId] = useState(cached?.current.id ?? 0)
   // Traductions serveur (melis-core PHP) : priment sur les valeurs statiques de dictionaries.ts.
   const [serverTr, setServerTr] = useState<Record<string, string>>({})
 
@@ -49,7 +77,8 @@ export function I18nProvider({ children }: { children: ReactNode }) {
   // and load the available languages for the switcher.
   useEffect(() => {
     let cancelled = false
-    fetchLangs().then((data) => {
+    fetchLangsWithRetry().then((data) => {
+      // Échec après retries : on garde ce qui vient du cache plutôt que de masquer le switcher.
       if (cancelled || !data) return
       setLangs(data.langs)
       setCurrentLocale(data.current.locale)
@@ -60,6 +89,7 @@ export function I18nProvider({ children }: { children: ReactNode }) {
       try {
         localStorage.setItem(LOCALE_STORAGE_KEY, data.current.locale)
         localStorage.setItem(LANG_STORAGE_KEY, next)
+        localStorage.setItem(LANGS_STORAGE_KEY, JSON.stringify(data))
       } catch { /* best-effort */ }
     })
     return () => { cancelled = true }
@@ -87,6 +117,11 @@ export function I18nProvider({ children }: { children: ReactNode }) {
         if (target) {
           localStorage.setItem(LOCALE_STORAGE_KEY, target.locale)
           localStorage.setItem(LANG_STORAGE_KEY, localeToLang(target.locale))
+          // Garde le cache du switcher aligné, sinon le reload repeint l'ancien drapeau.
+          localStorage.setItem(
+            LANGS_STORAGE_KEY,
+            JSON.stringify({ current: { id: target.id, locale: target.locale }, langs }),
+          )
         }
       } catch { /* best-effort */ }
     }
