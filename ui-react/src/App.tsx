@@ -1,4 +1,5 @@
-import { lazy, Suspense, useEffect } from 'react'
+import { Suspense, useEffect } from 'react'
+import { lazyRetry } from '@/lib/lazy-retry'
 import { BrowserRouter, Navigate, Route, Routes, useLocation, useNavigate } from 'react-router-dom'
 import { Loader2 } from 'lucide-react'
 
@@ -102,11 +103,11 @@ function TabBridge() {
 }
 
 // DashboardPage : monté par Shell (persistent), plus par la route '/' — voir Route path="/" plus bas.
-const PlaceholderPage = lazy(() => import('@/pages/PlaceholderPage'))
-const ZonePage        = lazy(() => import('@/pages/ZonePage'))
+const PlaceholderPage = lazyRetry(() => import('@/pages/PlaceholderPage'), 'PlaceholderPage')
+const ZonePage        = lazyRetry(() => import('@/pages/ZonePage'), 'ZonePage')
 // « Mon compte » : outil natif non-menu, ouvert depuis le Topbar (avatar) à /melis-core/account.
 // Route statique déclarée explicitement → prime sur le fallback ZonePage (/:section/:tool/*).
-const AccountPage     = lazy(() => import('@/pages/AccountPage'))
+const AccountPage     = lazyRetry(() => import('@/pages/AccountPage'), 'AccountPage')
 
 function PageLoader() {
   return (

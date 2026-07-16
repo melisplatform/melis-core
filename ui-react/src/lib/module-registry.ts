@@ -1,4 +1,5 @@
-import { lazy, type LazyExoticComponent, type ComponentType } from 'react'
+import { type LazyExoticComponent, type ComponentType } from 'react'
+import { lazyRetry } from '@/lib/lazy-retry'
 import { Languages, Mail, Megaphone, Palette, Puzzle, ScrollText, Server, Settings2, ShieldCheck, Users, type LucideIcon } from 'lucide-react'
 
 /**
@@ -67,8 +68,8 @@ export const MODULES: ReactModuleDef[] = [
     icon: Users,
     forwardKey: 'MelisCore/ToolUser',
     melisKey: 'meliscore_tool_user',
-    list: lazy(() => import('@/pages/UserListPage')),
-    form: lazy(() => import('@/pages/UserFormPage')),
+    list: lazyRetry(() => import('@/pages/UserListPage'), 'UserListPage'),
+    form: lazyRetry(() => import('@/pages/UserFormPage'), 'UserFormPage'),
     persistent: true,
     // Toggle encore actif tant que la vue React Utilisateurs n'est pas validée.
     // Le jour venu : passer à `false` (puis retirer le mécanisme iframe).
@@ -81,8 +82,8 @@ export const MODULES: ReactModuleDef[] = [
     icon: Server,
     forwardKey: 'MelisCore/Platforms',
     melisKey: 'meliscore_tool_platform',
-    list: lazy(() => import('@/pages/PlatformListPage')),
-    form: lazy(() => import('@/pages/PlatformFormPage')),
+    list: lazyRetry(() => import('@/pages/PlatformListPage'), 'PlatformListPage'),
+    form: lazyRetry(() => import('@/pages/PlatformFormPage'), 'PlatformFormPage'),
     persistent: true,
     viewToggle: true,
   },
@@ -93,8 +94,8 @@ export const MODULES: ReactModuleDef[] = [
     icon: Languages,
     forwardKey: 'MelisCore/Language',
     melisKey: 'meliscore_tool_language',
-    list: lazy(() => import('@/pages/LanguageListPage')),
-    form: lazy(() => import('@/pages/LanguageFormPage')),
+    list: lazyRetry(() => import('@/pages/LanguageListPage'), 'LanguageListPage'),
+    form: lazyRetry(() => import('@/pages/LanguageFormPage'), 'LanguageFormPage'),
     persistent: true,
     viewToggle: true,
   },
@@ -105,7 +106,7 @@ export const MODULES: ReactModuleDef[] = [
     icon: ScrollText,
     forwardKey: 'MelisCore/Log',
     melisKey: 'meliscore_logs_tool',
-    list: lazy(() => import('@/pages/LogListPage')),
+    list: lazyRetry(() => import('@/pages/LogListPage'), 'LogListPage'),
     // Outil EN LECTURE SEULE : pas de formulaire (pas de route /new ni /:id).
     persistent: true,
     viewToggle: true,
@@ -117,8 +118,8 @@ export const MODULES: ReactModuleDef[] = [
     icon: Megaphone,
     forwardKey: 'MelisCore/Announcement',
     melisKey: 'melis_core_announcement_tool',
-    list: lazy(() => import('@/pages/AnnouncementListPage')),
-    form: lazy(() => import('@/pages/AnnouncementFormPage')),
+    list: lazyRetry(() => import('@/pages/AnnouncementListPage'), 'AnnouncementListPage'),
+    form: lazyRetry(() => import('@/pages/AnnouncementFormPage'), 'AnnouncementFormPage'),
     persistent: true,
     viewToggle: true,
   },
@@ -130,7 +131,7 @@ export const MODULES: ReactModuleDef[] = [
     forwardKey: 'MelisCore/Modules',
     melisKey: 'meliscore_tool_user_module_management',
     // Outil SPÉCIAL (pas liste/formulaire) : activation + ordre des modules.
-    list: lazy(() => import('@/pages/ModulesPage')),
+    list: lazyRetry(() => import('@/pages/ModulesPage'), 'ModulesPage'),
     persistent: true,
     viewToggle: true,
   },
@@ -143,7 +144,7 @@ export const MODULES: ReactModuleDef[] = [
     melisKey: 'melis_core_gdpr',
     // Outil SPÉCIAL (pas liste/formulaire) : recherche → extraction/suppression des
     // données personnelles à travers les modules. L'Auto-Delete reste en vue « Old ».
-    list: lazy(() => import('@/pages/GdprPage')),
+    list: lazyRetry(() => import('@/pages/GdprPage'), 'GdprPage'),
     persistent: true,
     viewToggle: true,
   },
@@ -155,8 +156,8 @@ export const MODULES: ReactModuleDef[] = [
     forwardKey: 'MelisCore/EmailsManagement',
     melisKey: 'meliscore_tool_emails_mngt',
     // CRUD multilingue des emails transactionnels (liste + formulaire à onglets de langue).
-    list: lazy(() => import('@/pages/EmailListPage')),
-    form: lazy(() => import('@/pages/EmailFormPage')),
+    list: lazyRetry(() => import('@/pages/EmailListPage'), 'EmailListPage'),
+    form: lazyRetry(() => import('@/pages/EmailFormPage'), 'EmailFormPage'),
     persistent: true,
     viewToggle: true,
   },
@@ -168,7 +169,7 @@ export const MODULES: ReactModuleDef[] = [
     forwardKey: 'MelisCore/MelisCoreOtherConfig',
     melisKey: 'meliscore_tool_other_config',
     // Outil SPÉCIAL (page unique de réglages) : politique connexion / mot de passe (app.login.php).
-    list: lazy(() => import('@/pages/OtherConfigPage')),
+    list: lazyRetry(() => import('@/pages/OtherConfigPage'), 'OtherConfigPage'),
     persistent: true,
     viewToggle: true,
   },
@@ -180,7 +181,7 @@ export const MODULES: ReactModuleDef[] = [
     forwardKey: 'MelisCore/PlatformScheme',
     melisKey: 'meliscore_tool_platform_scheme',
     // Outil SPÉCIAL (page unique de réglages) : couleurs + logos/favicon du BO (schemes.css).
-    list: lazy(() => import('@/pages/PlatformSchemePage')),
+    list: lazyRetry(() => import('@/pages/PlatformSchemePage'), 'PlatformSchemePage'),
     persistent: true,
     viewToggle: true,
   },

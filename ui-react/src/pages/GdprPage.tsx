@@ -1,4 +1,5 @@
-import { lazy, Suspense, useEffect, useState } from 'react'
+import { Suspense, useEffect, useState } from 'react'
+import { lazyRetry } from '@/lib/lazy-retry'
 import { useLocation } from 'react-router-dom'
 import { Database, Megaphone, Server, ShieldOff } from 'lucide-react'
 
@@ -12,10 +13,10 @@ import type { I18nKey } from '@/i18n/dictionaries'
 import { useCan } from '@/lib/capabilities'
 import { GDPR_TOOL_KEY } from '@/components/gdpr/gdpr-shared'
 
-const GdprDataTab = lazy(() => import('@/components/gdpr/GdprDataTab'))
-const GdprBannersTab = lazy(() => import('@/components/gdpr/GdprBannersTab'))
-const GdprAutoDeleteTab = lazy(() => import('@/components/gdpr/GdprAutoDeleteTab'))
-const GdprSmtpTab = lazy(() => import('@/components/gdpr/GdprSmtpTab'))
+const GdprDataTab = lazyRetry(() => import('@/components/gdpr/GdprDataTab'), 'GdprDataTab')
+const GdprBannersTab = lazyRetry(() => import('@/components/gdpr/GdprBannersTab'), 'GdprBannersTab')
+const GdprAutoDeleteTab = lazyRetry(() => import('@/components/gdpr/GdprAutoDeleteTab'), 'GdprAutoDeleteTab')
+const GdprSmtpTab = lazyRetry(() => import('@/components/gdpr/GdprSmtpTab'), 'GdprSmtpTab')
 
 type TabId = 'data' | 'banners' | 'autodelete' | 'smtp'
 const TABS: { id: TabId; label: I18nKey; icon: typeof Database }[] = [
