@@ -49,7 +49,6 @@ function PluginRow({
         <span className="shrink-0 text-xs font-semibold uppercase tracking-wide text-muted-foreground/80">{module}</span>
       )}
       <span className={cn('text-sm truncate', on ? 'text-foreground/90' : 'text-foreground/70')}>{plugin.title}</span>
-      <span className="ml-auto text-[10px] text-muted-foreground/40 font-mono truncate max-w-[38%]">{plugin.key}</span>
     </label>
   )
 }

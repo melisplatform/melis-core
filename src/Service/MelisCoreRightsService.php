@@ -320,8 +320,17 @@ class MelisCoreRightsService extends MelisServiceManager implements MelisCoreRig
         }
         $keys = array_keys($this->melisKeysCached());
         sort($keys);
+        // On inclut AUSSI un hash de la déclaration des capacités (`melisReactToolCapabilities`) :
+        // ajouter/retirer une capacité (onglet/bouton) à un outil DÉJÀ présent ne change pas les
+        // melisKeys, mais DOIT invalider le cache de droits — sinon les nouvelles capacités sont
+        // absentes de l'allow-set caché et traitées comme REFUSÉES jusqu'au prochain save user.
+        $capsSig = '';
+        try {
+            $caps = $this->getServiceManager()->get('config')['melisReactToolCapabilities'] ?? [];
+            $capsSig = md5((string) json_encode($caps));
+        } catch (\Throwable) { /* config indisponible → signature sans les caps */ }
 
-        return $this->configVersionMemo = md5(implode(',', $keys));
+        return $this->configVersionMemo = md5(implode(',', $keys) . '|' . $capsSig);
     }
 
     /**
