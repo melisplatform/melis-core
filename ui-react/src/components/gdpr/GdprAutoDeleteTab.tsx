@@ -32,6 +32,7 @@ function emptyConfig(): AdConfig {
 function validate(c: AdConfig): FieldErrors {
   const e: FieldErrors = {}
   if (!c.module) e.module = 'gdpr.ad.err_module'
+  if (!c.siteId || c.siteId <= 0) e.siteId = 'gdpr.ad.err_site'
   if (!c.deleteDays || c.deleteDays <= 0) e.deleteDays = 'gdpr.ad.err_delete_days'
   if (c.alertStatus && c.alertDays > 0 && c.deleteDays > 0 && c.alertDays >= c.deleteDays) e.alertDays = 'gdpr.ad.err_alert_after'
   if (c.alertStatus && c.resend && c.deleteDays > 0 && c.deleteDays - c.alertDays < 7) e.resend = 'gdpr.ad.err_resend_gap'
@@ -255,10 +256,10 @@ export default function GdprAutoDeleteTab() {
               <ErrorText field="module" />
             </div>
             <div className="min-w-[200px] flex-1">
-              <label className="mb-1 block text-xs font-medium text-muted-foreground">{t('gdpr.ad.site')}</label>
+              <label className="mb-1 block text-xs font-medium text-muted-foreground">{t('gdpr.ad.site')} *</label>
               <select value={form.siteId} onChange={(e) => patchForm({ siteId: Number(e.target.value) }, 'siteId')} disabled={!canEdit}
                 className={cn('h-9 w-full rounded-md border border-input bg-card px-3 text-sm', errorRing('siteId'))}>
-                <option value={0}>{t('gdpr.ad.all_sites')}</option>
+                <option value={0}>{t('gdpr.ad.choose_site')}</option>
                 {meta.sites.map((s) => <option key={s.id} value={s.id}>{s.label}</option>)}
               </select>
               <ErrorText field="siteId" />
