@@ -718,17 +718,35 @@ var melisHelper = (function () {
 
 						$("#" + zoneId).html(data.html);
 
-						// Collapse a redundant nested tool pane (e.g. list tools whose
-						// top view keeps its own ".container-level-a tab-pane" wrapper, like
-						// News/Slider): flatten its content into the section wrapper (#zoneId).
-						// The section wrapper keeps id === activeTabId, so tabSwitch() can add
-						// ".active" to it and the content becomes visible. Removing the wrapper
-						// instead (the previous ".children().unwrap()") orphaned the inner pane,
-						// which never received ".active" -> blank tool.
+						// Collapse a redundant nested wrapper. Two known shapes:
+						// 1) list tools whose top view keeps its own ".container-level-a tab-pane"
+						//    wrapper, like News/Slider.
+						// 2) any zone view that (per the standard Melis pattern) renders its own
+						//    outer div carrying the zone's own id/class (e.g. a grid column class
+						//    like "col-md-6") — the very same id as #zoneId. That's fine on the
+						//    first server-rendered page load (the zone IS that div), but zoneReload
+						//    inserts the response via .html() *inside* the already-existing
+						//    #zoneId element, so the response's own copy of that wrapper lands as
+						//    a *child* of itself: a nested "col-md-6 > col-md-6", which halves the
+						//    effective width again (e.g. the Order Checkout Adresses step's
+						//    delivery/billing address cards rendering at ~25% instead of 50%).
+						// In both cases: flatten the redundant wrapper's content into the section
+						// wrapper (#zoneId). The section wrapper keeps id === activeTabId, so
+						// tabSwitch() can add ".active" to it and the content becomes visible.
+						// Removing the wrapper instead (the previous ".children().unwrap()")
+						// orphaned the inner pane, which never received ".active" -> blank tool.
 						var $section = $("#" + zoneId),
-							$toolPane = $section.children(".container-level-a.tab-pane");
+							$toolPane = $section.children().filter(function () {
+								return (
+									(this.id && this.id === zoneId) ||
+									(this.className &&
+										$(this).hasClass("container-level-a") &&
+										$(this).hasClass("tab-pane"))
+								);
+							});
 
 						if ($toolPane.length) {
+							$toolPane = $toolPane.first();
 							// The view's own attributes/classes must survive the flattening:
 							// tools read them back through .closest(".container-level-a"),
 							// e.g. News reads data-newsId there to locate its Texts/SEO forms.
