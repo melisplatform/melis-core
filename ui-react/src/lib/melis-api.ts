@@ -584,7 +584,9 @@ export interface MeUser {
  * onglets ont leurs propres actions (ex. "Variants" du produit — voir react.capabilities.php
  * pour la forme exacte et melis-react-api/Service/Capabilities.php pour l'aplatissement).
  */
-export interface CapTreeNode { key?: string; label?: string; actions?: string[]; tabs?: CapTabEntry[] }
+/** Une action déclarée : soit une simple clé (`'edit'`), soit `{key,label}` (label déjà traduit côté serveur). */
+export type CapActionEntry = string | { key: string; label?: string }
+export interface CapTreeNode { key?: string; label?: string; actions?: CapActionEntry[]; tabs?: CapTabEntry[] }
 export type CapTabEntry = string | CapTreeNode
 export type DeclaredCapValue = string[] | CapTreeNode
 

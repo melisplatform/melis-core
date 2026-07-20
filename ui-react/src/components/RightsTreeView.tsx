@@ -16,7 +16,7 @@
 
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { Boxes, CheckSquare, ChevronRight, FileText, LayoutDashboard, Loader2, MinusSquare, Square } from 'lucide-react'
-import type { ApiMenuNode, CapTreeNode, DeclaredCapValue } from '@/lib/melis-api'
+import type { ApiMenuNode, CapActionEntry, CapTreeNode, DeclaredCapValue } from '@/lib/melis-api'
 import { fetchMenu, fetchReactModules, fetchDeclaredCapabilities } from '@/lib/melis-api'
 import { cn } from '@/lib/utils'
 import { useI18n } from '@/i18n/i18n-context'
@@ -64,6 +64,15 @@ function capLabel(t: (k: I18nKey) => string, cap: string): string {
   return CAP_I18N[cap] ? t(CAP_I18N[cap]) : cap
 }
 
+/** Une action déclarée peut être une clé nue (`'edit'`) ou `{key,label}` (label traduit côté serveur,
+ *  cf. `meliscms_page` dans melis-cms/config/react.capabilities.php). Ces deux helpers normalisent. */
+function actionKey(a: CapActionEntry): string {
+  return typeof a === 'string' ? a : a.key
+}
+function actionLabel(t: (k: I18nKey) => string, a: CapActionEntry): string {
+  return typeof a === 'string' ? capLabel(t, a) : (a.label ?? capLabel(t, a.key))
+}
+
 /** Chemin de capacité complet (ex. `variants.list`) pour la deny-list, à partir du préfixe du nœud parent. */
 function capPath(prefix: string, cap: string): string {
   return prefix ? `${prefix}.${cap}` : cap
@@ -73,7 +82,7 @@ function capPath(prefix: string, cap: string): string {
  *  savoir « au moins une fonction est-elle permise ? » (grant auto des sections is_parent_tool). */
 function allCapPaths(node: CapTreeNode, prefix = ''): string[] {
   const out: string[] = []
-  for (const a of node.actions ?? []) out.push(capPath(prefix, a))
+  for (const a of node.actions ?? []) out.push(capPath(prefix, actionKey(a)))
   for (const tab of node.tabs ?? []) {
     if (typeof tab === 'string') continue
     const tp = tab.key ? capPath(prefix, tab.key) : prefix
@@ -399,9 +408,9 @@ function CapTree({ node, pathPrefix, toolKey, denied, onToggleCap, t }: {
       {(node.actions?.length ?? 0) > 0 && (
         <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
           {node.actions!.map((cap) => {
-            const full = capPath(pathPrefix, cap)
+            const full = capPath(pathPrefix, actionKey(cap))
             return (
-              <CapCheckbox key={full} allowed={!denied.includes(full)} label={capLabel(t, cap)}
+              <CapCheckbox key={full} allowed={!denied.includes(full)} label={actionLabel(t, cap)}
                 onChange={(v) => onToggleCap(toolKey, full, v)} />
             )
           })}
