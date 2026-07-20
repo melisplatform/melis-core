@@ -220,6 +220,21 @@ class MelisCoreRightsService extends MelisServiceManager implements MelisCoreRig
             }
         }
 
+        // Les menus legacy gatent chaque nœud avec canAccess(CLÉ DE TABLEAU de l'arbre d'outils), PAS
+        // avec le melisKey : TreeToolsController L73/L90 et AITreeToolsController L64/L81/L125. Or pour
+        // les nœuds liés par `conf.type` (MelisCommerce, MelisAI) et certains wrappers, cette clé n'est
+        // pas un melisKey : isAccessible() la refuse TOUJOURS, elle n'entre donc jamais dans l'allow-set
+        // → toute la branche disparaît du menu legacy pour un NON-admin alors que l'outil EST accordé
+        // (l'admin court-circuite canAccess() → bug invisible en admin).
+        // On alias donc la clé de tableau sur le droit DÉJÀ calculé de son melisKey résolu.
+        // Purement ADDITIF et sans escalade possible : allow[alias] n'est posé QUE si allow[melisKey]
+        // existe déjà. Aucune identité, aucune donnée stockée, aucune migration.
+        foreach ($this->toolKeyAliases() as $arrayKey => $melisKey) {
+            if (!isset($allow[$arrayKey]) && isset($allow[$melisKey])) {
+                $allow[$arrayKey] = 1;
+            }
+        }
+
         $caps      = [];
         $capsClass = '\\MelisReactApi\\Service\\Capabilities';
         if (class_exists($capsClass)) {
@@ -303,13 +318,74 @@ class MelisCoreRightsService extends MelisServiceManager implements MelisCoreRig
         return array_values(array_unique($keys));
     }
 
+    /**
+     * Alias « clé de tableau de l'arbre d'outils → melisKey résolu », uniquement là où les deux
+     * diffèrent (nœuds `conf.type` : MelisCommerce, MelisAI ; wrappers). Dérivé de getToolSectionMap()
+     * (mémoïsé, déjà résolu par getItem()). Consommé par buildResolvedRights() pour aliaser l'allow-set
+     * sur les clés que les menus legacy interrogent réellement.
+     */
+    private function toolKeyAliases(): array
+    {
+        $aliases = [];
+        foreach ($this->getToolSectionMap() as $section) {
+            foreach ($section['children'] ?? [] as $lvl1) {
+                if (!empty($lvl1['melisKey']) && $lvl1['melisKey'] !== $lvl1['key']) {
+                    $aliases[$lvl1['key']] = $lvl1['melisKey'];
+                }
+                foreach ($lvl1['children'] ?? [] as $lvl2) {
+                    if (!empty($lvl2['melisKey']) && $lvl2['melisKey'] !== $lvl2['key']) {
+                        $aliases[$lvl2['key']] = $lvl2['melisKey'];
+                    }
+                }
+            }
+        }
+
+        return $aliases;
+    }
+
+    /** Version du SCHÉMA de l'allow-set caché. À incrémenter dès que la CONSTRUCTION de l'allow-set
+     *  change (ex. ajout des alias clé-de-tableau → melisKey) : la structure évoluant sans que les
+     *  melisKeys/caps bougent, `configVersion()` ne suffit pas à invalider les caches existants — ils
+     *  resteraient "valides" mais sans les nouvelles entrées, et le correctif serait silencieusement
+     *  sans effet. Incrémenter force une reconstruction unique. (Un rollback remet l'ancienne valeur
+     *  → nouvelle invalidation → retour propre au comportement précédent.) */
+    private const RIGHTS_CACHE_SCHEMA = 2;
+
+    /** Should the legacy rights modal key its nodes on the resolved melisKey rather than on the
+     *  toolstree ARRAY KEY?
+     *
+     *  The modal (getToolsKeys) historically ticked and stored the array key, while React, the
+     *  runtime gate (canAccess) and the cached allow-set all use the melisKey. Wherever a module's
+     *  array key differs from its melisKey, the two back-offices wrote different names into the same
+     *  usr_rights XML: a right granted in React showed as unticked in legacy, and saving from legacy
+     *  silently revoked it. Keying on the melisKey makes both back-offices read and write the same
+     *  name, for every module at once, instead of renaming array keys module by module.
+     *
+     *  ROLLBACK: flip to false — getToolsKeys goes back to array keys verbatim, and nothing else in
+     *  this service changes. Note the stored XML is NOT migrated: an XML saved from legacy while this
+     *  was true holds melisKeys (which is what the runtime uses anyway), so a rollback leaves those
+     *  grants readable by React and by canAccess, but unticked in the legacy modal again. */
+    private const RIGHTS_MODAL_USE_MELISKEY = true;
+
+    /** Node key for the legacy rights modal: the resolved melisKey when there is one, else the array
+     *  key. `$conf` must come from a getItem() read (which resolves `conf.type` links), so a
+     *  type-linked node reports the melisKey it actually resolves to. */
+    private function rightsModalKey(array $conf, string $arrayKey): string
+    {
+        if (!self::RIGHTS_MODAL_USE_MELISKEY) {
+            return $arrayKey;
+        }
+
+        return !empty($conf['melisKey']) ? $conf['melisKey'] : $arrayKey;
+    }
+
     /** Signature d'invalidation : hash des droits effectifs + version de la config d'interface.
      *  Empreinte unique de 32 caractères (tient dans usr_rights_cache_sig VARCHAR(64)) — la
      *  concaténation md5(xml)+md5(config) ferait 65 caractères et serait tronquée en base → le
      *  cache raterait à chaque requête. */
     private function rightsSignature(string $xml): string
     {
-        return md5($xml . '|' . $this->configVersion());
+        return md5($xml . '|' . $this->configVersion() . '|' . self::RIGHTS_CACHE_SCHEMA);
     }
 
     /** Version de la config d'interface (jeu de melisKeys) : bouge si un module est installé/activé. */
@@ -757,12 +833,27 @@ class MelisCoreRightsService extends MelisServiceManager implements MelisCoreRig
             $appConfigPath = $melisKeys[$path];
             $appsConfig = $melisAppConfig->getItem($appConfigPath);
             $orderInterface = $melisAppConfig->getOrderInterfaceConfig($path);
-            $selectedTools = $melisCoreUser->isItemRightChecked($userXml, self::MELIS_PLATFORM_TOOLS_PREFIX, $path);
+            // An `is_parent_tool` section (MelisMarketPlace is the only one) has NO interface
+            // children: the section node IS the tool, and it points at the real tool melisKey via
+            // `conf.target_meliskey`. So this category renders as a SINGLE checkbox — and keyed on
+            // $path it meant `<section>_root` (isItemRightChecked L63 appends `_root` for any key in
+            // getMelisKeyPaths), while React writes the explicit TOOL id under that section tag
+            // (RightsTreeView::buildRightsXml, which deliberately never emits `<section>_root`).
+            // Result: granted in React, shown UNTICKED in legacy — and a legacy save then wrote the
+            // section without that id, silently revoking the tool. Keying on the target melisKey
+            // makes both sides read and write the same id. Scoped to is_parent_tool → no other
+            // section changes. Paired with the getToolSectionMap entry below, without which
+            // getSectionParent() cannot resolve the posted tool id and files it under <noparent>.
+            $sectionNodeKey = !empty($appsConfig['conf']['is_parent_tool']) && !empty($appsConfig['conf']['target_meliskey'])
+                ? $appsConfig['conf']['target_meliskey']
+                : $path;
+
+            $selectedTools = $melisCoreUser->isItemRightChecked($userXml, self::MELIS_PLATFORM_TOOLS_PREFIX, $sectionNodeKey);
             // show only a category when there are keys [interface] present on it
             if ((isset($appsConfig['interface']) && ! empty($appsConfig['interface'])) || in_array($path,$exemptedPath)) {
                 // tool category
                 $tools[$idx] = [
-                    'key' => $path,
+                    'key' => $sectionNodeKey,
                     'title' => $appsConfig['conf']['name'] ?? $path,
                     'lazy' => false,
                     'children' => [],
@@ -785,9 +876,13 @@ class MelisCoreRightsService extends MelisServiceManager implements MelisCoreRig
                             continue;
                     }
 
-                    $selectedTools = $melisCoreUser->isItemRightChecked($userXml, self::MELIS_PLATFORM_TOOLS_PREFIX, $appKey);
+                    // Key on the resolved melisKey so this modal ticks/stores the same name React
+                    // and canAccess() use (see RIGHTS_MODAL_USE_MELISKEY).
+                    $appNodeKey = $this->rightsModalKey($appSection['conf'] ?? [], $appKey);
+
+                    $selectedTools = $melisCoreUser->isItemRightChecked($userXml, self::MELIS_PLATFORM_TOOLS_PREFIX, $appNodeKey);
                     $tools[$idx]['children'][$appCtr] = [
-                        'key' => $appKey,
+                        'key' => $appNodeKey,
                         'title' => $appSection['conf']['name'] ?? $appKey,
                         'lazy' => false,
                         'children' => [],
@@ -800,6 +895,7 @@ class MelisCoreRightsService extends MelisServiceManager implements MelisCoreRig
 
                     // Second level, tools
                     $appToolCtr = 0;
+                    $seenNodeKeys = [$appNodeKey => true];
                     if (isset($appSection['interface'])) {
                         foreach ($appSection['interface'] as $toolKey => $toolName) {
                             /**
@@ -812,11 +908,24 @@ class MelisCoreRightsService extends MelisServiceManager implements MelisCoreRig
                                     continue;
                             }
 
-                            $selectedTools = $melisCoreUser->isItemRightChecked($userXml, self::MELIS_PLATFORM_TOOLS_PREFIX, $toolKey);
+                            $toolNodeKey = $this->rightsModalKey($toolName['conf'] ?? [], $toolKey);
+
+                            // Distinct array keys can resolve to ONE melisKey — a `conf.type` child
+                            // pointing at its own parent (MelisCmsUserAccount's duplicate
+                            // "Users FO > Users FO" row), or two siblings linking to the same target.
+                            // They are the same rights node reached twice: keying on the melisKey
+                            // would emit fancytree nodes sharing one key, which breaks selection and
+                            // round-trips the key twice on save. Keep the first, drop the rest.
+                            if (isset($seenNodeKeys[$toolNodeKey])) {
+                                continue;
+                            }
+                            $seenNodeKeys[$toolNodeKey] = true;
+
+                            $selectedTools = $melisCoreUser->isItemRightChecked($userXml, self::MELIS_PLATFORM_TOOLS_PREFIX, $toolNodeKey);
                             $icon = $toolName['conf']['icon'] ?? null;
 
                             $tools[$idx]['children'][$appCtr]['children'][$appToolCtr] = [
-                                'key' => $toolKey,
+                                'key' => $toolNodeKey,
                                 'title' => $toolName['conf']['name'] ?? $toolKey,
                                 'children' => [],
                                 'lazy' => false,
@@ -1107,11 +1216,22 @@ class MelisCoreRightsService extends MelisServiceManager implements MelisCoreRig
         }
 
         foreach ($data as $idx => $tool) {
-            if ($tool['key'] === $melisKey) {
+            // Match on the array key OR the resolved melisKey. The map is keyed by ARRAY KEY, but
+            // callers legitimately pass a melisKey — createXmlRightsValues (L1043) feeds it whatever
+            // the rights modal posted, and since RIGHTS_MODAL_USE_MELISKEY the modal posts melisKeys.
+            // Without this, a divergent node (array key != melisKey: `conf.type` links, wrappers)
+            // resolves to null and its grant is written as <noparent> instead of under its section →
+            // runtime access survives (isAccessible folds <noparent> into the tool ids) but React's
+            // section-scoped editor shows the tool UNTICKED and the next React save silently drops it.
+            // Additive: array-key callers are unaffected, and melisKey === key for most tools.
+            $isMatch = $tool['key'] === $melisKey
+                || (!empty($tool['melisKey']) && $tool['melisKey'] === $melisKey);
+
+            if ($isMatch) {
                 $this->sectionParent = $tool['section'];
             }
 
-            if (!empty($tool['children']) && $tool['key'] !== $melisKey) {
+            if (!empty($tool['children']) && !$isMatch) {
                 $this->getSectionParent($melisKey, $tool['children']);
             }
         }
@@ -1138,11 +1258,15 @@ class MelisCoreRightsService extends MelisServiceManager implements MelisCoreRig
         }
 
         foreach ($data as $idx => $tool) {
-            if ($tool['key'] === $toolKey) {
+            // Match on the array key OR the resolved melisKey — same reason as getSectionParent().
+            $isMatch = $tool['key'] === $toolKey
+                || (!empty($tool['melisKey']) && $tool['melisKey'] === $toolKey);
+
+            if ($isMatch) {
                 $this->sectionParent = $tool['parent'];
             }
 
-            if (!empty($tool['children']) && $tool['key'] !== $toolKey) {
+            if (!empty($tool['children']) && !$isMatch) {
                 $this->isParentOf($toolKey, $parentKey, $tool['children']);
             }
         }
@@ -1183,12 +1307,36 @@ class MelisCoreRightsService extends MelisServiceManager implements MelisCoreRig
                 'children' => [],
             ];
 
+            // An `is_parent_tool` section (MelisMarketPlace) carries its tool via
+            // `conf.target_meliskey` instead of an interface child, so the tool id would be absent
+            // from this map entirely — and getSectionParent(), which resolves a posted rights id to
+            // its section, would return null and make createXmlRightsValues (L1043) file the grant
+            // under <noparent> instead of inside the section. Register the target as a child so it
+            // resolves like any other tool. Additive and scoped to is_parent_tool.
+            if (!empty($appsConfig['conf']['is_parent_tool']) && !empty($appsConfig['conf']['target_meliskey'])) {
+                $tools[$idx]['children'][] = [
+                    'key' => $appsConfig['conf']['target_meliskey'],
+                    'melisKey' => $appsConfig['conf']['target_meliskey'],
+                    'title' => $appsConfig['conf']['tab_name'] ?? $appsConfig['conf']['target_meliskey'],
+                    'lazy' => false,
+                    'section' => $path,
+                    'parent' => $path,
+                    'children' => [],
+                ];
+            }
+
             // first level, sections
             $appCtr = 0;
-            foreach ($appsConfig['interface'] as $appKey => $appSection) {
+            foreach (($appsConfig['interface'] ?? []) as $appKey => $appSection) {
 
                 $tools[$idx]['children'][$appCtr] = [
                     'key' => $appKey,
+                    // melisKey RÉSOLU (getItem() a déjà résolu les liens `conf.type`). Diffère de la
+                    // clé de tableau pour les nœuds type-linked (MelisCommerce, MelisAI) et certains
+                    // wrappers → sert aux alias d'allow-set (cf. buildResolvedRights). Champ ADDITIF :
+                    // les consommateurs existants (getSectionParent/isParentOf) ne lisent que
+                    // 'key'/'section'/'children'.
+                    'melisKey' => $appSection['conf']['melisKey'] ?? $appKey,
                     'title' => $appSection['conf']['name'] ?? $appKey,
                     'lazy' => false,
                     'section' => $path,
@@ -1205,6 +1353,8 @@ class MelisCoreRightsService extends MelisServiceManager implements MelisCoreRig
                         if ($icon) {
                             $tools[$idx]['children'][$appCtr]['children'][$appToolCtr] = [
                                 'key' => $toolKey,
+                                // cf. commentaire niveau 1 : melisKey résolu, pour les alias d'allow-set.
+                                'melisKey' => $toolName['conf']['melisKey'] ?? $toolKey,
                                 'title' => $toolName['conf']['name'] ?? $toolKey,
                                 'children' => [],
                                 'section' => $path,
@@ -1214,8 +1364,16 @@ class MelisCoreRightsService extends MelisServiceManager implements MelisCoreRig
                         }
                         $appToolCtr++;
                     }
-                    $appCtr++;
                 }
+
+                // $appCtr must advance for EVERY child, not only those carrying a sub-`interface`.
+                // While it lived inside the isset() above, a leaf node (no sub-interface) left the
+                // index unchanged and was overwritten by its next sibling, so most `conf.type` link
+                // nodes (MelisCommerce's 13 tools) never reached this map at all. They were then
+                // absent from toolKeyAliases(), their array key never entered the allow-set, and the
+                // legacy menu — which gates on the ARRAY KEY (TreeToolsController L127) — dropped
+                // them even though the right was granted.
+                $appCtr++;
             }
         }
 
