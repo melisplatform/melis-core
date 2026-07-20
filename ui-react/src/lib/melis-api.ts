@@ -311,11 +311,9 @@ export async function fetchMenu(full = false): Promise<ApiMenuNode[] | null> {
       credentials: 'include',
     })
     // eslint-disable-next-line no-console
-    console.debug('[MelisAPI] /menu status:', res.status, res.url)
     if (!res.ok) return null
     const data = (await res.json()) as { success: boolean; data?: ApiMenuNode[]; error?: string; _debug?: string }
     // eslint-disable-next-line no-console
-    console.debug('[MelisAPI] /menu response:', data)
     if (!data.success || !Array.isArray(data.data) || data.data.length === 0) return null
     return data.data
   } catch (err) {
