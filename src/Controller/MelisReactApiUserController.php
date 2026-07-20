@@ -232,6 +232,38 @@ class MelisReactApiUserController extends MelisAbstractActionController
                     try { $this->getServiceManager()->get('MelisCoreRights')->regenerateUserCache($id, $rights); } catch (\Throwable) {}
                 }
 
+                // Événements legacy de FIN de sauvegarde. Le save React n'en émettait AUCUN : tous les
+                // listeners branchés sur la sauvegarde d'un user restaient donc muets depuis /melis-react.
+                //  • meliscore_tooluser_save_info_end → MelisCoreClearCacheListenerListener :
+                //    deleteCacheByPrefix('*_'.usr_id) — purge le cache de rendu DE CET utilisateur (le
+                //    menu en fait partie). Sans lui, il fallait re-sauver depuis l'ancien BO pour voir le
+                //    menu à jour. Le listener lit `success` + `datas['usr_id']` (cf. ToolUserController
+                //    L1461-1466 pour la forme d'origine).
+                //  • meliscore_tooluser_save_end → MelisCoreRightsCacheListener (regenerateUserCache) +
+                //    MelisCoreFlashMessengerListener (journalisation melis_core_log, absente jusqu'ici
+                //    côté React). Lit `success`/`textTitle`/`textMessage`/`errors`/`typeCode`/`itemId`
+                //    (cf. ToolUserController L1557-1565).
+                // ⚠️ NE JAMAIS déclencher les `_start` ici : MelisCoreToolUserUpdateUserListener y
+                // RECONSTRUIT usr_rights à partir du POST de la fancytree legacy puis dispatche l'écriture.
+                // Le body React est du JSON (pas de fancytree) → les droits seraient écrasés/vidés.
+                // Seuls les `_end` sont sûrs sur ce chemin.
+                try {
+                    $this->getEventManager()->trigger('meliscore_tooluser_save_info_end', $this, [
+                        'success' => 1,
+                        'errors'  => [],
+                        'datas'   => ['usr_id' => $id],
+                    ]);
+                    $this->getEventManager()->trigger('meliscore_tooluser_save_end', $this, [
+                        'success'     => 1,
+                        'textTitle'   => 'tr_meliscore_tool_user',
+                        'textMessage' => 'tr_meliscore_tool_user_update_success_info',
+                        'errors'      => [],
+                        'datas'       => ['usr_rights' => $rights],
+                        'typeCode'    => 'CORE_USER_UPDATE',
+                        'itemId'      => $id,
+                    ]);
+                } catch (\Throwable) {}
+
                 return $this->jsonResponse(['success' => true, 'data' => ['id' => $id, 'self' => isset($identity) && (int) ($identity->usr_id ?? 0) === $id]]);
             }
 
@@ -250,6 +282,21 @@ class MelisReactApiUserController extends MelisAbstractActionController
 
             // Génère le cache de droits du nouvel utilisateur (colonne usr_rights_cache).
             try { $this->getServiceManager()->get('MelisCoreRights')->regenerateUserCache($newId, $rights ?? ''); } catch (\Throwable) {}
+
+            // Pendant création du `meliscore_tooluser_save_end` ci-dessus (cf. son commentaire) :
+            // MelisCoreRightsCacheListener + MelisCoreFlashMessengerListener écoutent `savenew_end`.
+            // Là encore, PAS de `_start` (MelisCoreToolUserAddNewUserListener y rejoue la mécanique
+            // legacy sur un POST fancytree inexistant côté React).
+            try {
+                $this->getEventManager()->trigger('meliscore_tooluser_savenew_end', $this, [
+                    'success'     => 1,
+                    'textTitle'   => 'tr_meliscore_tool_user',
+                    'textMessage' => 'tr_meliscore_tool_user_save_success',
+                    'errors'      => [],
+                    'typeCode'    => 'CORE_USER_ADD',
+                    'itemId'      => $newId,
+                ]);
+            } catch (\Throwable) {}
 
             return $this->jsonResponse(['success' => true, 'data' => ['id' => $newId]], 201);
         } catch (\Throwable $e) {
