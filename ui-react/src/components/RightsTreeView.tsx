@@ -302,7 +302,10 @@ function TriCheckbox({
     <button
       type="button"
       onClick={() => onChange(state !== 'all')}
-      className="flex shrink-0 items-center justify-center rounded transition-colors hover:opacity-80 focus:outline-none"
+      // [&_svg]:pointer-events-none : sous Firefox, cliquer l'intérieur vide (fill:none) d'une icône
+      // SVG ne déclenche pas le <button> (le centre des cases décochées ne réagissait pas). En rendant
+      // l'icône non-interactive, tout clic traverse jusqu'au button → toute la case est cliquable.
+      className="flex shrink-0 items-center justify-center rounded transition-colors hover:opacity-80 focus:outline-none [&_svg]:pointer-events-none"
     >
       {state === 'all' ? (
         <CheckSquare className="size-[15px] text-primary" />

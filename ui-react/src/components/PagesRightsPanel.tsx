@@ -21,7 +21,9 @@ function TriBox({ state, disabled, onChange }: { state: Tri; disabled?: boolean;
       type="button"
       disabled={disabled}
       onClick={() => onChange(state !== 'all')}
-      className={cn('flex shrink-0 items-center justify-center rounded transition-colors focus:outline-none',
+      // [&_svg]:pointer-events-none : Firefox ne déclenche pas le button au clic sur l'intérieur vide
+      // (fill:none) de l'icône SVG → clic qui traverse, toute la case cliquable (cf. RightsTreeView).
+      className={cn('flex shrink-0 items-center justify-center rounded transition-colors focus:outline-none [&_svg]:pointer-events-none',
         disabled ? 'cursor-not-allowed opacity-60' : 'hover:opacity-80')}
     >
       {state === 'all' ? <CheckSquare className="size-[15px] text-primary" />
