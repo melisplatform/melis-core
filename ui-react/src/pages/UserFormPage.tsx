@@ -314,6 +314,7 @@ export default function UserFormPage() {
     setForm((p) => ({ ...p, [key]: value }))
     setErrors((p) => ({ ...p, [key]: undefined }))
     setSaveError(null)
+    setSaved(false) // toute modification ré-active le bouton Enregistrer (cf. bouton disabled={saving||saved})
   }
 
   function validate(): boolean {
@@ -346,6 +347,11 @@ export default function UserFormPage() {
       const savedId = res.id
       userApi.markUsersListStale()
       setSaved(true)
+      // Éditer un AUTRE utilisateur ne recharge pas la page (contrairement à soi-même, res.self →
+      // reload) et navigue vers la MÊME URL (no-op) : sans ça, `saved` restait true → le bouton
+      // Enregistrer restait bloqué « Enregistré » et on ne pouvait plus sauvegarder. On ré-active
+      // le bouton après un bref feedback (et toute modification le ré-active aussi, cf. set()).
+      setTimeout(() => setSaved(false), 1500)
       notify('ok', t('users.title'), t('users.form.saved'))
       if (!isEdit) closeSubTab(`${base}/new`)
       if (res.self) {
