@@ -10,6 +10,7 @@
 import { useState } from 'react'
 import { CheckSquare, ChevronRight, MinusSquare, Square } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { useI18n } from '@/i18n/i18n-context'
 import { DASHBOARD_ALL, type DashboardPluginRight } from '@/lib/dashboard-rights-api'
 
 type Tri = 'all' | 'some' | 'none'
@@ -49,7 +50,6 @@ function PluginRow({
         <span className="shrink-0 text-xs font-semibold uppercase tracking-wide text-muted-foreground/80">{module}</span>
       )}
       <span className={cn('text-sm truncate', on ? 'text-foreground/90' : 'text-foreground/70')}>{plugin.title}</span>
-      <span className="ml-auto text-[10px] text-muted-foreground/40 font-mono truncate max-w-[38%]">{plugin.key}</span>
     </label>
   )
 }
@@ -99,6 +99,7 @@ export function DashboardPluginsRightsPanel({
   onToggleMany: (keys: string[], v: boolean) => void
   onToggleAll: (v: boolean) => void
 }) {
+  const { t } = useI18n()
   const all = checked.has(DASHBOARD_ALL)
   const specificCount = Array.from(checked).filter((k) => k !== DASHBOARD_ALL).length
 
@@ -115,20 +116,20 @@ export function DashboardPluginsRightsPanel({
     <div className="rounded-lg border border-border bg-card overflow-hidden">
       <label className="flex cursor-pointer items-center gap-2 bg-muted/40 px-3 py-2 hover:bg-muted/60 transition-colors">
         <TriBox state={all ? 'all' : specificCount > 0 ? 'some' : 'none'} onChange={onToggleAll} />
-        <span className="text-sm font-medium text-foreground/90">Tous les plugins</span>
+        <span className="text-sm font-medium text-foreground/90">{t('rights.dash_all_label')}</span>
         <span className="ml-auto text-xs text-muted-foreground/70">
-          {all ? 'tous autorisés' : specificCount > 0 ? `${specificCount} sélectionné${specificCount !== 1 ? 's' : ''}` : 'sélection par module'}
+          {all ? t('rights.dash_all_status') : specificCount > 0 ? t('rights.dash_selected', { count: specificCount }) : t('rights.dash_by_module')}
         </span>
       </label>
       {/* Hint: individual plugins are inherited (disabled) while "all" is on — tell the user how to target some. */}
       {all && (
         <p className="border-b border-border/40 bg-muted/20 px-3 py-1.5 text-[11px] text-muted-foreground/70">
-          Tous les plugins sont accordés. Décochez « Tous les plugins » pour en cibler certains.
+          {t('rights.dash_all_hint', { label: t('rights.dash_all_label') })}
         </p>
       )}
       <div className="py-1">
         {groups.length === 0
-          ? <p className="py-2 pl-4 text-xs text-muted-foreground">Aucun plugin.</p>
+          ? <p className="py-2 pl-4 text-xs text-muted-foreground">{t('rights.dash_none')}</p>
           : groups.map((g) => (
             // A module that contributes a single plugin renders as ONE row (no redundant group header
             // to expand for a lone entry); modules with 2+ plugins keep the collapsible group.

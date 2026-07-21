@@ -10,6 +10,7 @@
 import { useEffect, useState } from 'react'
 import { CheckSquare, ChevronRight, Loader2, MinusSquare, Square } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { useI18n } from '@/i18n/i18n-context'
 import { ALL_PAGES, PAGES_RIGHTS_ROOT, fetchPagesRightNodes, type PageRightNode } from '@/lib/pages-rights-api'
 
 type Tri = 'all' | 'some' | 'none'
@@ -40,6 +41,7 @@ function PageNode({
   inherited: boolean
   onToggle: (pageId: number, v: boolean) => void
 }) {
+  const { t } = useI18n()
   const [open, setOpen] = useState(false)
   const [children, setChildren] = useState<PageRightNode[] | null>(null)
   const [loading, setLoading] = useState(false)
@@ -75,7 +77,7 @@ function PageNode({
       {open && (
         <div>
           {loading && <div className="flex items-center gap-2 py-1 text-xs text-muted-foreground" style={{ paddingLeft: pl + 18 }}>
-            <Loader2 className="size-3 animate-spin" /> Chargement…
+            <Loader2 className="size-3 animate-spin" /> {t('rights.loading')}
           </div>}
           {children?.map((c) => (
             <PageNode key={c.pageId} node={c} depth={depth + 1} checkedPages={checkedPages}
@@ -94,6 +96,7 @@ export function PagesRightsPanel({
   onTogglePage: (pageId: number, v: boolean) => void
   onToggleAll: (v: boolean) => void
 }) {
+  const { t } = useI18n()
   const [roots, setRoots] = useState<PageRightNode[] | null>(null)
   const allPages = checkedPages.has(ALL_PAGES)
   const specificCount = Array.from(checkedPages).filter((id) => id !== ALL_PAGES).length
@@ -105,23 +108,23 @@ export function PagesRightsPanel({
       {/* "All pages" master row (= <id>-1</id>) */}
       <label className="flex cursor-pointer items-center gap-2 bg-muted/40 px-3 py-2 hover:bg-muted/60 transition-colors">
         <TriBox state={allPages ? 'all' : 'none'} onChange={onToggleAll} />
-        <span className="text-sm font-medium text-foreground/90">Toutes les pages</span>
+        <span className="text-sm font-medium text-foreground/90">{t('rights.pages_all_label')}</span>
         <span className="ml-auto text-xs text-muted-foreground/70">
-          {allPages ? 'accès total' : specificCount > 0 ? `${specificCount} page${specificCount !== 1 ? 's' : ''} ciblée${specificCount !== 1 ? 's' : ''}` : 'sélection par page'}
+          {allPages ? t('rights.pages_all_status') : specificCount > 0 ? t('rights.pages_targeted', { count: specificCount }) : t('rights.pages_by_page')}
         </span>
       </label>
       {/* Hint: individual pages are inherited (disabled) while "all" is on — tell the user how to target some. */}
       {allPages && (
         <p className="border-b border-border/40 bg-muted/20 px-3 py-1.5 text-[11px] text-muted-foreground/70">
-          Toutes les pages sont accordées. Décochez « Toutes les pages » pour cibler des pages précises.
+          {t('rights.pages_all_hint', { label: t('rights.pages_all_label') })}
         </p>
       )}
       {/* Page hierarchy (lazy) — disabled rows when "all" grants everything */}
       <div className="py-1">
         {roots === null
-          ? <div className="flex items-center gap-2 py-2 pl-4 text-xs text-muted-foreground"><Loader2 className="size-3 animate-spin" /> Chargement de l&apos;arbre…</div>
+          ? <div className="flex items-center gap-2 py-2 pl-4 text-xs text-muted-foreground"><Loader2 className="size-3 animate-spin" /> {t('rights.loading_tree')}</div>
           : roots.length === 0
-            ? <p className="py-2 pl-4 text-xs text-muted-foreground">Aucune page.</p>
+            ? <p className="py-2 pl-4 text-xs text-muted-foreground">{t('rights.pages_none')}</p>
             : roots.map((r) => (
               <PageNode key={r.pageId} node={r} depth={0} checkedPages={checkedPages} inherited={allPages} onToggle={onTogglePage} />
             ))}
