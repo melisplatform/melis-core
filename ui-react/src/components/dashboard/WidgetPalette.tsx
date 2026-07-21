@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react'
-import { GripVertical, Plus, X } from 'lucide-react'
+import { Plus, X } from 'lucide-react'
 import { GridStack } from 'gridstack'
 
 import { cn } from '@/lib/utils'
@@ -143,23 +143,26 @@ function PaletteItem({
     <div
       ref={wrapperRef}
       className={cn(
-        'flex items-center gap-1 rounded-md border border-border/70 bg-background transition-colors',
+        'group flex cursor-grab items-center gap-1 rounded-md border border-border/70 bg-background transition-colors active:cursor-grabbing',
         'hover:border-primary/40 hover:bg-accent',
       )}
+      title="Glisser vers le dashboard (ou cliquer pour ajouter)"
     >
-      {/* Poignée de drag — glisser ajoute toujours une nouvelle instance */}
+      {/* Zone d'ajout au clic — ajoute toujours une nouvelle instance, même si déjà présente.
+          ⚠️ Surtout PAS un <button> : le drag de GridStack (DDDraggable) ignore les mousedown
+          survenant sur `input,textarea,button,select,option…` — avec un <button> ici, seule la
+          poignée restait draggable. Un div + role="button" garde le clic ET le drag. */}
       <div
-        className="grid h-full w-7 shrink-0 place-items-center self-stretch text-muted-foreground/40 cursor-grab hover:text-muted-foreground/80"
-        title="Glisser vers le dashboard"
-      >
-        <GripVertical className="size-3.5" />
-      </div>
-
-      {/* Bouton d'ajout au clic — ajoute toujours une nouvelle instance, même si déjà présent */}
-      <button
-        type="button"
+        role="button"
+        tabIndex={0}
         onClick={onAdd}
-        className="group flex min-w-0 flex-1 cursor-pointer items-center gap-3 py-2.5 pr-3 text-left"
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault()
+            onAdd()
+          }
+        }}
+        className="flex min-w-0 flex-1 items-center gap-3 py-2.5 pl-3 pr-3 text-left"
       >
         {widget.thumbnail ? (
           <img
@@ -183,7 +186,7 @@ function PaletteItem({
           {added && <div className="text-[11px] text-muted-foreground">{t('widget.in_dashboard')}</div>}
         </div>
         <Plus className="size-4 shrink-0 text-muted-foreground transition-colors group-hover:text-primary" />
-      </button>
+      </div>
     </div>
   )
 }

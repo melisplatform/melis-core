@@ -5,7 +5,9 @@
  *
  * Ce champ affiche/édite au format de la locale passée (ordre jour/mois déduit via `Intl`, donc
  * valable pour N'IMPORTE QUELLE langue), tout en conservant la valeur interne "YYYY-MM-DDTHH:MM"
- * (format `datetime-local`) et un calendrier natif (input caché + showPicker()).
+ * (format `datetime-local`) et un calendrier **custom localisé** (CalendarPopup). Le picker natif
+ * (input caché + showPicker()) est proscrit : hors langue navigateur, la sélection faite dans son
+ * popup ne remontait pas au champ (input caché en size-0/pointer-events-none).
  *
  * Pattern repris de l'outil News (melis-cms-news, DateTimeField) — mutualisé ici pour les outils
  * natifs de MelisCore (ex. Annonces).
@@ -14,6 +16,7 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { Calendar } from 'lucide-react'
 import { Input } from '@/components/ui/input'
 import { useI18n } from '@/i18n/i18n-context'
+import { CalendarPopup } from '@/components/ui/date-time-picker'
 
 /** L'ordre d'affichage de cette locale est-il jour-avant-mois (jj/mm) ? Déduit via Intl. */
 function localeDayFirst(locale: string): boolean {
@@ -61,24 +64,28 @@ export function DateTimeField({ value, onChange, locale, className }: {
   const { t } = useI18n()
   const dayFirst = useMemo(() => localeDayFirst(locale), [locale])
   const [text, setText] = useState(() => dtToDisplay(value, dayFirst))
-  const nativeRef = useRef<HTMLInputElement>(null)
+  const [open, setOpen] = useState(false)
+  const wrapRef = useRef<HTMLDivElement>(null)
 
   // Resynchronise l'affichage quand la valeur change de l'extérieur (chargement, changement de langue).
   useEffect(() => { setText(dtToDisplay(value, dayFirst)) }, [value, dayFirst])
+
+  // Ferme le calendrier au clic en dehors.
+  useEffect(() => {
+    if (!open) return
+    const onDown = (e: MouseEvent) => { if (wrapRef.current && !wrapRef.current.contains(e.target as Node)) setOpen(false) }
+    document.addEventListener('mousedown', onDown)
+    return () => document.removeEventListener('mousedown', onDown)
+  }, [open])
 
   const commit = () => {
     const iso = dtFromDisplay(text, dayFirst)
     if (iso === null) { setText(dtToDisplay(value, dayFirst)); return } // saisie invalide → on revient à la valeur
     onChange(iso)
   }
-  const openPicker = () => {
-    const el = nativeRef.current as (HTMLInputElement & { showPicker?: () => void }) | null
-    if (el?.showPicker) el.showPicker()
-    else el?.focus()
-  }
 
   return (
-    <div className={`relative ${className ?? ''}`}>
+    <div className={`relative ${className ?? ''}`} ref={wrapRef}>
       <Input
         value={text}
         onChange={(e) => setText(e.target.value)}
@@ -90,23 +97,16 @@ export function DateTimeField({ value, onChange, locale, className }: {
       />
       <button
         type="button"
-        onClick={openPicker}
+        onClick={() => setOpen((o) => !o)}
         tabIndex={-1}
         aria-label={t('ui.datetime.calendar')}
         className="absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
       >
         <Calendar className="size-4" />
       </button>
-      {/* Input natif caché : fournit le calendrier via showPicker(), valeur au format datetime-local. */}
-      <input
-        ref={nativeRef}
-        type="datetime-local"
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        tabIndex={-1}
-        aria-hidden="true"
-        className="pointer-events-none absolute size-0 opacity-0"
-      />
+      {/* Calendrier custom localisé — remplace le picker natif (langue navigateur + sélection non
+          remontée quand l'input natif est caché). */}
+      {open && <CalendarPopup value={value} onChange={onChange} locale={locale} onClose={() => setOpen(false)} />}
     </div>
   )
 }

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Bell, ChevronDown, ChevronUp, Download, LayoutGrid, MessageSquare, Newspaper, RotateCcw, X } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
@@ -107,6 +107,30 @@ export default function DashboardPage() {
     melisApi.saveDashboardLayout(next)
   }, [])
 
+  // Remonte les tuiles plus courtes que la hauteur de leur widget (contenu tronqué).
+  //
+  // ⚠️ Ne peut PAS se faire uniquement à la pose : les défs des plugins legacy arrivent d'un fetch
+  // (`/react-dashboard-plugins`) postérieur au layout — au moment où le layout est appliqué, leur
+  // hauteur de référence est encore inconnue. D'où ce recalage, qui se déclenche aussi quand les
+  // défs arrivent. Idempotent (on ne persiste que si quelque chose change) → pas de boucle.
+  //
+  // Ne dépend QUE de `legacyWidgets` (le layout est lu via une ref) : re-déclenché à chaque
+  // changement de layout, ce recalage se rejouerait après CHAQUE déplacement/redimensionnement
+  // utilisateur — y compris pour annuler un redimensionnement volontaire.
+  const layoutRef = useRef(layout)
+  layoutRef.current = layout
+  useEffect(() => {
+    if (!legacyWidgets.length) return
+    let changed = false
+    const fixed = layoutRef.current.map((l) => {
+      const def = allWidgetMap[widgetIdOf(l.i)]
+      if (!def || l.h >= def.h) return l
+      changed = true
+      return { ...l, h: def.h, minW: def.minW, minH: def.minH }
+    })
+    if (changed) persist(fixed)
+  }, [legacyWidgets, allWidgetMap, persist])
+
   // Émis par GridStack après un déplacement / redimensionnement utilisateur.
   const handleChange = useCallback((items: GridItem[]) => persist(items), [persist])
 
@@ -212,18 +236,24 @@ export default function DashboardPage() {
 
         {/* Grille */}
         <div className="min-h-0 flex-1 overflow-auto px-5 pb-8 pt-4 sm:px-8">
-          {layout.length === 0 ? (
-            <div className="grid min-h-64 place-items-center rounded-lg border border-dashed border-border text-center">
-              <div className="max-w-xs text-sm text-muted-foreground">{t('widget.empty')}</div>
-            </div>
-          ) : (
+          {/* La grille reste TOUJOURS montée, même vide : c'est elle la cible de dépôt des
+              widgets glissés depuis la palette. La remplacer par l'état vide retirait
+              `.grid-stack` du DOM → après avoir retiré tous les widgets, plus rien n'acceptait
+              un drop (seul le clic sur « + » fonctionnait encore). L'état vide passe donc en
+              surimpression, en `pointer-events-none` pour ne pas intercepter le dépôt. */}
+          <div className="relative">
+            {layout.length === 0 && (
+              <div className="pointer-events-none absolute inset-0 grid place-items-center rounded-lg border border-dashed border-border text-center">
+                <div className="max-w-xs text-sm text-muted-foreground">{t('widget.empty')}</div>
+              </div>
+            )}
             <DashboardGrid
               layout={layout}
               onChange={handleChange}
               onRemove={removeWidget}
               extraWidgetMap={extraWidgetMap}
             />
-          )}
+          </div>
         </div>
       </div>
 

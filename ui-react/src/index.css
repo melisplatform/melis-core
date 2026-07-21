@@ -152,6 +152,9 @@ body {
 /* ---- GridStack : theming pour épouser nos cartes/thèmes ------------------ */
 .melis-dashboard-grid.grid-stack {
   background: transparent;
+  /* Une grille vide a une hauteur nulle → aucune surface pour recevoir un widget glissé
+     depuis la palette. On lui garantit une zone de dépôt (cf. l'état vide de DashboardPage). */
+  min-height: 16rem;
 }
 /* Pendant un drag de widget : neutralise les iframes (widgets plugins legacy) pour
    qu'elles n'avalent pas le mouseup — sinon GridStack ne retire jamais son clone

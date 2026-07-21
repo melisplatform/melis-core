@@ -50,17 +50,29 @@ export function defaultLayout(): GridItem[] {
   return [item('activity', 0, 0)]
 }
 
+/** Un id d'instance de widget « plugin legacy » (cf. buildLegacyWidgetDef). */
+const LEGACY_ID_PREFIX = 'legacy-'
+
 export function loadLayout(): GridItem[] {
   try {
     const raw = localStorage.getItem(STORAGE_KEY)
     if (raw) {
       const parsed = JSON.parse(raw) as GridItem[]
-      const clean = parsed.filter((l) => WIDGET_MAP[widgetIdOf(l.i)])
-      if (clean.length) {
-        // Réinjecte les contraintes min depuis le registre.
+      // Les plugins legacy N'ONT PAS d'entrée dans WIDGET_MAP (leurs défs viennent d'un fetch) :
+      // les filtrer sur ce registre vidait un dashboard composé UNIQUEMENT de plugins, et le
+      // `defaultLayout()` de repli réinjectait alors le widget « Recent activity » à chaque
+      // rafraîchissement — même après suppression. On les conserve donc sur leur préfixe d'id.
+      const clean = parsed.filter(
+        (l) => WIDGET_MAP[widgetIdOf(l.i)] || widgetIdOf(l.i).startsWith(LEGACY_ID_PREFIX),
+      )
+      // Un tableau vide STOCKÉ est un choix de l'utilisateur (il a tout retiré) : on le respecte,
+      // au lieu de retomber sur la disposition par défaut.
+      if (clean.length || Array.isArray(parsed)) {
+        // Réinjecte les contraintes min depuis le registre (inconnues pour les plugins legacy,
+        // que DashboardPage recale une fois leurs défs chargées).
         return clean.map((l) => {
           const def = WIDGET_MAP[widgetIdOf(l.i)]
-          return { ...l, minW: def.minW, minH: def.minH }
+          return def ? { ...l, minW: def.minW, minH: def.minH } : l
         })
       }
     }

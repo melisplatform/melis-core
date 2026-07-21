@@ -6,6 +6,7 @@ import { AlertTriangle, Loader2, RotateCcw } from 'lucide-react'
 import 'gridstack/dist/gridstack.min.css'
 
 import { useI18n } from '@/i18n/i18n-context'
+import { CELL_HEIGHT, GRID_COLS, MARGIN, contentPxToGridRows } from './grid-metrics'
 import { WIDGET_MAP, type WidgetDef } from './widget-registry'
 import { WidgetFrame } from './WidgetFrame'
 import { WidgetConfigDialog } from './WidgetConfigDialog'
@@ -54,9 +55,7 @@ class WidgetErrorBoundary extends Component<EBProps, EBState> {
 
 // ─────────────────────────────────────────────────────────────────────────────
 
-export const GRID_COLS = 12
-const CELL_HEIGHT = 46
-const MARGIN = 8
+export { GRID_COLS }
 
 interface Slot {
   id: string
@@ -90,6 +89,17 @@ export function DashboardGrid({
   layoutRef.current = layout
   const allWidgetsRef = useRef(allWidgets)
   allWidgetsRef.current = allWidgets
+  // Content-measured row counts, per grid item, published by legacy plugin iframes once loaded.
+  // Kept out of React state on purpose: it must survive the `readLayout` round-trip below without
+  // triggering a render of its own.
+  const fittedRows = useRef(new Map<string, number>())
+  // Fit cycle each `fittedRows` entry came from, so readings of the CURRENT cycle only grow the
+  // tile while a fresh cycle (triggered by a width change) is allowed to shrink it.
+  const fitCycles = useRef(new Map<string, number>())
+  // Tiles the user has resized by hand. Auto-fit NEVER touches these again: a plugin iframe keeps
+  // reporting its height (its ResizeObserver fires on the reflow the resize itself causes), which
+  // would otherwise snap the tile straight back and make manual resizing impossible.
+  const userSized = useRef(new Set<string>())
 
   // --- Init GridStack (une seule fois) ---
   useEffect(() => {
@@ -106,7 +116,13 @@ export function DashboardGrid({
         // < 640px → 1 colonne (widgets empilés), < 1024px → 6 colonnes, sinon 12.
         // GridStack mémorise le layout 12-col d'origine et le restaure en élargissant.
         columnOpts: {
-          layout: 'moveScale',
+          // `move` et NON `moveScale` : sous un breakpoint, `moveScale` met les hauteurs à
+          // l'échelle des colonnes (12 → 6 ⇒ hauteur ÷ 2). Or le contenu d'un plugin legacy ne
+          // raccourcit PAS quand il se rétrécit — le graphique flot fait 400px de haut quelle que
+          // soit la largeur. La tuile était donc divisée par deux, le contenu non : bas rogné.
+          // Concrètement : une tuile Prospects ajustée à 16 lignes retombait à 8 (~424px) sous
+          // 1024px. `move` conserve les hauteurs et ne fait que repositionner.
+          layout: 'move',
           breakpoints: [
             { w: 640, c: 1 },
             { w: 1024, c: 6 },
@@ -125,6 +141,17 @@ export function DashboardGrid({
       // (1 ou 6 col) ne doit pas écraser les positions desktop sauvegardées.
       if (grid.getColumn() !== GRID_COLS) return
       onChangeRef.current(readLayout(grid, allWidgetsRef.current))
+    })
+
+    // Un redimensionnement MANUEL fige la tuile : plus aucun ajustement automatique dessus.
+    // ⚠️ `mutating` : nos PROPRES `grid.update()` (ajustement auto, recalage du layout) émettent
+    // eux aussi `resizestop`. Sans ce garde-fou, la 1ʳᵉ mesure — volontairement précoce, avant que
+    // le graphique du plugin ne soit dessiné — marquait la tuile comme « redimensionnée à la main »
+    // et TOUTES les mesures suivantes, plus hautes, étaient ignorées : tuile figée trop courte.
+    grid.on('resizestop', (_e, el: HTMLElement) => {
+      if (mutating.current) return
+      const id = (el as HTMLElement & { gridstackNode?: { id?: string } }).gridstackNode?.id
+      if (id) userSized.current.add(id)
     })
 
     // Gère les widgets déposés depuis la palette externe (setupDragIn).
@@ -185,6 +212,56 @@ export function DashboardGrid({
     }
   }, [])
 
+  // --- Auto-fit: apply a legacy plugin's measured content height to its tile ---
+  // Published by LegacyPluginContent once its iframe has loaded (a few readings while the plugin's
+  // charts settle). Routed through `onChange` rather than `grid.update()` so React state stays the
+  // source of truth — a direct grid mutation would be reverted by the [layout] effect below.
+  useEffect(() => {
+    const onAutofit = (e: Event) => {
+      const { itemId, contentPx, fitId } = (e as CustomEvent<{ itemId?: string; contentPx?: number; fitId?: number }>).detail ?? {}
+      const grid = gridRef.current
+      if (!grid || !itemId || !contentPx) return
+      // A hand-resized tile is the user's call — never override it.
+      if (userSized.current.has(itemId)) return
+      const cols = grid.getColumn()
+      // Opt-in tracing: `localStorage.setItem('melis-autofit-debug', '1')` in the console.
+      // Auto-fit spans an iframe, a postMessage and GridStack's column modes, so when a tile ends
+      // up the wrong height the only useful question is which of those stages dropped it.
+      if (localStorage.getItem('melis-autofit-debug')) {
+        console.debug('[autofit]', { itemId, contentPx, rows: contentPxToGridRows(contentPx), cols, currentH: layoutRef.current.find((l) => l.i === itemId)?.h })
+      }
+      // Under a responsive breakpoint GridStack SCALES heights (`columnOpts.layout: 'moveScale'`):
+      // writing a desktop height into the PERSISTED layout would corrupt it. We still fix the tile
+      // VISUALLY though — returning early here was leaving every widget at its declared height on
+      // any viewport under 1024px, which is precisely when content clips hardest.
+      if (cols !== GRID_COLS) {
+        const node = grid.engine.nodes.find((n) => n.id === itemId)
+        const rowsNow = contentPxToGridRows(contentPx)
+        if (node?.el && node.h !== rowsNow) {
+          mutating.current = true
+          grid.update(node.el as HTMLElement, { h: rowsNow })
+          mutating.current = false
+        }
+        return
+      }
+      // Within ONE fit cycle keep the tallest reading — a chart that draws late makes the document
+      // grow, and we must not shrink back onto content that has just appeared. A NEW cycle (the
+      // tile was resized, so the content reflowed) starts from scratch and may shrink the tile.
+      const prev = fittedRows.current.get(itemId)
+      const sameCycle = prev !== undefined && fitCycles.current.get(itemId) === fitId
+      const rows = sameCycle ? Math.max(contentPxToGridRows(contentPx), prev) : contentPxToGridRows(contentPx)
+      const item = layoutRef.current.find((l) => l.i === itemId)
+      if (!item || item.h === rows) return
+      fittedRows.current.set(itemId, rows)
+      fitCycles.current.set(itemId, fitId ?? 0)
+      // `h` ONLY — never minH. Pinning the floor to the fitted height would block shrinking just
+      // like the registry's old `minH: h` did.
+      onChangeRef.current(layoutRef.current.map((l) => (l.i === itemId ? { ...l, h: rows } : l)))
+    }
+    window.addEventListener('melis:widget-autofit', onAutofit)
+    return () => window.removeEventListener('melis:widget-autofit', onAutofit)
+  }, [])
+
   // --- Sync ajout/suppression de widgets (diff par rapport à grid.engine.nodes) ---
   useEffect(() => {
     const grid = gridRef.current
@@ -199,19 +276,53 @@ export function DashboardGrid({
     const toAdd = layout.filter((l) => !inGrid.has(l.i))
     const toRemove = grid.engine.nodes.filter((n) => n.id && !want.has(n.id as string))
 
-    if (!toAdd.length && !toRemove.length) return
+    // Tuiles déjà en place dont la hauteur a changé côté React (recalage des plugins legacy une
+    // fois leurs défs chargées, cf. DashboardPage). Sans ça, GridStack garderait l'ancienne
+    // hauteur : le diff ci-dessus ne voit que les ajouts/suppressions.
+    //
+    // ⚠️ UNIQUEMENT en pleine largeur (12 col). Sous un breakpoint responsive, GridStack MET À
+    // L'ÉCHELLE les hauteurs (`columnOpts.layout: 'moveScale'`) : la hauteur appliquée ne peut
+    // alors jamais égaler celle du layout desktop, `toResize` ne se vide plus, et l'effet se
+    // relance à chaque rendu — la grille passe son temps à se réécrire et devient indéplaçable.
+    const toResize =
+      grid.getColumn() !== GRID_COLS
+        ? []
+        : grid.engine.nodes.filter((n) => {
+            const it = n.id ? want.get(n.id as string) : undefined
+            return it && (n.h !== it.h || n.w !== it.w)
+          })
+
+    if (!toAdd.length && !toRemove.length && !toResize.length) return
 
     mutating.current = true
     grid.batchUpdate()
 
+    for (const n of toResize) {
+      const it = want.get(n.id as string)!
+      const def = allWidgetsRef.current[widgetIdOf(it.i)]
+      grid.update(n.el as HTMLElement, {
+        w: it.w,
+        h: it.h,
+        // Registry FIRST: a layout persisted before the auto-fit work carries the plugin's
+        // declared height as `minH`, which would clamp the tile straight back on resize.
+        minW: def?.minW ?? it.minW,
+        minH: def?.minH ?? it.minH,
+      })
+    }
+
     for (const it of toAdd) {
+      // Registry FIRST for the constraints (cf. the resize path above): a persisted `minH` from
+      // before the auto-fit work is the plugin's declared height and would pin the tile there.
+      // The saved `h` is now taken AS IS — auto-fit corrects it from the real content shortly
+      // after the iframe loads, and clamping it up here would fight a deliberate manual resize.
+      const def = allWidgetsRef.current[widgetIdOf(it.i)]
       const el = grid.addWidget({
         x: it.x,
         y: it.y,
         w: it.w,
         h: it.h,
-        minW: it.minW,
-        minH: it.minH,
+        minW: def?.minW ?? it.minW,
+        minH: def?.minH ?? it.minH,
         id: it.i,
       })
       const content = el.querySelector('.grid-stack-item-content') as HTMLElement
@@ -313,6 +424,9 @@ function readLayout(grid: GridStack, allWidgets: Record<string, WidgetDef>): Gri
         w: w.w ?? 1,
         h: w.h ?? 1,
         minW: def.minW,
+        // Always the REGISTRY's floor, never a persisted one: layouts saved before the auto-fit
+        // work carry `minH` = the plugin's declared height, and re-persisting that value is what
+        // made hand-resized tiles spring back.
         minH: def.minH,
       }
     })

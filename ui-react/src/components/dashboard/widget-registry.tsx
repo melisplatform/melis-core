@@ -3,6 +3,7 @@ import { Activity, type LucideIcon, Wrench } from 'lucide-react'
 
 import type { I18nKey } from '@/i18n/dictionaries'
 import type { LegacyDashboardPlugin } from '@/lib/melis-api'
+import { GRID_COLS, legacyRowsToGridRows } from './grid-metrics'
 import { ActivityContent, LegacyPluginContent } from './widgets'
 
 /** Définition d'un widget = équivalent React d'un "dashboard plugin" Melis
@@ -47,6 +48,9 @@ export const WIDGET_SECTIONS: I18nKey[] = ['widget.sec.content']
 /** Builds a WidgetDef for a legacy PHP dashboard plugin (rendered as an iframe). */
 export function buildLegacyWidgetDef(plugin: LegacyDashboardPlugin): WidgetDef {
   const id = `legacy-${plugin.pluginName}`
+  // `plugin.h` est exprimé dans la grille LEGACY (cellules de 80px) : le reprendre tel quel
+  // donne une tuile ~2× trop courte et coupe le contenu du plugin (cf. grid-metrics.ts).
+  const h = legacyRowsToGridRows(plugin.h)
   return {
     id,
     titleKey: 'widget.sec.legacy',
@@ -56,9 +60,15 @@ export function buildLegacyWidgetDef(plugin: LegacyDashboardPlugin): WidgetDef {
     pluginName: plugin.pluginName,
     sectionKey: 'widget.sec.legacy',
     sectionLabel: plugin.section || 'Plugins',
-    w: Math.min(plugin.w, 12),
-    h: Math.max(plugin.h, 2),
+    w: Math.min(plugin.w, GRID_COLS),
+    h,
     minW: 2,
+    // ⚠️ NE PAS remettre `minH: h` (la hauteur convertie). C'était le garde-fou qui « réparait »
+    // les tuiles persistées trop courtes, mais il PLAFONNE le rétrécissement : GridStack ramène
+    // la tuile à `minH` dès qu'on la redimensionne plus petit — l'utilisateur voit sa tuile
+    // revenir seule à sa taille d'origine et ne peut plus jamais la réduire.
+    // L'ajustement automatique à la hauteur RÉELLE du contenu (cf. LegacyPluginContent) remplace
+    // ce garde-fou, et un redimensionnement manuel doit toujours primer.
     minH: 2,
     render: () => <LegacyPluginContent pluginName={plugin.pluginName} />,
   }
