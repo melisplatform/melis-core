@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
-import { useSubTabs } from '@/components/tabs/sub-tab-store'
+import { SUBTABS_CHANGED, useSubTabs } from '@/components/tabs/sub-tab-store'
 import { routeForForward } from '@/lib/tool-routes'
 import {
   Activity, Calendar, Copy, Cpu, Eye, EyeOff,
@@ -221,8 +221,26 @@ const EMPTY_FORM: FormData = {
 }
 
 type FormCache = { form: FormData; roles: userApi.UserRole[]; activeTab: Tab }
+// Clé = chemin du SOUS-ONGLET du user (ex. "/users/2"). Le cache préserve la saisie en cours quand
+// on change d'onglet PRINCIPAL (le sous-onglet reste ouvert), MAIS il doit disparaître dès que le
+// sous-onglet du user est fermé — sinon rouvrir le user réaffiche les droits ÉDITÉS non sauvés
+// (ticket 0010558). On purge donc toute entrée dont le sous-onglet n'est plus ouvert, à chaque
+// changement de la liste des sous-onglets (croix du SubTabBar, ou fermeture de l'onglet principal
+// Users → CLOSE_ALL). Listener module-niveau (persistant) : le composant est démonté à la fermeture.
 const _formCache = new Map<string, FormCache>()
 let _rolesCache: userApi.UserRole[] | null = null
+
+if (typeof window !== 'undefined') {
+  const w = window as unknown as { __melisFormCachePruneBound?: boolean; __melisSubTabs?: Record<string, { tabs: { id: string }[] }> }
+  if (!w.__melisFormCachePruneBound) {
+    w.__melisFormCachePruneBound = true
+    window.addEventListener(SUBTABS_CHANGED, () => {
+      const open = new Set<string>()
+      for (const s of Object.values(w.__melisSubTabs ?? {})) for (const t of s.tabs) open.add(t.id)
+      for (const key of Array.from(_formCache.keys())) if (!open.has(key)) _formCache.delete(key)
+    })
+  }
+}
 
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
@@ -266,7 +284,7 @@ export default function UserFormPage() {
 
   useEffect(() => {
     if (!isEdit || !userId) return
-    const cached = _formCache.get(String(userId))
+    const cached = _formCache.get(subTabPath)
     if (cached) { setForm(cached.form); if (cached.roles.length) setRoles(cached.roles); setActiveTab(cached.activeTab); return }
     setLoading(true)
     userApi.fetchUserById(userId)
@@ -281,7 +299,7 @@ export default function UserFormPage() {
   }, [userId, isEdit, navigate])
 
   useEffect(() => {
-    if (userId && form.login) _formCache.set(String(userId), { form, roles, activeTab })
+    if (userId && form.login) _formCache.set(subTabPath, { form, roles, activeTab })
   }, [form, roles, activeTab, userId])
 
   useEffect(() => {
@@ -349,7 +367,7 @@ export default function UserFormPage() {
 
   function handleRefresh() {
     if (!isEdit || !userId) return
-    _formCache.delete(String(userId))
+    _formCache.delete(subTabPath)
     setRefreshing(true)
     setLoading(true)
     userApi.fetchUserById(userId)
