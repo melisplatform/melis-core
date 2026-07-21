@@ -18,8 +18,12 @@ export interface WidgetDef {
   thumbnail?: string
   /** Clé i18n de la section dans la palette. */
   sectionKey: I18nKey
-  /** Overrides sectionKey label for dynamic sections (e.g. legacy plugin groups). */
+  /** Melis section this widget belongs to (MelisCore, MelisCms…) — drives the palette group.
+   *  Overrides sectionKey for dynamic sections (e.g. legacy plugin groups). */
   sectionLabel?: string
+  /** Owning module, shown as a sub-group inside the section (legacy palette rule: only when the
+   *  section holds more than one module). */
+  moduleLabel?: string
   /** Taille par défaut + minimale (unités de grille, 12 colonnes). */
   w: number
   h: number
@@ -32,10 +36,12 @@ export interface WidgetDef {
 }
 
 export const WIDGETS: WidgetDef[] = [
-  // Contenu
   // Ce widget natif a un équivalent plugin legacy PHP avec une vraie capture d'écran —
   // on réutilise cette image plutôt que l'icône générique (cohérent avec la palette legacy).
-  { id: 'activity', titleKey: 'dash.recent_activity', icon: Activity, thumbnail: '/MelisCore/plugins/images/MelisCoreDashboardRecentUserActivityPlugin.jpg', sectionKey: 'widget.sec.content', w: 4, h: 6, minW: 3, minH: 4, render: () => <ActivityContent /> },
+  // `sectionLabel: 'MelisCore'` → il est listé dans la section MELISCORE de la palette, avec les
+  // plugins legacy du même module (cf. WidgetPalette : les widgets porteurs d'un sectionLabel
+  // rejoignent les groupes dynamiques au lieu de former une section statique à part).
+  { id: 'activity', titleKey: 'dash.recent_activity', icon: Activity, thumbnail: '/MelisCore/plugins/images/MelisCoreDashboardRecentUserActivityPlugin.jpg', sectionKey: 'widget.sec.content', sectionLabel: 'MelisCore', moduleLabel: 'Melis Core', w: 4, h: 6, minW: 3, minH: 4, render: () => <ActivityContent /> },
 ]
 
 export const WIDGET_MAP: Record<string, WidgetDef> = Object.fromEntries(
@@ -59,7 +65,8 @@ export function buildLegacyWidgetDef(plugin: LegacyDashboardPlugin): WidgetDef {
     thumbnail: plugin.thumbnail || undefined,
     pluginName: plugin.pluginName,
     sectionKey: 'widget.sec.legacy',
-    sectionLabel: plugin.section || 'Plugins',
+    sectionLabel: plugin.section || 'Others',
+    moduleLabel: plugin.moduleLabel || plugin.module || undefined,
     w: Math.min(plugin.w, GRID_COLS),
     h,
     minW: 2,

@@ -65,7 +65,9 @@ export function WidgetPalette({
 
       <div className="flex-1 space-y-5 overflow-y-auto px-3 pb-4">
         {WIDGET_SECTIONS.map((sectionKey) => {
-          const items = WIDGETS.filter((w) => w.sectionKey === sectionKey)
+          // Les widgets natifs déclarant un `sectionLabel` sont rendus plus bas, dans le groupe
+          // dynamique du module correspondant (ex. Recent activity → MELISCORE).
+          const items = WIDGETS.filter((w) => w.sectionKey === sectionKey && !w.sectionLabel)
           if (!items.length) return null
           return (
             <div key={sectionKey}>
@@ -90,35 +92,62 @@ export function WidgetPalette({
           )
         })}
 
-        {/* Sections dynamiques : plugins legacy PHP (par groupe) */}
-        {extraWidgets.length > 0 && (() => {
-          const groups = new Map<string, WidgetDef[]>()
-          for (const w of extraWidgets) {
-            const label = w.sectionLabel ?? w.sectionKey
-            if (!groups.has(label)) groups.set(label, [])
-            groups.get(label)!.push(w)
+        {/* Sections dynamiques — même hiérarchie que la palette legacy (dashboard-menu-content.phtml) :
+            SECTION Melis (MelisCore, MelisCms, MelisMarketing, MelisCommerce…) → sous-groupes par
+            MODULE. Comme en legacy, le sous-titre module n'apparaît que si la section contient
+            plusieurs modules (sinon il ferait doublon avec le titre de section).
+            L'ordre des sections/modules vient du backend (cf. legacy-plugins), qui reproduit l'ordre
+            marketplace/fallback de organizedPluginsBySection() — rien n'est retrié ici.
+            Les widgets natifs rattachés à une section (sectionLabel) sont fusionnés dans ces groupes. */}
+        {(() => {
+          const dynamicWidgets = [...WIDGETS.filter((w) => w.sectionLabel), ...extraWidgets]
+          if (!dynamicWidgets.length) return null
+
+          const sections = new Map<string, Map<string, WidgetDef[]>>()
+          for (const w of dynamicWidgets) {
+            const sectionLabel = w.sectionLabel ?? w.sectionKey
+            const moduleLabel = w.moduleLabel ?? sectionLabel
+            if (!sections.has(sectionLabel)) sections.set(sectionLabel, new Map())
+            const modules = sections.get(sectionLabel)!
+            if (!modules.has(moduleLabel)) modules.set(moduleLabel, [])
+            modules.get(moduleLabel)!.push(w)
           }
-          return Array.from(groups.entries()).map(([label, items]) => (
-            <div key={label}>
-              <div className="mb-1.5 px-1 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground/70">
-                {label}
+
+          const renderItem = (w: WidgetDef) => (
+            <PaletteItem
+              key={w.id}
+              widget={w}
+              added={present.has(w.id)}
+              onAdd={() => onAdd(w.id)}
+              wrapperRef={(el) => {
+                if (el) wrapperRefs.current.set(w.id, el)
+                else wrapperRefs.current.delete(w.id)
+              }}
+            />
+          )
+
+          return Array.from(sections.entries()).map(([sectionLabel, modules]) => {
+            const showModuleTitles = modules.size > 1
+            return (
+              <div key={sectionLabel}>
+                <div className="mb-1.5 px-1 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground/70">
+                  {sectionLabel === 'CustomProjects' ? 'Custom / Projects' : sectionLabel}
+                </div>
+                <div className="space-y-2.5">
+                  {Array.from(modules.entries()).map(([moduleLabel, items]) => (
+                    <div key={moduleLabel}>
+                      {showModuleTitles && (
+                        <div className="mb-1 px-1 text-[11px] font-medium text-muted-foreground/60">
+                          {moduleLabel}
+                        </div>
+                      )}
+                      <div className="space-y-1.5">{items.map(renderItem)}</div>
+                    </div>
+                  ))}
+                </div>
               </div>
-              <div className="space-y-1.5">
-                {items.map((w) => (
-                  <PaletteItem
-                    key={w.id}
-                    widget={w}
-                    added={present.has(w.id)}
-                    onAdd={() => onAdd(w.id)}
-                    wrapperRef={(el) => {
-                      if (el) wrapperRefs.current.set(w.id, el)
-                      else wrapperRefs.current.delete(w.id)
-                    }}
-                  />
-                ))}
-              </div>
-            </div>
-          ))
+            )
+          })
         })()}
       </div>
     </aside>

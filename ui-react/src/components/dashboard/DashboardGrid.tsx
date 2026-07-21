@@ -15,9 +15,8 @@ import { widgetIdOf, type GridItem } from './dashboard-store'
 // ─── Error boundary per widget ────────────────────────────────────────────────
 
 interface EBState { error: Error | null }
-interface EBProps { children: ReactNode; fallbackMessage: string; retryLabel: string }
 
-class WidgetErrorBoundary extends Component<EBProps, EBState> {
+class WidgetErrorBoundary extends Component<{ children: ReactNode }, EBState> {
   state: EBState = { error: null }
 
   static getDerivedStateFromError(error: Error): EBState {
@@ -36,7 +35,7 @@ class WidgetErrorBoundary extends Component<EBProps, EBState> {
         <div className="flex h-full flex-col items-center justify-center gap-3 p-4 text-center">
           <AlertTriangle className="size-8 text-destructive/70" />
           <p className="max-w-[22ch] text-sm text-muted-foreground">
-            {this.state.error.message || this.props.fallbackMessage}
+            {this.state.error.message || 'Une erreur est survenue dans ce widget.'}
           </p>
           <button
             type="button"
@@ -44,7 +43,7 @@ class WidgetErrorBoundary extends Component<EBProps, EBState> {
             className="flex items-center gap-1.5 rounded-md border border-border bg-muted/50 px-3 py-1.5 text-xs font-medium text-foreground hover:bg-muted"
           >
             <RotateCcw className="size-3" />
-            {this.props.retryLabel}
+            Réessayer
           </button>
         </div>
       )
@@ -89,16 +88,9 @@ export function DashboardGrid({
   layoutRef.current = layout
   const allWidgetsRef = useRef(allWidgets)
   allWidgetsRef.current = allWidgets
-  // Content-measured row counts, per grid item, published by legacy plugin iframes once loaded.
-  // Kept out of React state on purpose: it must survive the `readLayout` round-trip below without
-  // triggering a render of its own.
-  const fittedRows = useRef(new Map<string, number>())
-  // Fit cycle each `fittedRows` entry came from, so readings of the CURRENT cycle only grow the
-  // tile while a fresh cycle (triggered by a width change) is allowed to shrink it.
-  const fitCycles = useRef(new Map<string, number>())
-  // Tiles the user has resized by hand. Auto-fit NEVER touches these again: a plugin iframe keeps
-  // reporting its height (its ResizeObserver fires on the reflow the resize itself causes), which
-  // would otherwise snap the tile straight back and make manual resizing impossible.
+  // Tuiles redimensionnées À LA MAIN : l'ajustement automatique ne les touche plus jamais. Le
+  // document du plugin continue de publier sa hauteur (son ResizeObserver se déclenche sur le
+  // reflow provoqué par le redimensionnement lui-même), ce qui ramènerait sinon la tuile de force.
   const userSized = useRef(new Set<string>())
 
   // --- Init GridStack (une seule fois) ---
@@ -143,11 +135,9 @@ export function DashboardGrid({
       onChangeRef.current(readLayout(grid, allWidgetsRef.current))
     })
 
-    // Un redimensionnement MANUEL fige la tuile : plus aucun ajustement automatique dessus.
-    // ⚠️ `mutating` : nos PROPRES `grid.update()` (ajustement auto, recalage du layout) émettent
-    // eux aussi `resizestop`. Sans ce garde-fou, la 1ʳᵉ mesure — volontairement précoce, avant que
-    // le graphique du plugin ne soit dessiné — marquait la tuile comme « redimensionnée à la main »
-    // et TOUTES les mesures suivantes, plus hautes, étaient ignorées : tuile figée trop courte.
+    // Un redimensionnement MANUEL fige la tuile : plus d'ajustement automatique dessus.
+    // ⚠️ `mutating` : nos PROPRES `grid.update()` émettent aussi `resizestop`. Sans ce garde-fou,
+    // le tout premier ajustement marquerait la tuile comme « réglée à la main » et se bloquerait.
     grid.on('resizestop', (_e, el: HTMLElement) => {
       if (mutating.current) return
       const id = (el as HTMLElement & { gridstackNode?: { id?: string } }).gridstackNode?.id
@@ -212,50 +202,36 @@ export function DashboardGrid({
     }
   }, [])
 
-  // --- Auto-fit: apply a legacy plugin's measured content height to its tile ---
-  // Published by LegacyPluginContent once its iframe has loaded (a few readings while the plugin's
-  // charts settle). Routed through `onChange` rather than `grid.update()` so React state stays the
-  // source of truth — a direct grid mutation would be reverted by the [layout] effect below.
+  // --- Ajustement auto : applique la hauteur de contenu mesurée par le plugin ---
+  // Publiée par LegacyPluginContent depuis le document du plugin. Passe par `onChange` plutôt que
+  // par `grid.update()` : l'état React reste la source de vérité, sinon l'effet [layout] ci-dessous
+  // annulerait la mutation. La mesure étant STABLE (indépendante de la taille de l'iframe), il n'y
+  // a pas de boucle : appliquer la hauteur ne change pas la mesure suivante.
   useEffect(() => {
     const onAutofit = (e: Event) => {
-      const { itemId, contentPx, fitId } = (e as CustomEvent<{ itemId?: string; contentPx?: number; fitId?: number }>).detail ?? {}
+      const { itemId, contentPx } = (e as CustomEvent<{ itemId?: string; contentPx?: number }>).detail ?? {}
       const grid = gridRef.current
       if (!grid || !itemId || !contentPx) return
-      // A hand-resized tile is the user's call — never override it.
       if (userSized.current.has(itemId)) return
-      const cols = grid.getColumn()
-      // Opt-in tracing: `localStorage.setItem('melis-autofit-debug', '1')` in the console.
-      // Auto-fit spans an iframe, a postMessage and GridStack's column modes, so when a tile ends
-      // up the wrong height the only useful question is which of those stages dropped it.
+      const rows = contentPxToGridRows(contentPx)
       if (localStorage.getItem('melis-autofit-debug')) {
-        console.debug('[autofit]', { itemId, contentPx, rows: contentPxToGridRows(contentPx), cols, currentH: layoutRef.current.find((l) => l.i === itemId)?.h })
+        console.debug('[autofit]', { itemId, contentPx, rows, cols: grid.getColumn(), currentH: layoutRef.current.find((l) => l.i === itemId)?.h })
       }
-      // Under a responsive breakpoint GridStack SCALES heights (`columnOpts.layout: 'moveScale'`):
-      // writing a desktop height into the PERSISTED layout would corrupt it. We still fix the tile
-      // VISUALLY though — returning early here was leaving every widget at its declared height on
-      // any viewport under 1024px, which is precisely when content clips hardest.
-      if (cols !== GRID_COLS) {
+      // Sous un breakpoint responsive, GridStack met les hauteurs à l'échelle : écrire une hauteur
+      // « desktop » dans le layout PERSISTÉ le corromprait. On corrige alors seulement l'affichage.
+      if (grid.getColumn() !== GRID_COLS) {
         const node = grid.engine.nodes.find((n) => n.id === itemId)
-        const rowsNow = contentPxToGridRows(contentPx)
-        if (node?.el && node.h !== rowsNow) {
+        if (node?.el && node.h !== rows) {
           mutating.current = true
-          grid.update(node.el as HTMLElement, { h: rowsNow })
+          grid.update(node.el as HTMLElement, { h: rows })
           mutating.current = false
         }
         return
       }
-      // Within ONE fit cycle keep the tallest reading — a chart that draws late makes the document
-      // grow, and we must not shrink back onto content that has just appeared. A NEW cycle (the
-      // tile was resized, so the content reflowed) starts from scratch and may shrink the tile.
-      const prev = fittedRows.current.get(itemId)
-      const sameCycle = prev !== undefined && fitCycles.current.get(itemId) === fitId
-      const rows = sameCycle ? Math.max(contentPxToGridRows(contentPx), prev) : contentPxToGridRows(contentPx)
       const item = layoutRef.current.find((l) => l.i === itemId)
       if (!item || item.h === rows) return
-      fittedRows.current.set(itemId, rows)
-      fitCycles.current.set(itemId, fitId ?? 0)
-      // `h` ONLY — never minH. Pinning the floor to the fitted height would block shrinking just
-      // like the registry's old `minH: h` did.
+      // `h` uniquement, jamais `minH` : figer le plancher sur la hauteur mesurée empêcherait de
+      // rétrécir la tuile à la main (c'était le bug du `minH` déclaré).
       onChangeRef.current(layoutRef.current.map((l) => (l.i === itemId ? { ...l, h: rows } : l)))
     }
     window.addEventListener('melis:widget-autofit', onAutofit)
@@ -361,7 +337,9 @@ function WidgetPortal({ widgetDef, onRemove }: { widgetId: string; widgetDef: Wi
   const [reloading, setReloading] = useState(false)
   const [configOpen, setConfigOpen] = useState(false)
   const title = widgetDef.titleLabel ?? t(widgetDef.titleKey)
-  // Bouton config (engrenage) uniquement pour les widgets plugins legacy (qui ont un pluginName).
+  // Engrenage affiché sur TOUS les widgets, pour un cadre homogène. Les widgets NATIFS n'ont pas
+  // de plugin legacy derrière eux (donc rien à configurer) : la modale affiche alors simplement
+  // « aucun paramètre », sans appel réseau.
   const pluginName = widgetDef.pluginName
 
   // Recharge = remonte le contenu (nouvelle clé) + affiche un spinner un court instant, pour
@@ -380,7 +358,7 @@ function WidgetPortal({ widgetDef, onRemove }: { widgetId: string; widgetDef: Wi
         icon={widgetDef.icon}
         onRemove={onRemove}
         onReload={reload}
-        onConfig={pluginName ? () => setConfigOpen(true) : undefined}
+        onConfig={() => setConfigOpen(true)}
       >
         <div className="relative h-full w-full">
           {reloading && (
@@ -388,13 +366,20 @@ function WidgetPortal({ widgetDef, onRemove }: { widgetId: string; widgetDef: Wi
               <Loader2 className="size-6 animate-spin text-muted-foreground" />
             </div>
           )}
-          <WidgetErrorBoundary key={refreshKey} fallbackMessage={t('layout.widget_error')} retryLabel={t('layout.retry')}>
+          <WidgetErrorBoundary key={refreshKey}>
             {widgetDef.render()}
           </WidgetErrorBoundary>
         </div>
       </WidgetFrame>
-      {pluginName && configOpen && (
-        <WidgetConfigDialog pluginName={pluginName} title={title} onClose={() => setConfigOpen(false)} />
+      {configOpen && (
+        <WidgetConfigDialog
+          pluginName={pluginName}
+          title={title}
+          onClose={() => setConfigOpen(false)}
+          // La config est appliquée côté serveur au rendu du plugin : sans rechargement, la tuile
+          // continuerait d'afficher l'ancienne (ex. filtre par défaut d'un graphique).
+          onSaved={reload}
+        />
       )}
     </>
   )
