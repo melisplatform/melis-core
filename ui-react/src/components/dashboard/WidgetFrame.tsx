@@ -2,6 +2,8 @@ import type { ReactNode } from 'react'
 import { GripVertical, RotateCcw, Settings, X } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 
+import { useI18n } from '@/i18n/i18n-context'
+
 /** Cadre d'un widget : header (poignée de drag + titre + config/recharger/retirer) + corps.
  *  Le header porte `.widget-drag-handle` → c'est la zone de déplacement (le
  *  corps reste interactif). Équivalent du `widget-head` de Melis (cog/refresh/trash).
@@ -25,6 +27,7 @@ export function WidgetFrame({
   onConfig?: () => void
   children: ReactNode
 }) {
+  const { t } = useI18n()
   const btn =
     'grid size-6 shrink-0 place-items-center rounded text-muted-foreground/70 transition-colors hover:text-foreground'
   return (
@@ -40,8 +43,8 @@ export function WidgetFrame({
               onMouseDown={(e) => e.stopPropagation()}
               onClick={onConfig}
               className={`${btn} hover:bg-accent`}
-              aria-label="Configurer le widget"
-              title="Configurer"
+              aria-label={t('layout.widget_configure')}
+              title={t('layout.widget_configure')}
             >
               <Settings className="size-3.5" />
             </button>
@@ -51,8 +54,8 @@ export function WidgetFrame({
             onMouseDown={(e) => e.stopPropagation()}
             onClick={onReload}
             className={`${btn} hover:bg-accent`}
-            aria-label="Recharger le widget"
-            title="Recharger"
+            aria-label={t('layout.reload')}
+            title={t('layout.reload')}
           >
             <RotateCcw className="size-3.5" />
           </button>
@@ -61,8 +64,8 @@ export function WidgetFrame({
             onMouseDown={(e) => e.stopPropagation()}
             onClick={onRemove}
             className={`${btn} hover:bg-destructive/10 hover:text-destructive`}
-            aria-label="Retirer le widget"
-            title="Retirer"
+            aria-label={t('layout.widget_remove')}
+            title={t('layout.widget_remove')}
           >
             <X className="size-4" />
           </button>

@@ -1,4 +1,5 @@
 import { Loader2, RefreshCw } from 'lucide-react'
+import { useI18n } from '@/i18n/i18n-context'
 import { useZonePool } from './zone-pool'
 
 interface Props {
@@ -12,6 +13,7 @@ interface Props {
  * are preserved.  Re-opening a zone that was already loaded is instant.
  */
 export function ZoneFrames({ activeKey }: Props) {
+  const { t } = useI18n()
   const { entries, markReady, markError, reload } = useZonePool()
 
   if (entries.size === 0) return null
@@ -38,7 +40,7 @@ export function ZoneFrames({ activeKey }: Props) {
 
               {entry.state === 'error' ? (
                 <div className="flex flex-1 items-center justify-center gap-2 text-sm text-muted-foreground">
-                  <span>Impossible de charger</span>
+                  <span>{t('layout.zone_load_error')}</span>
                   <span className="rounded-md bg-muted px-2 py-0.5 font-mono text-xs">{key}</span>
                 </div>
               ) : (
@@ -54,11 +56,11 @@ export function ZoneFrames({ activeKey }: Props) {
                   />
                   <button
                     onClick={() => reload(key)}
-                    title="Recharger depuis le serveur"
+                    title={t('layout.reload_from_server')}
                     className="absolute bottom-3 right-3 flex items-center gap-1.5 rounded-md bg-background/80 px-2 py-1 text-xs text-muted-foreground shadow backdrop-blur hover:text-foreground"
                   >
                     <RefreshCw className="size-3" />
-                    Recharger
+                    {t('layout.reload')}
                   </button>
                 </>
               )}

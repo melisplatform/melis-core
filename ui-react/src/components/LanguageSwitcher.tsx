@@ -33,7 +33,7 @@ export function Flag({ short, width = 18, height = 12 }: { short: string; width?
  * tools and tool iframes all follow the new locale.
  */
 export function LanguageSwitcher() {
-  const { lang, langs, currentLocale, currentLangId, changeLocale } = useI18n()
+  const { t, lang, langs, currentLocale, currentLangId, changeLocale } = useI18n()
 
   // La session peut porter la locale sans l'id (melis-lang-id absent → currentLangId = 0) : sans
   // ce repli sur la locale, le bouton se rendrait vide (ni drapeau ni code).
@@ -50,7 +50,7 @@ export function LanguageSwitcher() {
     <DropdownMenu>
       <DropdownMenuTrigger
         className="inline-flex h-9 items-center justify-center gap-1.5 rounded-md px-2 text-muted-foreground transition-colors hover:bg-accent hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40"
-        aria-label="Langue"
+        aria-label={t('layout.language')}
       >
         <Flag short={short} />
         <span className="text-xs font-semibold uppercase">{short}</span>

@@ -3,6 +3,7 @@ import { AlertTriangle, CheckCircle2, Loader2, RotateCcw } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
+import { useI18n } from '@/i18n/i18n-context'
 import {
   activateModules,
   downloadModules,
@@ -19,6 +20,7 @@ type InstallPhase = 'saving' | 'downloading' | 'activating' | 'done'
  * marketplace est injoignable — même comportement que côté legacy dans ce cas.
  */
 export function Step31ModuleSelection({ onStatusChange }: { onStatusChange?: (passed: boolean) => void }) {
+  const { t } = useI18n()
   const [modules, setModules] = useState<ModuleCatalogEntry[] | null>(null)
   const [loading, setLoading] = useState(true)
   const [loadError, setLoadError] = useState<string | null>(null)
@@ -63,23 +65,23 @@ export function Step31ModuleSelection({ onStatusChange }: { onStatusChange?: (pa
     try {
       setPhase('saving')
       await saveModuleSelection(chosen)
-      setLog((l) => [...l, `${chosen.length} module(s) enregistré(s).`])
+      setLog((l) => [...l, t('setup.modules.log_saved', { count: chosen.length })])
 
       setPhase('downloading')
       const dl = await downloadModules()
       setLog((l) => [
         ...l,
         dl.alreadyPresent.length
-          ? `${dl.alreadyPresent.length} module(s) déjà présent(s), non re-téléchargé(s).`
+          ? t('setup.modules.log_already_present', { count: dl.alreadyPresent.length })
           : null,
         dl.downloaded.length
-          ? `${dl.downloaded.length} module(s) téléchargé(s) : ${dl.downloaded.join(', ')}.`
-          : 'Aucun module à télécharger.',
+          ? t('setup.modules.log_downloaded', { count: dl.downloaded.length, names: dl.downloaded.join(', ') })
+          : t('setup.modules.log_none_download'),
       ].filter((x): x is string => !!x))
 
       setPhase('activating')
       const act = await activateModules()
-      setLog((l) => [...l, `${act.modules.length} module(s) actif(s) après activation.`])
+      setLog((l) => [...l, t('setup.modules.log_active', { count: act.modules.length })])
 
       setPhase('done')
       onStatusChange?.(true)
@@ -95,16 +97,16 @@ export function Step31ModuleSelection({ onStatusChange }: { onStatusChange?: (pa
     <div className="rounded-xl border border-border bg-card p-5">
       <div className="flex items-start justify-between gap-4">
         <div>
-          <h3 className="font-[var(--font-display)] text-sm font-semibold">Modules à installer</h3>
+          <h3 className="font-[var(--font-display)] text-sm font-semibold">{t('setup.modules.title')}</h3>
           <p className="mt-0.5 text-xs text-muted-foreground">
-            Sélectionnez les modules Melis à télécharger et installer.
+            {t('setup.modules.desc')}
           </p>
         </div>
         <button
           type="button"
           onClick={load}
           disabled={loading}
-          aria-label="Rafraîchir"
+          aria-label={t('setup.modules.refresh')}
           className="grid size-7 shrink-0 place-items-center rounded-md text-muted-foreground transition-colors hover:bg-accent hover:text-foreground disabled:opacity-50"
         >
           {loading ? <Loader2 className="size-4 animate-spin" /> : <RotateCcw className="size-4" />}
@@ -121,7 +123,7 @@ export function Step31ModuleSelection({ onStatusChange }: { onStatusChange?: (pa
         ) : !modules?.length ? (
           <div className="flex items-center gap-2 text-sm text-muted-foreground">
             <AlertTriangle className="size-4" />
-            Aucun module disponible (marketplace injoignable ?).
+            {t('setup.modules.none')}
           </div>
         ) : (
           <>
@@ -139,12 +141,12 @@ export function Step31ModuleSelection({ onStatusChange }: { onStatusChange?: (pa
             <div className="mt-4 flex items-center gap-3">
               <Button type="button" onClick={handleInstall} disabled={installing}>
                 {installing && <Loader2 className="size-4 animate-spin" />}
-                Installer les modules sélectionnés ({selected.size})
+                {t('setup.modules.install', { count: selected.size })}
               </Button>
               {phase === 'done' && (
                 <span className="inline-flex items-center gap-1.5 text-sm text-[var(--color-success)]">
                   <CheckCircle2 className="size-4" />
-                  Installation terminée
+                  {t('setup.modules.done')}
                 </span>
               )}
             </div>

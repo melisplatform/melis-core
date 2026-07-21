@@ -14,8 +14,9 @@ import { widgetIdOf, type GridItem } from './dashboard-store'
 // ─── Error boundary per widget ────────────────────────────────────────────────
 
 interface EBState { error: Error | null }
+interface EBProps { children: ReactNode; fallbackMessage: string; retryLabel: string }
 
-class WidgetErrorBoundary extends Component<{ children: ReactNode }, EBState> {
+class WidgetErrorBoundary extends Component<EBProps, EBState> {
   state: EBState = { error: null }
 
   static getDerivedStateFromError(error: Error): EBState {
@@ -34,7 +35,7 @@ class WidgetErrorBoundary extends Component<{ children: ReactNode }, EBState> {
         <div className="flex h-full flex-col items-center justify-center gap-3 p-4 text-center">
           <AlertTriangle className="size-8 text-destructive/70" />
           <p className="max-w-[22ch] text-sm text-muted-foreground">
-            {this.state.error.message || 'Une erreur est survenue dans ce widget.'}
+            {this.state.error.message || this.props.fallbackMessage}
           </p>
           <button
             type="button"
@@ -42,7 +43,7 @@ class WidgetErrorBoundary extends Component<{ children: ReactNode }, EBState> {
             className="flex items-center gap-1.5 rounded-md border border-border bg-muted/50 px-3 py-1.5 text-xs font-medium text-foreground hover:bg-muted"
           >
             <RotateCcw className="size-3" />
-            Réessayer
+            {this.props.retryLabel}
           </button>
         </div>
       )
@@ -276,7 +277,7 @@ function WidgetPortal({ widgetDef, onRemove }: { widgetId: string; widgetDef: Wi
               <Loader2 className="size-6 animate-spin text-muted-foreground" />
             </div>
           )}
-          <WidgetErrorBoundary key={refreshKey}>
+          <WidgetErrorBoundary key={refreshKey} fallbackMessage={t('layout.widget_error')} retryLabel={t('layout.retry')}>
             {widgetDef.render()}
           </WidgetErrorBoundary>
         </div>

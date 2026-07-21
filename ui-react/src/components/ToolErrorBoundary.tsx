@@ -1,4 +1,6 @@
-import { Component, type ReactNode } from 'react'
+import { Component, type ReactNode, type ContextType } from 'react'
+
+import { I18nContext } from '@/i18n/i18n-context'
 
 /**
  * Isole le crash d'UN outil pour qu'il ne fasse jamais tomber tout le back-office.
@@ -16,6 +18,9 @@ interface State { error: Error | null }
 
 export class ToolErrorBoundary extends Component<Props, State> {
   state: State = { error: null }
+  // Accès au contexte i18n depuis un composant classe (pas de hook) → libellés traduits.
+  static contextType = I18nContext
+  declare context: ContextType<typeof I18nContext>
 
   static getDerivedStateFromError(error: Error): State { return { error } }
 
@@ -26,6 +31,11 @@ export class ToolErrorBoundary extends Component<Props, State> {
 
   render() {
     if (!this.state.error) return this.props.children
+    const t = this.context?.t
+    const errorMsg = this.props.label
+      ? (t ? t('layout.tool_error', { label: this.props.label }) : `L'outil « ${this.props.label} » a rencontré une erreur`)
+      : (t ? t('layout.tool_error_generic') : 'Cet outil a rencontré une erreur')
+    const retryMsg = t ? t('layout.retry') : 'Réessayer'
     return (
       <div className="flex h-full flex-col items-center justify-center gap-3 p-8 text-center">
         <div className="grid size-12 place-items-center rounded-full bg-destructive/10 text-destructive">
@@ -34,7 +44,7 @@ export class ToolErrorBoundary extends Component<Props, State> {
           </svg>
         </div>
         <div className="text-base font-semibold text-foreground">
-          {this.props.label ? `L'outil « ${this.props.label} » a rencontré une erreur` : 'Cet outil a rencontré une erreur'}
+          {errorMsg}
         </div>
         <div className="max-w-xl break-words text-sm text-muted-foreground">{this.state.error.message}</div>
         <button
@@ -42,7 +52,7 @@ export class ToolErrorBoundary extends Component<Props, State> {
           onClick={() => this.setState({ error: null })}
           className="mt-1 rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:opacity-90"
         >
-          Réessayer
+          {retryMsg}
         </button>
       </div>
     )

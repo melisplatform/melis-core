@@ -7,6 +7,7 @@ import { cn } from '@/lib/utils'
 import wordmark from '@/assets/melis-wordmark.svg'
 import wordmarkWhite from '@/assets/melis-wordmark-white.svg'
 import { useTheme } from '@/theme/theme-context'
+import { useI18n } from '@/i18n/i18n-context'
 import { useSetupWizardState } from './hooks/useSetupWizardState'
 import { SETUP_STEPS } from './wizard-steps'
 
@@ -26,6 +27,7 @@ import { SETUP_STEPS } from './wizard-steps'
  */
 export default function SetupWizardPage() {
   const { theme } = useTheme()
+  const { t } = useI18n()
   const dark = theme === 'studio'
   const wizard = useSetupWizardState(SETUP_STEPS.length)
   const currentStep = SETUP_STEPS[wizard.index]
@@ -58,7 +60,7 @@ export default function SetupWizardPage() {
                           ? 'bg-[var(--color-success)]/15 text-[var(--color-success)]'
                           : 'bg-muted text-muted-foreground',
                     )}
-                    title={step.label}
+                    title={t(step.labelKey)}
                   >
                     {wizard.isPassed(i) && i !== wizard.index ? <Check className="size-3.5" /> : i + 1}
                   </button>
@@ -66,7 +68,7 @@ export default function SetupWizardPage() {
                 </li>
               ))}
             </ol>
-            <p className="-mt-3 text-xs font-medium text-muted-foreground">{currentStep.label}</p>
+            <p className="-mt-3 text-xs font-medium text-muted-foreground">{t(currentStep.labelKey)}</p>
 
             {currentStep.render((passed) => wizard.setStepPassed(wizard.index, passed))}
 
@@ -74,11 +76,11 @@ export default function SetupWizardPage() {
             <div className="flex items-center justify-between">
               <Button type="button" variant="outline" onClick={wizard.back} disabled={wizard.index === 0}>
                 <ArrowLeft className="size-4" />
-                Précédent
+                {t('setup.prev')}
               </Button>
               {!isLast && (
                 <Button type="button" onClick={wizard.next} disabled={!wizard.canGoNext}>
-                  Suivant
+                  {t('setup.next')}
                   <ArrowRight className="size-4" />
                 </Button>
               )}

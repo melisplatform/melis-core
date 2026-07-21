@@ -134,7 +134,7 @@ export default function OtherConfigPage() {
       </div>
 
       {/* Vue Melis classique (iframe) */}
-      <MelisClassicFrame melisKey={TOOL_KEY} title="Autres Configurations — Vue Melis"
+      <MelisClassicFrame melisKey={TOOL_KEY} title={t('layout.oldview.otherconfig')}
         visible={effectiveMode === 'iframe'} loaded={iframeLoaded} />
 
       {/* Vue React */}

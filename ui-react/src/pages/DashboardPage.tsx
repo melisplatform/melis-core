@@ -3,6 +3,7 @@ import { Bell, ChevronDown, ChevronUp, Download, LayoutGrid, MessageSquare, News
 
 import { Button } from '@/components/ui/button'
 import { useI18n } from '@/i18n/i18n-context'
+import type { I18nKey } from '@/i18n/dictionaries'
 import { CURRENT_USER } from '@/lib/mocks'
 import * as melisApi from '@/lib/melis-api'
 import { DashboardGrid } from '@/components/dashboard/DashboardGrid'
@@ -22,10 +23,10 @@ const BUBBLES_HIDDEN_KEY = 'melis-dash-bubbles-hidden'
 
 // Top "bubble" widgets, mirroring MelisCore's legacy dashboard bubble plugins.
 const BUBBLES = [
-  { key: 'news',          icon: Newspaper,     label: 'Actualités Melis' },
-  { key: 'updates',       icon: Download,      label: 'Mises à jour' },
-  { key: 'notifications', icon: Bell,          label: 'Notifications' },
-  { key: 'messages',      icon: MessageSquare, label: 'Messages' },
+  { key: 'news',          icon: Newspaper,     labelKey: 'dash.bubble.news' as I18nKey },
+  { key: 'updates',       icon: Download,      labelKey: 'dash.bubble.updates' as I18nKey },
+  { key: 'notifications', icon: Bell,          labelKey: 'dash.bubble.notifications' as I18nKey },
+  { key: 'messages',      icon: MessageSquare, labelKey: 'dash.bubble.messages' as I18nKey },
 ] as const
 
 export default function DashboardPage() {
@@ -178,9 +179,9 @@ export default function DashboardPage() {
             className="inline-flex items-center gap-1.5 rounded-full bg-primary px-3 py-1 text-xs font-medium text-primary-foreground shadow-sm transition-colors hover:bg-primary/90"
           >
             {bubblesHidden ? (
-              <>Afficher la barre <ChevronDown className="size-3.5" /></>
+              <>{t('dash.show_bar')} <ChevronDown className="size-3.5" /></>
             ) : (
-              <>Cacher la barre <ChevronUp className="size-3.5" /></>
+              <>{t('dash.hide_bar')} <ChevronUp className="size-3.5" /></>
             )}
           </button>
         </div>
@@ -197,10 +198,10 @@ export default function DashboardPage() {
                 >
                   <Icon className="size-6 text-muted-foreground" />
                   <div className="mt-2 text-2xl font-bold leading-none">{count}</div>
-                  <div className="mt-1 text-sm text-muted-foreground">{b.label}</div>
+                  <div className="mt-1 text-sm text-muted-foreground">{t(b.labelKey)}</div>
                   {b.key === 'notifications' && count > 0 && (
                     <Button variant="outline" size="sm" className="mt-3">
-                      Voir les notifications
+                      {t('dash.see_notifications')}
                     </Button>
                   )}
                 </div>

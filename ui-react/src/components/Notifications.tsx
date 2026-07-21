@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react'
 import { X } from 'lucide-react'
 
+import { useI18n } from '@/i18n/i18n-context'
+
 /**
  * Toast notifications (green = success / red = error), shown top-right in the BO chrome.
  * Fed by the bridge in buildToolPage: legacy tools' melisOkNotification/melisKoNotification
@@ -18,6 +20,7 @@ let lastKey = ''
 let lastAt = 0
 
 export function Notifications() {
+  const { t: tr } = useI18n()
   const [toasts, setToasts] = useState<Toast[]>([])
 
   useEffect(() => {
@@ -78,7 +81,7 @@ export function Notifications() {
             type="button"
             onClick={() => dismiss(t.id)}
             className="-mr-0.5 shrink-0 rounded p-0.5 opacity-80 transition-opacity hover:opacity-100"
-            aria-label="Fermer"
+            aria-label={tr('layout.close')}
           >
             <X className="size-3.5" />
           </button>

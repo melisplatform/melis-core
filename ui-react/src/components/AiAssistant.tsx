@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { Bot, X } from 'lucide-react'
 
 import { AiChatContainer } from '@melis-ai-engine'
+import { useI18n } from '@/i18n/i18n-context'
 import { useTabs } from '@/components/tabs/tab-store'
 import { useNavMenu, type NavNode } from '@/hooks/useNavMenu'
 import { melisKeyForRoute } from '@/lib/tool-routes'
@@ -43,6 +44,7 @@ declare global {
  * read live values (menu / navigate / openTab) from refs to avoid stale closures.
  */
 export function AiAssistant() {
+  const { t } = useI18n()
   const [open, setOpen] = useState(false)
   const navigate = useNavigate()
   const { openTab } = useTabs()
@@ -146,7 +148,7 @@ export function AiAssistant() {
         <button
           type="button"
           onClick={() => setOpen(true)}
-          title="AI Assistant"
+          title={t('layout.ai_assistant')}
           style={fabStyle}
         >
           <Bot style={{ width: 22, height: 22 }} />
@@ -156,9 +158,9 @@ export function AiAssistant() {
         <div style={panelStyle}>
           <div style={panelHeaderStyle}>
             <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8, fontWeight: 600 }}>
-              <Bot style={{ width: 18, height: 18 }} /> AI Assistant
+              <Bot style={{ width: 18, height: 18 }} /> {t('layout.ai_assistant')}
             </span>
-            <button type="button" onClick={() => setOpen(false)} title="Close" style={panelCloseStyle}>
+            <button type="button" onClick={() => setOpen(false)} title={t('layout.close')} style={panelCloseStyle}>
               <X style={{ width: 16, height: 16 }} />
             </button>
           </div>

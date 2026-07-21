@@ -2,6 +2,7 @@ import { useEffect, useState, type ReactNode } from 'react'
 import { AlertTriangle, CheckCircle2, Loader2, RotateCcw } from 'lucide-react'
 
 import { cn } from '@/lib/utils'
+import { useI18n } from '@/i18n/i18n-context'
 
 /**
  * Carte générique pour un check de diagnostic du wizard (steps 1.0/1/1.1/1.2) : lance `run` au
@@ -23,6 +24,7 @@ export function CheckStepCard<T extends { passed: boolean }>({
   /** Notifie le wizard parent du résultat (pour déverrouiller le bouton Suivant). */
   onStatusChange?: (passed: boolean) => void
 }) {
+  const { t } = useI18n()
   const [result, setResult] = useState<T | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -64,14 +66,14 @@ export function CheckStepCard<T extends { passed: boolean }>({
               {error || (result && !result.passed)
                 ? <AlertTriangle className="size-3.5" />
                 : <CheckCircle2 className="size-3.5" />}
-              {error ? 'Erreur' : result?.passed ? 'OK' : 'Échec'}
+              {error ? t('setup.check.error') : result?.passed ? t('setup.check.ok') : t('setup.check.fail')}
             </span>
           )}
           <button
             type="button"
             onClick={execute}
             disabled={loading}
-            aria-label="Relancer"
+            aria-label={t('setup.check.retry')}
             className="grid size-7 place-items-center rounded-md text-muted-foreground transition-colors hover:bg-accent hover:text-foreground disabled:opacity-50"
           >
             {loading ? <Loader2 className="size-4 animate-spin" /> : <RotateCcw className="size-4" />}

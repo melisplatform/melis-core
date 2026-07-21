@@ -13,6 +13,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { Calendar } from 'lucide-react'
 import { Input } from '@/components/ui/input'
+import { useI18n } from '@/i18n/i18n-context'
 
 /** L'ordre d'affichage de cette locale est-il jour-avant-mois (jj/mm) ? Déduit via Intl. */
 function localeDayFirst(locale: string): boolean {
@@ -57,6 +58,7 @@ export function DateTimeField({ value, onChange, locale, className }: {
   locale: string
   className?: string
 }) {
+  const { t } = useI18n()
   const dayFirst = useMemo(() => localeDayFirst(locale), [locale])
   const [text, setText] = useState(() => dtToDisplay(value, dayFirst))
   const nativeRef = useRef<HTMLInputElement>(null)
@@ -82,7 +84,7 @@ export function DateTimeField({ value, onChange, locale, className }: {
         onChange={(e) => setText(e.target.value)}
         onBlur={commit}
         onKeyDown={(e) => { if (e.key === 'Enter') (e.currentTarget as HTMLInputElement).blur() }}
-        placeholder={dayFirst ? 'jj/mm/aaaa hh:mm' : 'mm/dd/yyyy hh:mm'}
+        placeholder={dayFirst ? t('ui.datetime.placeholder_dayfirst') : t('ui.datetime.placeholder_monthfirst')}
         inputMode="numeric"
         className="pr-9"
       />
@@ -90,7 +92,7 @@ export function DateTimeField({ value, onChange, locale, className }: {
         type="button"
         onClick={openPicker}
         tabIndex={-1}
-        aria-label="Calendrier"
+        aria-label={t('ui.datetime.calendar')}
         className="absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
       >
         <Calendar className="size-4" />

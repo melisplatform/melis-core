@@ -2,6 +2,8 @@ import { useEffect } from 'react'
 import { createPortal } from 'react-dom'
 import { X } from 'lucide-react'
 
+import { useI18n } from '@/i18n/i18n-context'
+
 /**
  * Modale de configuration d'un widget plugin legacy — équivalent React du bouton engrenage
  * (`dashboard-plugin-properties`) du dashboard Melis PHP. Le formulaire de config du plugin est
@@ -18,6 +20,7 @@ export function WidgetConfigDialog({
   title: string
   onClose: () => void
 }) {
+  const { t } = useI18n()
   // Ferme sur Échap.
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose() }
@@ -36,13 +39,13 @@ export function WidgetConfigDialog({
       >
         <div className="flex items-center justify-between border-b border-border px-4 py-3">
           <h2 className="font-[var(--font-display)] truncate text-sm font-semibold">
-            Configuration — {title}
+            {t('layout.widget_config', { title })}
           </h2>
           <button
             type="button"
             onClick={onClose}
             className="grid size-7 place-items-center rounded text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
-            aria-label="Fermer"
+            aria-label={t('layout.close')}
           >
             <X className="size-4" />
           </button>

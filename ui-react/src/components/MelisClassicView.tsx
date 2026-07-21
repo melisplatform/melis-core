@@ -1,5 +1,6 @@
 import { Layout, Sparkles } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { useI18n } from '@/i18n/i18n-context'
 
 export type ViewMode = 'react' | 'iframe'
 
@@ -20,6 +21,7 @@ export function ViewModeToggle({
   mode: ViewMode
   onChange: (mode: ViewMode) => void
 }) {
+  const { t } = useI18n()
   return (
     <div className="flex items-center gap-1 rounded-lg border border-border bg-muted/40 p-1">
       <button
@@ -33,7 +35,7 @@ export function ViewModeToggle({
         )}
       >
         <Sparkles className="size-3.5" />
-        New
+        {t('layout.view_new')}
       </button>
       <button
         type="button"
@@ -46,7 +48,7 @@ export function ViewModeToggle({
         )}
       >
         <Layout className="size-3.5" />
-        Old
+        {t('layout.view_old')}
       </button>
     </div>
   )

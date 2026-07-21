@@ -24,6 +24,7 @@ import {
   RemoveFormatting,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { useI18n } from '@/i18n/i18n-context'
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -68,6 +69,7 @@ function ToolbarBtn({
 // ─── TipTap toolbar ───────────────────────────────────────────────────────────
 
 function TiptapToolbar({ editor }: { editor: TiptapEditor }) {
+  const { t } = useI18n()
   const setLink = () => {
     const prev = editor.getAttributes('link').href as string ?? ''
     const url = window.prompt('URL', prev)
@@ -82,64 +84,64 @@ function TiptapToolbar({ editor }: { editor: TiptapEditor }) {
   return (
     <div className="flex flex-wrap items-center gap-0.5 border-b border-border bg-muted/30 px-2 py-1.5">
       {/* Headings */}
-      <ToolbarBtn active={editor.isActive('heading', { level: 2 })} onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()} title="Heading 2">
+      <ToolbarBtn active={editor.isActive('heading', { level: 2 })} onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()} title={t('ui.rich.h2')}>
         <Heading2 className="size-3.5" />
       </ToolbarBtn>
-      <ToolbarBtn active={editor.isActive('heading', { level: 3 })} onClick={() => editor.chain().focus().toggleHeading({ level: 3 }).run()} title="Heading 3">
+      <ToolbarBtn active={editor.isActive('heading', { level: 3 })} onClick={() => editor.chain().focus().toggleHeading({ level: 3 }).run()} title={t('ui.rich.h3')}>
         <Heading3 className="size-3.5" />
       </ToolbarBtn>
 
       <div className="mx-1 h-4 w-px bg-border" />
 
       {/* Inline marks */}
-      <ToolbarBtn active={editor.isActive('bold')} onClick={() => editor.chain().focus().toggleBold().run()} title="Bold">
+      <ToolbarBtn active={editor.isActive('bold')} onClick={() => editor.chain().focus().toggleBold().run()} title={t('ui.rich.bold')}>
         <Bold className="size-3.5" />
       </ToolbarBtn>
-      <ToolbarBtn active={editor.isActive('italic')} onClick={() => editor.chain().focus().toggleItalic().run()} title="Italic">
+      <ToolbarBtn active={editor.isActive('italic')} onClick={() => editor.chain().focus().toggleItalic().run()} title={t('ui.rich.italic')}>
         <Italic className="size-3.5" />
       </ToolbarBtn>
-      <ToolbarBtn active={editor.isActive('underline')} onClick={() => editor.chain().focus().toggleUnderline().run()} title="Underline">
+      <ToolbarBtn active={editor.isActive('underline')} onClick={() => editor.chain().focus().toggleUnderline().run()} title={t('ui.rich.underline')}>
         <UnderlineIcon className="size-3.5" />
       </ToolbarBtn>
-      <ToolbarBtn active={editor.isActive('strike')} onClick={() => editor.chain().focus().toggleStrike().run()} title="Strikethrough">
+      <ToolbarBtn active={editor.isActive('strike')} onClick={() => editor.chain().focus().toggleStrike().run()} title={t('ui.rich.strike')}>
         <Strikethrough className="size-3.5" />
       </ToolbarBtn>
 
       <div className="mx-1 h-4 w-px bg-border" />
 
       {/* Alignment */}
-      <ToolbarBtn active={editor.isActive({ textAlign: 'left' })} onClick={() => editor.chain().focus().setTextAlign('left').run()} title="Align left">
+      <ToolbarBtn active={editor.isActive({ textAlign: 'left' })} onClick={() => editor.chain().focus().setTextAlign('left').run()} title={t('ui.rich.align_left')}>
         <AlignLeft className="size-3.5" />
       </ToolbarBtn>
-      <ToolbarBtn active={editor.isActive({ textAlign: 'center' })} onClick={() => editor.chain().focus().setTextAlign('center').run()} title="Center">
+      <ToolbarBtn active={editor.isActive({ textAlign: 'center' })} onClick={() => editor.chain().focus().setTextAlign('center').run()} title={t('ui.rich.center')}>
         <AlignCenter className="size-3.5" />
       </ToolbarBtn>
-      <ToolbarBtn active={editor.isActive({ textAlign: 'right' })} onClick={() => editor.chain().focus().setTextAlign('right').run()} title="Align right">
+      <ToolbarBtn active={editor.isActive({ textAlign: 'right' })} onClick={() => editor.chain().focus().setTextAlign('right').run()} title={t('ui.rich.align_right')}>
         <AlignRight className="size-3.5" />
       </ToolbarBtn>
-      <ToolbarBtn active={editor.isActive({ textAlign: 'justify' })} onClick={() => editor.chain().focus().setTextAlign('justify').run()} title="Justify">
+      <ToolbarBtn active={editor.isActive({ textAlign: 'justify' })} onClick={() => editor.chain().focus().setTextAlign('justify').run()} title={t('ui.rich.justify')}>
         <AlignJustify className="size-3.5" />
       </ToolbarBtn>
 
       <div className="mx-1 h-4 w-px bg-border" />
 
       {/* Lists */}
-      <ToolbarBtn active={editor.isActive('bulletList')} onClick={() => editor.chain().focus().toggleBulletList().run()} title="Bullet list">
+      <ToolbarBtn active={editor.isActive('bulletList')} onClick={() => editor.chain().focus().toggleBulletList().run()} title={t('ui.rich.bullet_list')}>
         <List className="size-3.5" />
       </ToolbarBtn>
-      <ToolbarBtn active={editor.isActive('orderedList')} onClick={() => editor.chain().focus().toggleOrderedList().run()} title="Numbered list">
+      <ToolbarBtn active={editor.isActive('orderedList')} onClick={() => editor.chain().focus().toggleOrderedList().run()} title={t('ui.rich.numbered_list')}>
         <ListOrdered className="size-3.5" />
       </ToolbarBtn>
 
       <div className="mx-1 h-4 w-px bg-border" />
 
       {/* Link */}
-      <ToolbarBtn active={editor.isActive('link')} onClick={setLink} title="Link">
+      <ToolbarBtn active={editor.isActive('link')} onClick={setLink} title={t('ui.rich.link')}>
         <LinkIcon className="size-3.5" />
       </ToolbarBtn>
 
       {/* Clear formatting */}
-      <ToolbarBtn active={false} onClick={() => editor.chain().focus().clearNodes().unsetAllMarks().run()} title="Clear formatting">
+      <ToolbarBtn active={false} onClick={() => editor.chain().focus().clearNodes().unsetAllMarks().run()} title={t('ui.rich.clear_format')}>
         <RemoveFormatting className="size-3.5" />
       </ToolbarBtn>
     </div>
@@ -149,13 +151,14 @@ function TiptapToolbar({ editor }: { editor: TiptapEditor }) {
 // ─── TipTap editor ────────────────────────────────────────────────────────────
 
 function TiptapEditor_({ value, onChange, placeholder, minRows = 6, className }: Omit<RichEditorProps, 'engine'>) {
+  const { t } = useI18n()
   const editor = useEditor({
     extensions: [
       StarterKit,
       Underline,
       TextAlign.configure({ types: ['heading', 'paragraph'] }),
       Link.configure({ openOnClick: false }),
-      Placeholder.configure({ placeholder: placeholder ?? 'Write your content here…' }),
+      Placeholder.configure({ placeholder: placeholder ?? t('ui.rich.placeholder') }),
     ],
     content: value,
     onUpdate: ({ editor }) => onChange(editor.getHTML()),
@@ -182,6 +185,7 @@ function TiptapEditor_({ value, onChange, placeholder, minRows = 6, className }:
 // ─── TinyMCE editor ───────────────────────────────────────────────────────────
 
 function TinymceEditor_({ value, onChange, placeholder, minRows = 6, className }: Omit<RichEditorProps, 'engine'>) {
+  const { t } = useI18n()
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const tinyRef = useRef<any>(null)
 
@@ -198,7 +202,7 @@ function TinymceEditor_({ value, onChange, placeholder, minRows = 6, className }
           toolbar:
             'bold italic underline strikethrough | alignleft aligncenter alignright alignjustify | ' +
             'bullist numlist | link | removeformat',
-          placeholder: placeholder ?? 'Write your content here…',
+          placeholder: placeholder ?? t('ui.rich.placeholder'),
           skin: 'oxide',
           content_css: 'default',
           branding: false,

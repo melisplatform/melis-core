@@ -341,7 +341,7 @@ function TabStrip() {
               </button>
               <button
                 type="button"
-                title="Fermer"
+                title={t('layout.close')}
                 onClick={() => handleClose(tab)}
                 className={cn(
                   'flex items-center pr-2 transition-colors',

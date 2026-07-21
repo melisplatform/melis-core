@@ -1,5 +1,6 @@
 import { X } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { useI18n } from '@/i18n/i18n-context'
 import { useTabs, type Tab } from './tab-store'
 
 interface TabBarProps {
@@ -9,6 +10,7 @@ interface TabBarProps {
 
 export function TabBar({ onActivate, onClose }: TabBarProps) {
   const { tabs, activeId } = useTabs()
+  const { t } = useI18n()
 
   return (
     <div className="flex items-end overflow-x-auto border-b border-border bg-background px-2 pt-1 shrink-0"
@@ -34,7 +36,7 @@ export function TabBar({ onActivate, onClose }: TabBarProps) {
             </button>
             <button
               type="button"
-              title="Fermer"
+              title={t('layout.close')}
               onClick={(e) => { e.stopPropagation(); onClose(tab.id) }}
               className={cn(
                 'ml-0.5 rounded p-0.5 transition-colors hover:bg-muted',

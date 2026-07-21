@@ -15,6 +15,9 @@ import { DASHBOARD_ALL, type DashboardPluginRight } from '@/lib/dashboard-rights
 
 type Tri = 'all' | 'some' | 'none'
 
+/** Sentinel grouping key for plugins with no owning module — displayed via i18n (layout.rights_other). */
+const UNGROUPED = '__ungrouped__'
+
 function TriBox({ state, disabled, onChange }: { state: Tri; disabled?: boolean; onChange: (v: boolean) => void }) {
   return (
     <button
@@ -43,11 +46,12 @@ function PluginRow({
    *  so the module stays visible now that there's no group header. Omitted inside a ModuleGroup. */
   module?: string
 }) {
+  const { t } = useI18n()
   return (
     <label className="flex cursor-pointer items-center gap-2 py-1 pr-3 pl-2 rounded hover:bg-muted/40 transition-colors">
       <TriBox state={on ? 'all' : 'none'} disabled={disabled} onChange={(v) => onToggle(plugin.key, v)} />
       {module && (
-        <span className="shrink-0 text-xs font-semibold uppercase tracking-wide text-muted-foreground/80">{module}</span>
+        <span className="shrink-0 text-xs font-semibold uppercase tracking-wide text-muted-foreground/80">{module === UNGROUPED ? t('layout.rights_other') : module}</span>
       )}
       <span className={cn('text-sm truncate', on ? 'text-foreground/90' : 'text-foreground/70')}>{plugin.title}</span>
     </label>
@@ -64,6 +68,7 @@ function ModuleGroup({
   onToggle: (key: string, v: boolean) => void
   onToggleMany: (keys: string[], v: boolean) => void
 }) {
+  const { t } = useI18n()
   const [open, setOpen] = useState(true)
   const keys = plugins.map((p) => p.key)
   const nChecked = plugins.filter((p) => checked.has(p.key)).length
@@ -74,7 +79,7 @@ function ModuleGroup({
       <div className="flex items-center gap-1.5 py-1 pl-2 pr-3 rounded hover:bg-muted/30 transition-colors">
         <TriBox state={state} disabled={all} onChange={(v) => onToggleMany(keys, v)} />
         <button type="button" onClick={() => setOpen((o) => !o)} className="flex flex-1 items-center gap-1.5 min-w-0">
-          <span className="text-xs font-semibold uppercase tracking-wide text-muted-foreground/90 truncate">{module || 'Autres'}</span>
+          <span className="text-xs font-semibold uppercase tracking-wide text-muted-foreground/90 truncate">{module === UNGROUPED ? t('layout.rights_other') : module}</span>
           <span className="ml-1 text-[11px] text-muted-foreground/50 tabular-nums">{all ? plugins.length : nChecked}/{plugins.length}</span>
           <ChevronRight className={cn('size-3 shrink-0 text-muted-foreground/60 transition-transform ml-auto', open && 'rotate-90')} />
         </button>
@@ -107,7 +112,7 @@ export function DashboardPluginsRightsPanel({
   const groups: { module: string; plugins: DashboardPluginRight[] }[] = []
   const idx: Record<string, number> = {}
   for (const p of plugins) {
-    const m = p.module || 'Autres'
+    const m = p.module || UNGROUPED
     if (idx[m] === undefined) { idx[m] = groups.length; groups.push({ module: m, plugins: [] }) }
     groups[idx[m]].plugins.push(p)
   }
