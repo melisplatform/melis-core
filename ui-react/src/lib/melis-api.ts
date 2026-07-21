@@ -456,7 +456,12 @@ export interface LegacyDashboardPlugin {
   icon: string
   /** Screenshot shown in the legacy plugin picker (module-relative URL, e.g. /Utilities/plugins/images/Foo.jpg). */
   thumbnail: string
+  /** Melis section the owning module belongs to (MelisCore, MelisCms, MelisMarketing…). */
   section: string
+  /** Owning module (forward.module), e.g. MelisCmsPageHistoric — sub-group inside the section. */
+  module: string
+  /** Translated module label (tr_PluginSection_<module>), e.g. "Melis Cms Page Historic". */
+  moduleLabel: string
   w: number
   h: number
 }

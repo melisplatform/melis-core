@@ -64,32 +64,6 @@ export function ActivityContent() {
   )
 }
 
-/**
- * Real content height of a legacy plugin document, in px.
- *
- * `scrollHeight` alone under-reports it: it ignores the bottom margin of the last in-flow child
- * and gives nothing useful for content taken out of flow. The legacy dashboard markup hits both
- * cases — e.g. `.grid-stack-item-content .flotchart-holder` carries `margin-top: 60px`
- * (styles.css) and the KPI/table row sits below a floated block. Under-measuring is exactly what
- * clips the bottom of the tile, so we take the furthest bottom edge of every top-level element,
- * margins included, and keep the largest of all readings.
- */
-function measureContentPx(doc: Document): number {
-  const win = doc.defaultView
-  let px = Math.max(doc.documentElement?.scrollHeight ?? 0, doc.body?.scrollHeight ?? 0)
-  const body = doc.body
-  if (!body || !win) return Math.ceil(px)
-  // Offset of the document's top edge, so rect.bottom (viewport-relative) becomes document-relative.
-  const scrollY = win.scrollY || doc.documentElement?.scrollTop || 0
-  for (const el of Array.from(body.children) as HTMLElement[]) {
-    const rect = el.getBoundingClientRect()
-    if (rect.height === 0) continue // hidden chrome (the fake tab strip, script tags…)
-    const marginBottom = parseFloat(win.getComputedStyle(el).marginBottom) || 0
-    px = Math.max(px, rect.bottom + scrollY + marginBottom)
-  }
-  return Math.ceil(px)
-}
-
 /** Renders a legacy Melis dashboard plugin (PHP) inside an iframe. */
 export function LegacyPluginContent({ pluginName }: { pluginName: string }) {
   // Un widget plugin legacy est une iframe qui charge tout le bundle de la plateforme →
@@ -103,90 +77,31 @@ export function LegacyPluginContent({ pluginName }: { pluginName: string }) {
   // de SA fenêtre, qu'un redimensionnement de l'iframe ne déclenche pas. On le lui envoie donc.
   const frameRef = useRef<HTMLIFrameElement>(null)
 
-  // ── Auto-fit the tile height to the plugin's real content ────────────────────────────────
-  // A legacy plugin DECLARES its height in the classic BO's grid (cf. grid-metrics.ts); that
-  // figure is a guess and is routinely wrong here — too tall (dead space) or too short (clipped
-  // content). Once the iframe has loaded we measure the document and tell the grid.
-  //
-  // A fit runs on load AND whenever the tile's WIDTH changes: narrowing the plugin reflows its
-  // content taller (tables wrap, the chart's legend stacks), which is precisely when a fixed
-  // height starts clipping. Height changes never trigger a fit — that would fight the user's own
-  // vertical resize, and would feed back on itself.
-  //
-  // `fitId` marks one fit cycle. Within a cycle the grid keeps the TALLEST reading (a chart that
-  // draws late makes the document grow); a new cycle starts fresh, so a re-fit is free to SHRINK
-  // the tile when the content genuinely got shorter.
-  const fittedRef = useRef(false)
-  const fitIdRef = useRef(0)
-  function reportContentHeight() {
-    const frame = frameRef.current
-    if (!frame) return
-    // The grid node carries the item id GridStack knows this tile by; reading it from the DOM
-    // avoids threading the id through WidgetDef.render(), which takes no arguments.
-    const item = frame.closest('.grid-stack-item') as (HTMLElement & { gridstackNode?: { id?: string } }) | null
-    const itemId = item?.gridstackNode?.id
-    if (!itemId) return
-    let px = 0
-    try {
-      const doc = frame.contentDocument
-      if (!doc) return // not ready / cross-origin — nothing to measure
-      px = measureContentPx(doc)
-    } catch {
-      return // cross-origin guard — never let a measurement break the widget
-    }
-    if (px <= 0) return
-    window.dispatchEvent(
-      new CustomEvent('melis:widget-autofit', { detail: { itemId, contentPx: px, fitId: fitIdRef.current } }),
-    )
-  }
-
-  // Starts a fit cycle. The authoritative readings come from the plugin document itself
-  // (postMessage, see `__melisPluginHeight` in PluginViewController) — it knows exactly when its
-  // charts have finished drawing, which no parent-side timer can. These local measurements are
-  // only a fallback for a page served before that reporter existed (stale opcache, cached HTML).
-  function runFit() {
-    fitIdRef.current += 1
-    fitTimers.current.forEach(window.clearTimeout)
-    reportContentHeight()
-    fitTimers.current = [150, 400, 1000].map((ms) => window.setTimeout(reportContentHeight, ms))
-  }
-
-  // Heights pushed by the plugin document. Accepted for the CURRENT fit cycle, so a late chart
-  // draw still grows the tile, while the user's own vertical resize is never overridden later on.
+  // ── Hauteur de tuile ajustée au contenu réel du plugin ────────────────────────────────────
+  // La hauteur DÉCLARÉE par un plugin (cf. grid-metrics) est une estimation, souvent trop courte :
+  // le plugin Prospects tient sur 802px mesurés là où sa déclaration donne ~478px → bas rogné.
+  // La mesure vient du document lui-même (postMessage `__melisPluginHeight`, cf.
+  // PluginViewController) : lui seul sait quand ses graphiques sont dessinés, et il mesure les
+  // ÉLÉMENTS — seule grandeur stable ici (identique dans une iframe de 319px ou de 2400px).
   useEffect(() => {
     const onMessage = (e: MessageEvent) => {
       const d = e.data as { __melisPluginHeight?: boolean; px?: number } | null
       if (!d || !d.__melisPluginHeight || !d.px) return
-      // Several plugin iframes are mounted at once — only react to OUR document's reports.
+      // Plusieurs iframes de plugins coexistent : ne réagir qu'aux messages de LA nôtre.
       if (!frameRef.current || e.source !== frameRef.current.contentWindow) return
       const item = frameRef.current.closest('.grid-stack-item') as (HTMLElement & { gridstackNode?: { id?: string } }) | null
       const itemId = item?.gridstackNode?.id
       if (!itemId) return
-      window.dispatchEvent(
-        new CustomEvent('melis:widget-autofit', { detail: { itemId, contentPx: d.px, fitId: fitIdRef.current } }),
-      )
+      window.dispatchEvent(new CustomEvent('melis:widget-autofit', { detail: { itemId, contentPx: d.px } }))
     }
     window.addEventListener('message', onMessage)
     return () => window.removeEventListener('message', onMessage)
   }, [])
 
-  function handleLoad() {
-    setLoading(false)
-    if (fittedRef.current) return // a reload must not restart the initial fit
-    fittedRef.current = true
-    runFit()
-  }
-
-  // `onLoad` can't return a cleanup, so the settle timers are cancelled on unmount here —
-  // otherwise removing a widget right after adding it would measure a detached iframe.
-  const fitTimers = useRef<number[]>([])
-  useEffect(() => () => fitTimers.current.forEach(window.clearTimeout), [])
-
   useEffect(() => {
     const frame = frameRef.current
     if (!frame) return
     let pending = 0
-    let lastWidth = 0
     const ro = new ResizeObserver(() => {
       // Coalescé en une frame : un drag de redimensionnement émet des dizaines d'événements.
       if (pending) return
@@ -197,13 +112,6 @@ export function LegacyPluginContent({ pluginName }: { pluginName: string }) {
         } catch {
           /* iframe pas encore prête / cross-origin : sans effet */
         }
-        // Re-fit the height only on a WIDTH change — reacting to height would fight the user's
-        // own vertical resize and loop on the change we just made. Rounded: sub-pixel jitter from
-        // the grid's animation must not count as a resize. Debounced behind `runFit`'s own
-        // staggered readings, which land after flot has redrawn on the `resize` above.
-        const width = Math.round(frame.getBoundingClientRect().width)
-        if (width > 0 && lastWidth > 0 && width !== lastWidth && fittedRef.current) runFit()
-        if (width > 0) lastWidth = width
       })
     })
     ro.observe(frame)
@@ -227,7 +135,7 @@ export function LegacyPluginContent({ pluginName }: { pluginName: string }) {
         title={pluginName}
         style={{ minHeight: 120 }}
         sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-modals"
-        onLoad={handleLoad}
+        onLoad={() => setLoading(false)}
       />
     </div>
   )

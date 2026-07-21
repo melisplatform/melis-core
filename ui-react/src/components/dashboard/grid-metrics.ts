@@ -15,13 +15,14 @@ export const CELL_HEIGHT = 46
 export const MARGIN = 8
 
 /**
- * Chrome du cadre React autour du contenu (WidgetFrame) :
- *  - en-tête : `py-2.5` (2×10px) + la plus haute de ses lignes (boutons `size-6` = 24px)
- *              + la bordure basse (1px) = 45px
- *  - corps   : `p-4` (2×16px) = 32px
- * Sous-estimer cette valeur rend TOUTES les tuiles trop courtes d'autant (contenu rogné).
+ * Chrome du cadre React autour du contenu (WidgetFrame), en px : tout ce qui, dans la tuile, n'est
+ * PAS l'iframe — en-tête + padding du corps + bordures.
+ *
+ * Valeur MESURÉE sur la grille (`hauteur de tuile − hauteur d'iframe`), constante à 95px sur tous
+ * les widgets testés. Elle avait été estimée à 77px en additionnant les classes Tailwind, ce qui
+ * rognait 18px de contenu sur CHAQUE tuile. Sous-estimer ici rogne le bas de tous les widgets.
  */
-const FRAME_CHROME = 45 + 32
+const FRAME_CHROME = 95
 
 /** Hauteur d'une cellule dans la grille du BO legacy (public/js/core/gridstack.init.js). */
 const LEGACY_CELL_HEIGHT = 80
@@ -54,18 +55,24 @@ export function legacyRowsToGridRows(legacyRows: number): number {
 }
 
 /**
- * Converts a MEASURED content height (px) into a row count for our grid.
+ * Convertit une hauteur de contenu MESURÉE (px) en nombre de lignes de la grille.
  *
- * Same arithmetic as `legacyRowsToGridRows`, but fed by a real measurement of the plugin's
- * iframe document instead of the size the plugin DECLARES. Used to auto-fit a legacy widget
- * once its iframe has loaded (cf. LegacyPluginContent): the declared height is a legacy-grid
- * guess and is routinely too tall (empty space) or too short (clipped content).
+ * Même arithmétique que `legacyRowsToGridRows`, mais nourrie par une vraie mesure du document du
+ * plugin (cf. `__melisPluginHeight`) plutôt que par la taille qu'il DÉCLARE — laquelle est une
+ * estimation calée sur la grille legacy, régulièrement trop courte (contenu rogné).
  *
- * No SAFETY_PX here: unlike the declared value, the measurement already covers the real
- * content — padding it would just reintroduce the empty space we're removing. The `+1` row of
- * slack absorbs sub-pixel rounding and scrollbar-driven reflow.
+ * Pas de `SAFETY_PX` ici : contrairement à la valeur déclarée, la mesure couvre déjà le contenu
+ * réel ; la rembourrer ne ferait que réintroduire le vide qu'on cherche à supprimer.
  */
 export function contentPxToGridRows(contentPx: number): number {
-  const rows = (contentPx + FRAME_CHROME + MARGIN) / (CELL_HEIGHT + MARGIN)
+  // Relation MESURÉE sur la grille réelle (et non déduite de cellHeight/margin) :
+  //   hauteur de tuile   = lignes × CELL_HEIGHT      (5→230, 8→368, 16→736, 17→782)
+  //   hauteur d'iframe   = hauteur de tuile − FRAME_CHROME
+  // L'ancienne formule ajoutait MARGIN au dénominateur (`CELL_HEIGHT + MARGIN`) : elle supposait
+  // une gouttière PAR LIGNE qui n'existe pas dans la hauteur de l'élément, et sous-estimait donc
+  // systématiquement la tuile — 802px de contenu tombaient sur 17 lignes, soit 687px utiles :
+  // toujours rogné.
+  const rows = (contentPx + FRAME_CHROME) / CELL_HEIGHT
   return Math.max(2, Math.ceil(rows))
 }
+
