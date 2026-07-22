@@ -63,7 +63,10 @@ function SubTabBarInner({
             <button
               type="button"
               onClick={(e) => handleClose(e, tab.id)}
-              className="ml-0.5 rounded p-0.5 opacity-0 group-hover:opacity-100 hover:bg-muted transition-all"
+              className={cn(
+                'ml-0.5 rounded p-0.5 transition-all hover:bg-muted',
+                isActive ? 'opacity-100' : 'opacity-0 group-hover:opacity-100',
+              )}
             >
               <X className="size-3" />
             </button>
