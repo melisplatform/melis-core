@@ -23,10 +23,13 @@ function BrandMark() {
 
 // ─── Recursive nav node ───────────────────────────────────────────────────────
 
-/** Collect every Melis module referenced by a nav node's subtree (via tool forwards). */
+/** Collect every Melis module referenced by a nav node's subtree (via tool forwards).
+ *  Also honours `sidebarModule` — a section flagged as a "sidebar host" (e.g. the CMS page tree)
+ *  that must attach its module's panel even when it has no accessible tool child. */
 function collectModules(node: NavNode, acc: Set<string> = new Set()): Set<string> {
   const mod = node.forward?.module
   if (mod) acc.add(mod)
+  if (node.sidebarModule) acc.add(node.sidebarModule)
   node.children.forEach((c) => collectModules(c, acc))
   return acc
 }

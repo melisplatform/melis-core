@@ -273,7 +273,7 @@ export interface ApiMenuNode {
   key: string
   name: string
   icon: string
-  melisKey: string
+  melisKey: string | null
   /** true = nœud cliquable possédant un `forward` (outil PHP). */
   isTool: boolean
   /** Données de routage Melis (module, controller, action, jscallback). */
@@ -291,6 +291,9 @@ export interface ApiMenuNode {
   /** Category opts out of the single-tool collapse (conf.no_collapse) — kept as an expandable
    *  group even with one child, so tools can be added under it later. See collapseSingleTool. */
   noCollapse?: boolean
+  /** Module propriétaire d'un panneau de sidebar à accrocher à cette section même sans outil
+   *  accessible (section « hôte de sidebar », ex. l'arbre des pages CMS). Voir Sidebar/collectModules. */
+  sidebarModule?: string
   children: ApiMenuNode[]
 }
 

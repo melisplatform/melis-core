@@ -54,6 +54,9 @@ export interface NavNode {
   configChildCount?: number
   /** La catégorie refuse le collapse mono-outil (conf.no_collapse) — reste un groupe dépliable. */
   noCollapse?: boolean
+  /** Module dont le panneau de sidebar (ex. arbre des pages CMS) doit s'accrocher à cette section
+   *  même quand elle n'a aucun outil accessible (section « hôte de sidebar »). Voir collectModules. */
+  sidebarModule?: string
   children: NavNode[]
 }
 
@@ -264,6 +267,7 @@ function apiNodeToNavNode(node: melisApi.ApiMenuNode, depth = 0, section = ''): 
     forward:     node.isTool ? node.forward : null,
     configChildCount: node.configChildCount,
     noCollapse:  node.noCollapse,
+    sidebarModule: node.sidebarModule,
     children:    node.children.map(child => apiNodeToNavNode(child, depth + 1, sec)),
   }
 }
