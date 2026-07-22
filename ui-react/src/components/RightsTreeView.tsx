@@ -383,7 +383,6 @@ function ToolRow({
           className="flex flex-1 cursor-pointer items-center gap-2 min-w-0 text-left"
         >
           <span className="text-sm text-foreground/90">{node.name}</span>
-          <span className="ml-auto text-[10px] text-muted-foreground/50 font-mono">{key}</span>
         </button>
       </div>
 
