@@ -1,5 +1,7 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { Loader2 } from 'lucide-react'
+
+import { useTheme } from '@/theme/theme-context'
 
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { useI18n } from '@/i18n/i18n-context'
@@ -77,6 +79,29 @@ export function LegacyPluginContent({ pluginName }: { pluginName: string }) {
   // de SA fenêtre, qu'un redimensionnement de l'iframe ne déclenche pas. On le lui envoie donc.
   const frameRef = useRef<HTMLIFrameElement>(null)
 
+  // ── Couleur d'accent du thème, transmise à l'iframe ────────────────────────────────────────
+  // L'iframe est un DOCUMENT à part : elle n'hérite ni du `data-theme` de l'hôte ni de ses
+  // variables CSS. On lit donc `--primary` résolue sur `<html>` (le thème reste la seule source
+  // de vérité, cf. theme/themes.ts) et on la passe dans l'URL — le param CHANGE avec le thème,
+  // donc l'iframe se recharge d'elle-même et il n'y a pas de flash de contenu non thémé.
+  // On NORMALISE la valeur avant de l'envoyer, via un élément sonde : `getPropertyValue` rend le
+  // token BRUT tel qu'écrit dans la feuille, et il n'est pas forcément hexadécimal — le minifieur
+  // du build réécrit `#ff0000` en `red` (mot-clé CSS), et un thème pourrait tout aussi bien poser
+  // `oklch(...)` ou `color-mix(...)`. Le `color` calculé d'un élément, lui, est toujours résolu en
+  // `rgb(...)` : une seule forme à valider côté PHP, quelle que soit l'écriture du thème.
+  const { theme } = useTheme()
+  const primary = useMemo(() => {
+    const raw = getComputedStyle(document.documentElement).getPropertyValue('--primary').trim()
+    if (!raw) return ''
+    const probe = document.createElement('span')
+    probe.style.display = 'none'
+    probe.style.color = raw
+    document.body.appendChild(probe)
+    const resolved = getComputedStyle(probe).color
+    probe.remove()
+    return resolved || raw
+  }, [theme])
+
   // ── Hauteur de tuile ajustée au contenu réel du plugin ────────────────────────────────────
   // La hauteur DÉCLARÉE par un plugin (cf. grid-metrics) est une estimation, souvent trop courte :
   // le plugin Prospects tient sur 802px mesurés là où sa déclaration donne ~478px → bas rogné.
@@ -130,7 +155,7 @@ export function LegacyPluginContent({ pluginName }: { pluginName: string }) {
       )}
       <iframe
         ref={frameRef}
-        src={`/melis/react-dashboard-plugin?plugin=${encodeURIComponent(pluginName)}`}
+        src={`/melis/react-dashboard-plugin?plugin=${encodeURIComponent(pluginName)}&primary=${encodeURIComponent(primary)}`}
         className="h-full w-full border-0"
         title={pluginName}
         style={{ minHeight: 120 }}

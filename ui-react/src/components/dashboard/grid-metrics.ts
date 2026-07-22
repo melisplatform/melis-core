@@ -46,6 +46,15 @@ const SAFETY_PX = 40
 const LEGACY_BASE_ROWS = 4
 
 /**
+ * Tolérance, en px, de l'ajustement automatique quand il RÉTRÉCIT une tuile (DashboardGrid).
+ *
+ * Double emploi : coussin sous le contenu mesuré (pas d'ascenseur pour un pixel de sous-estimation)
+ * et seuil de détection des mesures « circulaires » — celles des plugins dont le contenu se cale
+ * sur la hauteur de l'iframe, où réduire la tuile réduit la mesure.
+ */
+export const AUTOFIT_TOLERANCE_PX = 12
+
+/**
  * Convertit une hauteur déclarée en lignes legacy vers le nombre de lignes de NOTRE grille
  * offrant la même hauteur de contenu utile.
  */

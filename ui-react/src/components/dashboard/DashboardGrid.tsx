@@ -6,7 +6,7 @@ import { AlertTriangle, Loader2, RotateCcw } from 'lucide-react'
 import 'gridstack/dist/gridstack.min.css'
 
 import { useI18n } from '@/i18n/i18n-context'
-import { CELL_HEIGHT, GRID_COLS, MARGIN, contentPxToGridRows } from './grid-metrics'
+import { AUTOFIT_TOLERANCE_PX, CELL_HEIGHT, GRID_COLS, MARGIN, contentPxToGridRows } from './grid-metrics'
 import { WIDGET_MAP, type WidgetDef } from './widget-registry'
 import { WidgetFrame } from './WidgetFrame'
 import { WidgetConfigDialog } from './WidgetConfigDialog'
@@ -96,6 +96,14 @@ export function DashboardGrid({
   // une hauteur pendant que GridStack manipule la tuile la corrompt, et surtout `userSized` n'est
   // rempli qu'au `resizestop` — sans ce verrou, tout le drag se déroule ajustement actif.
   const interacting = useRef(false)
+  // Rétrécissement automatique EN ATTENTE DE CONFIRMATION : `itemId → { fromRows, px }`. On garde
+  // la hauteur d'avant et la mesure qui a motivé la réduction, pour vérifier au rapport suivant
+  // que la mesure n'a pas bougé (cf. `noShrink`).
+  const shrinkProbe = useRef(new Map<string, { fromRows: number; px: number }>())
+  // Plugins dont la mesure S'EST RÉVÉLÉE CIRCULAIRE : leur contenu se cale sur la hauteur de
+  // l'iframe (hauteurs en %), donc réduire la tuile réduit la mesure — un cliquet qui écrase la
+  // tuile jusqu'à rendre le contenu invisible. Détectés à l'exécution, ils ne rétrécissent plus.
+  const noShrink = useRef(new Set<string>())
 
   // --- Init GridStack (une seule fois) ---
   useEffect(() => {
@@ -257,11 +265,40 @@ export function DashboardGrid({
         return
       }
       const item = layoutRef.current.find((l) => l.i === itemId)
-      // GROSSIR UNIQUEMENT. La mesure n'est fiable QUE comme plancher : pour un plugin dont le
-      // contenu se cale sur la hauteur de l'iframe, elle vaut toujours un peu moins que la tuile
-      // et la rétrécirait indéfiniment (cliquet → tuile écrasée, contenu invisible). Réduire une
-      // tuile reste possible à la main ; c'est le geste qui la fige (`userSized`).
-      if (!item || rows <= item.h) return
+      if (!item) return
+
+      // Vérification d'un rétrécissement précédent. La mesure d'un plugin dont le contenu se cale
+      // sur l'iframe (hauteurs en %) SUIT la tuile : l'avoir réduite la fait baisser à son tour →
+      // cliquet qui écraserait la tuile. On le détecte ici — la mesure a-t-elle bougé après coup ? —
+      // puis on restaure la hauteur d'avant et on interdit définitivement de réduire cette tuile.
+      // Pour un plugin à contenu de hauteur propre (la plupart), la mesure est identique : rien à faire.
+      const probe = shrinkProbe.current.get(itemId)
+      if (probe) {
+        shrinkProbe.current.delete(itemId)
+        if (contentPx < probe.px - AUTOFIT_TOLERANCE_PX) {
+          noShrink.current.add(itemId)
+          onChangeRef.current(
+            layoutRef.current.map((l) => (l.i === itemId ? { ...l, h: probe.fromRows } : l)),
+          )
+          return
+        }
+      }
+
+      if (rows === item.h) return
+      if (rows < item.h) {
+        // RÉTRÉCIR : c'est ce qui supprime la bande blanche sous les plugins dont la hauteur
+        // DÉCLARÉE surestime le contenu réel (`legacyRowsToGridRows` + `SAFETY_PX`). On ne le fait
+        // que sur une mesure fiable, avec un petit coussin pour ne pas déclencher d'ascenseur, et
+        // seulement si le gain vaut le mouvement — sinon la tuile oscillerait d'une ligne.
+        if (noShrink.current.has(itemId)) return
+        const target = contentPxToGridRows(contentPx + AUTOFIT_TOLERANCE_PX)
+        if (target >= item.h) return
+        shrinkProbe.current.set(itemId, { fromRows: item.h, px: contentPx })
+        onChangeRef.current(
+          layoutRef.current.map((l) => (l.i === itemId ? { ...l, h: target } : l)),
+        )
+        return
+      }
       // `h` uniquement, jamais `minH` : figer le plancher sur la hauteur mesurée empêcherait de
       // rétrécir la tuile à la main (c'était le bug du `minH` déclaré).
       onChangeRef.current(layoutRef.current.map((l) => (l.i === itemId ? { ...l, h: rows } : l)))
