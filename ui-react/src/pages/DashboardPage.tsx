@@ -1,10 +1,11 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { Bell, ChevronDown, ChevronUp, Download, LayoutGrid, MessageSquare, Newspaper, RotateCcw, X } from 'lucide-react'
+import { Bell, ChevronDown, ChevronUp, Download, MessageSquare, Newspaper, Plug } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
+import { Collapsible } from '@/components/ui/collapsible'
+import { cn } from '@/lib/utils'
 import { useI18n } from '@/i18n/i18n-context'
 import type { I18nKey } from '@/i18n/dictionaries'
-import { CURRENT_USER } from '@/lib/mocks'
 import * as melisApi from '@/lib/melis-api'
 import { DashboardGrid } from '@/components/dashboard/DashboardGrid'
 import { WidgetPalette } from '@/components/dashboard/WidgetPalette'
@@ -12,7 +13,6 @@ import { WIDGET_MAP, buildLegacyWidgetDef, type WidgetDef } from '@/components/d
 import {
   loadLayout,
   makeInstanceId,
-  resetLayout,
   saveLayout,
   widgetIdOf,
   type GridItem,
@@ -50,10 +50,14 @@ export default function DashboardPage() {
   }, [])
 
   // Legacy PHP dashboard plugins (loaded once at mount).
+  // La liste est déjà filtrée par les droits côté serveur (usr_rights → <melis_dashboardplugin>),
+  // comme le menu du dashboard legacy : un plugin non accordé n'arrive tout simplement pas.
   const [legacyWidgets, setLegacyWidgets] = useState<WidgetDef[]>([])
+  const [legacyLoaded, setLegacyLoaded] = useState(false)
   useEffect(() => {
     melisApi.fetchLegacyDashboardPlugins().then((plugins) => {
       setLegacyWidgets(plugins.map(buildLegacyWidgetDef))
+      setLegacyLoaded(true)
     })
   }, [])
 
@@ -131,6 +135,17 @@ export default function DashboardPage() {
     if (changed) persist(fixed)
   }, [legacyWidgets, allWidgetMap, persist])
 
+  // Élague de la grille sauvegardée les widgets dont la déf. est inconnue — typiquement un plugin
+  // legacy retiré des droits de l'utilisateur (ou désinstallé) : sans ça sa tuile reste posée, vide.
+  // Attend `legacyLoaded` : avant la réponse de /react-dashboard-plugins, TOUTES les défs legacy
+  // sont inconnues et on viderait la grille. Ne dépend pas de `layout` (lu via la ref) pour ne pas
+  // se rejouer à chaque déplacement.
+  useEffect(() => {
+    if (!legacyLoaded) return
+    const kept = layoutRef.current.filter((l) => allWidgetMap[widgetIdOf(l.i)])
+    if (kept.length !== layoutRef.current.length) persist(kept)
+  }, [legacyLoaded, allWidgetMap, persist])
+
   // Émis par GridStack après un déplacement / redimensionnement utilisateur.
   const handleChange = useCallback((items: GridItem[]) => persist(items), [persist])
 
@@ -153,46 +168,20 @@ export default function DashboardPage() {
     [layout, persist],
   )
 
-  const handleReset = useCallback(() => persist(resetLayout()), [persist])
+  // « Supprimer tous les plugins » — équivalent du `#dashboard-plugin-delete-all` legacy
+  // (gridstack.init.js : `gridData.removeAll()` puis `saveDBWidgets`). `persist([])` fait les deux :
+  // vide la grille ET enregistre en base, sinon les tuiles reviendraient au prochain chargement.
+  // La confirmation est portée par la palette, comme le `melisCoreTool.confirm()` d'origine.
+  const removeAllWidgets = useCallback(() => persist([]), [persist])
 
   return (
     <DashboardDataContext.Provider value={{ stats }}>
-    <div className="flex h-full">
+    {/* `relative` : référentiel de l'onglet d'ouverture, positionné en `right` pour coulisser avec
+        la palette. `overflow-hidden` : pendant l'animation de largeur, la palette (largeur interne
+        figée à 18rem) dépasse de son cadre — sans ça elle créerait une barre de défilement
+        horizontale sur toute la page. */}
+    <div className="relative flex h-full overflow-hidden">
       <div className="flex min-w-0 flex-1 flex-col">
-        {/* En-tête */}
-        <div className="flex flex-wrap items-center justify-between gap-3 px-5 pt-6 sm:px-8">
-          <div>
-            <div className="flex items-center gap-2.5">
-              <div className="grid size-9 shrink-0 place-items-center rounded-xl bg-primary/10 text-primary">
-                <svg viewBox="0 0 70 70" fill="currentColor" className="size-5">
-                  <path d="M57.4,0c-4.8,0-8.6,3.9-8.6,8.6v49.2c0,4.8,3.9,8.6,8.6,8.6s8.6-3.9,8.6-8.6V8.7C66,3.9,62.2,0,57.4,0Z"/>
-                  <path d="M16.3,4.6C14,.4,8.8-1.2,4.6,1,.4,3.2-1.2,8.5,1,12.7l26.1,49.3c2.2,4.2,7.4,5.8,11.7,3.6,4.2-2.2,5.8-7.4,3.6-11.7L16.3,4.6Z"/>
-                  <circle cx="8.8" cy="57.7" r="8.8"/>
-                </svg>
-              </div>
-              <h2 className="font-[var(--font-display)] text-xl font-bold tracking-tight sm:text-2xl">
-                {t('dash.welcome', { name: CURRENT_USER.name })}
-              </h2>
-            </div>
-            <p className="mt-1.5 text-muted-foreground">{t('dash.welcome_sub')}</p>
-          </div>
-
-          <div className="flex items-center gap-2">
-            <Button variant="ghost" size="sm" onClick={handleReset}>
-              <RotateCcw className="size-4" />
-              {t('widget.reset')}
-            </Button>
-            <Button
-              variant={paletteOpen ? 'default' : 'outline'}
-              size="sm"
-              onClick={() => setPaletteOpen((v) => !v)}
-            >
-              {paletteOpen ? <X className="size-4" /> : <LayoutGrid className="size-4" />}
-              {t('widget.add')}
-            </Button>
-          </div>
-        </div>
-
         {/* Bulles du haut (News / Mises à jour / Notifications / Messages) —
             équivalent React des dashboard bubble plugins de MelisCore.
             Masquables, état mémorisé (localStorage) comme la version d'origine. */}
@@ -210,29 +199,27 @@ export default function DashboardPage() {
           </button>
         </div>
 
-        {!bubblesHidden && (
-          <div className="grid grid-cols-2 gap-3 px-5 pt-3 sm:px-8 sm:grid-cols-4 sm:gap-4">
+        {/* Barre de bulles repliable — `Collapsible` anime la hauteur (équivalent du slideUp/Down
+            legacy). Le `pt-2` reste sur la grille INTERNE : posé sur le Collapsible, il subsisterait
+            en barre d'espace vide une fois la barre masquée. */}
+        <Collapsible open={!bubblesHidden}>
+          <div className="grid grid-cols-4 gap-2 px-5 pt-2 sm:px-8">
             {BUBBLES.map((b) => {
               const Icon = b.icon
               const count = bubbles ? bubbles[b.key].count : 0
               return (
                 <div
                   key={b.key}
-                  className="flex flex-col items-center justify-center rounded-xl border border-border bg-card p-5 text-center"
+                  className="flex items-center justify-center gap-2.5 rounded-lg border border-border bg-card px-3 py-3 text-center"
                 >
-                  <Icon className="size-6 text-muted-foreground" />
-                  <div className="mt-2 text-2xl font-bold leading-none">{count}</div>
-                  <div className="mt-1 text-sm text-muted-foreground">{t(b.labelKey)}</div>
-                  {b.key === 'notifications' && count > 0 && (
-                    <Button variant="outline" size="sm" className="mt-3">
-                      {t('dash.see_notifications')}
-                    </Button>
-                  )}
+                  <Icon className="size-5 shrink-0 text-muted-foreground" />
+                  <span className="text-base font-bold leading-none">{count}</span>
+                  <span className="truncate text-sm text-muted-foreground">{t(b.labelKey)}</span>
                 </div>
               )
             })}
           </div>
-        )}
+        </Collapsible>
 
         {/* Grille */}
         <div className="min-h-0 flex-1 overflow-auto px-5 pb-8 pt-4 sm:px-8">
@@ -257,15 +244,62 @@ export default function DashboardPage() {
         </div>
       </div>
 
-      {/* Palette d'ajout de widgets */}
-      {paletteOpen && (
+      {/* Onglet d'ouverture — accroché au FLANC GAUCHE de la palette (legacy :
+          `#melisDashBoardPluginBtn`, `position:absolute; left:-38px`, dashboard.css:189).
+          Positionné en `right` par rapport à la page (et non dans le flux de l'en-tête) : c'est ce
+          qui lui permet de COULISSER en même temps que la palette. Fermé → collé au bord droit ;
+          ouvert → `right-72`, exactement la largeur de la palette, donc posé sur son bord.
+          Même durée/courbe que la palette : les deux bougent d'un seul bloc. */}
+      <Button
+        // Toujours `default` (aplat primaire, icône blanche) : c'est l'action principale du
+        // dashboard, elle doit rester repérable. En `outline` le bouton fermé se fondait dans
+        // l'en-tête et devenait invisible.
+        variant="default"
+        size="icon"
+        onClick={() => setPaletteOpen((v) => !v)}
+        title={t('widget.add')}
+        aria-label={t('widget.add')}
+        className={cn(
+          // `[&_svg]:size-5` et NON `size-5` sur l'icône : la base du Button impose
+          // `[&_svg]:size-4`, un sélecteur descendant qui l'emporte en spécificité sur une classe
+          // posée directement sur le <svg>. Il faut donc relever la taille depuis le bouton.
+          'absolute top-4 z-40 rounded-none transition-[right] duration-[400ms] ease-out [&_svg]:size-5',
+          paletteOpen ? 'right-72' : 'right-0',
+        )}
+      >
+        {/* Icône INVARIANTE (pas de bascule en croix à l'ouverture) : le bouton reste le
+            repère « plugins du dashboard », comme le legacy qui garde son `fa-plug` ouvert
+            comme fermé. `rotate-45` : broches vers le haut-DROITE.
+            `strokeWidth` monté à 2.5 (défaut lucide : 2) — le trait fin se perdait sur l'aplat
+            rouge ; c'est le seul levier de graisse d'une icône lucide (pas de `font-weight`). */}
+        <Plug className="rotate-45" strokeWidth={2.5} />
+      </Button>
+
+      {/* Palette d'ajout de widgets — colonne flex qui COMPRIME la grille (comportement voulu),
+          animée en largeur 0 → 18rem, `transition: width 0.4s` (le legacy anime un `transform`,
+          mais il recouvre la grille au lieu de la pousser : ici c'est la largeur qui doit bouger
+          pour que la colonne de gauche suive).
+          `overflow-hidden` + `w-72` figée sur l'aside : le contenu garde sa largeur pleine et se
+          fait révéler par le cadre qui s'ouvre — sans ça la palette se re-disposerait à chaque
+          frame (texte qui saute pendant 400 ms).
+          Le panneau reste MONTÉ en permanence : c'est ce qui rend l'animation possible dans les
+          deux sens, et ça préserve l'état interne de la palette (scroll, drag-in GridStack). */}
+      <div
+        className={cn(
+          'flex shrink-0 overflow-hidden transition-[width] duration-[400ms] ease-out',
+          paletteOpen ? 'w-72' : 'w-0',
+        )}
+        aria-hidden={!paletteOpen}
+      >
         <WidgetPalette
           present={present}
           onAdd={addWidget}
           onClose={() => setPaletteOpen(false)}
+          onRemoveAll={removeAllWidgets}
+          widgetCount={layout.length}
           extraWidgets={legacyWidgets}
         />
-      )}
+      </div>
     </div>
     </DashboardDataContext.Provider>
   )

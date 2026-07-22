@@ -226,11 +226,10 @@ class MelisReactApiUserController extends MelisAbstractActionController
                     }
                 } catch (\Throwable) {}
 
-                // Régénère le cache de droits de l'utilisateur (colonne usr_rights_cache) UNIQUEMENT
-                // si les droits ont été modifiés — point de génération « à la sauvegarde » côté React.
-                if ($rights !== null) {
-                    try { $this->getServiceManager()->get('MelisCoreRights')->regenerateUserCache($id, $rights); } catch (\Throwable) {}
-                }
+                // NB : le cache de droits (usr_rights_cache) est régénéré par MelisCoreRightsCacheListener
+                // sur l'event `meliscore_tooluser_save_end` ci-dessous (il lit les droits FRAÎCHEMENT
+                // écrits en DB, cf. UPDATE plus haut). On ne le régénère donc PAS en plus ici : c'était
+                // un DOUBLE rebuild (perf — la génération est l'op. la plus coûteuse de la sauvegarde).
 
                 // Événements legacy de FIN de sauvegarde. Le save React n'en émettait AUCUN : tous les
                 // listeners branchés sur la sauvegarde d'un user restaient donc muets depuis /melis-react.
@@ -280,8 +279,9 @@ class MelisReactApiUserController extends MelisAbstractActionController
                 $db->query('SELECT LAST_INSERT_ID() AS id', [])
             )[0]['id'];
 
-            // Génère le cache de droits du nouvel utilisateur (colonne usr_rights_cache).
-            try { $this->getServiceManager()->get('MelisCoreRights')->regenerateUserCache($newId, $rights ?? ''); } catch (\Throwable) {}
+            // Le cache de droits du nouvel utilisateur est généré par MelisCoreRightsCacheListener sur
+            // l'event `meliscore_tooluser_savenew_end` ci-dessous (il lit les droits en DB). Pas de
+            // régénération directe ici → on évite le double rebuild (perf).
 
             // Pendant création du `meliscore_tooluser_save_end` ci-dessus (cf. son commentaire) :
             // MelisCoreRightsCacheListener + MelisCoreFlashMessengerListener écoutent `savenew_end`.

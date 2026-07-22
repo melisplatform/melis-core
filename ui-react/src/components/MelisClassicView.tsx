@@ -1,6 +1,17 @@
-import { Layout, Sparkles } from 'lucide-react'
+import { Layout } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { useI18n } from '@/i18n/i18n-context'
+
+/** Logo « M » de Melis (même tracé que les icônes de modules de la sidebar). */
+function MelisM({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 70 70" fill="currentColor" aria-hidden="true">
+      <path d="M57.4,0c-4.8,0-8.6,3.9-8.6,8.6v49.2c0,4.8,3.9,8.6,8.6,8.6s8.6-3.9,8.6-8.6V8.7C66,3.9,62.2,0,57.4,0Z" />
+      <path d="M16.3,4.6C14,.4,8.8-1.2,4.6,1,.4,3.2-1.2,8.5,1,12.7l26.1,49.3c2.2,4.2,7.4,5.8,11.7,3.6,4.2-2.2,5.8-7.4,3.6-11.7L16.3,4.6Z" />
+      <circle cx="8.8" cy="57.7" r="8.8" />
+    </svg>
+  )
+}
 
 export type ViewMode = 'react' | 'iframe'
 
@@ -34,7 +45,7 @@ export function ViewModeToggle({
             : 'text-muted-foreground hover:text-foreground',
         )}
       >
-        <Sparkles className="size-3.5" />
+        <MelisM className="size-3.5" />
         {t('layout.view_new')}
       </button>
       <button

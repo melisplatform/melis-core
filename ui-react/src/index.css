@@ -1,5 +1,13 @@
 @import 'tailwindcss';
 
+/* Les pages React des modules vivent hors de ui-react/ (vendor/<module>/public/react).
+   Tailwind v4 s'enracine dans ui-react/ et ne les scanne pas par défaut → leurs
+   classes (ex. sm:grid-cols-4) ne sont pas générées et les layouts cassent.
+   On déclare ces dossiers comme sources supplémentaires. */
+@source "../../vendor/melisplatform/melis-core/public/react";
+@source "../../vendor/melisplatform/melis-cms-news/public/react";
+@source "../../vendor/melisplatform/melis-small-business/public/react";
+
 /* ============================================================================
    Melis backoffice — système de thèmes
    ----------------------------------------------------------------------------

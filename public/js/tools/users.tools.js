@@ -9,7 +9,8 @@ function getRightsTree(userId) {
 		if (tree == null) {
 			tree = initRightsTree(
 				"body #rights-fancytree",
-				"/melis/MelisCore/ToolUser/getRightsTreeView?userId=" + userId
+				"/melis/MelisCore/ToolUser/getRightsTreeView?userId=" + userId,
+				{ cascade: true }
 			);
 		} else {
 			tree.reload({
@@ -325,7 +326,8 @@ function melisNewUserRights() {
 		if (tree == null)
 			initRightsTree(
 				"#new-rights-fancytree",
-				"/melis/MelisCore/ToolUser/getRightsTreeView"
+				"/melis/MelisCore/ToolUser/getRightsTreeView",
+				{ cascade: true }
 			);
 }
 

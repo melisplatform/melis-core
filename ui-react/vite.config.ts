@@ -125,19 +125,30 @@ export default defineConfig(({ command }) => ({
   base: command === 'build' ? (process.env.VITE_BASE_URL ?? '/MelisCore/ui-react/') : '/',
   plugins: [react(), tailwindcss(), melisModuleAssetsPlugin()],
   resolve: {
-    alias: {
-      '@': path.resolve(import.meta.dirname, 'src'),
+    // Forme tableau (regex exactes) : les pages React vivent dans vendor/*/public/react
+    // (hors de ui-react/), donc au BUILD rolldown ne remonte pas jusqu'à
+    // ui-react/node_modules. En dev ça passe via optimizeDeps, mais le build a
+    // besoin d'alias explicites pour react & co. Les regex `^x$` évitent que
+    // `react` matche `react-router-dom`.
+    alias: [
+      { find: /^@\/(.*)$/,          replacement: path.resolve(import.meta.dirname, 'src') + '/$1' },
+      { find: /^xlsx$/,             replacement: path.resolve(import.meta.dirname, 'node_modules/xlsx/xlsx.mjs') },
       // Source library: the AI chat React components (AiChatContainer…) live in the
       // melis-ai-engine module. The shell composes them (like a brick) to offer a global
       // assistant; the chat's own logic stays in the engine. No separate build — imported
       // at build time (engine ui-react has no external deps beyond React).
-      '@melis-ai-engine': path.resolve(import.meta.dirname, '../../melis-ai-engine/ui-react/src'),
+      { find: /^@melis-ai-engine$/,       replacement: path.resolve(import.meta.dirname, '../../melis-ai-engine/ui-react/src/index.ts') },
+      { find: /^@melis-ai-engine\/(.*)$/, replacement: path.resolve(import.meta.dirname, '../../melis-ai-engine/ui-react/src') + '/$1' },
       // The engine source lives outside this project's node_modules tree, so its bare
       // `react` imports can't resolve upward. Pin react/react-dom to THIS app's copy so the
       // composed engine files bundle against the same single React instance as the shell.
-      react: path.resolve(import.meta.dirname, 'node_modules/react'),
-      'react-dom': path.resolve(import.meta.dirname, 'node_modules/react-dom'),
-    },
+      { find: /^react$/,            replacement: path.resolve(import.meta.dirname, 'node_modules/react') },
+      { find: /^react\/(.*)$/,      replacement: path.resolve(import.meta.dirname, 'node_modules/react') + '/$1' },
+      { find: /^react-dom$/,        replacement: path.resolve(import.meta.dirname, 'node_modules/react-dom') },
+      { find: /^react-dom\/(.*)$/,  replacement: path.resolve(import.meta.dirname, 'node_modules/react-dom') + '/$1' },
+      { find: /^react-router-dom$/, replacement: path.resolve(import.meta.dirname, 'node_modules/react-router-dom') },
+      { find: /^lucide-react$/,     replacement: path.resolve(import.meta.dirname, 'node_modules/lucide-react') },
+    ],
     dedupe: ['react', 'react-dom'],
   },
   build: {

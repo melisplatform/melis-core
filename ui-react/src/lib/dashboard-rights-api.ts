@@ -54,8 +54,20 @@ export function parseDashboardRights(xml: string): Set<string> {
   return ids
 }
 
+/**
+ * Announcement is granted to EVERY user, unconditionally — which is why it carries
+ * `exclude_rights_display` and never appears in the rights tree (there is nothing to tick). Legacy
+ * re-adds it on every save (MelisCoreDashboardPluginsRightsService::createXmlRightsValues), so we
+ * must too: saving rights from React would otherwise drop it from the XML, and the dashboard's
+ * rights filter would then hide the widget for that user.
+ */
+const ALWAYS_GRANTED = 'MelisCoreDashboardAnnouncementPlugin'
+
 /** Serialize granted plugin ids (DASHBOARD_ALL collapses to just the root). */
 export function dashboardRightsIds(checked: Set<string>): string[] {
-  if (checked.has(DASHBOARD_ALL)) return [DASHBOARD_ALL]
-  return Array.from(checked).filter((k) => k !== DASHBOARD_ALL)
+  const ids = checked.has(DASHBOARD_ALL)
+    ? [DASHBOARD_ALL]
+    : Array.from(checked).filter((k) => k !== DASHBOARD_ALL)
+  // Legacy appends it even alongside the root wildcard — keep the XML byte-identical.
+  return ids.includes(ALWAYS_GRANTED) ? ids : [...ids, ALWAYS_GRANTED]
 }

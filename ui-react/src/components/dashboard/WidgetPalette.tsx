@@ -1,8 +1,10 @@
-import { useEffect, useRef } from 'react'
-import { Plus, X } from 'lucide-react'
+import { useEffect, useRef, useState } from 'react'
+import { createPortal } from 'react-dom'
+import { ChevronDown, Plus, X } from 'lucide-react'
 import { GridStack } from 'gridstack'
 
 import { cn } from '@/lib/utils'
+import { Collapsible } from '@/components/ui/collapsible'
 import { useI18n } from '@/i18n/i18n-context'
 import { makeInstanceId } from './dashboard-store'
 import { WIDGETS, WIDGET_SECTIONS, WIDGET_MAP, type WidgetDef } from './widget-registry'
@@ -15,16 +17,37 @@ export function WidgetPalette({
   present,
   onAdd,
   onClose,
+  onRemoveAll,
+  widgetCount,
   extraWidgets = [],
 }: {
   present: Set<string>
   onAdd: (widgetId: string) => void
   onClose: () => void
+  /** Vide le dashboard — cf. `dashboard-plugin-delete-all` du legacy. */
+  onRemoveAll: () => void
+  /** Nombre de tuiles POSÉES (pas de widgets distincts) : sert à désactiver « tout supprimer »
+   *  sur un dashboard déjà vide, comme le `if ($items.length !== 0)` du legacy. */
+  widgetCount: number
   extraWidgets?: WidgetDef[]
 }) {
   const { t } = useI18n()
   // Refs sur les wrappers draggables, indexés par widgetId.
   const wrapperRefs = useRef<Map<string, HTMLDivElement>>(new Map())
+
+  // Accordéon à 2 niveaux, calqué sur le legacy (melisCore.js, showPlugLists/showCatPlugLists) :
+  // tout est REPLIÉ au départ, et un seul groupe ouvert par niveau — ouvrir une section referme
+  // la précédente. Refermer une section réinitialise aussi le module ouvert à l'intérieur.
+  const [openSection, setOpenSection] = useState<string | null>(null)
+  const [openModule, setOpenModule] = useState<string | null>(null)
+  // Confirmation avant de vider le dashboard — le legacy passe par `melisCoreTool.confirm()`.
+  const [confirmRemoveAll, setConfirmRemoveAll] = useState(false)
+  const toggleSection = (key: string) =>
+    setOpenSection((cur) => {
+      setOpenModule(null)
+      return cur === key ? null : key
+    })
+  const toggleModule = (key: string) => setOpenModule((cur) => (cur === key ? null : key))
 
   // Configure le drag-in GridStack pour tous les widgets (y compris déjà posés,
   // pour permettre d'en glisser une nouvelle instance). Chaque source de drag
@@ -45,6 +68,9 @@ export function WidgetPalette({
     if (els.length) {
       GridStack.setupDragIn(els, { helper: 'clone', appendTo: 'body' }, widgets)
     }
+    // Pas de dépendance à l'état de l'accordéon : `Collapsible` garde le contenu MONTÉ même replié
+    // (cf. son commentaire), donc tous les wrappers existent dès ce passage et sont enregistrés en
+    // une fois. Un groupe qu'on déplie livre des widgets déjà draggables.
   }, [present, extraWidgets])
 
   return (
@@ -54,7 +80,7 @@ export function WidgetPalette({
         <button
           type="button"
           onClick={onClose}
-          className="grid size-7 place-items-center rounded text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
+          className="grid size-7 cursor-pointer place-items-center rounded text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
           aria-label={t('widget.done')}
         >
           <X className="size-4" />
@@ -69,25 +95,34 @@ export function WidgetPalette({
           // dynamique du module correspondant (ex. Recent activity → MELISCORE).
           const items = WIDGETS.filter((w) => w.sectionKey === sectionKey && !w.sectionLabel)
           if (!items.length) return null
+          const key = `sec:${sectionKey}`
           return (
             <div key={sectionKey}>
-              <div className="mb-1.5 px-1 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground/70">
-                {t(sectionKey)}
-              </div>
-              <div className="space-y-1.5">
-                {items.map((w) => (
-                  <PaletteItem
-                    key={w.id}
-                    widget={w}
-                    added={present.has(w.id)}
-                    onAdd={() => onAdd(w.id)}
-                    wrapperRef={(el) => {
-                      if (el) wrapperRefs.current.set(w.id, el)
-                      else wrapperRefs.current.delete(w.id)
-                    }}
-                  />
-                ))}
-              </div>
+              {/* Sections natives React (pas des sections marketplace) → `section=""` : aucune
+                  couleur ne leur correspond, elles prennent le rouge plateforme par défaut,
+                  comme n'importe quelle section inconnue du helper legacy. */}
+              <GroupHeader
+                label={t(sectionKey)}
+                section=""
+                open={openSection === key}
+                onToggle={() => toggleSection(key)}
+              />
+              <Collapsible open={openSection === key}>
+                <div className="space-y-1.5">
+                  {items.map((w) => (
+                    <PaletteItem
+                      key={w.id}
+                      widget={w}
+                      added={present.has(w.id)}
+                      onAdd={() => onAdd(w.id)}
+                      wrapperRef={(el) => {
+                        if (el) wrapperRefs.current.set(w.id, el)
+                        else wrapperRefs.current.delete(w.id)
+                      }}
+                    />
+                  ))}
+                </div>
+              </Collapsible>
             </div>
           )
         })}
@@ -127,30 +162,178 @@ export function WidgetPalette({
           )
 
           return Array.from(sections.entries()).map(([sectionLabel, modules]) => {
+            // Un seul module dans la section → pas de 2ᵉ niveau d'accordéon : le sous-titre ferait
+            // doublon avec le titre de section (règle déjà en place avant les groupes repliables)
+            // et on imposerait deux clics pour atteindre un unique widget.
             const showModuleTitles = modules.size > 1
+            const sectionKey = `dyn:${sectionLabel}`
             return (
               <div key={sectionLabel}>
-                <div className="mb-1.5 px-1 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground/70">
-                  {sectionLabel === 'CustomProjects' ? 'Custom / Projects' : sectionLabel}
-                </div>
-                <div className="space-y-2.5">
-                  {Array.from(modules.entries()).map(([moduleLabel, items]) => (
-                    <div key={moduleLabel}>
-                      {showModuleTitles && (
-                        <div className="mb-1 px-1 text-[11px] font-medium text-muted-foreground/60">
-                          {moduleLabel}
+                <GroupHeader
+                  label={sectionLabel === 'CustomProjects' ? 'Custom / Projects' : sectionLabel}
+                  // `sectionLabel` BRUT (pas le libellé affiché) : c'est la clé du helper legacy —
+                  // 'CustomProjects' porte une couleur, 'Custom / Projects' n'en aurait aucune.
+                  section={sectionLabel}
+                  open={openSection === sectionKey}
+                  onToggle={() => toggleSection(sectionKey)}
+                />
+                <Collapsible open={openSection === sectionKey}>
+                  <div className="space-y-2.5">
+                    {Array.from(modules.entries()).map(([moduleLabel, items]) => {
+                      if (!showModuleTitles) {
+                        return <div key={moduleLabel} className="space-y-1.5">{items.map(renderItem)}</div>
+                      }
+                      const moduleKey = `${sectionKey}::${moduleLabel}`
+                      return (
+                        <div key={moduleLabel}>
+                          <GroupHeader
+                            label={moduleLabel}
+                            level="module"
+                            open={openModule === moduleKey}
+                            onToggle={() => toggleModule(moduleKey)}
+                          />
+                          <Collapsible open={openModule === moduleKey}>
+                            <div className="space-y-1.5">{items.map(renderItem)}</div>
+                          </Collapsible>
                         </div>
-                      )}
-                      <div className="space-y-1.5">{items.map(renderItem)}</div>
-                    </div>
-                  ))}
-                </div>
+                      )
+                    })}
+                  </div>
+                </Collapsible>
               </div>
             )
           })
         })()}
       </div>
+
+      {/* Pied de panneau — équivalent du `#dashboard-plugin-delete-all` legacy, en bas du menu.
+          `shrink-0` : le pied reste visible, c'est la liste au-dessus qui défile. */}
+      <div className="shrink-0 border-t border-border p-3">
+        <button
+          type="button"
+          onClick={() => setConfirmRemoveAll(true)}
+          // Dashboard déjà vide → rien à supprimer. Le legacy sortait silencieusement
+          // (`if ($items.length !== 0)`) ; désactiver le bouton dit la même chose, en visible.
+          disabled={widgetCount === 0}
+          className="w-full cursor-pointer rounded-md bg-destructive px-3 py-2 text-sm font-medium text-destructive-foreground transition-colors hover:bg-destructive/90 disabled:cursor-not-allowed disabled:opacity-40"
+        >
+          {t('widget.remove_all')}
+        </button>
+      </div>
+
+      {confirmRemoveAll && (
+        <ConfirmRemoveAllDialog
+          onCancel={() => setConfirmRemoveAll(false)}
+          onConfirm={() => {
+            setConfirmRemoveAll(false)
+            onRemoveAll()
+          }}
+        />
+      )}
     </aside>
+  )
+}
+
+/** Confirmation « supprimer tous les plugins » — pendant React du `melisCoreTool.confirm()` legacy
+ *  (mêmes titre, message et libellés Oui/Non). Rendue en portail sur `body` comme
+ *  `WidgetConfigDialog` : la palette est dans un conteneur `overflow-hidden` (l'animation de
+ *  largeur), une modale rendue sur place s'y ferait rogner. */
+function ConfirmRemoveAllDialog({ onCancel, onConfirm }: { onCancel: () => void; onConfirm: () => void }) {
+  const { t } = useI18n()
+  return createPortal(
+    <div className="fixed inset-0 z-[10000] flex items-center justify-center bg-black/50 p-4" onClick={onCancel}>
+      <div
+        className="w-full max-w-sm overflow-hidden rounded-lg border border-border bg-card shadow-xl"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="border-b border-border px-4 py-3">
+          <h2 className="font-[var(--font-display)] text-sm font-semibold">{t('widget.remove_all_title')}</h2>
+        </div>
+        <p className="px-4 py-4 text-sm text-muted-foreground">{t('widget.remove_all_confirm')}</p>
+        <div className="flex justify-end gap-2 border-t border-border px-4 py-3">
+          <button
+            type="button"
+            onClick={onCancel}
+            className="cursor-pointer rounded-md border border-input bg-card px-3 py-1.5 text-sm font-medium transition-colors hover:bg-accent"
+          >
+            {t('common.no')}
+          </button>
+          <button
+            type="button"
+            onClick={onConfirm}
+            className="cursor-pointer rounded-md bg-destructive px-3 py-1.5 text-sm font-medium text-destructive-foreground transition-colors hover:bg-destructive/90"
+          >
+            {t('common.yes')}
+          </button>
+        </div>
+      </div>
+    </div>,
+    document.body,
+  )
+}
+
+/** Couleur de pastille par section marketplace — reprise à l'identique du helper PHP legacy
+ *  `MelisCoreSectionIconsHelper` (une seule et même icône Melis, seul le fond change).
+ *  Section inconnue → rouge plateforme, exactement comme la branche `else` du helper. */
+const SECTION_COLORS: Record<string, string> = {
+  MelisCore: '#ee6622',
+  MelisCms: '#69b344',
+  MelisMarketing: '#70469c',
+  MelisCommerce: '#2780c4',
+  CustomProjects: '#676767',
+}
+
+/** Logo Melis sur carré arrondi coloré — portage React du SVG inline du helper legacy
+ *  (mêmes `path`/`circle`, même viewBox 0 0 80 80). Aucun appel PHP : la seule variable est
+ *  la couleur de fond, donnée par `SECTION_COLORS`. */
+function SectionIcon({ section }: { section: string }) {
+  return (
+    <svg viewBox="0 0 80 80" className="size-5 shrink-0" aria-hidden="true" focusable="false">
+      <rect fill={SECTION_COLORS[section] ?? '#ff0000'} x=".07" y=".13" width="79.86" height="79.86" rx="15.36" ry="15.36" />
+      <path fill="#FFFFFF" d="M57.78,15.87c-3.47,0-6.29,2.81-6.29,6.29v35.85c0,3.47,2.81,6.29,6.29,6.29s6.29-2.81,6.29-6.29V22.16c0-3.47-2.81-6.29-6.29-6.29Z" />
+      <path fill="#FFFFFF" d="M27.79,19.16c-1.62-3.07-5.43-4.24-8.5-2.62-3.07,1.62-4.24,5.43-2.62,8.5l19.01,35.93c1.62,3.07,5.43,4.24,8.5,2.62,3.07-1.62,4.24-5.43,2.62-8.5L27.79,19.16Z" />
+      <circle fill="#FFFFFF" cx="22.36" cy="57.88" r="6.43" />
+    </svg>
+  )
+}
+
+/** En-tête de groupe repliable — équivalent des `melis-core-dashboard-filter-btn` (section) et
+ *  `melis-core-dashboard-category-btn` (module) du legacy, chevron `fa-angle-down` compris.
+ *  Deux niveaux : `section` (majuscules, appuyé) et `module` (plus discret, légèrement indenté). */
+function GroupHeader({
+  label,
+  open,
+  onToggle,
+  level = 'section',
+  /** Clé de section pour la pastille colorée. Niveau `module` : aucune icône, comme le legacy. */
+  section,
+}: {
+  label: string
+  open: boolean
+  onToggle: () => void
+  level?: 'section' | 'module'
+  section?: string
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onToggle}
+      aria-expanded={open}
+      className={cn(
+        'mb-1.5 flex w-full cursor-pointer items-center gap-2 rounded px-1 py-1 text-left transition-colors hover:bg-accent',
+        level === 'section'
+          ? 'text-[11px] font-semibold uppercase tracking-wider text-muted-foreground/70'
+          : 'pl-2 text-[11px] font-medium text-muted-foreground/60',
+      )}
+    >
+      {section !== undefined && <SectionIcon section={section} />}
+      {/* `mr-auto` plutôt qu'un `justify-between` sur le parent : avec l'icône en tête, seul le
+          libellé doit absorber l'espace libre, sinon un trou se creuse entre icône et texte. */}
+      <span className="mr-auto truncate">{label}</span>
+      {/* Chevron pivoté plutôt qu'échangé contre une autre icône : la rotation est animable et
+          garde la même empreinte, donc l'en-tête ne « saute » pas au dépliage. */}
+      <ChevronDown className={cn('size-3.5 shrink-0 transition-transform', open && 'rotate-180')} />
+    </button>
   )
 }
 

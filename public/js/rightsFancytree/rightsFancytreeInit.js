@@ -1,9 +1,13 @@
 var melisCoreRights = (function ($, window, document) {
 	//Check this for updates: https://github.com/mar10/fancytree/blob/master/demo/sample-api.html
-	window.initRightsTree = function (trees, url) {
+	// options.cascade === true -> selectMode 3 (multi-hier) : checking a parent checks all
+	// its children. Opt-in per caller so existing trees keep the historical flat behaviour.
+	window.initRightsTree = function (trees, url, options) {
+		var opts = options || {};
+
 		return $(trees).fancytree({
 			checkbox: true,
-			selectMode: 2,
+			selectMode: opts.cascade === true ? 3 : 2,
 			debugLevel: 0,
 			toggleEffect: {
 				effect: "slideToggle",
@@ -30,22 +34,8 @@ var melisCoreRights = (function ($, window, document) {
 						.find(".fancytree-icon")
 						.addClass("page-icons " + fnode.data.iconTab)
 						.removeClass("fancytree-icon");
-					$(fnode.span)
-						.find(".fancytree-checkbox")
-						.addClass("rights-custom-checkbox fa fa-square-o");
 
-					if (fnode.isSelected() === true) {
-						$(fnode.span)
-							.find(".fancytree-title")
-							.css("color", fnode.data.melisData.colorSelected);
-						$(fnode.span)
-							.find(".fancytree-checkbox")
-							.removeClass("fa-square-o")
-							.addClass("fa-check-square-o")
-							.css("color", fnode.data.melisData.colorSelected);
-					} else {
-						$(fnode.span).find(".fancytree-title").css("color", "#686868");
-					}
+					paintNode(fnode);
 
 					// hightlight parents of selected child nodes
 					updateParentHighlight(fnode);
@@ -97,24 +87,11 @@ var melisCoreRights = (function ($, window, document) {
 
 					// hightlight parents of selected child nodes
 					updateParentHighlight(fnode);
-					
-					if (fnode.isSelected() === true) {
-						$(fnode.span)
-							.find(".fancytree-title")
-							.css("color", fnode.data.melisData.colorSelected);
-						$(fnode.span)
-							.find(".fancytree-checkbox")
-							.removeClass("fa-square-o")
-							.addClass("fa-check-square-o")
-							.css("color", fnode.data.melisData.colorSelected);
-					} else {
-						$(fnode.span).find(".fancytree-title").css("color", "#686868");
-						$(fnode.span)
-							.find(".fancytree-checkbox")
-							.removeClass("fa-check-square-o")
-							.addClass("fa-square-o")
-							.css("color", "#686868");
-					}
+
+					// selectMode 3 : cocher/decocher un noeud change aussi l'etat de ses
+					// descendants et de ses ancetres sans declencher d'evenement `select`
+					// pour eux -> on repeint tout l'arbre.
+					data.tree.visit(paintNode);
 
 					// reset the values of the array everytime a node is checked or unchecked to update values
 					for (var i = 0; i < userRightsData.length; i++) {
@@ -165,6 +142,34 @@ var melisCoreRights = (function ($, window, document) {
 			}
 		});
 	};
+
+	// applique le glyphe font-awesome + la couleur correspondant a l'etat coche du noeud
+	function paintNode(node) {
+		if (!node.span) {
+			return;
+		}
+
+		var selectedColor =
+			(node.data.melisData && node.data.melisData.colorSelected) || "#686868";
+		var $checkbox = $(node.span).find(".fancytree-checkbox");
+		var $title = $(node.span).find(".fancytree-title");
+
+		$checkbox.addClass("rights-custom-checkbox fa");
+
+		if (node.isSelected() === true) {
+			$title.css("color", selectedColor);
+			$checkbox
+				.removeClass("fa-square-o")
+				.addClass("fa-check-square-o")
+				.css("color", selectedColor);
+		} else {
+			$title.css("color", "#686868");
+			$checkbox
+				.removeClass("fa-check-square-o")
+				.addClass("fa-square-o")
+				.css("color", "#686868");
+		}
+	}
 
 	function updateParentHighlight(node) {
 		node.tree.visit(function(n) {

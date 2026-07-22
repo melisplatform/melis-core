@@ -105,6 +105,11 @@ const fr = {
   'widget.in_dashboard': 'Déjà présent',
   'widget.sec.content': 'Contenu',
   'widget.sec.legacy': 'Plugins hérités',
+  // Reprises telles quelles du legacy (tr_melisore_remove_all_plugins,
+  // tr_meliscore_remove_all_plugins, tr_meliscore_remove_dashboard_all_plugin_msg).
+  'widget.remove_all': 'Supprimer tous les plugins',
+  'widget.remove_all_title': 'Suppression de tous les plugins du dashboard',
+  'widget.remove_all_confirm': 'Êtes-vous sûr de vouloir supprimer tous les plugins ?',
 
   'common.coming_soon': 'Bientôt disponible',
   'common.coming_soon_sub': 'Cet écran fait partie des prochains jalons du prototype.',
@@ -900,6 +905,9 @@ const en: Record<I18nKey, string> = {
   'widget.in_dashboard': 'Already added',
   'widget.sec.content': 'Content',
   'widget.sec.legacy': 'Legacy Plugins',
+  'widget.remove_all': 'Remove all plugins',
+  'widget.remove_all_title': 'Removal of all dashboard plugins',
+  'widget.remove_all_confirm': 'Are you sure you want to remove all plugins?',
 
   'common.coming_soon': 'Coming soon',
   'common.coming_soon_sub': 'This screen is part of the prototype’s next milestones.',

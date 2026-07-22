@@ -92,6 +92,10 @@ export function DashboardGrid({
   // document du plugin continue de publier sa hauteur (son ResizeObserver se déclenche sur le
   // reflow provoqué par le redimensionnement lui-même), ce qui ramènerait sinon la tuile de force.
   const userSized = useRef(new Set<string>())
+  // Drag / redimensionnement EN COURS : l'ajustement automatique est totalement suspendu. Écrire
+  // une hauteur pendant que GridStack manipule la tuile la corrompt, et surtout `userSized` n'est
+  // rempli qu'au `resizestop` — sans ce verrou, tout le drag se déroule ajustement actif.
+  const interacting = useRef(false)
 
   // --- Init GridStack (une seule fois) ---
   useEffect(() => {
@@ -138,11 +142,21 @@ export function DashboardGrid({
     // Un redimensionnement MANUEL fige la tuile : plus d'ajustement automatique dessus.
     // ⚠️ `mutating` : nos PROPRES `grid.update()` émettent aussi `resizestop`. Sans ce garde-fou,
     // le tout premier ajustement marquerait la tuile comme « réglée à la main » et se bloquerait.
-    grid.on('resizestop', (_e, el: HTMLElement) => {
+    //
+    // ⚠️ On marque dès le `resizestart`, PAS au `resizestop` : redimensionner l'iframe déclenche le
+    // ResizeObserver du plugin, qui republie une hauteur PENDANT le drag. La tuile était alors
+    // ajustée en plein geste — et comme la mesure d'un plugin dont le contenu suit la hauteur de
+    // l'iframe (thème legacy : `body{height:100%}`) vaut un peu MOINS que la tuile, chaque frame la
+    // rétrécissait un peu plus : effet cliquet jusqu'au minimum, contenu invisible.
+    grid.on('resizestart', (_e, el: HTMLElement) => {
       if (mutating.current) return
+      interacting.current = true
       const id = (el as HTMLElement & { gridstackNode?: { id?: string } }).gridstackNode?.id
       if (id) userSized.current.add(id)
     })
+    grid.on('resizestop', () => { interacting.current = false })
+    grid.on('dragstart', () => { if (!mutating.current) interacting.current = true })
+    grid.on('dragstop', () => { interacting.current = false })
 
     // Gère les widgets déposés depuis la palette externe (setupDragIn).
     grid.on('added', (_, items: GridStackNode[]) => {
@@ -184,12 +198,25 @@ export function DashboardGrid({
     // l'iframe, le handler document de GridStack ne se déclenche jamais → le clone
     // reste COLLÉ à l'écran. On met donc toutes les iframes en pointer-events:none dès
     // qu'un drag démarre (poignée de tuile OU item de palette), rétabli au relâchement.
+    //
+    // ⚠️ Vaut AUSSI pour la poignée de REDIMENSIONNEMENT (`.ui-resizable-handle`) : un
+    // redimensionnement se termine très souvent au-dessus d'une iframe (celle de la tuile qu'on
+    // agrandit). Le `mouseup` y était avalé, donc `resizestop` ne partait jamais — le verrou
+    // `interacting` restait bloqué et l'ajustement automatique mourait pour toute la session.
     const startsDrag = (t: HTMLElement | null) =>
-      !!t && (!!t.closest('.widget-drag-handle') || !!t.closest('[data-widget-palette]'))
+      !!t &&
+      (!!t.closest('.widget-drag-handle') ||
+        !!t.closest('[data-widget-palette]') ||
+        !!t.closest('.ui-resizable-handle'))
     const onDown = (e: MouseEvent) => {
       if (startsDrag(e.target as HTMLElement)) document.body.classList.add('melis-widget-dragging')
     }
-    const onUp = () => document.body.classList.remove('melis-widget-dragging')
+    const onUp = () => {
+      document.body.classList.remove('melis-widget-dragging')
+      // Filet : si GridStack n'émet pas son `resizestop`/`dragstop` (événement avalé), le verrou
+      // resterait actif et l'ajustement automatique ne repartirait plus.
+      interacting.current = false
+    }
     document.addEventListener('mousedown', onDown, true)
     document.addEventListener('mouseup', onUp, true)
 
@@ -212,6 +239,7 @@ export function DashboardGrid({
       const { itemId, contentPx } = (e as CustomEvent<{ itemId?: string; contentPx?: number }>).detail ?? {}
       const grid = gridRef.current
       if (!grid || !itemId || !contentPx) return
+      if (interacting.current) return
       if (userSized.current.has(itemId)) return
       const rows = contentPxToGridRows(contentPx)
       if (localStorage.getItem('melis-autofit-debug')) {
@@ -221,7 +249,7 @@ export function DashboardGrid({
       // « desktop » dans le layout PERSISTÉ le corromprait. On corrige alors seulement l'affichage.
       if (grid.getColumn() !== GRID_COLS) {
         const node = grid.engine.nodes.find((n) => n.id === itemId)
-        if (node?.el && node.h !== rows) {
+        if (node?.el && rows > (node.h ?? 0)) {
           mutating.current = true
           grid.update(node.el as HTMLElement, { h: rows })
           mutating.current = false
@@ -229,7 +257,11 @@ export function DashboardGrid({
         return
       }
       const item = layoutRef.current.find((l) => l.i === itemId)
-      if (!item || item.h === rows) return
+      // GROSSIR UNIQUEMENT. La mesure n'est fiable QUE comme plancher : pour un plugin dont le
+      // contenu se cale sur la hauteur de l'iframe, elle vaut toujours un peu moins que la tuile
+      // et la rétrécirait indéfiniment (cliquet → tuile écrasée, contenu invisible). Réduire une
+      // tuile reste possible à la main ; c'est le geste qui la fige (`userSized`).
+      if (!item || rows <= item.h) return
       // `h` uniquement, jamais `minH` : figer le plancher sur la hauteur mesurée empêcherait de
       // rétrécir la tuile à la main (c'était le bug du `minH` déclaré).
       onChangeRef.current(layoutRef.current.map((l) => (l.i === itemId ? { ...l, h: rows } : l)))

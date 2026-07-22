@@ -32,6 +32,15 @@ class MelisCoreTranslationService extends Translator implements MelisCoreTransla
     protected $serviceManager;
 
     /**
+     * Mémo par requête du catalogue de traductions par locale (service singleton).
+     * getTranslatedMessageByLocale() scanne les dossiers language/ de TOUS les modules et `include`
+     * chaque fichier : sans cache, getMessage() le reconstruisait à CHAQUE appel (ex.
+     * /rights/capabilities traduit ~150 labels → ~4,3 s). Clé = locale + liste de modules.
+     * @var array<string,array>
+     */
+    private $translatedByLocaleMemo = [];
+
+    /**
      * @param ServiceManager $service
      */
     public function setServiceManager(ServiceManager $service)
@@ -110,6 +119,13 @@ class MelisCoreTranslationService extends Translator implements MelisCoreTransla
      */
     public function getTranslatedMessageByLocale($locale = 'en_EN', $moduleArr = [])
     {
+        // Mémo par requête : le catalogue est invariant sur la durée de la requête (les fichiers de
+        // langue ne changent pas), et le reconstruire coûte cher (I/O + include de tous les modules).
+        $memoKey = $locale . '|' . implode(',', (array) $moduleArr);
+        if (isset($this->translatedByLocaleMemo[$memoKey])) {
+            return $this->translatedByLocaleMemo[$memoKey];
+        }
+
         $modulesSvc = $this->getServiceManager()->get('ModulesService');
         $modules = $moduleArr ?: $modulesSvc->getAllModules();
 
@@ -163,6 +179,7 @@ class MelisCoreTranslationService extends Translator implements MelisCoreTransla
             }
         }
 
+        $this->translatedByLocaleMemo[$memoKey] = $transMessages;
 
         return $transMessages;
 
@@ -176,12 +193,9 @@ class MelisCoreTranslationService extends Translator implements MelisCoreTransla
 
         $getAllTransMsg = $this->getTranslatedMessageByLocale($locale, $moduleArr);
 
-        foreach($getAllTransMsg as $transKey => $transMsg) {
-            if($translationKey == $transKey)
-                return $transMsg;
-        }
-
-        return null;
+        // Le catalogue est indexé par clé de traduction → accès direct O(1) (au lieu d'un balayage
+        // linéaire du catalogue entier à CHAQUE appel).
+        return $getAllTransMsg[$translationKey] ?? null;
     }
 
     /**
@@ -447,6 +461,7 @@ class MelisCoreTranslationService extends Translator implements MelisCoreTransla
         $content = '<?php'. PHP_EOL . 'return array(' . PHP_EOL . PHP_EOL. ');';
         if(file_exists($dir) && is_writable($dir)) {
             file_put_contents($dir.'/'.$fileName, $content);
+            $this->translatedByLocaleMemo = []; // nouveau fichier de langue → invalider le mémo
         }
     }
 
@@ -572,6 +587,7 @@ class MelisCoreTranslationService extends Translator implements MelisCoreTransla
 
         if(file_put_contents($currentTrans, $content, LOCK_EX)){
             $status = true;
+            $this->translatedByLocaleMemo = []; // fichier modifié → invalider le mémo du catalogue
         }
 
         return $status;
