@@ -496,32 +496,85 @@ export async function fetchLegacyDashboardPlugins(): Promise<DashboardPluginsRes
 }
 
 // ─── Dashboard layout persistence (DB, melis_core_dashboards) ────────────────
+//
+// React and the classic /melis dashboard share the SAME record (dashboard_id
+// `id_meliscore_toolstree_section_dashboard`), so a change on either side is always consistent.
+// The DB stores the legacy XML schema, keyed by the REAL PHP plugin name — hence this "record"
+// shape (pluginName + pluginId) rather than a bare React grid id. DashboardPage maps it to/from
+// its GridItem (`i`) using the widget registry.
+//
+// READ goes through the react-api (JSON); WRITE goes through the SAME legacy endpoint the classic
+// dashboard uses (`saveDashboardPlugins`) — one code path, and it fires
+// `meliscore_save_dashboard_plugin_end` natively (→ per-user dashboard cache purge) so the classic
+// dashboard reflects every React change (add / move / remove / remove-all).
 
-export interface DashboardGridItem { i: string; x: number; y: number; w: number; h: number }
+/** dashboard_id of the shared dashboard record (cf. renderDashboardPluginsAction's default). */
+const LEGACY_DASHBOARD_ID = 'id_meliscore_toolstree_section_dashboard'
 
-/** Returns the saved layout from the DB, or null if not yet saved. */
-export async function fetchDashboardLayout(): Promise<DashboardGridItem[] | null> {
+export interface DashboardPluginRecord {
+  /** Real PHP dashboard plugin name (e.g. MelisCoreDashboardRecentUserActivityPlugin). */
+  pluginName: string
+  /** Per-instance id kept in the XML (`plugin_id`) — lets the same plugin appear several times. */
+  pluginId: string
+  x: number
+  y: number
+  w: number
+  /** Hauteur en lignes de la grille LEGACY (cellules 80px) — hauteur DÉCLARÉE du plugin, PAS la
+   *  hauteur d'affichage React (46px, ajustée au contenu). C'est ce que rend le dashboard /melis. */
+  h: number
+}
+
+/** Returns the saved plugin records from the shared DB record, or null if not yet saved. */
+export async function fetchDashboardLayout(): Promise<DashboardPluginRecord[] | null> {
   try {
     const res = await fetch('/melis/react-api/dashboard/layout', {
       headers: { ...XHR_HEADER },
       credentials: 'include',
     })
     if (!res.ok) return null
-    const data = (await res.json()) as { success: boolean; data?: DashboardGridItem[] | null }
-    return data.success && Array.isArray(data.data) && data.data.length > 0 ? data.data : null
+    const data = (await res.json()) as { success: boolean; data?: DashboardPluginRecord[] | null }
+    if (!data.success) return null
+    // DB VIDE (record absent ou `d_content` vidé par « Remove all » legacy) ⇒ tableau vide, PAS null :
+    // c'est un état d'autorité (l'utilisateur a tout retiré) que l'appelant doit propager en effaçant
+    // son cache localStorage. `null` est réservé aux échecs réels (HTTP/réseau) → l'appelant garde le
+    // cache. Sans cette distinction, un dashboard vidé côté legacy restait affiché côté React.
+    if (!Array.isArray(data.data)) return []
+    // `h` est la hauteur LEGACY déclarée (grille 80px) telle que stockée ; la conversion en lignes de
+    // la grille React (46px) pour l'AFFICHAGE se fait à la construction du layout (cf. recordsToLayout).
+    return data.data
   } catch {
     return null
   }
 }
 
-/** Persists the layout to DB (fire-and-forget, errors are silently swallowed). */
-export async function saveDashboardLayout(items: DashboardGridItem[]): Promise<void> {
+/**
+ * Persists the dashboard through the legacy `saveDashboardPlugins` endpoint — the SAME one the
+ * classic /melis dashboard posts to (MelisCoreDashboardDragDropZonePlugin::savePlugins). Payload
+ * shape mirrors the legacy `serializeWidgetMap`: `dashboard_id` + `plugins[name][id][key]`. An empty
+ * set (Remove all) posts only `dashboard_id` → the endpoint saves an empty dashboard AND fires
+ * `meliscore_save_dashboard_plugin_end`, so the classic dashboard's cache is purged too.
+ * Fire-and-forget: errors are silently swallowed.
+ */
+export async function saveDashboardLayout(items: DashboardPluginRecord[]): Promise<void> {
+  const form = new URLSearchParams()
+  form.set('dashboard_id', LEGACY_DASHBOARD_ID)
+  for (const p of items) {
+    const base = `plugins[${p.pluginName}][${p.pluginId}]`
+    form.set(`${base}[x-axis]`, String(p.x))
+    form.set(`${base}[y-axis]`, String(p.y))
+    form.set(`${base}[width]`, String(p.w))
+    // `h` porte déjà la hauteur LEGACY DÉCLARÉE du plugin (cf. layoutToRecords → def.legacyH), donc
+    // dans l'unité de la grille classique (80px). On l'écrit tel quel : le dashboard /melis la rend
+    // à sa hauteur de config → pas de vide en bas. On NE persiste PAS la hauteur d'affichage React
+    // (ajustée au contenu, 46px), qui gonflait la tuile legacy.
+    form.set(`${base}[height]`, String(p.h))
+  }
   try {
-    await fetch('/melis/react-api/dashboard/layout', {
+    await fetch('/melis/MelisCore/DashboardPlugins/saveDashboardPlugins', {
       method: 'POST',
-      headers: { ...XHR_HEADER, 'Content-Type': 'application/json' },
+      headers: { ...XHR_HEADER, 'Content-Type': 'application/x-www-form-urlencoded' },
       credentials: 'include',
-      body: JSON.stringify(items),
+      body: form.toString(),
     })
   } catch {
     /* ignore */

@@ -10,6 +10,7 @@ import { AUTOFIT_TOLERANCE_PX, CELL_HEIGHT, GRID_COLS, MARGIN, contentPxToGridRo
 import { WIDGET_MAP, type WidgetDef } from './widget-registry'
 import { WidgetFrame } from './WidgetFrame'
 import { WidgetConfigDialog } from './WidgetConfigDialog'
+import { PluginConfirmDialog } from './PluginConfirmDialog'
 import { widgetIdOf, type GridItem } from './dashboard-store'
 
 // ─── Error boundary per widget ────────────────────────────────────────────────
@@ -287,15 +288,20 @@ export function DashboardGrid({
       if (rows === item.h) return
       if (rows < item.h) {
         // RÉTRÉCIR : c'est ce qui supprime la bande blanche sous les plugins dont la hauteur
-        // DÉCLARÉE surestime le contenu réel (`legacyRowsToGridRows` + `SAFETY_PX`). On ne le fait
-        // que sur une mesure fiable, avec un petit coussin pour ne pas déclencher d'ascenseur, et
-        // seulement si le gain vaut le mouvement — sinon la tuile oscillerait d'une ligne.
+        // DÉCLARÉE surestime le contenu réel (`legacyRowsToGridRows` + `SAFETY_PX`).
+        //
+        // On vise EXACTEMENT `rows`, comme pour l'agrandissement. Ce chemin ajoutait auparavant
+        // `AUTOFIT_TOLERANCE_PX` au contenu avant conversion, ce qui gardait souvent une ligne
+        // entière de trop : le `Math.ceil` de `contentPxToGridRows` offre DÉJÀ jusqu'à 45px de
+        // marge sous le contenu — bien plus que le bruit de mesure que ce coussin couvrait — et
+        // les 12px suffisaient à faire basculer le ceil sur la ligne suivante. Pire, `target`
+        // pouvait alors repasser au-dessus de `item.h` et annuler le rétrécissement décidé deux
+        // lignes plus haut sur `rows`. La tolérance garde son autre rôle : détecter plus bas les
+        // mesures circulaires. Pas d'oscillation : la mesure ne dépend pas de la taille de la tuile.
         if (noShrink.current.has(itemId)) return
-        const target = contentPxToGridRows(contentPx + AUTOFIT_TOLERANCE_PX)
-        if (target >= item.h) return
         shrinkProbe.current.set(itemId, { fromRows: item.h, px: contentPx })
         onChangeRef.current(
-          layoutRef.current.map((l) => (l.i === itemId ? { ...l, h: target } : l)),
+          layoutRef.current.map((l) => (l.i === itemId ? { ...l, h: rows } : l)),
         )
         return
       }
@@ -405,6 +411,8 @@ function WidgetPortal({ widgetDef, onRemove }: { widgetId: string; widgetDef: Wi
   const [refreshKey, setRefreshKey] = useState(0)
   const [reloading, setReloading] = useState(false)
   const [configOpen, setConfigOpen] = useState(false)
+  // Confirmation avant de retirer la tuile — comme le legacy (jarviswidget → confirm à la fermeture).
+  const [confirmRemove, setConfirmRemove] = useState(false)
   const title = widgetDef.titleLabel ?? t(widgetDef.titleKey)
   // Engrenage affiché sur TOUS les widgets, pour un cadre homogène. Les widgets NATIFS n'ont pas
   // de plugin legacy derrière eux (donc rien à configurer) : la modale affiche alors simplement
@@ -425,7 +433,7 @@ function WidgetPortal({ widgetDef, onRemove }: { widgetId: string; widgetDef: Wi
       <WidgetFrame
         title={title}
         icon={widgetDef.icon}
-        onRemove={onRemove}
+        onRemove={() => setConfirmRemove(true)}
         onReload={reload}
         onConfig={() => setConfigOpen(true)}
       >
@@ -448,6 +456,18 @@ function WidgetPortal({ widgetDef, onRemove }: { widgetId: string; widgetDef: Wi
           // La config est appliquée côté serveur au rendu du plugin : sans rechargement, la tuile
           // continuerait d'afficher l'ancienne (ex. filtre par défaut d'un graphique).
           onSaved={reload}
+        />
+      )}
+      {confirmRemove && (
+        <PluginConfirmDialog
+          title={t('widget.remove_title')}
+          message={t('widget.remove_confirm')}
+          textOk={t('common.yes')}
+          textNo={t('common.no')}
+          onResult={(kind) => {
+            setConfirmRemove(false)
+            if (kind === 'yes') onRemove()
+          }}
         />
       )}
     </>

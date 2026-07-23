@@ -24,9 +24,15 @@ export interface WidgetDef {
   /** Owning module, shown as a sub-group inside the section (legacy palette rule: only when the
    *  section holds more than one module). */
   moduleLabel?: string
-  /** Taille par défaut + minimale (unités de grille, 12 colonnes). */
+  /** Taille par défaut + minimale (unités de grille, 12 colonnes). `h` est en lignes de la grille
+   *  React (46px), ajustée pour l'affichage. */
   w: number
   h: number
+  /** Hauteur DÉCLARÉE du plugin en lignes de la grille LEGACY (cellules 80px) — celle de sa config
+   *  PHP (`config['height']`). C'est CETTE valeur qu'on persiste dans le record partagé (cf.
+   *  layoutToRecords), jamais `h` (l'affichage React ajusté au contenu), sinon le dashboard /melis
+   *  rend la tuile trop haute (vide en bas). */
+  legacyH: number
   minW: number
   minH: number
   /** Nom du plugin legacy PHP (widgets legacy uniquement) → active le bouton config (engrenage). */
@@ -41,7 +47,11 @@ export const WIDGETS: WidgetDef[] = [
   // `sectionLabel: 'MelisCore'` → il est listé dans la section MELISCORE de la palette, avec les
   // plugins legacy du même module (cf. WidgetPalette : les widgets porteurs d'un sectionLabel
   // rejoignent les groupes dynamiques au lieu de former une section statique à part).
-  { id: 'activity', titleKey: 'dash.recent_activity', icon: Activity, thumbnail: '/MelisCore/plugins/images/MelisCoreDashboardRecentUserActivityPlugin.jpg', sectionKey: 'widget.sec.content', sectionLabel: 'MelisCore', moduleLabel: 'Melis Core', w: 4, h: 6, minW: 3, minH: 4, render: () => <ActivityContent /> },
+  // `pluginName` : ce widget natif correspond au plugin PHP `MelisCoreDashboardRecentUserActivityPlugin`.
+  // Il permet de le PERSISTER dans le record partagé avec le dashboard classique (schéma legacy, clé
+  // = vrai nom de plugin) et d'activer son bouton de config. Au rechargement, ce nom de plugin est
+  // remappé vers ce widget natif (préféré à sa variante iframe `legacy-…`, cf. DashboardPage).
+  { id: 'activity', titleKey: 'dash.recent_activity', icon: Activity, thumbnail: '/MelisCore/plugins/images/MelisCoreDashboardRecentUserActivityPlugin.jpg', sectionKey: 'widget.sec.content', sectionLabel: 'MelisCore', moduleLabel: 'Melis Core', pluginName: 'MelisCoreDashboardRecentUserActivityPlugin', w: 4, h: 6, legacyH: 4, minW: 3, minH: 4, render: () => <ActivityContent /> },
 ]
 
 export const WIDGET_MAP: Record<string, WidgetDef> = Object.fromEntries(
@@ -69,6 +79,9 @@ export function buildLegacyWidgetDef(plugin: LegacyDashboardPlugin): WidgetDef {
     moduleLabel: plugin.moduleLabel || plugin.module || undefined,
     w: Math.min(plugin.w, GRID_COLS),
     h,
+    // Hauteur DÉCLARÉE (grille legacy 80px), telle que fournie par la découverte — c'est elle qu'on
+    // repersiste dans le record partagé, pas `h` (converti pour l'affichage React 46px).
+    legacyH: plugin.h,
     minW: 2,
     // ⚠️ NE PAS remettre `minH: h` (la hauteur convertie). C'était le garde-fou qui « réparait »
     // les tuiles persistées trop courtes, mais il PLAFONNE le rétrécissement : GridStack ramène

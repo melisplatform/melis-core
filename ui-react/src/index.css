@@ -146,6 +146,21 @@ html {
   color-scheme: dark;
 }
 
+/* ---- "Supprimer tous les plugins" (palette de widgets) ------------------- */
+/* En thème sombre, le `bg-destructive` plein (#f05252) détonne sur les surfaces
+   bleu-nuit. On reprend le traitement destructif sombre du reste du BO
+   (boutons "refuse" du workflow) : teinte rouge discrète + texte/bordure adoucis,
+   accordés au scheme. Le thème clair (platform) garde le rouge plein d'origine.
+   Sélecteur [data-theme] + classe → l'emporte sur les utilitaires Tailwind. */
+[data-theme='studio'] .dashboard-remove-all-btn {
+  background: rgba(240, 82, 82, 0.14);
+  color: #f87171;
+  border: 1px solid rgba(240, 82, 82, 0.42);
+}
+[data-theme='studio'] .dashboard-remove-all-btn:hover:not(:disabled) {
+  background: rgba(240, 82, 82, 0.24);
+}
+
 body {
   margin: 0;
   font-family: var(--font-sans);

@@ -17,9 +17,35 @@ import {
   widgetIdOf,
   type GridItem,
 } from '@/components/dashboard/dashboard-store'
+import { legacyRowsToGridRows } from '@/components/dashboard/grid-metrics'
 import { DashboardDataContext } from '@/components/dashboard/dashboard-data-context'
 
 const BUBBLES_HIDDEN_KEY = 'melis-dash-bubbles-hidden'
+
+// Nom de plugin PHP → id de widget NATIF (ex. MelisCoreDashboardRecentUserActivityPlugin → 'activity').
+// Sert à remapper un record partagé vers son widget natif plutôt que sa variante iframe `legacy-…`.
+const NATIVE_ID_BY_PLUGIN: Record<string, string> = Object.fromEntries(
+  Object.values(WIDGET_MAP)
+    .filter((w) => w.pluginName)
+    .map((w) => [w.pluginName as string, w.id]),
+)
+
+// Record DB (schéma legacy, clé = vrai nom de plugin) → items de grille React. L'id d'instance `i`
+// est dérivé du NOM DE PLUGIN (natif préféré, sinon `legacy-<pluginName>`), jamais du plugin_id
+// (qui peut être un timestamp legacy). Les exemplaires multiples d'un même plugin reçoivent un
+// suffixe d'instance pour rester distincts.
+function recordsToLayout(records: melisApi.DashboardPluginRecord[]): GridItem[] {
+  const seen = new Set<string>()
+  return records.map((r) => {
+    const base = NATIVE_ID_BY_PLUGIN[r.pluginName] ?? `legacy-${r.pluginName}`
+    const i = seen.has(base) ? makeInstanceId(base) : base
+    seen.add(base)
+    // `r.h` est la hauteur LEGACY déclarée (grille 80px). On la convertit en lignes de la grille
+    // React (46px) pour l'AFFICHAGE — comme le fait le registre pour les défs (buildLegacyWidgetDef).
+    // La hauteur persistée, elle, reste la valeur déclarée (cf. layoutToRecords → def.legacyH).
+    return { i, x: r.x, y: r.y, w: r.w, h: legacyRowsToGridRows(r.h) }
+  })
+}
 
 // Top "bubble" widgets, mirroring MelisCore's legacy dashboard bubble plugins.
 const BUBBLES = [
@@ -87,16 +113,43 @@ export default function DashboardPage() {
   }, [])
 
   const [layout, setLayout] = useState<GridItem[]>(() => loadLayout())
+  // Passe à `true` une fois le fetch DB résolu (succès OU échec). Tant qu'il est `false`, on retient
+  // l'affichage de l'état vide : au montage `layout` peut être vide (cache localStorage absent/périmé
+  // avant que la DB partagée ne le remplisse), et sans ce verrou le message « dashboard vide »
+  // clignotait le temps du fetch alors que des plugins allaient s'afficher.
+  const [dbSynced, setDbSynced] = useState(false)
   const [paletteOpen, setPaletteOpen] = useState(false)
 
-  // Priorité DB : au montage, charge depuis le serveur (écrase le cache localStorage si trouvé).
+  // Vignettes de la palette : différées jusqu'à la 1ʳᵉ ouverture. Fermée par défaut, la palette est
+  // pourtant TOUJOURS montée (animation de largeur) → sans ce verrou ses ~N images se chargeraient
+  // au premier rendu du dashboard, sur le chemin critique. Chaque vignette passe par MelisAssetManager
+  // (servie en PHP) qui sérialise sur le verrou de session ; on ne les tire donc qu'à l'ouverture.
+  const [paletteEverOpened, setPaletteEverOpened] = useState(false)
   useEffect(() => {
-    melisApi.fetchDashboardLayout().then((dbLayout) => {
-      if (dbLayout && dbLayout.length > 0) {
+    if (paletteOpen) setPaletteEverOpened(true)
+  }, [paletteOpen])
+
+  // Passe à `true` quand le record serveur a été chargé (≠ cache localStorage) → gate du heal effect.
+  const serverLayoutRef = useRef(false)
+
+  // Priorité DB : au montage, charge le record partagé (schéma legacy) et le convertit en layout
+  // React (écrase le cache localStorage si trouvé).
+  useEffect(() => {
+    melisApi.fetchDashboardLayout().then((records) => {
+      // `null` = échec réel du fetch (HTTP/réseau) → on garde le cache localStorage.
+      // Un tableau (même VIDE) fait autorité : la DB est partagée avec le dashboard legacy, donc
+      // « Remove all » côté /melis vide le record → on doit refléter ce vide côté React (effacer la
+      // grille + le cache), sinon les plugins retirés restaient affichés depuis le localStorage.
+      if (records) {
+        const dbLayout = recordsToLayout(records)
         setLayout(dbLayout)
         saveLayout(dbLayout)
+        // Le record serveur a bien été chargé → autorise la normalisation des hauteurs (heal effect).
+        // Ne PAS normaliser depuis le seul cache localStorage (fetch en échec) : on n'écrirait pas
+        // une hauteur fiable dans le record partagé.
+        serverLayoutRef.current = true
       }
-    })
+    }).finally(() => setDbSynced(true))
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
@@ -117,11 +170,33 @@ export default function DashboardPage() {
   // indicateur "déjà sur le dashboard" dans la palette, pas à bloquer un ré-ajout.
   const present = useMemo(() => new Set(layout.map((l) => widgetIdOf(l.i))), [layout])
 
-  const persist = useCallback((next: GridItem[]) => {
-    setLayout(next)
-    saveLayout(next)
-    melisApi.saveDashboardLayout(next)
-  }, [])
+  // Items de grille React → records DB (schéma legacy partagé). Le nom de plugin PHP vient du
+  // registre ; un item sans `pluginName` (widget natif sans plugin PHP) n'est pas persistable dans
+  // le record partagé et est ignoré. Le plugin_id conserve l'id d'instance React → la préservation
+  // de la config côté serveur peut réapparier chaque instance.
+  const layoutToRecords = useCallback(
+    (items: GridItem[]): melisApi.DashboardPluginRecord[] =>
+      items.flatMap((l) => {
+        const def = allWidgetMap[widgetIdOf(l.i)]
+        // On persiste la hauteur LEGACY DÉCLARÉE du plugin (`def.legacyH`), PAS la hauteur d'affichage
+        // React (`l.h`, ajustée au contenu en cellules 46px). Écrire `l.h` gonflait la tuile côté
+        // /melis (rendue à ×80px) → gros vide en bas. La hauteur reste ainsi celle de la config du
+        // plugin dans les deux dashboards. (x/y/w conservés : mêmes unités, 12 colonnes.)
+        return def?.pluginName
+          ? [{ pluginName: def.pluginName, pluginId: l.i, x: l.x, y: l.y, w: l.w, h: def.legacyH }]
+          : []
+      }),
+    [allWidgetMap],
+  )
+
+  const persist = useCallback(
+    (next: GridItem[]) => {
+      setLayout(next)
+      saveLayout(next)
+      melisApi.saveDashboardLayout(layoutToRecords(next))
+    },
+    [layoutToRecords],
+  )
 
   // Remonte les tuiles plus courtes que la hauteur de leur widget (contenu tronqué).
   //
@@ -157,6 +232,20 @@ export default function DashboardPage() {
     const kept = layoutRef.current.filter((l) => allWidgetMap[widgetIdOf(l.i)])
     if (kept.length !== layoutRef.current.length) persist(kept)
   }, [legacyLoaded, allWidgetMap, persist])
+
+  // Auto-réparation des hauteurs héritées : une SEULE fois, quand le record serveur ET les défs
+  // legacy sont chargés, on repersiste le layout. `layoutToRecords` écrit désormais la hauteur
+  // DÉCLARÉE de chaque plugin (`def.legacyH`) → toute ligne gonflée par l'ancienne écriture (hauteur
+  // d'affichage React, 46px, rendue ×80px côté /melis) est ramenée à la hauteur de config → plus de
+  // vide en bas dans le dashboard classique. Gaté sur `legacyLoaded` (toutes les défs connues, sinon
+  // on omettrait des plugins du record) ET `serverLayoutRef` (pas depuis le seul cache). `dbSynced`
+  // dans les deps couvre les deux ordres d'arrivée fetch/défs. Idempotent une fois normalisé.
+  const healedRef = useRef(false)
+  useEffect(() => {
+    if (!legacyLoaded || !dbSynced || !serverLayoutRef.current || healedRef.current) return
+    healedRef.current = true
+    persist(layoutRef.current)
+  }, [legacyLoaded, dbSynced, persist])
 
   // Émis par GridStack après un déplacement / redimensionnement utilisateur.
   const handleChange = useCallback((items: GridItem[]) => persist(items), [persist])
@@ -241,7 +330,7 @@ export default function DashboardPage() {
               un drop (seul le clic sur « + » fonctionnait encore). L'état vide passe donc en
               surimpression, en `pointer-events-none` pour ne pas intercepter le dépôt. */}
           <div className="relative">
-            {layout.length === 0 && (
+            {layout.length === 0 && dbSynced && (
               <div className="pointer-events-none absolute inset-0 grid place-items-center rounded-lg border border-dashed border-border text-center">
                 <div className="max-w-xs text-sm text-muted-foreground">{t('widget.empty')}</div>
               </div>
@@ -275,13 +364,20 @@ export default function DashboardPage() {
           // `[&_svg]:size-5` et NON `size-5` sur l'icône : la base du Button impose
           // `[&_svg]:size-4`, un sélecteur descendant qui l'emporte en spécificité sur une classe
           // posée directement sur le <svg>. Il faut donc relever la taille depuis le bouton.
-          'absolute top-4 z-40 rounded-none transition-[right] duration-[400ms] ease-out [&_svg]:size-5',
+          // Rayon arrondi À GAUCHE seulement, côté droit au ras du bord → la pastille rouge paraît
+          // accrochée au flanc (languette latérale).
+          // ⚠️ On passe par un rayon ARBITRAIRE en une seule déclaration `border-radius: 6px 0 0 6px`
+          // au lieu de `rounded-l-md rounded-r-none` : la base `Button` porte déjà `rounded-md`, que
+          // twMerge conserve à côté de `rounded-r-none`, et l'ordre CSS laisse le raccourci `rounded-md`
+          // reprendre les coins droits (bouton « toujours arrondi »). Un unique rayon arbitraire évince
+          // `rounded-md` (même groupe twMerge) et supprime tout conflit raccourci/longhand.
+          'absolute top-4 z-40 rounded-[0.375rem_0_0_0.375rem] transition-[right] duration-[400ms] ease-out [&_svg]:size-5',
           paletteOpen ? 'right-72' : 'right-0',
         )}
       >
         {/* Icône INVARIANTE (pas de bascule en croix à l'ouverture) : le bouton reste le
             repère « plugins du dashboard », comme le legacy qui garde son `fa-plug` ouvert
-            comme fermé. `rotate-45` : broches vers le haut-DROITE.
+            comme fermé. `rotate-45` : plug en diagonale.
             `strokeWidth` monté à 2.5 (défaut lucide : 2) — le trait fin se perdait sur l'aplat
             rouge ; c'est le seul levier de graisse d'une icône lucide (pas de `font-weight`). */}
         <Plug className="rotate-45" strokeWidth={2.5} />
@@ -311,6 +407,7 @@ export default function DashboardPage() {
           widgetCount={layout.length}
           nativeWidgets={gatedNativeWidgets}
           extraWidgets={legacyWidgets}
+          loadThumbnails={paletteEverOpened}
         />
       </div>
     </div>

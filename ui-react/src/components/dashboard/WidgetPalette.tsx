@@ -21,6 +21,7 @@ export function WidgetPalette({
   widgetCount,
   nativeWidgets = WIDGETS,
   extraWidgets = [],
+  loadThumbnails = true,
 }: {
   present: Set<string>
   onAdd: (widgetId: string) => void
@@ -33,6 +34,9 @@ export function WidgetPalette({
   /** Native widgets to offer — already RIGHTS-GATED by the caller (defaults to all for safety). */
   nativeWidgets?: WidgetDef[]
   extraWidgets?: WidgetDef[]
+  /** Autorise le chargement des vignettes de plugins. Piloté par le dashboard : `false` tant que la
+   *  palette n'a jamais été ouverte, pour ne charger AUCUNE image au premier rendu (cf. PaletteItem). */
+  loadThumbnails?: boolean
 }) {
   const { t } = useI18n()
   // Refs sur les wrappers draggables, indexés par widgetId.
@@ -118,6 +122,7 @@ export function WidgetPalette({
                       widget={w}
                       added={present.has(w.id)}
                       onAdd={() => onAdd(w.id)}
+                      showThumbnail={loadThumbnails}
                       wrapperRef={(el) => {
                         if (el) wrapperRefs.current.set(w.id, el)
                         else wrapperRefs.current.delete(w.id)
@@ -157,6 +162,7 @@ export function WidgetPalette({
               widget={w}
               added={present.has(w.id)}
               onAdd={() => onAdd(w.id)}
+              showThumbnail={loadThumbnails}
               wrapperRef={(el) => {
                 if (el) wrapperRefs.current.set(w.id, el)
                 else wrapperRefs.current.delete(w.id)
@@ -218,7 +224,9 @@ export function WidgetPalette({
           // Dashboard déjà vide → rien à supprimer. Le legacy sortait silencieusement
           // (`if ($items.length !== 0)`) ; désactiver le bouton dit la même chose, en visible.
           disabled={widgetCount === 0}
-          className="w-full cursor-pointer rounded-md bg-destructive px-3 py-2 text-sm font-medium text-destructive-foreground transition-colors hover:bg-destructive/90 disabled:cursor-not-allowed disabled:opacity-40"
+          // `dashboard-remove-all-btn` : le thème sombre (studio) remplace le rouge plein par un
+          // traitement destructif discret (cf. index.css) pour s'accorder aux surfaces bleu-nuit.
+          className="dashboard-remove-all-btn w-full cursor-pointer rounded-md bg-destructive px-3 py-2 text-sm font-medium text-destructive-foreground transition-colors hover:bg-destructive/90 disabled:cursor-not-allowed disabled:opacity-40"
         >
           {t('widget.remove_all')}
         </button>
@@ -345,11 +353,16 @@ function PaletteItem({
   added,
   onAdd,
   wrapperRef,
+  showThumbnail,
 }: {
   widget: WidgetDef
   added: boolean
   onAdd: () => void
   wrapperRef: (el: HTMLDivElement | null) => void
+  /** Ne charge la vignette (requête image, servie par PHP) que si vrai. La palette étant fermée au
+   *  départ, on diffère jusqu'à sa 1ʳᵉ ouverture pour ne PAS tirer ~N images au chargement du
+   *  dashboard (elles passent par MelisAssetManager qui sérialise sur le verrou de session PHP). */
+  showThumbnail: boolean
 }) {
   const { t } = useI18n()
   const Icon = widget.icon
@@ -379,7 +392,7 @@ function PaletteItem({
         }}
         className="flex min-w-0 flex-1 items-center gap-3 py-2.5 pl-3 pr-3 text-left"
       >
-        {widget.thumbnail ? (
+        {widget.thumbnail && showThumbnail ? (
           <img
             src={widget.thumbnail}
             alt=""

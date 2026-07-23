@@ -61,15 +61,32 @@ function TabBridge() {
   // uses below, then navigate — the existing route→tab sync effect takes it from there.
   useEffect(() => {
     const onMessage = (e: MessageEvent) => {
-      const d = e.data as { __melisOpenTool?: boolean; forwardKey?: string; id?: string | number; label?: string } | null
-      if (!d || !d.__melisOpenTool || !d.forwardKey) return
+      const d = e.data as { __melisOpenTool?: boolean; forwardKey?: string; path?: string; id?: string | number; label?: string } | null
+      if (!d || !d.__melisOpenTool) return
+      // A caller can pass a ready-made React route (`path`) when the target tool has no forwardKey
+      // in the registry — e.g. the CMS pages editor, a persistent brick at /melis-cms/page with no
+      // forward (the Workflow dashboard plugin's "eye" and the Recent-page-activity plugin's rows
+      // use this to open /melis-cms/page/:id).
+      // On CRÉE + ACTIVE l'onglet AVANT de naviguer (openTab puis navigate) — exactement comme
+      // l'ouverture depuis l'arbre CMS (CmsSidebar). Sans ça, l'onglet n'est créé que réactivement
+      // APRÈS la navigation (SYNC dans l'effet route→onglet, un tick plus tard) : s'il existe déjà
+      // un AUTRE onglet de la même brique persistante (une autre page CMS déjà ouverte), il reste
+      // l'onglet actif le temps de ce tick → on voit brièvement CETTE page avant que la page
+      // demandée ne s'affiche. `label` (nom de page) est posé d'emblée → pas de « Page N » qui
+      // clignote, et threadé via router state pour l'effet de synchro.
+      if (d.path) {
+        openTab({ id: d.path, label: d.label || deriveTabLabel(d.path), path: d.path })
+        navigate(d.path, d.label ? { state: { melisTabLabel: d.label } } : undefined)
+        return
+      }
+      if (!d.forwardKey) return
       const route = routeForForward(d.forwardKey)
       if (!route) return
       navigate(d.id != null ? `${route}/${d.id}` : route)
     }
     window.addEventListener('message', onMessage)
     return () => window.removeEventListener('message', onMessage)
-  }, [navigate])
+  }, [navigate, openTab])
   useEffect(() => {
     const path = location.pathname
     if (path === '/login' || path === '/setup') return
@@ -97,8 +114,11 @@ function TabBridge() {
     // /react-modules, refreshing a brick's open sub-tab spawned a stray top tab labelled with the
     // raw id. Once loaded, an unknown route is a genuine zone/brick tab → create it.
     if (path !== '/' && (!hasToolRoutes() || !bricksReady())) return
-    syncRoute({ id: path, label: deriveTabLabel(path), path })
-  }, [location.pathname, syncRoute, toolRoutesVersion, bricksVersion, bricks])
+    // A label passed through navigation state (e.g. the Workflow eye → page name) wins over the
+    // derived "Page N"/slug fallback, so the tab shows the real name from its first paint.
+    const stateLabel = (location.state as { melisTabLabel?: string } | null)?.melisTabLabel
+    syncRoute({ id: path, label: stateLabel || deriveTabLabel(path), path })
+  }, [location.pathname, location.state, syncRoute, toolRoutesVersion, bricksVersion, bricks])
   return null
 }
 

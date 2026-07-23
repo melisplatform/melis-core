@@ -155,6 +155,13 @@ const LAYOUT_FIXES = `
 [data-theme='studio'] .${LEGACY_WIDGET_CLASS} .separator {
   border-color: var(--color-border) !important;
 }
+/* The "Orders" plugin row hover is hardcoded light (#f5f5f5) in the phtml → in dark theme the row
+   becomes an unreadable light block. Repaint it with the shell tokens. */
+[data-theme='studio'] .${LEGACY_WIDGET_CLASS} .melis-commerce-dashboard-plugin-orders-number-item:hover,
+[data-theme='studio'] .${LEGACY_WIDGET_CLASS} .melis-commerce-dashboard-plugin-orders-number-item:hover td {
+  background-color: color-mix(in srgb, var(--color-foreground) 28%, transparent) !important;
+  color: var(--color-foreground) !important;
+}
 `
 
 function ensureLayoutFixes(): void {

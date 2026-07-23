@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
+import type { RefObject } from 'react'
 import { Loader2 } from 'lucide-react'
 
 import { useTheme } from '@/theme/theme-context'
@@ -7,10 +8,60 @@ import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { useI18n } from '@/i18n/i18n-context'
 import { formatRelativeHours } from '@/lib/format'
 import { useDashboardData } from './dashboard-data-context'
+import { WorkflowCommentDialog, type WorkflowCommentParams } from './WorkflowCommentDialog'
+import { PluginConfirmDialog } from './PluginConfirmDialog'
+
+/** Demande de confirmation « Oui / Non » émise par un plugin legacy dans son iframe. */
+interface PluginConfirmRequest {
+  id: number
+  title?: string
+  message?: string
+  textOk?: string
+  textNo?: string
+}
+
+/**
+ * Ajuste la hauteur de la tuile au contenu RÉEL d'un widget React natif (pas de scroll).
+ *
+ * Même canal que les plugins legacy (`melis:widget-autofit`, cf. DashboardGrid) — seule la source
+ * de la mesure change : ici l'élément de contenu lui-même, plutôt qu'un postMessage d'iframe.
+ * La mesure est intrinsèque (le corps du widget est `overflow:auto`, il ne contraint donc pas la
+ * hauteur de l'élément) → appliquer la hauteur ne change pas la mesure suivante : pas de boucle.
+ */
+function useAutofitContent<T extends HTMLElement>(ref: RefObject<T | null>, enabled: boolean) {
+  useEffect(() => {
+    const el = ref.current
+    if (!el || !enabled) return
+    let pending = 0
+    const publish = () => {
+      pending = 0
+      const item = el.closest('.grid-stack-item') as (HTMLElement & { gridstackNode?: { id?: string } }) | null
+      const itemId = item?.gridstackNode?.id
+      const contentPx = el.scrollHeight
+      if (!itemId || !contentPx) return
+      window.dispatchEvent(new CustomEvent('melis:widget-autofit', { detail: { itemId, contentPx } }))
+    }
+    // La largeur de la tuile influe sur la mesure (retour à la ligne) → on re-mesure au resize,
+    // coalescé en une frame comme pour les iframes.
+    const ro = new ResizeObserver(() => {
+      if (pending) return
+      pending = requestAnimationFrame(publish)
+    })
+    ro.observe(el)
+    publish()
+    return () => {
+      if (pending) cancelAnimationFrame(pending)
+      ro.disconnect()
+    }
+  }, [ref, enabled])
+}
 
 export function ActivityContent() {
   const { t, lang } = useI18n()
   const { stats } = useDashboardData()
+  const listRef = useRef<HTMLUListElement>(null)
+  // Pas d'ajustement sur le squelette : sa hauteur est arbitraire et la tuile sauterait deux fois.
+  useAutofitContent(listRef, !!stats?.activity.length)
 
   // Données réelles : dernières connexions utilisateurs.
   if (stats) {
@@ -18,7 +69,7 @@ export function ActivityContent() {
       return <p className="text-sm text-muted-foreground">{t('dash.recent_activity')}</p>
     }
     return (
-      <ul className="space-y-4">
+      <ul ref={listRef} className="space-y-4">
         {stats.activity.map((a) => {
           const hoursAgo = a.loginDate
             ? Math.max(1, Math.round((Date.now() - new Date(a.loginDate).getTime()) / 3_600_000))
@@ -72,6 +123,13 @@ export function LegacyPluginContent({ pluginName }: { pluginName: string }) {
   // ça peut prendre plusieurs secondes. On affiche un spinner tant que l'iframe n'a pas
   // fini de charger (onLoad) : couvre le 1er affichage ET chaque rechargement (remontage).
   const [loading, setLoading] = useState(true)
+  // Modale « Ajouter un commentaire » du plugin Workflow : le tool legacy l'ouvrait dans l'iframe
+  // (où une petite tuile la rognait) ; l'iframe nous demande désormais de la rendre au niveau de
+  // l'hôte, centrée sur la page (cf. WorkflowCommentDialog + le postMessage dans PluginViewController).
+  const [wfComment, setWfComment] = useState<WorkflowCommentParams | null>(null)
+  // Confirmation « Oui / Non » d'un plugin legacy (ex. Valider / Refuser du Workflow) : idem, l'iframe
+  // nous demande de l'afficher centrée sur la page ; on lui renvoie ensuite le choix de l'utilisateur.
+  const [confirm, setConfirm] = useState<PluginConfirmRequest | null>(null)
 
   // Les graphiques flot sont des CANVAS dessinés une fois, à la largeur du conteneur au moment du
   // rendu. Redimensionner la tuile agrandit l'iframe mais pas le canvas : le graphique reste étroit
@@ -79,28 +137,52 @@ export function LegacyPluginContent({ pluginName }: { pluginName: string }) {
   // de SA fenêtre, qu'un redimensionnement de l'iframe ne déclenche pas. On le lui envoie donc.
   const frameRef = useRef<HTMLIFrameElement>(null)
 
-  // ── Couleur d'accent du thème, transmise à l'iframe ────────────────────────────────────────
+  // ── Thème de l'hôte, transmis à l'iframe ───────────────────────────────────────────────────
   // L'iframe est un DOCUMENT à part : elle n'hérite ni du `data-theme` de l'hôte ni de ses
-  // variables CSS. On lit donc `--primary` résolue sur `<html>` (le thème reste la seule source
-  // de vérité, cf. theme/themes.ts) et on la passe dans l'URL — le param CHANGE avec le thème,
+  // variables CSS. On lit donc les tokens résolus sur `<html>` (le thème reste la seule source de
+  // vérité, cf. theme/themes.ts) et on les passe dans l'URL — les params CHANGENT avec le thème,
   // donc l'iframe se recharge d'elle-même et il n'y a pas de flash de contenu non thémé.
-  // On NORMALISE la valeur avant de l'envoyer, via un élément sonde : `getPropertyValue` rend le
-  // token BRUT tel qu'écrit dans la feuille, et il n'est pas forcément hexadécimal — le minifieur
-  // du build réécrit `#ff0000` en `red` (mot-clé CSS), et un thème pourrait tout aussi bien poser
-  // `oklch(...)` ou `color-mix(...)`. Le `color` calculé d'un élément, lui, est toujours résolu en
-  // `rgb(...)` : une seule forme à valider côté PHP, quelle que soit l'écriture du thème.
+  // Le mode sombre passe par le MÊME canal : le HTML legacy est écrit pour un fond clair (surfaces
+  // blanches et textes sombres codés en dur), donc la seule couleur d'accent ne suffit pas — d'où
+  // `scheme` (dark|light) et les 4 tokens de surface qu'utilisent les surcharges du document iframe.
   const { theme } = useTheme()
-  const primary = useMemo(() => {
-    const raw = getComputedStyle(document.documentElement).getPropertyValue('--primary').trim()
-    if (!raw) return ''
+  const themeParams = useMemo(() => {
+    // `getPropertyValue` rend le token BRUT tel qu'écrit dans la feuille, pas forcément hexadécimal
+    // (le minifieur du build réécrit `#ff0000` en `red` ; un thème peut poser `oklch(...)`). Le
+    // `color` CALCULÉ d'un élément, lui, est toujours résolu en `rgb(...)` : une seule forme à
+    // valider côté PHP, quelle que soit l'écriture du thème.
+    const css = getComputedStyle(document.documentElement)
     const probe = document.createElement('span')
     probe.style.display = 'none'
-    probe.style.color = raw
     document.body.appendChild(probe)
-    const resolved = getComputedStyle(probe).color
+    const resolve = (token: string) => {
+      const raw = css.getPropertyValue(token).trim()
+      if (!raw) return ''
+      probe.style.color = raw
+      return getComputedStyle(probe).color || raw
+    }
+    const params = {
+      primary: resolve('--primary'),
+      bg: resolve('--card'),
+      fg: resolve('--foreground'),
+      border: resolve('--border'),
+      muted: resolve('--muted-foreground'),
+      // Aujourd'hui « sombre » == thème studio (cf. theme/themes.ts, qui n'a pas d'axe light/dark
+      // séparé). Si un tel axe apparaît un jour, SEULE cette ligne change : le contrat avec
+      // l'iframe (`?scheme=dark|light`) reste le même.
+      scheme: document.documentElement.dataset.theme === 'studio' ? 'dark' : 'light',
+    }
     probe.remove()
-    return resolved || raw
+    return params
   }, [theme])
+
+  // Switching mode (light/dark) changes `themeParams` → the iframe URL changes → it reloads to
+  // reflect the new scheme. We re-show the loader for the duration of that reload, exactly like the
+  // first render (onLoad resets it to false). `themeParams` is memoised on `[theme]`, so this effect
+  // only runs on mount and on each theme change.
+  useEffect(() => {
+    setLoading(true)
+  }, [themeParams])
 
   // ── Hauteur de tuile ajustée au contenu réel du plugin ────────────────────────────────────
   // La hauteur DÉCLARÉE par un plugin (cf. grid-metrics) est une estimation, souvent trop courte :
@@ -118,6 +200,25 @@ export function LegacyPluginContent({ pluginName }: { pluginName: string }) {
       const itemId = item?.gridstackNode?.id
       if (!itemId) return
       window.dispatchEvent(new CustomEvent('melis:widget-autofit', { detail: { itemId, contentPx: d.px } }))
+    }
+    window.addEventListener('message', onMessage)
+    return () => window.removeEventListener('message', onMessage)
+  }, [])
+
+  // Demandes d'UI émises par NOTRE iframe et rendues au niveau de l'hôte, centrées sur la page :
+  // la modale de commentaire du Workflow et les confirmations « Oui / Non » des plugins legacy.
+  useEffect(() => {
+    const onMessage = (e: MessageEvent) => {
+      // Plusieurs iframes de plugins coexistent : ne réagir qu'aux messages de LA nôtre.
+      if (!frameRef.current || e.source !== frameRef.current.contentWindow) return
+      const d = e.data as
+        | { __melisWorkflowComment?: boolean; params?: WorkflowCommentParams; __melisConfirm?: boolean; id?: number; title?: string; message?: string; textOk?: string; textNo?: string }
+        | null
+      if (!d) return
+      if (d.__melisWorkflowComment) setWfComment(d.params ?? {})
+      else if (d.__melisConfirm && typeof d.id === 'number') {
+        setConfirm({ id: d.id, title: d.title, message: d.message, textOk: d.textOk, textNo: d.textNo })
+      }
     }
     window.addEventListener('message', onMessage)
     return () => window.removeEventListener('message', onMessage)
@@ -155,13 +256,32 @@ export function LegacyPluginContent({ pluginName }: { pluginName: string }) {
       )}
       <iframe
         ref={frameRef}
-        src={`/melis/react-dashboard-plugin?plugin=${encodeURIComponent(pluginName)}&primary=${encodeURIComponent(primary)}`}
+        src={`/melis/react-dashboard-plugin?${new URLSearchParams({ plugin: pluginName, ...themeParams })}`}
         className="h-full w-full border-0"
         title={pluginName}
         style={{ minHeight: 120 }}
         sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-modals"
         onLoad={() => setLoading(false)}
       />
+      {confirm && (
+        <PluginConfirmDialog
+          title={confirm.title}
+          message={confirm.message}
+          textOk={confirm.textOk}
+          textNo={confirm.textNo}
+          onResult={(kind) => {
+            // On renvoie le choix à l'iframe émettrice, qui rejoue le bon callback dans son contexte.
+            frameRef.current?.contentWindow?.postMessage(
+              { __melisConfirmResult: true, id: confirm.id, result: kind },
+              '*',
+            )
+            setConfirm(null)
+          }}
+        />
+      )}
+      {wfComment && (
+        <WorkflowCommentDialog params={wfComment} onClose={() => setWfComment(null)} />
+      )}
     </div>
   )
 }
