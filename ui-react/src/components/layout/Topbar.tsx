@@ -339,19 +339,26 @@ function TabStrip() {
                 {tab.icon && <tab.icon className="size-3.5 shrink-0" />}
                 <span className="max-w-[150px] truncate">{tab.label}</span>
               </button>
-              <button
-                type="button"
-                title={t('layout.close')}
-                onClick={() => handleClose(tab)}
-                className={cn(
-                  'flex items-center pr-2 transition-colors',
-                  isActive
-                    ? 'text-muted-foreground hover:text-foreground'
-                    : 'text-transparent group-hover:text-muted-foreground group-hover:hover:text-foreground',
-                )}
-              >
-                <X className="size-3" />
-              </button>
+              {/* Le Dashboard est l'accueil PERMANENT : pas de × (fermer les outils y ramène toujours).
+                  On garde un padding droit équivalent pour ne pas décaler le libellé. Les autres onglets
+                  restent fermables. */}
+              {tab.id === '/' ? (
+                <span className="pr-2" aria-hidden="true" />
+              ) : (
+                <button
+                  type="button"
+                  title={t('layout.close')}
+                  onClick={() => handleClose(tab)}
+                  className={cn(
+                    'flex items-center pr-2 transition-colors',
+                    isActive
+                      ? 'text-muted-foreground hover:text-foreground'
+                      : 'text-transparent group-hover:text-muted-foreground group-hover:hover:text-foreground',
+                  )}
+                >
+                  <X className="size-3" />
+                </button>
+              )}
             </div>
           )
         })}
