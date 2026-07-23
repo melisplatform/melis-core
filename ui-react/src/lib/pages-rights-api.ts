@@ -51,6 +51,29 @@ export async function fetchPagesRightNodes(nodeId: number | string): Promise<Pag
   }
 }
 
+/**
+ * Fetch the union of ancestor page ids (each page + its breadcrumb up to the root) for the given
+ * granted page ids. Used to show a tri-state DASH on a parent page whose descendant is granted —
+ * works even when that parent is collapsed (the breadcrumb is resolved server-side). ALL_PAGES and
+ * non-positive ids are ignored (they have no ancestors).
+ */
+export async function fetchPagesAncestors(ids: number[]): Promise<Set<number>> {
+  const real = ids.filter((id) => id > 0)
+  if (real.length === 0) return new Set()
+  try {
+    const res = await fetch(
+      `/melis/MelisCms/TreeSites/getPagesAncestorsForRights?ids=${real.join(',')}`,
+      { headers: { 'X-Requested-With': 'XMLHttpRequest' }, credentials: 'include' },
+    )
+    if (!res.ok) return new Set()
+    const data = await res.json()
+    const arr: unknown[] = Array.isArray(data?.data?.ancestorIds) ? data.data.ancestorIds : []
+    return new Set(arr.map(Number).filter((n) => Number.isFinite(n)))
+  } catch {
+    return new Set()
+  }
+}
+
 /** Read the granted page ids from a usr_rights XML (<meliscms_pages><id>…</id></meliscms_pages>). */
 export function parsePagesRights(xml: string): Set<number> {
   const ids = new Set<number>()
