@@ -7,7 +7,7 @@ import { cn } from '@/lib/utils'
 import { Collapsible } from '@/components/ui/collapsible'
 import { useI18n } from '@/i18n/i18n-context'
 import { makeInstanceId } from './dashboard-store'
-import { WIDGETS, WIDGET_SECTIONS, WIDGET_MAP, type WidgetDef } from './widget-registry'
+import { WIDGETS, WIDGET_SECTIONS, type WidgetDef } from './widget-registry'
 
 /** Panneau latéral listant les widgets disponibles à ajouter (clic ou drag).
  *  Équivalent du panneau de plugins Melis (dashboard-menu-content.phtml).
@@ -19,6 +19,7 @@ export function WidgetPalette({
   onClose,
   onRemoveAll,
   widgetCount,
+  nativeWidgets = WIDGETS,
   extraWidgets = [],
 }: {
   present: Set<string>
@@ -29,6 +30,8 @@ export function WidgetPalette({
   /** Nombre de tuiles POSÉES (pas de widgets distincts) : sert à désactiver « tout supprimer »
    *  sur un dashboard déjà vide, comme le `if ($items.length !== 0)` du legacy. */
   widgetCount: number
+  /** Native widgets to offer — already RIGHTS-GATED by the caller (defaults to all for safety). */
+  nativeWidgets?: WidgetDef[]
   extraWidgets?: WidgetDef[]
 }) {
   const { t } = useI18n()
@@ -54,7 +57,7 @@ export function WidgetPalette({
   // reçoit un id d'instance fraîchement généré à chaque (re-)rendu de l'effet,
   // donc un drag après un ajout précédent ne peut pas entrer en collision.
   useEffect(() => {
-    const allWidgetMap = { ...WIDGET_MAP, ...Object.fromEntries(extraWidgets.map((w) => [w.id, w])) }
+    const allWidgetMap = { ...Object.fromEntries(nativeWidgets.map((w) => [w.id, w])), ...Object.fromEntries(extraWidgets.map((w) => [w.id, w])) }
     const els: HTMLElement[] = []
     const widgets: import('gridstack').GridStackWidget[] = []
 
@@ -71,7 +74,7 @@ export function WidgetPalette({
     // Pas de dépendance à l'état de l'accordéon : `Collapsible` garde le contenu MONTÉ même replié
     // (cf. son commentaire), donc tous les wrappers existent dès ce passage et sont enregistrés en
     // une fois. Un groupe qu'on déplie livre des widgets déjà draggables.
-  }, [present, extraWidgets])
+  }, [present, nativeWidgets, extraWidgets])
 
   return (
     <aside data-widget-palette className="flex w-72 shrink-0 flex-col border-l border-border bg-card">
@@ -93,7 +96,7 @@ export function WidgetPalette({
         {WIDGET_SECTIONS.map((sectionKey) => {
           // Les widgets natifs déclarant un `sectionLabel` sont rendus plus bas, dans le groupe
           // dynamique du module correspondant (ex. Recent activity → MELISCORE).
-          const items = WIDGETS.filter((w) => w.sectionKey === sectionKey && !w.sectionLabel)
+          const items = nativeWidgets.filter((w) => w.sectionKey === sectionKey && !w.sectionLabel)
           if (!items.length) return null
           const key = `sec:${sectionKey}`
           return (
@@ -135,7 +138,7 @@ export function WidgetPalette({
             marketplace/fallback de organizedPluginsBySection() — rien n'est retrié ici.
             Les widgets natifs rattachés à une section (sectionLabel) sont fusionnés dans ces groupes. */}
         {(() => {
-          const dynamicWidgets = [...WIDGETS.filter((w) => w.sectionLabel), ...extraWidgets]
+          const dynamicWidgets = [...nativeWidgets.filter((w) => w.sectionLabel), ...extraWidgets]
           if (!dynamicWidgets.length) return null
 
           const sections = new Map<string, Map<string, WidgetDef[]>>()

@@ -469,18 +469,29 @@ export interface LegacyDashboardPlugin {
   h: number
 }
 
-/** Returns the list of active legacy Melis dashboard plugins (from PHP config). */
-export async function fetchLegacyDashboardPlugins(): Promise<LegacyDashboardPlugin[]> {
+/** Active legacy dashboard plugins (rights-filtered) + the native React widgets the user is granted. */
+export interface DashboardPluginsResult {
+  plugins: LegacyDashboardPlugin[]
+  /** Native widget ids (widget-registry) the current user has the right to — gates always-registered
+   *  native widgets so a rights-less user doesn't see them (e.g. "Recent activity"). */
+  nativeWidgets: string[]
+}
+
+/** Returns the active legacy Melis dashboard plugins (from PHP config) + granted native widget ids. */
+export async function fetchLegacyDashboardPlugins(): Promise<DashboardPluginsResult> {
   try {
     const res = await fetch('/melis/react-api/dashboard/legacy-plugins', {
       headers: { ...XHR_HEADER },
       credentials: 'include',
     })
-    if (!res.ok) return []
-    const data = (await res.json()) as { success: boolean; data?: LegacyDashboardPlugin[] }
-    return data.success && Array.isArray(data.data) ? data.data : []
+    if (!res.ok) return { plugins: [], nativeWidgets: [] }
+    const data = (await res.json()) as { success: boolean; data?: LegacyDashboardPlugin[]; nativeWidgets?: string[] }
+    return {
+      plugins: data.success && Array.isArray(data.data) ? data.data : [],
+      nativeWidgets: Array.isArray(data.nativeWidgets) ? data.nativeWidgets : [],
+    }
   } catch {
-    return []
+    return { plugins: [], nativeWidgets: [] }
   }
 }
 

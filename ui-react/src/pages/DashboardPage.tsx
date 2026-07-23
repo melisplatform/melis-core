@@ -53,10 +53,15 @@ export default function DashboardPage() {
   // La liste est déjà filtrée par les droits côté serveur (usr_rights → <melis_dashboardplugin>),
   // comme le menu du dashboard legacy : un plugin non accordé n'arrive tout simplement pas.
   const [legacyWidgets, setLegacyWidgets] = useState<WidgetDef[]>([])
+  // Native React widgets (widget-registry) the user is granted. Native widgets are always registered
+  // client-side, so without this gate a rights-less user would see them (e.g. "Recent activity",
+  // ticket 0010740). Empty until loaded → gated out by default, restored once the fetch resolves.
+  const [nativeGranted, setNativeGranted] = useState<Set<string>>(new Set())
   const [legacyLoaded, setLegacyLoaded] = useState(false)
   useEffect(() => {
-    melisApi.fetchLegacyDashboardPlugins().then((plugins) => {
+    melisApi.fetchLegacyDashboardPlugins().then(({ plugins, nativeWidgets }) => {
       setLegacyWidgets(plugins.map(buildLegacyWidgetDef))
+      setNativeGranted(new Set(nativeWidgets))
       setLegacyLoaded(true)
     })
   }, [])
@@ -99,7 +104,14 @@ export default function DashboardPage() {
     () => Object.fromEntries(legacyWidgets.map((w) => [w.id, w])),
     [legacyWidgets],
   )
-  const allWidgetMap = useMemo(() => ({ ...WIDGET_MAP, ...extraWidgetMap }), [extraWidgetMap])
+  // Native widgets, gated by the user's rights (granted set from the server). Ungranted ones are
+  // absent from the map → pruned from the grid layout and hidden from the palette.
+  const gatedNativeMap = useMemo(
+    () => Object.fromEntries(Object.entries(WIDGET_MAP).filter(([id]) => nativeGranted.has(id))),
+    [nativeGranted],
+  )
+  const gatedNativeWidgets = useMemo(() => Object.values(gatedNativeMap) as WidgetDef[], [gatedNativeMap])
+  const allWidgetMap = useMemo(() => ({ ...gatedNativeMap, ...extraWidgetMap }), [gatedNativeMap, extraWidgetMap])
 
   // Ids de widget (pas d'instance) déjà présents — sert uniquement à afficher un
   // indicateur "déjà sur le dashboard" dans la palette, pas à bloquer un ré-ajout.
@@ -297,6 +309,7 @@ export default function DashboardPage() {
           onClose={() => setPaletteOpen(false)}
           onRemoveAll={removeAllWidgets}
           widgetCount={layout.length}
+          nativeWidgets={gatedNativeWidgets}
           extraWidgets={legacyWidgets}
         />
       </div>
