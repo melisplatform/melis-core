@@ -29,6 +29,7 @@ import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
 import { cn } from '@/lib/utils'
 import * as userApi from '@/lib/user-api'
+import { fetchMe } from '@/lib/melis-api'
 import * as XLSX from 'xlsx'
 import { useTabs } from '@/components/tabs/tab-store'
 import { MelisClassicFrame, ViewModeToggle, type ViewMode } from '@/components/MelisClassicView'
@@ -436,6 +437,9 @@ export default function UserListPage() {
 
   const [toDelete, setToDelete] = useState<userApi.UserItem | null>(null)
   const [deleting, setDeleting] = useState(false)
+  // Id de l'utilisateur courant : on interdit de supprimer son propre compte (barrière serveur aussi).
+  const [myId, setMyId] = useState<number | null>(null)
+  useEffect(() => { fetchMe().then((m) => setMyId(m?.id ?? null)).catch(() => null) }, [])
 
   const [rawCols, setCols]          = useState<ColDef[]>(loadUserCols)
   // La colonne « Rôle » est apportée par MelisSmallBusiness : retirée quand le module est off.
@@ -704,10 +708,17 @@ export default function UserListPage() {
                           </button>
                         )}
                         {canDelete && (
-                          <button type="button" onClick={() => handleDelete(user)} title={t('common.delete')}
-                            className="rounded p-1.5 hover:bg-destructive/10 transition-colors">
-                            <Trash2 className="size-3.5 text-destructive/70" />
-                          </button>
+                          user.id === myId ? (
+                            <button type="button" disabled title={t('users.delete.self')}
+                              className="rounded p-1.5 opacity-40 cursor-not-allowed">
+                              <Trash2 className="size-3.5 text-muted-foreground" />
+                            </button>
+                          ) : (
+                            <button type="button" onClick={() => handleDelete(user)} title={t('common.delete')}
+                              className="rounded p-1.5 hover:bg-destructive/10 transition-colors">
+                              <Trash2 className="size-3.5 text-destructive/70" />
+                            </button>
+                          )
                         )}
                       </div>
                     </td>

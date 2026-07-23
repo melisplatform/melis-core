@@ -316,6 +316,15 @@ class MelisReactApiUserController extends MelisAbstractActionController
             return $this->jsonResponse(['success' => false, 'error' => 'Invalid ID'], 400);
         }
 
+        // Interdiction de supprimer son propre compte (barrière serveur).
+        $identity = $this->getServiceManager()->get('MelisCoreAuth')->getIdentity();
+        if ($identity && (int) ($identity->usr_id ?? 0) === $id) {
+            return $this->jsonResponse(
+                ['success' => false, 'error' => 'You cannot delete your own account.'],
+                403
+            );
+        }
+
         try {
             $db = $this->getServiceManager()->get('Laminas\Db\Adapter\AdapterInterface');
             $db->query('DELETE FROM melis_core_user WHERE usr_id = ?', [$id]);
