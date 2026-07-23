@@ -945,7 +945,12 @@ export function RightsTreeView({ rights, onChange }: RightsTreeViewProps) {
     partStates.push(checkedPages.has(ALL_PAGES) ? 'all' : checkedPages.size ? 'some' : 'none')
   }
   if (dashPlugins.length) {
-    partStates.push(checkedDash.has(DASHBOARD_ALL) ? 'all' : checkedDash.size ? 'some' : 'none')
+    // Only DISPLAYED plugins count as a partial selection — ignore always-granted/hidden keys
+    // (e.g. MelisCoreDashboardAnnouncementPlugin) that are in the XML but have no checkbox, else the
+    // global toggle shows a phantom dash while nothing is actually ticked (ticket).
+    const dashKeys = new Set(dashPlugins.map((p) => p.key))
+    const dashSome = [...checkedDash].some((k) => k !== DASHBOARD_ALL && dashKeys.has(k))
+    partStates.push(checkedDash.has(DASHBOARD_ALL) ? 'all' : dashSome ? 'some' : 'none')
   }
   const everythingState: TriState =
     partStates.every((s) => s === 'all') ? 'all'

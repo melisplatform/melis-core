@@ -108,7 +108,12 @@ export function DashboardPluginsRightsPanel({
 }) {
   const { t } = useI18n()
   const all = checked.has(DASHBOARD_ALL)
-  const specificCount = Array.from(checked).filter((k) => k !== DASHBOARD_ALL).length
+  // Count ONLY keys that correspond to a displayed plugin. Some granted keys are never shown — chiefly
+  // MelisCoreDashboardAnnouncementPlugin (always granted to everyone, carries exclude_rights_display and
+  // is re-appended on save) — and stale keys from uninstalled modules. Counting them made "All plugins"
+  // show a partial DASH while every visible box was unchecked (ticket).
+  const pluginKeys = new Set(plugins.map((p) => p.key))
+  const specificCount = Array.from(checked).filter((k) => k !== DASHBOARD_ALL && pluginKeys.has(k)).length
 
   // Group by module, preserving the backend's module-merge order.
   const groups: { module: string; plugins: DashboardPluginRight[] }[] = []
