@@ -1,4 +1,4 @@
-import { useState, type ReactNode } from 'react'
+import { createContext, useContext, useState, type ReactNode } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { ChevronRight, LayoutDashboard } from 'lucide-react'
 
@@ -12,6 +12,10 @@ import { melisKeyForRoute } from '@/lib/tool-routes'
 import { useReactTheme } from '@/lib/react-theme'
 import wordmark from '@/assets/melis-wordmark.svg'
 import wordmarkWhite from '@/assets/melis-wordmark-white.svg'
+
+// Appelé après chaque navigation depuis la sidebar. En mobile, ferme le drawer off-canvas ;
+// undefined en desktop (aucun effet). Évite le prop-drilling à travers l'arbre récursif.
+const SidebarNavContext = createContext<(() => void) | undefined>(undefined)
 
 function BrandMark() {
   return (
@@ -47,6 +51,7 @@ function NavNodeItem({ node, depth, collapsed, defaultOpen = false, sidebarPanel
   const [open, setOpen] = useState(defaultOpen)
   const { openTab, activeId } = useTabs()
   const navigate = useNavigate()
+  const onNavigate = useContext(SidebarNavContext)
   const Icon = node.icon
   const hasChildren = node.children.length > 0
 
@@ -69,6 +74,7 @@ function NavNodeItem({ node, depth, collapsed, defaultOpen = false, sidebarPanel
         onClick={() => {
           openTab({ id: node.to!, label: node.label, path: node.to!, icon: node.icon })
           navigate(node.to!)
+          onNavigate?.()
         }}
         className={cn(
           'flex w-full items-center gap-2.5 rounded-md text-sm transition-colors cursor-pointer',
@@ -182,7 +188,19 @@ function NavSkeleton({ collapsed }: { collapsed: boolean }) {
 
 // ─── Sidebar ─────────────────────────────────────────────────────────────────
 
-export function Sidebar({ collapsed }: { collapsed: boolean }) {
+interface SidebarProps {
+  collapsed: boolean
+  /** < 768px : la sidebar devient un drawer off-canvas plein écran (jamais le rail étroit). */
+  isMobile?: boolean
+  /** Drawer ouvert (mobile uniquement). */
+  mobileOpen?: boolean
+  /** Ferme le drawer (backdrop, navigation). */
+  onClose?: () => void
+}
+
+export function Sidebar({ collapsed: collapsedProp, isMobile = false, mobileOpen = false, onClose }: SidebarProps) {
+  // En mobile le drawer est toujours DÉPLOYÉ (le rail étroit rendrait les sections indépliables).
+  const collapsed = isMobile ? false : collapsedProp
   const { t, lang } = useI18n()
   const { theme } = useTheme()
   const { openTab, activeId } = useTabs()
@@ -197,12 +215,26 @@ export function Sidebar({ collapsed }: { collapsed: boolean }) {
   const isDashboardActive = activeId === '/'
 
   return (
-    <aside
-      className={cn(
-        'flex shrink-0 flex-col border-r border-border bg-card transition-[width] duration-200',
-        collapsed ? 'w-[72px]' : 'w-64',
+    <SidebarNavContext.Provider value={isMobile ? onClose : undefined}>
+      {/* Backdrop mobile : ferme le drawer au tap hors sidebar. */}
+      {isMobile && mobileOpen && (
+        <div
+          className="fixed inset-0 z-40 bg-black/50 backdrop-blur-sm"
+          onClick={onClose}
+          aria-hidden
+        />
       )}
-    >
+      <aside
+        className={cn(
+          'flex flex-col border-r border-border bg-card',
+          isMobile
+            ? cn(
+                'fixed inset-y-0 left-0 z-50 w-64 shadow-xl transition-transform duration-200',
+                mobileOpen ? 'translate-x-0' : '-translate-x-full',
+              )
+            : cn('shrink-0 transition-[width] duration-200', collapsed ? 'w-[72px]' : 'w-64'),
+        )}
+      >
       {/* Header / Logo */}
       <div
         className={cn(
@@ -227,6 +259,7 @@ export function Sidebar({ collapsed }: { collapsed: boolean }) {
           onClick={() => {
             openTab({ id: '/', label: 'Dashboard', path: '/', icon: LayoutDashboard })
             navigate('/')
+            if (isMobile) onClose?.()
           }}
           className={cn(
             'flex w-full items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors',
@@ -282,6 +315,7 @@ export function Sidebar({ collapsed }: { collapsed: boolean }) {
           {version && <> - {t('footer.version')}: {version}</>}
         </div>
       )}
-    </aside>
+      </aside>
+    </SidebarNavContext.Provider>
   )
 }

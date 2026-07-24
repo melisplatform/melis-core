@@ -117,11 +117,22 @@ function BrickHost({ brick, isActive, visited }: { brick: BrickDef; isActive: bo
   )
 }
 
+const MOBILE_BREAKPOINT = 768
+
 function ShellInner() {
   // Start collapsed on narrow viewports; auto-collapse again if window shrinks below 768px.
   const [collapsed, setCollapsed] = useState(() => window.innerWidth < 1024)
+  // Mobile (< 768px) : la sidebar n'est plus un rail étroit (inutilisable : les sections ne peuvent
+  // pas se déplier en mode collapsed) mais un DRAWER off-canvas plein écran ouvert par le toggle.
+  const [isMobile, setIsMobile] = useState(() => window.innerWidth < MOBILE_BREAKPOINT)
+  const [mobileOpen, setMobileOpen] = useState(false)
   useEffect(() => {
-    const onResize = () => { if (window.innerWidth < 768) setCollapsed(true) }
+    const onResize = () => {
+      const mobile = window.innerWidth < MOBILE_BREAKPOINT
+      setIsMobile(mobile)
+      if (mobile) setCollapsed(true)
+      else setMobileOpen(false) // quitter le mobile → refermer le drawer
+    }
     window.addEventListener('resize', onResize, { passive: true })
     return () => window.removeEventListener('resize', onResize)
   }, [])
@@ -233,9 +244,18 @@ function ShellInner() {
       <Notifications />
       {/* Global AI assistant: floating chat + shell-side closed-loop navigation handlers. */}
       <AiAssistant />
-      <Sidebar collapsed={collapsed} />
+      <Sidebar
+        collapsed={collapsed}
+        isMobile={isMobile}
+        mobileOpen={mobileOpen}
+        onClose={() => setMobileOpen(false)}
+      />
       <div className="flex min-w-0 flex-1 flex-col">
-        <Topbar onToggleSidebar={() => setCollapsed((c) => !c)} />
+        <Topbar
+          onToggleSidebar={() =>
+            isMobile ? setMobileOpen((o) => !o) : setCollapsed((c) => !c)
+          }
+        />
         <SubTabBar />
         <ToolTabBar />
 
