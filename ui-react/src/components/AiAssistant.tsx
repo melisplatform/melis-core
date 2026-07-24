@@ -1,8 +1,9 @@
 import { useEffect, useRef, useState, type CSSProperties } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Bot, X } from 'lucide-react'
+import { Bot, ChevronDown, RotateCcw, X } from 'lucide-react'
 
 import { AiChatContainer } from '@melis-ai-engine'
+import { MelisAiIcon } from '@/lib/melis-icons'
 import { useI18n } from '@/i18n/i18n-context'
 import { useTabs } from '@/components/tabs/tab-store'
 import { useNavMenu, type NavNode } from '@/hooks/useNavMenu'
@@ -45,7 +46,14 @@ declare global {
  */
 export function AiAssistant() {
   const { t } = useI18n()
+  // `open`    = panneau visible (sinon on montre le FAB).
+  // `started` = le chat est MONTÉ (session vivante) ; rester monté quand caché préserve la session.
+  // `seed`    = clé de (re)montage → l'incrémenter force une nouvelle session.
+  // `clearOnMount` = passe clearSession au prochain montage (vraie fermeture / nouvelle session).
   const [open, setOpen] = useState(false)
+  const [started, setStarted] = useState(false)
+  const [seed, setSeed] = useState(0)
+  const [clearOnMount, setClearOnMount] = useState(false)
   const navigate = useNavigate()
   const { openTab } = useTabs()
   const { nodes } = useNavMenu()
@@ -142,32 +150,66 @@ export function AiAssistant() {
     }
   }, [])
 
+  // ── Actions des 3 boutons (parité legacy) ──────────────────────────────────
+  // Ouvrir depuis le FAB : si une session est déjà montée (cachée), on la RÉAFFICHE
+  // (même session) ; sinon on démarre le chat.
+  const openFromFab = () => { setStarted(true); setOpen(true) }
+  // ↓ Réduire : cache le panneau mais garde le chat MONTÉ → la même session reprend.
+  const hide = () => setOpen(false)
+  // ↺ Nouvelle session : remonte le container avec clearSession (efface la session serveur
+  //   et repart à neuf) SANS fermer — évite le aller-retour croix + réouverture.
+  const newSession = () => { setClearOnMount(true); setStarted(true); setSeed((s) => s + 1) }
+  // ✕ Fermer : démonte le chat (fin de session côté UI) et arme clearSession pour la prochaine
+  //   ouverture → rouvrir démarre une nouvelle session.
+  const close = () => { setClearOnMount(true); setStarted(false); setOpen(false) }
+
   return (
     <>
       {!open && (
         <button
           type="button"
-          onClick={() => setOpen(true)}
+          onClick={openFromFab}
           title={t('layout.ai_assistant')}
           style={fabStyle}
         >
           <Bot style={{ width: 22, height: 22 }} />
+          {/* Badge logo MelisAi (M dégradé) posé en bas à droite : garde l'icône robot
+              comme repère « assistant » tout en signant la marque MelisAi. Pastille claire
+              (surface card) pour que le dégradé rose→violet→cyan ressorte dans les 2 thèmes. */}
+          <span style={fabBadgeStyle}>
+            <MelisAiIcon className="size-[13px]" />
+          </span>
         </button>
       )}
-      {open && (
-        <div style={panelStyle}>
+      {/* Le panneau reste MONTÉ tant que `started` : caché = display:none (session préservée).
+          Il n'est retiré du DOM que par la croix (setStarted(false)). */}
+      {started && (
+        <div style={{ ...panelStyle, display: open ? 'flex' : 'none' }}>
           <div style={panelHeaderStyle}>
             <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8, fontWeight: 600 }}>
-              <Bot style={{ width: 18, height: 18 }} /> {t('layout.ai_assistant')}
+              {/* Logo MelisAi placé DEVANT le logo de l'assistant (robot). */}
+              <MelisAiIcon className="size-[18px]" />
+              <Bot style={{ width: 18, height: 18 }} />
+              {t('layout.ai_assistant')}
             </span>
-            <button type="button" onClick={() => setOpen(false)} title={t('layout.close')} style={panelCloseStyle}>
-              <X style={{ width: 16, height: 16 }} />
-            </button>
+            <div style={{ display: 'inline-flex', alignItems: 'center', gap: 4 }}>
+              <button type="button" onClick={hide} title={t('layout.ai_hide')} style={panelCloseStyle}>
+                <ChevronDown style={{ width: 16, height: 16 }} />
+              </button>
+              <button type="button" onClick={newSession} title={t('layout.ai_new_session')} style={panelCloseStyle}>
+                <RotateCcw style={{ width: 15, height: 15 }} />
+              </button>
+              <button type="button" onClick={close} title={t('layout.ai_close')} style={panelCloseStyle}>
+                <X style={{ width: 16, height: 16 }} />
+              </button>
+            </div>
           </div>
           <div style={{ flex: 1, minHeight: 0, display: 'flex' }}>
             <AiChatContainer
+              key={seed}
               maiInstanceId={GENERAL_MAI}
               agentId={GENERAL_AGENT_ID}
+              clearSession={clearOnMount}
               autoRun
               showHeader={false}
               style={{ flex: 1, minHeight: 0 }}
@@ -187,6 +229,16 @@ const fabStyle: CSSProperties = {
   display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
   border: '1px solid var(--color-border)', background: 'var(--color-primary, #f97316)',
   color: '#fff', cursor: 'pointer', boxShadow: '0 6px 20px rgba(0,0,0,.25)',
+}
+
+// Pastille MelisAi ancrée dans le coin bas-droit du FAB (le FAB est `position: fixed`, donc
+// contexte de positionnement pour cet absolu). Débordement léger hors du rond principal.
+const fabBadgeStyle: CSSProperties = {
+  position: 'absolute', right: -2, bottom: -2,
+  width: 20, height: 20, borderRadius: '50%',
+  display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+  background: 'var(--color-card, #fff)', border: '1px solid var(--color-border)',
+  boxShadow: '0 1px 3px rgba(0,0,0,.3)',
 }
 
 const panelStyle: CSSProperties = {

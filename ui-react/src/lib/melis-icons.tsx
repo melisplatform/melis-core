@@ -29,7 +29,7 @@ const MelisMarketplaceIcon = makeSolidM('#ef4444')  // red
 const MelisDefaultIcon     = makeSolidM('currentColor')
 
 // Melis AI: pink → purple → cyan gradient (from melis-ai-hero.svg)
-const MelisAiIcon = (({ className }: { className?: string }) =>
+export const MelisAiIcon = (({ className }: { className?: string }) =>
   React.createElement('svg', { className, viewBox: '0 0 70 70' },
     React.createElement('defs', null,
       React.createElement('linearGradient', { id: 'mai-g', x1: '0%', y1: '0%', x2: '100%', y2: '100%' },
