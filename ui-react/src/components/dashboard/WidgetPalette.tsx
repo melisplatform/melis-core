@@ -1,11 +1,12 @@
 import { useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
-import { ChevronDown, Plus, X } from 'lucide-react'
+import { ChevronRight, Plus, X, type LucideIcon } from 'lucide-react'
 import { GridStack } from 'gridstack'
 
 import { cn } from '@/lib/utils'
 import { Collapsible } from '@/components/ui/collapsible'
 import { useI18n } from '@/i18n/i18n-context'
+import { getMelisIcon } from '@/lib/melis-icons'
 import { makeInstanceId } from './dashboard-store'
 import { WIDGETS, WIDGET_SECTIONS, type WidgetDef } from './widget-registry'
 
@@ -96,7 +97,7 @@ export function WidgetPalette({
 
       <p className="px-4 py-2.5 text-xs text-muted-foreground">{t('widget.palette_hint')}</p>
 
-      <div className="flex-1 space-y-5 overflow-y-auto px-3 pb-4">
+      <div className="flex-1 space-y-0.5 overflow-y-auto p-2">
         {WIDGET_SECTIONS.map((sectionKey) => {
           // Les widgets natifs déclarant un `sectionLabel` sont rendus plus bas, dans le groupe
           // dynamique du module correspondant (ex. Recent activity → MELISCORE).
@@ -105,17 +106,15 @@ export function WidgetPalette({
           const key = `sec:${sectionKey}`
           return (
             <div key={sectionKey}>
-              {/* Sections natives React (pas des sections marketplace) → `section=""` : aucune
-                  couleur ne leur correspond, elles prennent le rouge plateforme par défaut,
-                  comme n'importe quelle section inconnue du helper legacy. */}
+              {/* Même icône Melis que la nav de gauche (getMelisIcon), dérivée du libellé de section. */}
               <GroupHeader
                 label={t(sectionKey)}
-                section=""
+                icon={getMelisIcon(t(sectionKey))}
                 open={openSection === key}
                 onToggle={() => toggleSection(key)}
               />
               <Collapsible open={openSection === key}>
-                <div className="space-y-1.5">
+                <div className="mt-0.5 mb-2 space-y-1">
                   {items.map((w) => (
                     <PaletteItem
                       key={w.id}
@@ -180,17 +179,17 @@ export function WidgetPalette({
               <div key={sectionLabel}>
                 <GroupHeader
                   label={sectionLabel === 'CustomProjects' ? 'Custom / Projects' : sectionLabel}
-                  // `sectionLabel` BRUT (pas le libellé affiché) : c'est la clé du helper legacy —
-                  // 'CustomProjects' porte une couleur, 'Custom / Projects' n'en aurait aucune.
-                  section={sectionLabel}
+                  // Même icône Melis que la nav de gauche : on la dérive du `sectionLabel` BRUT
+                  // (clé de module — 'CustomProjects', 'MelisCms'…), pas du libellé affiché.
+                  icon={getMelisIcon(sectionLabel)}
                   open={openSection === sectionKey}
                   onToggle={() => toggleSection(sectionKey)}
                 />
                 <Collapsible open={openSection === sectionKey}>
-                  <div className="space-y-2.5">
+                  <div className="mt-0.5 mb-2 space-y-0.5">
                     {Array.from(modules.entries()).map(([moduleLabel, items]) => {
                       if (!showModuleTitles) {
-                        return <div key={moduleLabel} className="space-y-1.5">{items.map(renderItem)}</div>
+                        return <div key={moduleLabel} className="space-y-1">{items.map(renderItem)}</div>
                       }
                       const moduleKey = `${sectionKey}::${moduleLabel}`
                       return (
@@ -202,7 +201,7 @@ export function WidgetPalette({
                             onToggle={() => toggleModule(moduleKey)}
                           />
                           <Collapsible open={openModule === moduleKey}>
-                            <div className="space-y-1.5">{items.map(renderItem)}</div>
+                            <div className="mt-0.5 space-y-1">{items.map(renderItem)}</div>
                           </Collapsible>
                         </div>
                       )
@@ -283,47 +282,23 @@ function ConfirmRemoveAllDialog({ onCancel, onConfirm }: { onCancel: () => void;
   )
 }
 
-/** Couleur de pastille par section marketplace — reprise à l'identique du helper PHP legacy
- *  `MelisCoreSectionIconsHelper` (une seule et même icône Melis, seul le fond change).
- *  Section inconnue → rouge plateforme, exactement comme la branche `else` du helper. */
-const SECTION_COLORS: Record<string, string> = {
-  MelisCore: '#ee6622',
-  MelisCms: '#69b344',
-  MelisMarketing: '#70469c',
-  MelisCommerce: '#2780c4',
-  CustomProjects: '#676767',
-}
-
-/** Logo Melis sur carré arrondi coloré — portage React du SVG inline du helper legacy
- *  (mêmes `path`/`circle`, même viewBox 0 0 80 80). Aucun appel PHP : la seule variable est
- *  la couleur de fond, donnée par `SECTION_COLORS`. */
-function SectionIcon({ section }: { section: string }) {
-  return (
-    <svg viewBox="0 0 80 80" className="size-5 shrink-0" aria-hidden="true" focusable="false">
-      <rect fill={SECTION_COLORS[section] ?? '#ff0000'} x=".07" y=".13" width="79.86" height="79.86" rx="15.36" ry="15.36" />
-      <path fill="#FFFFFF" d="M57.78,15.87c-3.47,0-6.29,2.81-6.29,6.29v35.85c0,3.47,2.81,6.29,6.29,6.29s6.29-2.81,6.29-6.29V22.16c0-3.47-2.81-6.29-6.29-6.29Z" />
-      <path fill="#FFFFFF" d="M27.79,19.16c-1.62-3.07-5.43-4.24-8.5-2.62-3.07,1.62-4.24,5.43-2.62,8.5l19.01,35.93c1.62,3.07,5.43,4.24,8.5,2.62,3.07-1.62,4.24-5.43,2.62-8.5L27.79,19.16Z" />
-      <circle fill="#FFFFFF" cx="22.36" cy="57.88" r="6.43" />
-    </svg>
-  )
-}
-
-/** En-tête de groupe repliable — équivalent des `melis-core-dashboard-filter-btn` (section) et
- *  `melis-core-dashboard-category-btn` (module) du legacy, chevron `fa-angle-down` compris.
- *  Deux niveaux : `section` (majuscules, appuyé) et `module` (plus discret, légèrement indenté). */
+/** En-tête de groupe repliable — calqué sur la nav de gauche (Sidebar.tsx) pour une lecture homogène :
+ *  niveau `section` = icône Melis colorée + libellé `text-sm font-semibold` (comme un module de la nav) ;
+ *  niveau `module` = sous-titre `uppercase tracking-wider` discret mais lisible (comme une catégorie
+ *  de la nav). Chevron `ChevronRight` qui pivote de 90°, à l'identique du menu. */
 function GroupHeader({
   label,
   open,
   onToggle,
   level = 'section',
-  /** Clé de section pour la pastille colorée. Niveau `module` : aucune icône, comme le legacy. */
-  section,
+  /** Icône Melis (niveau `section`). Niveau `module` : aucune icône, comme le legacy. */
+  icon: Icon,
 }: {
   label: string
   open: boolean
   onToggle: () => void
   level?: 'section' | 'module'
-  section?: string
+  icon?: LucideIcon
 }) {
   return (
     <button
@@ -331,19 +306,17 @@ function GroupHeader({
       onClick={onToggle}
       aria-expanded={open}
       className={cn(
-        'mb-1.5 flex w-full cursor-pointer items-center gap-2 rounded px-1 py-1 text-left transition-colors hover:bg-accent',
+        'flex w-full cursor-pointer items-center gap-2.5 rounded-md px-3 text-left transition-colors hover:bg-accent hover:text-foreground',
         level === 'section'
-          ? 'text-[11px] font-semibold uppercase tracking-wider text-muted-foreground/70'
-          : 'pl-2 text-[11px] font-medium text-muted-foreground/60',
+          ? cn('py-2 text-sm font-semibold', open ? 'text-foreground' : 'text-foreground/90')
+          : 'py-1.5 text-xs font-semibold uppercase tracking-wider text-muted-foreground',
       )}
     >
-      {section !== undefined && <SectionIcon section={section} />}
-      {/* `mr-auto` plutôt qu'un `justify-between` sur le parent : avec l'icône en tête, seul le
-          libellé doit absorber l'espace libre, sinon un trou se creuse entre icône et texte. */}
-      <span className="mr-auto truncate">{label}</span>
+      {Icon && <Icon className="size-[18px] shrink-0" />}
+      <span className="flex-1 truncate">{label}</span>
       {/* Chevron pivoté plutôt qu'échangé contre une autre icône : la rotation est animable et
           garde la même empreinte, donc l'en-tête ne « saute » pas au dépliage. */}
-      <ChevronDown className={cn('size-3.5 shrink-0 transition-transform', open && 'rotate-180')} />
+      <ChevronRight className={cn('size-3 shrink-0 transition-transform', open && 'rotate-90')} />
     </button>
   )
 }
@@ -390,7 +363,7 @@ function PaletteItem({
             onAdd()
           }
         }}
-        className="flex min-w-0 flex-1 items-center gap-3 py-2.5 pl-3 pr-3 text-left"
+        className="flex min-w-0 flex-1 items-center gap-3 py-2 pl-3 pr-3 text-left"
       >
         {widget.thumbnail && showThumbnail ? (
           <img
