@@ -38,6 +38,10 @@ export interface GridItem {
   h: number
   minW?: number
   minH?: number
+  /** L'utilisateur a redimensionné la HAUTEUR de cette tuile à la main. Quand vrai, `h` est une
+   *  hauteur voulue (pas un ajustement au contenu) : elle est persistée (react-height) et l'auto-fit
+   *  ne la retouche plus, y compris après un rechargement (cf. DashboardPage / DashboardGrid). */
+  userSized?: boolean
 }
 
 function item(widgetId: string, x: number, y: number): GridItem {

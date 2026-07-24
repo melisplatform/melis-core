@@ -503,13 +503,9 @@ export async function fetchLegacyDashboardPlugins(): Promise<DashboardPluginsRes
 // shape (pluginName + pluginId) rather than a bare React grid id. DashboardPage maps it to/from
 // its GridItem (`i`) using the widget registry.
 //
-// READ goes through the react-api (JSON); WRITE goes through the SAME legacy endpoint the classic
-// dashboard uses (`saveDashboardPlugins`) — one code path, and it fires
-// `meliscore_save_dashboard_plugin_end` natively (→ per-user dashboard cache purge) so the classic
-// dashboard reflects every React change (add / move / remove / remove-all).
-
-/** dashboard_id of the shared dashboard record (cf. renderDashboardPluginsAction's default). */
-const LEGACY_DASHBOARD_ID = 'id_meliscore_toolstree_section_dashboard'
+// READ and WRITE both go through the react-api (JSON). The controller writes the SAME shared record
+// the classic dashboard uses and replays `meliscore_save_dashboard_plugin_end` (→ per-user dashboard
+// cache purge), so the classic dashboard reflects every React change (add / move / remove / remove-all).
 
 export interface DashboardPluginRecord {
   /** Real PHP dashboard plugin name (e.g. MelisCoreDashboardRecentUserActivityPlugin). */
@@ -522,6 +518,10 @@ export interface DashboardPluginRecord {
   /** Hauteur en lignes de la grille LEGACY (cellules 80px) — hauteur DÉCLARÉE du plugin, PAS la
    *  hauteur d'affichage React (46px, ajustée au contenu). C'est ce que rend le dashboard /melis. */
   h: number
+  /** Hauteur d'affichage React (lignes de 46px) quand l'utilisateur a redimensionné la tuile À LA
+   *  MAIN. Stockée à part (`<react-height>`) car le dashboard classique rend `h` en 80px ; il ignore
+   *  ce champ. `null`/absent = pas de redimensionnement manuel → la grille auto-ajuste la hauteur. */
+  reactH?: number | null
 }
 
 /** Returns the saved plugin records from the shared DB record, or null if not yet saved. */
@@ -556,25 +556,18 @@ export async function fetchDashboardLayout(): Promise<DashboardPluginRecord[] | 
  * Fire-and-forget: errors are silently swallowed.
  */
 export async function saveDashboardLayout(items: DashboardPluginRecord[]): Promise<void> {
-  const form = new URLSearchParams()
-  form.set('dashboard_id', LEGACY_DASHBOARD_ID)
-  for (const p of items) {
-    const base = `plugins[${p.pluginName}][${p.pluginId}]`
-    form.set(`${base}[x-axis]`, String(p.x))
-    form.set(`${base}[y-axis]`, String(p.y))
-    form.set(`${base}[width]`, String(p.w))
-    // `h` porte déjà la hauteur LEGACY DÉCLARÉE du plugin (cf. layoutToRecords → def.legacyH), donc
-    // dans l'unité de la grille classique (80px). On l'écrit tel quel : le dashboard /melis la rend
-    // à sa hauteur de config → pas de vide en bas. On NE persiste PAS la hauteur d'affichage React
-    // (ajustée au contenu, 46px), qui gonflait la tuile legacy.
-    form.set(`${base}[height]`, String(p.h))
-  }
+  // POST via la react-api (JSON). Ce contrôleur écrit le MÊME record partagé (`<height>` = hauteur
+  // legacy déclarée, rendue par le dashboard classique), PRÉSERVE la config des plugins déjà en base,
+  // et rejoue `meliscore_save_dashboard_plugin_end` → la purge du cache dashboard classique tourne
+  // aussi (add/move/remove/remove-all restent reflétés côté /melis). Il stocke EN PLUS la hauteur
+  // d'affichage React d'une tuile redimensionnée à la main (`<react-height>`, ignorée par le legacy),
+  // ce que l'ancien endpoint `saveDashboardPlugins` ne savait pas faire (d'où la perte du resize).
   try {
-    await fetch('/melis/MelisCore/DashboardPlugins/saveDashboardPlugins', {
+    await fetch('/melis/react-api/dashboard/layout', {
       method: 'POST',
-      headers: { ...XHR_HEADER, 'Content-Type': 'application/x-www-form-urlencoded' },
+      headers: { ...XHR_HEADER, 'Content-Type': 'application/json' },
       credentials: 'include',
-      body: form.toString(),
+      body: JSON.stringify(items),
     })
   } catch {
     /* ignore */

@@ -40,10 +40,16 @@ function recordsToLayout(records: melisApi.DashboardPluginRecord[]): GridItem[] 
     const base = NATIVE_ID_BY_PLUGIN[r.pluginName] ?? `legacy-${r.pluginName}`
     const i = seen.has(base) ? makeInstanceId(base) : base
     seen.add(base)
-    // `r.h` est la hauteur LEGACY déclarée (grille 80px). On la convertit en lignes de la grille
-    // React (46px) pour l'AFFICHAGE — comme le fait le registre pour les défs (buildLegacyWidgetDef).
-    // La hauteur persistée, elle, reste la valeur déclarée (cf. layoutToRecords → def.legacyH).
-    return { i, x: r.x, y: r.y, w: r.w, h: legacyRowsToGridRows(r.h) }
+    // Redimensionnement MANUEL de la hauteur : si `react-height` est présent, on RESTAURE cette
+    // hauteur d'affichage React telle quelle et on marque la tuile « réglée à la main » → l'auto-fit
+    // ne la retouchera plus (cf. DashboardGrid). Sinon, on dérive la hauteur d'affichage (46px) de la
+    // hauteur LEGACY déclarée (80px) et l'auto-fit ajuste ensuite au contenu.
+    const userSized = typeof r.reactH === 'number' && r.reactH > 0
+    return {
+      i, x: r.x, y: r.y, w: r.w,
+      h: userSized ? (r.reactH as number) : legacyRowsToGridRows(r.h),
+      userSized,
+    }
   })
 }
 
@@ -132,6 +138,24 @@ export default function DashboardPage() {
   // Passe à `true` quand le record serveur a été chargé (≠ cache localStorage) → gate du heal effect.
   const serverLayoutRef = useRef(false)
 
+  // Signature STABLE d'un layout du point de vue du record serveur : uniquement les champs persistés
+  // (nom de plugin + position + taille + hauteur legacy déclarée). INSENSIBLE aux ids d'instance
+  // (aléatoires, cf. makeInstanceId) et à la hauteur d'AFFICHAGE React (46px, ajustée au contenu) —
+  // que `layoutToRecords` n'écrit jamais en base (il écrit `def.legacyH`). Sert de garde anti-doublon.
+  const recordsSig = useCallback(
+    (recs: melisApi.DashboardPluginRecord[]) =>
+      // `reactH` inclus : un redimensionnement manuel de la hauteur (qui ne change que react-height)
+      // doit compter comme un changement à persister, sinon la garde anti-doublon l'avalerait.
+      JSON.stringify(recs.map((r) => [r.pluginName, r.x, r.y, r.w, r.h, r.reactH ?? 0])),
+    [],
+  )
+  // Signature du dernier record ENVOYÉ (ou CHARGÉ) du serveur. Au montage, les effets de
+  // réconciliation (recalage des hauteurs, élagage, auto-réparation) + l'auto-fit produisent
+  // presque toujours le MÊME record que celui chargé → sans cette garde, chacun déclenchait un
+  // `saveDashboardLayout` redondant (plusieurs POST au premier affichage). `null` = rien encore
+  // synchronisé, le 1ᵉʳ envoi réel passe donc toujours.
+  const lastSavedSigRef = useRef<string | null>(null)
+
   // Priorité DB : au montage, charge le record partagé (schéma legacy) et le convertit en layout
   // React (écrase le cache localStorage si trouvé).
   useEffect(() => {
@@ -144,6 +168,9 @@ export default function DashboardPage() {
         const dbLayout = recordsToLayout(records)
         setLayout(dbLayout)
         saveLayout(dbLayout)
+        // Point de référence anti-doublon : ce que le serveur a DÉJÀ. Toute réconciliation au montage
+        // qui reproduit ce record (le cas normal) est alors reconnue identique → aucun POST inutile.
+        lastSavedSigRef.current = recordsSig(records)
         // Le record serveur a bien été chargé → autorise la normalisation des hauteurs (heal effect).
         // Ne PAS normaliser depuis le seul cache localStorage (fetch en échec) : on n'écrirait pas
         // une hauteur fiable dans le record partagé.
@@ -183,7 +210,13 @@ export default function DashboardPage() {
         // /melis (rendue à ×80px) → gros vide en bas. La hauteur reste ainsi celle de la config du
         // plugin dans les deux dashboards. (x/y/w conservés : mêmes unités, 12 colonnes.)
         return def?.pluginName
-          ? [{ pluginName: def.pluginName, pluginId: l.i, x: l.x, y: l.y, w: l.w, h: def.legacyH }]
+          ? [{
+              pluginName: def.pluginName, pluginId: l.i, x: l.x, y: l.y, w: l.w, h: def.legacyH,
+              // Hauteur d'affichage React persistée UNIQUEMENT si l'utilisateur l'a réglée à la main
+              // (`<react-height>`, ignorée par le dashboard classique). Sinon `null` → l'auto-fit
+              // reprend la main au prochain rendu.
+              reactH: l.userSized ? l.h : null,
+            }]
           : []
       }),
     [allWidgetMap],
@@ -193,9 +226,19 @@ export default function DashboardPage() {
     (next: GridItem[]) => {
       setLayout(next)
       saveLayout(next)
-      melisApi.saveDashboardLayout(layoutToRecords(next))
+      // N'ÉCRIT en base que si le record change réellement (cf. recordsSig). Les effets de
+      // réconciliation du montage et l'auto-fit des hauteurs repassent souvent par ici avec un record
+      // identique à ce qui est déjà persisté : on saute alors le POST (fini les multiples
+      // `saveDashboardLayout` au premier chargement). Le cache localStorage, lui, reste écrit à chaque
+      // fois (hauteur d'affichage comprise) pour un rechargement instantané.
+      const recs = layoutToRecords(next)
+      const sig = recordsSig(recs)
+      if (sig !== lastSavedSigRef.current) {
+        lastSavedSigRef.current = sig
+        melisApi.saveDashboardLayout(recs)
+      }
     },
-    [layoutToRecords],
+    [layoutToRecords, recordsSig],
   )
 
   // Remonte les tuiles plus courtes que la hauteur de leur widget (contenu tronqué).
@@ -215,7 +258,9 @@ export default function DashboardPage() {
     let changed = false
     const fixed = layoutRef.current.map((l) => {
       const def = allWidgetMap[widgetIdOf(l.i)]
-      if (!def || l.h >= def.h) return l
+      // Une tuile réglée à la main garde SA hauteur, même si elle est plus courte que la déf. — sinon
+      // ce recalage annulerait un rétrécissement volontaire de l'utilisateur au chargement.
+      if (l.userSized || !def || l.h >= def.h) return l
       changed = true
       return { ...l, h: def.h, minW: def.minW, minH: def.minH }
     })

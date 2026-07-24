@@ -174,7 +174,13 @@ class MelisCoreDashboardPluginsRightsService extends MelisServiceManager impleme
             foreach ($appsConfig['interface'] as $appKey => $appSection) {
                 if(!isset($appSection['datas']['skip_plugin_container'])) {
                     if(!isset($appSection['datas']['exclude_rights_display'])) {//check if this plugins is excluded in rights display
-                        $selectedTools = $melisCoreUser->isItemRightChecked($userXml, self::MELISCORE_DASHBOARDPLUGIN_PREFIX, $appKey);
+                        // Honore le raccourci « All plugins » : React stocke <id>melis_dashboardplugin_root</id>
+                        // pour tout accorder. isItemRightChecked (branche générique, égalité stricte) l'ignore
+                        // → chaque plugin s'affichait DÉCOCHÉ en legacy alors que React les montre tous cochés.
+                        // isAccessible() (local) traite melis_dashboardplugin_root comme « tous » (L104), donc
+                        // un droit _root coche tous les plugins ; un droit par-plugin reste exact. Même famille
+                        // que la divergence _root de l'arbre d'outils.
+                        $selectedTools = $this->isAccessible($userXml, self::MELISCORE_DASHBOARDPLUGIN_PREFIX, $appKey);
                         $tools[$appCtr] = [
                             'key' => $appKey,
                             'title' => $appSection['datas']['name'] ?? $appKey,

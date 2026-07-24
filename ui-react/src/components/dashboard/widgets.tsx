@@ -130,6 +130,12 @@ export function LegacyPluginContent({ pluginName }: { pluginName: string }) {
   // Confirmation « Oui / Non » d'un plugin legacy (ex. Valider / Refuser du Workflow) : idem, l'iframe
   // nous demande de l'afficher centrée sur la page ; on lui renvoie ensuite le choix de l'utilisateur.
   const [confirm, setConfirm] = useState<PluginConfirmRequest | null>(null)
+  // Hauteur de CONTENU mesurée par le plugin (postMessage `__melisPluginHeight`, mesure « éléments »
+  // STABLE, indépendante de la taille de l'iframe — pas le `scrollHeight` plafonné). Sert de PLANCHER
+  // de hauteur à l'iframe : quand l'utilisateur rétrécit la tuile SOUS le contenu, l'iframe garde cette
+  // hauteur (le contenu reste à sa taille réelle, pas compressé par la chaîne de % du thème legacy) et
+  // c'est le CADRE React (déjà `overflow-auto`) qui affiche l'ascenseur. 0 tant que non mesuré.
+  const [contentPx, setContentPx] = useState(0)
 
   // Les graphiques flot sont des CANVAS dessinés une fois, à la largeur du conteneur au moment du
   // rendu. Redimensionner la tuile agrandit l'iframe mais pas le canvas : le graphique reste étroit
@@ -176,12 +182,25 @@ export function LegacyPluginContent({ pluginName }: { pluginName: string }) {
     return params
   }, [theme])
 
-  // Switching mode (light/dark) changes `themeParams` → the iframe URL changes → it reloads to
-  // reflect the new scheme. We re-show the loader for the duration of that reload, exactly like the
-  // first render (onLoad resets it to false). `themeParams` is memoised on `[theme]`, so this effect
-  // only runs on mount and on each theme change.
+  // L'URL de l'iframe FIGE le thème du 1er rendu et ne change jamais ensuite : changer le `src`
+  // rechargeait tout le bundle plateforme (jQuery/Bootstrap/flot/DataTable + refetch des données) →
+  // plusieurs secondes à chaque bascule. Capturée une seule fois (initialiseur `useState`).
+  const [iframeSrc] = useState(
+    () => `/melis/react-dashboard-plugin?${new URLSearchParams({ plugin: pluginName, ...themeParams })}`,
+  )
+
+  // Bascule de thème : on ne recharge PLUS l'iframe. On pousse les nouveaux tokens au document déjà
+  // chargé (postMessage `__melisRetheme`, cf. PluginViewController) qui les applique via ses variables
+  // CSS + l'attribut de scheme — instantané. `themeParams` est mémoïsé sur `[theme]`, donc cet effet
+  // ne se déclenche qu'au montage (ignoré : l'URL porte déjà ce thème) puis à chaque changement.
+  // ⚠️ Les graphiques flot (peints dans un <canvas>) ne se recolorent pas par CSS — limite connue.
+  const themedOnce = useRef(false)
   useEffect(() => {
-    setLoading(true)
+    if (!themedOnce.current) {
+      themedOnce.current = true
+      return
+    }
+    frameRef.current?.contentWindow?.postMessage({ __melisRetheme: true, ...themeParams }, '*')
   }, [themeParams])
 
   // ── Hauteur de tuile ajustée au contenu réel du plugin ────────────────────────────────────
@@ -196,6 +215,8 @@ export function LegacyPluginContent({ pluginName }: { pluginName: string }) {
       if (!d || !d.__melisPluginHeight || !d.px) return
       // Plusieurs iframes de plugins coexistent : ne réagir qu'aux messages de LA nôtre.
       if (!frameRef.current || e.source !== frameRef.current.contentWindow) return
+      // Plancher de hauteur de l'iframe → ascenseur du cadre React quand la tuile est plus courte.
+      setContentPx(d.px)
       const item = frameRef.current.closest('.grid-stack-item') as (HTMLElement & { gridstackNode?: { id?: string } }) | null
       const itemId = item?.gridstackNode?.id
       if (!itemId) return
@@ -248,7 +269,11 @@ export function LegacyPluginContent({ pluginName }: { pluginName: string }) {
   }, [])
 
   return (
-    <div className="relative h-full w-full">
+    // `minHeight = contentPx` : le contenu du plugin garde sa hauteur réelle même si la tuile est
+    // rétrécie sous cette taille → le wrapper dépasse le cadre `overflow-auto` de WidgetFrame, qui
+    // affiche alors un ascenseur (droite/bas) au lieu de rogner. À taille normale/agrandie, `h-full`
+    // domine et l'iframe remplit la tuile (pas d'ascenseur). Voir `contentPx` plus haut.
+    <div className="relative h-full w-full" style={contentPx ? { minHeight: contentPx } : undefined}>
       {loading && (
         <div className="absolute inset-0 z-10 grid place-items-center bg-card/70">
           <Loader2 className="size-6 animate-spin text-muted-foreground" />
@@ -256,10 +281,10 @@ export function LegacyPluginContent({ pluginName }: { pluginName: string }) {
       )}
       <iframe
         ref={frameRef}
-        src={`/melis/react-dashboard-plugin?${new URLSearchParams({ plugin: pluginName, ...themeParams })}`}
+        src={iframeSrc}
         className="h-full w-full border-0"
         title={pluginName}
-        style={{ minHeight: 120 }}
+        style={{ minHeight: contentPx || 120 }}
         sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-modals"
         onLoad={() => setLoading(false)}
       />

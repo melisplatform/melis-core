@@ -145,7 +145,7 @@ export function DashboardGrid({
       // Ne persiste QUE le layout en pleine largeur (12 col). Un reflow responsive
       // (1 ou 6 col) ne doit pas écraser les positions desktop sauvegardées.
       if (grid.getColumn() !== GRID_COLS) return
-      onChangeRef.current(readLayout(grid, allWidgetsRef.current))
+      onChangeRef.current(readLayout(grid, allWidgetsRef.current, userSized.current))
     })
 
     // Un redimensionnement MANUEL fige la tuile : plus d'ajustement automatique dessus.
@@ -318,6 +318,13 @@ export function DashboardGrid({
     const grid = gridRef.current
     if (!grid) return
 
+    // Tuiles réglées à la main (react-height restauré au chargement) : on les inscrit dans `userSized`
+    // pour que l'auto-fit NE LES retouche PLUS — sinon la hauteur voulue serait écrasée par la mesure
+    // du contenu juste après le rechargement. Idempotent ; ne retire rien (un resize reste acquis).
+    for (const l of layout) {
+      if (l.userSized) userSized.current.add(l.i)
+    }
+
     // Source de vérité : ce qui est réellement dans GridStack, pas les slots React.
     const inGrid = new Set(
       grid.engine.nodes.map((n) => n.id as string).filter(Boolean),
@@ -485,14 +492,19 @@ function slotsFromGrid(grid: GridStack): Slot[] {
   return next
 }
 
-function readLayout(grid: GridStack, allWidgets: Record<string, WidgetDef>): GridItem[] {
+function readLayout(
+  grid: GridStack,
+  allWidgets: Record<string, WidgetDef>,
+  userSized: Set<string>,
+): GridItem[] {
   const saved = grid.save(false) as GridStackWidget[]
   return saved
     .filter((w) => w.id && allWidgets[widgetIdOf(w.id as string)])
     .map((w) => {
       const def = allWidgets[widgetIdOf(w.id as string)]
+      const id = w.id as string
       return {
-        i: w.id as string,
+        i: id,
         x: w.x ?? 0,
         y: w.y ?? 0,
         w: w.w ?? 1,
@@ -502,6 +514,9 @@ function readLayout(grid: GridStack, allWidgets: Record<string, WidgetDef>): Gri
         // work carry `minH` = the plugin's declared height, and re-persisting that value is what
         // made hand-resized tiles spring back.
         minH: def.minH,
+        // Propage l'état « redimensionné à la main » (rempli au resizestart) → DashboardPage le
+        // persiste (react-height) et la hauteur voulue survit au rechargement.
+        userSized: userSized.has(id),
       }
     })
 }
