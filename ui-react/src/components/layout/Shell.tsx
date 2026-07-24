@@ -186,7 +186,10 @@ function ShellInner() {
   // ce qui saturait le thread principal et FIGEAIT le 1er outil ouvert quand on arrive
   // directement sur une URL ≠ '/' (ex. /melis-core/gdpr → spinner infini).
   const isDashboard = location.pathname === '/'
-  const [dashboardVisited, setDashboardVisited] = useState(false)
+  // Initialisé à `isDashboard` : quand on ATTERRIT sur le dashboard, il est monté dès le 1ᵉʳ rendu
+  // (plus d'attente d'un tick d'effet) → ses fetches partent en même temps que la sidebar (/menu).
+  // L'effet couvre la navigation ULTÉRIEURE vers le dashboard.
+  const [dashboardVisited, setDashboardVisited] = useState(isDashboard)
   useEffect(() => { if (isDashboard) setDashboardVisited(true) }, [isDashboard])
 
   // Modules persistants : liste montée en permanence pour ne jamais détruire

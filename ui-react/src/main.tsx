@@ -14,6 +14,7 @@ import './index.css'
 import App from './App.tsx'
 import { isModuleActive } from '@/lib/bricks'
 import { useCaps, type CapsApi } from '@/lib/caps'
+import { prefetchDashboard } from '@/lib/dashboard-prefetch'
 
 const w = window as unknown as {
   MelisReact?: unknown
@@ -43,6 +44,18 @@ w.__melisRegisterBrick = (b) => {
   // A brick may register a routed page (Component), a left-sidebar panel (Sidebar) and/or a
   // topbar widget (Header, e.g. the messenger notification icon) — all optional, all modular.
   if (b && b.id) w.__MELIS_BRICK_COMPONENTS__![b.id] = { Component: b.Component, Sidebar: b.Sidebar, Header: b.Header }
+}
+
+// Boot du dashboard EN PARALLÈLE de /me et /menu : quand on atterrit sur le dashboard, on lance dès
+// maintenant ses 4 requêtes de données ET le téléchargement de son chunk lazy — sans attendre le tick
+// de montage. Le composant consomme ensuite les promesses préchargées (cf. dashboard-prefetch).
+// Gardé au chemin dashboard (base `/melis-react` en prod, `/` en dev) pour ne rien tirer ailleurs.
+{
+  const p = window.location.pathname.replace(/\/+$/, '')
+  if (p === '' || p === '/melis-react') {
+    void prefetchDashboard()
+    void import('@/pages/DashboardPage')
+  }
 }
 
 createRoot(document.getElementById('root')!).render(

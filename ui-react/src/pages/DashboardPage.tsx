@@ -7,6 +7,12 @@ import { cn } from '@/lib/utils'
 import { useI18n } from '@/i18n/i18n-context'
 import type { I18nKey } from '@/i18n/dictionaries'
 import * as melisApi from '@/lib/melis-api'
+import {
+  takeDashboardBubbles,
+  takeDashboardStats,
+  takeLegacyDashboardPlugins,
+  takeDashboardLayout,
+} from '@/lib/dashboard-prefetch'
 import { DashboardGrid } from '@/components/dashboard/DashboardGrid'
 import { WidgetPalette } from '@/components/dashboard/WidgetPalette'
 import { WIDGET_MAP, buildLegacyWidgetDef, type WidgetDef } from '@/components/dashboard/widget-registry'
@@ -70,15 +76,17 @@ export default function DashboardPage() {
   // always exists (initial state + the CLOSE guards); TabBridge activates it when the route is '/'.
 
   // Top bubble counts (News / Updates / Notifications / Messages).
+  // `take*` consomme la promesse PRÉCHARGÉE au boot (parallèle à /me + /menu, cf. dashboard-prefetch)
+  // si elle existe, sinon lance un fetch frais → aucune requête ne dépend du montage/chunk lazy.
   const [bubbles, setBubbles] = useState<melisApi.DashboardBubbles | null>(null)
   useEffect(() => {
-    melisApi.fetchDashboardBubbles().then(setBubbles)
+    takeDashboardBubbles().then(setBubbles)
   }, [])
 
   // KPI stats + recent activity (données réelles).
   const [stats, setStats] = useState<melisApi.DashboardStats | null>(null)
   useEffect(() => {
-    melisApi.fetchDashboardStats().then(setStats)
+    takeDashboardStats().then(setStats)
   }, [])
 
   // Legacy PHP dashboard plugins (loaded once at mount).
@@ -91,7 +99,7 @@ export default function DashboardPage() {
   const [nativeGranted, setNativeGranted] = useState<Set<string>>(new Set())
   const [legacyLoaded, setLegacyLoaded] = useState(false)
   useEffect(() => {
-    melisApi.fetchLegacyDashboardPlugins().then(({ plugins, nativeWidgets }) => {
+    takeLegacyDashboardPlugins().then(({ plugins, nativeWidgets }) => {
       setLegacyWidgets(plugins.map(buildLegacyWidgetDef))
       setNativeGranted(new Set(nativeWidgets))
       setLegacyLoaded(true)
@@ -159,7 +167,7 @@ export default function DashboardPage() {
   // Priorité DB : au montage, charge le record partagé (schéma legacy) et le convertit en layout
   // React (écrase le cache localStorage si trouvé).
   useEffect(() => {
-    melisApi.fetchDashboardLayout().then((records) => {
+    takeDashboardLayout().then((records) => {
       // `null` = échec réel du fetch (HTTP/réseau) → on garde le cache localStorage.
       // Un tableau (même VIDE) fait autorité : la DB est partagée avec le dashboard legacy, donc
       // « Remove all » côté /melis vide le record → on doit refléter ce vide côté React (effacer la
