@@ -426,6 +426,12 @@ const fr = {
   'users.err.lastname': 'Nom obligatoire',
   'users.err.password': 'Mot de passe obligatoire',
   'users.err.password_match': 'Les mots de passe ne correspondent pas',
+  'users.pw.requirements': 'Exigences du mot de passe :',
+  'users.pw.min': 'Au moins {n} caractères',
+  'users.pw.lower': 'Une lettre minuscule',
+  'users.pw.upper': 'Une lettre majuscule',
+  'users.pw.digit': 'Un chiffre',
+  'users.pw.special': 'Un caractère spécial (ex : @#$%)',
 
   // ── Modules (activation + ordre de chargement) ──
   'modules.title': 'Modules',
@@ -1235,6 +1241,12 @@ const en: Record<I18nKey, string> = {
   'users.err.lastname': 'Last name is required',
   'users.err.password': 'Password is required',
   'users.err.password_match': 'Passwords do not match',
+  'users.pw.requirements': 'Password requirements:',
+  'users.pw.min': 'At least {n} characters',
+  'users.pw.lower': 'One lowercase letter',
+  'users.pw.upper': 'One uppercase letter',
+  'users.pw.digit': 'One digit',
+  'users.pw.special': 'One special character (e.g. @#$%)',
 
   // ── Modules (activation + load order) ──
   'modules.title': 'Modules',

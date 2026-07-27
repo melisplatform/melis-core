@@ -3,7 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { SUBTABS_CHANGED, useSubTabs } from '@/components/tabs/sub-tab-store'
 import { routeForForward } from '@/lib/tool-routes'
 import {
-  Activity, Calendar, Copy, Cpu, Eye, EyeOff,
+  Activity, Calendar, Check, Circle, Copy, Cpu, Eye, EyeOff,
   KeyRound, Loader2, RefreshCw, RotateCcw, Save, Shield, ShieldCheck,
   ToggleLeft, ToggleRight, User, UserPlus,
 } from 'lucide-react'
@@ -229,6 +229,26 @@ type FormCache = { form: FormData; roles: userApi.UserRole[]; activeTab: Tab }
 // Users → CLOSE_ALL). Listener module-niveau (persistant) : le composant est démonté à la fermeture.
 const _formCache = new Map<string, FormCache>()
 let _rolesCache: userApi.UserRole[] | null = null
+let _pwPolicyCache: userApi.PasswordPolicy | null = null
+
+/**
+ * Règles de complexité NON satisfaites par `pw` selon la politique effective (mêmes règles que
+ * le validateur serveur MelisPasswordValidatorWithConfig). Une règle ne compte que si activée.
+ */
+function passwordPolicyErrors(
+  pw: string,
+  policy: userApi.PasswordPolicy | null,
+  t: (k: I18nKey, params?: Record<string, string | number>) => string,
+): string[] {
+  if (!policy) return []
+  const errs: string[] = []
+  if (policy.minLength > 0 && pw.length < policy.minLength) errs.push(t('users.pw.min', { n: policy.minLength }))
+  if (policy.requireLower && !/[a-z]/.test(pw)) errs.push(t('users.pw.lower'))
+  if (policy.requireUpper && !/[A-Z]/.test(pw)) errs.push(t('users.pw.upper'))
+  if (policy.requireDigit && !/\d/.test(pw)) errs.push(t('users.pw.digit'))
+  if (policy.requireSpecial && !/[\p{P}\p{S}]/u.test(pw)) errs.push(t('users.pw.special'))
+  return errs
+}
 
 if (typeof window !== 'undefined') {
   const w = window as unknown as { __melisFormCachePruneBound?: boolean; __melisSubTabs?: Record<string, { tabs: { id: string }[] }> }
@@ -274,6 +294,7 @@ export default function UserFormPage() {
   const [saveError, setSaveError] = useState<string | null>(null)
   const [saved, setSaved]     = useState(false)
   const [activeTab, setActiveTab] = useState<Tab>('profil')
+  const [pwPolicy, setPwPolicy] = useState<userApi.PasswordPolicy | null>(_pwPolicyCache)
   const rolesModuleActive = useModuleActive('MelisSmallBusiness')
 
   useEffect(() => {
@@ -281,6 +302,13 @@ export default function UserFormPage() {
     if (_rolesCache) { setRoles(_rolesCache); return }
     userApi.fetchRoles().then(r => { _rolesCache = r; setRoles(r) }).catch(() => null)
   }, [rolesModuleActive])
+
+  // Politique de complexité effective (défauts otherconfig + app.login.php) — pour le feedback
+  // client. Le serveur reste la source de vérité : la validation serveur bloque de toute façon.
+  useEffect(() => {
+    if (_pwPolicyCache) { setPwPolicy(_pwPolicyCache); return }
+    userApi.fetchPasswordPolicy().then(p => { _pwPolicyCache = p; setPwPolicy(p) }).catch(() => null)
+  }, [])
 
   useEffect(() => {
     if (!isEdit || !userId) return
@@ -325,6 +353,11 @@ export default function UserFormPage() {
     if (!form.firstname.trim()) errs.firstname = t('users.err.firstname')
     if (!form.lastname.trim())  errs.lastname  = t('users.err.lastname')
     if (!isEdit && !form.password) errs.password = t('users.err.password')
+    // Complexité (parité serveur) : seulement si un mot de passe est saisi.
+    if (form.password) {
+      const pwErrs = passwordPolicyErrors(form.password, pwPolicy, t)
+      if (pwErrs.length) errs.password = pwErrs.join(' • ')
+    }
     if (form.password && form.password !== form.confirmPassword) errs.confirmPassword = t('users.err.password_match')
     setErrors(errs)
     return Object.keys(errs).length === 0
@@ -482,6 +515,32 @@ export default function UserFormPage() {
                   autoComplete="new-password" placeholder="••••••••" className={cn(errors.confirmPassword && 'border-destructive')} />
               </Field>
             </div>
+            {/* Checklist des exigences de complexité (politique effective, cf. outil « Autres config »). */}
+            {pwPolicy && (() => {
+              const rules: { key: string; label: string; ok: boolean }[] = []
+              if (pwPolicy.minLength > 0) rules.push({ key: 'min', label: t('users.pw.min', { n: pwPolicy.minLength }), ok: form.password.length >= pwPolicy.minLength })
+              if (pwPolicy.requireLower) rules.push({ key: 'lower', label: t('users.pw.lower'), ok: /[a-z]/.test(form.password) })
+              if (pwPolicy.requireUpper) rules.push({ key: 'upper', label: t('users.pw.upper'), ok: /[A-Z]/.test(form.password) })
+              if (pwPolicy.requireDigit) rules.push({ key: 'digit', label: t('users.pw.digit'), ok: /\d/.test(form.password) })
+              if (pwPolicy.requireSpecial) rules.push({ key: 'special', label: t('users.pw.special'), ok: /[\p{P}\p{S}]/u.test(form.password) })
+              if (!rules.length) return null
+              return (
+                <div className="mt-3">
+                  <p className="mb-1.5 text-xs font-medium text-muted-foreground">{t('users.pw.requirements')}</p>
+                  <ul className="grid grid-cols-2 gap-x-4 gap-y-1">
+                    {rules.map((r) => (
+                      <li key={r.key} className={cn('flex items-center gap-1.5 text-xs',
+                        form.password && r.ok ? 'text-emerald-600 dark:text-emerald-400' : 'text-muted-foreground')}>
+                        {form.password && r.ok
+                          ? <Check className="size-3.5 shrink-0" />
+                          : <Circle className="size-3.5 shrink-0" />}
+                        {r.label}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )
+            })()}
           </div>
         </div>
 

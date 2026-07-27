@@ -46,26 +46,6 @@ class MelisReactApiOtherConfigController extends MelisAbstractActionController
         'password_complexity_use_digit',
     ];
 
-    /** Valeurs par défaut si app.login.php absent. */
-    private const DEFAULTS = [
-        'login_account_lock_status'                  => '0',
-        'login_account_admin_email'                  => '',
-        'login_account_lock_number_of_attempts'      => '',
-        'login_account_type_of_lock'                 => 'timer',
-        'login_account_duration_days'                => '0',
-        'login_account_duration_hours'               => '0',
-        'login_account_duration_minutes'             => '0',
-        'password_validity_status'                   => '0',
-        'password_validity_lifetime'                 => '',
-        'password_duplicate_status'                  => '0',
-        'password_duplicate_lifetime'                => '183',
-        'password_complexity_number_of_characters'   => '8',
-        'password_complexity_use_special_characters' => '',
-        'password_complexity_use_lower_case'         => '',
-        'password_complexity_use_upper_case'         => '',
-        'password_complexity_use_digit'              => '',
-    ];
-
     // ─── GET /otherconfig ─────────────────────────────────────────────────────
 
     public function getAction(): HttpResponse
@@ -74,23 +54,35 @@ class MelisReactApiOtherConfigController extends MelisAbstractActionController
         if ($denyCap = $this->denyUnlessCan('list')) { return $denyCap; }
 
         try {
-            $config = self::DEFAULTS;
-            $file = $this->configFile();
-            if (is_file($file)) {
-                $cfg   = include $file;
-                $saved = $cfg['plugins']['meliscore']['datas']['login'] ?? [];
-                if (is_array($saved)) {
-                    foreach (self::KEYS as $k) {
-                        if (array_key_exists($k, $saved)) {
-                            $config[$k] = (string) $saved[$k];
-                        }
-                    }
-                }
-            }
+            // Parité stricte avec le legacy : les valeurs par défaut (app.login.php absent)
+            // viennent de `meliscore/datas/otherconfig_default/login` (config/otherconfig.php),
+            // et sont écrasées par `meliscore/datas/login` (app.login.php mergé au boot) quand
+            // le fichier existe. NE PAS hardcoder les défauts ici : le legacy pré-remplit p.ex.
+            // login_account_admin_email = contact@melistechnology.com — sans quoi un simple
+            // « Enregistrer » échoue sur le validateur email requis et app.login.php n'est jamais écrit.
+            $config = $this->effectiveLoginConfig();
             return $this->jsonResponse(['success' => true, 'data' => ['config' => $config]]);
         } catch (\Throwable $e) {
             return $this->errorResponse($e);
         }
+    }
+
+    /**
+     * Config effective de la politique connexion/mot de passe : les 16 clés, en string.
+     * Défauts (`otherconfig_default/login`) surchargés par les valeurs sauvegardées (`login`).
+     */
+    private function effectiveLoginConfig(): array
+    {
+        $melisConfig = $this->getServiceManager()->get('MelisCoreConfig');
+        $defaults = $melisConfig->getItem('meliscore/datas/otherconfig_default/login') ?: [];
+        $saved    = $melisConfig->getItem('meliscore/datas/login') ?: [];
+        $merged   = array_merge(is_array($defaults) ? $defaults : [], is_array($saved) ? $saved : []);
+
+        $config = [];
+        foreach (self::KEYS as $k) {
+            $config[$k] = isset($merged[$k]) ? (string) $merged[$k] : '';
+        }
+        return $config;
     }
 
     // ─── POST /otherconfig/save ───────────────────────────────────────────────
@@ -118,10 +110,20 @@ class MelisReactApiOtherConfigController extends MelisAbstractActionController
             $result = $this->getServiceManager()->get('MelisPasswordSettingsService')->saveItem($settings);
 
             if (empty($result['success'])) {
+                $fields = $result['errors'] ?? [];
+                // Pas d'erreurs de champ → la validation est passée mais l'écriture d'app.login.php
+                // a échoué (MelisPasswordSettingsService avale l'exception). Cause typique : le dossier
+                // config de melis-core n'est pas accessible en écriture par le process PHP (www-data).
+                $message = $this->flattenErrors($fields);
+                if ($message === '') {
+                    $message = "Configuration valide mais impossible d'écrire app.login.php : "
+                        . "le dossier vendor/melisplatform/melis-core/config n'est pas accessible "
+                        . "en écriture par le serveur.";
+                }
                 return $this->jsonResponse([
                     'success' => false,
-                    'error'   => $this->flattenErrors($result['errors'] ?? []) ?: 'Validation failed',
-                    'fields'  => $result['errors'] ?? [],
+                    'error'   => $message,
+                    'fields'  => $fields,
                 ], 422);
             }
 

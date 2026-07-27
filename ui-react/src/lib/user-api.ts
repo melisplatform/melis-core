@@ -150,6 +150,19 @@ export async function fetchRoles(): Promise<UserRole[]> {
   return apiFetch<UserRole[]>('/melis/react-api/roles')
 }
 
+/** Politique de complexité du mot de passe effective (défauts otherconfig + app.login.php). */
+export interface PasswordPolicy {
+  minLength: number
+  requireLower: boolean
+  requireUpper: boolean
+  requireDigit: boolean
+  requireSpecial: boolean
+}
+
+export async function fetchPasswordPolicy(): Promise<PasswordPolicy> {
+  return apiFetch<PasswordPolicy>('/melis/react-api/users/password-policy')
+}
+
 export async function fetchUserConnections(id: number): Promise<UserConnection[]> {
   return apiFetch<UserConnection[]>(`/melis/react-api/users/${id}/connections`)
 }
