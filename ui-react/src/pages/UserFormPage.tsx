@@ -3,8 +3,8 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { SUBTABS_CHANGED, useSubTabs } from '@/components/tabs/sub-tab-store'
 import { routeForForward } from '@/lib/tool-routes'
 import {
-  Activity, Calendar, Check, Circle, Copy, Cpu, Eye, EyeOff,
-  KeyRound, Loader2, RefreshCw, RotateCcw, Save, Shield, ShieldCheck,
+  Activity, Calendar, Check, Circle, Copy, Cpu, ExternalLink, Eye, EyeOff,
+  KeyRound, Link as LinkIcon, Loader2, RefreshCw, RotateCcw, Save, Shield, ShieldCheck,
   ToggleLeft, ToggleRight, User, UserPlus,
 } from 'lucide-react'
 
@@ -12,7 +12,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Badge } from '@/components/ui/badge'
-import { cn } from '@/lib/utils'
+import { cn, copyToClipboard } from '@/lib/utils'
 import * as userApi from '@/lib/user-api'
 import { RightsTreeView } from '@/components/RightsTreeView'
 import { useModuleActive } from '@/lib/bricks'
@@ -112,13 +112,16 @@ function MicroserviceTab({ userId }: { userId: number }) {
   const [loading, setLoading] = useState(true)
   const [busy, setBusy]       = useState(false)
   const [copied, setCopied]   = useState(false)
+  const [copiedUrl, setCopiedUrl] = useState(false)
   const [showKey, setShowKey] = useState(false)
+  const [confirmRegen, setConfirmRegen] = useState(false)
 
   useEffect(() => {
     userApi.fetchUserMicroservice(userId).then(setData).catch(() => setData(null)).finally(() => setLoading(false))
   }, [userId])
 
   async function handleAction(action: 'toggle' | 'generate') {
+    setConfirmRegen(false)
     setBusy(true)
     try {
       const result = await userApi.saveMicroservice(userId, action)
@@ -130,9 +133,24 @@ function MicroserviceTab({ userId }: { userId: number }) {
 
   async function copyKey() {
     if (!data?.apiKey) return
-    await navigator.clipboard.writeText(data.apiKey)
+    const ok = await copyToClipboard(data.apiKey)
+    if (!ok) {
+      notify('ko', t('users.ms.apikey'), t('users.ms.copy_failed'))
+      return
+    }
     setCopied(true)
     setTimeout(() => setCopied(false), 2000)
+  }
+
+  async function copyUrl() {
+    if (!data?.url) return
+    const ok = await copyToClipboard(data.url)
+    if (!ok) {
+      notify('ko', t('users.ms.url'), t('users.ms.copy_failed'))
+      return
+    }
+    setCopiedUrl(true)
+    setTimeout(() => setCopiedUrl(false), 2000)
   }
 
   if (loading) {
@@ -184,10 +202,33 @@ function MicroserviceTab({ userId }: { userId: number }) {
               <code className="flex-1 text-xs font-mono tracking-wider">{showKey ? data.apiKey : '•'.repeat(data.apiKey.length)}</code>
               {copied && <span className="text-xs text-emerald-600">{t('users.ms.copied')}</span>}
             </div>
-            <Button type="button" variant="outline" size="sm" onClick={() => handleAction('generate')} disabled={busy} className="w-full">
+            <Button type="button" variant="outline" size="sm" onClick={() => setConfirmRegen(true)} disabled={busy} className="w-full">
               {busy ? <Loader2 className="size-3.5 animate-spin" /> : <RefreshCw className="size-3.5" />}{t('users.ms.generate_new')}
             </Button>
           </div>
+
+          {data.url && (
+            <div className="rounded-xl border border-border bg-card p-4 shadow-sm space-y-3">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium">{t('users.ms.url')}</p>
+                  <p className="text-xs text-muted-foreground">{t('users.ms.url_hint')}</p>
+                </div>
+                <button type="button" onClick={copyUrl} title={t('users.ms.copy')} className="rounded p-1.5 hover:bg-accent transition-colors">
+                  <Copy className="size-3.5 text-muted-foreground" />
+                </button>
+              </div>
+              <div className="flex items-center gap-2 rounded-lg border border-border bg-muted/40 px-3 py-2">
+                <LinkIcon className="size-3.5 shrink-0 text-muted-foreground" />
+                <a href={data.url} target="_blank" rel="noopener noreferrer"
+                  className="flex-1 truncate text-xs font-mono text-primary hover:underline">
+                  {data.url}
+                </a>
+                {copiedUrl && <span className="text-xs text-emerald-600">{t('users.ms.copied')}</span>}
+                <ExternalLink className="size-3.5 shrink-0 text-muted-foreground" />
+              </div>
+            </div>
+          )}
         </div>
       ) : (
         <div className="flex flex-col items-center gap-4 rounded-xl border border-dashed border-border p-10 text-center">
@@ -199,6 +240,21 @@ function MicroserviceTab({ userId }: { userId: number }) {
           <Button type="button" size="sm" onClick={() => handleAction('generate')} disabled={busy}>
             {busy ? <Loader2 className="size-4 animate-spin" /> : <KeyRound className="size-4" />}{t('users.ms.generate')}
           </Button>
+        </div>
+      )}
+
+      {confirmRegen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+          <div className="w-full max-w-sm rounded-xl border border-border bg-card p-6 shadow-xl">
+            <h3 className="text-base font-semibold">{t('users.ms.regen.title')}</h3>
+            <p className="mt-2 text-sm text-muted-foreground">{t('users.ms.regen.confirm')}</p>
+            <div className="mt-5 flex justify-end gap-2">
+              <Button variant="outline" size="sm" onClick={() => setConfirmRegen(false)} disabled={busy}>{t('common.cancel')}</Button>
+              <Button size="sm" onClick={() => handleAction('generate')} disabled={busy}>
+                {busy ? <Loader2 className="size-4 animate-spin" /> : <RefreshCw className="size-4" />}{t('users.ms.regen.action')}
+              </Button>
+            </div>
+          </div>
         </div>
       )}
     </div>

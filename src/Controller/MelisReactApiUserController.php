@@ -439,6 +439,18 @@ class MelisReactApiUserController extends MelisAbstractActionController
 
     // ─── GET /users/:id/microservice ──────────────────────────────────────────
 
+    /**
+     * URL publique d'accès aux microservices pour une clé API.
+     * Même formule que le tool legacy (MelisCoreMicroServiceController) :
+     * <scheme>://<host>/melis/api/<api_key>
+     */
+    private function microserviceUrl(string $apiKey): string
+    {
+        $uri = $this->getRequest()->getUri();
+
+        return $uri->getScheme() . '://' . $uri->getHost() . '/melis/api/' . $apiKey;
+    }
+
     public function microserviceAction(): HttpResponse
     {
         if ($deny = $this->denyUnlessAccess()) { return $deny; }
@@ -470,6 +482,7 @@ class MelisReactApiUserController extends MelisAbstractActionController
                     'id'     => (int)  $r['msoa_id'],
                     'status' => (bool) $r['msoa_status'],
                     'apiKey' => (string) $r['msoa_api_key'],
+                    'url'    => $this->microserviceUrl((string) $r['msoa_api_key']),
                 ],
             ]);
         } catch (\Throwable $e) {
@@ -507,20 +520,32 @@ class MelisReactApiUserController extends MelisAbstractActionController
                     $db->query('INSERT INTO melis_core_microservice_auth (msoa_user_id, msoa_status, msoa_api_key) VALUES (?,1,?)', [$id, $newKey]);
                 }
                 $status = !empty($existing) ? (bool) $existing[0]['msoa_status'] : true;
-                return $this->jsonResponse(['success' => true, 'data' => ['apiKey' => $newKey, 'status' => $status]]);
+                return $this->jsonResponse(['success' => true, 'data' => [
+                    'apiKey' => $newKey,
+                    'status' => $status,
+                    'url'    => $this->microserviceUrl($newKey),
+                ]]);
             }
 
             // toggle
             if (empty($existing)) {
                 $newKey = bin2hex(random_bytes(16));
                 $db->query('INSERT INTO melis_core_microservice_auth (msoa_user_id, msoa_status, msoa_api_key) VALUES (?,1,?)', [$id, $newKey]);
-                return $this->jsonResponse(['success' => true, 'data' => ['apiKey' => $newKey, 'status' => true]]);
+                return $this->jsonResponse(['success' => true, 'data' => [
+                    'apiKey' => $newKey,
+                    'status' => true,
+                    'url'    => $this->microserviceUrl($newKey),
+                ]]);
             }
 
             $r          = (array) $existing[0];
             $newStatus  = $r['msoa_status'] ? 0 : 1;
             $db->query('UPDATE melis_core_microservice_auth SET msoa_status=? WHERE msoa_user_id=?', [$newStatus, $id]);
-            return $this->jsonResponse(['success' => true, 'data' => ['apiKey' => (string) $r['msoa_api_key'], 'status' => (bool) $newStatus]]);
+            return $this->jsonResponse(['success' => true, 'data' => [
+                'apiKey' => (string) $r['msoa_api_key'],
+                'status' => (bool) $newStatus,
+                'url'    => $this->microserviceUrl((string) $r['msoa_api_key']),
+            ]]);
         } catch (\Throwable $e) {
             return $this->errorResponse($e);
         }

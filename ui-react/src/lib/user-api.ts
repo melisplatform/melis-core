@@ -55,6 +55,8 @@ export interface UserMicroservice {
   id: number
   status: boolean
   apiKey: string
+  /** URL d'accès aux microservices : <scheme>://<host>/melis/api/<apiKey> */
+  url: string
 }
 
 export interface UserListResult {
