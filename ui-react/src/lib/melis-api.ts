@@ -478,20 +478,25 @@ export interface DashboardPluginsResult {
 }
 
 /** Returns the active legacy Melis dashboard plugins (from PHP config) + granted native widget ids. */
-export async function fetchLegacyDashboardPlugins(): Promise<DashboardPluginsResult> {
+// ⚠️ Renvoie `null` sur ÉCHEC (HTTP/réseau/`success:false`), JAMAIS un résultat vide. Un `[]` en cas
+// d'échec est INDISTINGUABLE de « l'utilisateur n'a aucun plugin » → la réconciliation du dashboard
+// élaguait alors TOUS les plugins d'un registre vide et ÉCRASAIT le record (perte de données). `null`
+// = « on ne sait pas » → l'appelant conserve l'état et réessaie ; `{plugins:[],…}` = vrai vide accordé.
+export async function fetchLegacyDashboardPlugins(): Promise<DashboardPluginsResult | null> {
   try {
     const res = await fetch('/melis/react-api/dashboard/legacy-plugins', {
       headers: { ...XHR_HEADER },
       credentials: 'include',
     })
-    if (!res.ok) return { plugins: [], nativeWidgets: [] }
+    if (!res.ok) return null
     const data = (await res.json()) as { success: boolean; data?: LegacyDashboardPlugin[]; nativeWidgets?: string[] }
+    if (!data.success) return null
     return {
-      plugins: data.success && Array.isArray(data.data) ? data.data : [],
+      plugins: Array.isArray(data.data) ? data.data : [],
       nativeWidgets: Array.isArray(data.nativeWidgets) ? data.nativeWidgets : [],
     }
   } catch {
-    return { plugins: [], nativeWidgets: [] }
+    return null
   }
 }
 

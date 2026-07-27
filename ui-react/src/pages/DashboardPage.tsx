@@ -99,11 +99,28 @@ export default function DashboardPage() {
   const [nativeGranted, setNativeGranted] = useState<Set<string>>(new Set())
   const [legacyLoaded, setLegacyLoaded] = useState(false)
   useEffect(() => {
-    takeLegacyDashboardPlugins().then(({ plugins, nativeWidgets }) => {
-      setLegacyWidgets(plugins.map(buildLegacyWidgetDef))
-      setNativeGranted(new Set(nativeWidgets))
-      setLegacyLoaded(true)
-    })
+    let cancelled = false
+    let attempts = 0
+    const load = (p: ReturnType<typeof takeLegacyDashboardPlugins>) => {
+      p.then((result) => {
+        if (cancelled) return
+        // `null` = ÉCHEC du fetch (≠ « aucun plugin »). On NE marque PAS `legacyLoaded` : sinon la
+        // réconciliation élaguerait tout le dashboard contre un registre vide et ÉCRASERAIT le record
+        // partagé (perte de données). Les données restent intactes ; on réessaie pour récupérer
+        // l'AFFICHAGE sans rechargement. Un vrai résultat (même vide, accordé) passe normalement.
+        if (!result) {
+          if (++attempts <= 3) {
+            window.setTimeout(() => load(melisApi.fetchLegacyDashboardPlugins()), 1500)
+          }
+          return
+        }
+        setLegacyWidgets(result.plugins.map(buildLegacyWidgetDef))
+        setNativeGranted(new Set(result.nativeWidgets))
+        setLegacyLoaded(true)
+      })
+    }
+    load(takeLegacyDashboardPlugins())
+    return () => { cancelled = true }
   }, [])
 
   // Hide/show the top bubble bar, remembered across sessions (like the legacy cookie).
@@ -163,6 +180,12 @@ export default function DashboardPage() {
   // `saveDashboardLayout` redondant (plusieurs POST au premier affichage). `null` = rien encore
   // synchronisé, le 1ᵉʳ envoi réel passe donc toujours.
   const lastSavedSigRef = useRef<string | null>(null)
+  // Nombre de plugins du DERNIER record connu du serveur. Invariant anti-effacement : une
+  // RÉCONCILIATION (recalage/élagage/auto-réparation) ne doit JAMAIS réduire ce nombre — seule une
+  // action UTILISATEUR (retrait/déplacement/tout supprimer) le peut. Sans ça, une liste de plugins
+  // vide/partielle (fetch `/legacy-plugins` en échec ou glitch) élaguait des plugins et écrasait le
+  // record partagé. `null` = pas encore de référence serveur.
+  const lastSavedCountRef = useRef<number | null>(null)
 
   // Priorité DB : au montage, charge le record partagé (schéma legacy) et le convertit en layout
   // React (écrase le cache localStorage si trouvé).
@@ -179,6 +202,7 @@ export default function DashboardPage() {
         // Point de référence anti-doublon : ce que le serveur a DÉJÀ. Toute réconciliation au montage
         // qui reproduit ce record (le cas normal) est alors reconnue identique → aucun POST inutile.
         lastSavedSigRef.current = recordsSig(records)
+        lastSavedCountRef.current = records.length
         // Le record serveur a bien été chargé → autorise la normalisation des hauteurs (heal effect).
         // Ne PAS normaliser depuis le seul cache localStorage (fetch en échec) : on n'écrirait pas
         // une hauteur fiable dans le record partagé.
@@ -231,7 +255,7 @@ export default function DashboardPage() {
   )
 
   const persist = useCallback(
-    (next: GridItem[]) => {
+    (next: GridItem[], opts?: { userAction?: boolean }) => {
       setLayout(next)
       saveLayout(next)
       // N'ÉCRIT en base que si le record change réellement (cf. recordsSig). Les effets de
@@ -240,9 +264,30 @@ export default function DashboardPage() {
       // `saveDashboardLayout` au premier chargement). Le cache localStorage, lui, reste écrit à chaque
       // fois (hauteur d'affichage comprise) pour un rechargement instantané.
       const recs = layoutToRecords(next)
+      // ⚠️ FILET ANTI-EFFACEMENT (1) : `layoutToRecords` LAISSE TOMBER tout item dont la déf. est
+      // absente du registre — lequel est vide/incomplet quand `/legacy-plugins` a échoué. Si des items
+      // « persistables » (id `legacy-*` ou natif connu) ont été droppés, le registre est incomplet →
+      // on met à jour l'affichage + le cache mais on NE TOUCHE PAS la base.
+      const expected = next.filter((l) => {
+        const wid = widgetIdOf(l.i)
+        return wid.startsWith('legacy-') || !!WIDGET_MAP[wid]?.pluginName
+      }).length
+      if (recs.length < expected) return
+      // ⚠️ FILET ANTI-EFFACEMENT (2) — INVARIANT : une RÉCONCILIATION ne réduit JAMAIS le nombre de
+      // plugins du record serveur ; seule une action UTILISATEUR le peut. Couvre le cas d'une liste
+      // `/legacy-plugins` PARTIELLE (succès mais incomplète) qui élaguerait à tort. Une suppression
+      // volontaire passe `userAction` → autorisée. On met quand même à jour l'affichage/cache.
+      if (
+        !opts?.userAction &&
+        lastSavedCountRef.current !== null &&
+        recs.length < lastSavedCountRef.current
+      ) {
+        return
+      }
       const sig = recordsSig(recs)
       if (sig !== lastSavedSigRef.current) {
         lastSavedSigRef.current = sig
+        lastSavedCountRef.current = recs.length
         melisApi.saveDashboardLayout(recs)
       }
     },
@@ -281,10 +326,17 @@ export default function DashboardPage() {
   // sont inconnues et on viderait la grille. Ne dépend pas de `layout` (lu via la ref) pour ne pas
   // se rejouer à chaque déplacement.
   useEffect(() => {
-    if (!legacyLoaded) return
+    // `dbSynced` en plus de `legacyLoaded` : on n'élague qu'une fois le record SERVEUR chargé (donc la
+    // référence anti-effacement `lastSavedCountRef` posée) et contre le vrai layout, pas le cache.
+    if (!legacyLoaded || !dbSynced) return
+    // ⚠️ FILET ANTI-EFFACEMENT : contre un registre VIDE (aucune déf. chargée) tout item paraît
+    // « inconnu » et `kept` serait vide → on écraserait le dashboard. `legacyLoaded` n'est désormais
+    // vrai que sur un fetch RÉUSSI, mais on double la protection : ne jamais élaguer si le registre
+    // est vide (un utilisateur sans aucun plugin n'a de toute façon rien à élaguer).
+    if (Object.keys(allWidgetMap).length === 0) return
     const kept = layoutRef.current.filter((l) => allWidgetMap[widgetIdOf(l.i)])
     if (kept.length !== layoutRef.current.length) persist(kept)
-  }, [legacyLoaded, allWidgetMap, persist])
+  }, [legacyLoaded, dbSynced, allWidgetMap, persist])
 
   // Auto-réparation des hauteurs héritées : une SEULE fois, quand le record serveur ET les défs
   // legacy sont chargés, on repersiste le layout. `layoutToRecords` écrit désormais la hauteur
@@ -300,8 +352,9 @@ export default function DashboardPage() {
     persist(layoutRef.current)
   }, [legacyLoaded, dbSynced, persist])
 
-  // Émis par GridStack après un déplacement / redimensionnement utilisateur.
-  const handleChange = useCallback((items: GridItem[]) => persist(items), [persist])
+  // Émis par GridStack après un déplacement / redimensionnement utilisateur → action utilisateur
+  // (peut légitimement réduire le nombre de tuiles, ex. via un drag qui en retire une).
+  const handleChange = useCallback((items: GridItem[]) => persist(items, { userAction: true }), [persist])
 
   // Ajoute toujours une NOUVELLE instance — le même plugin peut être posé plusieurs fois.
   const addWidget = useCallback(
@@ -310,7 +363,7 @@ export default function DashboardPage() {
       if (!def) return
       const instanceId = present.has(widgetId) ? makeInstanceId(widgetId) : widgetId
       const maxY = layout.reduce((m, l) => Math.max(m, l.y + l.h), 0)
-      persist([...layout, { i: instanceId, x: 0, y: maxY, w: def.w, h: def.h, minW: def.minW, minH: def.minH }])
+      persist([...layout, { i: instanceId, x: 0, y: maxY, w: def.w, h: def.h, minW: def.minW, minH: def.minH }], { userAction: true })
     },
     [layout, present, allWidgetMap, persist],
   )
@@ -318,7 +371,7 @@ export default function DashboardPage() {
   // `instanceId` = id complet de l'item de grille (l.i), pas l'id du widget —
   // ne retire que l'instance ciblée, pas tous les exemplaires du même widget.
   const removeWidget = useCallback(
-    (instanceId: string) => persist(layout.filter((l) => l.i !== instanceId)),
+    (instanceId: string) => persist(layout.filter((l) => l.i !== instanceId), { userAction: true }),
     [layout, persist],
   )
 
@@ -326,7 +379,8 @@ export default function DashboardPage() {
   // (gridstack.init.js : `gridData.removeAll()` puis `saveDBWidgets`). `persist([])` fait les deux :
   // vide la grille ET enregistre en base, sinon les tuiles reviendraient au prochain chargement.
   // La confirmation est portée par la palette, comme le `melisCoreTool.confirm()` d'origine.
-  const removeAllWidgets = useCallback(() => persist([]), [persist])
+  // Action utilisateur explicite (confirmée) → `userAction` : autorisée à vider le record.
+  const removeAllWidgets = useCallback(() => persist([], { userAction: true }), [persist])
 
   return (
     <DashboardDataContext.Provider value={{ stats }}>
