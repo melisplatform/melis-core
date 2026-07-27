@@ -1,12 +1,12 @@
 import { useEffect, useRef, useState } from 'react'
 import { useLocation } from 'react-router-dom'
-import { Image as ImageIcon, LogIn, Palette, Save, Upload, X } from 'lucide-react'
+import { Image as ImageIcon, LogIn, Palette, RotateCcw, Save, Upload, X } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { cn } from '@/lib/utils'
 import {
-  EMPTY_SCHEME, fetchReactScheme, saveReactScheme,
+  EMPTY_SCHEME, fetchReactScheme, resetReactScheme, saveReactScheme,
   type ReactScheme, type ThemeLang,
 } from '@/lib/platformscheme-react-api'
 import { setReactTheme } from '@/lib/react-theme'
@@ -137,6 +137,28 @@ function TextField({ label, value, canEdit, onChange }: {
   )
 }
 
+/** Confirmation avant restauration au thème par défaut (miroir du confirm() legacy). */
+function RestoreConfirm({ busy, onConfirm, onCancel }: {
+  busy: boolean; onConfirm: () => void; onCancel: () => void
+}) {
+  const { t } = useI18n()
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+      <div className="w-full max-w-sm rounded-xl border border-border bg-card p-6 shadow-xl">
+        <h3 className="text-base font-semibold">{t('scheme.restore_confirm_title')}</h3>
+        <p className="mt-2 text-sm text-muted-foreground">{t('scheme.restore_confirm')}</p>
+        <div className="mt-5 flex justify-end gap-2">
+          <Button variant="outline" size="sm" onClick={onCancel} disabled={busy}>{t('common.cancel')}</Button>
+          <Button variant="outline" size="sm" onClick={onConfirm} disabled={busy}
+            className="border-red-300 text-red-600 hover:bg-red-50 dark:hover:bg-red-950/20">
+            {busy ? t('scheme.restoring') : t('scheme.restore')}
+          </Button>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 export default function PlatformSchemePage() {
   const location = useLocation()
   const { openTab } = useTabs()
@@ -154,6 +176,8 @@ export default function PlatformSchemePage() {
   const [scheme, setScheme] = useState<ReactScheme>(EMPTY_SCHEME)
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
+  const [restoring, setRestoring] = useState(false)
+  const [confirmRestore, setConfirmRestore] = useState(false)
   const [activeLang, setActiveLang] = useState(0)
   const curLang = activeLang || scheme.languages[0]?.id || 0
 
@@ -189,6 +213,21 @@ export default function PlatformSchemePage() {
     } finally { setSaving(false) }
   }
 
+  /** Restaure le thème par défaut : vide côté serveur, recharge, applique instantanément. */
+  async function restore() {
+    setRestoring(true)
+    try {
+      await resetReactScheme()
+      const fresh = await fetchReactScheme()
+      setScheme(fresh)
+      setReactTheme(fresh) // application instantanée (shell + login), pas de reload comme le legacy
+      notify('ok', t('scheme.title'), t('scheme.reset_done'))
+      setConfirmRestore(false)
+    } catch (e) {
+      notify('ko', t('scheme.title'), String((e as Error)?.message ?? e))
+    } finally { setRestoring(false) }
+  }
+
   return (
     <div className={cn('flex flex-col gap-6 p-6', effectiveMode === 'iframe' ? 'h-full' : 'flex-1')}>
       {/* Header */}
@@ -202,7 +241,13 @@ export default function PlatformSchemePage() {
             <ViewModeToggle mode={effectiveMode} onChange={(m) => { setMode(m); if (m === 'iframe') setIframeLoaded(true) }} />
           )}
           {canEdit && effectiveMode === 'react' && (
-            <Button size="sm" className="gap-1.5" onClick={save} disabled={saving || loading}>
+            <Button variant="outline" size="sm" className="gap-1.5 border-red-300 text-red-600 hover:bg-red-50 dark:hover:bg-red-950/20"
+              onClick={() => setConfirmRestore(true)} disabled={saving || restoring || loading}>
+              <RotateCcw className="size-4" />{t('scheme.restore')}
+            </Button>
+          )}
+          {canEdit && effectiveMode === 'react' && (
+            <Button size="sm" className="gap-1.5" onClick={save} disabled={saving || restoring || loading}>
               <Save className="size-4" />{saving ? t('scheme.saving') : t('common.save')}
             </Button>
           )}
@@ -250,6 +295,10 @@ export default function PlatformSchemePage() {
           </Section>
         </>)}
       </div>
+
+      {confirmRestore && (
+        <RestoreConfirm busy={restoring} onConfirm={restore} onCancel={() => setConfirmRestore(false)} />
+      )}
     </div>
   )
 }

@@ -113,6 +113,40 @@ class MelisReactApiPlatformSchemeReactController extends MelisAbstractActionCont
         }
     }
 
+    // ─── POST /platformscheme-react/reset ─────────────────────────────────────
+    // Restaure le thème par défaut : vide toutes les valeurs stockées (images + textes
+    // traduits). Ici « défaut » = valeurs vides → l'app retombe sur ses défauts in-app
+    // (miroir du « Restore to Default » legacy, qui recopiait la ligne MELIS_DEFAULT).
+
+    public function resetAction(): HttpResponse
+    {
+        if ($deny = $this->denyUnlessAccess()) { return $deny; }
+        if ($denyCap = $this->denyUnlessCan('edit')) { return $denyCap; }
+
+        try {
+            if (!$this->getRequest()->isPost()) {
+                return $this->jsonResponse(['success' => false, 'error' => 'POST required'], 405);
+            }
+
+            // Champs mono-valeur → null.
+            $kv = [];
+            foreach (self::FIELDS as $dbKey) { $kv[$dbKey] = null; }
+            $this->schemeSvc()->setMany($kv);
+
+            // Traductions existantes → null (toutes langues).
+            $storedTrans = $this->schemeSvc()->getTranslations();
+            foreach (self::TRANS_FIELDS as $dbKey) {
+                foreach (array_keys($storedTrans[$dbKey] ?? []) as $langId) {
+                    $this->schemeSvc()->setTranslation($dbKey, (int) $langId, null);
+                }
+            }
+
+            return $this->jsonResponse(['success' => true, 'data' => ['reset' => true]]);
+        } catch (\Throwable $e) {
+            return $this->errorResponse($e);
+        }
+    }
+
     /** Version de la plateforme = version du module MelisCore (comme le footer legacy). */
     private function coreVersion(): string
     {

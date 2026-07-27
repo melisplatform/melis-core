@@ -84,3 +84,11 @@ export async function saveReactScheme(payload: ReactSchemeSavePayload): Promise<
     body: JSON.stringify(payload),
   })
 }
+
+/** Restaure le thème par défaut (vide toutes les valeurs → défauts in-app). Miroir du legacy. */
+export async function resetReactScheme(): Promise<void> {
+  await apiFetch('/melis/react-api/platformscheme-react/reset', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+  })
+}

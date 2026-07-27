@@ -144,6 +144,17 @@ return [
                                     ],
                                 ],
                             ],
+                            'platformscheme-react-reset' => [
+                                'type'    => 'Segment',
+                                'options' => [
+                                    'route'    => '/platformscheme-react/reset[/]',
+                                    'defaults' => [
+                                        '__NAMESPACE__' => 'MelisCore\Controller',
+                                        'controller'    => 'MelisReactApiPlatformSchemeReact',
+                                        'action'        => 'reset',
+                                    ],
+                                ],
+                            ],
                             'platformscheme-react-get' => [
                                 'type'    => 'Segment',
                                 'options' => [
