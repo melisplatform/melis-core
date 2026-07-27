@@ -97,7 +97,15 @@ export default function EmailListPage() {
 
   async function confirmDelete() {
     if (!toDelete) return
-    try { await emailsApi.deleteEmail(toDelete.codename); setItems((prev) => prev.filter((e) => e.codename !== toDelete.codename)); setToDelete(null) }
+    try {
+      await emailsApi.deleteEmail(toDelete.codename)
+      setToDelete(null)
+      // Recharge la liste complète (comme le zoneReload du legacy) : si l'email
+      // supprimé avait une config par défaut derrière lui, sa version « Default »
+      // réapparaît automatiquement. Un simple filtre local la ferait disparaître.
+      _cache = null
+      load()
+    }
     catch { setToDelete(null) }
   }
 
