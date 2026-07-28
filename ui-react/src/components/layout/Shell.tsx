@@ -20,7 +20,7 @@ import { ZonePoolProvider } from '@/components/zone/zone-pool'
 import { ZoneFrames } from '@/components/zone/ZoneFrames'
 import { SubTabProvider, SubTabWindowBridge } from '@/components/tabs/sub-tab-store'
 import { ToolTabBridgeProvider } from '@/components/tabs/tool-tab-bridge'
-import { useBricks, brickRoute, refreshActiveModules, type BrickDef } from '@/lib/bricks'
+import { useBricks, brickRoute, refreshActiveModules, useModuleActive, type BrickDef } from '@/lib/bricks'
 import { loadReactTheme } from '@/lib/react-theme'
 import { PERSISTENT_MODULES } from '@/lib/module-registry'
 import { ToolErrorBoundary } from '@/components/ToolErrorBoundary'
@@ -120,6 +120,11 @@ function BrickHost({ brick, isActive, visited }: { brick: BrickDef; isActive: bo
 const MOBILE_BREAKPOINT = 768
 
 function ShellInner() {
+  // The global chat assistant is SERVED by MelisAI (the "Main Chat Assistant" agent,
+  // GeneralChatController): without that module its endpoints don't exist, so we don't
+  // even mount the FAB. Reactive (useModuleActive): enabling/disabling the module is
+  // reflected when reopening a tool, without a full page reload.
+  const aiActive = useModuleActive('MelisAI')
   // Start collapsed on narrow viewports; auto-collapse again if window shrinks below 768px.
   const [collapsed, setCollapsed] = useState(() => window.innerWidth < 1024)
   // Mobile (< 768px) : la sidebar n'est plus un rail étroit (inutilisable : les sections ne peuvent
@@ -245,8 +250,9 @@ function ShellInner() {
     <div className="flex h-screen overflow-hidden bg-background">
       <SubTabWindowBridge />
       <Notifications />
-      {/* Global AI assistant: floating chat + shell-side closed-loop navigation handlers. */}
-      <AiAssistant />
+      {/* Global AI assistant: floating chat + shell-side closed-loop navigation handlers.
+          Mounted only when the MelisAI module is active. */}
+      {aiActive && <AiAssistant />}
       <Sidebar
         collapsed={collapsed}
         isMobile={isMobile}
