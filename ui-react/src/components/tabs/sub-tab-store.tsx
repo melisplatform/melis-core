@@ -5,6 +5,23 @@ export interface SubTab { id: string; label: string; path: string }
 interface SectionState { tabs: SubTab[] }
 interface SubTabState { sections: Record<string, SectionState> }
 
+// Les sous-onglets ouverts survivent à un reload complet (comme les onglets du shell) : ils ne sont
+// perdus que si l'utilisateur les ferme. SubTab = { id, label, path } → entièrement sérialisable.
+const SUBTABS_STORAGE_KEY = 'melis-open-subtabs'
+
+function loadInitialState(): SubTabState {
+  try {
+    const raw = sessionStorage.getItem(SUBTABS_STORAGE_KEY)
+    if (raw) {
+      const parsed = JSON.parse(raw) as SubTabState
+      if (parsed && typeof parsed === 'object' && parsed.sections && typeof parsed.sections === 'object') {
+        return { sections: parsed.sections }
+      }
+    }
+  } catch { /* storage indisponible / corrompu */ }
+  return { sections: {} }
+}
+
 type Action =
   | { type: 'OPEN';         section: string; tab: SubTab }
   | { type: 'CLOSE';        section: string; id: string }
@@ -44,14 +61,16 @@ interface SubTabWindow extends Window {
 }
 
 export function SubTabProvider({ children }: { children: React.ReactNode }) {
-  const [state, dispatch] = useReducer(reducer, { sections: {} })
+  const [state, dispatch] = useReducer(reducer, undefined, loadInitialState)
 
   // Publie la liste des sous-onglets ouverts (les globals __melisOpenSubTab/__melisCloseSubTab sont
   // write-only : une brique ne pouvait pas voir une fermeture déclenchée par la croix de SubTabBar).
   // Une brique `persistent` monte un formulaire par enregistrement ouvert et a besoin de cette liste.
+  // On persiste aussi l'état en sessionStorage → les sous-onglets sont restaurés au reload.
   useEffect(() => {
     ;(window as SubTabWindow).__melisSubTabs = state.sections
     window.dispatchEvent(new CustomEvent(SUBTABS_CHANGED))
+    try { sessionStorage.setItem(SUBTABS_STORAGE_KEY, JSON.stringify(state)) } catch { /* best-effort */ }
   }, [state])
 
   // L'onglet principal d'un outil est fermé → ses sous-onglets d'enregistrement n'ont plus lieu
