@@ -22,8 +22,8 @@ const w = window as unknown as {
   MelisReactJsxRuntime?: unknown
   MelisReactRouterDOM?: unknown
   MelisXLSX?: unknown
-  __MELIS_BRICK_COMPONENTS__?: Record<string, { Component?: ComponentType; Sidebar?: ComponentType; Header?: ComponentType }>
-  __melisRegisterBrick?: (b: { id: string; Component?: ComponentType; Sidebar?: ComponentType; Header?: ComponentType }) => void
+  __MELIS_BRICK_COMPONENTS__?: Record<string, { Component?: ComponentType; Sidebar?: ComponentType; Header?: ComponentType; Overlay?: ComponentType }>
+  __melisRegisterBrick?: (b: { id: string; Component?: ComponentType; Sidebar?: ComponentType; Header?: ComponentType; Overlay?: ComponentType }) => void
   /** Exposed for brick IIFE bundles that cannot import from the host. */
   __melisIsModuleActive?: (id: string) => boolean
   /** Vérification CENTRALE des droits (capacités actions/onglets) — cf. lib/caps.ts. Les briques
@@ -41,9 +41,10 @@ w.__MELIS_BRICK_COMPONENTS__ = w.__MELIS_BRICK_COMPONENTS__ ?? {}
 w.__melisIsModuleActive = isModuleActive
 w.__melisUseCaps = useCaps
 w.__melisRegisterBrick = (b) => {
-  // A brick may register a routed page (Component), a left-sidebar panel (Sidebar) and/or a
-  // topbar widget (Header, e.g. the messenger notification icon) — all optional, all modular.
-  if (b && b.id) w.__MELIS_BRICK_COMPONENTS__![b.id] = { Component: b.Component, Sidebar: b.Sidebar, Header: b.Header }
+  // A brick may register a routed page (Component), a left-sidebar panel (Sidebar), a topbar
+  // widget (Header, e.g. the messenger notification icon) and/or a global overlay (Overlay,
+  // e.g. the MelisAI floating assistant) — all optional, all modular.
+  if (b && b.id) w.__MELIS_BRICK_COMPONENTS__![b.id] = { Component: b.Component, Sidebar: b.Sidebar, Header: b.Header, Overlay: b.Overlay }
 }
 
 // Boot du dashboard EN PARALLÈLE de /me et /menu : quand on atterrit sur le dashboard, on lance dès

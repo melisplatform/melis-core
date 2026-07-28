@@ -15,12 +15,12 @@ import { Topbar } from './Topbar'
 import { SubTabBar } from './SubTabBar'
 import { ToolTabBar } from './ToolTabBar'
 import { Notifications } from '@/components/Notifications'
-import { AiAssistant } from '@/components/AiAssistant'
+import { AiNavActionsBridge } from '@/components/AiNavActionsBridge'
 import { ZonePoolProvider } from '@/components/zone/zone-pool'
 import { ZoneFrames } from '@/components/zone/ZoneFrames'
 import { SubTabProvider, SubTabWindowBridge } from '@/components/tabs/sub-tab-store'
 import { ToolTabBridgeProvider } from '@/components/tabs/tool-tab-bridge'
-import { useBricks, brickRoute, refreshActiveModules, useModuleActive, type BrickDef } from '@/lib/bricks'
+import { useBricks, brickRoute, refreshActiveModules, overlayBricks, type BrickDef } from '@/lib/bricks'
 import { loadReactTheme } from '@/lib/react-theme'
 import { PERSISTENT_MODULES } from '@/lib/module-registry'
 import { ToolErrorBoundary } from '@/components/ToolErrorBoundary'
@@ -120,11 +120,6 @@ function BrickHost({ brick, isActive, visited }: { brick: BrickDef; isActive: bo
 const MOBILE_BREAKPOINT = 768
 
 function ShellInner() {
-  // The global chat assistant is SERVED by MelisAI (the "Main Chat Assistant" agent,
-  // GeneralChatController): without that module its endpoints don't exist, so we don't
-  // even mount the FAB. Reactive (useModuleActive): enabling/disabling the module is
-  // reflected when reopening a tool, without a full page reload.
-  const aiActive = useModuleActive('MelisAI')
   // Start collapsed on narrow viewports; auto-collapse again if window shrinks below 768px.
   const [collapsed, setCollapsed] = useState(() => window.innerWidth < 1024)
   // Mobile (< 768px) : la sidebar n'est plus un rail étroit (inutilisable : les sections ne peuvent
@@ -143,6 +138,9 @@ function ShellInner() {
   }, [])
   const location = useLocation()
   const bricks = useBricks()
+  // Bricks contributing a global overlay (recomputed on every brick-list change via useBricks:
+  // a bundle registers its Overlay only once its IIFE has executed).
+  const overlays = overlayBricks()
   useToolRoutesVersion() // re-resolve the active zone once the tool-routes registry populates
 
   // Onglets ouverts (ref stable pour le listener de fermeture) : une brique MULTI-ONGLETS (ex.
@@ -250,9 +248,16 @@ function ShellInner() {
     <div className="flex h-screen overflow-hidden bg-background">
       <SubTabWindowBridge />
       <Notifications />
-      {/* Global AI assistant: floating chat + shell-side closed-loop navigation handlers.
-          Mounted only when the MelisAI module is active. */}
-      {aiActive && <AiAssistant />}
+      {/* Shell-side handlers the AI chat drives (window.melisReactActionMap). Host-owned:
+          they need the router, the menu and the tabs. Renders nothing. */}
+      <AiNavActionsBridge />
+      {/* Module-contributed global overlays (e.g. the MelisAI floating assistant): rendered
+          once, outside the routed content, so their state survives navigation. Present only
+          when the owning module is active — a brick exists iff its module is. */}
+      {overlays.map((b) => {
+        const Overlay = b.Overlay!
+        return <Overlay key={b.id} />
+      })}
       <Sidebar
         collapsed={collapsed}
         isMobile={isMobile}

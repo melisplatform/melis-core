@@ -49,6 +49,13 @@ export interface BrickDef {
   Sidebar?: ComponentType
   /** Topbar widget (e.g. the messenger notification icon), rendered next to the language switcher (optional). */
   Header?: ComponentType
+  /**
+   * Global overlay rendered ONCE at the shell root, outside the routed content and above
+   * everything else (optional) — for a module-owned floating UI that must be reachable from
+   * any tool, e.g. the MelisAI assistant (FAB + chat panel). Route-independent: it stays
+   * mounted across navigations, so its own state (an open chat session) survives.
+   */
+  Overlay?: ComponentType
 }
 
 /** `Module/Controller` → React route, fed to the menu so legacy entries link to bricks. */
@@ -102,7 +109,7 @@ export async function refreshActiveModules(): Promise<void> {
 }
 
 /** Where brick bundles self-register their components, keyed by brick id. */
-type RegisteredBrick = { Component?: ComponentType; Sidebar?: ComponentType; Header?: ComponentType }
+type RegisteredBrick = { Component?: ComponentType; Sidebar?: ComponentType; Header?: ComponentType; Overlay?: ComponentType }
 function componentRegistry(): Record<string, RegisteredBrick> {
   const w = window as unknown as { __MELIS_BRICK_COMPONENTS__?: Record<string, RegisteredBrick> }
   return (w.__MELIS_BRICK_COMPONENTS__ ??= {})
@@ -146,6 +153,11 @@ export function sidebarBrickForModules(modules: Set<string>): BrickDef | undefin
 /** All loaded bricks that ship a topbar widget (rendered next to the language switcher). */
 export function headerBricks(): BrickDef[] {
   return bricks.filter((b) => b.Header)
+}
+
+/** All loaded bricks that ship a global overlay (rendered once at the shell root). */
+export function overlayBricks(): BrickDef[] {
+  return bricks.filter((b) => b.Overlay)
 }
 
 /**
@@ -232,13 +244,14 @@ export async function loadBricks(): Promise<void> {
           if (idx >= 0) {
             bricks.splice(idx, 1)
             if (m.forwardKey) delete BRICK_ROUTES[m.forwardKey]
-            // Sidebar/Header still valid even without a Component page (e.g. Messenger bell).
-            if (reg?.Sidebar || reg?.Header) {
+            // Sidebar/Header/Overlay still valid without a Component page (e.g. Messenger bell,
+            // MelisAI assistant).
+            if (reg?.Sidebar || reg?.Header || reg?.Overlay) {
               bricks.push({
                 id: m.id, module: m.module, route: '', label: m.label,
                 forwardKey: m.forwardKey, melisKey: m.melisKey, subTabs: m.subTabs ?? false,
                 persistent: m.persistent ?? false,
-                Component: undefined, Sidebar: reg.Sidebar, Header: reg.Header,
+                Component: undefined, Sidebar: reg.Sidebar, Header: reg.Header, Overlay: reg.Overlay,
               })
             }
             notify()
@@ -246,12 +259,13 @@ export async function loadBricks(): Promise<void> {
           return { default: (() => null) as unknown as ComponentType }
         }
 
-        // Bundle may also export Sidebar / Header — patch the BrickDef in-place so
-        // sidebarBrickForModules() / headerBricks() see them on the next render cycle.
+        // Bundle may also export Sidebar / Header / Overlay — patch the BrickDef in-place so
+        // sidebarBrickForModules() / headerBricks() / overlayBricks() see them next render.
         const def = bricks.find((b) => b.id === brickId)
         if (def && reg) {
           def.Sidebar = reg.Sidebar
           def.Header  = reg.Header
+          def.Overlay = reg.Overlay
           notify()
         }
         return { default: C }
@@ -267,16 +281,18 @@ export async function loadBricks(): Promise<void> {
         subTabs:    m.subTabs ?? false,
         persistent: m.persistent ?? false,
         Component:  LazyComponent,
-        // Sidebar and Header are unknown until the bundle executes — set lazily above.
+        // Sidebar, Header and Overlay are unknown until the bundle executes — set lazily above.
         Sidebar:    undefined,
         Header:     undefined,
+        Overlay:    undefined,
       })
     }
     bricks = next
 
-    // Background-prefetch: load all bundles in parallel so Sidebar/Header components
-    // register early (e.g. the CMS page-tree Sidebar, the Messenger bell — both need
-    // to appear from boot, not only after the user first visits the brick's route).
+    // Background-prefetch: load all bundles in parallel so Sidebar/Header/Overlay components
+    // register early (e.g. the CMS page-tree Sidebar, the Messenger bell, the MelisAI
+    // assistant — all need to appear from boot, not only after the user first visits the
+    // brick's route).
     // Non-blocking: the loop fires-and-forgets; React.lazy benefits from the cache.
     //
     // ⚡ PRIORITÉ aux briques « widget-only » (route ET forwardKey nuls) : leur SEULE raison d'être
@@ -299,7 +315,8 @@ export async function loadBricks(): Promise<void> {
           if (def && reg) {
             def.Sidebar = reg.Sidebar
             def.Header  = reg.Header
-            if (reg.Sidebar || reg.Header) notify()
+            def.Overlay = reg.Overlay
+            if (reg.Sidebar || reg.Header || reg.Overlay) notify()
           }
         })
         .catch(() => {})

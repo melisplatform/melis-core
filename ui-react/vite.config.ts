@@ -19,18 +19,6 @@ const MELIS_PROXY_HOST = process.env.MELIS_PROXY_HOST
 // (ui-react → melis-core → melisplatform → vendor → root).
 const MELIS_ROOT = path.resolve(import.meta.dirname, '..', '..', '..', '..')
 
-// The AI chat components are imported from the SIBLING module melis-ai-engine (source-level
-// composition, see the alias below). That module is optional: when it isn't installed, the
-// aliased path doesn't exist and the dev server / build die on the first import. Detect it
-// and fall back to a local no-op stub (the assistant is already gated at runtime on the
-// MelisAI module being active).
-const AI_ENGINE_SRC = path.resolve(import.meta.dirname, '../../melis-ai-engine/ui-react/src')
-const AI_ENGINE_INSTALLED = fs.existsSync(path.join(AI_ENGINE_SRC, 'index.ts'))
-const AI_ENGINE_FALLBACK = path.resolve(import.meta.dirname, 'src/lib/ai-engine-fallback.tsx')
-if (!AI_ENGINE_INSTALLED) {
-  console.warn('[melis] melis-ai-engine not found — @melis-ai-engine resolves to a no-op stub.')
-}
-
 const MIME: Record<string, string> = {
   css: 'text/css; charset=utf-8',
   js:  'application/javascript; charset=utf-8',
@@ -145,17 +133,9 @@ export default defineConfig(({ command }) => ({
     alias: [
       { find: /^@\/(.*)$/,          replacement: path.resolve(import.meta.dirname, 'src') + '/$1' },
       { find: /^xlsx$/,             replacement: path.resolve(import.meta.dirname, 'node_modules/xlsx/xlsx.mjs') },
-      // Source library: the AI chat React components (AiChatContainer…) live in the
-      // melis-ai-engine module. The shell composes them (like a brick) to offer a global
-      // assistant; the chat's own logic stays in the engine. No separate build — imported
-      // at build time (engine ui-react has no external deps beyond React).
-      // Optional module: when melis-ai-engine isn't installed, both specifiers resolve to the
-      // local no-op stub so dev/build keep working (see AI_ENGINE_INSTALLED above).
-      { find: /^@melis-ai-engine$/,       replacement: AI_ENGINE_INSTALLED ? path.join(AI_ENGINE_SRC, 'index.ts') : AI_ENGINE_FALLBACK },
-      { find: /^@melis-ai-engine\/(.*)$/, replacement: AI_ENGINE_INSTALLED ? AI_ENGINE_SRC + '/$1' : AI_ENGINE_FALLBACK },
-      // The engine source lives outside this project's node_modules tree, so its bare
-      // `react` imports can't resolve upward. Pin react/react-dom to THIS app's copy so the
-      // composed engine files bundle against the same single React instance as the shell.
+      // react/react-dom pinned to THIS app's copy: brick sources composed at build time live
+      // outside this project's node_modules tree, so their bare `react` imports can't resolve
+      // upward — pinning keeps a single React instance across the boundary.
       { find: /^react$/,            replacement: path.resolve(import.meta.dirname, 'node_modules/react') },
       { find: /^react\/(.*)$/,      replacement: path.resolve(import.meta.dirname, 'node_modules/react') + '/$1' },
       { find: /^react-dom$/,        replacement: path.resolve(import.meta.dirname, 'node_modules/react-dom') },
