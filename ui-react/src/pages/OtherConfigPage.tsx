@@ -7,6 +7,7 @@ import { Input } from '@/components/ui/input'
 import { cn } from '@/lib/utils'
 import * as api from '@/lib/otherconfig-api'
 import type { OtherConfig } from '@/lib/otherconfig-api'
+import { invalidatePasswordPolicy } from '@/lib/user-api'
 import { useTabs } from '@/components/tabs/tab-store'
 import { MelisClassicFrame, ViewModeToggle, type ViewMode } from '@/components/MelisClassicView'
 import { toolHasViewToggle } from '@/lib/module-registry'
@@ -82,6 +83,8 @@ export default function OtherConfigPage() {
       await api.saveOtherConfig(cfg)
       notify('ok', t('otherconfig.title'), t('otherconfig.saved'))
       _cache = null
+      // La politique de mot de passe vient d'ici : purger le cache du formulaire utilisateur.
+      invalidatePasswordPolicy()
     } catch (e) {
       notify('ko', t('otherconfig.title'), String((e as Error)?.message ?? e))
     } finally { setSaving(false) }

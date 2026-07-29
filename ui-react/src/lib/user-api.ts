@@ -161,8 +161,27 @@ export interface PasswordPolicy {
   requireSpecial: boolean
 }
 
+// Cache mémoire de la politique : sert uniquement à peindre le formulaire immédiatement.
+// Il peut être PÉRIMÉ (la config est modifiable à côté par l'outil Other Config, React ou
+// legacy) — tout appelant doit re-fetcher au montage et ne jamais s'en contenter.
+let _pwPolicyCache: PasswordPolicy | null = null
+
+/** Dernière politique connue, potentiellement périmée (affichage immédiat). */
+export function cachedPasswordPolicy(): PasswordPolicy | null {
+  return _pwPolicyCache
+}
+
+/** Vide le cache — à appeler dès que la config login est réécrite. */
+export function invalidatePasswordPolicy(): void {
+  _pwPolicyCache = null
+}
+
 export async function fetchPasswordPolicy(): Promise<PasswordPolicy> {
-  return apiFetch<PasswordPolicy>('/melis/react-api/users/password-policy')
+  const policy = await apiFetch<PasswordPolicy>('/melis/react-api/users/password-policy', {
+    cache: 'no-store',
+  })
+  _pwPolicyCache = policy
+  return policy
 }
 
 export async function fetchUserConnections(id: number): Promise<UserConnection[]> {

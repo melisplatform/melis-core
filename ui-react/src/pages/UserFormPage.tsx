@@ -285,7 +285,6 @@ type FormCache = { form: FormData; roles: userApi.UserRole[]; activeTab: Tab }
 // Users → CLOSE_ALL). Listener module-niveau (persistant) : le composant est démonté à la fermeture.
 const _formCache = new Map<string, FormCache>()
 let _rolesCache: userApi.UserRole[] | null = null
-let _pwPolicyCache: userApi.PasswordPolicy | null = null
 
 /**
  * Règles de complexité NON satisfaites par `pw` selon la politique effective (mêmes règles que
@@ -350,7 +349,7 @@ export default function UserFormPage() {
   const [saveError, setSaveError] = useState<string | null>(null)
   const [saved, setSaved]     = useState(false)
   const [activeTab, setActiveTab] = useState<Tab>('profil')
-  const [pwPolicy, setPwPolicy] = useState<userApi.PasswordPolicy | null>(_pwPolicyCache)
+  const [pwPolicy, setPwPolicy] = useState<userApi.PasswordPolicy | null>(userApi.cachedPasswordPolicy())
   const rolesModuleActive = useModuleActive('MelisSmallBusiness')
 
   useEffect(() => {
@@ -361,9 +360,10 @@ export default function UserFormPage() {
 
   // Politique de complexité effective (défauts otherconfig + app.login.php) — pour le feedback
   // client. Le serveur reste la source de vérité : la validation serveur bloque de toute façon.
+  // Toujours re-fetchée au montage : la config peut avoir été changée entre-temps par l'outil
+  // Other Config (React ou legacy) sans reload du SPA — le cache ne sert qu'au 1ᵉʳ rendu.
   useEffect(() => {
-    if (_pwPolicyCache) { setPwPolicy(_pwPolicyCache); return }
-    userApi.fetchPasswordPolicy().then(p => { _pwPolicyCache = p; setPwPolicy(p) }).catch(() => null)
+    userApi.fetchPasswordPolicy().then(setPwPolicy).catch(() => null)
   }, [])
 
   useEffect(() => {
