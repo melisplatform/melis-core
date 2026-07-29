@@ -15,6 +15,25 @@ export interface EmailLang { id: number; name: string; locale: string }
 export interface EmailListItem {
   codename: string; name: string; fromName: string; fromEmail: string; replyTo: string; inDb: boolean
 }
+export type EmailSortKey = 'name' | 'codename' | 'fromName' | 'fromEmail' | 'source'
+
+export interface EmailListParams {
+  limit?: number
+  search?: string
+  sort?: EmailSortKey
+  dir?: 'asc' | 'desc'
+  /** Curseur keyset (opaque) ; toujours null ici (liste courte, un seul lot). */
+  after?: string | null
+}
+
+export interface EmailListResult {
+  items: EmailListItem[]
+  total: number
+  /** Toujours null (pas de scroll) — la liste tient en un lot. */
+  nextCursor: string | null
+  langs: EmailLang[]
+}
+
 export interface EmailContent { boedId: number; subject: string; html: string; text: string }
 export interface EmailDetail {
   codename: string; name: string; fromName: string; fromEmail: string; replyTo: string
@@ -41,8 +60,15 @@ async function apiFetch<T>(url: string, opts?: RequestInit): Promise<T> {
 }
 
 // ─── Endpoints ────────────────────────────────────────────────────────────────
-export async function fetchEmails(): Promise<{ emails: EmailListItem[]; langs: EmailLang[] }> {
-  return apiFetch<{ emails: EmailListItem[]; langs: EmailLang[] }>('/melis/react-api/emails')
+export async function fetchEmails(params: EmailListParams = {}): Promise<EmailListResult> {
+  const qs = new URLSearchParams()
+  if (params.limit)  qs.set('limit',  String(params.limit))
+  if (params.search) qs.set('search', params.search)
+  if (params.sort)   qs.set('sort',   params.sort)
+  if (params.dir)    qs.set('dir',    params.dir)
+  if (params.after)  qs.set('after',  params.after)
+  const q = qs.toString()
+  return apiFetch<EmailListResult>(`/melis/react-api/emails${q ? `?${q}` : ''}`)
 }
 export async function fetchEmail(codename: string): Promise<{ email: EmailDetail; langs: EmailLang[] }> {
   return apiFetch<{ email: EmailDetail; langs: EmailLang[] }>(`/melis/react-api/emails/${encodeURIComponent(codename)}`)

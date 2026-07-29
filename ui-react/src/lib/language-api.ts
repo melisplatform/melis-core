@@ -31,17 +31,22 @@ export interface LanguageStats {
   total: number
 }
 
+export type LanguageSortKey = 'id' | 'locale' | 'name'
+
 export interface LanguageListParams {
-  page?: number
   limit?: number
   search?: string
+  sort?: LanguageSortKey
+  dir?: 'asc' | 'desc'
+  /** Curseur keyset (opaque) du lot précédent ; absent = premier lot. */
+  after?: string | null
 }
 
 export interface LanguageListResult {
   items: LanguageItem[]
   total: number
-  page: number
-  limit: number
+  /** Curseur keyset à repasser en `after` pour le lot suivant ; null = fin de liste. */
+  nextCursor: string | null
 }
 
 export interface LanguageSavePayload {
@@ -75,9 +80,11 @@ async function apiFetch<T>(url: string, opts?: RequestInit): Promise<T> {
 
 export async function fetchLanguages(params: LanguageListParams = {}): Promise<LanguageListResult> {
   const qs = new URLSearchParams()
-  if (params.page)   qs.set('page',   String(params.page))
   if (params.limit)  qs.set('limit',  String(params.limit))
   if (params.search) qs.set('search', params.search)
+  if (params.sort)   qs.set('sort',   params.sort)
+  if (params.dir)    qs.set('dir',    params.dir)
+  if (params.after)  qs.set('after',  params.after)
   return apiFetch<LanguageListResult>(`/melis/react-api/languages?${qs}`)
 }
 

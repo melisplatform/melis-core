@@ -12,8 +12,11 @@ use MelisCore\Controller\MelisAbstractActionController;
  *
  * Outil EN LECTURE SEULE (visionneuse) — pas de create/update/delete. Calqué sur le
  * gabarit de migration full-React pour la partie liste/stats, mais sans form.
- * Réutilise le service métier MelisCoreLogService (getLogList / getLogCount) :
- * la logique (scoping, filtres, jointures de types) reste côté Laminas.
+ *
+ * La liste passe en SQL BRUT via le trait MelisReactKeysetListTrait (scroll infini +
+ * tri server-side + pagination keyset). On CONTOURNE volontairement le service
+ * MelisCoreLogService qui ne gère ni le tri multi-colonnes ni le keyset. La jointure
+ * de type et le scoping/droits sont reproduits ici.
  * Routes :
  *   GET /melis/react-api/logs            → liste paginée + filtres (type, user, dates, recherche)
  *   GET /melis/react-api/logs/stats      → statistiques (cartes KPI)
@@ -26,6 +29,7 @@ use MelisCore\Controller\MelisAbstractActionController;
 class MelisReactApiLogController extends MelisAbstractActionController
 {
     use CapabilityGuardTrait;
+    use MelisReactKeysetListTrait;
 
     /** melisKey de l'outil — utilisé par le garde de droits (cf. denyUnlessAccess). */
     private const MELIS_KEY = 'meliscore_logs_tool';
@@ -38,26 +42,71 @@ class MelisReactApiLogController extends MelisAbstractActionController
         if ($denyCap = $this->denyUnlessCan('list')) { return $denyCap; }
 
         try {
-            $page   = max(1, (int) $this->params()->fromQuery('page', 1));
-            $limit  = min(9999, max(1, (int) $this->params()->fromQuery('limit', 50)));
+            $limit  = min(9999, max(1, (int) $this->params()->fromQuery('limit', 25)));
             $search = trim((string) ($this->params()->fromQuery('search', '') ?? '')) ?: null;
             $typeId = (int) $this->params()->fromQuery('type', 0) ?: null;
+            // Clé EXACTE de log_title (certaines valeurs ont des espaces significatifs) → pas de trim.
+            $title     = (($t = (string) ($this->params()->fromQuery('title', '') ?? '')) !== '') ? $t : null;
             $reqUser   = (int) $this->params()->fromQuery('user', 0) ?: null;
             $startDate = trim((string) ($this->params()->fromQuery('startDate', '') ?? '')) ?: null;
             $endDate   = trim((string) ($this->params()->fromQuery('endDate', '') ?? '')) ?: null;
-            $offset    = ($page - 1) * $limit;
 
             // Scoping : non-admin → ses propres logs uniquement ; admin → filtre libre.
             [$currentUserId, $isAdmin] = $this->currentUser();
             $userId = $isAdmin ? $reqUser : $currentUserId;
 
-            $logSrv = $this->getServiceManager()->get('MelisCoreLogService');
-            $total  = (int) $logSrv->getLogCount($typeId, null, $userId, $startDate, $endDate, $search, null);
-            $logs   = $logSrv->getLogList($typeId, null, $userId, $startDate, $endDate, $offset, $limit, 'desc', $search, null);
+            $db = $this->getServiceManager()->get('Laminas\Db\Adapter\AdapterInterface');
+
+            // Filtres (communs au COUNT et à la requête data).
+            $filterWhere = []; $filterParams = [];
+            if ($userId !== null) { $filterWhere[] = 'l.log_user_id = ?'; $filterParams[] = $userId; }
+            if ($typeId !== null) { $filterWhere[] = 'l.log_type_id = ?'; $filterParams[] = $typeId; }
+            if ($title !== null) { $filterWhere[] = 'l.log_title = ?'; $filterParams[] = $title; }
+            if ($startDate !== null) { $filterWhere[] = 'l.log_date_added >= ?'; $filterParams[] = $startDate; }
+            if ($endDate   !== null) { $filterWhere[] = 'l.log_date_added <= ?'; $filterParams[] = $endDate; }
+            if ($search !== null) {
+                // NB : log_title/log_message sont les CLÉS de traduction (le texte affiché est
+                // traduit à la volée, absent de la base) → la recherche porte sur ces clés
+                // brutes + le code de type, comme le legacy (qui matchait logt_code/traductions).
+                $like = '%' . $search . '%';
+                $filterWhere[] = '(l.log_title LIKE ? OR l.log_message LIKE ? OR COALESCE(t.logt_code,\'\') LIKE ?)';
+                $filterParams = array_merge($filterParams, [$like, $like, $like]);
+            }
+
+            // Tri server-side (whitelist = COL_ORDER de la page). Chaque expression NON-NULL.
+            // ⚠ title/message trient sur la colonne BRUTE (clé de traduction), pas le texte traduit.
+            $sortMap = [
+                'id'      => 'l.log_id',
+                'date'    => 'l.log_date_added',
+                'type'    => "COALESCE(t.logt_code,'')",
+                'title'   => "COALESCE(l.log_title,'')",
+                'message' => "COALESCE(l.log_message,'')",
+                'user'    => 'l.log_user_id',
+                'itemId'  => 'COALESCE(l.log_item_id,0)',
+            ];
+            $sortKey = (string) $this->params()->fromQuery('sort', 'date');
+            $dir     = (string) $this->params()->fromQuery('dir', 'desc');
+
+            [$rows, $total, $nextCursor] = $this->keysetList([
+                'db'           => $db,
+                'from'         => 'melis_core_log l',
+                'joins'        => 'LEFT JOIN melis_core_log_type t ON t.logt_id = l.log_type_id',
+                'selectCols'   => 'l.log_id, l.log_title, l.log_message, l.log_action_status, '
+                                . 'l.log_type_id, l.log_item_id, l.log_user_id, l.log_date_added, t.logt_code',
+                'filterWhere'  => $filterWhere,
+                'filterParams' => $filterParams,
+                'sortMap'      => $sortMap,
+                'idCol'        => 'l.log_id',
+                'idAlias'      => 'log_id',
+                'sortKey'      => $sortKey,
+                'dir'          => $dir,
+                'after'        => (string) ($this->params()->fromQuery('after', '') ?? ''),
+                'limit'        => $limit,
+            ]);
 
             // Noms d'utilisateurs (batch, dédupliqué — évite le N+1).
             $userIds = [];
-            foreach ($logs as $entity) { $userIds[(int) $entity->getLog()->log_user_id] = true; }
+            foreach ($rows as $row) { $userIds[(int) ((array) $row)['log_user_id']] = true; }
             $userNames = $this->userNames(array_keys($userIds));
 
             // Titre/message sont des clés de traduction (`tr_...`) → traduire (parité legacy),
@@ -65,30 +114,30 @@ class MelisReactApiLogController extends MelisAbstractActionController
             $translator = $this->getServiceManager()->get('translator');
 
             $items = [];
-            foreach ($logs as $entity) {
-                $log  = $entity->getLog();
-                $type = $entity->getType();
-                $message = (string) $translator->translate($log->log_message);
+            foreach ($rows as $row) {
+                $r       = (array) $row; // ignore la colonne technique __sortval
+                $itemId  = $r['log_item_id'] !== null ? (int) $r['log_item_id'] : null;
+                $message = (string) $translator->translate((string) $r['log_message']);
                 if (strpos($message, '[itemId]') !== false) {
-                    $message = str_replace('[itemId]', (string) $log->log_item_id, $message);
+                    $message = str_replace('[itemId]', (string) $itemId, $message);
                 }
                 $items[] = [
-                    'id'       => (int)    $entity->getId(),
-                    'title'    => (string) $translator->translate($log->log_title),
+                    'id'       => (int)    $r['log_id'],
+                    'title'    => (string) $translator->translate((string) $r['log_title']),
                     'message'  => $message,
-                    'typeId'   => $type ? (int) $type->logt_id : null,
-                    'typeCode' => $type ? (string) $type->logt_code : '',
-                    'status'   => (int) $log->log_action_status,
-                    'itemId'   => $log->log_item_id !== null ? (int) $log->log_item_id : null,
-                    'userId'   => (int) $log->log_user_id,
-                    'userName' => $userNames[(int) $log->log_user_id] ?? ('#' . (int) $log->log_user_id),
-                    'date'     => (string) $log->log_date_added,
+                    'typeId'   => $r['log_type_id'] !== null ? (int) $r['log_type_id'] : null,
+                    'typeCode' => (string) ($r['logt_code'] ?? ''),
+                    'status'   => (int) $r['log_action_status'],
+                    'itemId'   => $itemId,
+                    'userId'   => (int) $r['log_user_id'],
+                    'userName' => $userNames[(int) $r['log_user_id']] ?? ('#' . (int) $r['log_user_id']),
+                    'date'     => (string) $r['log_date_added'],
                 ];
             }
 
             return $this->jsonResponse([
                 'success' => true,
-                'data'    => ['items' => $items, 'total' => $total, 'page' => $page, 'limit' => $limit],
+                'data'    => ['items' => $items, 'total' => $total, 'nextCursor' => $nextCursor, 'limit' => $limit],
             ]);
         } catch (\Throwable $e) {
             return $this->errorResponse($e);
@@ -135,40 +184,52 @@ class MelisReactApiLogController extends MelisAbstractActionController
         if ($denyCap = $this->denyUnlessCan('list')) { return $denyCap; }
 
         try {
-            [, $isAdmin] = $this->currentUser();
+            [$currentUserId, $isAdmin] = $this->currentUser();
             $db = $this->getServiceManager()->get('Laminas\Db\Adapter\AdapterInterface');
 
-            // Types présents dans les logs (utiles à filtrer).
+            // Portée : un non-admin ne voit que ses propres logs → les options de filtre
+            // (types, utilisateurs, titres) sont dérivées du sous-ensemble VISIBLE.
+            $scope = $isAdmin ? '' : (' WHERE log_user_id = ' . (int) $currentUserId);
+
+            // Types présents dans les logs visibles.
             $typeRows = iterator_to_array($db->query(
-                'SELECT t.logt_id, t.logt_code
+                "SELECT t.logt_id, t.logt_code
                  FROM melis_core_log_type t
-                 INNER JOIN (SELECT DISTINCT log_type_id FROM melis_core_log) l ON l.log_type_id = t.logt_id
-                 ORDER BY t.logt_code ASC',
+                 INNER JOIN (SELECT DISTINCT log_type_id FROM melis_core_log$scope) l ON l.log_type_id = t.logt_id
+                 ORDER BY t.logt_code ASC",
                 []
             ));
             $types = array_map(fn ($r) => ['id' => (int) $r['logt_id'], 'code' => (string) $r['logt_code']], $typeRows);
 
-            // Utilisateurs présents dans les logs — uniquement pour un admin (scoping).
-            $users = [];
-            if ($isAdmin) {
-                $userRows = iterator_to_array($db->query(
-                    "SELECT u.usr_id,
-                            TRIM(CONCAT(COALESCE(u.usr_firstname,''),' ',COALESCE(u.usr_lastname,''))) AS name,
-                            u.usr_login
-                     FROM melis_core_user u
-                     INNER JOIN (SELECT DISTINCT log_user_id FROM melis_core_log) l ON l.log_user_id = u.usr_id
-                     ORDER BY name ASC",
-                    []
-                ));
-                $users = array_map(fn ($r) => [
-                    'id'   => (int) $r['usr_id'],
-                    'name' => trim((string) $r['name']) !== '' ? (string) $r['name'] : (string) $r['usr_login'],
-                ], $userRows);
+            // Utilisateurs présents dans les logs visibles (admin → tous ; non-admin → lui-même).
+            $userRows = iterator_to_array($db->query(
+                "SELECT u.usr_id,
+                        TRIM(CONCAT(COALESCE(u.usr_firstname,''),' ',COALESCE(u.usr_lastname,''))) AS name,
+                        u.usr_login
+                 FROM melis_core_user u
+                 INNER JOIN (SELECT DISTINCT log_user_id FROM melis_core_log$scope) l ON l.log_user_id = u.usr_id
+                 ORDER BY name ASC",
+                []
+            ));
+            $users = array_map(fn ($r) => [
+                'id'   => (int) $r['usr_id'],
+                'name' => trim((string) $r['name']) !== '' ? (string) $r['name'] : (string) $r['usr_login'],
+            ], $userRows);
+
+            // Titres présents (log_title = clé de traduction) → libellé traduit pour l'affichage.
+            $translator = $this->getServiceManager()->get('translator');
+            $titleRows  = iterator_to_array($db->query("SELECT DISTINCT log_title FROM melis_core_log$scope", []));
+            $titles = [];
+            foreach ($titleRows as $r) {
+                $key = (string) $r['log_title'];
+                if ($key === '') { continue; }
+                $titles[] = ['key' => $key, 'label' => (string) $translator->translate($key)];
             }
+            usort($titles, fn ($a, $b) => strcasecmp($a['label'], $b['label']));
 
             return $this->jsonResponse([
                 'success' => true,
-                'data'    => ['isAdmin' => $isAdmin, 'types' => $types, 'users' => $users],
+                'data'    => ['isAdmin' => $isAdmin, 'types' => $types, 'users' => $users, 'titles' => $titles],
             ]);
         } catch (\Throwable $e) {
             return $this->errorResponse($e);

@@ -1,8 +1,8 @@
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useLocation } from 'react-router-dom'
 import {
   Activity, AlertTriangle, ArrowDown, ArrowUp, ArrowUpDown, CalendarDays, CheckCircle2,
-  Columns3, RotateCcw, Search, Tags, X, type LucideIcon,
+  Columns3, Loader2, RotateCcw, Search, Tags, X, type LucideIcon,
 } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
@@ -10,6 +10,7 @@ import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
 import { cn } from '@/lib/utils'
 import * as logApi from '@/lib/log-api'
+import { useKeysetList } from '@/lib/use-keyset-list'
 import { useTabs } from '@/components/tabs/tab-store'
 import { MelisClassicFrame, ViewModeToggle, type ViewMode } from '@/components/MelisClassicView'
 import { toolHasViewToggle } from '@/lib/module-registry'
@@ -25,11 +26,16 @@ const TOOL_KEY = 'meliscore_logs_tool'
 interface ListCache {
   items: logApi.LogItem[]
   total: number
+  cursor: string | null
+  hasMore: boolean
+  sortCol: string
+  sortDir: 'asc' | 'desc'
   stats: logApi.LogStats | null
   filters: logApi.LogFilters | null
   searchInput: string
   search: string
   type: number | null
+  title: string | null
   user: number | null
   startDate: string
   endDate: string
@@ -78,17 +84,6 @@ function loadCols(): ColDef[] {
 }
 function saveCols(cols: ColDef[]) { localStorage.setItem(COL_KEY, JSON.stringify(cols)) }
 
-function getCellSortValue(l: logApi.LogItem, id: string): string | number {
-  if (id === 'id')      return l.id
-  if (id === 'date')    return l.date
-  if (id === 'type')    return l.typeCode
-  if (id === 'title')   return l.title
-  if (id === 'message') return l.message
-  if (id === 'user')    return l.userName
-  if (id === 'itemId')  return l.itemId ?? ''
-  return ''
-}
-
 function fmtDate(s: string, locale: string): string {
   const d = new Date(s.replace(' ', 'T'))
   return isNaN(d.getTime()) ? s : d.toLocaleString(locale, {
@@ -114,15 +109,13 @@ export default function LogListPage() {
   const [iframeLoaded, setIframeLoaded] = useState(_cache?.iframeLoaded ?? false)
   const effectiveMode: ViewMode = showViewToggle ? mode : 'react'
 
-  const [items, setItems]   = useState<logApi.LogItem[]>(_cache?.items ?? [])
-  const [total, setTotal]   = useState(_cache?.total ?? 0)
-  const [loading, setLoading] = useState(false)
   const [stats, setStats]   = useState<logApi.LogStats | null>(_cache?.stats ?? null)
   const [filters, setFilters] = useState<logApi.LogFilters | null>(_cache?.filters ?? null)
 
   const [searchInput, setSearchInput] = useState(_cache?.searchInput ?? '')
   const [search, setSearch] = useState(_cache?.search ?? '')
   const [type, setType]     = useState<number | null>(_cache?.type ?? null)
+  const [title, setTitle]   = useState<string | null>(_cache?.title ?? null)
   const [user, setUser]     = useState<number | null>(_cache?.user ?? null)
   const [startDate, setStartDate] = useState(_cache?.startDate ?? '')
   const [endDate, setEndDate]     = useState(_cache?.endDate ?? '')
@@ -134,11 +127,30 @@ export default function LogListPage() {
   const [showColMgr, setShowColMgr] = useState(false)
   const colMgrRef = useRef<HTMLDivElement>(null)
 
-  const [sortCol, setSortCol] = useState<string | null>(null)
-  const [sortDir, setSortDir] = useState<'asc' | 'desc'>('asc')
+  // Scroll infini + tri server-side + keyset (backend en SQL brut via le trait).
+  const {
+    items, total, loading, hasMore, sentinelRef,
+    sortCol, sortDir, toggleSort, reload, snapshot,
+  } = useKeysetList<logApi.LogItem>({
+    fetcher: (a) => logApi.fetchLogs({
+      ...a,
+      sort: a.sort as logApi.LogSortKey,
+      search,
+      type, title, user,
+      startDate: startDate ? `${startDate} 00:00:00` : undefined,
+      endDate: endDate ? `${endDate} 23:59:59` : undefined,
+    }),
+    deps: [search, type, title, user, startDate, endDate, refreshKey],
+    defaultSort: 'date',
+    defaultDir: 'desc',
+    initial: _cache
+      ? { items: _cache.items, total: _cache.total, cursor: _cache.cursor, hasMore: _cache.hasMore, sortCol: _cache.sortCol, sortDir: _cache.sortDir }
+      : undefined,
+    skipInitial: !!(_cache && _cache.items.length),
+  })
 
-  const cacheRef = useRef({ items, total, stats, filters, searchInput, search, type, user, startDate, endDate, mode, iframeLoaded })
-  useEffect(() => { cacheRef.current = { items, total, stats, filters, searchInput, search, type, user, startDate, endDate, mode, iframeLoaded } })
+  const cacheRef = useRef<ListCache>({ ...snapshot(), stats, filters, searchInput, search, type, title, user, startDate, endDate, mode, iframeLoaded })
+  useEffect(() => { cacheRef.current = { ...snapshot(), stats, filters, searchInput, search, type, title, user, startDate, endDate, mode, iframeLoaded } })
   useEffect(() => () => { _cache = cacheRef.current }, [])
 
   useEffect(() => {
@@ -155,20 +167,6 @@ export default function LogListPage() {
     logApi.fetchLogFilters().then(setFilters).catch(() => null)
   }, [])
 
-  // Filtres serveur (type / user / dates / recherche) → refetch.
-  useEffect(() => {
-    setLoading(true)
-    logApi.fetchLogs({
-      limit: 9999, search,
-      type, user,
-      startDate: startDate ? `${startDate} 00:00:00` : undefined,
-      endDate: endDate ? `${endDate} 23:59:59` : undefined,
-    })
-      .then(res => { setItems(res.items); setTotal(res.total) })
-      .catch(() => null)
-      .finally(() => setLoading(false))
-  }, [search, type, user, startDate, endDate, refreshKey])
-
   useEffect(() => {
     if (!showColMgr) return
     const h = (e: MouseEvent) => { if (colMgrRef.current && !colMgrRef.current.contains(e.target as Node)) setShowColMgr(false) }
@@ -182,47 +180,27 @@ export default function LogListPage() {
   function handleRefresh() {
     _cache = null
     setRefreshing(true)
-    setRefreshKey(k => k + 1)
+    reload()
     logApi.fetchLogStats().then(setStats).catch(() => null)
     setTimeout(() => setRefreshing(false), 600)
   }
 
-  // Réinitialise recherche + filtres (type / utilisateur / dates) + tri, puis recharge.
-  // setItems([]) est obligatoire : sans ça les lignes déjà affichées restent à l'écran
-  // et le clic paraît sans effet.
+  // Réinitialise recherche + filtres (type / utilisateur / dates), puis recharge.
+  // Changer les filtres met à jour `deps` → le hook relance un chargement frais.
   function resetFilters() {
     _cache = null
     setSearchInput('')
     setSearch('')
     setType(null)
+    setTitle(null)
     setUser(null)
     setStartDate('')
     setEndDate('')
-    setSortCol(null)
-    setSortDir('asc')
-    setItems([])
     setRefreshing(true)
     setRefreshKey(k => k + 1)
     logApi.fetchLogStats().then(setStats).catch(() => null)
     setTimeout(() => setRefreshing(false), 600)
   }
-
-  function toggleSort(id: string) {
-    if (sortCol === id) setSortDir(d => d === 'asc' ? 'desc' : 'asc')
-    else { setSortCol(id); setSortDir('asc') }
-  }
-
-  const sortedItems = useMemo(() => {
-    // Tri par défaut : du plus récent (la liste arrive déjà en date desc).
-    if (!sortCol) return items
-    return [...items].sort((a, b) => {
-      const va = getCellSortValue(a, sortCol), vb = getCellSortValue(b, sortCol)
-      const na = typeof va === 'number' ? va : parseFloat(String(va))
-      const nb = typeof vb === 'number' ? vb : parseFloat(String(vb))
-      const cmp = !isNaN(na) && !isNaN(nb) ? na - nb : String(va).localeCompare(String(vb), undefined, { sensitivity: 'base' })
-      return sortDir === 'asc' ? cmp : -cmp
-    })
-  }, [items, sortCol, sortDir])
 
   return (
     <div className={cn('flex flex-col gap-6 p-6', effectiveMode === 'iframe' ? 'h-full' : 'flex-1')}>
@@ -275,7 +253,14 @@ export default function LogListPage() {
             {filters?.types.map(ty => <option key={ty.id} value={ty.id}>{ty.code}</option>)}
           </select>
 
-          {filters?.isAdmin && (
+          {filters && filters.titles.length > 0 && (
+            <select className={cn(selectCls, 'max-w-[200px]')} value={title ?? ''} onChange={e => setTitle(e.target.value || null)}>
+              <option value="">{t('logs.filter.title_all')}</option>
+              {filters.titles.map(ti => <option key={ti.key} value={ti.key}>{ti.label}</option>)}
+            </select>
+          )}
+
+          {filters && filters.users.length > 0 && (
             <select className={selectCls} value={user ?? ''} onChange={e => setUser(e.target.value ? Number(e.target.value) : null)}>
               <option value="">{t('logs.filter.user_all')}</option>
               {filters.users.map(u => <option key={u.id} value={u.id}>{u.name}</option>)}
@@ -300,7 +285,7 @@ export default function LogListPage() {
         </div>
 
         {/* Table */}
-        <div className="rounded-xl border border-border bg-card shadow-sm">
+        <div className="overflow-x-auto rounded-xl border border-border bg-card shadow-sm">
           <table className="w-full min-w-[720px] text-sm">
             <thead className="sticky top-0 border-b border-border bg-muted/60 text-xs uppercase tracking-wide text-muted-foreground">
               <tr>
@@ -322,23 +307,24 @@ export default function LogListPage() {
             <tbody className="divide-y divide-border">
               {items.length === 0 && !loading ? (
                 <tr><td colSpan={visibleCols(cols).length} className="px-4 py-10 text-center text-sm text-muted-foreground">{t('logs.empty')}</td></tr>
-              ) : sortedItems.map(l => (
+              ) : items.map(l => (
                 <tr key={l.id} className="group transition-colors hover:bg-muted/40">
                   {visibleCols(cols).map(({ id }) => (
-                    <td key={id} className={cn('px-4 py-2.5',
+                    <td key={id} className={cn('px-4 py-2.5 align-top',
                       (id === 'id' || id === 'itemId') && 'tabular-nums text-muted-foreground',
                       (id === 'date' || id === 'user') && 'whitespace-nowrap',
-                      id === 'message' && 'text-muted-foreground',
+                      id === 'message' && 'text-muted-foreground max-w-[440px] break-words',
+                      id === 'title' && 'max-w-[300px] break-words',
                       id === 'date' && 'text-muted-foreground')}>
                       {id === 'id' && l.id}
                       {id === 'date' && fmtDate(l.date, dateLocale)}
                       {id === 'type' && <code className="rounded bg-muted px-1.5 py-0.5 text-xs font-medium">{l.typeCode}</code>}
                       {id === 'title' && (
-                        <div className="flex items-center gap-2">
+                        <div className="flex items-start gap-2 min-w-0">
                           {l.status
-                            ? <CheckCircle2 className="size-3.5 shrink-0 text-emerald-500" />
-                            : <AlertTriangle className="size-3.5 shrink-0 text-amber-500" />}
-                          <span className="font-medium">{l.title}</span>
+                            ? <CheckCircle2 className="mt-0.5 size-3.5 shrink-0 text-emerald-500" />
+                            : <AlertTriangle className="mt-0.5 size-3.5 shrink-0 text-amber-500" />}
+                          <span className="font-medium break-words">{l.title}</span>
                         </div>
                       )}
                       {id === 'message' && l.message}
@@ -350,9 +336,17 @@ export default function LogListPage() {
               ))}
             </tbody>
           </table>
-          <div className="px-4 py-3 text-center text-xs text-muted-foreground">
-            {loading ? t('common.loading') : t('logs.count', { n: total })}
-          </div>
+
+          {/* Scroll infini : sentinel + spinner + pied de compteur (fin de liste). */}
+          <div ref={sentinelRef} className="h-1" />
+          {loading && (
+            <div className="flex items-center justify-center gap-2 py-4 text-xs text-muted-foreground">
+              <Loader2 className="size-3.5 animate-spin" />{t('common.loading')}
+            </div>
+          )}
+          {!hasMore && items.length > 0 && (
+            <div className="py-4 text-center text-xs text-muted-foreground">{t('logs.count', { n: total })}</div>
+          )}
         </div>
         </>)}
       </div>

@@ -27,6 +27,7 @@ use MelisCore\Controller\MelisAbstractActionController;
 class MelisReactApiAnnouncementController extends MelisAbstractActionController
 {
     use CapabilityGuardTrait;
+    use MelisReactKeysetListTrait;
 
     /** melisKey de l'outil — utilisé par le garde de droits (cf. denyUnlessAccess). */
     private const MELIS_KEY = 'melis_core_announcement_tool';
@@ -39,43 +40,54 @@ class MelisReactApiAnnouncementController extends MelisAbstractActionController
         if ($denyCap = $this->denyUnlessCan('list')) { return $denyCap; }
 
         try {
-            $page   = max(1, (int) $this->params()->fromQuery('page', 1));
             $limit  = min(9999, max(1, (int) $this->params()->fromQuery('limit', 25)));
             $search = trim((string) ($this->params()->fromQuery('search', '') ?? ''));
             $status = $this->params()->fromQuery('status', '');
-            $offset = ($page - 1) * $limit;
 
             $db = $this->getServiceManager()->get('Laminas\Db\Adapter\AdapterInterface');
 
-            $where = [];
-            $params = [];
+            // Filtres (communs au COUNT et à la requête data).
+            $filterWhere = [];
+            $filterParams = [];
             if ($search !== '') {
-                $like    = '%' . $search . '%';
-                $where[] = '(a.mca_title LIKE ? OR a.mca_text LIKE ? OR a.mca_id LIKE ?)';
-                $params  = array_merge($params, [$like, $like, $like]);
+                $like          = '%' . $search . '%';
+                $filterWhere[] = '(a.mca_title LIKE ? OR a.mca_text LIKE ? OR a.mca_id LIKE ?)';
+                $filterParams  = array_merge($filterParams, [$like, $like, $like]);
             }
             if ($status === '0' || $status === '1') {
-                $where[] = 'a.mca_status = ?';
-                $params[] = (int) $status;
+                $filterWhere[]  = 'a.mca_status = ?';
+                $filterParams[] = (int) $status;
             }
-            $whereClause = $where ? 'WHERE ' . implode(' AND ', $where) : '';
 
-            $countRow = iterator_to_array(
-                $db->query("SELECT COUNT(*) AS total FROM melis_core_announcement a $whereClause", $params)
-            );
-            $total = (int) ($countRow[0]['total'] ?? 0);
+            // Tri server-side : whitelist clé → expression SQL NON-NULL (COALESCE) pour que
+            // la comparaison keyset reste fiable sur les colonnes nullables (mca_date).
+            // `user` trie sur la colonne brute présente dans le SELECT (mca_user_id).
+            $sortMap = [
+                'id'     => 'a.mca_id',
+                'status' => 'a.mca_status',
+                'title'  => "COALESCE(a.mca_title,'')",
+                'text'   => "COALESCE(a.mca_text,'')",
+                'date'   => "COALESCE(a.mca_date,'1000-01-01 00:00:00')",
+                'user'   => 'a.mca_user_id',
+            ];
 
-            $rows = $db->query(
-                "SELECT a.mca_id, a.mca_user_id, a.mca_status, a.mca_title, a.mca_text, a.mca_date,
+            [$rows, $total, $nextCursor] = $this->keysetList([
+                'db'           => $db,
+                'from'         => 'melis_core_announcement a',
+                'joins'        => 'LEFT JOIN melis_core_user u ON u.usr_id = a.mca_user_id',
+                'selectCols'   => "a.mca_id, a.mca_user_id, a.mca_status, a.mca_title, a.mca_text, a.mca_date,
                         TRIM(CONCAT(COALESCE(u.usr_firstname,''),' ',COALESCE(u.usr_lastname,''))) AS user_name,
-                        u.usr_login
-                 FROM melis_core_announcement a
-                 LEFT JOIN melis_core_user u ON u.usr_id = a.mca_user_id
-                 $whereClause
-                 ORDER BY a.mca_date DESC, a.mca_id DESC
-                 LIMIT ? OFFSET ?",
-                array_merge($params, [$limit, $offset])
-            );
+                        u.usr_login",
+                'filterWhere'  => $filterWhere,
+                'filterParams' => $filterParams,
+                'sortMap'      => $sortMap,
+                'idCol'        => 'a.mca_id',
+                'idAlias'      => 'mca_id',
+                'sortKey'      => (string) $this->params()->fromQuery('sort', 'date'),
+                'dir'          => strtolower((string) $this->params()->fromQuery('dir', 'desc')) === 'asc' ? 'asc' : 'desc',
+                'after'        => (string) ($this->params()->fromQuery('after', '') ?? ''),
+                'limit'        => $limit,
+            ]);
 
             $items = [];
             foreach ($rows as $row) {
@@ -84,7 +96,7 @@ class MelisReactApiAnnouncementController extends MelisAbstractActionController
 
             return $this->jsonResponse([
                 'success' => true,
-                'data'    => ['items' => $items, 'total' => $total, 'page' => $page, 'limit' => $limit],
+                'data'    => ['items' => $items, 'total' => $total, 'nextCursor' => $nextCursor, 'limit' => $limit],
             ]);
         } catch (\Throwable $e) {
             return $this->errorResponse($e);

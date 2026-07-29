@@ -1,7 +1,7 @@
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import {
-  ArrowDown, ArrowUp, ArrowUpDown, CheckCircle2, Circle, Columns3, FileDown, Megaphone,
+  ArrowDown, ArrowUp, ArrowUpDown, CheckCircle2, Circle, Columns3, FileDown, Loader2, Megaphone,
   Pencil, Plus, RotateCcw, Search, Trash2, X, type LucideIcon,
 } from 'lucide-react'
 
@@ -10,6 +10,7 @@ import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
 import { cn } from '@/lib/utils'
 import * as annApi from '@/lib/announcement-api'
+import { useKeysetList } from '@/lib/use-keyset-list'
 import { useTabs } from '@/components/tabs/tab-store'
 import { MelisClassicFrame, ViewModeToggle, type ViewMode } from '@/components/MelisClassicView'
 import { toolHasViewToggle } from '@/lib/module-registry'
@@ -26,6 +27,10 @@ const TOOL_KEY = 'melis_core_announcement_tool'
 interface ListCache {
   items: annApi.AnnouncementItem[]
   total: number
+  cursor: string | null
+  hasMore: boolean
+  sortCol: string
+  sortDir: 'asc' | 'desc'
   search: string
   searchInput: string
   status: '' | '0' | '1'
@@ -94,16 +99,6 @@ function loadCols(): ColDef[] {
 }
 function saveCols(cols: ColDef[]) { localStorage.setItem(COL_KEY, JSON.stringify(cols)) }
 
-function getCellSortValue(a: annApi.AnnouncementItem, id: string): string | number {
-  if (id === 'id')     return a.id
-  if (id === 'status') return a.status ? 1 : 0
-  if (id === 'title')  return a.title
-  if (id === 'text')   return a.text
-  if (id === 'date')   return a.date
-  if (id === 'user')   return a.userName
-  return ''
-}
-
 function fmtDate(s: string, locale: string): string {
   const d = new Date(s.replace(' ', 'T'))
   return isNaN(d.getTime()) ? s : d.toLocaleString(locale, {
@@ -152,9 +147,6 @@ export default function AnnouncementListPage() {
   const [iframeLoaded, setIframeLoaded] = useState(_cache?.iframeLoaded ?? false)
   const effectiveMode: ViewMode = showViewToggle ? mode : 'react'
 
-  const [items, setItems]   = useState<annApi.AnnouncementItem[]>(_cache?.items ?? [])
-  const [total, setTotal]   = useState(_cache?.total ?? 0)
-  const [loading, setLoading] = useState(false)
   const [stats, setStats]   = useState<annApi.AnnouncementStats | null>(_cache?.stats ?? null)
 
   const [search, setSearch]           = useState(_cache?.search ?? '')
@@ -169,13 +161,33 @@ export default function AnnouncementListPage() {
   const [showExport, setShowExport] = useState(false)
   const colMgrRef = useRef<HTMLDivElement>(null)
 
-  const [sortCol, setSortCol] = useState<string | null>(null)
-  const [sortDir, setSortDir] = useState<'asc' | 'desc'>('asc')
-
   const [toDelete, setToDelete] = useState<annApi.AnnouncementItem | null>(null)
 
-  const cacheRef = useRef({ items, total, search, searchInput, status, stats, mode, iframeLoaded })
-  useEffect(() => { cacheRef.current = { items, total, search, searchInput, status, stats, mode, iframeLoaded } })
+  // Scroll infini + tri server-side + pagination keyset.
+  const {
+    items, total, loading, hasMore, sentinelRef,
+    sortCol, sortDir, toggleSort, reload, removeLocal, snapshot,
+  } = useKeysetList<annApi.AnnouncementItem>({
+    fetcher: (a) => annApi.fetchAnnouncements({
+      ...a, sort: a.sort as annApi.AnnouncementSortKey, search, status,
+    }),
+    deps: [search, status, refreshKey],
+    defaultSort: 'date',
+    defaultDir: 'desc',
+    initial: _cache
+      ? { items: _cache.items, total: _cache.total, cursor: _cache.cursor,
+          hasMore: _cache.hasMore, sortCol: _cache.sortCol, sortDir: _cache.sortDir }
+      : undefined,
+    skipInitial: !!(_cache && _cache.items.length),
+  })
+
+  const cacheRef = useRef<ListCache>({
+    items, total, cursor: null, hasMore, sortCol, sortDir,
+    search, searchInput, status, stats, mode, iframeLoaded,
+  })
+  useEffect(() => {
+    cacheRef.current = { ...snapshot(), search, searchInput, status, stats, mode, iframeLoaded }
+  })
   useEffect(() => () => { _cache = cacheRef.current }, [])
 
   useEffect(() => {
@@ -192,14 +204,6 @@ export default function AnnouncementListPage() {
     if (_cache?.stats) return
     annApi.fetchAnnouncementStats().then(setStats).catch(() => null)
   }, [])
-
-  useEffect(() => {
-    setLoading(true)
-    annApi.fetchAnnouncements({ limit: 9999, search, status })
-      .then(res => { setItems(res.items); setTotal(res.total) })
-      .catch(() => null)
-      .finally(() => setLoading(false))
-  }, [search, status, refreshKey])
 
   useEffect(() => {
     if (!showColMgr) return
@@ -219,46 +223,26 @@ export default function AnnouncementListPage() {
     setTimeout(() => setRefreshing(false), 600)
   }
 
-  // Réinitialise recherche + filtre statut + tri, puis recharge. setItems([]) est obligatoire :
-  // sans ça les lignes déjà affichées restent à l'écran et le clic paraît sans effet.
+  // Réinitialise recherche + filtre statut, puis recharge (le bump de refreshKey relance
+  // le hook depuis le début ; le tri revient au défaut via reload → sort par défaut).
   function resetFilters() {
     _cache = null
     setSearchInput('')
     setSearch('')
     setStatus('')
-    setSortCol(null)
-    setSortDir('asc')
-    setItems([])
     setRefreshing(true)
     setRefreshKey(k => k + 1)
     annApi.fetchAnnouncementStats().then(setStats).catch(() => null)
     setTimeout(() => setRefreshing(false), 600)
   }
 
-  function toggleSort(id: string) {
-    if (sortCol === id) setSortDir(d => d === 'asc' ? 'desc' : 'asc')
-    else { setSortCol(id); setSortDir('asc') }
-  }
-
-  const sortedItems = useMemo(() => {
-    if (!sortCol) return items
-    return [...items].sort((a, b) => {
-      const va = getCellSortValue(a, sortCol), vb = getCellSortValue(b, sortCol)
-      const na = typeof va === 'number' ? va : parseFloat(String(va))
-      const nb = typeof vb === 'number' ? vb : parseFloat(String(vb))
-      const cmp = !isNaN(na) && !isNaN(nb) ? na - nb : String(va).localeCompare(String(vb), undefined, { sensitivity: 'base' })
-      return sortDir === 'asc' ? cmp : -cmp
-    })
-  }, [items, sortCol, sortDir])
-
   async function confirmDelete() {
     if (!toDelete) return
     try {
       await annApi.deleteAnnouncement(toDelete.id)
-      setItems(prev => prev.filter(a => a.id !== toDelete.id))
-      setTotal(t => t - 1)
+      removeLocal(a => a.id === toDelete.id)
       setToDelete(null)
-      setRefreshKey(k => k + 1)
+      reload()
       annApi.fetchAnnouncementStats().then(setStats).catch(() => null)
     } catch { setToDelete(null) }
   }
@@ -372,7 +356,7 @@ export default function AnnouncementListPage() {
             <tbody className="divide-y divide-border">
               {items.length === 0 && !loading ? (
                 <tr><td colSpan={visibleCols(cols).length + 1} className="px-4 py-10 text-center text-sm text-muted-foreground">{t('ann.empty')}</td></tr>
-              ) : sortedItems.map(a => (
+              ) : items.map(a => (
                 <tr key={a.id} className="group transition-colors hover:bg-muted/40">
                   {visibleCols(cols).map(({ id }) => (
                     <td key={id} className={cn('px-4 py-2.5',
@@ -410,9 +394,16 @@ export default function AnnouncementListPage() {
               ))}
             </tbody>
           </table>
-          <div className="px-4 py-3 text-center text-xs text-muted-foreground">
-            {loading ? t('common.loading') : t('ann.count', { n: total })}
-          </div>
+
+          <div ref={sentinelRef} className="h-1" />
+          {loading && (
+            <div className="flex items-center justify-center gap-2 py-4 text-xs text-muted-foreground">
+              <Loader2 className="size-3.5 animate-spin" />{t('common.loading')}
+            </div>
+          )}
+          {!hasMore && items.length > 0 && (
+            <div className="py-4 text-center text-xs text-muted-foreground">{t('ann.count', { n: total })}</div>
+          )}
         </div>
         </>)}
       </div>
@@ -422,7 +413,19 @@ export default function AnnouncementListPage() {
         <ExportModal
           cols={cols}
           labelFor={(id) => t(COL_LABEL[id])}
-          fetchAll={async () => (await annApi.fetchAnnouncements({ limit: 9999, search, status })).items}
+          fetchAll={async () => {
+            // Export complet : boucle keyset (100/lot) jusqu'à nextCursor === null.
+            const all: annApi.AnnouncementItem[] = []
+            let after: string | null = null
+            do {
+              const res: annApi.AnnouncementListResult = await annApi.fetchAnnouncements({
+                limit: 100, search, status, sort: sortCol as annApi.AnnouncementSortKey, dir: sortDir, after,
+              })
+              all.push(...res.items)
+              after = res.nextCursor
+            } while (after !== null)
+            return all
+          }}
           getCell={(a, id) => getCellExport(a, id, t, dateLocale)}
           filename={t('ann.export.filename')}
           sheetName={t('ann.title')}

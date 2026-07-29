@@ -1,15 +1,18 @@
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 
 // ─── Module-level cache — survit au démontage du composant (navigation) ────────
 
 interface ListCache {
   items: userApi.UserItem[]
   total: number
-  page: number
+  cursor: string | null
+  hasMore: boolean
   search: string
   searchInput: string
   statusFilter: '' | '0' | '1'
   roleFilter: number | undefined
+  sortCol: userApi.UserSortKey
+  sortDir: 'asc' | 'desc'
   stats: userApi.UserStats | null
   roles: userApi.UserRole[]
   mode: ViewMode
@@ -279,12 +282,12 @@ function ExportModal({ cols, search, status, total, onClose }: {
     setExporting(true)
     try {
       const all: userApi.UserItem[] = []
-      let p = 1
+      let after: string | undefined = undefined
       while (true) {
-        const res = await userApi.fetchUsers({ page: p, limit: 100, search, status, roleId: undefined })
+        const res = await userApi.fetchUsers({ limit: 100, search, status, after })
         all.push(...res.items)
-        if (all.length >= res.total) break
-        p++
+        if (!res.nextCursor) break
+        after = res.nextCursor
       }
       const header = included.map(c => t(COL_LABEL[c.id]))
       const rows = all.map(u => included.map(c => getCellExport(u, c.id, t)))
@@ -393,7 +396,8 @@ export default function UserListPage() {
 
   const [items, setItems]     = useState<userApi.UserItem[]>(_cache?.items ?? [])
   const [total, setTotal]     = useState(_cache?.total ?? 0)
-  const [page, setPage]       = useState(_cache?.page ?? 1)
+  const [hasMore, setHasMore] = useState(_cache?.hasMore ?? false)
+  const cursorRef = useRef<string | null>(_cache?.cursor ?? null)
   const [loading, setLoading] = useState(false)
   const [stats, setStats]     = useState<userApi.UserStats | null>(_cache?.stats ?? null)
   const [roles, setRoles]     = useState<userApi.UserRole[]>(_cache?.roles ?? [])
@@ -410,7 +414,7 @@ export default function UserListPage() {
     _cache = null
     setStats(null)
     setItems([])
-    setPage(1)
+    cursorRef.current = null
     setRefreshing(true)
     setRefreshKey(k => k + 1)
     userApi.fetchUserStats().then(setStats).catch(() => null)
@@ -425,10 +429,10 @@ export default function UserListPage() {
     setSearch('')
     setStatusFilter('')
     setRoleFilter(undefined)
-    setSortCol(null)
-    setSortDir('asc')
+    setSortCol('id')
+    setSortDir('desc')
     setItems([])
-    setPage(1)
+    cursorRef.current = null
     setRefreshing(true)
     setRefreshKey(k => k + 1)
     userApi.fetchUserStats().then(setStats).catch(() => null)
@@ -448,43 +452,32 @@ export default function UserListPage() {
   const [showExport, setShowExport] = useState(false)
   const colMgrRef = useRef<HTMLDivElement>(null)
 
-  const [sortCol, setSortCol] = useState<string | null>(null)
-  const [sortDir, setSortDir] = useState<'asc' | 'desc'>('asc')
+  const [sortCol, setSortCol] = useState<userApi.UserSortKey>(_cache?.sortCol ?? 'id')
+  const [sortDir, setSortDir] = useState<'asc' | 'desc'>(_cache?.sortDir ?? 'desc')
 
-  function toggleSort(id: string) {
+  // Tri désormais server-side : changer de colonne/sens relance un chargement frais
+  // (via l'effet ci-dessous) — plus aucun tri client sur le sous-ensemble déjà chargé.
+  function toggleSort(id: userApi.UserSortKey) {
     if (sortCol === id) setSortDir(d => d === 'asc' ? 'desc' : 'asc')
-    else { setSortCol(id); setSortDir('asc') }
+    else { setSortCol(id); setSortDir(id === 'id' ? 'desc' : 'asc') }
   }
-
-  const sortedItems = useMemo(() => {
-    if (!sortCol) return items
-    return [...items].sort((a, b) => {
-      const va = getCellSort(a, sortCol)
-      const vb = getCellSort(b, sortCol)
-      const na = typeof va === 'number' ? va : parseFloat(String(va))
-      const nb = typeof vb === 'number' ? vb : parseFloat(String(vb))
-      const cmp = !isNaN(na) && !isNaN(nb) ? na - nb : String(va).localeCompare(String(vb), undefined, { sensitivity: 'base' })
-      return sortDir === 'asc' ? cmp : -cmp
-    })
-  }, [items, sortCol, sortDir])
 
   const LIMIT = 25
   const sentinelRef = useRef<HTMLDivElement>(null)
-  const hasMore = items.length < total
 
   useEffect(() => {
     if (location.pathname === base) {
       openTab({ id: base, label: t('users.title'), path: base })
       if (userApi.consumeUsersListStale()) {
-        setPage(1)
+        cursorRef.current = null
         setRefreshKey(k => k + 1)
         userApi.fetchUserStats().then(setStats).catch(() => null)
       }
     }
   }, [location.pathname, openTab, base, t])
 
-  const cacheRef = useRef({ items, total, page, search, searchInput, statusFilter, roleFilter, stats, roles, mode, iframeLoaded })
-  useEffect(() => { cacheRef.current = { items, total, page, search, searchInput, statusFilter, roleFilter, stats, roles, mode, iframeLoaded } })
+  const cacheRef = useRef<ListCache>({ items, total, cursor: cursorRef.current, hasMore, search, searchInput, statusFilter, roleFilter, sortCol, sortDir, stats, roles, mode, iframeLoaded })
+  useEffect(() => { cacheRef.current = { items, total, cursor: cursorRef.current, hasMore, search, searchInput, statusFilter, roleFilter, sortCol, sortDir, stats, roles, mode, iframeLoaded } })
   useEffect(() => () => { _cache = cacheRef.current }, [])
 
   useEffect(() => {
@@ -497,30 +490,55 @@ export default function UserListPage() {
     userApi.fetchRoles().then(setRoles).catch(() => null)
   }, [rolesModuleActive])
 
-  useEffect(() => {
+  // Chargement keyset : reset=true → premier lot (remplace) ; reset=false → lot suivant
+  // (append) via le curseur. Un req-id invalide les réponses périmées (filtre/tri changé
+  // en cours de route) ; loadingRef sérialise les « load more ».
+  const loadingRef = useRef(false)
+  const reqIdRef = useRef(0)
+  const runLoad = useCallback(async (reset: boolean) => {
+    if (!reset && loadingRef.current) return
+    const myReq = ++reqIdRef.current
+    loadingRef.current = true
     setLoading(true)
-    userApi
-      .fetchUsers({ page, limit: LIMIT, search, status: statusFilter, roleId: roleFilter })
-      .then((res) => {
-        setItems((prev) => (page === 1 ? res.items : [...prev, ...res.items]))
-        setTotal(res.total)
-      })
-      .catch(() => null)
-      .finally(() => setLoading(false))
-  }, [page, search, statusFilter, roleFilter, refreshKey])
+    const after = reset ? undefined : (cursorRef.current ?? undefined)
+    try {
+      const res = await userApi.fetchUsers({ limit: LIMIT, search, status: statusFilter, roleId: roleFilter, sort: sortCol, dir: sortDir, after })
+      if (myReq !== reqIdRef.current) return
+      cursorRef.current = res.nextCursor
+      setHasMore(res.nextCursor !== null)
+      setTotal(res.total)
+      setItems((prev) => (reset ? res.items : [...prev, ...res.items]))
+    } catch { /* silent */ }
+    finally {
+      if (myReq === reqIdRef.current) { setLoading(false); loadingRef.current = false }
+    }
+  }, [search, statusFilter, roleFilter, sortCol, sortDir])
 
-  function applySearch() { setSearch(searchInput.trim()); setPage(1); setItems([]) }
-  function clearSearch() { setSearchInput(''); setSearch(''); setPage(1); setItems([]) }
+  // Chargement frais quand filtres/tri changent (ou refresh). Au 1er montage avec cache
+  // restauré (items présents), on saute le refetch pour conserver le scroll accumulé.
+  const didInitRef = useRef(false)
+  useEffect(() => {
+    if (!didInitRef.current) {
+      didInitRef.current = true
+      if (_cache && _cache.items.length > 0) return
+    }
+    runLoad(true)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [search, statusFilter, roleFilter, sortCol, sortDir, refreshKey])
 
+  function applySearch() { setSearch(searchInput.trim()); setItems([]) }
+  function clearSearch() { setSearchInput(''); setSearch(''); setItems([]) }
+
+  // Scroll infini : sentinel visible → charge le lot suivant (runLoad gère l'anti-stack).
   useEffect(() => {
     if (!sentinelRef.current || !hasMore) return
     const obs = new IntersectionObserver(
-      ([entry]) => { if (entry.isIntersecting && !loading) setPage((p) => p + 1) },
+      ([entry]) => { if (entry.isIntersecting) runLoad(false) },
       { rootMargin: '120px' },
     )
     obs.observe(sentinelRef.current)
     return () => obs.disconnect()
-  }, [hasMore, loading])
+  }, [hasMore, runLoad])
 
   function handleDelete(user: userApi.UserItem) { setToDelete(user) }
 
@@ -532,7 +550,7 @@ export default function UserListPage() {
       setItems((prev) => prev.filter((u) => u.id !== toDelete.id))
       setTotal((tt) => tt - 1)
       setToDelete(null)
-      setPage(1)
+      cursorRef.current = null
       setRefreshKey((k) => k + 1)
       userApi.fetchUserStats().then(setStats).catch(() => null)
     } catch {
@@ -613,7 +631,7 @@ export default function UserListPage() {
               { val: '0' as const, label: t('users.filter.inactive'),dot: 'bg-red-500' },
             ]).map(({ val, label, dot }) => (
               <button key={val} type="button"
-                onClick={() => { setStatusFilter(val); setPage(1); setItems([]) }}
+                onClick={() => { setStatusFilter(val); setItems([]) }}
                 className={cn('flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-medium transition-colors',
                   statusFilter === val ? 'bg-card shadow-sm text-foreground' : 'text-muted-foreground hover:text-foreground')}>
                 {dot && <span className={cn('size-1.5 rounded-full', dot)} />}
@@ -624,7 +642,7 @@ export default function UserListPage() {
 
           {rolesModuleActive && roles.length > 0 && (
             <select value={roleFilter ?? ''}
-              onChange={(e) => { setRoleFilter(e.target.value ? parseInt(e.target.value) : undefined); setPage(1); setItems([]) }}
+              onChange={(e) => { setRoleFilter(e.target.value ? parseInt(e.target.value) : undefined); setItems([]) }}
               className="h-9 rounded-md border border-input bg-background px-3 text-sm focus:outline-none focus:ring-1 focus:ring-ring">
               <option value="">{t('users.filter.all_roles')}</option>
               {roles.map((r) => <option key={r.id} value={r.id}>{r.name}</option>)}
@@ -678,7 +696,7 @@ export default function UserListPage() {
               {items.length === 0 && !loading ? (
                 <tr><td colSpan={9} className="px-4 py-10 text-center text-sm text-muted-foreground">{t('users.empty')}</td></tr>
               ) : (
-                sortedItems.map((user) => (
+                items.map((user) => (
                   <tr key={user.id} className="group transition-colors hover:bg-muted/40">
                     {cols.find(c => c.id === 'id')?.visible && <td className="px-4 py-2.5 tabular-nums text-muted-foreground">{user.id}</td>}
                     {cols.find(c => c.id === 'login')?.visible && <td className="px-4 py-2.5">

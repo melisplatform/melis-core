@@ -65,9 +65,43 @@ class MelisReactApiEmailsController extends MelisAbstractActionController
             }
 
             $emails = array_values($map);
-            usort($emails, static fn($a, $b) => strcasecmp($a['name'], $b['name']));
 
-            return $this->jsonResponse(['success' => true, 'data' => ['emails' => $emails, 'langs' => $this->listCoreLangs()]]);
+            // Filtre texte optionnel (server-side) : nom / codename / email expéditeur.
+            $search = trim((string) $this->params()->fromQuery('search', ''));
+            if ($search !== '') {
+                $needle = mb_strtolower($search);
+                $emails = array_values(array_filter($emails, static function (array $e) use ($needle): bool {
+                    return mb_strpos(mb_strtolower($e['name']), $needle) !== false
+                        || mb_strpos(mb_strtolower($e['codename']), $needle) !== false
+                        || mb_strpos(mb_strtolower($e['fromEmail']), $needle) !== false;
+                }));
+            }
+
+            // Tri server-side : whitelist des colonnes triables de la page. La liste étant courte
+            // (config + petite table), on trie tout d'un coup — pas de keyset SQL ici.
+            $sortable = ['name', 'codename', 'fromName', 'fromEmail', 'source'];
+            $sort = (string) $this->params()->fromQuery('sort', 'name');
+            if (!in_array($sort, $sortable, true)) { $sort = 'name'; }
+            $dir  = strtolower((string) $this->params()->fromQuery('dir', 'asc')) === 'desc' ? 'desc' : 'asc';
+
+            usort($emails, static function (array $a, array $b) use ($sort, $dir): int {
+                if ($sort === 'source') {
+                    // DB avant Config (ou l'inverse selon dir) ; départage stable par nom.
+                    $cmp = ((int) $a['inDb']) <=> ((int) $b['inDb']);
+                    if ($cmp === 0) { $cmp = strcasecmp((string) $a['name'], (string) $b['name']); }
+                } else {
+                    $cmp = strcasecmp((string) ($a[$sort] ?? ''), (string) ($b[$sort] ?? ''));
+                }
+                return $dir === 'desc' ? -$cmp : $cmp;
+            });
+
+            // Réponse au format keyset (pas de scroll : liste courte, un seul lot).
+            return $this->jsonResponse(['success' => true, 'data' => [
+                'items'      => $emails,
+                'total'      => count($emails),
+                'nextCursor' => null,
+                'langs'      => $this->listCoreLangs(),
+            ]]);
         } catch (\Throwable $e) { return $this->errorResponse($e); }
     }
 

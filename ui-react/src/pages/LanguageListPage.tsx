@@ -1,7 +1,7 @@
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import {
-  ArrowDown, ArrowUp, ArrowUpDown, Columns3, Languages, Pencil, Plus,
+  ArrowDown, ArrowUp, ArrowUpDown, Columns3, Languages, Loader2, Pencil, Plus,
   RotateCcw, Search, Star, Trash2, X, type LucideIcon,
 } from 'lucide-react'
 
@@ -10,6 +10,7 @@ import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
 import { cn } from '@/lib/utils'
 import * as languageApi from '@/lib/language-api'
+import { useKeysetList } from '@/lib/use-keyset-list'
 import { useTabs } from '@/components/tabs/tab-store'
 import { MelisClassicFrame, ViewModeToggle, type ViewMode } from '@/components/MelisClassicView'
 import { toolHasViewToggle } from '@/lib/module-registry'
@@ -25,6 +26,10 @@ const TOOL_KEY = 'meliscore_tool_language'
 interface ListCache {
   items: languageApi.LanguageItem[]
   total: number
+  cursor: string | null
+  hasMore: boolean
+  sortCol: string
+  sortDir: 'asc' | 'desc'
   search: string
   searchInput: string
   stats: languageApi.LanguageStats | null
@@ -91,13 +96,6 @@ function loadCols(): ColDef[] {
 }
 function saveCols(cols: ColDef[]) { localStorage.setItem(COL_KEY, JSON.stringify(cols)) }
 
-function getCellSortValue(l: languageApi.LanguageItem, id: string): string | number {
-  if (id === 'id')     return l.id
-  if (id === 'locale') return l.locale
-  if (id === 'name')   return l.name
-  return ''
-}
-
 // ─── Page ──────────────────────────────────────────────────────────────────────────
 export default function LanguageListPage() {
   const navigate = useNavigate()
@@ -117,9 +115,6 @@ export default function LanguageListPage() {
   const [iframeLoaded, setIframeLoaded] = useState(_cache?.iframeLoaded ?? false)
   const effectiveMode: ViewMode = showViewToggle ? mode : 'react'
 
-  const [items, setItems]   = useState<languageApi.LanguageItem[]>(_cache?.items ?? [])
-  const [total, setTotal]   = useState(_cache?.total ?? 0)
-  const [loading, setLoading] = useState(false)
   const [stats, setStats]   = useState<languageApi.LanguageStats | null>(_cache?.stats ?? null)
 
   const [search, setSearch]           = useState(_cache?.search ?? '')
@@ -132,13 +127,27 @@ export default function LanguageListPage() {
   const [showColMgr, setShowColMgr] = useState(false)
   const colMgrRef = useRef<HTMLDivElement>(null)
 
-  const [sortCol, setSortCol] = useState<string | null>(null)
-  const [sortDir, setSortDir] = useState<'asc' | 'desc'>('asc')
-
   const [toDelete, setToDelete] = useState<languageApi.LanguageItem | null>(null)
 
-  const cacheRef = useRef({ items, total, search, searchInput, stats, mode, iframeLoaded })
-  useEffect(() => { cacheRef.current = { items, total, search, searchInput, stats, mode, iframeLoaded } })
+  // Scroll infini + tri server-side + keyset (brique mutualisée).
+  const {
+    items, setItems, total, loading, hasMore, sentinelRef,
+    sortCol, sortDir, toggleSort, reload, removeLocal, snapshot,
+  } = useKeysetList<languageApi.LanguageItem>({
+    fetcher: (a) => languageApi.fetchLanguages({
+      limit: a.limit, sort: a.sort as languageApi.LanguageSortKey, dir: a.dir, after: a.after, search,
+    }),
+    deps: [search, refreshKey],
+    defaultSort: 'id',
+    defaultDir: 'asc',
+    initial: _cache
+      ? { items: _cache.items, total: _cache.total, cursor: _cache.cursor, hasMore: _cache.hasMore, sortCol: _cache.sortCol, sortDir: _cache.sortDir }
+      : undefined,
+    skipInitial: !!(_cache && _cache.items.length),
+  })
+
+  const cacheRef = useRef<ListCache>({ ...snapshot(), search, searchInput, stats, mode, iframeLoaded })
+  useEffect(() => { cacheRef.current = { ...snapshot(), search, searchInput, stats, mode, iframeLoaded } })
   useEffect(() => () => { _cache = cacheRef.current }, [])
 
   useEffect(() => {
@@ -155,14 +164,6 @@ export default function LanguageListPage() {
     if (_cache?.stats) return
     languageApi.fetchLanguageStats().then(setStats).catch(() => null)
   }, [])
-
-  useEffect(() => {
-    setLoading(true)
-    languageApi.fetchLanguages({ limit: 9999, search })
-      .then(res => { setItems(res?.items ?? []); setTotal(res?.total ?? 0) })
-      .catch(() => null)
-      .finally(() => setLoading(false))
-  }, [search, refreshKey])
 
   useEffect(() => {
     if (!showColMgr) return
@@ -182,14 +183,12 @@ export default function LanguageListPage() {
     setTimeout(() => setRefreshing(false), 600)
   }
 
-  // Réinitialise recherche + tri, puis recharge. setItems([]) est obligatoire :
-  // sans ça les lignes déjà affichées restent à l'écran et le clic paraît sans effet.
+  // Réinitialise recherche puis recharge. setItems([]) évite que les lignes déjà
+  // affichées restent visibles (le clic paraîtrait sans effet).
   function resetFilters() {
     _cache = null
     setSearchInput('')
     setSearch('')
-    setSortCol(null)
-    setSortDir('asc')
     setItems([])
     setRefreshing(true)
     setRefreshKey(k => k + 1)
@@ -197,30 +196,13 @@ export default function LanguageListPage() {
     setTimeout(() => setRefreshing(false), 600)
   }
 
-  function toggleSort(id: string) {
-    if (sortCol === id) setSortDir(d => d === 'asc' ? 'desc' : 'asc')
-    else { setSortCol(id); setSortDir('asc') }
-  }
-
-  const sortedItems = useMemo(() => {
-    if (!sortCol) return items
-    return [...items].sort((a, b) => {
-      const va = getCellSortValue(a, sortCol), vb = getCellSortValue(b, sortCol)
-      const na = typeof va === 'number' ? va : parseFloat(String(va))
-      const nb = typeof vb === 'number' ? vb : parseFloat(String(vb))
-      const cmp = !isNaN(na) && !isNaN(nb) ? na - nb : String(va).localeCompare(String(vb), undefined, { sensitivity: 'base' })
-      return sortDir === 'asc' ? cmp : -cmp
-    })
-  }, [items, sortCol, sortDir])
-
   async function confirmDelete() {
     if (!toDelete) return
     try {
       await languageApi.deleteLanguage(toDelete.id)
-      setItems(prev => prev.filter(l => l.id !== toDelete.id))
-      setTotal(t => t - 1)
+      removeLocal(l => l.id === toDelete.id)
       setToDelete(null)
-      setRefreshKey(k => k + 1)
+      reload()
       languageApi.fetchLanguageStats().then(setStats).catch(() => null)
     } catch { setToDelete(null) }
   }
@@ -310,7 +292,7 @@ export default function LanguageListPage() {
             <tbody className="divide-y divide-border">
               {items.length === 0 && !loading ? (
                 <tr><td colSpan={visibleCols(cols).length + 1} className="px-4 py-10 text-center text-sm text-muted-foreground">{t('languages.empty')}</td></tr>
-              ) : sortedItems.map(l => (
+              ) : items.map(l => (
                 <tr key={l.id} className="group transition-colors hover:bg-muted/40">
                   {visibleCols(cols).map(({ id }) => (
                     <td key={id} className={cn('px-4 py-2.5', id === 'id' && 'tabular-nums text-muted-foreground')}>
@@ -344,9 +326,16 @@ export default function LanguageListPage() {
               ))}
             </tbody>
           </table>
-          <div className="px-4 py-3 text-center text-xs text-muted-foreground">
-            {loading ? t('common.loading') : t('languages.count', { n: total })}
-          </div>
+
+          <div ref={sentinelRef} className="h-1" />
+          {loading && (
+            <div className="flex items-center justify-center gap-2 py-4 text-xs text-muted-foreground">
+              <Loader2 className="size-3.5 animate-spin" />{t('common.loading')}
+            </div>
+          )}
+          {!hasMore && items.length > 0 && (
+            <div className="py-4 text-center text-xs text-muted-foreground">{t('languages.count', { n: total })}</div>
+          )}
         </div>
         </>)}
       </div>

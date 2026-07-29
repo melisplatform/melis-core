@@ -1,13 +1,14 @@
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
-import { Database, Mail, Pencil, Plus, RotateCcw, Search, Settings, Trash2, X } from 'lucide-react'
+import { ArrowDown, ArrowUp, ArrowUpDown, Database, Loader2, Mail, Pencil, Plus, RotateCcw, Search, Settings, Trash2, X } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
 import { cn } from '@/lib/utils'
 import * as emailsApi from '@/lib/emails-api'
-import type { EmailListItem } from '@/lib/emails-api'
+import type { EmailListItem, EmailSortKey } from '@/lib/emails-api'
+import { useKeysetList } from '@/lib/use-keyset-list'
 import { useTabs } from '@/components/tabs/tab-store'
 import { MelisClassicFrame, ViewModeToggle, type ViewMode } from '@/components/MelisClassicView'
 import { toolHasViewToggle } from '@/lib/module-registry'
@@ -17,7 +18,11 @@ import { useCan } from '@/lib/capabilities'
 
 const TOOL_KEY = 'meliscore_tool_emails_mngt'
 
-interface ListCache { items: EmailListItem[]; search: string; mode: ViewMode; iframeLoaded: boolean }
+interface ListCache {
+  items: EmailListItem[]; total: number; cursor: string | null; hasMore: boolean
+  sortCol: string; sortDir: 'asc' | 'desc'
+  search: string; mode: ViewMode; iframeLoaded: boolean
+}
 let _cache: ListCache | null = null
 
 function DeleteConfirm({ email, onConfirm, onCancel }: { email: EmailListItem; onConfirm: () => void; onCancel: () => void }) {
@@ -53,47 +58,52 @@ export default function EmailListPage() {
   const [iframeLoaded, setIframeLoaded] = useState(_cache?.iframeLoaded ?? false)
   const effectiveMode: ViewMode = showViewToggle ? mode : 'react'
 
-  const [items, setItems] = useState<EmailListItem[]>(_cache?.items ?? [])
-  const [loading, setLoading] = useState(!_cache)
   const [search, setSearch] = useState(_cache?.search ?? '')
+  const [refreshKey, setRefreshKey] = useState(0)
   const [refreshing, setRefreshing] = useState(false)
   const [toDelete, setToDelete] = useState<EmailListItem | null>(null)
 
-  const cacheRef = useRef({ items, search, mode, iframeLoaded })
-  useEffect(() => { cacheRef.current = { items, search, mode, iframeLoaded } })
-  useEffect(() => () => { _cache = cacheRef.current }, [])
+  // Scroll infini / tri server-side. La source est courte (config + petite table) → le
+  // backend renvoie toujours nextCursor:null (un seul lot) ; le hook n'ajoute donc pas de
+  // scroll, mais le tri (sort/dir) est bien pris en compte au (re)chargement côté serveur.
+  const {
+    items, total, loading, hasMore, sentinelRef, sortCol, sortDir, toggleSort,
+    reload, snapshot,
+  } = useKeysetList<EmailListItem>({
+    fetcher: (a) => emailsApi
+      .fetchEmails({ ...a, sort: a.sort as EmailSortKey, search: search.trim() || undefined })
+      .then((r) => ({ items: r.items, total: r.total, nextCursor: r.nextCursor })),
+    deps: [search, refreshKey],
+    limit: 9999,
+    defaultSort: 'name',
+    defaultDir: 'asc',
+    initial: _cache
+      ? { items: _cache.items, total: _cache.total, cursor: _cache.cursor, hasMore: _cache.hasMore, sortCol: _cache.sortCol, sortDir: _cache.sortDir }
+      : undefined,
+    skipInitial: !!(_cache && _cache.items.length),
+  })
 
-  function load() {
-    setLoading(true)
-    emailsApi.fetchEmails().then((r) => setItems(r.emails)).catch(() => null).finally(() => setLoading(false))
-  }
-  useEffect(() => { if (!_cache) load() }, []) // eslint-disable-line react-hooks/exhaustive-deps
+  const cacheRef = useRef<ListCache>({ items, total, cursor: null, hasMore, sortCol, sortDir, search, mode, iframeLoaded })
+  useEffect(() => { cacheRef.current = { ...snapshot(), search, mode, iframeLoaded } })
+  useEffect(() => () => { _cache = cacheRef.current }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     if (location.pathname === base) {
       openTab({ id: base, label: t('emails.title'), path: base })
-      if (emailsApi.consumeEmailsListStale()) load()
+      if (emailsApi.consumeEmailsListStale()) { _cache = null; reload() }
     }
   }, [location.pathname, openTab, base, t]) // eslint-disable-line react-hooks/exhaustive-deps
 
-  function handleRefresh() { _cache = null; setRefreshing(true); load(); setTimeout(() => setRefreshing(false), 500) }
+  function handleRefresh() { _cache = null; setRefreshing(true); reload(); setTimeout(() => setRefreshing(false), 500) }
 
-  // Réinitialise la recherche puis recharge. setItems([]) est obligatoire : sans ça les lignes
-  // déjà affichées restent à l'écran et le clic paraît sans effet.
+  // Réinitialise la recherche puis recharge (le changement de `search` relance via deps).
   function resetFilters() {
     _cache = null
-    setSearch('')
-    setItems([])
     setRefreshing(true)
-    load()
+    if (search) setSearch('')
+    else { setRefreshKey((k) => k + 1) }
     setTimeout(() => setRefreshing(false), 500)
   }
-
-  const filtered = useMemo(() => {
-    const q = search.trim().toLowerCase()
-    if (!q) return items
-    return items.filter((e) => e.name.toLowerCase().includes(q) || e.codename.toLowerCase().includes(q) || e.fromEmail.toLowerCase().includes(q))
-  }, [items, search])
 
   async function confirmDelete() {
     if (!toDelete) return
@@ -104,9 +114,24 @@ export default function EmailListPage() {
       // supprimé avait une config par défaut derrière lui, sa version « Default »
       // réapparaît automatiquement. Un simple filtre local la ferait disparaître.
       _cache = null
-      load()
+      reload()
     }
     catch { setToDelete(null) }
+  }
+
+  // En-tête de colonne triable : flèche selon l'état du hook.
+  function SortHeader({ id, label, className }: { id: EmailSortKey; label: string; className?: string }) {
+    const active = sortCol === id
+    const SIcon = active ? (sortDir === 'asc' ? ArrowUp : ArrowDown) : ArrowUpDown
+    return (
+      <th className={cn('px-4 py-3 text-left', className)}>
+        <button type="button" onClick={() => toggleSort(id)}
+          className={cn('inline-flex items-center gap-1 uppercase tracking-wide hover:text-foreground', active && 'text-primary')}>
+          {label}
+          <SIcon className={cn('size-3', active ? 'opacity-100' : 'opacity-30')} />
+        </button>
+      </th>
+    )
   }
 
   return (
@@ -148,18 +173,18 @@ export default function EmailListPage() {
             <table className="w-full min-w-[720px] text-sm">
               <thead className="border-b border-border bg-muted/40 text-xs uppercase tracking-wide text-muted-foreground">
                 <tr>
-                  <th className="px-4 py-3 text-left">{t('emails.col.name')}</th>
-                  <th className="px-4 py-3 text-left">{t('emails.col.code')}</th>
-                  <th className="px-4 py-3 text-left">{t('emails.col.from_name')}</th>
-                  <th className="px-4 py-3 text-left">{t('emails.col.from_email')}</th>
-                  <th className="px-4 py-3 text-left">{t('emails.col.source')}</th>
+                  <SortHeader id="name" label={t('emails.col.name')} />
+                  <SortHeader id="codename" label={t('emails.col.code')} />
+                  <SortHeader id="fromName" label={t('emails.col.from_name')} />
+                  <SortHeader id="fromEmail" label={t('emails.col.from_email')} />
+                  <SortHeader id="source" label={t('emails.col.source')} />
                   <th className="w-20 px-4 py-3" />
                 </tr>
               </thead>
               <tbody className="divide-y divide-border">
-                {filtered.length === 0 && !loading ? (
+                {items.length === 0 && !loading ? (
                   <tr><td colSpan={6} className="px-4 py-10 text-center text-sm text-muted-foreground">{t('emails.empty')}</td></tr>
-                ) : filtered.map((e) => (
+                ) : items.map((e) => (
                   <tr key={e.codename} className="group transition-colors hover:bg-muted/40">
                     <td className="px-4 py-2.5"><div className="flex items-center gap-2"><Mail className="size-4 text-muted-foreground" /><span className="font-medium">{e.name}</span></div></td>
                     <td className="px-4 py-2.5"><code className="rounded bg-muted px-1.5 py-0.5 text-xs">{e.codename}</code></td>
@@ -180,7 +205,13 @@ export default function EmailListPage() {
                 ))}
               </tbody>
             </table>
-            <div className="px-4 py-3 text-center text-xs text-muted-foreground">{loading ? t('common.loading') : t('emails.count', { n: items.length })}</div>
+            {/* Sentinel scroll infini : inerte ici (nextCursor toujours null), gardé par cohérence. */}
+            <div ref={sentinelRef} className="h-1" />
+            <div className="px-4 py-3 text-center text-xs text-muted-foreground">
+              {loading
+                ? <span className="inline-flex items-center gap-1.5"><Loader2 className="size-3.5 animate-spin" />{t('common.loading')}</span>
+                : (!hasMore && items.length > 0 ? t('emails.count', { n: total }) : null)}
+            </div>
           </div>
         </>)}
       </div>

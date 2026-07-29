@@ -34,17 +34,22 @@ export interface PlatformStats {
   cache: number
 }
 
+export type PlatformSortKey = 'id' | 'name' | 'marketplace' | 'cache'
+
 export interface PlatformListParams {
-  page?: number
   limit?: number
   search?: string
+  sort?: PlatformSortKey
+  dir?: 'asc' | 'desc'
+  /** Curseur keyset (opaque) du lot précédent ; absent = premier lot. */
+  after?: string | null
 }
 
 export interface PlatformListResult {
   items: PlatformItem[]
   total: number
-  page: number
-  limit: number
+  /** Curseur keyset à repasser en `after` pour le lot suivant ; null = fin de liste. */
+  nextCursor: string | null
 }
 
 export interface PlatformSavePayload {
@@ -79,9 +84,11 @@ async function apiFetch<T>(url: string, opts?: RequestInit): Promise<T> {
 
 export async function fetchPlatforms(params: PlatformListParams = {}): Promise<PlatformListResult> {
   const qs = new URLSearchParams()
-  if (params.page)   qs.set('page',   String(params.page))
   if (params.limit)  qs.set('limit',  String(params.limit))
   if (params.search) qs.set('search', params.search)
+  if (params.sort)   qs.set('sort',   params.sort)
+  if (params.dir)    qs.set('dir',    params.dir)
+  if (params.after)  qs.set('after',  params.after)
   return apiFetch<PlatformListResult>(`/melis/react-api/platforms?${qs}`)
 }
 
