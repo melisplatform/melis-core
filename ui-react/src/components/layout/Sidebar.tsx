@@ -6,6 +6,7 @@ import { cn } from '@/lib/utils'
 import { useI18n } from '@/i18n/i18n-context'
 import { useTheme } from '@/theme/theme-context'
 import { useNavMenu, type NavNode } from '@/hooks/useNavMenu'
+import { getNavOpen, setNavOpen } from './nav-open-store'
 import { useBricks, sidebarBrickForModules } from '@/lib/bricks'
 import { useTabs } from '@/components/tabs/tab-store'
 import { melisKeyForRoute } from '@/lib/tool-routes'
@@ -48,7 +49,9 @@ interface NavNodeProps {
 }
 
 function NavNodeItem({ node, depth, collapsed, defaultOpen = false, sidebarPanel }: NavNodeProps) {
-  const [open, setOpen] = useState(defaultOpen)
+  // Init from the persisted open state (sessionStorage) so a full reload restores the accordion
+  // exactly as the user left it; untouched nodes fall back to defaultOpen.
+  const [open, setOpen] = useState(() => getNavOpen(node.key, defaultOpen))
   const { openTab, activeId } = useTabs()
   const navigate = useNavigate()
   const onNavigate = useContext(SidebarNavContext)
@@ -99,7 +102,7 @@ function NavNodeItem({ node, depth, collapsed, defaultOpen = false, sidebarPanel
     <div>
       <button
         type="button"
-        onClick={() => setOpen((v) => !v)}
+        onClick={() => setOpen((v) => { const next = !v; setNavOpen(node.key, next); return next })}
         title={collapsed ? node.label : undefined}
         style={indentStyle}
         className={cn(
