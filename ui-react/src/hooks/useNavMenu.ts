@@ -1,38 +1,11 @@
 import { useEffect, useMemo, useState } from 'react'
-import {
-  BarChart2,
-  Bell,
-  Box,
-  Calendar,
-  ChevronRight,
-  Cog,
-  Cpu,
-  Database,
-  FileText,
-  Folder,
-  Globe,
-  Image,
-  LayoutDashboard,
-  Mail,
-  Map,
-  Package,
-  Palette,
-  Percent,
-  ShieldCheck,
-  ShoppingCart,
-  Sliders,
-  Star,
-  Tag,
-  Truck,
-  Users,
-  Wrench,
-  type LucideIcon,
-} from 'lucide-react'
+import { LayoutDashboard, type LucideIcon } from 'lucide-react'
 
 import * as melisApi from '@/lib/melis-api'
 import { REACT_ROUTES } from '@/lib/module-registry'
 import { BRICK_ROUTES, useBricks } from '@/lib/bricks'
 import { getMelisIcon } from '@/lib/melis-icons'
+import { faToLucide } from '@/lib/fa-icons'
 import { sectionSlug, toolSlug, toolSlugForForward, registerTool } from '@/lib/tool-routes'
 import { NAV_SECTIONS, type NavSection } from '@/components/layout/nav'
 import { useI18n } from '@/i18n/i18n-context'
@@ -61,114 +34,6 @@ export interface NavNode {
   children: NavNode[]
 }
 
-// ─── FA → Lucide icon mapping ────────────────────────────────────────────────
-
-const FA_ICON_MAP: Record<string, LucideIcon> = {
-  cube:              Box,
-  cubes:             Package,
-  cog:               Cog,
-  cogs:              Sliders,
-  wrench:            Wrench,
-  sliders:           Sliders,
-  users:             Users,
-  user:              Users,
-  'user-circle':     Users,
-  globe:             Globe,
-  file:              FileText,
-  'file-text':       FileText,
-  'file-alt':        FileText,
-  image:             Image,
-  images:            Image,
-  photo:             Image,
-  folder:            Folder,
-  'folder-open':     Folder,
-  chart:             BarChart2,
-  'bar-chart':       BarChart2,
-  'line-chart':      BarChart2,
-  analytics:         BarChart2,
-  dashboard:         LayoutDashboard,
-  tachometer:        LayoutDashboard,
-  'tachometer-alt':  LayoutDashboard,
-  calendar:          Calendar,
-  envelope:          Mail,
-  mail:              Mail,
-  tag:               Tag,
-  tags:              Tag,
-  percent:           Percent,
-  star:              Star,
-  bookmark:          Star,
-  database:          Database,
-  server:            Database,
-  'shopping-cart':   ShoppingCart,
-  'shopping-bag':    ShoppingCart,
-  cart:              ShoppingCart,
-  truck:             Truck,
-  shipping:          Truck,
-  map:               Map,
-  'map-marker':      Map,
-  'map-marker-alt':  Map,
-  shield:            ShieldCheck,
-  'shield-alt':      ShieldCheck,
-  lock:              ShieldCheck,
-  robot:             Cpu,
-  android:           Cpu,
-  microchip:         Cpu,
-  palette:           Palette,
-  'paint-brush':     Palette,
-  'chevron-right':   ChevronRight,
-  'puzzle-piece':    Package,
-  language:          Globe,
-  flag:              Tag,
-  comments:          Mail,
-  bell:              Bell,
-  'bell-o':          Bell,
-  shopping:          ShoppingCart,
-  'list-alt':        FileText,
-  tasks:             FileText,
-  sitemap:           Folder,
-  paint:             Palette,
-  'paint-bucket':    Palette,
-  desktop:           LayoutDashboard,
-  columns:           LayoutDashboard,
-  th:                LayoutDashboard,
-  'th-large':        LayoutDashboard,
-  home:              LayoutDashboard,
-  book:              FileText,
-  'book-open':       FileText,
-  newspaper:         FileText,
-  rss:               Globe,
-  link:              Globe,
-  'external-link':   Globe,
-  'external-link-alt': Globe,
-  download:          Database,
-  upload:            Database,
-  'cloud-upload':    Database,
-  'cloud-download':  Database,
-  tools:             Wrench,
-  hammer:            Wrench,
-  'magic':           Palette,
-  brain:             Cpu,
-  'bolt':            Cpu,
-  eye:               ShieldCheck,
-  fingerprint:       ShieldCheck,
-  key:               ShieldCheck,
-  store:             ShoppingCart,
-  box:               Package,
-  boxes:             Package,
-  layer:             Package,
-  layers:            Package,
-}
-
-function faToLucide(faClass: string): LucideIcon {
-  // Handle "fa fa-fw icon-xxx", "fa-xxx", "icon-xxx" variants
-  const parts = faClass.split(/[\s-]/).filter(Boolean)
-  for (const part of parts) {
-    if (FA_ICON_MAP[part]) return FA_ICON_MAP[part]
-  }
-  const key = faClass.replace(/^fa-?/, '').replace(/\s+.*$/, '').trim()
-  return FA_ICON_MAP[key] ?? Box
-}
-
 // ─── Module → React route mapping ────────────────────────────────────────────
 //
 // Quand un outil Melis a une implémentation React dédiée, on le route vers
@@ -186,7 +51,11 @@ function getToolRoute(node: melisApi.ApiMenuNode, section: string): string {
   // but we still register forward→route so App can mount them at the derived URL. Iframe tools
   // register their melisKey so ZonePage/Shell resolve the iframe.
   const isReact = !!(REACT_ROUTES[key] || BRICK_ROUTES[key])
-  registerTool({ route, melisKey: isReact ? null : node.melisKey, forwardKey: key })
+  // `node.name` est le nom de l'outil traduit par le backend dans la langue de la session : on
+  // l'enregistre pour que TOUT titre d'onglet vienne du menu, y compris quand l'onglet est ouvert
+  // sans passer par le menu (pont __melisOpenTool, deep-link) — les libellés des manifestes de
+  // briques, eux, sont figés dans une seule langue.
+  registerTool({ route, melisKey: isReact ? null : node.melisKey, forwardKey: key, label: node.name })
   return route
 }
 

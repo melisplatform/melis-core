@@ -21,6 +21,10 @@ interface ToolRouteEntry {
   route: string
   melisKey: string | null
   forwardKey: string | null
+  /** Nom de l'outil TEL QUE TRADUIT par le menu (`/react-api/menu` → node.name). Les libellés
+   *  statiques des manifestes de briques ne le sont pas : c'est cette entrée qui donne le bon
+   *  titre d'onglet dans la langue de la session. */
+  label?: string
 }
 
 function kebab(s: string): string {
@@ -97,15 +101,17 @@ export function toolSlug(nodeKey: string, section: string): string {
 
 let routeToMelisKey: Record<string, string> = {}
 let forwardToRoute: Record<string, string> = {}
+let routeToLabel: Record<string, string> = {}
 const listeners = new Set<() => void>()
 
 function load() {
   try {
     const raw = sessionStorage.getItem(STORAGE_KEY)
     if (raw) {
-      const d = JSON.parse(raw) as { routeToMelisKey?: Record<string, string>; forwardToRoute?: Record<string, string> }
+      const d = JSON.parse(raw) as { routeToMelisKey?: Record<string, string>; forwardToRoute?: Record<string, string>; routeToLabel?: Record<string, string> }
       routeToMelisKey = d.routeToMelisKey ?? {}
       forwardToRoute = d.forwardToRoute ?? {}
+      routeToLabel = d.routeToLabel ?? {}
     }
   } catch { /* ignore */ }
 }
@@ -113,7 +119,7 @@ load()
 
 function persist() {
   try {
-    sessionStorage.setItem(STORAGE_KEY, JSON.stringify({ routeToMelisKey, forwardToRoute }))
+    sessionStorage.setItem(STORAGE_KEY, JSON.stringify({ routeToMelisKey, forwardToRoute, routeToLabel }))
   } catch { /* ignore */ }
 }
 
@@ -131,6 +137,10 @@ export function registerTool(e: ToolRouteEntry): void {
     delete routeToMelisKey[e.route]
     changed = true
   }
+  if (e.label && routeToLabel[e.route] !== e.label) {
+    routeToLabel[e.route] = e.label
+    changed = true
+  }
   if (e.forwardKey && forwardToRoute[e.forwardKey] !== e.route) {
     forwardToRoute[e.forwardKey] = e.route
     changed = true
@@ -146,6 +156,7 @@ export function registerTool(e: ToolRouteEntry): void {
 export function clearTools(): void {
   routeToMelisKey = {}
   forwardToRoute = {}
+  routeToLabel = {}
   try { sessionStorage.removeItem(STORAGE_KEY) } catch { /* ignore */ }
   listeners.forEach((l) => l())
 }
@@ -154,6 +165,11 @@ export function clearTools(): void {
 export function melisKeyForRoute(pathname: string): string | null {
   const base = '/' + pathname.split('/').filter(Boolean).slice(0, 2).join('/')
   return routeToMelisKey[base] ?? null
+}
+
+/** Nom TRADUIT (menu) d'un outil pour sa route /[section]/[tool], si le menu l'a déjà enregistré. */
+export function labelForRoute(route: string): string | null {
+  return routeToLabel[toolBaseRoute(route)] ?? null
 }
 
 /** Route for a Melis `Module/Controller` forward key, if a tool maps to it. */

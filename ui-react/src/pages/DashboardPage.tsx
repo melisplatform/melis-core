@@ -97,6 +97,9 @@ export default function DashboardPage() {
   // client-side, so without this gate a rights-less user would see them (e.g. "Recent activity",
   // ticket 0010740). Empty until loaded → gated out by default, restored once the fetch resolves.
   const [nativeGranted, setNativeGranted] = useState<Set<string>>(new Set())
+  // Infobulles des widgets natifs, reprises de la config du plugin legacy qu'ils remplacent — le
+  // registre client ne les porte pas (le texte est traduit côté PHP), cf. legacy-plugins.
+  const [nativeDescriptions, setNativeDescriptions] = useState<Record<string, string>>({})
   const [legacyLoaded, setLegacyLoaded] = useState(false)
   useEffect(() => {
     let cancelled = false
@@ -116,6 +119,7 @@ export default function DashboardPage() {
         }
         setLegacyWidgets(result.plugins.map(buildLegacyWidgetDef))
         setNativeGranted(new Set(result.nativeWidgets))
+        setNativeDescriptions(result.nativeWidgetDescriptions)
         setLegacyLoaded(true)
       })
     }
@@ -219,8 +223,15 @@ export default function DashboardPage() {
   // Native widgets, gated by the user's rights (granted set from the server). Ungranted ones are
   // absent from the map → pruned from the grid layout and hidden from the palette.
   const gatedNativeMap = useMemo(
-    () => Object.fromEntries(Object.entries(WIDGET_MAP).filter(([id]) => nativeGranted.has(id))),
-    [nativeGranted],
+    () =>
+      Object.fromEntries(
+        Object.entries(WIDGET_MAP)
+          .filter(([id]) => nativeGranted.has(id))
+          // Description serveur greffée sur la définition statique → même infobulle de palette que
+          // pour les plugins legacy.
+          .map(([id, def]) => [id, nativeDescriptions[id] ? { ...def, description: nativeDescriptions[id] } : def]),
+      ),
+    [nativeGranted, nativeDescriptions],
   )
   const gatedNativeWidgets = useMemo(() => Object.values(gatedNativeMap) as WidgetDef[], [gatedNativeMap])
   const allWidgetMap = useMemo(() => ({ ...gatedNativeMap, ...extraWidgetMap }), [gatedNativeMap, extraWidgetMap])

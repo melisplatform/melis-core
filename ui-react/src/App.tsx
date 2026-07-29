@@ -11,7 +11,7 @@ import { TabProvider, useTabs } from '@/components/tabs/tab-store'
 import { Shell } from '@/components/layout/Shell'
 import { MODULES } from '@/lib/module-registry'
 import { useBricks, useBricksVersion, bricksReady, brickRoute } from '@/lib/bricks'
-import { hasToolRoutes, routeForForward, useToolRoutesVersion } from '@/lib/tool-routes'
+import { hasToolRoutes, labelForRoute, routeForForward, useToolRoutesVersion } from '@/lib/tool-routes'
 import LoginPage from '@/pages/LoginPage'
 import ForgotPasswordPage from '@/pages/ForgotPasswordPage'
 import ResetPasswordPage from '@/pages/ResetPasswordPage'
@@ -75,6 +75,22 @@ function TabBridge() {
       // demandée ne s'affiche. `label` (nom de page) est posé d'emblée → pas de « Page N » qui
       // clignote, et threadé via router state pour l'effet de synchro.
       if (d.path) {
+        // Une brique `subTabs:true` gère SES enregistrements dans sa propre barre de sous-onglets
+        // (News, Slider…) : l'onglet du haut doit rester celui de l'OUTIL, sinon l'article s'ouvre
+        // dans un onglet général frère de « Actualités » (au lieu d'un sous-onglet dessous).
+        const owner = bricks.find((b) => {
+          if (!b.subTabs) return false
+          const r = brickRoute(b)
+          return !!r && (d.path === r || d.path!.startsWith(r + '/'))
+        })
+        if (owner) {
+          const r = brickRoute(owner)!
+          // Titre d'onglet = le nom TRADUIT du menu ; `owner.label` (manifeste de la brique) est
+          // figé dans une seule langue et ne sert que de repli avant chargement du menu.
+          openTab({ id: r, label: labelForRoute(r) ?? owner.label, path: r })
+          navigate(d.path, d.label ? { state: { melisTabLabel: d.label } } : undefined)
+          return
+        }
         openTab({ id: d.path, label: d.label || deriveTabLabel(d.path), path: d.path })
         navigate(d.path, d.label ? { state: { melisTabLabel: d.label } } : undefined)
         return
@@ -86,13 +102,13 @@ function TabBridge() {
     }
     window.addEventListener('message', onMessage)
     return () => window.removeEventListener('message', onMessage)
-  }, [navigate, openTab])
+  }, [navigate, openTab, bricks])
   useEffect(() => {
     const path = location.pathname
     if (path === '/login' || path === '/setup') return
     // Native tools (MODULES) use ONE top tab + a sub-tab bar for their entities, so an edit
     // sub-route (/[tool]/:id) must sync to the TOOL's top tab — not spawn a per-id tab ("2").
-    // Bricks WITHOUT subTabs (e.g. CMS pages, News) keep one top tab per entity (handled below);
+    // Bricks WITHOUT subTabs (e.g. CMS pages) keep one top tab per entity (handled below);
     // bricks WITH subTabs:true are collapsed just like native tools (see subTabBrick below).
     const tool = MODULES
       .map((m) => ({ route: routeForForward(m.forwardKey), label: m.label }))
@@ -106,7 +122,7 @@ function TabBridge() {
       const r = brickRoute(b)
       return r && (path === r || path.startsWith(r + '/'))
     })
-    if (subTabBrick) { const r = brickRoute(subTabBrick); syncRoute({ id: r, label: subTabBrick.label, path: r }); return }
+    if (subTabBrick) { const r = brickRoute(subTabBrick); syncRoute({ id: r, label: labelForRoute(r!) ?? subTabBrick.label, path: r }); return }
     // No native module matched. If the registries aren't loaded yet, a tool sub-route would here
     // spawn a raw "/section/tool/:id" tab (label "2"); skip until BOTH the menu-derived tool routes
     // and the brick list (which carries `subTabs`) have loaded — this effect re-runs on their

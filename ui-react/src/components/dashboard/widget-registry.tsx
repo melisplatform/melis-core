@@ -2,6 +2,7 @@ import type { ReactNode } from 'react'
 import { Activity, type LucideIcon, Wrench } from 'lucide-react'
 
 import type { I18nKey } from '@/i18n/dictionaries'
+import { faToLucide } from '@/lib/fa-icons'
 import type { LegacyDashboardPlugin } from '@/lib/melis-api'
 import { GRID_COLS, legacyRowsToGridRows } from './grid-metrics'
 import { ActivityContent, LegacyPluginContent } from './widgets'
@@ -13,6 +14,9 @@ export interface WidgetDef {
   titleKey: I18nKey
   /** Overrides titleKey for dynamic/legacy widgets where no i18n key exists. */
   titleLabel?: string
+  /** Description du plugin (config PHP traduite) — infobulle de l'item dans la palette, comme le
+   *  menu de plugins legacy. Absente pour les widgets natifs sans équivalent legacy. */
+  description?: string
   icon: LucideIcon
   /** Miniature legacy (PHP) à afficher dans la palette à la place de l'icône, si disponible. */
   thumbnail?: string
@@ -71,7 +75,11 @@ export function buildLegacyWidgetDef(plugin: LegacyDashboardPlugin): WidgetDef {
     id,
     titleKey: 'widget.sec.legacy',
     titleLabel: plugin.title || plugin.pluginName,
-    icon: Wrench,
+    description: plugin.description || undefined,
+    // Icône DÉCLARÉE par le plugin dans sa config PHP (`datas.icon`, ex. `fa fa-calendar`), remontée
+    // par /dashboard/legacy-plugins — même source que le dashboard legacy. Wrench ne sert plus que
+    // de repli quand le plugin ne déclare rien (ou une classe FA inconnue du mapping).
+    icon: faToLucide(plugin.icon, Wrench),
     thumbnail: plugin.thumbnail || undefined,
     pluginName: plugin.pluginName,
     sectionKey: 'widget.sec.legacy',

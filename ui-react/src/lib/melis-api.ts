@@ -456,6 +456,9 @@ export async function fetchDashboardStats(): Promise<DashboardStats | null> {
 export interface LegacyDashboardPlugin {
   pluginName: string
   title: string
+  /** Texte d'aide du plugin (config PHP `datas.description`, traduite) — affiché en infobulle sur
+   *  l'item de la palette, comme le `title="…"` du menu de plugins legacy. Vide si non déclaré. */
+  description?: string
   icon: string
   /** Screenshot shown in the legacy plugin picker (module-relative URL, e.g. /Utilities/plugins/images/Foo.jpg). */
   thumbnail: string
@@ -475,6 +478,8 @@ export interface DashboardPluginsResult {
   /** Native widget ids (widget-registry) the current user has the right to — gates always-registered
    *  native widgets so a rights-less user doesn't see them (e.g. "Recent activity"). */
   nativeWidgets: string[]
+  /** Infobulle des widgets natifs, reprise de la config du plugin legacy qu'ils remplacent. */
+  nativeWidgetDescriptions: Record<string, string>
 }
 
 /** Returns the active legacy Melis dashboard plugins (from PHP config) + granted native widget ids. */
@@ -489,11 +494,21 @@ export async function fetchLegacyDashboardPlugins(): Promise<DashboardPluginsRes
       credentials: 'include',
     })
     if (!res.ok) return null
-    const data = (await res.json()) as { success: boolean; data?: LegacyDashboardPlugin[]; nativeWidgets?: string[] }
+    const data = (await res.json()) as {
+      success: boolean
+      data?: LegacyDashboardPlugin[]
+      nativeWidgets?: string[]
+      nativeWidgetDescriptions?: Record<string, string>
+    }
     if (!data.success) return null
     return {
       plugins: Array.isArray(data.data) ? data.data : [],
       nativeWidgets: Array.isArray(data.nativeWidgets) ? data.nativeWidgets : [],
+      // PHP renvoie `[]` (et non `{}`) quand la map est vide — normalisé ici en objet.
+      nativeWidgetDescriptions:
+        data.nativeWidgetDescriptions && !Array.isArray(data.nativeWidgetDescriptions)
+          ? data.nativeWidgetDescriptions
+          : {},
     }
   } catch {
     return null

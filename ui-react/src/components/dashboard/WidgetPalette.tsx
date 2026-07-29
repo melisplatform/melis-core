@@ -347,7 +347,10 @@ function PaletteItem({
         'group flex cursor-grab items-center gap-1 rounded-md border border-border/70 bg-background transition-colors active:cursor-grabbing',
         'hover:border-primary/40 hover:bg-accent',
       )}
-      title="Glisser vers le dashboard (ou cliquer pour ajouter)"
+      // Infobulle NATIVE, comme le menu de plugins legacy (`title="<?= description ?>"` dans
+      // dashboard-menu-content.phtml) : on affiche la description déclarée par le plugin, et on
+      // retombe sur l'aide au glisser-déposer quand il n'en déclare aucune.
+      title={widget.description || t('layout.widget_drag_hint')}
     >
       {/* Zone d'ajout au clic — ajoute toujours une nouvelle instance, même si déjà présente.
           ⚠️ Surtout PAS un <button> : le drag de GridStack (DDDraggable) ignore les mousedown
