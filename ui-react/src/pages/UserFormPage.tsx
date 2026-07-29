@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { Fragment, useEffect, useState, type ReactNode } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { SUBTABS_CHANGED, useSubTabs } from '@/components/tabs/sub-tab-store'
 import { routeForForward } from '@/lib/tool-routes'
@@ -15,6 +15,8 @@ import { Badge } from '@/components/ui/badge'
 import { cn, copyToClipboard } from '@/lib/utils'
 import * as userApi from '@/lib/user-api'
 import { RightsTreeView } from '@/components/RightsTreeView'
+import { ExpandToggle, HiddenColsRow } from '@/components/ExpandableRow'
+import { useIsNarrow } from '@/hooks/useIsNarrow'
 import { useModuleActive } from '@/lib/bricks'
 import { useCan } from '@/lib/capabilities'
 import { useI18n } from '@/i18n/i18n-context'
@@ -59,8 +61,13 @@ const TABS: { id: Tab; labelKey: I18nKey; icon: React.ElementType }[] = [
 
 function ConnectionsTab({ userId }: { userId: number }) {
   const { t } = useI18n()
+  const narrow = useIsNarrow()
   const [rows, setRows]     = useState<userApi.UserConnection[] | null>(null)
   const [loading, setLoading] = useState(true)
+  const [expanded, setExpanded] = useState<Set<number>>(new Set())
+  const toggleExpand = (id: number) => setExpanded((s) => {
+    const n = new Set(s); n.has(id) ? n.delete(id) : n.add(id); return n
+  })
 
   useEffect(() => {
     userApi.fetchUserConnections(userId).then(setRows).catch(() => setRows([])).finally(() => setLoading(false))
@@ -68,6 +75,26 @@ function ConnectionsTab({ userId }: { userId: number }) {
 
   if (loading) {
     return <div className="flex flex-1 items-center justify-center p-6"><Loader2 className="size-5 animate-spin text-muted-foreground" /></div>
+  }
+
+  // Same essential-column-collapse pattern as the Users list: on narrow, force down to just the
+  // login date with the rest reachable via a per-row "+" — desktop (narrow=false) is untouched,
+  // since COLS itself never changes, only which of its entries render as <th>/<td>.
+  const COLS = [
+    { id: 'login_date', label: t('users.conn.login_date') },
+    { id: 'time_in', label: t('users.conn.time_in') },
+    { id: 'time_out', label: t('users.conn.time_out') },
+    { id: 'duration', label: t('users.conn.duration') },
+  ] as const
+  const displayCols = narrow ? COLS.filter((c) => c.id === 'login_date') : COLS
+  const hasHidden = narrow
+  const totalCols = displayCols.length + (hasHidden ? 1 : 0)
+  function cellContent(row: userApi.UserConnection, id: string): ReactNode {
+    if (id === 'login_date') return fmtDay(row.loginDate)
+    if (id === 'time_in') return row.timeIn ?? '—'
+    if (id === 'time_out') return row.timeOut ?? '—'
+    if (id === 'duration') return row.duration ?? '—'
+    return null
   }
 
   return (
@@ -80,22 +107,35 @@ function ConnectionsTab({ userId }: { userId: number }) {
         <table className="w-full text-sm">
           <thead className="border-b border-border bg-muted/60 text-xs uppercase tracking-wide text-muted-foreground">
             <tr>
-              <th className="px-4 py-3 text-left">{t('users.conn.login_date')}</th>
-              <th className="px-4 py-3 text-left">{t('users.conn.time_in')}</th>
-              <th className="px-4 py-3 text-left">{t('users.conn.time_out')}</th>
-              <th className="px-4 py-3 text-left">{t('users.conn.duration')}</th>
+              {hasHidden && <th className="w-8 px-2 py-3" />}
+              {displayCols.map((c) => <th key={c.id} className="px-4 py-3 text-left">{c.label}</th>)}
             </tr>
           </thead>
           <tbody className="divide-y divide-border">
             {rows?.length === 0 ? (
-              <tr><td colSpan={4} className="px-4 py-8 text-center text-muted-foreground">{t('users.conn.empty')}</td></tr>
+              <tr><td colSpan={totalCols} className="px-4 py-8 text-center text-muted-foreground">{t('users.conn.empty')}</td></tr>
             ) : rows?.map((row) => (
-              <tr key={row.id} className="hover:bg-muted/30 transition-colors">
-                <td className="px-4 py-2.5 tabular-nums">{fmtDay(row.loginDate)}</td>
-                <td className="px-4 py-2.5 tabular-nums text-muted-foreground">{row.timeIn ?? '—'}</td>
-                <td className="px-4 py-2.5 tabular-nums text-muted-foreground">{row.timeOut ?? '—'}</td>
-                <td className="px-4 py-2.5 text-muted-foreground">{row.duration ?? '—'}</td>
+              <Fragment key={row.id}>
+              <tr className="hover:bg-muted/30 transition-colors">
+                {hasHidden && (
+                  <td className="px-2 py-2.5">
+                    <ExpandToggle expanded={expanded.has(row.id)} onClick={() => toggleExpand(row.id)} />
+                  </td>
+                )}
+                {displayCols.some((c) => c.id === 'login_date') && <td className="px-4 py-2.5 tabular-nums">{fmtDay(row.loginDate)}</td>}
+                {displayCols.some((c) => c.id === 'time_in') && <td className="px-4 py-2.5 tabular-nums text-muted-foreground">{row.timeIn ?? '—'}</td>}
+                {displayCols.some((c) => c.id === 'time_out') && <td className="px-4 py-2.5 tabular-nums text-muted-foreground">{row.timeOut ?? '—'}</td>}
+                {displayCols.some((c) => c.id === 'duration') && <td className="px-4 py-2.5 text-muted-foreground">{row.duration ?? '—'}</td>}
               </tr>
+              {expanded.has(row.id) && (
+                <HiddenColsRow
+                  cols={COLS.map((c) => ({ id: c.id, visible: displayCols.some((d) => d.id === c.id) }))}
+                  labelFor={(id) => COLS.find((c) => c.id === id)?.label ?? id}
+                  renderValue={(id) => cellContent(row, id)}
+                  colSpan={totalCols}
+                />
+              )}
+              </Fragment>
             ))}
           </tbody>
         </table>
@@ -323,6 +363,7 @@ export default function UserFormPage() {
   const navigate = useNavigate()
   const { id }   = useParams<{ id: string }>()
   const { t }    = useI18n()
+  const narrow   = useIsNarrow()
   const isEdit   = Boolean(id)
   const userId   = id ? parseInt(id) : null
 
@@ -487,7 +528,7 @@ export default function UserFormPage() {
         <div className="grid size-8 shrink-0 place-items-center rounded-lg bg-primary/10 text-primary">
           {isEdit ? <User className="size-4" /> : <UserPlus className="size-4" />}
         </div>
-        <h1 className="flex-1 text-base font-semibold">{isEdit ? t('users.form.edit_title') : t('users.new')}</h1>
+        <h1 className={cn('flex-1 text-base font-semibold', narrow && 'min-w-0 truncate')}>{isEdit ? t('users.form.edit_title') : t('users.new')}</h1>
         <Badge variant="default" className={cn('transition-colors',
           form.status === 1 ? 'text-emerald-600 bg-emerald-500/10 border-emerald-200' : 'text-red-600 bg-red-500/10 border-red-200')}>
           {form.status === 1 ? t('users.status.active') : t('users.status.inactive')}
@@ -506,8 +547,9 @@ export default function UserFormPage() {
         )}
       </div>
 
-      {/* Tab bar */}
-      <div className="flex border-b border-border px-6">
+      {/* Tab bar — narrow wraps to a 2nd line instead of scrolling, so all tabs stay visible
+          at once (no hidden-until-you-swipe "slider" feel). */}
+      <div className={cn('flex border-b border-border px-6', narrow && 'flex-wrap')}>
         {TABS.map((tab) => {
           const Icon = tab.icon
           return (
@@ -525,13 +567,13 @@ export default function UserFormPage() {
       {saveError && <div className="mx-6 mt-4 rounded-lg border border-destructive/40 bg-destructive/10 px-4 py-2.5 text-sm text-destructive">{saveError}</div>}
 
       {/* ── Tab: Profil ──────────────────────────────────────────────────────── */}
-      <div className={cn('flex flex-1 gap-6 overflow-auto p-6', activeTab !== 'profil' && 'hidden')}>
+      <div className={cn('flex flex-1 gap-6 overflow-auto p-6', activeTab !== 'profil' && 'hidden', narrow && 'flex-col')}>
         <div className="flex flex-1 flex-col gap-5 min-w-0">
           <div className="rounded-xl border border-border bg-card p-5 shadow-sm">
             <h2 className="mb-4 flex items-center gap-2 text-sm font-semibold text-muted-foreground uppercase tracking-wide">
               <User className="size-3.5" />{t('users.form.identity')}
             </h2>
-            <div className="grid grid-cols-2 gap-4">
+            <div className={narrow ? 'grid grid-cols-1 gap-4' : 'grid grid-cols-2 gap-4'}>
               <Field label={t('users.field.firstname')} required error={errors.firstname}>
                 <Input value={form.firstname} onChange={(e) => set('firstname', e.target.value)}
                   placeholder={t('users.field.firstname')} className={cn(errors.firstname && 'border-destructive')} />
@@ -561,7 +603,7 @@ export default function UserFormPage() {
               <KeyRound className="size-3.5" />{t('users.form.password_section')}{' '}
               {isEdit && <span className="normal-case font-normal">{t('users.form.password_hint')}</span>}
             </h2>
-            <div className="grid grid-cols-2 gap-4">
+            <div className={narrow ? 'grid grid-cols-1 gap-4' : 'grid grid-cols-2 gap-4'}>
               <Field label={isEdit ? t('users.field.new_password') : t('users.field.password')} required={!isEdit} error={errors.password}>
                 <Input type="password" value={form.password} onChange={(e) => set('password', e.target.value)}
                   autoComplete="new-password" placeholder="••••••••" className={cn(errors.password && 'border-destructive')} />
@@ -583,7 +625,7 @@ export default function UserFormPage() {
               return (
                 <div className="mt-3">
                   <p className="mb-1.5 text-xs font-medium text-muted-foreground">{t('users.pw.requirements')}</p>
-                  <ul className="grid grid-cols-2 gap-x-4 gap-y-1">
+                  <ul className={narrow ? 'grid grid-cols-1 gap-x-4 gap-y-1' : 'grid grid-cols-2 gap-x-4 gap-y-1'}>
                     {rules.map((r) => (
                       <li key={r.key} className={cn('flex items-center gap-1.5 text-xs',
                         form.password && r.ok ? 'text-emerald-600 dark:text-emerald-400' : 'text-muted-foreground')}>
@@ -601,7 +643,7 @@ export default function UserFormPage() {
         </div>
 
         {/* Sidebar */}
-        <div className="w-64 shrink-0 space-y-4">
+        <div className={narrow ? 'w-full space-y-4' : 'w-64 shrink-0 space-y-4'}>
           <div className="rounded-xl border border-border bg-card p-4 shadow-sm">
             <h3 className="mb-3 flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
               <ToggleRight className="size-3.5" />{t('users.form.status')}

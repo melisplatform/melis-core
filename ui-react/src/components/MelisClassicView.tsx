@@ -28,9 +28,12 @@ export type ViewMode = 'react' | 'iframe'
 export function ViewModeToggle({
   mode,
   onChange,
+  compact = false,
 }: {
   mode: ViewMode
   onChange: (mode: ViewMode) => void
+  /** Icon-only, no text labels — opt-in so every other call site keeps its current look. */
+  compact?: boolean
 }) {
   const { t } = useI18n()
   return (
@@ -38,28 +41,32 @@ export function ViewModeToggle({
       <button
         type="button"
         onClick={() => onChange('react')}
+        title={compact ? t('layout.view_new') : undefined}
         className={cn(
-          'flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-medium transition-colors',
+          'flex items-center gap-1.5 rounded-md text-xs font-medium transition-colors',
+          compact ? 'px-2 py-1.5' : 'px-3 py-1.5',
           mode === 'react'
             ? 'bg-card text-foreground shadow-sm'
             : 'text-muted-foreground hover:text-foreground',
         )}
       >
         <MelisM className="size-3.5" />
-        {t('layout.view_new')}
+        {!compact && t('layout.view_new')}
       </button>
       <button
         type="button"
         onClick={() => onChange('iframe')}
+        title={compact ? t('layout.view_old') : undefined}
         className={cn(
-          'flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-medium transition-colors',
+          'flex items-center gap-1.5 rounded-md text-xs font-medium transition-colors',
+          compact ? 'px-2 py-1.5' : 'px-3 py-1.5',
           mode === 'iframe'
             ? 'bg-card text-foreground shadow-sm'
             : 'text-muted-foreground hover:text-foreground',
         )}
       >
         <Layout className="size-3.5" />
-        {t('layout.view_old')}
+        {!compact && t('layout.view_old')}
       </button>
     </div>
   )
