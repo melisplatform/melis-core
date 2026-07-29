@@ -81,7 +81,22 @@ class TreeToolsController extends MelisAbstractActionController
                 // derive its visibility from whether a child tool is actually granted (see $isNavChild),
                 // so nothing empty leaks.
                 $sectionKey         = $toolSectionName['conf']['melisKey'] ?? $key;
-                $sectionIsContainer = empty($toolSectionName['forward']) && !empty($toolSectionName['interface']);
+                // A node is a pure CONTAINER only when its interface children are real NAVIGABLE tools
+                // (they carry an icon + left_menu_display). A leaf tool can ALSO declare `interface`
+                // children that are non-navigable action-rights buttons — icon-less, left_menu_display
+                // = false, EXCLUSION group (e.g. MelisCommerce Clients/Contacts add/export/delete/save).
+                // Counting those as "children" wrongly turned the tool into a container: with no
+                // navigable child, $isNavChild stays false, so its own toolsection_* config was never
+                // built (L146) → it rendered EMPTY and vanished from the legacy left menu even though
+                // canAccess() granted it. Gate the container flag on navigable children only.
+                $sectionHasNavChild = false;
+                foreach (($toolSectionName['interface'] ?? []) as $sectionChild) {
+                    if (!empty($sectionChild['conf']['icon']) && ($sectionChild['conf']['left_menu_display'] ?? true)) {
+                        $sectionHasNavChild = true;
+                        break;
+                    }
+                }
+                $sectionIsContainer = empty($toolSectionName['forward']) && $sectionHasNavChild;
 
                 if ($melisCoreRights->canAccess($sectionKey) || $sectionIsContainer) {
 
