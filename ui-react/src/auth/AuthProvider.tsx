@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState, type ReactNode } from 'react'
 
 import * as melis from '@/lib/melis-api'
 import { loadBricks, resetBricks } from '@/lib/bricks'
+import { prefetchDashboard, resetDashboardPrefetch } from '@/lib/dashboard-prefetch'
 import { AuthContext, type AuthState } from './auth-context'
 
 const DEMO_STORAGE_KEY = 'melis-demo'
@@ -88,6 +89,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const signIn = useCallback<AuthState['signIn']>(async (login, password, remember) => {
     const result = await melis.login(login, password, remember)
     if (result.success) {
+      // Le préchargement du dashboard part au chargement de `main.tsx`, donc AVANT ce login quand on
+      // atterrit directement sur `/melis-react` en session neuve (fenêtre privée) : ses 4 requêtes ont
+      // pris un 401. On jette ces promesses mortes et on relance le préchargement, maintenant
+      // authentifié — sinon le dashboard les consommait à son montage et s'affichait vide/partiel
+      // jusqu'à un rechargement manuel (ticket « dashboard not loaded, I need to reload »).
+      resetDashboardPrefetch()
+      prefetchDashboard()
       setAuthed(true)
       return undefined
     }
@@ -102,6 +110,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
     await melis.logout()
     resetBricks()
+    // Rien du dashboard de l'utilisateur sortant ne doit être servi au suivant.
+    resetDashboardPrefetch()
     setAuthed(false)
   }, [])
 
