@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { Fragment, useEffect, useRef, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import {
   ArrowDown, ArrowUp, ArrowUpDown, Columns3, Languages, Loader2, Pencil, Plus,
@@ -18,6 +18,8 @@ import { routeForForward } from '@/lib/tool-routes'
 import { useI18n } from '@/i18n/i18n-context'
 import type { I18nKey } from '@/i18n/dictionaries'
 import { ColumnManager, visibleCols, type ColDef } from '@/components/ColumnManager'
+import { ExpandToggle, HiddenColsRow } from '@/components/ExpandableRow'
+import { useIsNarrow } from '@/hooks/useIsNarrow'
 import { useCan } from '@/lib/capabilities'
 
 const TOOL_KEY = 'meliscore_tool_language'
@@ -102,6 +104,7 @@ export default function LanguageListPage() {
   const location = useLocation()
   const { openTab } = useTabs()
   const { t } = useI18n()
+  const narrow = useIsNarrow()
   const base = routeForForward('MelisCore/Language') ?? '/languages'
 
   // Capacités (droits avancés) : masque les composants internes selon les droits de l'user.
@@ -126,6 +129,15 @@ export default function LanguageListPage() {
   const [cols, setCols]         = useState<ColDef[]>(loadCols)
   const [showColMgr, setShowColMgr] = useState(false)
   const colMgrRef = useRef<HTMLDivElement>(null)
+  // Mobile-only: force the table down to just "name" regardless of the desktop ColumnManager
+  // preference, with the rest reachable via a per-row "+" — desktop behavior (cols as-is, no "+"
+  // column at all) is untouched since hasHidden/displayCols only diverge from `cols` when narrow.
+  const [expanded, setExpanded] = useState<Set<number>>(new Set())
+  const toggleExpand = (id: number) => setExpanded((s) => {
+    const n = new Set(s); n.has(id) ? n.delete(id) : n.add(id); return n
+  })
+  const displayCols = narrow ? cols.map(c => ({ ...c, visible: c.id === 'name' })) : cols
+  const hasHidden = narrow
 
   const [toDelete, setToDelete] = useState<languageApi.LanguageItem | null>(null)
 
@@ -207,24 +219,39 @@ export default function LanguageListPage() {
     } catch { setToDelete(null) }
   }
 
+  const cellContent = (l: languageApi.LanguageItem, id: string) => {
+    if (id === 'id') return l.id
+    if (id === 'locale') return <code className="rounded bg-muted px-1.5 py-0.5 text-xs font-medium">{l.locale}</code>
+    if (id === 'name') return (
+      <div className="flex items-center gap-2">
+        <span className="font-medium">{l.name}</span>
+        {l.isDefault && <Badge variant="default" className="border-amber-200 bg-amber-500/10 text-amber-600"><Star className="mr-1 size-3" />{t('languages.default')}</Badge>}
+      </div>
+    )
+    return null
+  }
+
   return (
     <div className={cn('flex flex-col gap-6 p-6', effectiveMode === 'iframe' ? 'h-full' : 'flex-1')}>
-      {/* Header */}
+      {/* Header — narrow-only additions never remove/replace a desktop class, so at narrow=false
+          every className below renders byte-identical to the original desktop layout. */}
       <div className="flex items-center justify-between gap-4">
-        <div>
-          <h1 className="text-xl font-bold">{t('languages.title')}</h1>
-          <p className="text-sm text-muted-foreground">{t('languages.subtitle')}</p>
+        <div className={cn(narrow && 'min-w-0')}>
+          <h1 className={cn('text-xl font-bold', narrow && 'truncate')}>{t('languages.title')}</h1>
+          <p className={cn('text-sm text-muted-foreground', narrow && 'truncate')}>{t('languages.subtitle')}</p>
         </div>
-        <div className="flex items-center gap-2">
-          {showViewToggle && (
-            <ViewModeToggle mode={effectiveMode} onChange={(m) => { setMode(m); if (m === 'iframe') setIframeLoaded(true) }} />
-          )}
-          <button type="button" onClick={handleRefresh} title={t('common.refresh')}
-            className="inline-flex size-8 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-accent hover:text-foreground">
-            <RotateCcw className={cn('size-3.5', refreshing && 'animate-spin')} />
-          </button>
+        <div className={cn('flex items-center gap-2', narrow && 'shrink-0 flex-col')}>
+          <div className="flex items-center gap-2">
+            {showViewToggle && (
+              <ViewModeToggle mode={effectiveMode} compact={narrow} onChange={(m) => { setMode(m); if (m === 'iframe') setIframeLoaded(true) }} />
+            )}
+            <button type="button" onClick={handleRefresh} title={t('common.refresh')}
+              className="inline-flex size-8 shrink-0 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-accent hover:text-foreground">
+              <RotateCcw className={cn('size-3.5', refreshing && 'animate-spin')} />
+            </button>
+          </div>
           {canCreate && (
-            <Button size="sm" onClick={() => navigate(`${base}/new`)}>
+            <Button size="sm" className={cn(narrow && 'w-full')} onClick={() => navigate(`${base}/new`)}>
               <Plus className="size-4" />{t('languages.new')}
             </Button>
           )}
@@ -247,7 +274,7 @@ export default function LanguageListPage() {
 
         {/* Filtres */}
         <div className="flex flex-wrap items-center gap-2">
-          <div className="relative flex-1 min-w-[220px]">
+          <div className={narrow ? 'relative w-full' : 'relative flex-1 min-w-[220px]'}>
             <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
             <Input value={searchInput} onChange={e => setSearchInput(e.target.value)}
               onKeyDown={e => e.key === 'Enter' && applySearch()}
@@ -255,25 +282,32 @@ export default function LanguageListPage() {
             {searchInput && <button onClick={clearSearch}
               className="absolute right-2.5 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"><X className="size-4" /></button>}
           </div>
-          <Button variant="outline" size="sm" className="gap-1.5" onClick={resetFilters} title={t('common.reset_filters')}>
-            <RotateCcw className={cn('size-3.5', refreshing && 'animate-spin')} />{t('common.reset_filters')}
-          </Button>
-          <div ref={colMgrRef} className="relative">
-            <Button variant="outline" size="sm" className="gap-1.5" onClick={() => setShowColMgr(v => !v)}>
-              <Columns3 className="size-3.5" />{t('common.columns')}
+          <div className={cn('flex items-center gap-2', narrow && 'w-full flex-wrap')}>
+            <Button variant="outline" size="sm"
+              className={cn('gap-1.5', narrow && 'h-auto min-h-9 flex-[1_1_calc(50%_-_4px)] justify-center whitespace-normal text-center')}
+              onClick={resetFilters} title={t('common.reset_filters')}>
+              <RotateCcw className={cn('size-3.5', refreshing && 'animate-spin')} />{t('common.reset_filters')}
             </Button>
-            {showColMgr && <ColumnManager cols={cols} labelFor={(id) => t(COL_LABEL[id])}
-              onChange={(c) => { setCols(c); saveCols(c) }} onClose={() => setShowColMgr(false)}
-              onReset={() => { setCols(DEFAULT_COLS); saveCols(DEFAULT_COLS) }} />}
+            <div ref={colMgrRef} className={cn('relative', narrow && 'flex-[1_1_calc(50%_-_4px)]')}>
+              <Button variant="outline" size="sm"
+                className={cn('gap-1.5', narrow && 'h-auto min-h-9 w-full justify-center whitespace-normal text-center')}
+                onClick={() => setShowColMgr(v => !v)}>
+                <Columns3 className="size-3.5" />{t('common.columns')}
+              </Button>
+              {showColMgr && <ColumnManager cols={cols} labelFor={(id) => t(COL_LABEL[id])}
+                onChange={(c) => { setCols(c); saveCols(c) }} onClose={() => setShowColMgr(false)}
+                onReset={() => { setCols(DEFAULT_COLS); saveCols(DEFAULT_COLS) }} />}
+            </div>
           </div>
         </div>
 
         {/* Table */}
-        <div className="rounded-xl border border-border bg-card shadow-sm">
-          <table className="w-full min-w-[420px] text-sm">
+        <div className="rounded-xl border border-border bg-card shadow-sm overflow-x-auto">
+          <table className={cn('w-full text-sm', !narrow && 'min-w-[420px]')}>
             <thead className="sticky top-0 border-b border-border bg-muted/60 text-xs uppercase tracking-wide text-muted-foreground">
               <tr>
-                {visibleCols(cols).map(({ id }) => {
+                {hasHidden && <th className="w-8 px-2 py-3" />}
+                {visibleCols(displayCols).map(({ id }) => {
                   const isSorted = sortCol === id
                   const SIcon = isSorted ? (sortDir === 'asc' ? ArrowUp : ArrowDown) : ArrowUpDown
                   return (
@@ -291,19 +325,18 @@ export default function LanguageListPage() {
             </thead>
             <tbody className="divide-y divide-border">
               {items.length === 0 && !loading ? (
-                <tr><td colSpan={visibleCols(cols).length + 1} className="px-4 py-10 text-center text-sm text-muted-foreground">{t('languages.empty')}</td></tr>
+                <tr><td colSpan={visibleCols(displayCols).length + 1 + (hasHidden ? 1 : 0)} className="px-4 py-10 text-center text-sm text-muted-foreground">{t('languages.empty')}</td></tr>
               ) : items.map(l => (
-                <tr key={l.id} className="group transition-colors hover:bg-muted/40">
-                  {visibleCols(cols).map(({ id }) => (
+                <Fragment key={l.id}>
+                <tr className="group transition-colors hover:bg-muted/40">
+                  {hasHidden && (
+                    <td className="px-2 py-2.5">
+                      <ExpandToggle expanded={expanded.has(l.id)} onClick={() => toggleExpand(l.id)} />
+                    </td>
+                  )}
+                  {visibleCols(displayCols).map(({ id }) => (
                     <td key={id} className={cn('px-4 py-2.5', id === 'id' && 'tabular-nums text-muted-foreground')}>
-                      {id === 'id' && l.id}
-                      {id === 'locale' && <code className="rounded bg-muted px-1.5 py-0.5 text-xs font-medium">{l.locale}</code>}
-                      {id === 'name' && (
-                        <div className="flex items-center gap-2">
-                          <span className="font-medium">{l.name}</span>
-                          {l.isDefault && <Badge variant="default" className="border-amber-200 bg-amber-500/10 text-amber-600"><Star className="mr-1 size-3" />{t('languages.default')}</Badge>}
-                        </div>
-                      )}
+                      {cellContent(l, id)}
                     </td>
                   ))}
                   <td className="px-4 py-2.5">
@@ -323,6 +356,11 @@ export default function LanguageListPage() {
                     </div>
                   </td>
                 </tr>
+                {expanded.has(l.id) && (
+                  <HiddenColsRow cols={displayCols} labelFor={(id) => t(COL_LABEL[id])} renderValue={(id) => cellContent(l, id)}
+                    colSpan={visibleCols(displayCols).length + 1 + (hasHidden ? 1 : 0)} />
+                )}
+                </Fragment>
               ))}
             </tbody>
           </table>

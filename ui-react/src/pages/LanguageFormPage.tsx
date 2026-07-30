@@ -10,6 +10,7 @@ import { useSubTabs } from '@/components/tabs/sub-tab-store'
 import { routeForForward } from '@/lib/tool-routes'
 import { useI18n } from '@/i18n/i18n-context'
 import { useCan } from '@/lib/capabilities'
+import { useIsNarrow } from '@/hooks/useIsNarrow'
 
 const TOOL_KEY = 'meliscore_tool_language'
 
@@ -27,6 +28,7 @@ export default function LanguageFormPage() {
   const navigate = useNavigate()
   const { id }   = useParams<{ id: string }>()
   const { t }    = useI18n()
+  const narrow   = useIsNarrow()
   const isEdit   = Boolean(id)
   const languageId = id ? parseInt(id) : null
 
@@ -119,24 +121,29 @@ export default function LanguageFormPage() {
 
   return (
     <div className="flex flex-col gap-6 p-6">
-      {/* Header */}
+      {/* Header — narrow-only additions never remove/replace a desktop class, so at narrow=false
+          every className below renders byte-identical to the original desktop layout. */}
       <div className="flex items-center justify-between gap-4">
-        <div className="flex items-center gap-3">
-          <div className="grid size-10 place-items-center rounded-lg bg-primary/10 text-primary"><Languages className="size-5" /></div>
-          <div>
-            <h1 className="text-xl font-bold">{isEdit ? t('languages.form.edit_title') : t('languages.form.new_title')}</h1>
+        <div className={cn('flex items-center gap-3', narrow && 'min-w-0')}>
+          <div className={narrow ? 'hidden' : 'grid size-10 place-items-center rounded-lg bg-primary/10 text-primary'}>
+            <Languages className="size-5" />
+          </div>
+          <div className={cn(narrow && 'min-w-0')}>
+            <h1 className={cn('text-xl font-bold', narrow && 'truncate')}>{isEdit ? t('languages.form.edit_title') : t('languages.form.new_title')}</h1>
             {isDefault && <p className="text-xs text-amber-600">{t('languages.form.default_hint')}</p>}
           </div>
         </div>
-        <div className="flex items-center gap-2">
-          {saved && <span className="text-sm text-emerald-600">{t('languages.form.saved')}</span>}
-          {isEdit && (
-            <button type="button" onClick={handleRefresh} title={t('common.refresh')}
-              className="inline-flex size-8 items-center justify-center rounded-md text-muted-foreground hover:bg-accent hover:text-foreground">
-              <RotateCcw className={cn('size-3.5', loading && 'animate-spin')} />
-            </button>
-          )}
-          <Button size="sm" onClick={handleSubmit} disabled={saving || loading}>
+        <div className={cn('flex items-center gap-2', narrow && 'shrink-0 flex-col')}>
+          <div className="flex items-center gap-2">
+            {saved && <span className="text-sm text-emerald-600">{t('languages.form.saved')}</span>}
+            {isEdit && (
+              <button type="button" onClick={handleRefresh} title={t('common.refresh')}
+                className="inline-flex size-8 shrink-0 items-center justify-center rounded-md text-muted-foreground hover:bg-accent hover:text-foreground">
+                <RotateCcw className={cn('size-3.5', loading && 'animate-spin')} />
+              </button>
+            )}
+          </div>
+          <Button size="sm" className={cn(narrow && 'w-full')} onClick={handleSubmit} disabled={saving || loading}>
             {saving ? <Loader2 className="size-4 animate-spin" /> : <Save className="size-4" />}{t('common.save')}
           </Button>
         </div>
