@@ -111,7 +111,7 @@ function NavNodeItem({ node, depth, collapsed, defaultOpen = false, sidebarPanel
           depth === 0
             ? 'text-sm font-semibold text-foreground/90'
             : depth === 1
-              ? 'text-xs font-semibold uppercase tracking-wider text-muted-foreground'
+              ? 'text-sm font-semibold text-muted-foreground'
               : 'text-sm font-medium text-muted-foreground',
           open && depth === 0 && 'text-foreground',
         )}
