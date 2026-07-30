@@ -13,6 +13,7 @@ import { MelisClassicFrame, ViewModeToggle, type ViewMode } from '@/components/M
 import { toolHasViewToggle } from '@/lib/module-registry'
 import { routeForForward } from '@/lib/tool-routes'
 import { useI18n } from '@/i18n/i18n-context'
+import { useIsNarrow } from '@/hooks/useIsNarrow'
 import { useCan } from '@/lib/capabilities'
 
 const TOOL_KEY = 'meliscore_tool_other_config'
@@ -42,6 +43,7 @@ export default function OtherConfigPage() {
   const location = useLocation()
   const { openTab } = useTabs()
   const { t } = useI18n()
+  const narrow = useIsNarrow()
   const base = routeForForward('MelisCore/MelisCoreOtherConfig') ?? '/otherconfig'
 
   const canList = useCan(TOOL_KEY, 'list')
@@ -98,12 +100,12 @@ export default function OtherConfigPage() {
     </section>
   )
   const Row = ({ label, hint, children }: { label: string; hint?: string; children: React.ReactNode }) => (
-    <div className="flex items-start justify-between gap-4">
+    <div className={cn('flex items-start justify-between gap-4', narrow && 'flex-col')}>
       <div className="min-w-0">
         <div className="text-sm font-medium">{label}</div>
         {hint && <div className="text-xs text-muted-foreground">{hint}</div>}
       </div>
-      <div className="flex shrink-0 items-center gap-2">{children}</div>
+      <div className={cn('flex shrink-0 items-center gap-2', narrow && 'w-full flex-wrap')}>{children}</div>
     </div>
   )
   const Num = (key: keyof OtherConfig, opts: { w?: string } = {}) => (
@@ -114,22 +116,28 @@ export default function OtherConfigPage() {
 
   return (
     <div className={cn('flex flex-col gap-6 p-6', effectiveMode === 'iframe' ? 'h-full' : 'flex-1')}>
-      {/* Header */}
+      {/* Header — narrow-only additions never remove/replace a desktop class, so at narrow=false
+          every className below renders byte-identical to the original desktop layout. */}
       <div className="flex items-center justify-between gap-4">
-        <div>
-          <h1 className="flex items-center gap-2 text-xl font-bold"><Settings2 className="size-5 text-primary" />{t('otherconfig.title')}</h1>
-          <p className="text-sm text-muted-foreground">{t('otherconfig.subtitle')}</p>
+        <div className={cn(narrow && 'min-w-0')}>
+          <h1 className="flex items-center gap-2 text-xl font-bold">
+            <Settings2 className="size-5 shrink-0 text-primary" />
+            <span className={cn(narrow && 'truncate')}>{t('otherconfig.title')}</span>
+          </h1>
+          <p className={cn('text-sm text-muted-foreground', narrow && 'truncate')}>{t('otherconfig.subtitle')}</p>
         </div>
-        <div className="flex items-center gap-2">
-          {showViewToggle && (
-            <ViewModeToggle mode={effectiveMode} onChange={(m) => { setMode(m); if (m === 'iframe') setIframeLoaded(true) }} />
-          )}
-          <button type="button" onClick={load} title={t('common.refresh')}
-            className="inline-flex size-8 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-accent hover:text-foreground">
-            <RotateCcw className={cn('size-3.5', loading && 'animate-spin')} />
-          </button>
+        <div className={cn('flex items-center gap-2', narrow && 'shrink-0 flex-col')}>
+          <div className="flex items-center gap-2">
+            {showViewToggle && (
+              <ViewModeToggle mode={effectiveMode} compact={narrow} onChange={(m) => { setMode(m); if (m === 'iframe') setIframeLoaded(true) }} />
+            )}
+            <button type="button" onClick={load} title={t('common.refresh')}
+              className="inline-flex size-8 shrink-0 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-accent hover:text-foreground">
+              <RotateCcw className={cn('size-3.5', loading && 'animate-spin')} />
+            </button>
+          </div>
           {canEdit && (
-            <Button size="sm" className="gap-1.5" onClick={save} disabled={saving || !cfg}>
+            <Button size="sm" className={cn('gap-1.5', narrow && 'w-full')} onClick={save} disabled={saving || !cfg}>
               <Save className="size-4" />{saving ? t('otherconfig.saving') : t('common.save')}
             </Button>
           )}
@@ -156,7 +164,8 @@ export default function OtherConfigPage() {
             {bool(cfg.login_account_lock_status) && (<>
               <Row label={t('otherconfig.lock.admin_email')}>
                 <Input type="email" value={cfg.login_account_admin_email} disabled={!canEdit}
-                  onChange={(e) => set('login_account_admin_email', e.target.value)} className="h-8 w-72 text-sm" />
+                  onChange={(e) => set('login_account_admin_email', e.target.value)}
+                  className={cn('h-8 text-sm', narrow ? 'w-full' : 'w-72')} />
               </Row>
               <Row label={t('otherconfig.lock.attempts')}>{Num('login_account_lock_number_of_attempts')}</Row>
               <Row label={t('otherconfig.lock.type')}>

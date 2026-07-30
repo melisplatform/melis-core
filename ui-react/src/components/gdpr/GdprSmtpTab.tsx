@@ -9,6 +9,7 @@ import * as gdprApi from '@/lib/gdpr-api'
 import { GdprApiError } from '@/lib/gdpr-api'
 import type { I18nKey } from '@/i18n/dictionaries'
 import { useI18n } from '@/i18n/i18n-context'
+import { useIsNarrow } from '@/hooks/useIsNarrow'
 import { useCan } from '@/lib/capabilities'
 import { GDPR_TOOL_KEY, gdprNotify } from './gdpr-shared'
 
@@ -28,6 +29,7 @@ function validate(f: { id: number; host: string; username: string; password: str
 /** `actionsHost` : conteneur du header de la page où projeter les actions (Save…). */
 export default function GdprSmtpTab({ actionsHost }: { actionsHost?: HTMLElement | null }) {
   const { t } = useI18n()
+  const narrow = useIsNarrow()
   const canEdit = useCan(GDPR_TOOL_KEY, 'edit')
 
   const [id, setId] = useState(0)
@@ -104,16 +106,20 @@ export default function GdprSmtpTab({ actionsHost }: { actionsHost?: HTMLElement
   const actions = (
     <>
       <button type="button" onClick={load} title={t('common.refresh')}
-        className="inline-flex size-8 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-accent hover:text-foreground">
+        className="inline-flex size-8 shrink-0 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-accent hover:text-foreground">
         <RotateCcw className={cn('size-3.5', loading && 'animate-spin')} />
       </button>
       {canEdit && id > 0 && (
-        <Button variant="outline" size="sm" className="gap-1.5 text-red-600" onClick={remove} disabled={saving || loading}>
+        <Button variant="outline" size="sm"
+          className={cn('gap-1.5 text-red-600', narrow && 'h-auto min-h-9 flex-[1_1_calc(50%_-_4px)] justify-center whitespace-normal text-center')}
+          onClick={remove} disabled={saving || loading}>
           <Trash2 className="size-3.5" />{t('common.delete')}
         </Button>
       )}
       {canEdit && (
-        <Button size="sm" className="gap-1.5" onClick={save} disabled={saving || loading}>
+        <Button size="sm"
+          className={cn('gap-1.5', narrow && (id > 0 ? 'h-auto min-h-9 flex-[1_1_calc(50%_-_4px)] justify-center whitespace-normal text-center' : 'w-full justify-center'))}
+          onClick={save} disabled={saving || loading}>
           <Save className="size-4" />{saving ? t('gdpr.smtp.saving') : t('common.save')}
         </Button>
       )}

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { Fragment, useEffect, useState } from 'react'
 import { AlertCircle, ArrowLeft, Pencil, Play, Plus, Save, ScrollText, Search, Trash2, X } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
@@ -12,6 +12,8 @@ import type { I18nKey } from '@/i18n/dictionaries'
 import { useI18n } from '@/i18n/i18n-context'
 import { useCan } from '@/lib/capabilities'
 import { Flag } from '@/components/LanguageSwitcher'
+import { ExpandToggle, HiddenColsRow } from '@/components/ExpandableRow'
+import { useIsNarrow } from '@/hooks/useIsNarrow'
 import { GDPR_TOOL_KEY, gdprNotify } from './gdpr-shared'
 
 type View = 'list' | 'edit'
@@ -50,8 +52,16 @@ function Switch({ checked, onChange, disabled }: { checked: boolean; onChange: (
 
 export default function GdprAutoDeleteTab() {
   const { t } = useI18n()
+  const narrow = useIsNarrow()
   const canEdit = useCan(GDPR_TOOL_KEY, 'edit')
   const canDelete = useCan(GDPR_TOOL_KEY, 'delete')
+  // Mobile-only: force the configs table down to just "module", with the rest reachable via a
+  // per-row "+" — desktop behavior (all 4 columns, no "+" at all) is untouched since this table
+  // has no ColumnManager/persisted col prefs, so `narrow` is the only branch.
+  const [expandedCfg, setExpandedCfg] = useState<Set<number>>(new Set())
+  const toggleExpandCfg = (id: number) => setExpandedCfg((s) => {
+    const n = new Set(s); n.has(id) ? n.delete(id) : n.add(id); return n
+  })
 
   const [meta, setMeta] = useState<AdMeta | null>(null)
   const [configs, setConfigs] = useState<AdConfig[]>([])
@@ -235,7 +245,7 @@ export default function GdprAutoDeleteTab() {
   if (view === 'edit' && meta) {
     return (
       <div className="flex flex-col gap-4">
-        <div className="flex items-center justify-between">
+        <div className={cn('flex items-center justify-between gap-2', narrow && 'flex-wrap')}>
           <Button variant="outline" size="sm" className="gap-1.5" onClick={() => { clearErrors(); setView('list') }}><ArrowLeft className="size-3.5" />{t('gdpr.ad.back')}</Button>
           {canEdit && <Button size="sm" className="gap-1.5" onClick={save} disabled={saving}><Save className="size-4" />{saving ? t('gdpr.smtp.saving') : t('common.save')}</Button>}
         </div>
@@ -359,8 +369,8 @@ export default function GdprAutoDeleteTab() {
           ) : configLogsLoading ? (
             <p className="mt-3 text-xs text-muted-foreground">{t('common.loading')}</p>
           ) : (
-            <div className="mt-3 overflow-hidden rounded-lg border border-border">
-              <table className="w-full min-w-[560px] text-sm">
+            <div className="mt-3 overflow-x-auto rounded-lg border border-border">
+              <table className={cn('w-full text-sm', !narrow && 'min-w-[560px]')}>
                 <thead className="border-b border-border bg-muted/30 text-xs uppercase tracking-wide text-muted-foreground">
                   <tr>
                     <th className="px-3 py-2 text-left">{t('gdpr.ad.log_date')}</th>
@@ -398,40 +408,75 @@ export default function GdprAutoDeleteTab() {
   }
 
   // ─── Liste ─────────────────────────────────────────────────────────────────
+  // Mobile-only: force the table down to just "module", with the rest reachable via a per-row
+  // "+" — desktop behavior (all 4 columns, no "+" at all) is untouched since this table has no
+  // ColumnManager/persisted col prefs, so `narrow` is the only branch.
+  const AD_COLS = [
+    { id: 'module', label: t('gdpr.ad.col_module') },
+    { id: 'site', label: t('gdpr.ad.col_site') },
+    { id: 'alert', label: t('gdpr.ad.col_alert') },
+    { id: 'delete', label: t('gdpr.ad.col_delete') },
+  ] as const
+  const displayColIds = narrow ? ['module'] : AD_COLS.map((c) => c.id)
+  const hasHiddenCfg = narrow
+  function cfgCellContent(c: AdConfig, id: string) {
+    if (id === 'module') return c.module
+    if (id === 'site') return c.siteLabel || (c.siteId ? c.siteId : t('gdpr.ad.all_sites'))
+    if (id === 'alert') return c.alertStatus
+      ? <Badge variant="muted" className="px-1.5 py-0 text-[10px]">{t('gdpr.ad.days', { n: c.alertDays })}{c.resend ? ' +7' : ''}</Badge>
+      : <span className="text-muted-foreground">—</span>
+    if (id === 'delete') return t('gdpr.ad.days', { n: c.deleteDays })
+    return null
+  }
+
   return (
     <div className="flex flex-col gap-4">
       <div className="flex flex-wrap items-center gap-2">
-        <div className="flex-1">
+        <div className={cn(narrow ? 'w-full min-w-0' : 'flex-1')}>
           <h3 className="text-sm font-semibold">{t('gdpr.ad.list_title')}</h3>
           <p className="text-xs text-muted-foreground">{t('gdpr.ad.list_subtitle')}</p>
         </div>
-        <Button variant="outline" size="sm" className="gap-1.5" onClick={toggleLogs}><ScrollText className="size-3.5" />{t('gdpr.ad.logs')}</Button>
-        {canEdit && <Button variant="outline" size="sm" className="gap-1.5" onClick={run} disabled={running}><Play className={cn('size-3.5', running && 'animate-pulse')} />{t('gdpr.ad.run')}</Button>}
-        {canEdit && <Button size="sm" className="gap-1.5" onClick={openNew}><Plus className="size-4" />{t('gdpr.ad.new')}</Button>}
+        <Button variant="outline" size="sm"
+          className={cn('gap-1.5', narrow && 'h-auto min-h-9 flex-[1_1_calc(50%_-_4px)] justify-center whitespace-normal text-center')}
+          onClick={toggleLogs}><ScrollText className="size-3.5" />{t('gdpr.ad.logs')}</Button>
+        {canEdit && <Button variant="outline" size="sm"
+          className={cn('gap-1.5', narrow && 'h-auto min-h-9 flex-[1_1_calc(50%_-_4px)] justify-center whitespace-normal text-center')}
+          onClick={run} disabled={running}><Play className={cn('size-3.5', running && 'animate-pulse')} />{t('gdpr.ad.run')}</Button>}
+        {canEdit && <Button size="sm"
+          className={cn('gap-1.5', narrow && 'h-auto min-h-9 w-full justify-center whitespace-normal text-center')}
+          onClick={openNew}><Plus className="size-4" />{t('gdpr.ad.new')}</Button>}
       </div>
 
       <AlertBanner />
 
-      <div className="overflow-hidden rounded-xl border border-border bg-card shadow-sm">
-        <table className="w-full min-w-[640px] text-sm">
+      <div className="overflow-x-auto rounded-xl border border-border bg-card shadow-sm">
+        <table className={cn('w-full text-sm', !narrow && 'min-w-[640px]')}>
           <thead className="border-b border-border bg-muted/40 text-xs uppercase tracking-wide text-muted-foreground">
             <tr>
-              <th className="px-4 py-2.5 text-left">{t('gdpr.ad.col_module')}</th>
-              <th className="px-4 py-2.5 text-left">{t('gdpr.ad.col_site')}</th>
-              <th className="px-4 py-2.5 text-left">{t('gdpr.ad.col_alert')}</th>
-              <th className="px-4 py-2.5 text-left">{t('gdpr.ad.col_delete')}</th>
+              {hasHiddenCfg && <th className="w-8 px-2 py-2.5" />}
+              {displayColIds.includes('module') && <th className="px-4 py-2.5 text-left">{t('gdpr.ad.col_module')}</th>}
+              {displayColIds.includes('site') && <th className="px-4 py-2.5 text-left">{t('gdpr.ad.col_site')}</th>}
+              {displayColIds.includes('alert') && <th className="px-4 py-2.5 text-left">{t('gdpr.ad.col_alert')}</th>}
+              {displayColIds.includes('delete') && <th className="px-4 py-2.5 text-left">{t('gdpr.ad.col_delete')}</th>}
               <th className="w-20 px-4 py-2.5" />
             </tr>
           </thead>
           <tbody className="divide-y divide-border">
             {configs.length === 0 ? (
-              <tr><td colSpan={5} className="px-4 py-10 text-center text-sm text-muted-foreground">{t('gdpr.ad.empty')}</td></tr>
+              <tr><td colSpan={displayColIds.length + 1 + (hasHiddenCfg ? 1 : 0)} className="px-4 py-10 text-center text-sm text-muted-foreground">{t('gdpr.ad.empty')}</td></tr>
             ) : configs.map((c) => (
-              <tr key={c.id} className="transition-colors hover:bg-muted/40">
-                <td className="px-4 py-2.5 font-medium">{c.module}</td>
-                <td className="px-4 py-2.5 text-muted-foreground">{c.siteLabel || (c.siteId ? c.siteId : t('gdpr.ad.all_sites'))}</td>
-                <td className="px-4 py-2.5">{c.alertStatus ? <Badge variant="muted" className="px-1.5 py-0 text-[10px]">{t('gdpr.ad.days', { n: c.alertDays })}{c.resend ? ' +7' : ''}</Badge> : <span className="text-muted-foreground">—</span>}</td>
-                <td className="px-4 py-2.5">{t('gdpr.ad.days', { n: c.deleteDays })}</td>
+              <Fragment key={c.id}>
+              <tr className="transition-colors hover:bg-muted/40">
+                {hasHiddenCfg && (
+                  <td className="px-2 py-2.5">
+                    <ExpandToggle expanded={expandedCfg.has(c.id)} onClick={() => toggleExpandCfg(c.id)} />
+                  </td>
+                )}
+                {displayColIds.map((id) => (
+                  <td key={id} className={cn('px-4 py-2.5', id === 'module' && 'font-medium', id === 'site' && 'text-muted-foreground')}>
+                    {cfgCellContent(c, id)}
+                  </td>
+                ))}
                 <td className="px-4 py-2.5">
                   <div className="flex items-center justify-end gap-1">
                     {canEdit && <button onClick={() => openEdit(c.id)} title={t('common.edit')} className="inline-flex size-7 items-center justify-center rounded-md text-muted-foreground hover:bg-accent hover:text-foreground"><Pencil className="size-3.5" /></button>}
@@ -439,15 +484,22 @@ export default function GdprAutoDeleteTab() {
                   </div>
                 </td>
               </tr>
+              {expandedCfg.has(c.id) && (
+                <HiddenColsRow cols={AD_COLS.map((col) => ({ id: col.id, visible: displayColIds.includes(col.id) }))}
+                  labelFor={(id) => AD_COLS.find((col) => col.id === id)?.label ?? id}
+                  renderValue={(id) => cfgCellContent(c, id)}
+                  colSpan={displayColIds.length + 1 + (hasHiddenCfg ? 1 : 0)} />
+              )}
+              </Fragment>
             ))}
           </tbody>
         </table>
       </div>
 
       {showLogs && (
-        <div className="overflow-hidden rounded-xl border border-border bg-card shadow-sm">
+        <div className="overflow-x-auto rounded-xl border border-border bg-card shadow-sm">
           <div className="border-b border-border bg-muted/40 px-4 py-2.5 text-sm font-semibold">{t('gdpr.ad.logs')}</div>
-          <table className="w-full min-w-[640px] text-sm">
+          <table className={cn('w-full text-sm', !narrow && 'min-w-[640px]')}>
             <thead className="border-b border-border bg-muted/30 text-xs uppercase tracking-wide text-muted-foreground">
               <tr>
                 <th className="px-4 py-2 text-left">{t('gdpr.ad.log_date')}</th>

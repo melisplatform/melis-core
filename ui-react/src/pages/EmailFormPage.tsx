@@ -11,6 +11,7 @@ import type { EmailContent, EmailLang } from '@/lib/emails-api'
 import { useSubTabs } from '@/components/tabs/sub-tab-store'
 import { routeForForward } from '@/lib/tool-routes'
 import { useI18n } from '@/i18n/i18n-context'
+import { useIsNarrow } from '@/hooks/useIsNarrow'
 import { useCan } from '@/lib/capabilities'
 
 const TOOL_KEY = 'meliscore_tool_emails_mngt'
@@ -43,6 +44,7 @@ export default function EmailFormPage() {
   const navigate = useNavigate()
   const { id } = useParams()
   const { t } = useI18n()
+  const narrow = useIsNarrow()
   const base = routeForForward('MelisCore/EmailsManagement') ?? '/emails'
   const isNew = !id || id === 'new'
 
@@ -125,13 +127,16 @@ export default function EmailFormPage() {
   return (
     <div className="flex flex-1 flex-col gap-6 p-6">
       <div className="flex items-center justify-between gap-4">
-        <div className="flex items-center gap-3">
-          <div>
-            <h1 className="flex items-center gap-2 text-xl font-bold"><Mail className="size-5 text-primary" />{isNew ? t('emails.creation') : form.name}</h1>
-            <p className="text-sm text-muted-foreground">{isNew ? t('emails.creation_sub') : t('emails.edition_sub')}</p>
+        <div className={cn('flex items-center gap-3', narrow && 'min-w-0')}>
+          <div className={cn(narrow && 'min-w-0')}>
+            <h1 className="flex items-center gap-2 text-xl font-bold">
+              <Mail className="size-5 shrink-0 text-primary" />
+              <span className={cn(narrow && 'truncate')}>{isNew ? t('emails.creation') : form.name}</span>
+            </h1>
+            <p className={cn('text-sm text-muted-foreground', narrow && 'truncate')}>{isNew ? t('emails.creation_sub') : t('emails.edition_sub')}</p>
           </div>
         </div>
-        {canSave && <Button size="sm" className="gap-1.5" onClick={save} disabled={saving}><Save className="size-4" />{saving ? t('emails.saving') : t('common.save')}</Button>}
+        {canSave && <Button size="sm" className={cn('gap-1.5', narrow && 'shrink-0')} onClick={save} disabled={saving}><Save className="size-4" />{saving ? t('emails.saving') : t('common.save')}</Button>}
       </div>
 
       {/* Propriétés générales */}
