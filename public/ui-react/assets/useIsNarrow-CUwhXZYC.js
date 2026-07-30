@@ -1,0 +1,1 @@
+import{a as e,c as t}from"./i18n-context-kBrSUcTO.js";var n=t(e(),1);function r(e=640){let[t,r]=(0,n.useState)(()=>window.innerWidth<e);return(0,n.useEffect)(()=>{let t=()=>r(window.innerWidth<e);return window.addEventListener(`resize`,t),()=>window.removeEventListener(`resize`,t)},[e]),t}export{r as t};
