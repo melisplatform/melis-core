@@ -46,8 +46,8 @@ class MelisReactApiAuthController extends MelisAbstractActionController
             return $this->jsonResponse(['success' => true]);
         }
 
-        // Générer un nouveau hash
-        $hash = bin2hex(uniqid('', true));
+        // Générer un nouveau hash — CSPRNG (uniqid = temps serveur, prédictible → brute-force du token)
+        $hash = bin2hex(random_bytes(32));
 
         // Insérer ou mettre à jour l'entrée dans la table lost_password
         $lostPassTable = $sm->get('MelisLostPasswordTable');

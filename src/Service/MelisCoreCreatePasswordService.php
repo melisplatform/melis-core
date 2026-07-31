@@ -559,7 +559,9 @@ class MelisCoreCreatePasswordService extends MelisGeneralService implements Meli
      */
     private function generateHash()
     {
-        return bin2hex(uniqid());
+        // CSPRNG: the create/reset-password token is a bearer credential — must be unpredictable.
+        // uniqid() is server-time-derived (guessable); use random_bytes for a 256-bit token.
+        return bin2hex(random_bytes(32));
     }
 
 }

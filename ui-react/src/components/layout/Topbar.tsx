@@ -405,25 +405,28 @@ function TabStrip() {
 //  • SubTabBar  → sous-onglets React (outils natifs MODULES + briques `subTabs`) ;
 //  • ToolTabBar → enregistrements d'un outil LEGACY en iframe (bridge postMessage).
 // Un outil n'affiche que l'UNE des deux (selon la vue New/Old), comme en desktop.
-function MobileSubTabs({ onNavigate }: { onNavigate: () => void }) {
+// Rend les sous-onglets d'UN outil donné (identifié par `toolPath` = le chemin de son onglet), pas
+// seulement de l'outil actif — sinon les sous-onglets des autres onglets ouverts disparaissent du
+// panneau mobile (ticket 0010849). Le `pathname` courant ne sert plus qu'à surligner le sous-onglet actif.
+function MobileSubTabs({ toolPath, onNavigate }: { toolPath: string; onNavigate: () => void }) {
   useToolRoutesVersion()
   const { pathname } = useLocation()
   const navigate = useNavigate()
   const bricks = useBricks()
 
-  // Sous-onglets React (cf. SubTabBar).
+  // Sous-onglets React (cf. SubTabBar) — section dérivée du chemin de l'onglet, pas de l'URL courante.
   const sections = [
     ...MODULES.map((m) => ({ key: routeForForward(m.forwardKey) ?? m.route, melisKey: m.melisKey })),
     ...bricks.filter((b) => b.subTabs).map((b) => ({ key: brickRoute(b), melisKey: b.melisKey })),
   ]
-  const section = sections.find((s) => s.key && (pathname === s.key || pathname.startsWith(s.key + '/')))
+  const section = sections.find((s) => s.key && (toolPath === s.key || toolPath.startsWith(s.key + '/')))
   const publishedView = usePublishedToolView(section?.melisKey ?? null)
   const { tabs: reactSubTabs, closeTab: closeReactSub } = useSubTabs(section?.key ?? '__none__')
   const showReact = !!section && publishedView !== 'iframe' && reactSubTabs.length > 0
 
   // Enregistrements legacy (cf. ToolTabBar).
-  const brick = bricks.find((b) => { const r = brickRoute(b); return r && (pathname === r || pathname.startsWith(r + '/')) })
-  const legacyKey = brick?.melisKey ?? melisKeyForRoute(pathname)
+  const brick = bricks.find((b) => { const r = brickRoute(b); return r && (toolPath === r || toolPath.startsWith(r + '/')) })
+  const legacyKey = brick?.melisKey ?? melisKeyForRoute(toolPath)
   const { tabsFor, activate: activateLegacy, close: closeLegacy } = useToolTabs()
   const legacySecondary = tabsFor(legacyKey).filter((t) => !t.primary)
   const toolView = useToolView(legacyKey)
@@ -527,8 +530,8 @@ function MobileTabsPanel({ onNavigate }: { onNavigate: () => void }) {
                 </button>
               )}
             </div>
-            {/* Sous-onglets de l'outil actif (l'onglet actif = celui qui matche l'URL courante). */}
-            {isActive && <MobileSubTabs onNavigate={onNavigate} />}
+            {/* Sous-onglets de CET outil (indépendant de l'onglet actif) — ticket 0010849. */}
+            <MobileSubTabs toolPath={tab.path} onNavigate={onNavigate} />
           </div>
         )
       })}

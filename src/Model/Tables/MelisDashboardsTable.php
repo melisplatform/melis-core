@@ -32,8 +32,8 @@ class MelisDashboardsTable extends MelisGenericTable
     {
         $select = $this->tableGateway->getSql()->select();
         
-        $select->where('d_dashboard_id  ="'. $dashboardId .'"');
-        $select->where('d_user_id  ='. $userId);
+        $select->where->equalTo('d_dashboard_id', $dashboardId);
+        $select->where->equalTo('d_user_id', (int) $userId);
         
         $resultSet = $this->tableGateway->selectWith($select);
         return $resultSet;

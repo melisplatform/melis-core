@@ -355,6 +355,11 @@ class MelisAuthController extends MelisAbstractActionController
                                             }
                                         }
 
+                                        // Regenerate the session id on this privilege change (login) to
+                                        // defeat session fixation, then write the identity into the fresh session.
+                                        if (session_status() === PHP_SESSION_ACTIVE) {
+                                            session_regenerate_id(true);
+                                        }
                                         // Write session
                                         $melisCoreAuth->getStorage()->write($user);
 
@@ -593,12 +598,15 @@ class MelisAuthController extends MelisAbstractActionController
         $authCookieConfig = $melisCoreConfig->getItem('meliscore/datas/default/auth_cookies');
         $remember = $authCookieConfig['remember'];
 
-        $user = new SetCookie('cookie1', $this->crypt($username), strtotime($remember), null, null, false, false, null, null , SetCookie::SAME_SITE_STRICT );
-        $pass = new SetCookie('cookie2', $this->crypt($password), strtotime($remember), null, null, false, false, null, null , SetCookie::SAME_SITE_STRICT );
+        // SECURITY: never store the password in a cookie. Only the username is remembered (to prefill
+        // the login field); the password must be re-entered. Any legacy plaintext "cookie2"
+        // (base64-encoded password) is actively expired here. cookie1 is HttpOnly (read server-side).
+        $user = new SetCookie('cookie1', $this->crypt($username), strtotime($remember), null, null, false, true, null, null , SetCookie::SAME_SITE_STRICT );
+        $clearPass = new SetCookie('cookie2', '', strtotime('-1 day'), null, null, false, true, null, null , SetCookie::SAME_SITE_STRICT );
         $remember = new SetCookie('remember', 1, strtotime($remember), null, null, false, false, null, null , SetCookie::SAME_SITE_STRICT );
 
         $this->getResponse()->getHeaders()->addHeader($user);
-        $this->getResponse()->getHeaders()->addHeader($pass);
+        $this->getResponse()->getHeaders()->addHeader($clearPass);
         $this->getResponse()->getHeaders()->addHeader($remember);
 
         // add code here for the session
@@ -625,10 +633,12 @@ class MelisAuthController extends MelisAbstractActionController
         $expire = $authCookieConfig['remember'];
 
         // include same site attribute
-        $user = new SetCookie('cookie1', $this->crypt($username), strtotime($expire, time()),null, null, false, false, null, null , SetCookie::SAME_SITE_STRICT );
+        $user = new SetCookie('cookie1', $this->crypt($username), strtotime($expire, time()),null, null, false, true, null, null , SetCookie::SAME_SITE_STRICT );
+        $clearPass = new SetCookie('cookie2', '', strtotime('-1 day'), null, null, false, true, null, null , SetCookie::SAME_SITE_STRICT );
         $remember = new SetCookie('remember', 0, strtotime($expire, time()),null, null, false, false, null, null , SetCookie::SAME_SITE_STRICT );
 
         $this->getResponse()->getHeaders()->addHeader($user);
+        $this->getResponse()->getHeaders()->addHeader($clearPass);
         $this->getResponse()->getHeaders()->addHeader($remember);
 
         // add code here to remove session

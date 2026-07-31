@@ -857,12 +857,38 @@ class MelisCoreModulesService extends MelisServiceManager
      * @param $type
      * @param string $fileName
      */
+    /**
+     * SSRF guard for the asset bundler: use the PLATFORM-CONFIGURED host, not the client-supplied
+     * `Host` header, when building the internal URLs the bundler fetches server-side. For a
+     * legitimate request this is the same value as HTTP_HOST, so behaviour is unchanged; a spoofed
+     * Host can no longer redirect these server-side fetches to an internal/arbitrary target.
+     */
+    private function getSafeAssetHost()
+    {
+        try {
+            $config = $this->getServiceManager()->get('MelisCoreConfig');
+            $data   = $config->getItem('meliscore/datas/default');
+            $host   = !empty($data['host']) ? $data['host'] : null;
+            $env    = getenv('MELIS_PLATFORM') ?: null;
+            if ($env) {
+                $envData = $config->getItem('meliscore/datas/' . $env);
+                if (!empty($envData['host'])) {
+                    $host = $envData['host'];
+                }
+            }
+            if (!empty($host)) {
+                return $host;
+            }
+        } catch (\Throwable $e) {}
+        return $_SERVER['HTTP_HOST'] ?? 'localhost';
+    }
+
     private function combineAssets($array, $type, $fileName = 'bundle-all')
     {
         if (!empty($array)) {
             $contentString = '';
             foreach ($array as $key => $val) {
-                $url = (empty($_SERVER['HTTPS']) ? 'http' : 'https') . "://$_SERVER[HTTP_HOST]" . $val;
+                $url = (empty($_SERVER['HTTPS']) ? 'http' : 'https') . '://' . $this->getSafeAssetHost() . $val;
                 $cleanString = $this->getFileContent($url, false);//file_get_contents($url);
                 if ($type == 'css') {
                     $cleanString = $this->replaceURL($cleanString, $val);
@@ -891,7 +917,7 @@ class MelisCoreModulesService extends MelisServiceManager
         if (!empty($array)) {
             foreach ($array as $moduleName => $jsFiles) {
                 $jsMinifier = new Minify\JS();
-                $hostName = (empty($_SERVER['HTTPS']) ? 'http' : 'https') . "://$_SERVER[HTTP_HOST]";
+                $hostName = (empty($_SERVER['HTTPS']) ? 'http' : 'https') . '://' . $this->getSafeAssetHost();
                 foreach ($jsFiles as $key => $js) {
                     $url = $hostName . $js;
                     $jsMinifier->add($this->getFileContent($url));
@@ -914,7 +940,7 @@ class MelisCoreModulesService extends MelisServiceManager
 
             foreach ($array as $moduleName => $cssFiles) {
                 $cssMinifier = new Minify\CSS();
-                $hostName = (empty($_SERVER['HTTPS']) ? 'http' : 'https') . "://$_SERVER[HTTP_HOST]";
+                $hostName = (empty($_SERVER['HTTPS']) ? 'http' : 'https') . '://' . $this->getSafeAssetHost();
                 foreach ($cssFiles as $key => $css) {
                     $url = $hostName . $css;
                     /**

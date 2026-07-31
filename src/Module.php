@@ -139,9 +139,20 @@ class Module
 
     public function initSession(MvcEvent $e)
     {
-        // set cookie attribute samesite
+        // Harden the session cookie params. Set UNCONDITIONALLY (not only when starting) so the
+        // hardened attributes are in effect for session_regenerate_id() at login even if another
+        // module started the session first: HttpOnly (JS can't read PHPSESSID → XSS can't steal it),
+        // SameSite=Strict, Secure over HTTPS, strict-mode (reject attacker-fixated ids).
+        ini_set('session.use_strict_mode', '1');
+        ini_set('session.cookie_samesite', 'Strict');
+        ini_set('session.cookie_httponly', '1');
+        ini_set('session.cookie_secure', empty($_SERVER['HTTPS']) ? '0' : '1');
         if (session_status() == PHP_SESSION_NONE) {
-            ini_set('session.cookie_samesite', 'Strict');
+            session_set_cookie_params([
+                'httponly' => true,
+                'samesite' => 'Strict',
+                'secure'   => !empty($_SERVER['HTTPS']),
+            ]);
             session_start();
         }
 
