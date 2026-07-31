@@ -15,6 +15,7 @@ import { MelisClassicFrame, ViewModeToggle, type ViewMode } from '@/components/M
 import { toolHasViewToggle } from '@/lib/module-registry'
 import { routeForForward } from '@/lib/tool-routes'
 import { useI18n } from '@/i18n/i18n-context'
+import { useIsNarrow } from '@/hooks/useIsNarrow'
 import { useCan } from '@/lib/capabilities'
 
 /**
@@ -53,6 +54,7 @@ function ImageField({ label, value, note, canEdit, onChange }: {
   label: string; value: string; note: string; canEdit: boolean; onChange: (v: string) => void
 }) {
   const { t } = useI18n()
+  const narrow = useIsNarrow()
   const fileRef = useRef<HTMLInputElement>(null)
   function onPick(e: React.ChangeEvent<HTMLInputElement>) {
     const f = e.target.files?.[0]; if (!f) return
@@ -61,8 +63,8 @@ function ImageField({ label, value, note, canEdit, onChange }: {
   return (
     <div>
       <label className="text-sm font-medium">{label}</label>
-      <div className="mt-2 flex items-center gap-4">
-        <div className="grid h-14 w-40 shrink-0 place-items-center overflow-hidden rounded-lg border border-border bg-muted/30">
+      <div className={cn('mt-2 flex gap-4', narrow ? 'flex-col' : 'items-center')}>
+        <div className={cn('grid h-14 shrink-0 place-items-center overflow-hidden rounded-lg border border-border bg-muted/30', narrow ? 'w-full' : 'w-40')}>
           {value
             ? <img src={value} alt="" className="max-h-12 max-w-[150px] object-contain"
                 onError={(e) => { (e.currentTarget as HTMLImageElement).style.visibility = 'hidden' }} />
@@ -163,6 +165,7 @@ export default function PlatformSchemePage() {
   const location = useLocation()
   const { openTab } = useTabs()
   const { t } = useI18n()
+  const narrow = useIsNarrow()
   const base = routeForForward('MelisCore/PlatformScheme') ?? '/platform-scheme'
 
   const canList = useCan(TOOL_KEY, 'list')
@@ -230,24 +233,33 @@ export default function PlatformSchemePage() {
 
   return (
     <div className={cn('flex flex-col gap-6 p-6', effectiveMode === 'iframe' ? 'h-full' : 'flex-1')}>
-      {/* Header */}
+      {/* Header — narrow-only additions never remove/replace a desktop class, so at narrow=false
+          every className below renders byte-identical to the original desktop layout. */}
       <div className="flex items-center justify-between gap-4">
-        <div>
-          <h1 className="flex items-center gap-2 text-xl font-bold"><Palette className="size-5 text-primary" />{t('scheme.title')}</h1>
-          <p className="text-sm text-muted-foreground">{t('scheme.subtitle')}</p>
+        <div className={cn(narrow && 'min-w-0')}>
+          <h1 className="flex items-center gap-2 text-xl font-bold">
+            <Palette className="size-5 shrink-0 text-primary" />
+            <span className={cn(narrow && 'truncate')}>{t('scheme.title')}</span>
+          </h1>
+          <p className={cn('text-sm text-muted-foreground', narrow && 'truncate')}>{t('scheme.subtitle')}</p>
         </div>
-        <div className="flex items-center gap-2">
-          {showViewToggle && (
-            <ViewModeToggle mode={effectiveMode} onChange={(m) => { setMode(m); if (m === 'iframe') setIframeLoaded(true) }} />
-          )}
+        <div className={cn('flex items-center gap-2', narrow && 'shrink-0 flex-col')}>
+          <div className="flex items-center gap-2">
+            {showViewToggle && (
+              <ViewModeToggle mode={effectiveMode} compact={narrow} onChange={(m) => { setMode(m); if (m === 'iframe') setIframeLoaded(true) }} />
+            )}
+            {canEdit && effectiveMode === 'react' && (
+              <Button variant="outline" size="sm" title={narrow ? t('scheme.restore') : undefined}
+                className={cn('gap-1.5 border-red-300 text-red-600 hover:bg-red-50 dark:hover:bg-red-950/20', narrow && 'px-2')}
+                onClick={() => setConfirmRestore(true)} disabled={saving || restoring || loading}>
+                <RotateCcw className="size-4" />
+                {!narrow && t('scheme.restore')}
+              </Button>
+            )}
+          </div>
           {canEdit && effectiveMode === 'react' && (
-            <Button variant="outline" size="sm" className="gap-1.5 border-red-300 text-red-600 hover:bg-red-50 dark:hover:bg-red-950/20"
-              onClick={() => setConfirmRestore(true)} disabled={saving || restoring || loading}>
-              <RotateCcw className="size-4" />{t('scheme.restore')}
-            </Button>
-          )}
-          {canEdit && effectiveMode === 'react' && (
-            <Button size="sm" className="gap-1.5" onClick={save} disabled={saving || restoring || loading}>
+            <Button size="sm" className={cn('gap-1.5', narrow && 'w-full justify-center')}
+              onClick={save} disabled={saving || restoring || loading}>
               <Save className="size-4" />{saving ? t('scheme.saving') : t('common.save')}
             </Button>
           )}

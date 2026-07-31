@@ -117,13 +117,13 @@ function BrickHost({ brick, isActive, visited }: { brick: BrickDef; isActive: bo
   )
 }
 
-const MOBILE_BREAKPOINT = 768
+const MOBILE_BREAKPOINT = 1024
 
 function ShellInner() {
-  // Start collapsed on narrow viewports; auto-collapse again if window shrinks below 768px.
-  const [collapsed, setCollapsed] = useState(() => window.innerWidth < 1024)
-  // Mobile (< 768px) : la sidebar n'est plus un rail étroit (inutilisable : les sections ne peuvent
-  // pas se déplier en mode collapsed) mais un DRAWER off-canvas plein écran ouvert par le toggle.
+  // Start collapsed on narrow viewports; auto-collapse again if window shrinks below the breakpoint.
+  const [collapsed, setCollapsed] = useState(() => window.innerWidth < MOBILE_BREAKPOINT)
+  // Mobile (< 1024px) : header responsive (hamburger / logo / icônes + encoche onglets) et la sidebar
+  // devient un DRAWER off-canvas plein écran (le rail étroit ne permet pas de déplier les sections).
   const [isMobile, setIsMobile] = useState(() => window.innerWidth < MOBILE_BREAKPOINT)
   const [mobileOpen, setMobileOpen] = useState(false)
   useEffect(() => {
@@ -152,6 +152,14 @@ function ShellInner() {
 
   // Charge le thème du BO React (logo d'en-tête configurable) une fois, après login.
   useEffect(() => { loadReactTheme() }, [])
+
+  // Mobile : TOUTE navigation referme le drawer — sinon le menu reste par-dessus la page qu'on
+  // vient d'ouvrir. Les entrées de nav natives appellent déjà `onClose` (SidebarNavContext), mais
+  // pas les panneaux fournis par les briques (arbre des pages CMS) : ce garde-fou côté hôte les
+  // couvre tous, présents et à venir. (Ouvrir/fermer le drawer ne change pas l'URL → sans effet.)
+  useEffect(() => {
+    if (isMobile) setMobileOpen(false)
+  }, [location.pathname, isMobile])
 
   // Re-check which modules are active on each navigation (cheap no-store JSON), so a
   // module toggled in the Modules tool is reflected when the user reopens a gated tool
@@ -266,12 +274,15 @@ function ShellInner() {
       />
       <div className="flex min-w-0 flex-1 flex-col">
         <Topbar
+          isMobile={isMobile}
           onToggleSidebar={() =>
             isMobile ? setMobileOpen((o) => !o) : setCollapsed((c) => !c)
           }
         />
-        <SubTabBar />
-        <ToolTabBar />
+        {/* Sur mobile, les onglets (principaux + sous-onglets) se déploient via l'encoche du header ;
+            on masque les barres horizontales pour ne pas doublonner l'UI dans un écran étroit. */}
+        {!isMobile && <SubTabBar />}
+        {!isMobile && <ToolTabBar />}
 
         <main className="relative flex-1 overflow-hidden">
           {/* Dashboard — monté à la 1re visite puis gardé en DOM (hidden) : évite de charger

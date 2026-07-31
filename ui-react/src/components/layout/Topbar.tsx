@@ -1,18 +1,26 @@
 import { useEffect, useRef, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { Bell, ChevronLeft, ChevronRight, LogOut, PanelLeft, User, X } from 'lucide-react'
+import { useLocation, useNavigate } from 'react-router-dom'
+import { Bell, ChevronDown, ChevronLeft, ChevronRight, CornerDownRight, LogOut, Menu, PanelLeft, SlidersHorizontal, User, X } from 'lucide-react'
 
 import { cn } from '@/lib/utils'
 import { useAuth } from '@/auth/auth-context'
 import { useI18n } from '@/i18n/i18n-context'
+import { useTheme } from '@/theme/theme-context'
+import { useReactTheme } from '@/lib/react-theme'
+import wordmark from '@/assets/melis-wordmark.svg'
+import wordmarkWhite from '@/assets/melis-wordmark-white.svg'
 import { CURRENT_USER } from '@/lib/mocks'
 import { useTabs, type Tab } from '@/components/tabs/tab-store'
+import { useSubTabs } from '@/components/tabs/sub-tab-store'
+import { useToolTabs } from '@/components/tabs/tool-tab-bridge'
+import { MODULES } from '@/lib/module-registry'
+import { usePublishedToolView, useToolView } from '@/lib/tool-view-mode'
 import { LanguageSwitcher } from '@/components/LanguageSwitcher'
 import { ThemeSwitcher } from '@/components/ThemeSwitcher'
-import { headerBricks, useBricks } from '@/lib/bricks'
+import { headerBricks, useBricks, brickRoute } from '@/lib/bricks'
 import { fetchMe, fetchNotifications, clearNotifications, type MeUser, type FlashNotification } from '@/lib/melis-api'
 import { setCapabilitiesFromMe } from '@/lib/capabilities'
-import { registerTool } from '@/lib/tool-routes'
+import { registerTool, melisKeyForRoute, routeForForward, useToolRoutesVersion } from '@/lib/tool-routes'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -391,10 +399,208 @@ function TabStrip() {
   )
 }
 
+// ─── Mobile : sous-onglets de l'outil ACTIF, nichés sous son onglet ───────────────
+//
+// Reprend fidèlement la résolution des deux barres desktop :
+//  • SubTabBar  → sous-onglets React (outils natifs MODULES + briques `subTabs`) ;
+//  • ToolTabBar → enregistrements d'un outil LEGACY en iframe (bridge postMessage).
+// Un outil n'affiche que l'UNE des deux (selon la vue New/Old), comme en desktop.
+function MobileSubTabs({ onNavigate }: { onNavigate: () => void }) {
+  useToolRoutesVersion()
+  const { pathname } = useLocation()
+  const navigate = useNavigate()
+  const bricks = useBricks()
+
+  // Sous-onglets React (cf. SubTabBar).
+  const sections = [
+    ...MODULES.map((m) => ({ key: routeForForward(m.forwardKey) ?? m.route, melisKey: m.melisKey })),
+    ...bricks.filter((b) => b.subTabs).map((b) => ({ key: brickRoute(b), melisKey: b.melisKey })),
+  ]
+  const section = sections.find((s) => s.key && (pathname === s.key || pathname.startsWith(s.key + '/')))
+  const publishedView = usePublishedToolView(section?.melisKey ?? null)
+  const { tabs: reactSubTabs, closeTab: closeReactSub } = useSubTabs(section?.key ?? '__none__')
+  const showReact = !!section && publishedView !== 'iframe' && reactSubTabs.length > 0
+
+  // Enregistrements legacy (cf. ToolTabBar).
+  const brick = bricks.find((b) => { const r = brickRoute(b); return r && (pathname === r || pathname.startsWith(r + '/')) })
+  const legacyKey = brick?.melisKey ?? melisKeyForRoute(pathname)
+  const { tabsFor, activate: activateLegacy, close: closeLegacy } = useToolTabs()
+  const legacySecondary = tabsFor(legacyKey).filter((t) => !t.primary)
+  const toolView = useToolView(legacyKey)
+  const showLegacy = !!legacyKey && legacySecondary.length > 0 && toolView !== 'react'
+
+  if (!showReact && !showLegacy) return null
+
+  const row = (key: string, active: boolean, label: string, onOpen: () => void, onClose: () => void) => (
+    <div key={key} className={cn('flex items-center border-t border-border/40', active && 'bg-[color-mix(in_srgb,var(--color-primary)_8%,transparent)]')}>
+      <button type="button" onClick={onOpen}
+        className={cn('flex min-w-0 flex-1 items-center gap-2 py-2.5 pl-9 pr-3 text-left text-[13px]', active ? 'font-medium text-foreground' : 'text-muted-foreground')}>
+        <CornerDownRight className="size-3.5 shrink-0 opacity-60" />
+        <span className="truncate">{label}</span>
+      </button>
+      <button type="button" onClick={onClose} className="flex shrink-0 items-center px-3 py-2.5 text-muted-foreground hover:text-foreground">
+        <X className="size-3.5" />
+      </button>
+    </div>
+  )
+
+  return (
+    <div className="bg-muted/20">
+      {showReact && reactSubTabs.map((tab, idx) =>
+        row(tab.id, pathname === tab.path, tab.label, () => { navigate(tab.path); onNavigate() }, () => {
+          // Comme la croix desktop (SubTabBar.handleClose) : fermer le sous-onglet AFFICHÉ doit aussi
+          // quitter son URL, sinon la route /[section]/[tool]/:id reste montée et le formulaire
+          // d'édition demeure à l'écran alors que son onglet a disparu.
+          closeReactSub(tab.id)
+          if (pathname === tab.path) {
+            const next = reactSubTabs[idx + 1] ?? reactSubTabs[idx - 1]
+            navigate(next ? next.path : (section?.key ?? '/'))
+          }
+        }),
+      )}
+      {showLegacy && legacyKey && legacySecondary.map((t) =>
+        row(t.id, !!t.active, t.label, () => { activateLegacy(legacyKey, t.id); onNavigate() }, () => closeLegacy(legacyKey, t.id)),
+      )}
+    </div>
+  )
+}
+
+// ─── Mobile : panneau vertical des onglets ouverts (déployé par l'encoche) ────────
+//
+// Reproduit le « déploiement des onglets » du header legacy en mobile : la liste
+// horizontale (TabStrip) n'a pas sa place dans un header étroit, on la remplace par un
+// panneau vertical déroulant ; les sous-onglets de l'outil actif sont nichés dessous.
+function MobileTabsPanel({ onNavigate }: { onNavigate: () => void }) {
+  const { tabs, activeId, activateTab, closeTab } = useTabs()
+  const { lang } = useI18n()
+  const navigate = useNavigate()
+
+  function activate(tab: Tab) {
+    activateTab(tab.id)
+    navigate(tab.path)
+    onNavigate()
+  }
+  function close(tab: Tab) {
+    const remaining = tabs.filter((t) => t.id !== tab.id)
+    if (tab.id === activeId) {
+      const idx = tabs.findIndex((t) => t.id === tab.id)
+      const target = remaining[Math.min(idx, remaining.length - 1)] ?? { path: '/' }
+      navigate(target.path)
+    }
+    closeTab(tab.id)
+    window.dispatchEvent(new CustomEvent('melis:tab-closed', { detail: { path: tab.path, id: tab.id } }))
+  }
+
+  return (
+    <div className="max-h-[55vh] overflow-y-auto border-b border-border bg-card shadow-inner">
+      <div className="px-3 py-2 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
+        {lang === 'fr' ? 'Onglets ouverts' : 'Open tabs'}
+      </div>
+      {tabs.map((tab) => {
+        const isActive = tab.id === activeId
+        return (
+          <div key={tab.id}>
+            <div
+              className={cn(
+                'flex items-center border-t border-border/60',
+                isActive && 'bg-[color-mix(in_srgb,var(--color-primary)_10%,transparent)]',
+              )}
+            >
+              <button
+                type="button"
+                onClick={() => activate(tab)}
+                className={cn(
+                  'flex min-w-0 flex-1 items-center gap-2.5 px-3 py-3 text-left text-sm',
+                  isActive ? 'font-medium text-foreground' : 'text-muted-foreground',
+                )}
+              >
+                {tab.icon && <tab.icon className="size-4 shrink-0" />}
+                <span className="truncate">{tab.label}</span>
+              </button>
+              {tab.id !== '/' && (
+                <button
+                  type="button"
+                  onClick={() => close(tab)}
+                  className="flex shrink-0 items-center px-3 py-3 text-muted-foreground hover:text-foreground"
+                >
+                  <X className="size-4" />
+                </button>
+              )}
+            </div>
+            {/* Sous-onglets de l'outil actif (l'onglet actif = celui qui matche l'URL courante). */}
+            {isActive && <MobileSubTabs onNavigate={onNavigate} />}
+          </div>
+        )
+      })}
+    </div>
+  )
+}
+
 // ─── Topbar ───────────────────────────────────────────────────────────────────
 
-export function Topbar({ onToggleSidebar }: { onToggleSidebar: () => void }) {
+export function Topbar({ onToggleSidebar, isMobile = false }: { onToggleSidebar: () => void; isMobile?: boolean }) {
   const { t } = useI18n()
+  const { theme } = useTheme()
+  const { headerLogo } = useReactTheme()
+  const mark = theme === 'studio' ? wordmarkWhite : wordmark
+  const [actionsOpen, setActionsOpen] = useState(false)
+  const [tabsOpen, setTabsOpen] = useState(false)
+
+  // ── Header mobile : hamburger (menu gauche) · logo centré · bouton icônes ; l'encoche
+  //    (chevron à droite) déploie les onglets ouverts. Façon back-office legacy.
+  if (isMobile) {
+    return (
+      <div className="sticky top-0 z-20 shrink-0">
+        <header className="flex h-14 items-center gap-1 border-b border-border bg-card/90 px-2 backdrop-blur-md">
+          <button
+            type="button"
+            onClick={onToggleSidebar}
+            aria-label={t('topbar.collapse')}
+            className="inline-flex size-10 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
+          >
+            <Menu className="size-5" />
+          </button>
+          <div className="flex min-w-0 flex-1 items-center justify-center">
+            <img src={headerLogo || mark} alt="Melis Platform" className="h-6 w-auto max-w-[60vw] object-contain" />
+          </div>
+          <button
+            type="button"
+            onClick={() => setActionsOpen((o) => !o)}
+            aria-label={t('topbar.notifications')}
+            className={cn(
+              'inline-flex size-10 items-center justify-center rounded-md transition-colors hover:bg-accent hover:text-foreground',
+              actionsOpen ? 'bg-accent text-foreground' : 'text-muted-foreground',
+            )}
+          >
+            <SlidersHorizontal className="size-5" />
+          </button>
+        </header>
+
+        {/* Rangée d'icônes déployée par le bouton de droite */}
+        {actionsOpen && (
+          <div className="flex items-center justify-end gap-1 border-b border-border bg-card px-2 py-1.5">
+            <ThemeSwitcher />
+            <LanguageSwitcher />
+            <BrickHeaderWidgets />
+            <NotificationsMenu />
+            <UserMenu />
+          </div>
+        )}
+
+        {/* Encoche : déploie/replie les onglets ouverts */}
+        <button
+          type="button"
+          onClick={() => setTabsOpen((o) => !o)}
+          aria-label={t('topbar.close_all')}
+          className="flex h-6 w-full items-center justify-end gap-1 border-b border-border bg-muted/40 px-3 text-muted-foreground transition-colors hover:text-foreground"
+        >
+          <ChevronDown className={cn('size-4 transition-transform', tabsOpen && 'rotate-180')} />
+        </button>
+
+        {tabsOpen && <MobileTabsPanel onNavigate={() => setTabsOpen(false)} />}
+      </div>
+    )
+  }
 
   return (
     <header className="sticky top-0 z-10 flex h-14 items-stretch border-b border-border bg-card/80 backdrop-blur-md shrink-0">

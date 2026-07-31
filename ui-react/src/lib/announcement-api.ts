@@ -36,18 +36,23 @@ export interface AnnouncementStats {
   inactive: number
 }
 
+export type AnnouncementSortKey = 'id' | 'status' | 'title' | 'text' | 'date' | 'user'
+
 export interface AnnouncementListParams {
-  page?: number
   limit?: number
   search?: string
   status?: '' | '0' | '1'
+  sort?: AnnouncementSortKey
+  dir?: 'asc' | 'desc'
+  /** Curseur keyset (opaque) du lot précédent ; absent = premier lot. */
+  after?: string | null
 }
 
 export interface AnnouncementListResult {
   items: AnnouncementItem[]
   total: number
-  page: number
-  limit: number
+  /** Curseur keyset à repasser en `after` pour le lot suivant ; null = fin de liste. */
+  nextCursor: string | null
 }
 
 export interface AnnouncementSavePayload {
@@ -84,10 +89,12 @@ async function apiFetch<T>(url: string, opts?: RequestInit): Promise<T> {
 
 export async function fetchAnnouncements(params: AnnouncementListParams = {}): Promise<AnnouncementListResult> {
   const qs = new URLSearchParams()
-  if (params.page)   qs.set('page',   String(params.page))
   if (params.limit)  qs.set('limit',  String(params.limit))
   if (params.search) qs.set('search', params.search)
   if (params.status) qs.set('status', params.status)
+  if (params.sort)   qs.set('sort',   params.sort)
+  if (params.dir)    qs.set('dir',    params.dir)
+  if (params.after)  qs.set('after',  params.after)
   return apiFetch<AnnouncementListResult>(`/melis/react-api/announcements?${qs}`)
 }
 

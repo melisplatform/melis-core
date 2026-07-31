@@ -1,15 +1,18 @@
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { Fragment, useCallback, useEffect, useRef, useState } from 'react'
 
 // ─── Module-level cache — survit au démontage du composant (navigation) ────────
 
 interface ListCache {
   items: userApi.UserItem[]
   total: number
-  page: number
+  cursor: string | null
+  hasMore: boolean
   search: string
   searchInput: string
   statusFilter: '' | '0' | '1'
   roleFilter: number | undefined
+  sortCol: userApi.UserSortKey
+  sortDir: 'asc' | 'desc'
   stats: userApi.UserStats | null
   roles: userApi.UserRole[]
   mode: ViewMode
@@ -33,6 +36,8 @@ import { fetchMe } from '@/lib/melis-api'
 import * as XLSX from 'xlsx'
 import { useTabs } from '@/components/tabs/tab-store'
 import { MelisClassicFrame, ViewModeToggle, type ViewMode } from '@/components/MelisClassicView'
+import { ExpandToggle, HiddenColsRow } from '@/components/ExpandableRow'
+import { useIsNarrow } from '@/hooks/useIsNarrow'
 import { toolHasViewToggle } from '@/lib/module-registry'
 import { useModuleActive } from '@/lib/bricks'
 import { useCan } from '@/lib/capabilities'
@@ -279,12 +284,12 @@ function ExportModal({ cols, search, status, total, onClose }: {
     setExporting(true)
     try {
       const all: userApi.UserItem[] = []
-      let p = 1
+      let after: string | undefined = undefined
       while (true) {
-        const res = await userApi.fetchUsers({ page: p, limit: 100, search, status, roleId: undefined })
+        const res = await userApi.fetchUsers({ limit: 100, search, status, after })
         all.push(...res.items)
-        if (all.length >= res.total) break
-        p++
+        if (!res.nextCursor) break
+        after = res.nextCursor
       }
       const header = included.map(c => t(COL_LABEL[c.id]))
       const rows = all.map(u => included.map(c => getCellExport(u, c.id, t)))
@@ -376,6 +381,7 @@ export default function UserListPage() {
   const location = useLocation()
   const { openTab } = useTabs()
   const { t } = useI18n()
+  const narrow = useIsNarrow()
   const base = routeForForward('MelisCore/ToolUser') ?? '/users'
 
   const [mode, setMode] = useState<ViewMode>(_cache?.mode ?? 'react')
@@ -393,7 +399,8 @@ export default function UserListPage() {
 
   const [items, setItems]     = useState<userApi.UserItem[]>(_cache?.items ?? [])
   const [total, setTotal]     = useState(_cache?.total ?? 0)
-  const [page, setPage]       = useState(_cache?.page ?? 1)
+  const [hasMore, setHasMore] = useState(_cache?.hasMore ?? false)
+  const cursorRef = useRef<string | null>(_cache?.cursor ?? null)
   const [loading, setLoading] = useState(false)
   const [stats, setStats]     = useState<userApi.UserStats | null>(_cache?.stats ?? null)
   const [roles, setRoles]     = useState<userApi.UserRole[]>(_cache?.roles ?? [])
@@ -410,7 +417,7 @@ export default function UserListPage() {
     _cache = null
     setStats(null)
     setItems([])
-    setPage(1)
+    cursorRef.current = null
     setRefreshing(true)
     setRefreshKey(k => k + 1)
     userApi.fetchUserStats().then(setStats).catch(() => null)
@@ -425,10 +432,10 @@ export default function UserListPage() {
     setSearch('')
     setStatusFilter('')
     setRoleFilter(undefined)
-    setSortCol(null)
-    setSortDir('asc')
+    setSortCol('id')
+    setSortDir('desc')
     setItems([])
-    setPage(1)
+    cursorRef.current = null
     setRefreshing(true)
     setRefreshKey(k => k + 1)
     userApi.fetchUserStats().then(setStats).catch(() => null)
@@ -447,44 +454,42 @@ export default function UserListPage() {
   const [showColMgr, setShowColMgr] = useState(false)
   const [showExport, setShowExport] = useState(false)
   const colMgrRef = useRef<HTMLDivElement>(null)
+  // Mobile-only: force the table down to just "login" regardless of the desktop ColManager
+  // preference, with the rest reachable via a per-row "+" — desktop behavior (cols as-is, no "+"
+  // column at all) is untouched since hasHidden/displayCols only diverge from `cols` when narrow.
+  const [expanded, setExpanded] = useState<Set<number>>(new Set())
+  const toggleExpand = (id: number) => setExpanded((s) => {
+    const n = new Set(s); n.has(id) ? n.delete(id) : n.add(id); return n
+  })
+  const displayCols = narrow ? cols.map(c => ({ ...c, visible: c.id === 'login' })) : cols
+  const hasHidden = narrow
 
-  const [sortCol, setSortCol] = useState<string | null>(null)
-  const [sortDir, setSortDir] = useState<'asc' | 'desc'>('asc')
+  const [sortCol, setSortCol] = useState<userApi.UserSortKey>(_cache?.sortCol ?? 'id')
+  const [sortDir, setSortDir] = useState<'asc' | 'desc'>(_cache?.sortDir ?? 'desc')
 
-  function toggleSort(id: string) {
+  // Tri désormais server-side : changer de colonne/sens relance un chargement frais
+  // (via l'effet ci-dessous) — plus aucun tri client sur le sous-ensemble déjà chargé.
+  function toggleSort(id: userApi.UserSortKey) {
     if (sortCol === id) setSortDir(d => d === 'asc' ? 'desc' : 'asc')
-    else { setSortCol(id); setSortDir('asc') }
+    else { setSortCol(id); setSortDir(id === 'id' ? 'desc' : 'asc') }
   }
-
-  const sortedItems = useMemo(() => {
-    if (!sortCol) return items
-    return [...items].sort((a, b) => {
-      const va = getCellSort(a, sortCol)
-      const vb = getCellSort(b, sortCol)
-      const na = typeof va === 'number' ? va : parseFloat(String(va))
-      const nb = typeof vb === 'number' ? vb : parseFloat(String(vb))
-      const cmp = !isNaN(na) && !isNaN(nb) ? na - nb : String(va).localeCompare(String(vb), undefined, { sensitivity: 'base' })
-      return sortDir === 'asc' ? cmp : -cmp
-    })
-  }, [items, sortCol, sortDir])
 
   const LIMIT = 25
   const sentinelRef = useRef<HTMLDivElement>(null)
-  const hasMore = items.length < total
 
   useEffect(() => {
     if (location.pathname === base) {
       openTab({ id: base, label: t('users.title'), path: base })
       if (userApi.consumeUsersListStale()) {
-        setPage(1)
+        cursorRef.current = null
         setRefreshKey(k => k + 1)
         userApi.fetchUserStats().then(setStats).catch(() => null)
       }
     }
   }, [location.pathname, openTab, base, t])
 
-  const cacheRef = useRef({ items, total, page, search, searchInput, statusFilter, roleFilter, stats, roles, mode, iframeLoaded })
-  useEffect(() => { cacheRef.current = { items, total, page, search, searchInput, statusFilter, roleFilter, stats, roles, mode, iframeLoaded } })
+  const cacheRef = useRef<ListCache>({ items, total, cursor: cursorRef.current, hasMore, search, searchInput, statusFilter, roleFilter, sortCol, sortDir, stats, roles, mode, iframeLoaded })
+  useEffect(() => { cacheRef.current = { items, total, cursor: cursorRef.current, hasMore, search, searchInput, statusFilter, roleFilter, sortCol, sortDir, stats, roles, mode, iframeLoaded } })
   useEffect(() => () => { _cache = cacheRef.current }, [])
 
   useEffect(() => {
@@ -497,30 +502,55 @@ export default function UserListPage() {
     userApi.fetchRoles().then(setRoles).catch(() => null)
   }, [rolesModuleActive])
 
-  useEffect(() => {
+  // Chargement keyset : reset=true → premier lot (remplace) ; reset=false → lot suivant
+  // (append) via le curseur. Un req-id invalide les réponses périmées (filtre/tri changé
+  // en cours de route) ; loadingRef sérialise les « load more ».
+  const loadingRef = useRef(false)
+  const reqIdRef = useRef(0)
+  const runLoad = useCallback(async (reset: boolean) => {
+    if (!reset && loadingRef.current) return
+    const myReq = ++reqIdRef.current
+    loadingRef.current = true
     setLoading(true)
-    userApi
-      .fetchUsers({ page, limit: LIMIT, search, status: statusFilter, roleId: roleFilter })
-      .then((res) => {
-        setItems((prev) => (page === 1 ? res.items : [...prev, ...res.items]))
-        setTotal(res.total)
-      })
-      .catch(() => null)
-      .finally(() => setLoading(false))
-  }, [page, search, statusFilter, roleFilter, refreshKey])
+    const after = reset ? undefined : (cursorRef.current ?? undefined)
+    try {
+      const res = await userApi.fetchUsers({ limit: LIMIT, search, status: statusFilter, roleId: roleFilter, sort: sortCol, dir: sortDir, after })
+      if (myReq !== reqIdRef.current) return
+      cursorRef.current = res.nextCursor
+      setHasMore(res.nextCursor !== null)
+      setTotal(res.total)
+      setItems((prev) => (reset ? res.items : [...prev, ...res.items]))
+    } catch { /* silent */ }
+    finally {
+      if (myReq === reqIdRef.current) { setLoading(false); loadingRef.current = false }
+    }
+  }, [search, statusFilter, roleFilter, sortCol, sortDir])
 
-  function applySearch() { setSearch(searchInput.trim()); setPage(1); setItems([]) }
-  function clearSearch() { setSearchInput(''); setSearch(''); setPage(1); setItems([]) }
+  // Chargement frais quand filtres/tri changent (ou refresh). Au 1er montage avec cache
+  // restauré (items présents), on saute le refetch pour conserver le scroll accumulé.
+  const didInitRef = useRef(false)
+  useEffect(() => {
+    if (!didInitRef.current) {
+      didInitRef.current = true
+      if (_cache && _cache.items.length > 0) return
+    }
+    runLoad(true)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [search, statusFilter, roleFilter, sortCol, sortDir, refreshKey])
 
+  function applySearch() { setSearch(searchInput.trim()); setItems([]) }
+  function clearSearch() { setSearchInput(''); setSearch(''); setItems([]) }
+
+  // Scroll infini : sentinel visible → charge le lot suivant (runLoad gère l'anti-stack).
   useEffect(() => {
     if (!sentinelRef.current || !hasMore) return
     const obs = new IntersectionObserver(
-      ([entry]) => { if (entry.isIntersecting && !loading) setPage((p) => p + 1) },
+      ([entry]) => { if (entry.isIntersecting) runLoad(false) },
       { rootMargin: '120px' },
     )
     obs.observe(sentinelRef.current)
     return () => obs.disconnect()
-  }, [hasMore, loading])
+  }, [hasMore, runLoad])
 
   function handleDelete(user: userApi.UserItem) { setToDelete(user) }
 
@@ -532,7 +562,7 @@ export default function UserListPage() {
       setItems((prev) => prev.filter((u) => u.id !== toDelete.id))
       setTotal((tt) => tt - 1)
       setToDelete(null)
-      setPage(1)
+      cursorRef.current = null
       setRefreshKey((k) => k + 1)
       userApi.fetchUserStats().then(setStats).catch(() => null)
     } catch {
@@ -547,29 +577,57 @@ export default function UserListPage() {
     try { return new Date(d).toLocaleDateString(undefined, { day: '2-digit', month: 'short', year: 'numeric' }) } catch { return d }
   }
 
+  const visibleColIds = COL_ORDER.filter((id) => displayCols.find((c) => c.id === id)?.visible)
+  const totalCols = visibleColIds.length + 1 + (hasHidden ? 1 : 0)
+  const cellContent = (user: userApi.UserItem, id: string) => {
+    if (id === 'id') return user.id
+    if (id === 'login') return (
+      <div className="flex items-center gap-2">
+        {user.isOnline && <span className="size-2 shrink-0 rounded-full bg-emerald-500" title={t('users.online')} />}
+        <span className="font-medium">{user.login}</span>
+      </div>
+    )
+    if (id === 'name') return `${user.firstname} ${user.lastname}`
+    if (id === 'email') return user.email
+    if (id === 'role') return user.roleName || '—'
+    if (id === 'admin') return user.isAdmin
+      ? <Badge variant="default" className="text-violet-600 bg-violet-500/10 border-violet-200">{t('users.col.admin')}</Badge> : '—'
+    if (id === 'status') return user.status === 1
+      ? <Badge variant="default" className="text-emerald-600 bg-emerald-500/10 border-emerald-200">{t('users.status.active')}</Badge>
+      : <Badge variant="default" className="text-red-600 bg-red-500/10 border-red-200">{t('users.status.inactive')}</Badge>
+    if (id === 'lastLogin') return fmtDate(user.lastLoginDate)
+    return null
+  }
+
   return (
     <div className={cn('flex flex-col gap-6 p-6', effectiveMode === 'iframe' ? 'h-full' : 'flex-1')}>
-      {/* Header */}
+      {/* Header — narrow-only additions never remove/replace a desktop class, so at narrow=false
+          every className below renders byte-identical to the original desktop layout. */}
       <div className="flex items-center justify-between gap-4">
-        <div className="flex items-center gap-3">
-          <div className="grid size-10 shrink-0 place-items-center rounded-lg bg-primary/10 text-primary">
+        <div className={cn('flex items-center gap-3', narrow && 'min-w-0')}>
+          <div className={narrow ? 'hidden' : 'grid size-10 shrink-0 place-items-center rounded-lg bg-primary/10 text-primary'}>
             <Users className="size-5" />
           </div>
-          <div>
-            <h1 className="text-xl font-bold">{t('users.title')}</h1>
-            <p className="text-sm text-muted-foreground">{t('users.subtitle')}</p>
+          <div className={cn(narrow && 'min-w-0')}>
+            <h1 className={cn('text-xl font-bold', narrow && 'truncate')}>{t('users.title')}</h1>
+            <p className={cn('text-sm text-muted-foreground', narrow && 'truncate')}>{t('users.subtitle')}</p>
           </div>
         </div>
-        <div className="flex items-center gap-2">
-          {showViewToggle && (
-            <ViewModeToggle mode={effectiveMode} onChange={(m) => { setMode(m); if (m === 'iframe') setIframeLoaded(true) }} />
-          )}
-          <button type="button" onClick={handleRefresh} title={t('common.refresh')}
-            className="inline-flex size-8 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-accent hover:text-foreground">
-            <RotateCcw className={cn('size-3.5', refreshing && 'animate-spin')} />
-          </button>
+        {/* On narrow: icon row (toggle+refresh) stacks above the "+ New" button, which stretches
+            (w-full) to match that row's width — both stay grouped as a compact column to the
+            right of the title, never wrapping below it. Desktop keeps the original single row. */}
+        <div className={cn('flex items-center gap-2', narrow && 'shrink-0 flex-col')}>
+          <div className="flex items-center gap-2">
+            {showViewToggle && (
+              <ViewModeToggle mode={effectiveMode} compact={narrow} onChange={(m) => { setMode(m); if (m === 'iframe') setIframeLoaded(true) }} />
+            )}
+            <button type="button" onClick={handleRefresh} title={t('common.refresh')}
+              className="inline-flex size-8 shrink-0 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-accent hover:text-foreground">
+              <RotateCcw className={cn('size-3.5', refreshing && 'animate-spin')} />
+            </button>
+          </div>
           {canCreate && (
-            <Button size="sm" onClick={() => navigate(`${base}/new`)}>
+            <Button size="sm" className={cn(narrow && 'w-full')} onClick={() => navigate(`${base}/new`)}>
               <Plus className="size-4" />{t('users.new')}
             </Button>
           )}
@@ -593,7 +651,7 @@ export default function UserListPage() {
 
         {/* Filters */}
         <div className="flex flex-wrap items-center gap-2">
-          <div className="relative flex-1 min-w-[180px] max-w-sm">
+          <div className={narrow ? 'relative w-full' : 'relative flex-1 min-w-[180px] max-w-sm'}>
             <Search className="absolute left-3 top-1/2 size-3.5 -translate-y-1/2 text-muted-foreground" />
             <Input className="pl-9 pr-8 h-9 text-sm" placeholder={t('users.search')}
               value={searchInput} onChange={(e) => setSearchInput(e.target.value)}
@@ -606,15 +664,15 @@ export default function UserListPage() {
             )}
           </div>
 
-          <div className="flex items-center rounded-lg border border-border bg-muted/40 p-1 gap-1">
+          <div className={cn('flex items-center rounded-lg border border-border bg-muted/40 p-1 gap-1', narrow && 'w-full')}>
             {([
               { val: '' as const,  label: t('users.filter.all'),     dot: null },
               { val: '1' as const, label: t('users.filter.active'),  dot: 'bg-emerald-500' },
               { val: '0' as const, label: t('users.filter.inactive'),dot: 'bg-red-500' },
             ]).map(({ val, label, dot }) => (
               <button key={val} type="button"
-                onClick={() => { setStatusFilter(val); setPage(1); setItems([]) }}
-                className={cn('flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-medium transition-colors',
+                onClick={() => { setStatusFilter(val); setItems([]) }}
+                className={cn('flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-medium transition-colors', narrow && 'flex-1 justify-center',
                   statusFilter === val ? 'bg-card shadow-sm text-foreground' : 'text-muted-foreground hover:text-foreground')}>
                 {dot && <span className={cn('size-1.5 rounded-full', dot)} />}
                 {label}
@@ -624,25 +682,31 @@ export default function UserListPage() {
 
           {rolesModuleActive && roles.length > 0 && (
             <select value={roleFilter ?? ''}
-              onChange={(e) => { setRoleFilter(e.target.value ? parseInt(e.target.value) : undefined); setPage(1); setItems([]) }}
-              className="h-9 rounded-md border border-input bg-background px-3 text-sm focus:outline-none focus:ring-1 focus:ring-ring">
+              onChange={(e) => { setRoleFilter(e.target.value ? parseInt(e.target.value) : undefined); setItems([]) }}
+              className={cn('h-9 rounded-md border border-input bg-background px-3 text-sm focus:outline-none focus:ring-1 focus:ring-ring', narrow && 'w-full')}>
               <option value="">{t('users.filter.all_roles')}</option>
               {roles.map((r) => <option key={r.id} value={r.id}>{r.name}</option>)}
             </select>
           )}
 
-          <div className="ml-auto flex items-center gap-2">
-            <Button variant="outline" size="sm" className="gap-1.5" onClick={resetFilters} title={t('common.reset_filters')}>
+          <div className={cn('flex items-center gap-2', narrow ? 'w-full flex-wrap' : 'ml-auto')}>
+            <Button variant="outline" size="sm"
+              className={cn('gap-1.5', narrow && 'h-auto min-h-9 flex-[1_1_calc(50%_-_4px)] justify-center whitespace-normal text-center')}
+              onClick={resetFilters} title={t('common.reset_filters')}>
               <RotateCcw className={cn('size-3.5', refreshing && 'animate-spin')} />{t('common.reset_filters')}
             </Button>
-            <div ref={colMgrRef} className="relative">
-              <Button variant="outline" size="sm" className="gap-1.5" onClick={() => setShowColMgr(v => !v)}>
+            <div ref={colMgrRef} className={cn('relative', narrow && 'flex-[1_1_calc(50%_-_4px)]')}>
+              <Button variant="outline" size="sm"
+                className={cn('gap-1.5', narrow && 'h-auto min-h-9 w-full justify-center whitespace-normal text-center')}
+                onClick={() => setShowColMgr(v => !v)}>
                 <Columns3 className="size-3.5" />{t('common.columns')}
               </Button>
               {showColMgr && <ColManager cols={cols} onChange={setCols} onClose={() => setShowColMgr(false)} />}
             </div>
             {canExport && (
-              <Button variant="outline" size="sm" className="gap-1.5" onClick={() => setShowExport(true)}>
+              <Button variant="outline" size="sm"
+                className={cn('gap-1.5', narrow && 'h-auto min-h-9 flex-[1_1_calc(50%_-_4px)] justify-center whitespace-normal text-center')}
+                onClick={() => setShowExport(true)}>
                 <FileDown className="size-3.5" />{t('users.export')}
               </Button>
             )}
@@ -651,11 +715,12 @@ export default function UserListPage() {
 
         {/* Table */}
         <div className="overflow-x-auto rounded-xl border border-border bg-card shadow-sm">
-          <table className="w-full min-w-[640px] text-sm">
+          <table className={cn('w-full text-sm', !narrow && 'min-w-[640px]')}>
             <thead className="sticky top-0 border-b border-border bg-muted/60 text-xs uppercase tracking-wide text-muted-foreground">
               <tr>
+                {hasHidden && <th className="w-8 px-2 py-3" />}
                 {COL_ORDER.map(id => {
-                  const col = cols.find(c => c.id === id)
+                  const col = displayCols.find(c => c.id === id)
                   if (!col?.visible) return null
                   const isSorted = sortCol === id
                   const SIcon = isSorted ? (sortDir === 'asc' ? ArrowUp : ArrowDown) : ArrowUpDown
@@ -671,35 +736,41 @@ export default function UserListPage() {
                     </th>
                   )
                 })}
-                <th className="w-20 px-4 py-3" />
+                <th className={cn('w-20 px-4 py-3', narrow && 'sticky right-0 bg-muted/60')} />
               </tr>
             </thead>
             <tbody className="divide-y divide-border">
               {items.length === 0 && !loading ? (
-                <tr><td colSpan={9} className="px-4 py-10 text-center text-sm text-muted-foreground">{t('users.empty')}</td></tr>
+                <tr><td colSpan={totalCols} className="px-4 py-10 text-center text-sm text-muted-foreground">{t('users.empty')}</td></tr>
               ) : (
-                sortedItems.map((user) => (
-                  <tr key={user.id} className="group transition-colors hover:bg-muted/40">
-                    {cols.find(c => c.id === 'id')?.visible && <td className="px-4 py-2.5 tabular-nums text-muted-foreground">{user.id}</td>}
-                    {cols.find(c => c.id === 'login')?.visible && <td className="px-4 py-2.5">
+                items.map((user) => (
+                  <Fragment key={user.id}>
+                  <tr className="group transition-colors hover:bg-muted/40">
+                    {hasHidden && (
+                      <td className="px-2 py-2.5">
+                        <ExpandToggle expanded={expanded.has(user.id)} onClick={() => toggleExpand(user.id)} />
+                      </td>
+                    )}
+                    {displayCols.find(c => c.id === 'id')?.visible && <td className="px-4 py-2.5 tabular-nums text-muted-foreground">{user.id}</td>}
+                    {displayCols.find(c => c.id === 'login')?.visible && <td className="px-4 py-2.5">
                       <div className="flex items-center gap-2">
                         {user.isOnline && <span className="size-2 shrink-0 rounded-full bg-emerald-500" title={t('users.online')} />}
                         <span className="font-medium">{user.login}</span>
                       </div>
                     </td>}
-                    {cols.find(c => c.id === 'name')?.visible && <td className="px-4 py-2.5 text-muted-foreground">{user.firstname} {user.lastname}</td>}
-                    {cols.find(c => c.id === 'email')?.visible && <td className="px-4 py-2.5 text-muted-foreground">{user.email}</td>}
-                    {cols.find(c => c.id === 'role')?.visible && <td className="px-4 py-2.5 text-muted-foreground">{user.roleName || '—'}</td>}
-                    {cols.find(c => c.id === 'admin')?.visible && <td className="px-4 py-2.5 text-center">
+                    {displayCols.find(c => c.id === 'name')?.visible && <td className="px-4 py-2.5 text-muted-foreground">{user.firstname} {user.lastname}</td>}
+                    {displayCols.find(c => c.id === 'email')?.visible && <td className="px-4 py-2.5 text-muted-foreground">{user.email}</td>}
+                    {displayCols.find(c => c.id === 'role')?.visible && <td className="px-4 py-2.5 text-muted-foreground">{user.roleName || '—'}</td>}
+                    {displayCols.find(c => c.id === 'admin')?.visible && <td className="px-4 py-2.5 text-center">
                       {user.isAdmin ? <Badge variant="default" className="text-violet-600 bg-violet-500/10 border-violet-200">{t('users.col.admin')}</Badge> : '—'}
                     </td>}
-                    {cols.find(c => c.id === 'status')?.visible && <td className="px-4 py-2.5 text-center">
+                    {displayCols.find(c => c.id === 'status')?.visible && <td className="px-4 py-2.5 text-center">
                       {user.status === 1
                         ? <Badge variant="default" className="text-emerald-600 bg-emerald-500/10 border-emerald-200">{t('users.status.active')}</Badge>
                         : <Badge variant="default" className="text-red-600 bg-red-500/10 border-red-200">{t('users.status.inactive')}</Badge>}
                     </td>}
-                    {cols.find(c => c.id === 'lastLogin')?.visible && <td className="px-4 py-2.5 text-xs text-muted-foreground tabular-nums">{fmtDate(user.lastLoginDate)}</td>}
-                    <td className="px-4 py-2.5">
+                    {displayCols.find(c => c.id === 'lastLogin')?.visible && <td className="px-4 py-2.5 text-xs text-muted-foreground tabular-nums">{fmtDate(user.lastLoginDate)}</td>}
+                    <td className={cn('px-4 py-2.5', narrow && 'sticky right-0 bg-card group-hover:bg-muted/40')}>
                       <div className="flex items-center justify-end gap-1">
                         {canEdit && (
                           <button type="button" onClick={() => navigate(`${base}/${user.id}`)} title={t('common.edit')}
@@ -723,6 +794,10 @@ export default function UserListPage() {
                       </div>
                     </td>
                   </tr>
+                  {expanded.has(user.id) && (
+                    <HiddenColsRow cols={displayCols} labelFor={(id) => t(COL_LABEL[id])} renderValue={(id) => cellContent(user, id)} colSpan={totalCols} />
+                  )}
+                  </Fragment>
                 ))
               )}
             </tbody>

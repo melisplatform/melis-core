@@ -17,6 +17,7 @@ import { toolHasViewToggle } from '@/lib/module-registry'
 import { routeForForward } from '@/lib/tool-routes'
 import { useI18n } from '@/i18n/i18n-context'
 import { useCan } from '@/lib/capabilities'
+import { useIsNarrow } from '@/hooks/useIsNarrow'
 
 const TOOL_KEY = 'meliscore_tool_user_module_management'
 
@@ -68,6 +69,7 @@ export default function ModulesPage() {
   const location = useLocation()
   const { openTab } = useTabs()
   const { t } = useI18n()
+  const narrow = useIsNarrow()
   const base = routeForForward('MelisCore/Modules') ?? '/modules'
 
   const canList = useCan(TOOL_KEY, 'list')
@@ -185,17 +187,48 @@ export default function ModulesPage() {
     load()
   }
 
-  // ─── Réordonnancement (drag & drop natif, désactivé pendant une recherche) ───
+  // ─── Réordonnancement (Pointer Events — un seul mécanisme pour souris ET tactile,
+  // désactivé pendant une recherche). Le drag & drop HTML5 natif ne répond à aucun geste
+  // tactile (limitation de la spec, pas un bug melis) : on le remplace entièrement par les
+  // Pointer Events, qui unifient souris/tactile/stylet — la même poignée se glisse pareil
+  // partout, plutôt que deux mécanismes distincts à maintenir.
   const canReorder = canEdit && search.trim() === ''
-  function onDrop(targetIndex: number) {
-    if (dragIndex === null || dragIndex === targetIndex) { setDragIndex(null); return }
+  const [overIndex, setOverIndex] = useState<number | null>(null)
+
+  function reorder(fromIndex: number, toIndex: number) {
+    if (fromIndex === toIndex) return
     setModules((prev) => {
       const next = [...prev]
-      const [moved] = next.splice(dragIndex, 1)
-      next.splice(targetIndex, 0, moved)
+      const [moved] = next.splice(fromIndex, 1)
+      next.splice(toIndex, 0, moved)
       return next
     })
+  }
+
+  function handleGripPointerDown(e: React.PointerEvent<Element>, index: number) {
+    if (!canReorder) return
+    e.preventDefault()
+    e.currentTarget.setPointerCapture(e.pointerId)
+    setDragIndex(index)
+    setOverIndex(index)
+  }
+  function handleGripPointerMove(e: React.PointerEvent<Element>) {
+    if (dragIndex === null) return
+    const row = document.elementFromPoint(e.clientX, e.clientY)?.closest<HTMLElement>('[data-row-index]')
+    if (!row) return
+    const idx = Number(row.dataset.rowIndex)
+    if (!Number.isNaN(idx)) setOverIndex(idx)
+  }
+  function handleGripPointerUp(e: React.PointerEvent<Element>) {
+    if (dragIndex === null) return
+    e.currentTarget.releasePointerCapture(e.pointerId)
+    if (overIndex !== null) reorder(dragIndex, overIndex)
     setDragIndex(null)
+    setOverIndex(null)
+  }
+  function handleGripPointerCancel() {
+    setDragIndex(null)
+    setOverIndex(null)
   }
 
   async function doSave() {
@@ -222,21 +255,24 @@ export default function ModulesPage() {
 
   return (
     <div className={cn('flex flex-col gap-6 p-6', effectiveMode === 'iframe' ? 'h-full' : 'flex-1')}>
-      {/* Header */}
+      {/* Header — narrow-only additions never remove/replace a desktop class, so at narrow=false
+          every className below renders byte-identical to the original desktop layout. */}
       <div className="flex items-center justify-between gap-4">
-        <div>
-          <h1 className="text-xl font-bold">{t('modules.title')}</h1>
-          <p className="text-sm text-muted-foreground">{t('modules.subtitle')}</p>
+        <div className={cn(narrow && 'min-w-0')}>
+          <h1 className={cn('text-xl font-bold', narrow && 'truncate')}>{t('modules.title')}</h1>
+          <p className={cn('text-sm text-muted-foreground', narrow && 'truncate')}>{t('modules.subtitle')}</p>
         </div>
-        <div className="flex items-center gap-2">
-          {showViewToggle && (
-            <ViewModeToggle mode={effectiveMode} onChange={(m) => { setMode(m); if (m === 'iframe') setIframeLoaded(true) }} />
-          )}
-          <button type="button" onClick={load} title={t('common.refresh')}
-            className="inline-flex size-8 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-accent hover:text-foreground">
-            <RotateCcw className={cn('size-3.5', loading && 'animate-spin')} />
-          </button>
-          <Button size="sm" className="gap-1.5" onClick={() => setShowSaveConfirm(true)} disabled={!dirty || saving || !canEdit}>
+        <div className={cn('flex items-center gap-2', narrow && 'shrink-0 flex-col')}>
+          <div className="flex items-center gap-2">
+            {showViewToggle && (
+              <ViewModeToggle mode={effectiveMode} compact={narrow} onChange={(m) => { setMode(m); if (m === 'iframe') setIframeLoaded(true) }} />
+            )}
+            <button type="button" onClick={load} title={t('common.refresh')}
+              className="inline-flex size-8 shrink-0 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-accent hover:text-foreground">
+              <RotateCcw className={cn('size-3.5', loading && 'animate-spin')} />
+            </button>
+          </div>
+          <Button size="sm" className={cn('gap-1.5', narrow && 'w-full')} onClick={() => setShowSaveConfirm(true)} disabled={!dirty || saving || !canEdit}>
             <Save className="size-4" />
             {saving ? t('modules.saving') : t('modules.save')}
           </Button>
@@ -254,7 +290,7 @@ export default function ModulesPage() {
         ) : (<>
           {/* Barre d'actions */}
           <div className="flex flex-wrap items-center gap-2">
-            <div className="relative flex-1 min-w-[220px]">
+            <div className={narrow ? 'relative w-full' : 'relative flex-1 min-w-[220px]'}>
               <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
               <Input value={search} onChange={(e) => setSearch(e.target.value)}
                 placeholder={t('modules.search')} className="pl-9" />
@@ -267,17 +303,25 @@ export default function ModulesPage() {
             </Badge>
             {canEdit && (
               <>
-                <Button variant="outline" size="sm" onClick={() => setAll(true)}>{t('modules.select_all')}</Button>
-                <Button variant="outline" size="sm" onClick={() => setAll(false)}>{t('modules.deselect_all')}</Button>
+                <Button variant="outline" size="sm"
+                  className={cn(narrow && 'h-auto min-h-9 flex-[1_1_calc(50%_-_4px)] justify-center whitespace-normal text-center')}
+                  onClick={() => setAll(true)}>{t('modules.select_all')}</Button>
+                <Button variant="outline" size="sm"
+                  className={cn(narrow && 'h-auto min-h-9 flex-[1_1_calc(50%_-_4px)] justify-center whitespace-normal text-center')}
+                  onClick={() => setAll(false)}>{t('modules.deselect_all')}</Button>
               </>
             )}
             {dirty && (
-              <Button variant="outline" size="sm" className="gap-1.5 text-amber-600" onClick={resetChanges}>
+              <Button variant="outline" size="sm"
+                className={cn('gap-1.5 text-amber-600', narrow && 'h-auto min-h-9 flex-[1_1_calc(50%_-_4px)] justify-center whitespace-normal text-center')}
+                onClick={resetChanges}>
                 <Undo2 className="size-3.5" />{t('modules.reset')}
               </Button>
             )}
-            <div className="ml-auto flex items-center gap-2">
-              <Button variant="outline" size="sm" className="gap-1.5" onClick={resetFilters} title={t('common.reset_filters')}>
+            <div className={cn('flex items-center gap-2', !narrow && 'ml-auto', narrow && 'w-full')}>
+              <Button variant="outline" size="sm"
+                className={cn('gap-1.5', narrow && 'h-auto min-h-9 w-full justify-center whitespace-normal text-center')}
+                onClick={resetFilters} title={t('common.reset_filters')}>
                 <RotateCcw className={cn('size-3.5', loading && 'animate-spin')} />{t('common.reset_filters')}
               </Button>
             </div>
@@ -301,19 +345,26 @@ export default function ModulesPage() {
                   return (
                     <li
                       key={m.name}
-                      draggable={canReorder}
-                      onDragStart={() => canReorder && setDragIndex(realIndex)}
-                      onDragOver={(e) => { if (canReorder) e.preventDefault() }}
-                      onDrop={() => canReorder && onDrop(realIndex)}
-                      onDragEnd={() => setDragIndex(null)}
+                      data-row-index={realIndex}
                       className={cn(
                         'flex items-center gap-3 px-4 py-2.5 transition-colors',
-                        dragIndex === realIndex ? 'bg-primary/5' : 'hover:bg-muted/40',
+                        dragIndex === realIndex
+                          ? 'bg-primary/5'
+                          : overIndex === realIndex && dragIndex !== null
+                            ? 'bg-primary/10'
+                            : 'hover:bg-muted/40',
                         !m.active && 'opacity-60',
                       )}
                     >
                       {canReorder ? (
-                        <GripVertical className="size-4 shrink-0 cursor-grab text-muted-foreground active:cursor-grabbing" />
+                        <GripVertical
+                          onPointerDown={(e) => handleGripPointerDown(e, realIndex)}
+                          onPointerMove={handleGripPointerMove}
+                          onPointerUp={handleGripPointerUp}
+                          onPointerCancel={handleGripPointerCancel}
+                          style={{ touchAction: 'none' }}
+                          className="size-4 shrink-0 cursor-grab select-none text-muted-foreground active:cursor-grabbing"
+                        />
                       ) : (
                         <span className="size-4 shrink-0" />
                       )}
@@ -328,10 +379,10 @@ export default function ModulesPage() {
                             <Badge variant="muted" className="px-1.5 py-0 text-[10px] tabular-nums">v{m.version.replace(/^v/i, '')}</Badge>
                           )}
                         </div>
-                        <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                        <div className={cn('flex items-center gap-2 text-xs text-muted-foreground', narrow && 'flex-wrap gap-y-0.5')}>
                           {m.package && <code className="truncate">{m.package}</code>}
                           {m.requires.length > 0 && (
-                            <span className="truncate" title={m.requires.join(', ')}>
+                            <span className={cn('truncate', narrow && 'w-full')} title={m.requires.join(', ')}>
                               · {t('modules.requires')}: {m.requires.join(', ')}
                             </span>
                           )}

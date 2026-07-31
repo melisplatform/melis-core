@@ -33,64 +33,96 @@ class MelisReactApiUserController extends MelisAbstractActionController
         if ($denyCap = $this->denyUnlessCan('list')) { return $denyCap; }
 
         try {
-            $page      = max(1, (int) $this->params()->fromQuery('page', 1));
             $limit     = min(9999, max(1, (int) $this->params()->fromQuery('limit', 25)));
             $search    = trim((string) ($this->params()->fromQuery('search', '') ?? ''));
             $rawStatus = $this->params()->fromQuery('status', '');
             $status    = ($rawStatus !== '' && $rawStatus !== null) ? (int) $rawStatus : null;
             $rawRole   = $this->params()->fromQuery('roleId', '');
             $roleId    = ($rawRole !== '' && $rawRole !== null) ? (int) $rawRole : null;
-            $offset    = ($page - 1) * $limit;
+
+            // Tri server-side : whitelist clé → expression SQL. Chaque expression est rendue
+            // NON-NULL (COALESCE) pour que le keyset (comparaison sur la valeur de tri) reste
+            // fiable, y compris sur les colonnes nullables (rôle, dernière connexion).
+            $sortMap = [
+                'id'        => 'u.usr_id',
+                'login'     => 'u.usr_login',
+                'name'      => "CONCAT(COALESCE(u.usr_firstname,''),' ',COALESCE(u.usr_lastname,''))",
+                'email'     => "COALESCE(u.usr_email,'')",
+                'role'      => "COALESCE(r.urole_name,'')",
+                'admin'     => 'u.usr_admin',
+                'status'    => 'u.usr_status',
+                'lastLogin' => "COALESCE(u.usr_last_login_date,'1000-01-01 00:00:00')",
+            ];
+            $sortKey  = (string) $this->params()->fromQuery('sort', 'id');
+            if (!isset($sortMap[$sortKey])) { $sortKey = 'id'; }
+            $sortExpr = $sortMap[$sortKey];
+            $dir = strtolower((string) $this->params()->fromQuery('dir', 'desc')) === 'asc' ? 'ASC' : 'DESC';
+            $op  = $dir === 'ASC' ? '>' : '<';
 
             $db = $this->getServiceManager()->get('Laminas\Db\Adapter\AdapterInterface');
 
-            $where  = [];
-            $params = [];
-
-            if ($status !== null) {
-                $where[]  = 'u.usr_status = ?';
-                $params[] = $status;
-            }
-            if ($roleId !== null) {
-                $where[]  = 'u.usr_role_id = ?';
-                $params[] = $roleId;
-            }
+            // Filtres (communs au COUNT et à la requête data).
+            $filterWhere = []; $filterParams = [];
+            if ($status !== null) { $filterWhere[] = 'u.usr_status = ?'; $filterParams[] = $status; }
+            if ($roleId !== null) { $filterWhere[] = 'u.usr_role_id = ?'; $filterParams[] = $roleId; }
             if ($search !== '') {
-                $like     = '%' . $search . '%';
-                $where[]  = '(u.usr_login LIKE ? OR u.usr_email LIKE ? OR u.usr_firstname LIKE ? OR u.usr_lastname LIKE ?)';
-                $params   = array_merge($params, [$like, $like, $like, $like]);
+                $like = '%' . $search . '%';
+                $filterWhere[] = '(u.usr_login LIKE ? OR u.usr_email LIKE ? OR u.usr_firstname LIKE ? OR u.usr_lastname LIKE ?)';
+                $filterParams = array_merge($filterParams, [$like, $like, $like, $like]);
             }
 
-            $whereClause = $where ? 'WHERE ' . implode(' AND ', $where) : '';
-
-            $countRow = iterator_to_array(
-                $db->query("SELECT COUNT(*) AS total FROM melis_core_user u $whereClause", $params)
-            );
+            // total = taille du jeu filtré (indépendant du curseur).
+            $countWhere = $filterWhere ? 'WHERE ' . implode(' AND ', $filterWhere) : '';
+            $countRow = iterator_to_array($db->query("SELECT COUNT(*) AS total FROM melis_core_user u $countWhere", $filterParams));
             $total = (int) ($countRow[0]['total'] ?? 0);
+
+            // Keyset : reprendre STRICTEMENT après le dernier élément (valeur de tri + usr_id).
+            $dataWhere = $filterWhere; $dataParams = $filterParams;
+            $after = (string) ($this->params()->fromQuery('after', '') ?? '');
+            if ($after !== '') {
+                $cur = json_decode((string) base64_decode($after, true), true);
+                if (is_array($cur) && array_key_exists('v', $cur) && array_key_exists('id', $cur)) {
+                    $dataWhere[]  = "($sortExpr $op ? OR ($sortExpr = ? AND u.usr_id $op ?))";
+                    $dataParams[] = $cur['v'];
+                    $dataParams[] = $cur['v'];
+                    $dataParams[] = (int) $cur['id'];
+                }
+            }
+            $dataWhereClause = $dataWhere ? 'WHERE ' . implode(' AND ', $dataWhere) : '';
 
             $dataSql  = "
                 SELECT u.usr_id, u.usr_status, u.usr_login, u.usr_email,
                        u.usr_firstname, u.usr_lastname, u.usr_role_id,
                        u.usr_admin, u.usr_tags, u.usr_creation_date,
                        u.usr_last_login_date, u.usr_is_online,
-                       r.urole_name
+                       r.urole_name,
+                       $sortExpr AS __sortval
                 FROM melis_core_user u
                 LEFT JOIN melis_core_user_role r ON r.urole_id = u.usr_role_id
-                $whereClause
-                ORDER BY u.usr_id DESC
-                LIMIT ? OFFSET ?
+                $dataWhereClause
+                ORDER BY $sortExpr $dir, u.usr_id $dir
+                LIMIT ?
             ";
-            $rows = $db->query($dataSql, array_merge($params, [$limit, $offset]));
+            $rows = iterator_to_array($db->query($dataSql, array_merge($dataParams, [$limit])));
 
             $items = [];
+            $lastSortVal = null; $lastId = null;
             foreach ($rows as $row) {
-                $r       = (array) $row;
-                $items[] = $this->formatUser($r);
+                $r           = (array) $row;
+                $lastSortVal = $r['__sortval'] ?? null;
+                $lastId      = (int) ($r['usr_id'] ?? 0);
+                $items[]     = $this->formatUser($r);
+            }
+
+            // nextCursor null = plus rien à charger (dernier lot incomplet).
+            $nextCursor = null;
+            if (count($rows) === $limit && $lastId !== null) {
+                $nextCursor = base64_encode((string) json_encode(['v' => $lastSortVal, 'id' => $lastId]));
             }
 
             return $this->jsonResponse([
                 'success' => true,
-                'data'    => ['items' => $items, 'total' => $total, 'page' => $page, 'limit' => $limit],
+                'data'    => ['items' => $items, 'total' => $total, 'nextCursor' => $nextCursor, 'limit' => $limit],
             ]);
         } catch (\Throwable $e) {
             return $this->errorResponse($e);

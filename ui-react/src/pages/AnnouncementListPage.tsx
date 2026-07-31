@@ -1,7 +1,7 @@
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { Fragment, useEffect, useRef, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import {
-  ArrowDown, ArrowUp, ArrowUpDown, CheckCircle2, Circle, Columns3, FileDown, Megaphone,
+  ArrowDown, ArrowUp, ArrowUpDown, CheckCircle2, Circle, Columns3, FileDown, Loader2, Megaphone,
   Pencil, Plus, RotateCcw, Search, Trash2, X, type LucideIcon,
 } from 'lucide-react'
 
@@ -10,6 +10,7 @@ import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
 import { cn } from '@/lib/utils'
 import * as annApi from '@/lib/announcement-api'
+import { useKeysetList } from '@/lib/use-keyset-list'
 import { useTabs } from '@/components/tabs/tab-store'
 import { MelisClassicFrame, ViewModeToggle, type ViewMode } from '@/components/MelisClassicView'
 import { toolHasViewToggle } from '@/lib/module-registry'
@@ -18,6 +19,8 @@ import { useI18n } from '@/i18n/i18n-context'
 import type { I18nKey } from '@/i18n/dictionaries'
 import { ColumnManager, visibleCols, type ColDef } from '@/components/ColumnManager'
 import { ExportModal } from '@/components/ExportModal'
+import { ExpandToggle, HiddenColsRow } from '@/components/ExpandableRow'
+import { useIsNarrow } from '@/hooks/useIsNarrow'
 import { useCan } from '@/lib/capabilities'
 
 const TOOL_KEY = 'melis_core_announcement_tool'
@@ -26,6 +29,10 @@ const TOOL_KEY = 'melis_core_announcement_tool'
 interface ListCache {
   items: annApi.AnnouncementItem[]
   total: number
+  cursor: string | null
+  hasMore: boolean
+  sortCol: string
+  sortDir: 'asc' | 'desc'
   search: string
   searchInput: string
   status: '' | '0' | '1'
@@ -94,16 +101,6 @@ function loadCols(): ColDef[] {
 }
 function saveCols(cols: ColDef[]) { localStorage.setItem(COL_KEY, JSON.stringify(cols)) }
 
-function getCellSortValue(a: annApi.AnnouncementItem, id: string): string | number {
-  if (id === 'id')     return a.id
-  if (id === 'status') return a.status ? 1 : 0
-  if (id === 'title')  return a.title
-  if (id === 'text')   return a.text
-  if (id === 'date')   return a.date
-  if (id === 'user')   return a.userName
-  return ''
-}
-
 function fmtDate(s: string, locale: string): string {
   const d = new Date(s.replace(' ', 'T'))
   return isNaN(d.getTime()) ? s : d.toLocaleString(locale, {
@@ -137,6 +134,7 @@ export default function AnnouncementListPage() {
   const location = useLocation()
   const { openTab } = useTabs()
   const { t, lang } = useI18n()
+  const narrow = useIsNarrow()
   const dateLocale = lang === 'fr' ? 'fr-FR' : 'en-GB'
   const base = routeForForward('MelisCore/Announcement') ?? '/announcements'
 
@@ -152,9 +150,6 @@ export default function AnnouncementListPage() {
   const [iframeLoaded, setIframeLoaded] = useState(_cache?.iframeLoaded ?? false)
   const effectiveMode: ViewMode = showViewToggle ? mode : 'react'
 
-  const [items, setItems]   = useState<annApi.AnnouncementItem[]>(_cache?.items ?? [])
-  const [total, setTotal]   = useState(_cache?.total ?? 0)
-  const [loading, setLoading] = useState(false)
   const [stats, setStats]   = useState<annApi.AnnouncementStats | null>(_cache?.stats ?? null)
 
   const [search, setSearch]           = useState(_cache?.search ?? '')
@@ -168,14 +163,43 @@ export default function AnnouncementListPage() {
   const [showColMgr, setShowColMgr] = useState(false)
   const [showExport, setShowExport] = useState(false)
   const colMgrRef = useRef<HTMLDivElement>(null)
-
-  const [sortCol, setSortCol] = useState<string | null>(null)
-  const [sortDir, setSortDir] = useState<'asc' | 'desc'>('asc')
+  // Mobile-only: force the table down to just "title" regardless of the desktop ColumnManager
+  // preference, with the rest reachable via a per-row "+" — desktop behavior (cols as-is, no "+"
+  // column at all) is untouched since hasHidden/displayCols only diverge from `cols` when narrow.
+  const [expanded, setExpanded] = useState<Set<number>>(new Set())
+  const toggleExpand = (id: number) => setExpanded((s) => {
+    const n = new Set(s); n.has(id) ? n.delete(id) : n.add(id); return n
+  })
+  const displayCols = narrow ? cols.map(c => ({ ...c, visible: c.id === 'title' })) : cols
+  const hasHidden = narrow
 
   const [toDelete, setToDelete] = useState<annApi.AnnouncementItem | null>(null)
 
-  const cacheRef = useRef({ items, total, search, searchInput, status, stats, mode, iframeLoaded })
-  useEffect(() => { cacheRef.current = { items, total, search, searchInput, status, stats, mode, iframeLoaded } })
+  // Scroll infini + tri server-side + pagination keyset.
+  const {
+    items, total, loading, hasMore, sentinelRef,
+    sortCol, sortDir, toggleSort, reload, removeLocal, snapshot,
+  } = useKeysetList<annApi.AnnouncementItem>({
+    fetcher: (a) => annApi.fetchAnnouncements({
+      ...a, sort: a.sort as annApi.AnnouncementSortKey, search, status,
+    }),
+    deps: [search, status, refreshKey],
+    defaultSort: 'date',
+    defaultDir: 'desc',
+    initial: _cache
+      ? { items: _cache.items, total: _cache.total, cursor: _cache.cursor,
+          hasMore: _cache.hasMore, sortCol: _cache.sortCol, sortDir: _cache.sortDir }
+      : undefined,
+    skipInitial: !!(_cache && _cache.items.length),
+  })
+
+  const cacheRef = useRef<ListCache>({
+    items, total, cursor: null, hasMore, sortCol, sortDir,
+    search, searchInput, status, stats, mode, iframeLoaded,
+  })
+  useEffect(() => {
+    cacheRef.current = { ...snapshot(), search, searchInput, status, stats, mode, iframeLoaded }
+  })
   useEffect(() => () => { _cache = cacheRef.current }, [])
 
   useEffect(() => {
@@ -192,14 +216,6 @@ export default function AnnouncementListPage() {
     if (_cache?.stats) return
     annApi.fetchAnnouncementStats().then(setStats).catch(() => null)
   }, [])
-
-  useEffect(() => {
-    setLoading(true)
-    annApi.fetchAnnouncements({ limit: 9999, search, status })
-      .then(res => { setItems(res.items); setTotal(res.total) })
-      .catch(() => null)
-      .finally(() => setLoading(false))
-  }, [search, status, refreshKey])
 
   useEffect(() => {
     if (!showColMgr) return
@@ -219,68 +235,63 @@ export default function AnnouncementListPage() {
     setTimeout(() => setRefreshing(false), 600)
   }
 
-  // Réinitialise recherche + filtre statut + tri, puis recharge. setItems([]) est obligatoire :
-  // sans ça les lignes déjà affichées restent à l'écran et le clic paraît sans effet.
+  // Réinitialise recherche + filtre statut, puis recharge (le bump de refreshKey relance
+  // le hook depuis le début ; le tri revient au défaut via reload → sort par défaut).
   function resetFilters() {
     _cache = null
     setSearchInput('')
     setSearch('')
     setStatus('')
-    setSortCol(null)
-    setSortDir('asc')
-    setItems([])
     setRefreshing(true)
     setRefreshKey(k => k + 1)
     annApi.fetchAnnouncementStats().then(setStats).catch(() => null)
     setTimeout(() => setRefreshing(false), 600)
   }
 
-  function toggleSort(id: string) {
-    if (sortCol === id) setSortDir(d => d === 'asc' ? 'desc' : 'asc')
-    else { setSortCol(id); setSortDir('asc') }
-  }
-
-  const sortedItems = useMemo(() => {
-    if (!sortCol) return items
-    return [...items].sort((a, b) => {
-      const va = getCellSortValue(a, sortCol), vb = getCellSortValue(b, sortCol)
-      const na = typeof va === 'number' ? va : parseFloat(String(va))
-      const nb = typeof vb === 'number' ? vb : parseFloat(String(vb))
-      const cmp = !isNaN(na) && !isNaN(nb) ? na - nb : String(va).localeCompare(String(vb), undefined, { sensitivity: 'base' })
-      return sortDir === 'asc' ? cmp : -cmp
-    })
-  }, [items, sortCol, sortDir])
-
   async function confirmDelete() {
     if (!toDelete) return
     try {
       await annApi.deleteAnnouncement(toDelete.id)
-      setItems(prev => prev.filter(a => a.id !== toDelete.id))
-      setTotal(t => t - 1)
+      removeLocal(a => a.id === toDelete.id)
       setToDelete(null)
-      setRefreshKey(k => k + 1)
+      reload()
       annApi.fetchAnnouncementStats().then(setStats).catch(() => null)
     } catch { setToDelete(null) }
   }
 
+  const cellContent = (a: annApi.AnnouncementItem, id: string) => {
+    if (id === 'id') return a.id
+    if (id === 'status') return a.status
+      ? <Badge variant="success" className="gap-1"><CheckCircle2 className="size-3" />{t('ann.status.active')}</Badge>
+      : <Badge variant="muted" className="gap-1"><Circle className="size-3" />{t('ann.status.inactive')}</Badge>
+    if (id === 'title') return <span className="font-medium">{a.title}</span>
+    if (id === 'text') return textPreview(a.text)
+    if (id === 'date') return fmtDate(a.date, dateLocale)
+    if (id === 'user') return <Badge variant="muted" className="font-normal">{a.userName}</Badge>
+    return null
+  }
+
   return (
     <div className={cn('flex flex-col gap-6 p-6', effectiveMode === 'iframe' ? 'h-full' : 'flex-1')}>
-      {/* Header */}
+      {/* Header — narrow-only additions never remove/replace a desktop class, so at narrow=false
+          every className below renders byte-identical to the original desktop layout. */}
       <div className="flex items-center justify-between gap-4">
-        <div>
-          <h1 className="text-xl font-bold">{t('ann.title')}</h1>
-          <p className="text-sm text-muted-foreground">{t('ann.subtitle')}</p>
+        <div className={cn(narrow && 'min-w-0')}>
+          <h1 className={cn('text-xl font-bold', narrow && 'truncate')}>{t('ann.title')}</h1>
+          <p className={cn('text-sm text-muted-foreground', narrow && 'truncate')}>{t('ann.subtitle')}</p>
         </div>
-        <div className="flex items-center gap-2">
-          {showViewToggle && (
-            <ViewModeToggle mode={effectiveMode} onChange={(m) => { setMode(m); if (m === 'iframe') setIframeLoaded(true) }} />
-          )}
-          <button type="button" onClick={handleRefresh} title={t('common.refresh')}
-            className="inline-flex size-8 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-accent hover:text-foreground">
-            <RotateCcw className={cn('size-3.5', refreshing && 'animate-spin')} />
-          </button>
+        <div className={cn('flex items-center gap-2', narrow && 'shrink-0 flex-col')}>
+          <div className="flex items-center gap-2">
+            {showViewToggle && (
+              <ViewModeToggle mode={effectiveMode} compact={narrow} onChange={(m) => { setMode(m); if (m === 'iframe') setIframeLoaded(true) }} />
+            )}
+            <button type="button" onClick={handleRefresh} title={t('common.refresh')}
+              className="inline-flex size-8 shrink-0 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-accent hover:text-foreground">
+              <RotateCcw className={cn('size-3.5', refreshing && 'animate-spin')} />
+            </button>
+          </div>
           {canCreate && (
-            <Button size="sm" onClick={() => navigate(`${base}/new`)}>
+            <Button size="sm" className={cn(narrow && 'w-full')} onClick={() => navigate(`${base}/new`)}>
               <Plus className="size-4" />{t('ann.new')}
             </Button>
           )}
@@ -305,7 +316,7 @@ export default function AnnouncementListPage() {
 
         {/* Filtres */}
         <div className="flex flex-wrap items-center gap-2">
-          <div className="relative flex-1 min-w-[220px]">
+          <div className={narrow ? 'relative w-full' : 'relative flex-1 min-w-[220px]'}>
             <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
             <Input value={searchInput} onChange={e => setSearchInput(e.target.value)}
               onKeyDown={e => e.key === 'Enter' && applySearch()}
@@ -313,14 +324,14 @@ export default function AnnouncementListPage() {
             {searchInput && <button onClick={clearSearch}
               className="absolute right-2.5 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"><X className="size-4" /></button>}
           </div>
-          <div className="flex items-center rounded-lg border border-border bg-muted/40 p-1 gap-1">
+          <div className={cn('flex items-center rounded-lg border border-border bg-muted/40 p-1 gap-1', narrow && 'w-full')}>
             {([
               { val: '' as const,  label: t('ann.filter.all'),      dot: null },
               { val: '1' as const, label: t('ann.status.active'),   dot: 'bg-emerald-500' },
               { val: '0' as const, label: t('ann.status.inactive'), dot: 'bg-red-500' },
             ]).map(({ val, label, dot }) => (
               <button key={val} type="button" onClick={() => setStatus(val)}
-                className={cn('flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-medium transition-colors',
+                className={cn('flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-medium transition-colors', narrow && 'flex-1 justify-center',
                   status === val ? 'bg-card shadow-sm text-foreground' : 'text-muted-foreground hover:text-foreground')}>
                 {dot && <span className={cn('size-1.5 rounded-full', dot)} />}
                 {label}
@@ -328,12 +339,16 @@ export default function AnnouncementListPage() {
             ))}
           </div>
 
-          <div className="ml-auto flex items-center gap-2">
-            <Button variant="outline" size="sm" className="gap-1.5" onClick={resetFilters} title={t('common.reset_filters')}>
+          <div className={cn('flex items-center gap-2', narrow ? 'w-full flex-wrap' : 'ml-auto')}>
+            <Button variant="outline" size="sm"
+              className={cn('gap-1.5', narrow && 'h-auto min-h-9 flex-[1_1_calc(50%_-_4px)] justify-center whitespace-normal text-center')}
+              onClick={resetFilters} title={t('common.reset_filters')}>
               <RotateCcw className={cn('size-3.5', refreshing && 'animate-spin')} />{t('common.reset_filters')}
             </Button>
-            <div ref={colMgrRef} className="relative">
-              <Button variant="outline" size="sm" className="gap-1.5" onClick={() => setShowColMgr(v => !v)}>
+            <div ref={colMgrRef} className={cn('relative', narrow && 'flex-[1_1_calc(50%_-_4px)]')}>
+              <Button variant="outline" size="sm"
+                className={cn('gap-1.5', narrow && 'h-auto min-h-9 w-full justify-center whitespace-normal text-center')}
+                onClick={() => setShowColMgr(v => !v)}>
                 <Columns3 className="size-3.5" />{t('common.columns')}
               </Button>
               {showColMgr && <ColumnManager cols={cols} labelFor={(id) => t(COL_LABEL[id])}
@@ -341,7 +356,9 @@ export default function AnnouncementListPage() {
                 onReset={() => { setCols(DEFAULT_COLS); saveCols(DEFAULT_COLS) }} />}
             </div>
             {canExport && (
-              <Button variant="outline" size="sm" className="gap-1.5" onClick={() => setShowExport(true)}>
+              <Button variant="outline" size="sm"
+                className={cn('gap-1.5', narrow && 'h-auto min-h-9 flex-[1_1_calc(50%_-_4px)] justify-center whitespace-normal text-center')}
+                onClick={() => setShowExport(true)}>
                 <FileDown className="size-3.5" />{t('common.export')}
               </Button>
             )}
@@ -349,11 +366,12 @@ export default function AnnouncementListPage() {
         </div>
 
         {/* Table */}
-        <div className="rounded-xl border border-border bg-card shadow-sm">
-          <table className="w-full min-w-[680px] text-sm">
+        <div className="rounded-xl border border-border bg-card shadow-sm overflow-x-auto">
+          <table className={cn('w-full text-sm', !narrow && 'min-w-[680px]')}>
             <thead className="sticky top-0 border-b border-border bg-muted/60 text-xs uppercase tracking-wide text-muted-foreground">
               <tr>
-                {visibleCols(cols).map(({ id }) => {
+                {hasHidden && <th className="w-8 px-2 py-3" />}
+                {visibleCols(displayCols).map(({ id }) => {
                   const isSorted = sortCol === id
                   const SIcon = isSorted ? (sortDir === 'asc' ? ArrowUp : ArrowDown) : ArrowUpDown
                   return (
@@ -371,23 +389,22 @@ export default function AnnouncementListPage() {
             </thead>
             <tbody className="divide-y divide-border">
               {items.length === 0 && !loading ? (
-                <tr><td colSpan={visibleCols(cols).length + 1} className="px-4 py-10 text-center text-sm text-muted-foreground">{t('ann.empty')}</td></tr>
-              ) : sortedItems.map(a => (
-                <tr key={a.id} className="group transition-colors hover:bg-muted/40">
-                  {visibleCols(cols).map(({ id }) => (
+                <tr><td colSpan={visibleCols(displayCols).length + 1 + (hasHidden ? 1 : 0)} className="px-4 py-10 text-center text-sm text-muted-foreground">{t('ann.empty')}</td></tr>
+              ) : items.map(a => (
+                <Fragment key={a.id}>
+                <tr className="group transition-colors hover:bg-muted/40">
+                  {hasHidden && (
+                    <td className="px-2 py-2.5">
+                      <ExpandToggle expanded={expanded.has(a.id)} onClick={() => toggleExpand(a.id)} />
+                    </td>
+                  )}
+                  {visibleCols(displayCols).map(({ id }) => (
                     <td key={id} className={cn('px-4 py-2.5',
                       id === 'id' && 'tabular-nums text-muted-foreground',
                       id === 'text' && 'text-muted-foreground',
                       (id === 'date' || id === 'user') && 'whitespace-nowrap',
                       id === 'date' && 'text-muted-foreground')}>
-                      {id === 'id' && a.id}
-                      {id === 'status' && (a.status
-                        ? <Badge variant="success" className="gap-1"><CheckCircle2 className="size-3" />{t('ann.status.active')}</Badge>
-                        : <Badge variant="muted" className="gap-1"><Circle className="size-3" />{t('ann.status.inactive')}</Badge>)}
-                      {id === 'title' && <span className="font-medium">{a.title}</span>}
-                      {id === 'text' && textPreview(a.text)}
-                      {id === 'date' && fmtDate(a.date, dateLocale)}
-                      {id === 'user' && <Badge variant="muted" className="font-normal">{a.userName}</Badge>}
+                      {cellContent(a, id)}
                     </td>
                   ))}
                   <td className="px-4 py-2.5">
@@ -407,12 +424,24 @@ export default function AnnouncementListPage() {
                     </div>
                   </td>
                 </tr>
+                {expanded.has(a.id) && (
+                  <HiddenColsRow cols={displayCols} labelFor={(id) => t(COL_LABEL[id])} renderValue={(id) => cellContent(a, id)}
+                    colSpan={visibleCols(displayCols).length + 1 + (hasHidden ? 1 : 0)} />
+                )}
+                </Fragment>
               ))}
             </tbody>
           </table>
-          <div className="px-4 py-3 text-center text-xs text-muted-foreground">
-            {loading ? t('common.loading') : t('ann.count', { n: total })}
-          </div>
+
+          <div ref={sentinelRef} className="h-1" />
+          {loading && (
+            <div className="flex items-center justify-center gap-2 py-4 text-xs text-muted-foreground">
+              <Loader2 className="size-3.5 animate-spin" />{t('common.loading')}
+            </div>
+          )}
+          {!hasMore && items.length > 0 && (
+            <div className="py-4 text-center text-xs text-muted-foreground">{t('ann.count', { n: total })}</div>
+          )}
         </div>
         </>)}
       </div>
@@ -422,7 +451,19 @@ export default function AnnouncementListPage() {
         <ExportModal
           cols={cols}
           labelFor={(id) => t(COL_LABEL[id])}
-          fetchAll={async () => (await annApi.fetchAnnouncements({ limit: 9999, search, status })).items}
+          fetchAll={async () => {
+            // Export complet : boucle keyset (100/lot) jusqu'à nextCursor === null.
+            const all: annApi.AnnouncementItem[] = []
+            let after: string | null = null
+            do {
+              const res: annApi.AnnouncementListResult = await annApi.fetchAnnouncements({
+                limit: 100, search, status, sort: sortCol as annApi.AnnouncementSortKey, dir: sortDir, after,
+              })
+              all.push(...res.items)
+              after = res.nextCursor
+            } while (after !== null)
+            return all
+          }}
           getCell={(a, id) => getCellExport(a, id, t, dateLocale)}
           filename={t('ann.export.filename')}
           sheetName={t('ann.title')}

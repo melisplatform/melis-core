@@ -10,6 +10,7 @@ import { toolHasViewToggle } from '@/lib/module-registry'
 import { routeForForward } from '@/lib/tool-routes'
 import { useI18n } from '@/i18n/i18n-context'
 import type { I18nKey } from '@/i18n/dictionaries'
+import { useIsNarrow } from '@/hooks/useIsNarrow'
 import { useCan } from '@/lib/capabilities'
 import { GDPR_TOOL_KEY } from '@/components/gdpr/gdpr-shared'
 
@@ -33,6 +34,7 @@ export default function GdprPage() {
   const location = useLocation()
   const { openTab } = useTabs()
   const { t } = useI18n()
+  const narrow = useIsNarrow()
   const base = routeForForward('MelisCore/MelisCoreGdpr') ?? '/gdpr'
   const canList = useCan(GDPR_TOOL_KEY, 'list')
 
@@ -52,18 +54,21 @@ export default function GdprPage() {
 
   return (
     <div className={cn('flex flex-col gap-6 p-6', effectiveMode === 'iframe' ? 'h-full' : 'flex-1')}>
-      {/* Header */}
+      {/* Header — narrow-only additions never remove/replace a desktop class, so at narrow=false
+          every className below renders byte-identical to the original desktop layout. */}
       <div className="flex items-center justify-between gap-4">
-        <div>
-          <h1 className="text-xl font-bold">{t('gdpr.title')}</h1>
-          <p className="text-sm text-muted-foreground">{t('gdpr.subtitle')}</p>
+        <div className={cn(narrow && 'min-w-0')}>
+          <h1 className={cn('text-xl font-bold', narrow && 'truncate')}>{t('gdpr.title')}</h1>
+          <p className={cn('text-sm text-muted-foreground', narrow && 'truncate')}>{t('gdpr.subtitle')}</p>
         </div>
-        <div className="flex items-center gap-2">
+        <div className={cn('flex items-center gap-2', narrow && 'shrink-0 flex-wrap justify-end')}>
           {showViewToggle && (
-            <ViewModeToggle mode={effectiveMode} onChange={(m) => { setMode(m); if (m === 'iframe') setIframeLoaded(true) }} />
+            <ViewModeToggle mode={effectiveMode} compact={narrow} onChange={(m) => { setMode(m); if (m === 'iframe') setIframeLoaded(true) }} />
           )}
-          {/* Emplacement des actions de l'onglet actif (portail : cf. GdprSmtpTab). */}
-          <div ref={setActionsHost} className="flex items-center gap-2" />
+          {/* Emplacement des actions de l'onglet actif (portail : cf. GdprSmtpTab). Ce conteneur
+              hérite du flex-wrap ci-dessus quand narrow, donc peu importe ce que l'onglet actif y
+              projette (0 à 3 boutons), ça retombe proprement sur une nouvelle ligne au besoin. */}
+          <div ref={setActionsHost} className={cn('flex items-center gap-2', narrow && 'flex-wrap justify-end')} />
         </div>
       </div>
 

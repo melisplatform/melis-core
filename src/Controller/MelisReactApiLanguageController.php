@@ -28,6 +28,7 @@ use MelisCore\Controller\MelisAbstractActionController;
 class MelisReactApiLanguageController extends MelisAbstractActionController
 {
     use CapabilityGuardTrait;
+    use MelisReactKeysetListTrait;
 
     /** melisKey de l'outil — utilisé par le garde de droits (cf. denyUnlessAccess). */
     private const MELIS_KEY = 'meliscore_tool_language';
@@ -43,34 +44,43 @@ class MelisReactApiLanguageController extends MelisAbstractActionController
         if ($denyCap = $this->denyUnlessCan('list')) { return $denyCap; }
 
         try {
-            $page   = max(1, (int) $this->params()->fromQuery('page', 1));
             $limit  = min(9999, max(1, (int) $this->params()->fromQuery('limit', 25)));
             $search = trim((string) ($this->params()->fromQuery('search', '') ?? ''));
-            $offset = ($page - 1) * $limit;
+            $sort   = (string) $this->params()->fromQuery('sort', 'id');
+            $dir     = (string) $this->params()->fromQuery('dir', 'asc');
+            $after   = (string) $this->params()->fromQuery('after', '');
 
             $db = $this->getServiceManager()->get('Laminas\Db\Adapter\AdapterInterface');
 
-            $where = [];
-            $params = [];
+            $filterWhere  = [];
+            $filterParams = [];
             if ($search !== '') {
-                $like    = '%' . $search . '%';
-                $where[] = '(lang_name LIKE ? OR lang_locale LIKE ? OR lang_id LIKE ?)';
-                $params  = array_merge($params, [$like, $like, $like]);
+                $like          = '%' . $search . '%';
+                $filterWhere[] = '(lang_name LIKE ? OR lang_locale LIKE ? OR lang_id LIKE ?)';
+                $filterParams  = array_merge($filterParams, [$like, $like, $like]);
             }
-            $whereClause = $where ? 'WHERE ' . implode(' AND ', $where) : '';
 
-            $countRow = iterator_to_array(
-                $db->query("SELECT COUNT(*) AS total FROM melis_core_lang $whereClause", $params)
-            );
-            $total = (int) ($countRow[0]['total'] ?? 0);
+            // Colonnes triables (whitelist) → expressions SQL NON-NULL (keyset fiable).
+            $sortMap = [
+                'id'     => 'COALESCE(lang_id, 0)',
+                'locale' => "COALESCE(lang_locale, '')",
+                'name'   => "COALESCE(lang_name, '')",
+            ];
 
-            $rows = $db->query(
-                "SELECT lang_id, lang_locale, lang_name
-                 FROM melis_core_lang $whereClause
-                 ORDER BY lang_id ASC
-                 LIMIT ? OFFSET ?",
-                array_merge($params, [$limit, $offset])
-            );
+            [$rows, $total, $next] = $this->keysetList([
+                'db'           => $db,
+                'from'         => 'melis_core_lang',
+                'selectCols'   => 'lang_id, lang_locale, lang_name',
+                'filterWhere'  => $filterWhere,
+                'filterParams' => $filterParams,
+                'sortMap'      => $sortMap,
+                'idCol'        => 'lang_id',
+                'idAlias'      => 'lang_id',
+                'sortKey'      => $sort,
+                'dir'          => $dir,
+                'after'        => $after,
+                'limit'        => $limit,
+            ]);
 
             $items = [];
             foreach ($rows as $row) {
@@ -79,7 +89,7 @@ class MelisReactApiLanguageController extends MelisAbstractActionController
 
             return $this->jsonResponse([
                 'success' => true,
-                'data'    => ['items' => $items, 'total' => $total, 'page' => $page, 'limit' => $limit],
+                'data'    => ['items' => $items, 'total' => $total, 'nextCursor' => $next],
             ]);
         } catch (\Throwable $e) {
             return $this->errorResponse($e);

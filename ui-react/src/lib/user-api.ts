@@ -62,16 +62,22 @@ export interface UserMicroservice {
 export interface UserListResult {
   items: UserItem[]
   total: number
-  page: number
+  /** Curseur keyset à repasser en `after` pour le lot suivant ; null = fin de liste. */
+  nextCursor: string | null
   limit: number
 }
 
+export type UserSortKey = 'id' | 'login' | 'name' | 'email' | 'role' | 'admin' | 'status' | 'lastLogin'
+
 export interface UserListParams {
-  page?: number
   limit?: number
   search?: string
   status?: '' | '0' | '1'
   roleId?: number
+  sort?: UserSortKey
+  dir?: 'asc' | 'desc'
+  /** Curseur keyset (opaque) du lot précédent ; absent = premier lot. */
+  after?: string | null
 }
 
 export interface UserSavePayload {
@@ -120,11 +126,13 @@ async function apiFetch<T>(url: string, opts?: RequestInit): Promise<T> {
 
 export async function fetchUsers(params: UserListParams = {}): Promise<UserListResult> {
   const qs = new URLSearchParams()
-  if (params.page)   qs.set('page',   String(params.page))
   if (params.limit)  qs.set('limit',  String(params.limit))
   if (params.search) qs.set('search', params.search)
   if (params.status !== undefined && params.status !== '') qs.set('status', params.status)
   if (params.roleId) qs.set('roleId', String(params.roleId))
+  if (params.sort)   qs.set('sort',   params.sort)
+  if (params.dir)    qs.set('dir',    params.dir)
+  if (params.after)  qs.set('after',  params.after)
   return apiFetch<UserListResult>(`/melis/react-api/users?${qs}`)
 }
 

@@ -25,6 +25,7 @@ use MelisCore\Controller\MelisAbstractActionController;
 class MelisReactApiPlatformController extends MelisAbstractActionController
 {
     use CapabilityGuardTrait;
+    use MelisReactKeysetListTrait;
 
     /** melisKey de l'outil — utilisé par le garde de droits (cf. denyUnlessAccess). */
     private const MELIS_KEY = 'meliscore_tool_platform';
@@ -37,34 +38,46 @@ class MelisReactApiPlatformController extends MelisAbstractActionController
         if ($denyCap = $this->denyUnlessCan('list')) { return $denyCap; }
 
         try {
-            $page   = max(1, (int) $this->params()->fromQuery('page', 1));
             $limit  = min(9999, max(1, (int) $this->params()->fromQuery('limit', 25)));
             $search = trim((string) ($this->params()->fromQuery('search', '') ?? ''));
-            $offset = ($page - 1) * $limit;
 
             $db = $this->getServiceManager()->get('Laminas\Db\Adapter\AdapterInterface');
 
-            $where = [];
-            $params = [];
+            // Filtres (communs au COUNT et à la requête data — scoping/droits inchangés).
+            $filterWhere = []; $filterParams = [];
             if ($search !== '') {
-                $like    = '%' . $search . '%';
-                $where[] = '(plf_name LIKE ? OR plf_id LIKE ?)';
-                $params  = array_merge($params, [$like, $like]);
+                $like = '%' . $search . '%';
+                $filterWhere[]  = '(plf_name LIKE ? OR plf_id LIKE ?)';
+                $filterParams   = array_merge($filterParams, [$like, $like]);
             }
-            $whereClause = $where ? 'WHERE ' . implode(' AND ', $where) : '';
 
-            $countRow = iterator_to_array(
-                $db->query("SELECT COUNT(*) AS total FROM melis_core_platform $whereClause", $params)
-            );
-            $total = (int) ($countRow[0]['total'] ?? 0);
+            // Tri server-side : whitelist clé → expression SQL NON-NULL (COALESCE) pour un
+            // keyset fiable. marketplace/cache sont des flags stockés (varchar/int) → on trie
+            // sur la colonne SQL sous-jacente, pas sur la valeur dérivée affichée.
+            $sortMap = [
+                'id'          => 'plf_id',
+                'name'        => "COALESCE(plf_name,'')",
+                'marketplace' => 'COALESCE(plf_update_marketplace,0)',
+                'cache'       => 'COALESCE(plf_activate_cache,0)',
+            ];
+            $sortKey = (string) $this->params()->fromQuery('sort', 'id');
+            $dir     = (string) $this->params()->fromQuery('dir', 'asc');
+            $after   = (string) ($this->params()->fromQuery('after', '') ?? '');
 
-            $rows = $db->query(
-                "SELECT plf_id, plf_name, plf_update_marketplace, plf_activate_cache
-                 FROM melis_core_platform $whereClause
-                 ORDER BY plf_id ASC
-                 LIMIT ? OFFSET ?",
-                array_merge($params, [$limit, $offset])
-            );
+            [$rows, $total, $nextCursor] = $this->keysetList([
+                'db'           => $db,
+                'from'         => 'melis_core_platform',
+                'selectCols'   => 'plf_id, plf_name, plf_update_marketplace, plf_activate_cache',
+                'filterWhere'  => $filterWhere,
+                'filterParams' => $filterParams,
+                'sortMap'      => $sortMap,
+                'idCol'        => 'plf_id',
+                'idAlias'      => 'plf_id',
+                'sortKey'      => $sortKey,
+                'dir'          => $dir,
+                'after'        => $after,
+                'limit'        => $limit,
+            ]);
 
             $current = (string) getenv('MELIS_PLATFORM');
             $items = [];
@@ -74,7 +87,7 @@ class MelisReactApiPlatformController extends MelisAbstractActionController
 
             return $this->jsonResponse([
                 'success' => true,
-                'data'    => ['items' => $items, 'total' => $total, 'page' => $page, 'limit' => $limit],
+                'data'    => ['items' => $items, 'total' => $total, 'nextCursor' => $nextCursor, 'limit' => $limit],
             ]);
         } catch (\Throwable $e) {
             return $this->errorResponse($e);
