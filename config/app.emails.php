@@ -84,7 +84,7 @@ return array(
                         'from' => 'noreply@melistechnology.com',
                         'from_name' => 'Melis Technology',
                         'replyTo' => 'noreply@melistechnology.com',
-                        'tags' => 'NAME,PASSWORD',
+                        'tags' => 'NAME',
                     ),
                     'contents' => array(
                         'en_EN' => array(

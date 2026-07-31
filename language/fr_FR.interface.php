@@ -169,7 +169,7 @@ return [
     'tr_meliscore_email_failed' => 'Login ou email invalide',
     // Password Modification
     'tr_meliscore_email_password_modification_Subject' => 'Password modification',
-    'tr_meliscore_email_password_modification_html_Content' => '<p>Bonjour [NAME],</p><p>Votre mot de passe sur Melis Platform a été modifié.<br/>Votre nouveau mot de passe est : [PASSWORD]</p><p>Bonne journée.</p>',
+    'tr_meliscore_email_password_modification_html_Content' => '<p>Bonjour [NAME],</p><p>Votre mot de passe sur Melis Platform a été modifié.</p><p>Bonne journée.</p>',
     
     // Reset Password
     'tr_meliscore_reset_password_header' => 'Réinitialiser mot de passe',
