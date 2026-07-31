@@ -286,7 +286,7 @@ export default function DashboardPage() {
     // `clearAll` : SEULE porte d'entrée d'un record vide (« supprimer tous les plugins », confirmé).
     // `userAction` ne suffit pas — un déplacement/redimensionnement en porte aussi la marque, et
     // c'est précisément par là qu'un layout accidentellement vide partait en base.
-    (next: GridItem[], opts?: { userAction?: boolean; clearAll?: boolean }) => {
+    (next: GridItem[], opts?: { userAction?: boolean; clearAll?: boolean; allowRemoval?: boolean }) => {
       setLayout(next)
       saveLayout(next)
       // N'ÉCRIT en base que si le record change réellement (cf. recordsSig). Les effets de
@@ -304,12 +304,23 @@ export default function DashboardPage() {
         return wid.startsWith('legacy-') || !!WIDGET_MAP[wid]?.pluginName
       }).length
       if (recs.length < expected) return
-      // ⚠️ FILET ANTI-EFFACEMENT (2) — INVARIANT : une RÉCONCILIATION ne réduit JAMAIS le nombre de
-      // plugins du record serveur ; seule une action UTILISATEUR le peut. Couvre le cas d'une liste
-      // `/legacy-plugins` PARTIELLE (succès mais incomplète) qui élaguerait à tort. Une suppression
-      // volontaire passe `userAction` → autorisée. On met quand même à jour l'affichage/cache.
+      // ⚠️ FILET ANTI-EFFACEMENT (2) — INVARIANT : le nombre de plugins du record serveur ne peut
+      // DIMINUER que sur un RETRAIT EXPLICITE (croix d'une tuile, « tout supprimer »), jamais
+      // autrement.
+      //
+      // Ce filet était conditionné à `userAction`, ce qui ne suffisait PAS : `handleChange` — le
+      // canal de GridStack, emprunté par un simple déplacement/redimensionnement ET par CHAQUE
+      // ajustement automatique de hauteur — le porte aussi. D'où la perte observée en base
+      // (13 plugins → 1) : `/legacy-plugins` renvoie une liste vide mais VALIDE (aucun plugin
+      // legacy accordé/chargé), l'élagage retire les tuiles de l'ÉTAT React — son écriture en base
+      // est bien bloquée ici, mais l'état, lui, est réduit — puis le tout premier auto-fit repasse
+      // par `handleChange`, `userAction` lève le filet, et l'état amputé part en base.
+      //
+      // `allowRemoval` n'est donc posé QUE par `removeWidget` / `removeAllWidgets`. Un
+      // déplacement, un redimensionnement ou un auto-fit peut tout mettre à jour SAUF réduire la
+      // liste : dans ce cas on garde l'affichage et le cache, et on laisse la base intacte.
       if (
-        !opts?.userAction &&
+        !opts?.allowRemoval &&
         lastSavedCountRef.current !== null &&
         recs.length < lastSavedCountRef.current
       ) {
@@ -405,7 +416,7 @@ export default function DashboardPage() {
   // `instanceId` = id complet de l'item de grille (l.i), pas l'id du widget —
   // ne retire que l'instance ciblée, pas tous les exemplaires du même widget.
   const removeWidget = useCallback(
-    (instanceId: string) => persist(layout.filter((l) => l.i !== instanceId), { userAction: true }),
+    (instanceId: string) => persist(layout.filter((l) => l.i !== instanceId), { userAction: true, allowRemoval: true }),
     [layout, persist],
   )
 
@@ -414,7 +425,7 @@ export default function DashboardPage() {
   // vide la grille ET enregistre en base, sinon les tuiles reviendraient au prochain chargement.
   // La confirmation est portée par la palette, comme le `melisCoreTool.confirm()` d'origine.
   // Action utilisateur explicite (confirmée) → `userAction` : autorisée à vider le record.
-  const removeAllWidgets = useCallback(() => persist([], { userAction: true, clearAll: true }), [persist])
+  const removeAllWidgets = useCallback(() => persist([], { userAction: true, clearAll: true, allowRemoval: true }), [persist])
 
   return (
     <DashboardDataContext.Provider value={{ stats }}>
