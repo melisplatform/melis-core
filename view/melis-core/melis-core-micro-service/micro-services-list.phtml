@@ -1,48 +1,225 @@
-
 <?php
-if($this->userExists) {
-?>
-<style type="text/css">
-	.list{
-		padding-left:40px;
+/**
+ * Web-services (microservices) listing — standalone page styled to MATCH the React back-office
+ * palette (brand red), but this is a PURE server-rendered legacy Laminas view: no React, no Vite,
+ * no build step and no external assets — inline CSS/SVG/vanilla-JS only, system-font fallbacks.
+ * It therefore runs on any deployment (incl. existing projects without the node/Vite tooling).
+ * Rendered terminal (no legacy layout). Grouped by Melis module.
+ */
+$esc     = function ($v) { return $this->escapeHtml((string) $v); };
+$escAttr = function ($v) { return $this->escapeHtmlAttr((string) $v); };
+$escUrl  = function ($v) { return $this->escapeUrl((string) $v); };
 
-	}
-	.list li{
-		position: relative;
-		list-style: none;
-	}
-	#microservice_form input {
+$apiKey  = $this->apiKey;
+$modules = $this->userExists && is_array($this->microservice) ? $this->microservice : array();
 
-	}
-</style>
-<div style="padding-left: 20px;">
-	<h2><?php  echo $this->translate($this->title); ?></h2>
-	
-	<br>
-	<?php 
-		 foreach ($this->microservice as $module => $service) {
-
-		 	echo "<h4>$module</h4>";
-	 		
-		 	foreach($service as $serviceName => $methods) {
-				echo "<h5>&nbsp;&nbsp;&nbsp;&nbsp;$serviceName</h5>";
-				echo "<ul class=list>";
-
-	 			foreach($methods as $methodName => $config) {
-	 				echo "
-	 				<li>
-	 					<h6><i class='fa fa-plus'></i> <a href=\"/melis/api/$this->apiKey/$module/service/$serviceName/$methodName\" target='_blank'> $methodName</a></h6>
-	 				</li>";
-	 				
-	 			}
-	 			echo "</ul>";
-		 	} 
-		 	echo "<br/>";
-		}
-		 	
-	?>
-</div>
-
-<?php
+// Totals
+$totalModules   = 0;
+$totalServices  = 0;
+$totalEndpoints = 0;
+foreach ($modules as $svcs) {
+    if (!is_array($svcs)) { continue; }
+    $mEnd = 0;
+    foreach ($svcs as $methods) {
+        if (is_array($methods)) { $mEnd += count($methods); }
+    }
+    if ($mEnd === 0) { continue; } // skip modules that expose no endpoint
+    $totalModules++;
+    $totalServices += count($svcs);
+    $totalEndpoints += $mEnd;
 }
-?>
+?><!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Melis · Web Services API</title>
+<style>
+  :root{
+    --bg:#f2f4f8; --card:#ffffff; --ink:#353f4f; --muted:#6c757d;
+    --primary:#e11d2a; --primary-dark:#a8151f; --secondary:#fbe9ea;
+    --border:#e3e6ec; --success:#48af4b;
+    --grad:radial-gradient(130% 150% at 8% -20%, #d43a42 0%, #b31f29 46%, #8a1720 100%);
+    --shadow:0 1px 2px rgba(53,63,79,.06), 0 8px 24px -12px rgba(53,63,79,.18);
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0}
+  body{
+    background:var(--bg); color:var(--ink); min-height:100vh;
+    font-family:'Inter',system-ui,-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+    font-size:14px; line-height:1.5; -webkit-font-smoothing:antialiased;
+  }
+  a{color:inherit; text-decoration:none}
+  code,.mono{font-family:'JetBrains Mono',ui-monospace,'SF Mono',Menlo,Consolas,monospace}
+
+  /* Header */
+  .hero{background:var(--grad); color:#fff; padding:26px 0 22px; box-shadow:0 12px 30px -18px rgba(138,23,32,.6)}
+  .wrap{max-width:1080px; margin:0 auto; padding:0 24px}
+  .hero-top{display:flex; align-items:center; gap:14px; flex-wrap:wrap}
+  .mark{display:flex; align-items:center; gap:11px}
+  .mark .logo{width:34px;height:34px;border-radius:9px;background:rgba(255,255,255,.16);display:flex;align-items:center;justify-content:center;font-weight:800;letter-spacing:.5px;backdrop-filter:blur(4px)}
+  .mark .name{font-weight:800; font-size:19px; letter-spacing:.4px}
+  .mark .name small{font-weight:600; opacity:.85; letter-spacing:.6px; margin-left:6px; text-transform:uppercase; font-size:11px}
+  .hero h1{margin:16px 0 4px; font-size:24px; font-weight:800; letter-spacing:-.3px}
+  .hero p{margin:0; opacity:.9; max-width:640px}
+  .spacer{flex:1}
+  .keychip{display:inline-flex; align-items:center; gap:8px; background:rgba(255,255,255,.14); border:1px solid rgba(255,255,255,.25); padding:7px 10px; border-radius:10px}
+  .keychip .lbl{font-size:11px; text-transform:uppercase; letter-spacing:.6px; opacity:.85}
+  .keychip code{font-size:12.5px}
+  .keychip button{cursor:pointer; border:0; background:rgba(255,255,255,.2); color:#fff; border-radius:7px; padding:4px 8px; font-size:11px; font-weight:600}
+  .keychip button:hover{background:rgba(255,255,255,.32)}
+  .stats{display:flex; gap:22px; margin-top:16px; flex-wrap:wrap}
+  .stat b{font-size:20px; font-weight:800; display:block; line-height:1.1}
+  .stat span{font-size:11px; text-transform:uppercase; letter-spacing:.6px; opacity:.85}
+
+  /* Toolbar */
+  .toolbar{max-width:1080px; margin:22px auto 0; padding:0 24px; display:flex; gap:12px; align-items:center}
+  .search{flex:1; position:relative}
+  .search input{width:100%; padding:11px 14px 11px 40px; border:1px solid var(--border); background:var(--card); border-radius:11px; font-size:14px; color:var(--ink); box-shadow:var(--shadow)}
+  .search input:focus{outline:none; border-color:var(--primary); box-shadow:0 0 0 3px var(--secondary)}
+  .search svg{position:absolute; left:13px; top:50%; transform:translateY(-50%); opacity:.45}
+
+  /* Modules */
+  .grid{max-width:1080px; margin:20px auto 60px; padding:0 24px; display:grid; gap:18px}
+  .module{background:var(--card); border:1px solid var(--border); border-radius:16px; box-shadow:var(--shadow); overflow:hidden}
+  .m-head{display:flex; align-items:center; gap:12px; padding:15px 18px; border-bottom:1px solid var(--border); background:linear-gradient(180deg,#fff, #fbfbfd)}
+  .m-dot{width:10px;height:10px;border-radius:50%;background:var(--grad);box-shadow:0 0 0 4px var(--secondary)}
+  .m-name{font-weight:750; font-size:15.5px; letter-spacing:-.2px}
+  .m-count{margin-left:auto; font-size:11.5px; font-weight:700; color:var(--primary-dark); background:var(--secondary); padding:3px 10px; border-radius:20px}
+  .m-body{padding:8px 10px 14px}
+  .service{padding:8px 8px 2px}
+  .s-name{font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:.7px; color:var(--muted); padding:6px 8px 8px; display:flex; align-items:center; gap:7px}
+  .s-name svg{opacity:.5}
+  .methods{display:grid; gap:6px}
+  .method{display:flex; align-items:center; gap:12px; padding:10px 12px; border:1px solid transparent; border-radius:11px; transition:.13s}
+  .method:hover{border-color:var(--border); background:#fbfbfd; transform:translateX(2px)}
+  .method .verb{font-size:10px; font-weight:800; letter-spacing:.5px; color:#fff; background:var(--success); padding:3px 8px; border-radius:6px}
+  .method .mname{font-weight:650; font-size:14px}
+  .method .path{color:var(--muted); font-size:12px; margin-left:2px}
+  .method .go{margin-left:auto; display:inline-flex; align-items:center; gap:6px; color:var(--primary-dark); font-weight:700; font-size:12.5px; opacity:0; transform:translateX(-4px); transition:.13s}
+  .method:hover .go{opacity:1; transform:translateX(0)}
+
+  .empty{max-width:520px; margin:14vh auto; text-align:center; padding:0 24px}
+  .empty .logo{width:56px;height:56px;border-radius:14px;background:var(--grad);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:22px;margin:0 auto 18px;box-shadow:var(--shadow)}
+  .empty h2{margin:0 0 6px; font-size:20px}
+  .empty p{color:var(--muted); margin:0}
+  .noresult{display:none; text-align:center; color:var(--muted); padding:30px}
+  footer{max-width:1080px; margin:0 auto 40px; padding:0 24px; color:var(--muted); font-size:12px}
+</style>
+</head>
+<body>
+<?php if (!$this->userExists) { ?>
+  <div class="empty">
+    <div class="logo">M</div>
+    <h2>Invalid or inactive API key</h2>
+    <p>This web-services key was not found or has been deactivated. Please generate a new one from the user's account in the back-office.</p>
+  </div>
+<?php } else { ?>
+  <div class="hero">
+    <div class="wrap">
+      <div class="hero-top">
+        <div class="mark">
+          <div class="logo">M</div>
+          <div class="name">MELIS<small>Web Services</small></div>
+        </div>
+        <div class="spacer"></div>
+        <div class="keychip">
+          <span class="lbl">API key</span>
+          <code id="apikey"><?php echo $esc($apiKey); ?></code>
+          <button type="button" onclick="copyKey()">Copy</button>
+        </div>
+      </div>
+      <h1><?php echo $esc($this->translate($this->title)); ?></h1>
+      <p>Token-authenticated JSON API. Each endpoint is called with <b>POST</b>; open one to try it with a form. All responses are JSON.</p>
+      <div class="stats">
+        <div class="stat"><b><?php echo (int) $totalModules; ?></b><span>Modules</span></div>
+        <div class="stat"><b><?php echo (int) $totalServices; ?></b><span>Services</span></div>
+        <div class="stat"><b><?php echo (int) $totalEndpoints; ?></b><span>Endpoints</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="toolbar">
+    <div class="search">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+      <input id="filter" type="text" placeholder="Filter endpoints, services or modules…" oninput="filterList()" autocomplete="off">
+    </div>
+  </div>
+
+  <div class="grid" id="grid">
+  <?php foreach ($modules as $module => $services) {
+        if (!is_array($services)) { continue; }
+        $mCount = 0; foreach ($services as $mm) { if (is_array($mm)) { $mCount += count($mm); } }
+        if ($mCount === 0) { continue; } // don't render empty modules ?>
+    <section class="module" data-search="<?php echo $escAttr(strtolower($module)); ?>">
+      <div class="m-head">
+        <span class="m-dot"></span>
+        <span class="m-name"><?php echo $esc($module); ?></span>
+        <span class="m-count"><?php echo (int) $mCount; ?> endpoint<?php echo $mCount > 1 ? 's' : ''; ?></span>
+      </div>
+      <div class="m-body">
+      <?php foreach ($services as $serviceName => $methods) {
+            if (!is_array($methods)) { continue; } ?>
+        <div class="service">
+          <div class="s-name">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M8 12h8M8 8h8M8 16h5"/></svg>
+            <?php echo $esc($serviceName); ?>
+          </div>
+          <div class="methods">
+          <?php foreach ($methods as $methodName => $config) {
+                // Each segment is rawurlencode'd (no HTML-special chars left), so the assembled
+                // same-origin path is safe to print as-is — escaping the whole path would turn the
+                // slashes into &#x2F; and the router would 404.
+                $url = '/melis/api/' . rawurlencode($apiKey) . '/' . rawurlencode($module) . '/service/' . rawurlencode($serviceName) . '/' . rawurlencode($methodName);
+                $hay = strtolower($module . ' ' . $serviceName . ' ' . $methodName); ?>
+            <a class="method" href="<?php echo $url; ?>" target="_blank" rel="noopener" data-search="<?php echo $escAttr($hay); ?>">
+              <span class="verb">POST</span>
+              <span class="mname"><?php echo $esc($methodName); ?></span>
+              <span class="path mono"><?php echo $esc($serviceName); ?></span>
+              <span class="go">Try it
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+              </span>
+            </a>
+          <?php } ?>
+          </div>
+        </div>
+      <?php } ?>
+      </div>
+    </section>
+  <?php } ?>
+    <div class="noresult" id="noresult">No endpoint matches your search.</div>
+  </div>
+
+  <footer>Melis Platform · Web Services — this page lists the endpoints available for your API key.</footer>
+
+  <script>
+    function copyKey(){
+      var t = document.getElementById('apikey').textContent.trim();
+      if (navigator.clipboard) navigator.clipboard.writeText(t);
+    }
+    function filterList(){
+      var q = document.getElementById('filter').value.trim().toLowerCase();
+      var anyModule = false;
+      document.querySelectorAll('#grid .module').forEach(function(mod){
+        var anyMethod = false;
+        mod.querySelectorAll('.method').forEach(function(m){
+          var show = !q || m.getAttribute('data-search').indexOf(q) !== -1
+                     || mod.getAttribute('data-search').indexOf(q) !== -1;
+          m.style.display = show ? '' : 'none';
+          if (show) anyMethod = true;
+        });
+        // hide services with no visible methods
+        mod.querySelectorAll('.service').forEach(function(s){
+          var vis = Array.prototype.some.call(s.querySelectorAll('.method'), function(m){ return m.style.display !== 'none'; });
+          s.style.display = vis ? '' : 'none';
+        });
+        mod.style.display = anyMethod ? '' : 'none';
+        if (anyMethod) anyModule = true;
+      });
+      document.getElementById('noresult').style.display = anyModule ? 'none' : 'block';
+    }
+  </script>
+<?php } ?>
+</body>
+</html>

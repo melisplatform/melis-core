@@ -72,6 +72,17 @@ export function ToolTabBar() {
     // useNavMenu ne corrige l'entrée à son prochain passage — dommage irréversible (replaceState).
     if (!bricksReady()) return
     const base = toolBaseRoute(pathname)
+    // ⚠️ Ne JAMAIS réécrire une URL qui n'appartient plus à cet outil. Cet effet re-tourne à chaque
+    // render (tabsFor() renvoie un nouveau tableau), et `pathname` (React Router) peut être PÉRIMÉ
+    // d'un commit au moment où l'on ferme l'onglet de l'outil : le routeur a déjà fait pushState
+    // vers la nouvelle route (ex. « / », le Dashboard) mais cet effet tourne encore avec l'ancien
+    // pathname → il remettait l'ancienne URL par replaceState, laissant la barre d'adresse figée sur
+    // l'outil fermé (contenu = Dashboard, URL = /melis-core/account). La réflexion d'URL ne sert qu'à
+    // AJOUTER/RETIRER les segments d'enregistrement SOUS la base de l'outil : on n'agit donc que si
+    // la fenêtre est effectivement dans cet outil.
+    const home = BASENAME + base
+    const here = window.location.pathname
+    if (here !== home && !here.startsWith(home + '/')) return
     const nonPrimary = tabs.filter((t) => !t.primary)
     // ⚠️ Cet effet ne reflète QUE les sous-onglets publiés par un OUTIL IFRAME (tool-tab-bridge).
     // Sans onglet bridge, l'URL est gérée par React Router (outil NATIF ou brique React, dont les
@@ -81,9 +92,8 @@ export function ToolTabBar() {
     // (zoneKey non-null) ; pour un outil React (zoneKey null même si brick.melisKey existe), on ne
     // touche pas à l'URL.
     if (nonPrimary.length === 0) {
-      if (zoneKey) {
-        const full = BASENAME + base
-        if (window.location.pathname !== full) window.history.replaceState(window.history.state, '', full)
+      if (zoneKey && window.location.pathname !== home) {
+        window.history.replaceState(window.history.state, '', home)
       }
       return
     }

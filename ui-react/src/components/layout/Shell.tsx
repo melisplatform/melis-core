@@ -1,4 +1,4 @@
-import { lazy, Suspense, useEffect, useRef, useState, type ComponentType } from 'react'
+import { Suspense, useEffect, useRef, useState, type ComponentType } from 'react'
 import {
   Outlet,
   Route,
@@ -26,8 +26,13 @@ import { PERSISTENT_MODULES } from '@/lib/module-registry'
 import { ToolErrorBoundary } from '@/components/ToolErrorBoundary'
 import { useTabs } from '@/components/tabs/tab-store'
 import { melisKeyForRoute, routeForForward, useToolRoutesVersion } from '@/lib/tool-routes'
+import { lazyRetry } from '@/lib/lazy-retry'
 
-const DashboardPage = lazy(() => import('@/pages/DashboardPage'))
+// Ticket 0010791 : le Dashboard était le SEUL page-chunk chargé en `lazy()` brut (les autres passent
+// par `lazyRetry`). Après un déploiement, un onglet ouvert avant garde d'anciens hashs → le chunk
+// `DashboardPage-xxxx.js` n'existe plus (404) → « The tool Dashboard encountered an error ».
+// `lazyRetry` réessaie puis force UN reload complet (index.html frais) — comme les autres outils.
+const DashboardPage = lazyRetry(() => import('@/pages/DashboardPage'), 'DashboardPage')
 
 function PageLoader() {
   return (
