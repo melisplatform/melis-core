@@ -575,7 +575,15 @@ export async function fetchDashboardLayout(): Promise<DashboardPluginRecord[] | 
  * `meliscore_save_dashboard_plugin_end`, so the classic dashboard's cache is purged too.
  * Fire-and-forget: errors are silently swallowed.
  */
-export async function saveDashboardLayout(items: DashboardPluginRecord[]): Promise<void> {
+export async function saveDashboardLayout(
+  items: DashboardPluginRecord[],
+  opts?: {
+    /** Autorise l'écriture d'un record VIDE. Réservé au « tout supprimer » explicite (confirmé par
+     *  l'utilisateur). Sans ce drapeau, le serveur REFUSE une liste vide : c'est le filet contre un
+     *  bug client qui effacerait tout le dashboard partagé (déjà constaté en base). */
+    allowEmpty?: boolean
+  },
+): Promise<void> {
   // POST via la react-api (JSON). Ce contrôleur écrit le MÊME record partagé (`<height>` = hauteur
   // legacy déclarée, rendue par le dashboard classique), PRÉSERVE la config des plugins déjà en base,
   // et rejoue `meliscore_save_dashboard_plugin_end` → la purge du cache dashboard classique tourne
@@ -583,7 +591,7 @@ export async function saveDashboardLayout(items: DashboardPluginRecord[]): Promi
   // d'affichage React d'une tuile redimensionnée à la main (`<react-height>`, ignorée par le legacy),
   // ce que l'ancien endpoint `saveDashboardPlugins` ne savait pas faire (d'où la perte du resize).
   try {
-    await fetch('/melis/react-api/dashboard/layout', {
+    await fetch(`/melis/react-api/dashboard/layout${opts?.allowEmpty ? '?allowEmpty=1' : ''}`, {
       method: 'POST',
       headers: { ...XHR_HEADER, 'Content-Type': 'application/json' },
       credentials: 'include',

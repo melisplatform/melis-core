@@ -4,6 +4,7 @@ import { Bell, ChevronDown, ChevronUp, Download, MessageSquare, Newspaper, Plug 
 import { Button } from '@/components/ui/button'
 import { Collapsible } from '@/components/ui/collapsible'
 import { cn } from '@/lib/utils'
+import { useIsNarrow } from '@/hooks/useIsNarrow'
 import { useI18n } from '@/i18n/i18n-context'
 import type { I18nKey } from '@/i18n/dictionaries'
 import * as melisApi from '@/lib/melis-api'
@@ -54,6 +55,9 @@ function recordsToLayout(records: melisApi.DashboardPluginRecord[]): GridItem[] 
     return {
       i, x: r.x, y: r.y, w: r.w,
       h: userSized ? (r.reactH as number) : legacyRowsToGridRows(r.h),
+      // Hauteur legacy DÉCLARÉE, conservée telle quelle : elle permet de réécrire l'item à
+      // l'identique même si sa définition n'est jamais chargée (cf. layoutToRecords).
+      legacyH: r.h,
       userSized,
     }
   })
@@ -69,6 +73,10 @@ const BUBBLES = [
 
 export default function DashboardPage() {
   const { t } = useI18n()
+  // Source de vérité UNIQUE du responsive de cette page (cf. hooks/useIsNarrow) : chaque règle qui
+  // doit différer sur mobile est un TERNAIRE sur ce booléen, jamais une classe `sm:` — une seule
+  // liste de classes est produite à un instant donné, donc aucun risque de fuite vers le desktop.
+  const narrow = useIsNarrow()
 
   // NOTE: do NOT openTab('/') here. DashboardPage is kept mounted (Shell) and lazy-loaded, so its
   // mount effect runs AFTER TabBridge's route-sync and would re-activate the Dashboard tab on EVERY
@@ -247,26 +255,38 @@ export default function DashboardPage() {
   const layoutToRecords = useCallback(
     (items: GridItem[]): melisApi.DashboardPluginRecord[] =>
       items.flatMap((l) => {
-        const def = allWidgetMap[widgetIdOf(l.i)]
+        const wid = widgetIdOf(l.i)
+        const def = allWidgetMap[wid]
+        // Déf. INCONNUE (registre pas encore chargé, fetch en échec, plugin non accordé) : on
+        // reconstruit quand même le nom de plugin depuis l'id d'instance — il est formé par
+        // construction comme `legacy-<NomDuPlugin>` (cf. buildLegacyWidgetDef). Sans ce repli, un
+        // item à déf. inconnue était ABSENT du record réécrit : toute écriture autorisée (action
+        // utilisateur) le supprimait définitivement de la base.
+        const pluginName = def?.pluginName ?? (wid.startsWith('legacy-') ? wid.slice('legacy-'.length) : '')
+        if (!pluginName) return []
+        // Hauteur legacy : celle de la déf. si connue, sinon celle relevée dans le record au
+        // chargement (`legacyH`), sinon la hauteur de référence des plugins (4 lignes).
+        const legacyH = def?.legacyH ?? l.legacyH ?? 4
         // On persiste la hauteur LEGACY DÉCLARÉE du plugin (`def.legacyH`), PAS la hauteur d'affichage
         // React (`l.h`, ajustée au contenu en cellules 46px). Écrire `l.h` gonflait la tuile côté
         // /melis (rendue à ×80px) → gros vide en bas. La hauteur reste ainsi celle de la config du
         // plugin dans les deux dashboards. (x/y/w conservés : mêmes unités, 12 colonnes.)
-        return def?.pluginName
-          ? [{
-              pluginName: def.pluginName, pluginId: l.i, x: l.x, y: l.y, w: l.w, h: def.legacyH,
-              // Hauteur d'affichage React persistée UNIQUEMENT si l'utilisateur l'a réglée à la main
-              // (`<react-height>`, ignorée par le dashboard classique). Sinon `null` → l'auto-fit
-              // reprend la main au prochain rendu.
-              reactH: l.userSized ? l.h : null,
-            }]
-          : []
+        return [{
+          pluginName, pluginId: l.i, x: l.x, y: l.y, w: l.w, h: legacyH,
+          // Hauteur d'affichage React persistée UNIQUEMENT si l'utilisateur l'a réglée à la main
+          // (`<react-height>`, ignorée par le dashboard classique). Sinon `null` → l'auto-fit
+          // reprend la main au prochain rendu.
+          reactH: l.userSized ? l.h : null,
+        }]
       }),
     [allWidgetMap],
   )
 
   const persist = useCallback(
-    (next: GridItem[], opts?: { userAction?: boolean }) => {
+    // `clearAll` : SEULE porte d'entrée d'un record vide (« supprimer tous les plugins », confirmé).
+    // `userAction` ne suffit pas — un déplacement/redimensionnement en porte aussi la marque, et
+    // c'est précisément par là qu'un layout accidentellement vide partait en base.
+    (next: GridItem[], opts?: { userAction?: boolean; clearAll?: boolean }) => {
       setLayout(next)
       saveLayout(next)
       // N'ÉCRIT en base que si le record change réellement (cf. recordsSig). Les effets de
@@ -299,7 +319,10 @@ export default function DashboardPage() {
       if (sig !== lastSavedSigRef.current) {
         lastSavedSigRef.current = sig
         lastSavedCountRef.current = recs.length
-        melisApi.saveDashboardLayout(recs)
+        // `allowEmpty` : le serveur REFUSE un record vide sauf demande EXPLICITE de l'utilisateur
+        // (« tout supprimer », confirmé). Dernier filet contre un effacement complet du dashboard
+        // partagé par un bug client — le cas s'est produit (d_content réduit à `<Plugins></Plugins>`).
+        melisApi.saveDashboardLayout(recs, { allowEmpty: !!opts?.clearAll })
       }
     },
     [layoutToRecords, recordsSig],
@@ -391,7 +414,7 @@ export default function DashboardPage() {
   // vide la grille ET enregistre en base, sinon les tuiles reviendraient au prochain chargement.
   // La confirmation est portée par la palette, comme le `melisCoreTool.confirm()` d'origine.
   // Action utilisateur explicite (confirmée) → `userAction` : autorisée à vider le record.
-  const removeAllWidgets = useCallback(() => persist([], { userAction: true }), [persist])
+  const removeAllWidgets = useCallback(() => persist([], { userAction: true, clearAll: true }), [persist])
 
   return (
     <DashboardDataContext.Provider value={{ stats }}>
@@ -404,7 +427,7 @@ export default function DashboardPage() {
         {/* Bulles du haut (News / Mises à jour / Notifications / Messages) —
             équivalent React des dashboard bubble plugins de MelisCore.
             Masquables, état mémorisé (localStorage) comme la version d'origine. */}
-        <div className="flex justify-center px-5 pt-3 sm:px-8">
+        <div className={cn('flex justify-center pt-3', narrow ? 'px-3' : 'px-5 sm:px-8')}>
           <button
             type="button"
             onClick={toggleBubbles}
@@ -422,7 +445,9 @@ export default function DashboardPage() {
             legacy). Le `pt-2` reste sur la grille INTERNE : posé sur le Collapsible, il subsisterait
             en barre d'espace vide une fois la barre masquée. */}
         <Collapsible open={!bubblesHidden}>
-          <div className="grid grid-cols-4 gap-2 px-5 pt-2 sm:px-8">
+          {/* 4 bulles sur une ligne en desktop ; sur mobile, 4 colonnes de ~80px réduisaient chaque
+              libellé à une lettre (« M », « U », « N »…) — 2×2 leur rend une largeur lisible. */}
+          <div className={cn('grid gap-2 pt-2', narrow ? 'grid-cols-2 px-3' : 'grid-cols-4 px-5 sm:px-8')}>
             {BUBBLES.map((b) => {
               const Icon = b.icon
               const count = bubbles ? bubbles[b.key].count : 0
@@ -441,7 +466,7 @@ export default function DashboardPage() {
         </Collapsible>
 
         {/* Grille */}
-        <div className="min-h-0 flex-1 overflow-auto px-5 pb-8 pt-4 sm:px-8">
+        <div className={cn('min-h-0 flex-1 overflow-auto pb-8 pt-4', narrow ? 'px-2' : 'px-5 sm:px-8')}>
           {/* La grille reste TOUJOURS montée, même vide : c'est elle la cible de dépôt des
               widgets glissés depuis la palette. La remplacer par l'état vide retirait
               `.grid-stack` du DOM → après avoir retiré tous les widgets, plus rien n'acceptait
@@ -490,7 +515,12 @@ export default function DashboardPage() {
           // reprendre les coins droits (bouton « toujours arrondi »). Un unique rayon arbitraire évince
           // `rounded-md` (même groupe twMerge) et supprime tout conflit raccourci/longhand.
           'absolute top-4 z-40 rounded-[0.375rem_0_0_0.375rem] transition-[right] duration-[400ms] ease-out [&_svg]:size-5',
-          paletteOpen ? 'right-72' : 'right-0',
+          // Mobile : la palette s'ouvre en SURIMPRESSION pleine largeur (cf. plus bas), il n'y a
+          // donc plus de flanc où accrocher la languette — on la masque le temps de l'ouverture
+          // (la palette a sa propre croix de fermeture). Desktop : comportement d'origine intact.
+          narrow
+            ? paletteOpen ? 'right-0 hidden' : 'right-0'
+            : paletteOpen ? 'right-72' : 'right-0',
         )}
       >
         {/* Icône INVARIANTE (pas de bascule en croix à l'ouverture) : le bouton reste le
@@ -510,14 +540,21 @@ export default function DashboardPage() {
           frame (texte qui saute pendant 400 ms).
           Le panneau reste MONTÉ en permanence : c'est ce qui rend l'animation possible dans les
           deux sens, et ça préserve l'état interne de la palette (scroll, drag-in GridStack). */}
+      {/* Mobile : la palette ne peut plus COMPRIMER la grille (18rem sur un écran de 360px ne
+          laisserait qu'une lichette de dashboard) — elle passe en surimpression pleine largeur,
+          posée sur la grille, et se referme par sa croix. Même animation de largeur, même montage
+          permanent (état interne + drag-in GridStack préservés) : seul le positionnement change. */}
       <div
         className={cn(
-          'flex shrink-0 overflow-hidden transition-[width] duration-[400ms] ease-out',
-          paletteOpen ? 'w-72' : 'w-0',
+          'flex overflow-hidden transition-[width] duration-[400ms] ease-out',
+          narrow
+            ? cn('absolute inset-y-0 right-0 z-50', paletteOpen ? 'w-full' : 'w-0')
+            : cn('shrink-0', paletteOpen ? 'w-72' : 'w-0'),
         )}
         aria-hidden={!paletteOpen}
       >
         <WidgetPalette
+          fullWidth={narrow}
           present={present}
           onAdd={addWidget}
           onClose={() => setPaletteOpen(false)}

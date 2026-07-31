@@ -3,6 +3,7 @@ import { createPortal } from 'react-dom'
 import { Loader2, Settings, X } from 'lucide-react'
 
 import { cn } from '@/lib/utils'
+import { useIsNarrow } from '@/hooks/useIsNarrow'
 import { useI18n } from '@/i18n/i18n-context'
 
 
@@ -53,6 +54,7 @@ export function WidgetConfigDialog({
   onSaved?: () => void
 }) {
   const { t } = useI18n()
+  const narrow = useIsNarrow()
   const [data, setData] = useState<ConfigData | null>(null)
   const [values, setValues] = useState<Record<string, string>>({})
   const [activeTab, setActiveTab] = useState(0)
@@ -219,8 +221,10 @@ export function WidgetConfigDialog({
         </div>
 
         {/* Barre d'onglets seulement s'il y en a plusieurs — un onglet unique n'apporte rien. */}
+        {/* Étroit : les onglets PASSENT À LA LIGNE plutôt que de déborder (ils restent tous
+            visibles ; un défilement horizontal les cacherait derrière un geste à découvrir). */}
         {tabs.length > 1 && (
-          <div className="flex items-stretch gap-1 border-b border-border bg-muted/30 px-2">
+          <div className={cn('flex items-stretch gap-1 border-b border-border bg-muted/30 px-2', narrow && 'flex-wrap')}>
             {tabs.map((tab, i) => (
               <button key={tab.id} type="button" onClick={() => setActiveTab(i)}
                 style={{ borderBottom: i === activeTab ? '2px solid var(--color-primary)' : '2px solid transparent' }}

@@ -3,6 +3,7 @@ import type { RefObject } from 'react'
 import { Loader2 } from 'lucide-react'
 
 import { useTheme } from '@/theme/theme-context'
+import { useIsNarrow } from '@/hooks/useIsNarrow'
 
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { useI18n } from '@/i18n/i18n-context'
@@ -182,12 +183,38 @@ export function LegacyPluginContent({ pluginName }: { pluginName: string }) {
     return params
   }, [theme])
 
+  // ── Mise en page mobile du plugin ─────────────────────────────────────────────────────────
+  // Le document du plugin ne peut PAS en décider seul : ses media queries s'évaluent sur la largeur
+  // de l'IFRAME, qui vaut ~350px aussi bien pour une tuile `col-4` d'un grand écran (où le plugin
+  // doit garder sa mise en page « BO large ») que pour une tuile pleine largeur de téléphone. Seul
+  // l'hôte connaît la vraie largeur de FENÊTRE → on lui transmet ce booléen, et lui seul active le
+  // bloc CSS « étroit » de la page du plugin (cf. PluginViewController, `data-melis-narrow`).
+  const narrow = useIsNarrow()
+
   // L'URL de l'iframe FIGE le thème du 1er rendu et ne change jamais ensuite : changer le `src`
   // rechargeait tout le bundle plateforme (jQuery/Bootstrap/flot/DataTable + refetch des données) →
   // plusieurs secondes à chaque bascule. Capturée une seule fois (initialiseur `useState`).
+  // Idem pour `narrow` : porté par l'URL au 1er rendu (aucun flash de mise en page « large »),
+  // puis mis à jour à chaud par postMessage ci-dessous.
   const [iframeSrc] = useState(
-    () => `/melis/react-dashboard-plugin?${new URLSearchParams({ plugin: pluginName, ...themeParams })}`,
+    () =>
+      `/melis/react-dashboard-plugin?${new URLSearchParams({ plugin: pluginName, ...themeParams, narrow: narrow ? '1' : '0' })}`,
   )
+
+  // Bascule étroit ↔ large sans recharger l'iframe (rotation d'un téléphone, fenêtre redimensionnée) :
+  // même canal et même raison que le re-thème ci-dessous. Le 1er passage est ignoré — l'URL porte déjà
+  // l'état initial. `narrowRef` sert au renvoi au `load` : un changement survenu AVANT que le document
+  // du plugin n'ait installé son écouteur serait perdu (message posté dans le vide).
+  const narrowRef = useRef(narrow)
+  narrowRef.current = narrow
+  const narrowSyncedOnce = useRef(false)
+  useEffect(() => {
+    if (!narrowSyncedOnce.current) {
+      narrowSyncedOnce.current = true
+      return
+    }
+    frameRef.current?.contentWindow?.postMessage({ __melisNarrow: true, narrow }, '*')
+  }, [narrow])
 
   // Bascule de thème : on ne recharge PLUS l'iframe. On pousse les nouveaux tokens au document déjà
   // chargé (postMessage `__melisRetheme`, cf. PluginViewController) qui les applique via ses variables
@@ -286,7 +313,12 @@ export function LegacyPluginContent({ pluginName }: { pluginName: string }) {
         title={pluginName}
         style={{ minHeight: contentPx || 120 }}
         sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-modals"
-        onLoad={() => setLoading(false)}
+        onLoad={() => {
+          setLoading(false)
+          // Rattrapage : si la largeur a changé pendant le chargement du plugin, l'URL porte l'état
+          // périmé et le postMessage émis à ce moment-là n'avait pas d'écouteur en face.
+          frameRef.current?.contentWindow?.postMessage({ __melisNarrow: true, narrow: narrowRef.current }, '*')
+        }}
       />
       {confirm && (
         <PluginConfirmDialog

@@ -38,6 +38,12 @@ export interface GridItem {
   h: number
   minW?: number
   minH?: number
+  /** Hauteur DÉCLARÉE du plugin dans la grille legacy (cellules 80px), telle que lue dans le record
+   *  partagé. Conservée sur l'item pour pouvoir le RE-PERSISTER À L'IDENTIQUE même quand sa
+   *  définition est inconnue du registre (fetch `/legacy-plugins` pas encore résolu, en échec, ou
+   *  plugin non accordé) — sans elle, un tel item ne pourrait pas être réécrit et disparaîtrait du
+   *  record. Cf. `layoutToRecords` (DashboardPage). */
+  legacyH?: number
   /** L'utilisateur a redimensionné la HAUTEUR de cette tuile à la main. Quand vrai, `h` est une
    *  hauteur voulue (pas un ajustement au contenu) : elle est persistée (react-height) et l'auto-fit
    *  ne la retouche plus, y compris après un rechargement (cf. DashboardPage / DashboardGrid). */
@@ -88,7 +94,9 @@ export function loadLayout(): GridItem[] {
 
 export function saveLayout(layout: GridItem[]): void {
   try {
-    const slim = layout.map(({ i, x, y, w, h }) => ({ i, x, y, w, h }))
+    // `legacyH` fait partie du cache : c'est la seule trace de la hauteur DÉCLARÉE d'un plugin dont
+    // la déf. n'est pas (encore) chargée, et c'est elle qu'on réécrit dans le record partagé.
+    const slim = layout.map(({ i, x, y, w, h, legacyH }) => ({ i, x, y, w, h, legacyH }))
     localStorage.setItem(STORAGE_KEY, JSON.stringify(slim))
   } catch {
     /* best-effort */

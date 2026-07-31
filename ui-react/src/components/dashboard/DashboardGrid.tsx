@@ -145,7 +145,7 @@ export function DashboardGrid({
       // Ne persiste QUE le layout en pleine largeur (12 col). Un reflow responsive
       // (1 ou 6 col) ne doit pas écraser les positions desktop sauvegardées.
       if (grid.getColumn() !== GRID_COLS) return
-      onChangeRef.current(readLayout(grid, allWidgetsRef.current, userSized.current))
+      onChangeRef.current(readLayout(grid, allWidgetsRef.current, userSized.current, layoutRef.current))
     })
 
     // Un redimensionnement MANUEL fige la tuile : plus d'ajustement automatique dessus.
@@ -496,24 +496,39 @@ function readLayout(
   grid: GridStack,
   allWidgets: Record<string, WidgetDef>,
   userSized: Set<string>,
+  prev: GridItem[],
 ): GridItem[] {
+  const prevById = new Map(prev.map((l) => [l.i, l]))
   const saved = grid.save(false) as GridStackWidget[]
   return saved
-    .filter((w) => w.id && allWidgets[widgetIdOf(w.id as string)])
+    // ⚠️ NE JAMAIS FILTRER SUR LE REGISTRE ICI. Cette lecture alimente `onChange` → `persist(…,
+    // { userAction: true })`, qui a le droit de RÉDUIRE le record partagé (c'est le chemin d'une
+    // suppression volontaire). Filtrer sur `allWidgets` faisait donc disparaître de la BASE toute
+    // tuile dont la déf. n'est pas chargée — or `extraWidgetMap` est VIDE tant que
+    // `/legacy-plugins` n'a pas répondu, et le reste indéfiniment pour un utilisateur sans droit
+    // sur aucun plugin. Un simple déplacement/redimensionnement effaçait alors TOUT le dashboard
+    // (constaté en base : d_content réduit à `<Plugins></Plugins>`). On garde donc chaque nœud de
+    // la grille tel quel ; c'est `layoutToRecords` + les filets de `persist` (DashboardPage) qui
+    // décident, en connaissance de cause, de ce qui part en base.
+    .filter((w) => !!w.id)
     .map((w) => {
-      const def = allWidgets[widgetIdOf(w.id as string)]
       const id = w.id as string
+      const def = allWidgets[widgetIdOf(id)]
+      const before = prevById.get(id)
       return {
         i: id,
         x: w.x ?? 0,
         y: w.y ?? 0,
         w: w.w ?? 1,
         h: w.h ?? 1,
-        minW: def.minW,
+        minW: def?.minW ?? before?.minW,
         // Always the REGISTRY's floor, never a persisted one: layouts saved before the auto-fit
         // work carry `minH` = the plugin's declared height, and re-persisting that value is what
         // made hand-resized tiles spring back.
-        minH: def.minH,
+        minH: def?.minH ?? before?.minH,
+        // Hauteur legacy DÉCLARÉE, reportée depuis l'item précédent : GridStack ne la connaît pas,
+        // et sans elle une tuile à déf. inconnue ne serait plus re-persistable (cf. GridItem).
+        legacyH: before?.legacyH,
         // Propage l'état « redimensionné à la main » (rempli au resizestart) → DashboardPage le
         // persiste (react-height) et la hauteur voulue survit au rechargement.
         userSized: userSized.has(id),

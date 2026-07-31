@@ -3,6 +3,8 @@ import { GripVertical, RotateCcw, Settings, X } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 
 import { useI18n } from '@/i18n/i18n-context'
+import { useIsNarrow } from '@/hooks/useIsNarrow'
+import { cn } from '@/lib/utils'
 
 /** Cadre d'un widget : header (poignée de drag + titre + config/recharger/retirer) + corps.
  *  Le header porte `.widget-drag-handle` → c'est la zone de déplacement (le
@@ -28,11 +30,19 @@ export function WidgetFrame({
   children: ReactNode
 }) {
   const { t } = useI18n()
+  // Mobile : la tuile fait toute la largeur de l'écran, les 16px de gouttière de chaque côté
+  // coûtent ~10% de la surface utile du plugin. On les réduit — uniquement en étroit.
+  const narrow = useIsNarrow()
   const btn =
     'grid size-6 shrink-0 place-items-center rounded text-muted-foreground/70 transition-colors hover:text-foreground'
   return (
     <div className="group/widget flex h-full flex-col overflow-hidden rounded-lg border border-border/60 bg-card text-card-foreground shadow-card">
-      <div className="widget-drag-handle flex cursor-move select-none items-center gap-2 border-b border-border/60 px-4 py-2.5">
+      <div
+        className={cn(
+          'widget-drag-handle flex cursor-move select-none items-center gap-2 border-b border-border/60',
+          narrow ? 'px-2.5 py-2' : 'px-4 py-2.5',
+        )}
+      >
         <GripVertical className="size-4 shrink-0 text-muted-foreground/40 transition-colors group-hover/widget:text-muted-foreground/70" />
         <Icon className="size-4 shrink-0 text-muted-foreground" />
         <h3 className="font-[var(--font-display)] truncate text-sm font-semibold">{title}</h3>
@@ -71,7 +81,7 @@ export function WidgetFrame({
           </button>
         </div>
       </div>
-      <div className="min-h-0 flex-1 overflow-auto p-4">{children}</div>
+      <div className={cn('min-h-0 flex-1 overflow-auto', narrow ? 'p-2' : 'p-4')}>{children}</div>
     </div>
   )
 }

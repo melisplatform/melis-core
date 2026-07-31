@@ -23,6 +23,7 @@ export function WidgetPalette({
   nativeWidgets = WIDGETS,
   extraWidgets = [],
   loadThumbnails = true,
+  fullWidth = false,
 }: {
   present: Set<string>
   onAdd: (widgetId: string) => void
@@ -38,6 +39,9 @@ export function WidgetPalette({
   /** Autorise le chargement des vignettes de plugins. Piloté par le dashboard : `false` tant que la
    *  palette n'a jamais été ouverte, pour ne charger AUCUNE image au premier rendu (cf. PaletteItem). */
   loadThumbnails?: boolean
+  /** Mobile : le panneau occupe toute la largeur (il est alors posé en surimpression sur la grille
+   *  par le dashboard) au lieu de sa colonne fixe de 18rem. Faux par défaut → desktop inchangé. */
+  fullWidth?: boolean
 }) {
   const { t } = useI18n()
   // Refs sur les wrappers draggables, indexés par widgetId.
@@ -82,7 +86,13 @@ export function WidgetPalette({
   }, [present, nativeWidgets, extraWidgets])
 
   return (
-    <aside data-widget-palette className="flex w-72 shrink-0 flex-col border-l border-border bg-card">
+    <aside
+      data-widget-palette
+      className={cn(
+        'flex shrink-0 flex-col border-l border-border bg-card',
+        fullWidth ? 'w-full' : 'w-72',
+      )}
+    >
       <div className="flex items-center justify-between border-b border-border px-4 py-3">
         <h2 className="font-[var(--font-display)] text-sm font-semibold">{t('widget.add')}</h2>
         <button
