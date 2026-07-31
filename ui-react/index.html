@@ -26,6 +26,9 @@
         document.documentElement.dataset.theme = theme
       })()
     </script>
+    <!-- Responsive mobile pour TOUS les champs TinyMCE (melis-core + briques des modules) :
+         patch global installé avant le chargement de tinymce.min.js par n'importe quel module. -->
+    <script src="/MelisCore/js/tinyMCE/melis_tinymce_mobile.js"></script>
   </head>
   <body>
     <div id="root"></div>

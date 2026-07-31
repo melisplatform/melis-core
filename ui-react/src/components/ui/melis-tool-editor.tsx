@@ -20,10 +20,14 @@ import { useEffect, useId, useRef } from 'react'
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 declare global {
-  interface Window { tinymce?: any; tinyMceCleaner?: (editor: any) => void }
+  interface Window { tinymce?: any; tinyMceCleaner?: (editor: any) => void; __melisTinyMceMobile?: boolean }
 }
 
 const TINYMCE_SRC = '/MelisCore/js/library/tinymce/tinymce.min.js'
+// Patch responsive mobile global (wrappe tinymce.init) — normalement déjà chargé par
+// index.html ; rechargé ici par sécurité pour les hôtes qui ne servent pas ce shell.
+// Idempotent (garde `window.__melisTinyMceMobile`) et DOIT précéder tinymce.min.js.
+const TINYMCE_MOBILE_SRC = '/MelisCore/js/tinyMCE/melis_tinymce_mobile.js'
 const TINYMCE_CLEANER_SRC = '/MelisCore/js/tinyMCE/tinymce_cleaner.js' // définit le global tinyMceCleaner (autonome)
 const TINYMCE_CSS = '/MelisCore/css/melis_tinymce.css'                 // styles UI Melis (minitemplate…)
 const TINYMCE_BASE = '/MelisCore/js/library/tinymce' // skins/plugins/themes/models y résident (v6.7)
@@ -58,6 +62,7 @@ function ensureToolEditor(): Promise<boolean> {
   _ready = (async () => {
     try {
       loadCssOnce(TINYMCE_CSS)
+      if (!window.__melisTinyMceMobile) await loadScript(TINYMCE_MOBILE_SRC).catch(() => {})
       await loadScript(TINYMCE_SRC)
       await loadScript(TINYMCE_CLEANER_SRC).catch(() => {}) // tinyMceCleaner (optionnel)
       // attendre le global tinymce

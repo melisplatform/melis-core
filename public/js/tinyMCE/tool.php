@@ -5,9 +5,22 @@
 	    //'mode' => 'textareas',
 	    'selector' => 'tool-editable-selector',
 		'language' => 'en',
+		// Surcharges appliquées par TinyMCE sur les appareils mobiles (détection device).
+		// cf. https://www.tiny.cloud/docs/tinymce/latest/tinymce-for-mobile/
+		// NB : côté back-office React, melis_tinymce_mobile.js applique en plus ces réglages
+		// quand la FENÊTRE est étroite (< 640px) — la détection native est device-only.
 		'mobile' => [
 			//'theme' => 'silver',
-			'height' => 300
+			'height' => 300,
+			'menubar' => false,
+			// 'floating' : le débordement s'ouvre par un bouton « … » visible (cf. melis_tinymce_mobile.js).
+			'toolbar_mode' => 'floating',
+			'elementpath' => false,
+			// Barre réduite en DEUX groupes : l'essentiel tient dans la rangée visible, le reste
+			// (dont les listes déroulantes, trop larges) passe dans le popup « … ».
+			// 1ᵉʳ groupe volontairement court (5) : 'floating' bascule TOUT le groupe dans le popup
+			// s'il ne tient pas, et la largeur n'est pas mesurable ici (contrairement au patch JS).
+			'toolbar' => 'undo redo bold italic bullist | underline link blocks numlist unlink image forecolor removeformat minitemplate code fullscreen'
 		],
 		'branding' => false,
 		'inline' => false,
