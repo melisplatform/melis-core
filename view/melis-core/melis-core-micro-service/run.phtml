@@ -33,9 +33,9 @@ foreach ($form->getElements() as $element => $attributes) {
 <style>
   :root{
     --bg:#f2f4f8; --card:#ffffff; --ink:#353f4f; --muted:#6c757d;
-    --primary:#ff0000; --primary-dark:#c40000; --secondary:#ffe6e6;
+    --primary:#e11d2a; --primary-dark:#a8151f; --secondary:#fbe9ea;
     --border:#e3e6ec; --success:#48af4b;
-    --grad:radial-gradient(120% 140% at 12% 0%, #ff3b3b 0%, #ff0000 46%, #c40000 100%);
+    --grad:radial-gradient(130% 150% at 8% -20%, #d43a42 0%, #b31f29 46%, #8a1720 100%);
     --shadow:0 1px 2px rgba(53,63,79,.06), 0 8px 24px -12px rgba(53,63,79,.18);
   }
   *{box-sizing:border-box}
@@ -46,7 +46,7 @@ foreach ($form->getElements() as $element => $attributes) {
   a{color:inherit; text-decoration:none}
   code,.mono{font-family:'JetBrains Mono',ui-monospace,'SF Mono',Menlo,Consolas,monospace}
 
-  .hero{background:var(--grad); color:#fff; padding:20px 0 22px; box-shadow:0 12px 30px -18px rgba(196,0,0,.6)}
+  .hero{background:var(--grad); color:#fff; padding:20px 0 22px; box-shadow:0 12px 30px -18px rgba(138,23,32,.6)}
   .wrap{max-width:920px; margin:0 auto; padding:0 24px}
   .back{display:inline-flex; align-items:center; gap:7px; font-size:12.5px; font-weight:600; opacity:.9; margin-bottom:12px}
   .back:hover{opacity:1}
@@ -82,8 +82,8 @@ foreach ($form->getElements() as $element => $attributes) {
 
   .submit{margin-top:6px; display:inline-flex; align-items:center; gap:8px; cursor:pointer; border:0;
     background:var(--grad); color:#fff; font-weight:750; font-size:14px; padding:11px 20px; border-radius:11px;
-    box-shadow:0 8px 20px -10px rgba(196,0,0,.7); transition:.12s}
-  .submit:hover{transform:translateY(-1px); box-shadow:0 12px 24px -10px rgba(196,0,0,.8)}
+    box-shadow:0 8px 20px -10px rgba(138,23,32,.7); transition:.12s}
+  .submit:hover{transform:translateY(-1px); box-shadow:0 12px 24px -10px rgba(138,23,32,.8)}
   .submit:active{transform:translateY(0)}
 
   /* Response panel */
