@@ -1,88 +1,184 @@
-<div class="microservice_container">
-<!-- Method Name -->
-<h4><?= $this->methodName; ?></h4>
-<!-- Subtitle -->
-<p><?php echo $this->translate('tr_meliscore_microservice_sub_title'); ?></p>
-<br>
-
-<!-- Form -->
 <?php
-$form = $this->form;
-foreach($form->getElements() as $element => $attributes)  {
-	$el =  $form->get((string) $element);
-	$label=$el->getLabel();
-	$attributes = $el->getAttributes();
-	if($attributes && isset($attributes['data-type'])) {
-		$dataType = $this->translate($attributes['data-type']);
-		$form->get((string) $element)->setLabel($label.' ('.$dataType.')');
-	}
-}
-;
-echo $this->form()->openTag($form);
-echo $this->melisFieldCollection($form);
-echo '<button type="submit" style=margin-left:50px>Submit</button>';
-echo $this->form()->closeTag();
+/**
+ * Web-service method "try it" page — standalone, styled to match the React back-office palette
+ * (brand red). PURE server-rendered legacy Laminas view: no React, no Vite, no build, no external
+ * assets — inline CSS/SVG/vanilla-JS only. Runs on any deployment. Rendered terminal (no layout).
+ */
+$esc     = function ($v) { return $this->escapeHtml((string) $v); };
+$escAttr = function ($v) { return $this->escapeHtmlAttr((string) $v); };
 
-?>
-</div>
-<?php
-echo $this->headTitle($this->translate('tr_meliscore_microservice_tab_title'));
-?>
+$form        = $this->form;
+$methodName  = (string) $this->methodName;
+$module      = (string) $this->module;
+$serviceName = (string) $this->serviceName;
+$apiKey      = (string) $this->apiKey;
+$backUrl     = '/melis/api/' . rawurlencode($apiKey);
+$endpointUrl = $backUrl . '/' . rawurlencode($module) . '/service/' . rawurlencode($serviceName) . '/' . rawurlencode($methodName);
 
+// Append the argument data-type to each label (e.g. "idPage (int)"), like before.
+foreach ($form->getElements() as $element => $attributes) {
+    $el = $form->get((string) $element);
+    $attrs = $el->getAttributes();
+    if ($attrs && isset($attrs['data-type'])) {
+        $el->setLabel($el->getLabel() . ' (' . $this->translate($attrs['data-type']) . ')');
+    }
+}
+?><!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Melis · <?php echo $esc($methodName); ?></title>
+<style>
+  :root{
+    --bg:#f2f4f8; --card:#ffffff; --ink:#353f4f; --muted:#6c757d;
+    --primary:#ff0000; --primary-dark:#c40000; --secondary:#ffe6e6;
+    --border:#e3e6ec; --success:#48af4b;
+    --grad:radial-gradient(120% 140% at 12% 0%, #ff3b3b 0%, #ff0000 46%, #c40000 100%);
+    --shadow:0 1px 2px rgba(53,63,79,.06), 0 8px 24px -12px rgba(53,63,79,.18);
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0}
+  body{background:var(--bg); color:var(--ink); min-height:100vh;
+    font-family:'Inter',system-ui,-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+    font-size:14px; line-height:1.5; -webkit-font-smoothing:antialiased;}
+  a{color:inherit; text-decoration:none}
+  code,.mono{font-family:'JetBrains Mono',ui-monospace,'SF Mono',Menlo,Consolas,monospace}
 
-<style type="text/css">
-.microservice_container{
-	padding-left:20px;
-	padding-top:47px;
-	color:#686868;
-	font-family: "Open Sans'";
-}
-#microservice_form ul li{
-	list-style-type: none;
-}
-#microservice_form ul {
-	margin:0;
-	padding: 0;
-}
-.microservice_container input,select{
-	text-indent: 5px;
-	color:#000;
-	font-weight: 600;
-	display: block;
-	margin-bottom: 8px;
-	height: 30px;
-	border-radius: 3px;
-    border: 1px solid #a8a8a8;
-}
-select {
-	width: auto !important;
-}
-.microservice_container input::-webkit-input-placeholder {
-   color: #bcbcbc;
-}
+  .hero{background:var(--grad); color:#fff; padding:20px 0 22px; box-shadow:0 12px 30px -18px rgba(196,0,0,.6)}
+  .wrap{max-width:920px; margin:0 auto; padding:0 24px}
+  .back{display:inline-flex; align-items:center; gap:7px; font-size:12.5px; font-weight:600; opacity:.9; margin-bottom:12px}
+  .back:hover{opacity:1}
+  .mark{display:flex; align-items:center; gap:10px; margin-bottom:14px}
+  .mark .logo{width:30px;height:30px;border-radius:8px;background:rgba(255,255,255,.16);display:flex;align-items:center;justify-content:center;font-weight:800}
+  .mark .name{font-weight:800; font-size:16px; letter-spacing:.4px}
+  .mark .name small{font-weight:600; opacity:.85; letter-spacing:.6px; margin-left:5px; text-transform:uppercase; font-size:10px}
+  .crumb{font-size:12.5px; opacity:.9; margin-bottom:5px}
+  .crumb b{opacity:1}
+  h1{margin:0; font-size:24px; font-weight:800; letter-spacing:-.3px; display:flex; align-items:center; gap:10px}
+  .verb{font-size:11px; font-weight:800; letter-spacing:.5px; color:#fff; background:var(--success); padding:4px 9px; border-radius:7px}
+  .epurl{display:inline-block; margin-top:12px; background:rgba(255,255,255,.14); border:1px solid rgba(255,255,255,.25); padding:6px 11px; border-radius:9px; font-size:12px}
 
-.microservice_container input:-moz-placeholder { /* Firefox 18- */
-   color: #bcbcbc;  
-}
+  .grid{max-width:920px; margin:22px auto 60px; padding:0 24px; display:grid; gap:18px}
+  .card{background:var(--card); border:1px solid var(--border); border-radius:16px; box-shadow:var(--shadow); overflow:hidden}
+  .card-head{padding:14px 20px; border-bottom:1px solid var(--border); font-weight:750; font-size:14px; display:flex; align-items:center; gap:9px; background:linear-gradient(180deg,#fff,#fbfbfd)}
+  .card-head .dot{width:9px;height:9px;border-radius:50%;background:var(--grad);box-shadow:0 0 0 4px var(--secondary)}
+  .card-body{padding:20px}
+  .lead{color:var(--muted); margin:0 0 18px; font-size:13px}
 
-.microservice_container input::-moz-placeholder {  /* Firefox 19+ */
-   color: #bcbcbc;  
-}
+  /* Melis form fields (melisFieldCollection output) */
+  #microservice_form ul{margin:0;padding:0}
+  #microservice_form li{list-style:none}
+  .form-group{margin-bottom:15px}
+  .form-group label{display:block; font-weight:650; font-size:12.5px; color:var(--ink); margin-bottom:6px}
+  .form-group input, .form-group select, .card-body input, .card-body select{
+    width:100%; max-width:420px; display:block; padding:9px 12px; border:1px solid var(--input,#d8dce4);
+    border-radius:10px; font-size:14px; color:var(--ink); background:#fff; font-family:inherit;}
+  .form-group input:focus, .form-group select:focus{outline:none; border-color:var(--primary); box-shadow:0 0 0 3px var(--secondary)}
+  .form-group input::placeholder{color:#b6bcc8}
+  .form-group .help-block, .form-group ul.help-block, .input-error, .help-block li{color:var(--primary-dark); font-size:12px; margin-top:5px; list-style:none}
+  fieldset{border:none; padding:0; margin:0}
 
-.microservice_container input:-ms-input-placeholder {  
-   color: #bcbcbc;  
-}
-fieldset{
-	border:none;
-	padding: 0;
-}
-h4{
-	font-weight: 500;
-	font-size: 25px;
-	margin:0;
-}
-p{
-	margin-top:8px;
-	margin-bottom:10px;
-}
+  .submit{margin-top:6px; display:inline-flex; align-items:center; gap:8px; cursor:pointer; border:0;
+    background:var(--grad); color:#fff; font-weight:750; font-size:14px; padding:11px 20px; border-radius:11px;
+    box-shadow:0 8px 20px -10px rgba(196,0,0,.7); transition:.12s}
+  .submit:hover{transform:translateY(-1px); box-shadow:0 12px 24px -10px rgba(196,0,0,.8)}
+  .submit:active{transform:translateY(0)}
+
+  /* Response panel */
+  #resultCard{display:none}
+  #resultCard.show{display:block}
+  .res-head{display:flex; align-items:center; gap:10px}
+  .pill{font-size:11px; font-weight:800; padding:3px 9px; border-radius:20px}
+  .pill.ok{color:#1f7a34; background:#e6f6e9}
+  .pill.ko{color:var(--primary-dark); background:var(--secondary)}
+  pre.json{margin:0; padding:16px 18px; background:#0e1626; color:#e8edf6; border-radius:12px; overflow:auto;
+    font-size:12.5px; line-height:1.55; max-height:460px}
+  .json .k{color:#8ab4ff} .json .s{color:#7ee787} .json .n{color:#ffab70} .json .b{color:#ff7b72}
+  .spin{width:16px;height:16px;border:2px solid var(--secondary);border-top-color:var(--primary);border-radius:50%;display:inline-block;animation:sp .7s linear infinite}
+  @keyframes sp{to{transform:rotate(360deg)}}
 </style>
+</head>
+<body>
+  <div class="hero">
+    <div class="wrap">
+      <a class="back" href="<?php echo $backUrl; ?>">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>
+        All endpoints
+      </a>
+      <div class="mark"><div class="logo">M</div><div class="name">MELIS<small>Web Services</small></div></div>
+      <div class="crumb"><?php echo $esc($module); ?> &middot; <b><?php echo $esc($serviceName); ?></b></div>
+      <h1><span class="verb">POST</span><?php echo $esc($methodName); ?></h1>
+      <span class="epurl mono"><?php echo $esc($endpointUrl); ?></span>
+    </div>
+  </div>
+
+  <div class="grid">
+    <div class="card">
+      <div class="card-head"><span class="dot"></span> Parameters</div>
+      <div class="card-body">
+        <p class="lead"><?php echo $esc($this->translate('tr_meliscore_microservice_sub_title')); ?></p>
+        <?php
+          echo $this->form()->openTag($form);
+          echo $this->melisFieldCollection($form);
+          echo '<button type="submit" class="submit">'
+             . '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>'
+             . 'Send request</button>';
+          echo $this->form()->closeTag();
+        ?>
+      </div>
+    </div>
+
+    <div class="card" id="resultCard">
+      <div class="card-head res-head">
+        <span class="dot"></span> Response
+        <span id="resPill" class="pill" style="margin-left:auto"></span>
+      </div>
+      <div class="card-body">
+        <pre class="json" id="resBody"></pre>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function(){
+      var form = document.getElementById('microservice_form');
+      if(!form) return;
+      var card = document.getElementById('resultCard'),
+          pill = document.getElementById('resPill'),
+          body = document.getElementById('resBody');
+
+      function esc(s){return String(s).replace(/[&<>]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;'}[c];});}
+      function highlight(json){
+        return esc(json).replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(\.\d+)?([eE][+\-]?\d+)?)/g,function(m){
+          var cls='n'; if(/^"/.test(m)){cls=/:$/.test(m)?'k':'s';} else if(/true|false|null/.test(m)){cls='b';}
+          return '<span class="'+cls+'">'+m+'</span>';
+        });
+      }
+      form.addEventListener('submit', function(e){
+        e.preventDefault();
+        card.classList.add('show');
+        pill.className='pill'; pill.textContent='';
+        body.innerHTML='<span class="spin"></span>';
+        card.scrollIntoView({behavior:'smooth', block:'nearest'});
+        fetch(form.action, {method:'POST', body:new FormData(form), headers:{'X-Requested-With':'XMLHttpRequest'}})
+          .then(function(r){return r.text();})
+          .then(function(t){
+            try{
+              var d=JSON.parse(t);
+              var ok = d && d.success;
+              pill.className='pill '+(ok?'ok':'ko');
+              pill.textContent = ok ? 'success' : (d && d.errors && Object.keys(d.errors).length ? 'validation' : 'error');
+              body.innerHTML = highlight(JSON.stringify(d, null, 2));
+            }catch(err){
+              pill.className='pill ko'; pill.textContent='non-JSON';
+              body.textContent = t.slice(0, 4000);
+            }
+          })
+          .catch(function(err){ pill.className='pill ko'; pill.textContent='network'; body.textContent=String(err); });
+      });
+    })();
+  </script>
+</body>
+</html>
