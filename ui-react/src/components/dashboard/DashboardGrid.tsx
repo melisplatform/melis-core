@@ -255,14 +255,45 @@ export function DashboardGrid({
         console.debug('[autofit]', { itemId, contentPx, rows, cols: grid.getColumn(), currentH: layoutRef.current.find((l) => l.i === itemId)?.h })
       }
       // Sous un breakpoint responsive, GridStack met les hauteurs à l'échelle : écrire une hauteur
-      // « desktop » dans le layout PERSISTÉ le corromprait. On corrige alors seulement l'affichage.
+      // « desktop » dans le layout PERSISTÉ le corromprait. On corrige alors seulement l'affichage
+      // (`grid.update`, jamais `onChange`) — rien ne part en base depuis cette branche.
+      //
+      // ⚠️ Cette branche ne savait qu'AGRANDIR (`rows > node.h`). Or sur un téléphone la grille est
+      // TOUJOURS à 1 colonne : l'ajustement au contenu n'y rétrécissait donc JAMAIS. Symptôme
+      // constaté : dans un plugin dont on déplie une ligne (tables repliables des tuiles étroites),
+      // la tuile passait de 782 à 966px à l'ouverture et RESTAIT à 966 après refermeture — une
+      // bande vide sous le contenu. Idem pour tout plugin dont le contenu raccourcit (filtre plus
+      // sélectif, pagination). On autorise donc les DEUX sens, en reprenant à l'identique le
+      // garde-fou anti-cliquet du chemin 12 colonnes : un plugin dont la mesure SUIT la hauteur de
+      // l'iframe (hauteurs en %) verrait sinon sa tuile se réduire à chaque passage.
       if (grid.getColumn() !== GRID_COLS) {
         const node = grid.engine.nodes.find((n) => n.id === itemId)
-        if (node?.el && rows > (node.h ?? 0)) {
+        if (!node?.el) return
+        const el = node.el as HTMLElement
+        const currentH = node.h ?? 0
+        const applyH = (h: number) => {
           mutating.current = true
-          grid.update(node.el as HTMLElement, { h: rows })
+          grid.update(el, { h })
           mutating.current = false
         }
+        // Vérification du rétrécissement précédent (même contrat que plus bas) : si la mesure a
+        // BAISSÉ après qu'on a réduit la tuile, elle est circulaire → on restaure et on interdit
+        // définitivement de réduire cette tuile.
+        const probeR = shrinkProbe.current.get(itemId)
+        if (probeR) {
+          shrinkProbe.current.delete(itemId)
+          if (contentPx < probeR.px - AUTOFIT_TOLERANCE_PX) {
+            noShrink.current.add(itemId)
+            applyH(probeR.fromRows)
+            return
+          }
+        }
+        if (rows === currentH) return
+        if (rows < currentH) {
+          if (noShrink.current.has(itemId)) return
+          shrinkProbe.current.set(itemId, { fromRows: currentH, px: contentPx })
+        }
+        applyH(rows)
         return
       }
       const item = layoutRef.current.find((l) => l.i === itemId)
