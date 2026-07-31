@@ -299,16 +299,17 @@ export async function loadBricks(): Promise<void> {
     // est un widget visible au boot (ex. la cloche Messenger). On appende leur <script> EN PREMIER
     // pour qu'elles arrivent avant les bundles de pages (que l'utilisateur n'ouvrira peut-être
     // jamais) dans la file — utile car le service PHP sérialise les requêtes sur le verrou de session.
-    const prefetch = [...list].sort((a, b) => {
-      const wa = !a.route && !a.forwardKey ? 0 : 1
-      const wb = !b.route && !b.forwardKey ? 0 : 1
-      return wa - wb
-    })
-    for (const m of prefetch) {
-      if (!m.bundleUrl) continue
+    // ⚠️ Trier ne suffisait PAS : appender les ~50 <script> dans le MÊME tour de boucle les lance
+    // tous en parallèle, et les bundles sont servis par PHP (MelisAssetManager) qui SÉRIALISE sur le
+    // verrou de session. La cloche Messenger arrivait donc bonne dernière — mesuré sur dev6 :
+    // widget visible à t+21 s après le chargement de la page. On charge donc les briques
+    // « widget-only » D'ABORD, puis on attend qu'elles soient là avant de lancer les bundles de
+    // pages (que l'utilisateur n'ouvrira peut-être jamais).
+    const load = (m: (typeof list)[number]) => {
       const bundleUrl = m.bundleUrl
       const brickId   = m.id
-      loadScript(bundleUrl)
+      if (!bundleUrl) return Promise.resolve()
+      return loadScript(bundleUrl)
         .then(() => {
           const reg = componentRegistry()[brickId]
           const def = bricks.find((b) => b.id === brickId)
@@ -321,6 +322,31 @@ export async function loadBricks(): Promise<void> {
         })
         .catch(() => {})
     }
+
+    const isWidgetOnly = (m: (typeof list)[number]) => !m.route && !m.forwardKey
+    const widgetOnly   = list.filter((m) => m.bundleUrl && isWidgetOnly(m))
+    const pages        = list.filter((m) => m.bundleUrl && !isWidgetOnly(m))
+
+    // Une fois les widgets chargés, on NE LANCE PAS les bundles de pages tout de suite : les widgets
+    // viennent de se monter et déclenchent leurs PROPRES appels de données (ex. le compteur de
+    // messages non lus de la cloche). Ces appels passent par PHP, qui sérialise sur le verrou de
+    // session — lancés en même temps que ~50 bundles de pages, ils repassaient bons derniers et la
+    // pastille rouge n'apparaissait que plusieurs secondes après l'icône. On attend donc que le
+    // navigateur soit inactif (les fetch des widgets sont partis) avant d'amorcer la 2ᵉ vague ; ces
+    // bundles servent des outils que l'utilisateur n'ouvrira peut-être jamais, les différer est sans
+    // conséquence visible.
+    const startPages = () => pages.forEach((m) => void load(m))
+    const deferPages = () => {
+      const ric = (window as unknown as {
+        requestIdleCallback?: (cb: () => void, opts?: { timeout: number }) => void
+      }).requestIdleCallback
+      if (typeof ric === 'function') ric(startPages, { timeout: 2000 })
+      else window.setTimeout(startPages, 1200)
+    }
+
+    // Non bloquant pour loadBricks() : on n'attend pas cette chaîne (le shell doit se rendre tout
+    // de suite), on ordonne juste les deux vagues entre elles.
+    void Promise.all(widgetOnly.map(load)).then(deferPages)
   } catch {
     /* leave bricks empty on error */
   } finally {
