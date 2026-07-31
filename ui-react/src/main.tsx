@@ -55,7 +55,9 @@ w.__melisRegisterBrick = (b) => {
   const p = window.location.pathname.replace(/\/+$/, '')
   if (p === '' || p === '/melis-react') {
     void prefetchDashboard()
-    void import('@/pages/DashboardPage')
+    // Prefetch best-effort : sur un chunk hashé périmé (post-déploiement) l'import rejette ; on avale
+    // l'erreur ici (le vrai rendu passe par lazyRetry qui gère le reload — ticket 0010791).
+    import('@/pages/DashboardPage').catch(() => {})
   }
 }
 
