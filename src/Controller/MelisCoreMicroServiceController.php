@@ -621,8 +621,49 @@ class MelisCoreMicroServiceController extends MelisAbstractActionController
 
         }
      
-        $view->userExists   = $userExists;
-        $view->microservice = $microservice;
+        // Map each exposed module to its BO left-menu section (same grouping as the classic left
+        // menu), derived from the module's OWN app.interface.php: the `*_toolstree_section` it
+        // registers its tools under (e.g. MelisCmsProspects lives under "marketing", not "cms").
+        // Modules with no interface section (e.g. the rendering engine) fall back to the core section.
+        // Manual overrides: force a module into a specific section when its auto-derived section
+        // isn't the one we want to show here (e.g. the rendering engine and small-business tools
+        // are surfaced under the CMS section).
+        $sectionOverrides = array(
+            'MelisEngine'        => 'meliscms_toolstree_section',
+            'MelisSmallBusiness' => 'meliscms_toolstree_section',
+        );
+
+        $moduleSections = array();
+        if ($userExists) {
+            $modulesSvc = $this->getServiceManager()->get('ModulesService');
+            foreach (array_keys($microservice) as $moduleName) {
+                if ($moduleName === 'conf') { continue; }
+                if (isset($sectionOverrides[$moduleName])) {
+                    $moduleSections[$moduleName] = $sectionOverrides[$moduleName];
+                    continue;
+                }
+                $section = 'meliscore_toolstree_section';
+                try {
+                    $path  = $modulesSvc->getModulePath($moduleName);
+                    $iface = $path ? $path . '/config/app.interface.php' : '';
+                    if ($iface && is_file($iface)) {
+                        $contents = file_get_contents($iface);
+                        if ($contents !== false && preg_match_all('/melis[a-z]+_toolstree_section/', $contents, $mm) && !empty($mm[0])) {
+                            $counts = array_count_values($mm[0]); // primary section = the most-used one
+                            arsort($counts);
+                            $section = (string) key($counts);
+                        }
+                    }
+                } catch (\Throwable $e) {
+                    // keep the default core section
+                }
+                $moduleSections[$moduleName] = $section;
+            }
+        }
+
+        $view->userExists     = $userExists;
+        $view->microservice   = $microservice;
+        $view->moduleSections = $moduleSections;
         $view->apiKey       = $apiKey;
         $view->title       = 'tr_meliscore_microservice_title';
         // Standalone, self-contained styled page (Melis React look) — render without the legacy layout.

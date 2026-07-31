@@ -2,274 +2,83 @@
 return array(
     'plugins' => array(
         'microservice' => array(
-            // 'MelisCore' => array(
-            //     // MelisCoreLogService.php
-            //     'MelisCoreLogService' => array(
-            //         /**
-            //          * @method getLog($logId)
-            //          */
-            //         'getLog' => array(
-            //             'attributes' => array(
-            //                 'name'   => 'microservice_form',
-            //                 'id'     => 'microservice_form',
-            //                 'method' => 'POST',
-            //                 'action' => $_SERVER['REQUEST_URI'],
-            //             ),
-            //             'hydrator' => 'Laminas\Hydrator\ArraySerializable',
-            //             'elements' => array(
-            //                 array(
-            //                     'spec' => array(
-            //                         'name' => 'logId',
-            //                         'type' => 'Text',
-            //                         'options' => array(
-            //                             'label' => 'logId',
-            //                         ),
-            //                         'attributes' => array(
-            //                             'id' => 'logId',
-            //                             'value' => '',
-            //                             'class' => '',
-            //                             'placeholder' => 'logId',
-            //                         ),
-            //                     ),
-            //                 ),
-            //             ),
-            //             'input_filter' => array(
+            'MelisCore' => array(
 
-            //             )
-            //         ),
-            //         /**
-            //          * @method getLogTypeTranslations($logTypeId, $langId = null)
-            //          */
-            //         'getLogTypeTranslations' => array(
-            //             'attributes' => array(
-            //                 'name'   => 'microservice_form',
-            //                 'id'     => 'microservice_form',
-            //                 'method' => 'POST',
-            //                 'action' => $_SERVER['REQUEST_URI'],
-            //             ),
-            //             'hydrator' => 'Laminas\Hydrator\ArraySerializable',
-            //             'elements' => array(
-            //                 array(
-            //                     'spec' => array(
-            //                         'name' => 'logTypeId',
-            //                         'type' => 'Text',
-            //                         'options' => array(
-            //                             'label' => 'logTypeId',
-            //                         ),
-            //                         'attributes' => array(
-            //                             'id' => 'logTypeId',
-            //                             'value' => '',
-            //                             'class' => '',
-            //                             'placeholder' => 'logTypeId',
-            //                         ),
-            //                     ),
-            //                 ),
-            //                 array(
-            //                     'spec' => array(
-            //                         'name' => 'langId',
-            //                         'type' => 'Text',
-            //                         'options' => array(
-            //                             'label' => 'langId',
-            //                         ),
-            //                         'attributes' => array(
-            //                             'id' => 'langId',
-            //                             'value' => '',
-            //                             'class' => '',
-            //                             'placeholder' => 'langId',
-            //                         ),
-            //                     ),
-            //                 ),
-            //             ),
-            //             'input_filter' => array(
+                // MelisCoreAnnouncementService.php
+                'MelisCoreAnnouncementService' => array(
+                    '_description' => 'tr_meliscore_ws_desc_announcement',
 
-            //             )
-            //         ),
-            //     ),
+                    /**
+                     * @method getLists($status = null, $searchValue = '')
+                     * Lists back-office dashboard announcements. Both parameters are optional:
+                     * leave them empty to return every announcement. Only the two leading scalar
+                     * parameters are exposed (the method's 3rd argument is an array and is left to
+                     * its default). READ — no side effect.
+                     */
+                    'getLists' => array(
+                        'attributes' => array(
+                            'name'   => 'microservice_form',
+                            'id'     => 'microservice_form',
+                            'method' => 'POST',
+                            'action' => $_SERVER['REQUEST_URI'],
+                        ),
+                        'hydrator' => 'Laminas\Hydrator\ArraySerializable',
+                        'elements' => array(
+                            array(
+                                'spec' => array(
+                                    'name' => 'status',
+                                    'type' => 'Text',
+                                    'options' => array(
+                                        'label' => 'status',
+                                    ),
+                                    'attributes' => array(
+                                        'id' => 'status',
+                                        'value' => '',
+                                        'class' => '',
+                                        'placeholder' => 'status (0/1, optional)',
+                                        'data-type' => 'int',
+                                    ),
+                                ),
+                            ),
+                            array(
+                                'spec' => array(
+                                    'name' => 'searchValue',
+                                    'type' => 'Text',
+                                    'options' => array(
+                                        'label' => 'searchValue',
+                                    ),
+                                    'attributes' => array(
+                                        'id' => 'searchValue',
+                                        'value' => '',
+                                        'class' => '',
+                                        'placeholder' => 'searchValue (optional)',
+                                        'data-type' => 'string',
+                                    ),
+                                ),
+                            ),
+                        ),
+                        'input_filter' => array(
+                            'status' => array(
+                                'name'     => 'status',
+                                'required' => false,
+                                'filters'  => array(
+                                    array('name' => 'StripTags'),
+                                    array('name' => 'StringTrim'),
+                                ),
+                            ),
+                            'searchValue' => array(
+                                'name'     => 'searchValue',
+                                'required' => false,
+                                'filters'  => array(
+                                    array('name' => 'StripTags'),
+                                    array('name' => 'StringTrim'),
+                                ),
+                            ),
+                        ),
+                    ),
 
-            //     // MelisCoreMicroServiceTestService.php
-            //     'MelisCoreMicroServiceTestService' => array(
-            //         /**
-            //          * @method oneParam($fillMeIn)
-            //          */
-            //         'oneParam' => array(
-            //             'attributes' => array(
-            //                 'name'   => 'microservice_form',
-            //                 'id'     => 'microservice_form',
-            //                 'method' => 'POST',
-            //                 'action' => $_SERVER['REQUEST_URI'],
-            //             ),
-            //             'hydrator' => 'Laminas\Hydrator\ArraySerializable',
-            //             'elements' => array(
-            //                 array(
-            //                     'spec' => array(
-            //                         'name' => 'fillMeIn',
-            //                         'type' => 'Text',
-            //                         'options' => array(
-            //                             'label' => 'fillMeIn',
-            //                         ),
-            //                         'attributes' => array(
-            //                             'id' => 'fillMeIn',
-            //                             'value' => '',
-            //                             'class' => '',
-            //                             'placeholder' => 'fillMeIn',
-            //                         ),
-            //                     ),
-            //                 ),
-            //             ),
-            //             'input_filter' => array(
-            //                 'fillMeIn' => array(
-            //                     'name'     => 'fillMeIn',
-            //                     'required' => true,
-            //                     'validators' => array(
-            //                         array(
-            //                             'name' => 'NotEmpty',
-            //                             'options' => array(
-            //                                 'messages' => array(
-            //                                     \Laminas\Validator\NotEmpty::IS_EMPTY => 'Please enter the value of fillMeIn argument',
-            //                                 ),
-            //                             ),
-            //                         ),
-            //                     ),
-            //                     'filters'  => array(
-            //                         array('name' => 'StripTags'),
-            //                         array('name' => 'StringTrim'),
-            //                     ),
-            //                 ),
-            //             )
-            //         ),
-
-            //         *
-            //          * @method twoParams($fillMe, $andMe)
-                     
-            //         'twoParams' => array(
-            //             'attributes' => array(
-            //                 'name'   => 'microservice_form',
-            //                 'id'     => 'microservice_form',
-            //                 'method' => 'POST',
-            //                 'action' => $_SERVER['REQUEST_URI'],
-            //             ),
-            //             'hydrator' => 'Laminas\Hydrator\ArraySerializable',
-            //             'elements' => array(
-            //                 array(
-            //                     'spec' => array(
-            //                         'name' => 'fillMe',
-            //                         'type' => 'Text',
-            //                         'options' => array(
-            //                             'label' => 'fillMe',
-            //                         ),
-            //                         'attributes' => array(
-            //                             'id' => 'fillMe',
-            //                             'value' => '',
-            //                             'class' => '',
-            //                             'placeholder' => 'fillMe',
-            //                         ),
-            //                     ),
-            //                 ),
-            //                 array(
-            //                     'spec' => array(
-            //                         'name' => 'andMe',
-            //                         'type' => 'Text',
-            //                         'options' => array(
-            //                             'label' => 'andMe',
-            //                         ),
-            //                         'attributes' => array(
-            //                             'id' => 'andMe',
-            //                             'value' => '',
-            //                             'class' => '',
-            //                             'placeholder' => 'andMe',
-            //                         ),
-            //                     ),
-            //                 ),
-            //             ),
-            //             'input_filter' => array(
-            //                 'fillMe' => array(
-            //                     'name'     => 'fillMe',
-            //                     'required' => true,
-            //                     'validators' => array(
-            //                         array(
-            //                             'name' => 'NotEmpty',
-            //                             'options' => array(
-            //                                 'messages' => array(
-            //                                     \Laminas\Validator\NotEmpty::IS_EMPTY => 'Please enter the value of fillMe argument',
-            //                                 ),
-            //                             ),
-            //                         ),
-            //                     ),
-            //                     'filters'  => array(
-            //                         array('name' => 'StripTags'),
-            //                         array('name' => 'StringTrim'),
-            //                     ),
-            //                 ),
-            //                 'andMe' => array(
-            //                     'name'     => 'andMe',
-            //                     'required' => true,
-            //                     'validators' => array(
-            //                         array(
-            //                             'name' => 'NotEmpty',
-            //                             'options' => array(
-            //                                 'messages' => array(
-            //                                     \Laminas\Validator\NotEmpty::IS_EMPTY => 'Please enter the value of andMe argument',
-            //                                 ),
-            //                             ),
-            //                         ),
-            //                     ),
-            //                     'filters'  => array(
-            //                         array('name' => 'StripTags'),
-            //                         array('name' => 'StringTrim'),
-            //                     ),
-            //                 ),
-            //             )
-            //         ),
-
-            //         /**
-            //          * @method acceptArrayParam(array $arrayParam, $normalArg)
-            //          */
-            //         'acceptArrayParam' => array(
-            //             'attributes' => array(
-            //                 'name'   => 'microservice_form',
-            //                 'id'     => 'microservice_form',
-            //                 'method' => 'POST',
-            //                 'action' => $_SERVER['REQUEST_URI'],
-            //             ),
-            //             'hydrator' => 'Laminas\Hydrator\ArraySerializable',
-            //             'elements' => array(
-            //                 array(
-            //                     'spec' => array(
-            //                         'name' => 'arrayParam',
-            //                         'type' => 'Text',
-            //                         'options' => array(
-            //                             'label' => 'arrayParam',
-            //                         ),
-            //                         'attributes' => array(
-            //                             'id' => 'arrayParam',
-            //                             'value' => '',
-            //                             'class' => '',
-            //                             'placeholder' => 'arrayParam',
-            //                         ),
-            //                     ),
-            //                 ),
-            //                 array(
-            //                     'spec' => array(
-            //                         'name' => 'normalArg',
-            //                         'type' => 'Text',
-            //                         'options' => array(
-            //                             'label' => 'normalArg',
-            //                         ),
-            //                         'attributes' => array(
-            //                             'id' => 'normalArg',
-            //                             'value' => '',
-            //                             'class' => '',
-            //                             'placeholder' => 'normalArg',
-            //                         ),
-            //                     ),
-            //                 ),
-            //             ),
-            //             'input_filter' => array(
-
-            //             )
-            //         )
-            //     ),
-            // ),
+                ),
+            ),
         )
     ),
 );

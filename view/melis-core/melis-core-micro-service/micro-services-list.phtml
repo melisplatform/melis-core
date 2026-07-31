@@ -4,29 +4,74 @@
  * palette (brand red), but this is a PURE server-rendered legacy Laminas view: no React, no Vite,
  * no build step and no external assets — inline CSS/SVG/vanilla-JS only, system-font fallbacks.
  * It therefore runs on any deployment (incl. existing projects without the node/Vite tooling).
- * Rendered terminal (no legacy layout). Grouped by Melis module.
+ * Rendered terminal (no legacy layout).
+ *
+ * Left sidebar lists the modules that expose endpoints, grouped by Melis section (like the BO
+ * left menu). The section of a module is derived from its name/family (Core, CMS, Commerce,
+ * Marketing, AI, …) so the grouping stays correct as new modules gain web-services.
  */
 $esc     = function ($v) { return $this->escapeHtml((string) $v); };
 $escAttr = function ($v) { return $this->escapeHtmlAttr((string) $v); };
-$escUrl  = function ($v) { return $this->escapeUrl((string) $v); };
 
 $apiKey  = $this->apiKey;
 $modules = $this->userExists && is_array($this->microservice) ? $this->microservice : array();
+// module => `*_toolstree_section` key, computed controller-side from each module's app.interface.php.
+$moduleSections = is_array($this->moduleSections) ? $this->moduleSections : array();
 
-// Totals
+// --- The BO left-menu sections (same keys, order, colours and icon as the classic left menu). ---
+// `icon` is the name of the Melis view helper that renders the section's inline-SVG tile (identical
+// to the back-office); `color` is the official section colour taken from those helpers.
+$sectionDefs = array(
+    'meliscore_toolstree_section'        => array('label' => 'MelisCore',        'color' => '#ee6622', 'icon' => 'melisCoreIcon'),
+    'meliscms_toolstree_section'         => array('label' => 'MelisCMS',         'color' => '#69b344', 'icon' => 'melisCmsIcon'),
+    'melismarketing_toolstree_section'   => array('label' => 'MelisMarketing',   'color' => '#70469c', 'icon' => 'melisMarketingIcon'),
+    'meliscommerce_toolstree_section'    => array('label' => 'MelisCommerce',    'color' => '#2780c4', 'icon' => 'melisCommerceIcon'),
+    'melisothers_toolstree_section'      => array('label' => 'MelisOthers',      'color' => '#ff0000', 'icon' => 'melisOthersIcon'),
+    'meliscustom_toolstree_section'      => array('label' => 'MelisCustom',      'color' => '#676767', 'icon' => 'melisCustomIcon'),
+    'melismarketplace_toolstree_section' => array('label' => 'MelisMarketplace', 'color' => '#ff0000', 'icon' => 'melisOthersIcon'),
+);
+$sectionOf = function ($module) use ($moduleSections, $sectionDefs) {
+    $sk = isset($moduleSections[$module]) ? $moduleSections[$module] : 'meliscore_toolstree_section';
+    if (!isset($sectionDefs[$sk])) { $sk = 'melisothers_toolstree_section'; }
+    return $sk;
+};
+
+// --- Group modules (that expose at least one endpoint) by section ------------------------------
+// Count real endpoints in a service config, ignoring reserved meta keys (e.g. '_description').
+$countEndpoints = function ($methods) {
+    $n = 0;
+    if (is_array($methods)) {
+        foreach ($methods as $mName => $mCfg) {
+            if (is_array($mCfg) && (string) $mName !== '' && $mName[0] !== '_') { $n++; }
+        }
+    }
+    return $n;
+};
+
+$grouped        = array();   // sectionKey => array(module => endpointCount)
 $totalModules   = 0;
 $totalServices  = 0;
 $totalEndpoints = 0;
-foreach ($modules as $svcs) {
-    if (!is_array($svcs)) { continue; }
+foreach ($modules as $module => $services) {
+    if (!is_array($services)) { continue; }
     $mEnd = 0;
-    foreach ($svcs as $methods) {
-        if (is_array($methods)) { $mEnd += count($methods); }
+    foreach ($services as $methods) {
+        $mEnd += $countEndpoints($methods);
     }
     if ($mEnd === 0) { continue; } // skip modules that expose no endpoint
     $totalModules++;
-    $totalServices += count($svcs);
+    $totalServices  += count($services);
     $totalEndpoints += $mEnd;
+    $grouped[$sectionOf($module)][$module] = $mEnd;
+}
+
+// Ordered flat list of modules (section order, then alphabetical) — the grid follows this order
+// so scrolling matches the sidebar.
+$orderedModules = array();
+foreach ($sectionDefs as $sk => $def) {
+    if (empty($grouped[$sk])) { continue; }
+    ksort($grouped[$sk]);
+    foreach ($grouped[$sk] as $module => $cnt) { $orderedModules[] = $module; }
 }
 ?><!DOCTYPE html>
 <html lang="en">
@@ -44,6 +89,7 @@ foreach ($modules as $svcs) {
     --shadow:0 1px 2px rgba(53,63,79,.06), 0 8px 24px -12px rgba(53,63,79,.18);
   }
   *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
   html,body{margin:0}
   body{
     background:var(--bg); color:var(--ink); min-height:100vh;
@@ -55,10 +101,10 @@ foreach ($modules as $svcs) {
 
   /* Header */
   .hero{background:var(--grad); color:#fff; padding:26px 0 22px; box-shadow:0 12px 30px -18px rgba(138,23,32,.6)}
-  .wrap{max-width:1080px; margin:0 auto; padding:0 24px}
+  .wrap{max-width:1200px; margin:0 auto; padding:0 24px}
   .hero-top{display:flex; align-items:center; gap:14px; flex-wrap:wrap}
   .mark{display:flex; align-items:center; gap:11px}
-  .mark .logo{width:34px;height:34px;border-radius:9px;background:rgba(255,255,255,.16);display:flex;align-items:center;justify-content:center;font-weight:800;letter-spacing:.5px;backdrop-filter:blur(4px)}
+  .mark .logo{width:38px;height:38px;border-radius:10px;display:block;box-shadow:0 2px 8px rgba(0,0,0,.18)}
   .mark .name{font-weight:800; font-size:19px; letter-spacing:.4px}
   .mark .name small{font-weight:600; opacity:.85; letter-spacing:.6px; margin-left:6px; text-transform:uppercase; font-size:11px}
   .hero h1{margin:16px 0 4px; font-size:24px; font-weight:800; letter-spacing:-.3px}
@@ -67,29 +113,57 @@ foreach ($modules as $svcs) {
   .keychip{display:inline-flex; align-items:center; gap:8px; background:rgba(255,255,255,.14); border:1px solid rgba(255,255,255,.25); padding:7px 10px; border-radius:10px}
   .keychip .lbl{font-size:11px; text-transform:uppercase; letter-spacing:.6px; opacity:.85}
   .keychip code{font-size:12.5px}
-  .keychip button{cursor:pointer; border:0; background:rgba(255,255,255,.2); color:#fff; border-radius:7px; padding:4px 8px; font-size:11px; font-weight:600}
+  .keychip button{cursor:pointer; border:0; background:rgba(255,255,255,.2); color:#fff; border-radius:7px; padding:4px 8px; font-size:11px; font-weight:600; display:inline-flex; align-items:center; gap:5px; transition:background .15s, color .15s}
   .keychip button:hover{background:rgba(255,255,255,.32)}
+  .keychip button.copied{background:#fff; color:var(--success, #48af4b)}
+  .keychip button.copied svg{stroke:var(--success, #48af4b)}
   .stats{display:flex; gap:22px; margin-top:16px; flex-wrap:wrap}
   .stat b{font-size:20px; font-weight:800; display:block; line-height:1.1}
   .stat span{font-size:11px; text-transform:uppercase; letter-spacing:.6px; opacity:.85}
 
+  /* Two-column shell (sidebar + content) */
+  .shell{max-width:1200px; margin:22px auto 60px; padding:0 24px; display:flex; gap:24px; align-items:flex-start}
+  .content{flex:1; min-width:0}
+
+  /* Sidebar */
+  .sidebar{position:sticky; top:18px; width:250px; flex:0 0 250px; background:var(--card); border:1px solid var(--border); border-radius:16px; box-shadow:var(--shadow); padding:12px 10px; max-height:calc(100vh - 36px); overflow:auto}
+  .sb-h{font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:.7px; color:var(--muted); padding:4px 10px 10px; display:flex; align-items:center; gap:8px}
+  .sb-sec{margin:2px 0 4px}
+  .sb-title{font-size:10.5px; font-weight:800; text-transform:uppercase; letter-spacing:.6px; padding:9px 10px; display:flex; align-items:center; gap:8px; border-radius:9px; cursor:pointer; transition:.12s; user-select:none}
+  .sb-title:hover{background:#f5f6f9}
+  .sb-sec.sel > .sb-title{background:color-mix(in srgb, currentColor 12%, transparent)}
+  .sb-title .sec-ic{display:inline-flex; flex:0 0 auto}
+  .sb-title .sec-lbl{flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis}
+  .sb-title .sec-cnt{font-size:10px; font-weight:800; padding:1px 7px; border-radius:20px; background:color-mix(in srgb, currentColor 15%, transparent)}
+  .sec-ic svg, .m-ic svg{display:block; border-radius:4px}
+  /* Left menu stays fully expanded; the selected section is just highlighted. */
+  .sb-items{display:block; margin:2px 0 4px}
+  .sb-item{display:flex; align-items:center; gap:9px; padding:7px 10px 7px 20px; border-radius:9px; font-size:13.5px; font-weight:600; color:var(--ink); cursor:pointer; transition:.12s}
+  .sb-item:hover{background:#f5f6f9}
+  .sb-item.active{background:var(--secondary); color:var(--primary-dark)}
+  .sb-item .nm{white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+  .sb-item .cnt{margin-left:auto; font-size:11px; font-weight:700; color:var(--muted); background:#eef0f4; padding:1px 8px; border-radius:20px; flex:0 0 auto}
+  .sb-item.active .cnt{background:#fff; color:var(--primary-dark)}
+
   /* Toolbar */
-  .toolbar{max-width:1080px; margin:22px auto 0; padding:0 24px; display:flex; gap:12px; align-items:center}
+  .toolbar{display:flex; gap:12px; align-items:center; margin-bottom:18px}
   .search{flex:1; position:relative}
   .search input{width:100%; padding:11px 14px 11px 40px; border:1px solid var(--border); background:var(--card); border-radius:11px; font-size:14px; color:var(--ink); box-shadow:var(--shadow)}
   .search input:focus{outline:none; border-color:var(--primary); box-shadow:0 0 0 3px var(--secondary)}
   .search svg{position:absolute; left:13px; top:50%; transform:translateY(-50%); opacity:.45}
 
   /* Modules */
-  .grid{max-width:1080px; margin:20px auto 60px; padding:0 24px; display:grid; gap:18px}
-  .module{background:var(--card); border:1px solid var(--border); border-radius:16px; box-shadow:var(--shadow); overflow:hidden}
+  .grid{display:grid; gap:18px}
+  .module{background:var(--card); border:1px solid var(--border); border-radius:16px; box-shadow:var(--shadow); overflow:hidden; scroll-margin-top:16px}
   .m-head{display:flex; align-items:center; gap:12px; padding:15px 18px; border-bottom:1px solid var(--border); background:linear-gradient(180deg,#fff, #fbfbfd)}
-  .m-dot{width:10px;height:10px;border-radius:50%;background:var(--grad);box-shadow:0 0 0 4px var(--secondary)}
+  .m-ic{display:inline-flex; flex:0 0 auto}
+  .m-sec{font-size:10.5px; font-weight:800; text-transform:uppercase; letter-spacing:.6px; padding:2px 9px; border-radius:20px}
   .m-name{font-weight:750; font-size:15.5px; letter-spacing:-.2px}
   .m-count{margin-left:auto; font-size:11.5px; font-weight:700; color:var(--primary-dark); background:var(--secondary); padding:3px 10px; border-radius:20px}
   .m-body{padding:8px 10px 14px}
   .service{padding:8px 8px 2px}
-  .s-name{font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:.7px; color:var(--muted); padding:6px 8px 8px; display:flex; align-items:center; gap:7px}
+  .s-name{font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:.7px; color:var(--muted); padding:6px 8px 2px; display:flex; align-items:center; gap:7px}
+  .s-desc{color:var(--muted); font-size:12.5px; padding:0 8px 8px 27px; margin-top:-2px; line-height:1.45}
   .s-name svg{opacity:.5}
   .methods{display:grid; gap:6px}
   .method{display:flex; align-items:center; gap:12px; padding:10px 12px; border:1px solid transparent; border-radius:11px; transition:.13s}
@@ -105,111 +179,222 @@ foreach ($modules as $svcs) {
   .empty h2{margin:0 0 6px; font-size:20px}
   .empty p{color:var(--muted); margin:0}
   .noresult{display:none; text-align:center; color:var(--muted); padding:30px}
-  footer{max-width:1080px; margin:0 auto 40px; padding:0 24px; color:var(--muted); font-size:12px}
+  footer{margin:26px 0 0; color:var(--muted); font-size:12px}
+
+  @media (max-width:860px){
+    .shell{flex-direction:column}
+    .sidebar{position:static; width:auto; flex:1 1 auto; max-height:none}
+  }
 </style>
 </head>
 <body>
 <?php if (!$this->userExists) { ?>
   <div class="empty">
     <div class="logo">M</div>
-    <h2>Invalid or inactive API key</h2>
-    <p>This web-services key was not found or has been deactivated. Please generate a new one from the user's account in the back-office.</p>
+    <h2><?php echo $esc($this->translate('tr_meliscore_ws_invalid_title')); ?></h2>
+    <p><?php echo $esc($this->translate('tr_meliscore_ws_invalid_text')); ?></p>
   </div>
 <?php } else { ?>
   <div class="hero">
     <div class="wrap">
       <div class="hero-top">
         <div class="mark">
-          <div class="logo">M</div>
-          <div class="name">MELIS<small>Web Services</small></div>
+          <img class="logo" src="/MelisCore/images/dashboard/melis-logo.svg" alt="Melis Platform">
+          <div class="name">MELIS PLATFORM<small>Web Services</small></div>
         </div>
         <div class="spacer"></div>
         <div class="keychip">
-          <span class="lbl">API key</span>
+          <span class="lbl"><?php echo $esc($this->translate('tr_meliscore_ws_apikey')); ?></span>
           <code id="apikey"><?php echo $esc($apiKey); ?></code>
-          <button type="button" onclick="copyKey()">Copy</button>
+          <button type="button" id="copyBtn" onclick="copyKey(this)"><?php echo $esc($this->translate('tr_meliscore_ws_copy')); ?></button>
         </div>
       </div>
       <h1><?php echo $esc($this->translate($this->title)); ?></h1>
-      <p>Token-authenticated JSON API. Each endpoint is called with <b>POST</b>; open one to try it with a form. All responses are JSON.</p>
+      <p><?php echo $esc($this->translate('tr_meliscore_ws_intro')); ?></p>
       <div class="stats">
-        <div class="stat"><b><?php echo (int) $totalModules; ?></b><span>Modules</span></div>
-        <div class="stat"><b><?php echo (int) $totalServices; ?></b><span>Services</span></div>
-        <div class="stat"><b><?php echo (int) $totalEndpoints; ?></b><span>Endpoints</span></div>
+        <div class="stat"><b><?php echo (int) $totalModules; ?></b><span><?php echo $esc($this->translate('tr_meliscore_ws_stat_modules')); ?></span></div>
+        <div class="stat"><b><?php echo (int) $totalServices; ?></b><span><?php echo $esc($this->translate('tr_meliscore_ws_stat_services')); ?></span></div>
+        <div class="stat"><b><?php echo (int) $totalEndpoints; ?></b><span><?php echo $esc($this->translate('tr_meliscore_ws_stat_endpoints')); ?></span></div>
       </div>
     </div>
   </div>
 
-  <div class="toolbar">
-    <div class="search">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
-      <input id="filter" type="text" placeholder="Filter endpoints, services or modules…" oninput="filterList()" autocomplete="off">
-    </div>
-  </div>
-
-  <div class="grid" id="grid">
-  <?php foreach ($modules as $module => $services) {
-        if (!is_array($services)) { continue; }
-        $mCount = 0; foreach ($services as $mm) { if (is_array($mm)) { $mCount += count($mm); } }
-        if ($mCount === 0) { continue; } // don't render empty modules ?>
-    <section class="module" data-search="<?php echo $escAttr(strtolower($module)); ?>">
-      <div class="m-head">
-        <span class="m-dot"></span>
-        <span class="m-name"><?php echo $esc($module); ?></span>
-        <span class="m-count"><?php echo (int) $mCount; ?> endpoint<?php echo $mCount > 1 ? 's' : ''; ?></span>
+  <div class="shell">
+    <!-- Left menu: modules grouped by Melis section -->
+    <aside class="sidebar">
+      <div class="sb-h">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+        <?php echo $esc($this->translate('tr_meliscore_ws_menu_title')); ?>
       </div>
-      <div class="m-body">
-      <?php foreach ($services as $serviceName => $methods) {
-            if (!is_array($methods)) { continue; } ?>
-        <div class="service">
-          <div class="s-name">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M8 12h8M8 8h8M8 16h5"/></svg>
-            <?php echo $esc($serviceName); ?>
+      <?php foreach ($sectionDefs as $sk => $def) {
+            if (empty($grouped[$sk])) { continue; } ?>
+      <div class="sb-sec" data-sec="<?php echo $escAttr($sk); ?>">
+        <div class="sb-title" style="color:<?php echo $escAttr($def['color']); ?>" onclick="selectSection('<?php echo $escAttr($sk); ?>')" role="button" tabindex="0">
+          <span class="sec-ic"><?php echo $this->{$def['icon']}(17, 17); ?></span>
+          <span class="sec-lbl"><?php echo $esc($def['label']); ?></span>
+          <span class="sec-cnt"><?php echo (int) count($grouped[$sk]); ?></span>
+        </div>
+        <div class="sb-items">
+        <?php foreach ($grouped[$sk] as $module => $cnt) { ?>
+        <a class="sb-item" href="#mod-<?php echo $escAttr($module); ?>" data-mod="<?php echo $escAttr($module); ?>">
+          <span class="nm"><?php echo $esc($module); ?></span>
+          <span class="cnt"><?php echo (int) $cnt; ?></span>
+        </a>
+        <?php } ?>
+        </div>
+      </div>
+      <?php } ?>
+    </aside>
+
+    <div class="content">
+      <div class="toolbar">
+        <div class="search">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+          <input id="filter" type="text" placeholder="<?php echo $escAttr($this->translate('tr_meliscore_ws_search_placeholder')); ?>" oninput="filterList()" autocomplete="off">
+        </div>
+      </div>
+
+      <div class="grid" id="grid">
+      <?php foreach ($orderedModules as $module) {
+            $services = $modules[$module];
+            if (!is_array($services)) { continue; }
+            $sk    = $sectionOf($module);
+            $sDef  = $sectionDefs[$sk];
+            $mCount = 0; foreach ($services as $mm) { $mCount += $countEndpoints($mm); } ?>
+        <section class="module" id="mod-<?php echo $escAttr($module); ?>" data-section="<?php echo $escAttr($sk); ?>" data-search="<?php echo $escAttr(strtolower($module . ' ' . $sDef['label'])); ?>">
+          <div class="m-head">
+            <span class="m-ic"><?php echo $this->{$sDef['icon']}(24, 24); ?></span>
+            <span class="m-name"><?php echo $esc($module); ?></span>
+            <span class="m-sec" style="color:<?php echo $escAttr($sDef['color']); ?>;background:<?php echo $escAttr($sDef['color']); ?>18"><?php echo $esc($sDef['label']); ?></span>
+            <span class="m-count"><?php echo (int) $mCount; ?> <?php echo $esc($this->translate($mCount > 1 ? 'tr_meliscore_ws_endpoints' : 'tr_meliscore_ws_endpoint')); ?></span>
           </div>
-          <div class="methods">
-          <?php foreach ($methods as $methodName => $config) {
-                // Each segment is rawurlencode'd (no HTML-special chars left), so the assembled
-                // same-origin path is safe to print as-is — escaping the whole path would turn the
-                // slashes into &#x2F; and the router would 404.
-                $url = '/melis/api/' . rawurlencode($apiKey) . '/' . rawurlencode($module) . '/service/' . rawurlencode($serviceName) . '/' . rawurlencode($methodName);
-                $hay = strtolower($module . ' ' . $serviceName . ' ' . $methodName); ?>
-            <a class="method" href="<?php echo $url; ?>" target="_blank" rel="noopener" data-search="<?php echo $escAttr($hay); ?>">
-              <span class="verb">POST</span>
-              <span class="mname"><?php echo $esc($methodName); ?></span>
-              <span class="path mono"><?php echo $esc($serviceName); ?></span>
-              <span class="go">Try it
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-              </span>
-            </a>
+          <div class="m-body">
+          <?php foreach ($services as $serviceName => $methods) {
+                if (!is_array($methods)) { continue; }
+                // A service may carry a plain-text (or translatable) description in a reserved key.
+                $serviceDesc = isset($methods['_description']) ? (string) $methods['_description'] : ''; ?>
+            <div class="service" data-search="<?php echo $escAttr(strtolower($serviceName . ' ' . $serviceDesc)); ?>">
+              <div class="s-name">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M8 12h8M8 8h8M8 16h5"/></svg>
+                <?php echo $esc($serviceName); ?>
+              </div>
+              <?php if ($serviceDesc !== '') { ?><div class="s-desc"><?php echo $esc($this->translate($serviceDesc)); ?></div><?php } ?>
+              <div class="methods">
+              <?php foreach ($methods as $methodName => $config) {
+                    if (!is_array($config) || ((string) $methodName !== '' && $methodName[0] === '_')) { continue; } // skip reserved meta keys
+                    // Each segment is rawurlencode'd (no HTML-special chars left), so the assembled
+                    // same-origin path is safe to print as-is — escaping the whole path would turn the
+                    // slashes into &#x2F; and the router would 404.
+                    $url = '/melis/api/' . rawurlencode($apiKey) . '/' . rawurlencode($module) . '/service/' . rawurlencode($serviceName) . '/' . rawurlencode($methodName);
+                    $hay = strtolower($module . ' ' . $serviceName . ' ' . $methodName . ' ' . $serviceDesc); ?>
+                <a class="method" href="<?php echo $url; ?>" target="_blank" rel="noopener" data-search="<?php echo $escAttr($hay); ?>">
+                  <span class="verb">POST</span>
+                  <span class="mname"><?php echo $esc($methodName); ?></span>
+                  <span class="path mono"><?php echo $esc($serviceName); ?></span>
+                  <span class="go"><?php echo $esc($this->translate('tr_meliscore_ws_tryit')); ?>
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+                  </span>
+                </a>
+              <?php } ?>
+              </div>
+            </div>
           <?php } ?>
           </div>
-        </div>
+        </section>
       <?php } ?>
+        <div class="noresult" id="noresult"><?php echo $esc($this->translate('tr_meliscore_ws_noresult')); ?></div>
       </div>
-    </section>
-  <?php } ?>
-    <div class="noresult" id="noresult">No endpoint matches your search.</div>
+
+      <footer><?php echo $esc($this->translate('tr_meliscore_ws_footer')); ?></footer>
+    </div>
   </div>
 
-  <footer>Melis Platform · Web Services — this page lists the endpoints available for your API key.</footer>
-
   <script>
-    function copyKey(){
+    // Localized strings for JS-set labels (translated server-side via the Melis translator).
+    var WS_I18N = {
+      copy:   <?php echo json_encode($this->translate('tr_meliscore_ws_copy')); ?>,
+      copied: <?php echo json_encode($this->translate('tr_meliscore_ws_copied')); ?>
+    };
+    var _copyTimer = null;
+    function copyKey(btn){
       var t = document.getElementById('apikey').textContent.trim();
-      if (navigator.clipboard) navigator.clipboard.writeText(t);
+      var done = function(){
+        btn = btn || document.getElementById('copyBtn');
+        if (!btn) { return; }
+        btn.classList.add('copied');
+        btn.innerHTML = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>' + WS_I18N.copied;
+        clearTimeout(_copyTimer);
+        _copyTimer = setTimeout(function(){ btn.classList.remove('copied'); btn.textContent = WS_I18N.copy; }, 1600);
+      };
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(t).then(done).catch(done);
+      } else {
+        // Fallback for non-secure contexts
+        var ta = document.createElement('textarea');
+        ta.value = t; ta.style.position = 'fixed'; ta.style.opacity = '0';
+        document.body.appendChild(ta); ta.select();
+        try { document.execCommand('copy'); } catch (e) {}
+        document.body.removeChild(ta);
+        done();
+      }
     }
+    var activeSection = null;
+
+    function resetMethods(mod){
+      mod.querySelectorAll('.method').forEach(function(m){ m.style.display = ''; });
+      mod.querySelectorAll('.service').forEach(function(s){ s.style.display = ''; });
+    }
+
+    // Show only the cards of the active section (default view — one section at a time).
+    function applyActiveSection(){
+      var any = false;
+      document.querySelectorAll('#grid .module').forEach(function(mod){
+        var show = mod.getAttribute('data-section') === activeSection;
+        mod.style.display = show ? '' : 'none';
+        if (show) { resetMethods(mod); any = true; }
+      });
+      document.getElementById('noresult').style.display = any ? 'none' : 'block';
+    }
+
+    function selectSection(sk){
+      activeSection = sk;
+      var f = document.getElementById('filter'); if (f) f.value = '';
+      document.querySelectorAll('.sb-sec').forEach(function(sec){
+        sec.classList.toggle('sel', sec.getAttribute('data-sec') === sk);
+      });
+      document.querySelectorAll('.sb-item').forEach(function(a){ a.style.display = ''; a.classList.remove('active'); });
+      applyActiveSection();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // Sidebar module click → make sure its section is active, then scroll to its card.
+    function gotoModule(mod){
+      var el = document.getElementById('mod-' + mod);
+      var sk = el ? el.getAttribute('data-section') : null;
+      if (sk && sk !== activeSection) { selectSection(sk); el = document.getElementById('mod-' + mod); }
+      if (el) { el.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+      document.querySelectorAll('.sb-item.active').forEach(function(x){ x.classList.remove('active'); });
+      var it = document.querySelector('.sb-item[data-mod="' + mod + '"]'); if (it) it.classList.add('active');
+    }
+
+    // Search spans EVERYTHING (all sections, every service & method); clearing it returns to the
+    // active-section view.
     function filterList(){
       var q = document.getElementById('filter').value.trim().toLowerCase();
+      if (!q) {
+        document.querySelectorAll('.sb-item').forEach(function(a){ a.style.display = ''; });
+        applyActiveSection();
+        return;
+      }
       var anyModule = false;
       document.querySelectorAll('#grid .module').forEach(function(mod){
         var anyMethod = false;
         mod.querySelectorAll('.method').forEach(function(m){
-          var show = !q || m.getAttribute('data-search').indexOf(q) !== -1
+          var show = m.getAttribute('data-search').indexOf(q) !== -1
                      || mod.getAttribute('data-search').indexOf(q) !== -1;
           m.style.display = show ? '' : 'none';
           if (show) anyMethod = true;
         });
-        // hide services with no visible methods
         mod.querySelectorAll('.service').forEach(function(s){
           var vis = Array.prototype.some.call(s.querySelectorAll('.method'), function(m){ return m.style.display !== 'none'; });
           s.style.display = vis ? '' : 'none';
@@ -217,8 +402,21 @@ foreach ($modules as $svcs) {
         mod.style.display = anyMethod ? '' : 'none';
         if (anyMethod) anyModule = true;
       });
+      document.querySelectorAll('.sb-item').forEach(function(a){
+        var mod = document.getElementById('mod-' + a.getAttribute('data-mod'));
+        a.style.display = (mod && mod.style.display !== 'none') ? '' : 'none';
+      });
       document.getElementById('noresult').style.display = anyModule ? 'none' : 'block';
     }
+
+    // Wire sidebar module items + select the first section on load.
+    document.querySelectorAll('.sb-item').forEach(function(a){
+      a.addEventListener('click', function(e){ e.preventDefault(); gotoModule(a.getAttribute('data-mod')); });
+    });
+    (function(){
+      var first = document.querySelector('.sb-sec');
+      if (first) { selectSection(first.getAttribute('data-sec')); }
+    })();
   </script>
 <?php } ?>
 </body>
