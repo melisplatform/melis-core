@@ -1,4 +1,4 @@
-import { FileText, X } from 'lucide-react'
+import { CornerDownRight, FileText, X } from 'lucide-react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { cn } from '@/lib/utils'
 import { useSubTabs } from '@/components/tabs/sub-tab-store'
@@ -18,12 +18,27 @@ function SubTabBarInner({
 
   if (tabs.length === 0) return null
 
+  /**
+   * Profondeur du sous-onglet sous la racine de l'outil : 1 = un enregistrement
+   * (/[section]/[tool]/:id), 2+ = un sous-enregistrement (/[section]/[tool]/:id/:subId — ex. une
+   * slide DANS un slider). Dérivée du CHEMIN : rien à déclarer côté outil, et les outils à 2
+   * niveaux (Utilisateurs…) restent à 1 partout.
+   */
+  function depthOf(path: string): number {
+    return path.startsWith(sectionKey + '/') ? path.slice(sectionKey.length + 1).split('/').length : 1
+  }
+
   function handleClose(e: React.MouseEvent, tabId: string) {
     e.stopPropagation()
+    const closed = tabs.find(t => t.id === tabId)
     const idx = tabs.findIndex(t => t.id === tabId)
     closeTab(tabId)
-    if (pathname === tabId) {
-      const next = tabs[idx + 1] ?? tabs[idx - 1]
+    // Fermer un onglet dont on AFFICHE le contenu — ou celui d'un de ses descendants, fermés avec lui
+    // (cf. sub-tab-store) — doit quitter son URL, sinon l'écran reste monté sans onglet.
+    const showing = closed && (pathname === closed.path || pathname.startsWith(closed.path + '/'))
+    if (showing) {
+      const survives = (t: { path: string }) => !(t.path === closed!.path || t.path.startsWith(closed!.path + '/'))
+      const next = tabs.slice(idx + 1).find(survives) ?? tabs.slice(0, idx).reverse().find(survives)
       navigate(next ? next.path : listPath)
     }
   }
@@ -42,6 +57,10 @@ function SubTabBarInner({
       </button>
       {tabs.map(tab => {
         const isActive = pathname === tab.path
+        // Un sous-onglet imbriqué (niveau 3) porte le chevron « ↳ » plutôt que l'icône de l'outil,
+        // comme le panneau d'onglets mobile — il se lit alors comme rattaché à celui qui le précède.
+        const nested = depthOf(tab.path) > 1
+        const Icon = nested ? CornerDownRight : TabIcon
         return (
           <div
             key={tab.id}
@@ -53,12 +72,13 @@ function SubTabBarInner({
             }}
             className={cn(
               'group flex cursor-pointer items-center gap-1.5 px-3 text-xs font-medium transition-colors whitespace-nowrap select-none',
+              nested && 'pl-1.5',
               isActive
                 ? 'text-foreground bg-background'
                 : 'text-muted-foreground hover:text-foreground hover:bg-accent',
             )}
           >
-            <TabIcon className="size-3 shrink-0" />
+            <Icon className={cn('size-3 shrink-0', nested && 'opacity-60')} />
             <span className="max-w-[140px] truncate">{tab.label}</span>
             <button
               type="button"

@@ -36,7 +36,13 @@ function reducer(state: SubTabState, action: Action): SubTabState {
       return { sections: { ...state.sections, [action.section]: { tabs: [...section.tabs, action.tab] } } }
     }
     case 'CLOSE': {
-      const tabs = section.tabs.filter(t => t.id !== action.id)
+      // Les sous-onglets peuvent être IMBRIQUÉS (un outil à 3 niveaux : /[section]/[tool]/:id/:subId —
+      // ex. Slider ▸ un slider ▸ une slide). Fermer un parent ferme donc ses descendants, repérés par
+      // le préfixe de chemin : sans ça, la slide resterait seule dans la barre, orpheline d'un slider
+      // fermé. No-op pour les outils à 2 niveaux (aucun chemin n'est préfixe d'un autre).
+      const closed = section.tabs.find(t => t.id === action.id)
+      const prefix = closed ? closed.path + '/' : null
+      const tabs = section.tabs.filter(t => t.id !== action.id && !(prefix && t.path.startsWith(prefix)))
       return { sections: { ...state.sections, [action.section]: { tabs } } }
     }
     case 'CLOSE_ALL': {

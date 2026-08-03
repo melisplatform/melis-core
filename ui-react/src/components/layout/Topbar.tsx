@@ -434,10 +434,12 @@ function MobileSubTabs({ toolPath, onNavigate }: { toolPath: string; onNavigate:
 
   if (!showReact && !showLegacy) return null
 
-  const row = (key: string, active: boolean, label: string, onOpen: () => void, onClose: () => void) => (
+  // `depth` : 1 = enregistrement de l'outil, 2+ = sous-enregistrement (outil à 3 niveaux, ex. une
+  // slide DANS un slider) → un cran d'indentation de plus, comme le « ↳ » de la barre desktop.
+  const row = (key: string, active: boolean, label: string, onOpen: () => void, onClose: () => void, depth = 1) => (
     <div key={key} className={cn('flex items-center border-t border-border/40', active && 'bg-[color-mix(in_srgb,var(--color-primary)_8%,transparent)]')}>
       <button type="button" onClick={onOpen}
-        className={cn('flex min-w-0 flex-1 items-center gap-2 py-2.5 pl-9 pr-3 text-left text-[13px]', active ? 'font-medium text-foreground' : 'text-muted-foreground')}>
+        className={cn('flex min-w-0 flex-1 items-center gap-2 py-2.5 pr-3 text-left text-[13px]', depth > 1 ? 'pl-14' : 'pl-9', active ? 'font-medium text-foreground' : 'text-muted-foreground')}>
         <CornerDownRight className="size-3.5 shrink-0 opacity-60" />
         <span className="truncate">{label}</span>
       </button>
@@ -449,18 +451,22 @@ function MobileSubTabs({ toolPath, onNavigate }: { toolPath: string; onNavigate:
 
   return (
     <div className="bg-muted/20">
-      {showReact && reactSubTabs.map((tab, idx) =>
-        row(tab.id, pathname === tab.path, tab.label, () => { navigate(tab.path); onNavigate() }, () => {
+      {showReact && reactSubTabs.map((tab, idx) => {
+        const sec = section?.key ?? ''
+        const depth = sec && tab.path.startsWith(sec + '/') ? tab.path.slice(sec.length + 1).split('/').length : 1
+        return row(tab.id, pathname === tab.path, tab.label, () => { navigate(tab.path); onNavigate() }, () => {
           // Comme la croix desktop (SubTabBar.handleClose) : fermer le sous-onglet AFFICHÉ doit aussi
           // quitter son URL, sinon la route /[section]/[tool]/:id reste montée et le formulaire
-          // d'édition demeure à l'écran alors que son onglet a disparu.
+          // d'édition demeure à l'écran alors que son onglet a disparu. Idem quand c'est un
+          // DESCENDANT qui est affiché : le store ferme les sous-onglets imbriqués avec leur parent.
           closeReactSub(tab.id)
-          if (pathname === tab.path) {
-            const next = reactSubTabs[idx + 1] ?? reactSubTabs[idx - 1]
+          if (pathname === tab.path || pathname.startsWith(tab.path + '/')) {
+            const survives = (t: { path: string }) => !(t.path === tab.path || t.path.startsWith(tab.path + '/'))
+            const next = reactSubTabs.slice(idx + 1).find(survives) ?? reactSubTabs.slice(0, idx).reverse().find(survives)
             navigate(next ? next.path : (section?.key ?? '/'))
           }
-        }),
-      )}
+        }, depth)
+      })}
       {showLegacy && legacyKey && legacySecondary.map((t) =>
         row(t.id, !!t.active, t.label, () => { activateLegacy(legacyKey, t.id); onNavigate() }, () => closeLegacy(legacyKey, t.id)),
       )}
