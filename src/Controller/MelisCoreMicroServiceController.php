@@ -631,6 +631,8 @@ class MelisCoreMicroServiceController extends MelisAbstractActionController
         $sectionOverrides = array(
             'MelisEngine'        => 'meliscms_toolstree_section',
             'MelisSmallBusiness' => 'meliscms_toolstree_section',
+            // Comments has no toolstree section of its own (extends news/blog) — surface it under CMS.
+            'MelisCmsComments'   => 'meliscms_toolstree_section',
         );
 
         $moduleSections = array();
