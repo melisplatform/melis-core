@@ -5,6 +5,7 @@ import { Loader2 } from 'lucide-react'
 
 import { AuthProvider } from '@/auth/AuthProvider'
 import { ProtectedRoute } from '@/auth/ProtectedRoute'
+import { PublicOnlyRoute } from '@/auth/PublicOnlyRoute'
 import { ThemeProvider } from '@/theme/ThemeProvider'
 import { I18nProvider } from '@/i18n/I18nProvider'
 import { TabProvider, useTabs } from '@/components/tabs/tab-store'
@@ -170,10 +171,14 @@ export default function App() {
             <TabProvider>
             <TabBridge />
             <Routes>
-              {/* Public */}
-              <Route path="/login" element={<LoginPage />} />
-              <Route path="/forgot-password" element={<ForgotPasswordPage />} />
-              <Route path="/reset-password/:hash" element={<ResetPasswordPage />} />
+              {/* Public — inaccessibles si une session est déjà ouverte (→ redirigé vers le
+                  dashboard), comme le legacy qui renvoie /melis/login, /melis/lost-password et
+                  /melis/reset-password vers /melis quand MelisCoreAuth a déjà une identité. */}
+              <Route element={<PublicOnlyRoute />}>
+                <Route path="/login" element={<LoginPage />} />
+                <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+                <Route path="/reset-password/:hash" element={<ResetPasswordPage />} />
+              </Route>
               <Route path="/setup" element={<SetupWizardPage />} />
 
               {/* Authentifié — Shell (sidebar + topbar) */}
