@@ -52,7 +52,9 @@ export function ZoneFrames({ activeKey }: Props) {
                     className="h-full w-full border-0 flex-1"
                     onLoad={() => markReady(key)}
                     onError={() => markError(key)}
-                    sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox allow-downloads allow-modals"
+                    // No `sandbox`: first-party same-origin tool pages we render. allow-scripts +
+                    // allow-same-origin make the sandbox ineffective (Chrome: "can escape its
+                    // sandboxing"); dropping it clears that console warning without a real security change.
                   />
                   <button
                     onClick={() => reload(key)}
