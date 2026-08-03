@@ -399,6 +399,37 @@ function TabStrip() {
   )
 }
 
+// ─── Mobile : taps sûrs dans les panneaux d'onglets ──────────────────────────────
+//
+// Après un tap, le navigateur émet un click « de compatibilité » ~300 ms plus tard, à la MÊME
+// position à l'écran. Quand l'action a raccourci la liste (fermeture d'un onglet), une AUTRE ligne
+// a glissé sous le doigt entre-temps → ce click fantôme déclenchait la croix voisine et fermait un
+// 2ᵉ onglet (typiquement le dernier). Reproduit : tap sur la croix de « Langues » → « Langues » ET
+// « Gestion des emails » fermés.
+// Parade : agir sur `touchend` (preventDefault supprime le click compat de CE bouton) et ignorer
+// tout click résiduel pendant 700 ms, quel que soit le bouton visé. Un touch qui a bougé (> 10 px)
+// est un scroll du panneau, pas un tap → on ne fait rien (et on ne bloque pas le click).
+// Sans effet à la souris (desktop) : aucun évènement tactile → seul `onClick` s'exécute.
+let lastPanelTouchAt = 0
+let panelTouchStartY = 0
+
+function tapAction(run: () => void) {
+  return {
+    onTouchStart: (e: React.TouchEvent) => { panelTouchStartY = e.touches[0]?.clientY ?? 0 },
+    onTouchEnd: (e: React.TouchEvent) => {
+      const y = e.changedTouches[0]?.clientY ?? 0
+      if (Math.abs(y - panelTouchStartY) > 10) return // scroll, pas un tap
+      e.preventDefault()
+      lastPanelTouchAt = Date.now()
+      run()
+    },
+    onClick: (e: React.MouseEvent) => {
+      if (Date.now() - lastPanelTouchAt < 700) { e.preventDefault(); return } // click fantôme
+      run()
+    },
+  }
+}
+
 // ─── Mobile : sous-onglets de l'outil ACTIF, nichés sous son onglet ───────────────
 //
 // Reprend fidèlement la résolution des deux barres desktop :
@@ -438,12 +469,12 @@ function MobileSubTabs({ toolPath, onNavigate }: { toolPath: string; onNavigate:
   // slide DANS un slider) → un cran d'indentation de plus, comme le « ↳ » de la barre desktop.
   const row = (key: string, active: boolean, label: string, onOpen: () => void, onClose: () => void, depth = 1) => (
     <div key={key} className={cn('flex items-center border-t border-border/40', active && 'bg-[color-mix(in_srgb,var(--color-primary)_8%,transparent)]')}>
-      <button type="button" onClick={onOpen}
+      <button type="button" {...tapAction(onOpen)}
         className={cn('flex min-w-0 flex-1 items-center gap-2 py-2.5 pr-3 text-left text-[13px]', depth > 1 ? 'pl-14' : 'pl-9', active ? 'font-medium text-foreground' : 'text-muted-foreground')}>
         <CornerDownRight className="size-3.5 shrink-0 opacity-60" />
         <span className="truncate">{label}</span>
       </button>
-      <button type="button" onClick={onClose} className="flex shrink-0 items-center px-3 py-2.5 text-muted-foreground hover:text-foreground">
+      <button type="button" {...tapAction(onClose)} className="flex shrink-0 items-center px-3 py-2.5 text-muted-foreground hover:text-foreground">
         <X className="size-3.5" />
       </button>
     </div>
@@ -517,7 +548,7 @@ function MobileTabsPanel({ onNavigate }: { onNavigate: () => void }) {
             >
               <button
                 type="button"
-                onClick={() => activate(tab)}
+                {...tapAction(() => activate(tab))}
                 className={cn(
                   'flex min-w-0 flex-1 items-center gap-2.5 px-3 py-3 text-left text-sm',
                   isActive ? 'font-medium text-foreground' : 'text-muted-foreground',
@@ -529,7 +560,7 @@ function MobileTabsPanel({ onNavigate }: { onNavigate: () => void }) {
               {tab.id !== '/' && (
                 <button
                   type="button"
-                  onClick={() => close(tab)}
+                  {...tapAction(() => close(tab))}
                   className="flex shrink-0 items-center px-3 py-3 text-muted-foreground hover:text-foreground"
                 >
                   <X className="size-4" />
