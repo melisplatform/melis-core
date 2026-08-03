@@ -275,8 +275,26 @@ class MelisCoreMicroServiceController extends MelisAbstractActionController
                                     else {
 
                                         $tmpInstance = new $servicePath();
-                                        $tmpInstance->setgetServiceManager($this->getServiceManager());
+                                        $tmpInstance->setServiceManager($this->getServiceManager());
+
+                                        if (method_exists($servicePath, 'setEventManager')) {
+                                            $tmpInstance->setEventManager($this->getEventManager());
+                                        }
+
                                         $reflectionMethod = new \ReflectionMethod($servicePath, $method);
+
+                                        // No parameters to build — invoke directly. Keep this a JSON API:
+                                        // never let a service-side error bubble up as a framework HTML 500.
+                                        try {
+                                            $data = $reflectionMethod->invokeArgs($tmpInstance, []);
+                                        } catch (\Throwable $e) {
+                                            return new JsonModel([
+                                                'success'  => false,
+                                                'message'  => $translator->translate('tr_meliscore_microservice_request_ko'),
+                                                'response' => [],
+                                                'errors'   => ['execution' => 'The service could not process the request with the given parameters.'],
+                                            ]);
+                                        }
 
                                          // Check data if it's an Object
                                         if(is_object($data)){
@@ -633,6 +651,9 @@ class MelisCoreMicroServiceController extends MelisAbstractActionController
             'MelisSmallBusiness' => 'meliscms_toolstree_section',
             // Comments has no toolstree section of its own (extends news/blog) — surface it under CMS.
             'MelisCmsComments'   => 'meliscms_toolstree_section',
+            // Commerce splits its interface into config/interface/*.php (no single config/app.interface.php
+            // for the auto-deriver to read) — force it into its own Commerce section.
+            'MelisCommerce'      => 'meliscommerce_toolstree_section',
         );
 
         $moduleSections = array();
