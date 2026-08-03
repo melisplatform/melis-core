@@ -585,16 +585,24 @@ export function Topbar({ onToggleSidebar, isMobile = false }: { onToggleSidebar:
           </button>
         </header>
 
-        {/* Rangée d'icônes déployée par le bouton de droite */}
-        {actionsOpen && (
-          <div className="flex items-center justify-end gap-1 border-b border-border bg-card px-2 py-1.5">
-            <ThemeSwitcher />
-            <LanguageSwitcher />
-            <BrickHeaderWidgets />
-            <NotificationsMenu />
-            <UserMenu />
-          </div>
-        )}
+        {/* Rangée d'icônes déployée par le bouton de droite.
+            ⚠️ Toujours MONTÉE (juste masquée quand repliée) : un `Header` de brique n'est pas
+            forcément une icône — c'est aussi le point de montage de composants invisibles
+            (ex. MiniTemplateAiDialogHost, qui pose `__melisAiMiniTemplateDialogReady` et
+            portale son dialog dans document.body). Un montage conditionnel faisait échouer
+            la détection de l'hôte React depuis les iframes → dialog legacy en mobile. */}
+        <div
+          className={cn(
+            'flex items-center justify-end gap-1 border-b border-border bg-card px-2 py-1.5',
+            !actionsOpen && 'hidden',
+          )}
+        >
+          <ThemeSwitcher />
+          <LanguageSwitcher />
+          <BrickHeaderWidgets />
+          <NotificationsMenu />
+          <UserMenu />
+        </div>
 
         {/* Encoche : déploie/replie les onglets ouverts */}
         <button
