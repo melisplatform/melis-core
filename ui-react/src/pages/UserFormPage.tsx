@@ -198,7 +198,7 @@ function MicroserviceTab({ userId }: { userId: number }) {
   }
 
   return (
-    <div className="flex flex-1 flex-col gap-5 p-6">
+    <div className="flex min-h-0 flex-1 flex-col gap-5 overflow-y-auto p-6">
       <div className="flex items-start gap-3 rounded-xl border border-border bg-card p-5 shadow-sm">
         <div className="grid size-10 shrink-0 place-items-center rounded-lg bg-violet-500/10 text-violet-600"><Cpu className="size-5" /></div>
         <div className="flex-1 min-w-0">
