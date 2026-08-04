@@ -262,7 +262,7 @@ class MelisPhpUnitToolController extends MelisAbstractActionController
                     if(!file_exists($testModulePath)) {
                         $response .= 'Unable to read from <strong>' . $testModulePath . '</strong>, folder does not exist.<br/>';
                         if(is_writable($modulePath)) {
-                            mkdir($testModulePath, 0777, true);
+                            mkdir($testModulePath, 0755, true);
                             chmod($testModulePath, 0777);
                             $response .= '<strong>'.$testFolder.'</strong> folder has been created, please re-run the test<br/>';
                         }

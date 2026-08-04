@@ -100,12 +100,12 @@
                                             <?php if(isset($module['values']['datas'])) { ?>
                                                 <?php foreach($module['values']['datas'] as $dataArrayKey => $dataArrayValue) { ?>
                                                     <tr role="row" class="">
-                                                        <td style="width:1%;"><?= $dataArrayKey ?></td>
+                                                        <td style="width:1%;"><?= $this->escapeHtml($dataArrayKey) ?></td>
                                                         <td class="not-included" style="width:1%;padding-left: 15px !important;padding-right: 15px !important;">
                                                             <div class="checkbox checkbox-single margin-none gdpr-table-checkbox">
                                                                 <label class="checkbox-custom gdpr-table-checkbox-custom">
                                                                     <i class="fa fa-fw fa-square-o custom-gdpr-tab-table-checkbox"></i>
-                                                                    <input type="checkbox" class="checkRow" value="<?= $dataArrayKey ?>">
+                                                                    <input type="checkbox" class="checkRow" value="<?= $this->escapeHtmlAttr($dataArrayKey) ?>">
                                                                 </label>
                                                             </div>
                                                         </td>
@@ -117,7 +117,7 @@
                                                                     $style = $module['values']['columns'][$dataKey]['style'];
                                                                 }
                                                             ?>
-                                                            <td style="<?= $style ?>"><?= $dataValue ?></td>
+                                                            <td style="<?= $this->escapeHtmlAttr($style) ?>"><?= $this->escapeHtml($dataValue) ?></td>
                                                         <?php } ?>
                                                     </tr>
                                                 <?php } ?>

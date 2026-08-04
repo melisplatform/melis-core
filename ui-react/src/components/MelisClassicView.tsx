@@ -102,7 +102,9 @@ export function MelisClassicFrame({
       <iframe
         src={`/melis/react-tool-page?key=${encodeURIComponent(melisKey)}`}
         className="h-full w-full border-0"
-        sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox allow-downloads allow-modals"
+        // No `sandbox`: first-party same-origin legacy tool page. allow-scripts + allow-same-origin
+        // make the sandbox ineffective (Chrome warns it "can escape its sandboxing"); dropping it
+        // clears that console warning with no real security change.
         title={title}
       />
     </div>

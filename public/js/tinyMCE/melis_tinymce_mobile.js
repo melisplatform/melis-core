@@ -10,8 +10,9 @@
  *
  * What it does (https://www.tiny.cloud/docs/tinymce/latest/tinymce-for-mobile/):
  *  1. `cfg.mobile` — TinyMCE's own device-detected mobile mode already hides the menubar and
- *     switches to a scrolling toolbar; we additionally TRIM the toolbar (the Melis 'tool'
- *     config ships ~14 groups, unusable on a phone even when scrolling).
+ *     switches to a scrolling toolbar; we additionally RÉORDONNONS la barre en deux groupes
+ *     (essentiels visibles, le reste dans le panneau « … »). AUCUN bouton n'est supprimé :
+ *     tout ce qui existe au bureau reste atteignable — c'est une contrainte, pas un détail.
  *  2. Narrow WINDOW (< 640px, the `useIsNarrow()` breakpoint of the React UI). TinyMCE's
  *     mobile mode is DEVICE-detected, not width-detected: a desktop browser resized narrow
  *     keeps the full menubar and stacks the 14 toolbar groups into a tall multi-row block
@@ -28,13 +29,9 @@
 
   var BP = 640 // must stay in sync with useIsNarrow()'s default breakpoint
 
-  // Toolbar buttons worth keeping on a small screen, in no particular order — the original
-  // ORDER of the config's toolbar is preserved, we only filter it.
-  var KEEP = {
-    undo: 1, redo: 1, blocks: 1, bold: 1, italic: 1, underline: 1, strikethrough: 1,
-    bullist: 1, numlist: 1, link: 1, unlink: 1, image: 1, forecolor: 1, removeformat: 1,
-    minitemplate: 1, code: 1, fullscreen: 1
-  }
+  // AUCUN bouton n'est retiré : la parité avec le bureau est la règle. Le panneau « … » se
+  // déroule sur autant de rangées qu'il faut, donc rien ne justifie d'amputer la barre — on ne
+  // fait que RÉORDONNER (essentiels visibles d'abord, le reste dans le panneau).
 
   // Boutons candidats à la RANGÉE visible, par ordre de priorité. Combien en tiennent vraiment
   // est MESURÉ (fitCount) : si le 1ᵉʳ groupe dépasse, TOUT bascule dans le popup et la rangée
@@ -73,20 +70,21 @@
 
   /**
    * Rebuild the toolbar as EXACTLY TWO groups: the essentials that must stay visible, then
-   * everything else. TinyMCE breaks at a group boundary, so this grouping is what decides the
-   * layout — one filled row + a visible « … » button opening the rest.
+   * TOUS les autres boutons (aucune perte par rapport au bureau). TinyMCE breaks at a group
+   * boundary, so this grouping is what decides the layout — one filled row + a visible « … »
+   * button opening the rest.
    */
-  function trimToolbar(toolbar, selector) {
+  function reorderToolbar(toolbar, selector) {
     var all = flattenButtons(toolbar)
-    if (!all) return toolbar
+    if (!all || !all.length) return toolbar
     var present = {}
-    for (var i = 0; i < all.length; i++) if (KEEP[all[i]]) present[all[i]] = 1
+    for (var i = 0; i < all.length; i++) present[all[i]] = 1
 
     var primary = PRIMARY.filter(function (b) { return present[b] }).slice(0, fitCount(selector))
     var rest = all.filter(function (b, idx) {
-      return present[b] && primary.indexOf(b) === -1 && all.indexOf(b) === idx // dédoublonne
+      return primary.indexOf(b) === -1 && all.indexOf(b) === idx // dédoublonne
     })
-    if (!primary.length && !rest.length) return toolbar
+    if (!primary.length) return toolbar
     return primary.join(' ') + (rest.length ? ' | ' + rest.join(' ') : '')
   }
 
@@ -107,7 +105,7 @@
       resize: false,
       object_resizing: false
     }
-    var toolbar = trimToolbar(cfg.toolbar, cfg.selector)
+    var toolbar = reorderToolbar(cfg.toolbar, cfg.selector)
     if (toolbar) o.toolbar = toolbar
     return o
   }

@@ -589,7 +589,7 @@ class MelisTinyMceController extends MelisAbstractActionController
 
         $target = $_SERVER['DOCUMENT_ROOT'].'/media/Uploads/';
         if (!is_dir($target))
-            mkdir($target, 0777);
+            mkdir($target, 0755);
 
         // File Input
         $fileInput = new \Laminas\InputFilter\FileInput('file');

@@ -22,6 +22,7 @@ import { SubTabProvider, SubTabWindowBridge } from '@/components/tabs/sub-tab-st
 import { ToolTabBridgeProvider } from '@/components/tabs/tool-tab-bridge'
 import { useBricks, brickRoute, refreshActiveModules, overlayBricks, type BrickDef } from '@/lib/bricks'
 import { loadReactTheme } from '@/lib/react-theme'
+import { startTinyMceMobileFrameSync } from '@/lib/tinymce-mobile-frames'
 import { PERSISTENT_MODULES } from '@/lib/module-registry'
 import { ToolErrorBoundary } from '@/components/ToolErrorBoundary'
 import { useTabs } from '@/components/tabs/tab-store'
@@ -157,6 +158,10 @@ function ShellInner() {
 
   // Charge le thème du BO React (logo d'en-tête configurable) une fois, après login.
   useEffect(() => { loadReactTheme() }, [])
+
+  // Propage le patch responsive TinyMCE dans les iframes même origine (édition de page, outils
+  // legacy) : leur `window` a son propre global `tinymce`, que le script du shell n'atteint pas.
+  useEffect(() => { startTinyMceMobileFrameSync() }, [])
 
   // Mobile : TOUTE navigation referme le drawer — sinon le menu reste par-dessus la page qu'on
   // vient d'ouvrir. Les entrées de nav natives appellent déjà `onClose` (SidebarNavContext), mais

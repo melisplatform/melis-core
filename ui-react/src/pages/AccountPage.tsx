@@ -9,7 +9,7 @@
  * Toggle New/Old (via `viewToggle` du registre) : la vue « Old » remonte l'outil legacy en iframe.
  */
 import { useEffect, useRef, useState } from 'react'
-import { User, Mail, CalendarDays, ShieldCheck, Pencil, Loader2, Save, Check, ChevronDown } from 'lucide-react'
+import { User, Mail, CalendarDays, ShieldCheck, Pencil, Loader2, Save, Check, ChevronDown, X } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -144,8 +144,16 @@ export default function AccountPage() {
     }
   }
 
-  const avatar = preview ?? profile?.image ?? null
+  // `image === ''` = retrait demandé (non encore enregistré) → on affiche le placeholder tout de suite.
+  const avatar = image === '' ? null : (preview ?? profile?.image ?? null)
   const fullName = profile ? `${profile.firstName} ${profile.lastName}`.trim() : ''
+
+  // Retirer la photo : marque l'image comme effacée (envoyé au save comme '' → usr_image vidé).
+  function onRemovePhoto() {
+    setImage('')
+    setPreview(null)
+    if (fileRef.current) fileRef.current.value = ''
+  }
 
   return (
     <div className="flex min-h-full flex-col">
@@ -189,6 +197,17 @@ export default function AccountPage() {
                     >
                       <Pencil className="size-3.5" />
                     </button>
+                    {avatar && (
+                      <button
+                        type="button"
+                        onClick={onRemovePhoto}
+                        title={t('account.remove_photo')}
+                        aria-label={t('account.remove_photo')}
+                        className="absolute bottom-0 left-0 flex size-8 items-center justify-center rounded-full bg-destructive text-white shadow ring-2 ring-card transition-transform hover:scale-105"
+                      >
+                        <X className="size-3.5" />
+                      </button>
+                    )}
                     <input
                       ref={fileRef} type="file" accept="image/*" className="hidden"
                       onChange={(e) => { const f = e.target.files?.[0]; if (f) onPickPhoto(f); e.target.value = '' }}

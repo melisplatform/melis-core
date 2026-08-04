@@ -312,7 +312,11 @@ export function LegacyPluginContent({ pluginName }: { pluginName: string }) {
         className="h-full w-full border-0"
         title={pluginName}
         style={{ minHeight: contentPx || 120 }}
-        sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-modals"
+        // No `sandbox`: this is first-party, same-origin, authenticated content we generate
+        // (/melis/react-dashboard-plugin). `allow-scripts` + `allow-same-origin` together make the
+        // sandbox ineffective anyway — Chrome logs "an iframe … can escape its sandboxing" on every
+        // dashboard load. Dropping the attribute removes that console noise with no real security
+        // change (the widget already needed scripts, forms, popups, modals and same-origin session).
         onLoad={() => {
           setLoading(false)
           // Rattrapage : si la largeur a changé pendant le chargement du plugin, l'URL porte l'état

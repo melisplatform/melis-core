@@ -16,11 +16,11 @@
 			// 'floating' : le débordement s'ouvre par un bouton « … » visible (cf. melis_tinymce_mobile.js).
 			'toolbar_mode' => 'floating',
 			'elementpath' => false,
-			// Barre réduite en DEUX groupes : l'essentiel tient dans la rangée visible, le reste
-			// (dont les listes déroulantes, trop larges) passe dans le popup « … ».
-			// 1ᵉʳ groupe volontairement court (5) : 'floating' bascule TOUT le groupe dans le popup
+			// Barre RÉORDONNÉE (pas amputée) en DEUX groupes : l'essentiel dans la rangée visible,
+			// TOUT le reste dans le panneau « … » — parité complète avec le bureau.
+			// 1ᵉʳ groupe volontairement court (5) : TinyMCE bascule TOUT le groupe dans le panneau
 			// s'il ne tient pas, et la largeur n'est pas mesurable ici (contrairement au patch JS).
-			'toolbar' => 'undo redo bold italic bullist | underline link blocks numlist unlink image forecolor removeformat minitemplate code fullscreen'
+			'toolbar' => 'undo redo bold italic bullist | insertfile blocks fontfamily fontsize strikethrough underline alignleft aligncenter alignright alignjustify numlist link unlink image table media lineheight outdent indent forecolor backcolor charmap emoticons minitemplate code fullscreen anchor'
 		],
 		'branding' => false,
 		'inline' => false,

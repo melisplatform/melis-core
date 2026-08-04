@@ -79,7 +79,7 @@ class MelisPhpUnitToolService extends MelisCoreLogService
                 }
 
                 if(!file_exists($moduleTestSavePath)) {
-                    mkdir($moduleTestSavePath, 0777, true);
+                    mkdir($moduleTestSavePath, 0755, true);
 
                     $tmpcontrollerName = explode("Test", $moduleTestName);
                     if(is_array($tmpcontrollerName) && !empty($tmpcontrollerName)) {
@@ -99,7 +99,7 @@ class MelisPhpUnitToolService extends MelisCoreLogService
             }
         }
         else {
-            mkdir($testSavePath, 0777, true);
+            mkdir($testSavePath, 0755, true);
             $this->init($moduleName, $moduleTestName, $unitTestPath);
         }
 

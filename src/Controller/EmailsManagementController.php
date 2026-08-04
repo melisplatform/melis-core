@@ -746,7 +746,7 @@ class EmailsManagementController extends MelisAbstractActionController
                     );
 
                 if (!is_dir(__DIR__.'/../../../../../public/media/email-layout-logo'))
-                    mkdir(__DIR__.'/../../../../../public/media/email-layout-logo', 0777);
+                    mkdir(__DIR__.'/../../../../../public/media/email-layout-logo', 0755);
 
                 // All files will be renamed, i.e.:
                 //   ../melis-logo_4b3403665fea6.png,
