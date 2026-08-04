@@ -433,7 +433,7 @@ class MelisCoreTranslationService extends Translator implements MelisCoreTransla
         $result = true;
 
         if (!file_exists($dir)) {
-            $result = mkdir($dir, 0777, true);
+            $result = mkdir($dir, 0755, true);
             if(file_exists($modulePath.$defaultTransInterface)){
                 copy($modulePath.$defaultTransInterface, $dir.'/'.$defaultTransInterface);
             }

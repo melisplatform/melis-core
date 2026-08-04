@@ -1098,7 +1098,7 @@ class MelisCoreModulesService extends MelisServiceManager
         $dir = opendir($src);
         //create folder if not exist
         if(!file_exists($dst))
-            mkdir($dst, 0777);
+            mkdir($dst, 0755);
 
         //make sure destination is writable
         if(!is_writable($dst))
@@ -1185,15 +1185,15 @@ class MelisCoreModulesService extends MelisServiceManager
         $docroot = $_SERVER['DOCUMENT_ROOT'];
         $bundleFolder = $docroot.'/../etc';
         if(!file_exists($bundleFolder))
-            mkdir($bundleFolder, 0777);
+            mkdir($bundleFolder, 0755);
 
         $path = $bundleFolder.'/'.ModulesController::BUNDLE_FOLDER_NAME.'/'.$name;
 
         if(!file_exists($bundleFolder.'/'.ModulesController::BUNDLE_FOLDER_NAME.'/'))
-            mkdir($bundleFolder.'/'.ModulesController::BUNDLE_FOLDER_NAME, 0777);
+            mkdir($bundleFolder.'/'.ModulesController::BUNDLE_FOLDER_NAME, 0755);
 
         if(!file_exists($path))
-            mkdir($path, 0777);
+            mkdir($path, 0755);
 
         if(!is_writable($path.'/'))
             chmod($path.'/', 0777);

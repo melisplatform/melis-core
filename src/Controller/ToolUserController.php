@@ -619,11 +619,15 @@ class ToolUserController extends MelisAbstractActionController
                             // create tmp folder if not exists
                             $dirName = $_SERVER['DOCUMENT_ROOT'] . '/media/';
                             if (!file_exists($dirName) && is_writable($dirName)) {
-                                mkdir($dirName, 0777, true);
+                                mkdir($dirName, 0755, true);
                             }
 
                             if (file_exists($dirName)) {
                                 $imageFile = $this->params()->fromFiles('usr_image');
+                                // Sécurité : le nom de fichier vient du client → basename() une seule
+                                // fois et on l'utilise pour l'écriture, la relecture et la suppression
+                                // (empêche une traversée de répertoire via un nom comme "../../x.png").
+                                $safeImgName = basename((string) ($imageFile['name'] ?? ''));
 
                                 /** Ensuring file is an image */
                                 if ($imageFile['tmp_name'] !== "") {
@@ -635,13 +639,13 @@ class ToolUserController extends MelisAbstractActionController
                                         ];
                                     } else {
                                         if (!empty($imageFile['tmp_name'])) {
-                                            $imgService->createThumbnail($dirName, $imageFile['name'], $imageFile['tmp_name']);
+                                            $imgService->createThumbnail($dirName, $safeImgName, $imageFile['tmp_name']);
                                         }
-                                        $imageContent = !empty($imageFile['tmp_name']) ? file_get_contents($dirName . 'tmb_' . $imageFile['name']) : null;
+                                        $imageContent = !empty($imageFile['tmp_name']) ? file_get_contents($dirName . 'tmb_' . $safeImgName) : null;
 
                                         // delete tmp image
                                         if (!empty($imageFile['tmp_name'])) {
-                                            unlink($dirName . 'tmb_' . $imageFile['name']);
+                                            unlink($dirName . 'tmb_' . $safeImgName);
                                         }
                                     }
                                 }
@@ -1229,7 +1233,7 @@ class ToolUserController extends MelisAbstractActionController
                     // create tmp folder if not exists
                     $dirName = $_SERVER['DOCUMENT_ROOT'] . '/media/';
                     if (!file_exists($dirName) && is_writable($dirName)) {
-                        mkdir($dirName, 0777, true);
+                        mkdir($dirName, 0755, true);
                     }
 
                     if (file_exists($dirName)) {

@@ -181,7 +181,7 @@ class MelisReactApiPlatformSchemeController extends MelisAbstractActionControlle
             'action'     => 'getStyleColorCss',
         ]);
         $assetsFolder = $_SERVER['DOCUMENT_ROOT'] . '/assets/css/';
-        if (!file_exists($assetsFolder)) { @mkdir($assetsFolder, 0777, true); }
+        if (!file_exists($assetsFolder)) { @mkdir($assetsFolder, 0755, true); }
         @file_put_contents($assetsFolder . 'schemes.css', $content);
 
         // Invalide les caches navigateur (timestamp du fichier de scheme).

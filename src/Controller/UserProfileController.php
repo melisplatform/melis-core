@@ -193,20 +193,24 @@ class UserProfileController extends MelisAbstractActionController
                     if(!file_exists($dirName))
                     {
                         $oldmask = umask(0);
-                        mkdir($dirName, 0777, true);
+                        mkdir($dirName, 0755, true);
                     }
-                    
+
                     if(file_exists($dirName))
                     {
                         // process image, convert image content into mysql BLOB || image validation needed (file size & file type)
                         $imageFile = $this->params()->fromFiles('usr_image');
-                        $tempImg = !empty($imageFile['tmp_name']) ? $imgService->createThumbnail($dirName,$imageFile['name'],$imageFile['tmp_name']) : null;
-                        $imageContent = !empty($imageFile['tmp_name']) ? file_get_contents($dirName.'tmb_'.$imageFile['name']) : $userImage;
-                        
+                        // Sécurité : nom de fichier fourni par le client (endpoint self-service, tout
+                        // utilisateur authentifié) → basename() une fois, réutilisé partout, pour
+                        // empêcher une traversée de répertoire (écriture/lecture/suppression).
+                        $safeImgName = basename((string) ($imageFile['name'] ?? ''));
+                        $tempImg = !empty($imageFile['tmp_name']) ? $imgService->createThumbnail($dirName,$safeImgName,$imageFile['tmp_name']) : null;
+                        $imageContent = !empty($imageFile['tmp_name']) ? file_get_contents($dirName.'tmb_'.$safeImgName) : $userImage;
+
                         // delete tmp image
                         if(!empty($imageFile['tmp_name']))
                         {
-                            unlink($dirName.'tmb_'.$imageFile['name']);
+                            unlink($dirName.'tmb_'.$safeImgName);
                         }
                     }
                     
