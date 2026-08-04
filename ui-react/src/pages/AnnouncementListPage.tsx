@@ -47,7 +47,7 @@ function KpiCard({ icon: Icon, label, value, color }: {
   icon: LucideIcon; label: string; value: number | null; color: string
 }) {
   return (
-    <div className="flex items-center gap-3 rounded-xl border border-border bg-card p-4 shadow-sm">
+    <div className="flex min-w-[160px] flex-1 items-center gap-3 rounded-xl border border-border bg-card p-4 shadow-sm">
       <div className={cn('grid size-10 shrink-0 place-items-center rounded-lg', color)}>
         <Icon className="size-5" />
       </div>
@@ -308,7 +308,7 @@ export default function AnnouncementListPage() {
           <p className="text-sm text-muted-foreground">{t('ann.no_list')}</p>
         ) : (<>
         {/* KPI */}
-        <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+        <div className="flex flex-wrap gap-3">
           <KpiCard icon={Megaphone}   label={t('ann.kpi.total')}    value={stats?.total    ?? null} color="bg-primary/10 text-primary" />
           <KpiCard icon={CheckCircle2} label={t('ann.kpi.active')}   value={stats?.active   ?? null} color="bg-emerald-500/10 text-emerald-600" />
           <KpiCard icon={Circle}      label={t('ann.kpi.inactive')} value={stats?.inactive ?? null} color="bg-muted text-muted-foreground" />
@@ -351,7 +351,7 @@ export default function AnnouncementListPage() {
                 onClick={() => setShowColMgr(v => !v)}>
                 <Columns3 className="size-3.5" />{t('common.columns')}
               </Button>
-              {showColMgr && <ColumnManager cols={cols} labelFor={(id) => t(COL_LABEL[id])}
+              {showColMgr && <ColumnManager cols={cols} labelFor={(id) => t(COL_LABEL[id])} anchorRef={colMgrRef}
                 onChange={(c) => { setCols(c); saveCols(c) }} onClose={() => setShowColMgr(false)}
                 onReset={() => { setCols(DEFAULT_COLS); saveCols(DEFAULT_COLS) }} />}
             </div>

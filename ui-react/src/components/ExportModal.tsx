@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 import { useI18n } from '@/i18n/i18n-context'
 import type { ColDef } from '@/components/ColumnManager'
+import { useDragReorder } from '@/hooks/useDragReorder'
 
 /**
  * Modale d'export générique — réutilisable par tout outil natif de la liste full-React.
@@ -47,39 +48,26 @@ export function ExportModal<T>({
   cols, labelFor, fetchAll, getCell, filename, sheetName, total, onClose,
 }: ExportModalProps<T>) {
   const { t } = useI18n()
-  const [included, setIncluded] = useState<ColDef[]>(() => cols.filter(c => c.visible))
-  const [excluded, setExcluded] = useState<ColDef[]>(() => cols.filter(c => !c.visible))
+  // Single `visible`-flagged list (visible = included), same model as ColumnManager — lets this
+  // share `useDragReorder` (Pointer Events, touch-compatible — native HTML5 `draggable` never
+  // fires from touch input) instead of a second hand-rolled drag implementation.
+  const [exportCols, setExportCols] = useState<ColDef[]>(() => cols.map(c => ({ ...c })))
+  const { draggingId, overTarget, dragPos, startDragMouse, startDragTouch } = useDragReorder({ cols: exportCols, onChange: setExportCols })
+  const included = exportCols.filter(c => c.visible)
+  const excluded = exportCols.filter(c => !c.visible)
   const [format, setFormat] = useState<'csv' | 'xlsx'>('xlsx')
   const [exporting, setExporting] = useState(false)
-  const [draggingId, setDraggingId] = useState<string | null>(null)
-  const [overTarget, setOverTarget] = useState<{ id: string; panel: 'included' | 'excluded' } | null>(null)
-
-  function handleDrop(panel: 'included' | 'excluded') {
-    if (!draggingId) return
-    const srcItem = [...included, ...excluded].find(c => c.id === draggingId)!
-    let inc = included.filter(c => c.id !== draggingId)
-    let exc = excluded.filter(c => c.id !== draggingId)
-    if (panel === 'included') {
-      const dstId = overTarget?.id
-      if (!dstId || dstId === '__panel__') { inc = [...inc, srcItem] }
-      else { const idx = inc.findIndex(c => c.id === dstId); inc = idx === -1 ? [...inc, srcItem] : [...inc.slice(0, idx), srcItem, ...inc.slice(idx)] }
-    } else { exc = [...exc, srcItem] }
-    setIncluded(inc); setExcluded(exc)
-    setDraggingId(null); setOverTarget(null)
-  }
 
   function renderItem(col: ColDef, panel: 'included' | 'excluded') {
-    const isOver = overTarget?.id === col.id && overTarget?.panel === panel
+    const isOver = overTarget?.id === col.id && overTarget?.panel === (panel === 'included' ? 'visible' : 'hidden')
     return (
       <div
         key={col.id}
-        draggable
-        onDragStart={() => setDraggingId(col.id)}
-        onDragEnd={() => { setDraggingId(null); setOverTarget(null) }}
-        onDragOver={e => { e.preventDefault(); e.stopPropagation(); if (overTarget?.id !== col.id || overTarget?.panel !== panel) setOverTarget({ id: col.id, panel }) }}
-        onDrop={e => { e.preventDefault(); handleDrop(panel) }}
+        data-col-item={col.id}
+        onMouseDown={startDragMouse(col.id)}
+        onTouchStart={startDragTouch(col.id)}
         className={cn(
-          'flex items-center gap-2 rounded-lg px-2 py-1.5 text-sm select-none cursor-grab active:cursor-grabbing transition-colors',
+          'flex touch-none items-center gap-2 rounded-lg px-2 py-1.5 text-sm select-none cursor-grab active:cursor-grabbing transition-colors',
           draggingId === col.id && 'opacity-40',
           isOver ? 'bg-primary/10 ring-1 ring-primary/30' : 'hover:bg-accent',
         )}
@@ -123,6 +111,18 @@ export function ExportModal<T>({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm" onClick={e => { if (e.target === e.currentTarget) onClose() }}>
+      {/* Floating chip tracking the pointer while dragging — see useDragReorder.ts: on touch
+          there's no cursor, so without this the drag/highlight feedback alone can read as
+          "nothing is happening" even when the gesture is being tracked correctly. */}
+      {draggingId && dragPos && (
+        <div
+          className="pointer-events-none fixed z-[70] flex -translate-x-1/2 -translate-y-1/2 items-center gap-2 rounded-lg border border-primary/40 bg-card px-3 py-1.5 text-sm font-medium shadow-xl"
+          style={{ left: dragPos.x, top: dragPos.y }}
+        >
+          <GripVertical className="size-3.5 shrink-0 text-muted-foreground/40" />
+          {labelFor(draggingId)}
+        </div>
+      )}
       <div className="w-full max-w-[480px] rounded-2xl border border-border bg-card shadow-2xl">
         <div className="flex items-start justify-between border-b border-border px-5 py-4">
           <div>
@@ -144,9 +144,11 @@ export function ExportModal<T>({
           </div>
           <div className="grid grid-cols-2 gap-2">
             <div
-              className="flex flex-col gap-0.5 min-h-[100px] max-h-[min(48vh,320px)] overflow-y-auto min-w-0 rounded-lg border border-dashed border-border p-1.5"
-              onDragOver={e => { e.preventDefault(); if (overTarget?.id !== '__panel__' || overTarget?.panel !== 'excluded') setOverTarget({ id: '__panel__', panel: 'excluded' }) }}
-              onDrop={e => { e.preventDefault(); handleDrop('excluded') }}
+              data-col-panel="hidden"
+              className={cn(
+                'flex flex-col gap-0.5 min-h-[100px] max-h-[min(48vh,320px)] overflow-y-auto min-w-0 rounded-lg border border-dashed p-1.5',
+                overTarget?.id === '__panel__' && overTarget.panel === 'hidden' ? 'border-primary/40 bg-primary/5' : 'border-border',
+              )}
             >
               <p className="px-1.5 pb-1 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">{t('common.export.excluded')}</p>
               {excluded.length === 0
@@ -154,9 +156,11 @@ export function ExportModal<T>({
                 : excluded.map(col => renderItem(col, 'excluded'))}
             </div>
             <div
-              className="flex flex-col gap-0.5 min-h-[100px] max-h-[min(48vh,320px)] overflow-y-auto min-w-0 rounded-lg border border-dashed border-border p-1.5"
-              onDragOver={e => { e.preventDefault(); if (overTarget?.id !== '__panel__' || overTarget?.panel !== 'included') setOverTarget({ id: '__panel__', panel: 'included' }) }}
-              onDrop={e => { e.preventDefault(); handleDrop('included') }}
+              data-col-panel="visible"
+              className={cn(
+                'flex flex-col gap-0.5 min-h-[100px] max-h-[min(48vh,320px)] overflow-y-auto min-w-0 rounded-lg border border-dashed p-1.5',
+                overTarget?.id === '__panel__' && overTarget.panel === 'visible' ? 'border-primary/40 bg-primary/5' : 'border-border',
+              )}
             >
               <p className="px-1.5 pb-1 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">{t('common.export.included')}</p>
               {included.length === 0

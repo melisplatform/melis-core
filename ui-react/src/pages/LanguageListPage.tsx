@@ -268,7 +268,7 @@ export default function LanguageListPage() {
           <p className="text-sm text-muted-foreground">{t('languages.no_list')}</p>
         ) : (<>
         {/* KPI */}
-        <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
           <KpiCard icon={Languages} label={t('languages.kpi.total')} value={stats?.total ?? null} color="bg-primary/10 text-primary" />
         </div>
 
@@ -294,7 +294,7 @@ export default function LanguageListPage() {
                 onClick={() => setShowColMgr(v => !v)}>
                 <Columns3 className="size-3.5" />{t('common.columns')}
               </Button>
-              {showColMgr && <ColumnManager cols={cols} labelFor={(id) => t(COL_LABEL[id])}
+              {showColMgr && <ColumnManager cols={cols} labelFor={(id) => t(COL_LABEL[id])} anchorRef={colMgrRef}
                 onChange={(c) => { setCols(c); saveCols(c) }} onClose={() => setShowColMgr(false)}
                 onReset={() => { setCols(DEFAULT_COLS); saveCols(DEFAULT_COLS) }} />}
             </div>

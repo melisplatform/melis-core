@@ -1,4 +1,4 @@
-import { Fragment, useCallback, useEffect, useRef, useState } from 'react'
+import { Fragment, useCallback, useEffect, useLayoutEffect, useRef, useState, type RefObject } from 'react'
 
 // ─── Module-level cache — survit au démontage du composant (navigation) ────────
 
@@ -38,6 +38,7 @@ import { useTabs } from '@/components/tabs/tab-store'
 import { MelisClassicFrame, ViewModeToggle, type ViewMode } from '@/components/MelisClassicView'
 import { ExpandToggle, HiddenColsRow } from '@/components/ExpandableRow'
 import { useIsNarrow } from '@/hooks/useIsNarrow'
+import { useDragReorder } from '@/hooks/useDragReorder'
 import { toolHasViewToggle } from '@/lib/module-registry'
 import { useModuleActive } from '@/lib/bricks'
 import { useCan } from '@/lib/capabilities'
@@ -131,43 +132,51 @@ function getCellExport(user: userApi.UserItem, id: string, t: (k: I18nKey, v?: R
   return getCellSort(user, id)
 }
 
-function ColManager({ cols, onChange, onClose }: {
-  cols: ColDef[]; onChange: (cols: ColDef[]) => void; onClose: () => void
+function ColManager({ cols, onChange, onClose, anchorRef }: {
+  cols: ColDef[]; onChange: (cols: ColDef[]) => void; onClose: () => void; anchorRef: RefObject<HTMLElement | null>
 }) {
   const { t } = useI18n()
-  const [draggingId, setDraggingId] = useState<string | null>(null)
-  const [overTarget, setOverTarget] = useState<{ id: string; panel: 'visible' | 'hidden' } | null>(null)
+  // Touch-compatible drag (Pointer Events, not native HTML5 draggable — that API never fires
+  // from touch input) — see hooks/useDragReorder.ts. `onChange` below wraps the caller's setter
+  // to also persist via saveUserCols, same as every other mutation in this component.
+  const { draggingId, overTarget, dragPos, startDragMouse, startDragTouch } = useDragReorder({
+    cols, onChange: (next) => { onChange(next); saveUserCols(next) },
+  })
+  // Positioned relative to the trigger button (clamped to the viewport), not centered on screen —
+  // see ColumnManager.tsx (shared component) for the full rationale.
+  const [pos, setPos] = useState<{ top?: number; bottom?: number; left: number; width: number; maxHeight: number } | null>(null)
+
+  useLayoutEffect(() => {
+    const anchor = anchorRef.current
+    if (!anchor) return
+    const rect = anchor.getBoundingClientRect()
+    // Matches the page's own `p-6` content padding (24px) — clamping to the raw viewport edge
+    // (8px) made the popup visibly wider than the search input/button row above it.
+    const margin = 24
+    const spaceBelow = window.innerHeight - rect.bottom - margin
+    const spaceAbove = rect.top - margin
+    const width = Math.min(420, window.innerWidth - margin * 2)
+    const left = Math.min(Math.max(margin, rect.right - width), window.innerWidth - width - margin)
+    if (spaceBelow >= 200 || spaceBelow >= spaceAbove) {
+      setPos({ top: rect.bottom + 6, left, width, maxHeight: Math.max(160, spaceBelow - 6) })
+    } else {
+      setPos({ bottom: window.innerHeight - rect.top + 6, left, width, maxHeight: Math.max(160, spaceAbove - 6) })
+    }
+  }, [anchorRef])
 
   const visibleCols = cols.filter(c => c.visible)
   const hiddenCols  = cols.filter(c => !c.visible)
-
-  function handleDrop(panel: 'visible' | 'hidden') {
-    if (!draggingId) return
-    const srcItem = cols.find(c => c.id === draggingId)!
-    const updatedItem = { ...srcItem, visible: panel === 'visible' }
-    let vList = visibleCols.filter(c => c.id !== draggingId)
-    let hList = hiddenCols.filter(c => c.id !== draggingId)
-    if (panel === 'visible') {
-      const dstId = overTarget?.id
-      if (!dstId || dstId === '__panel__') { vList = [...vList, updatedItem] }
-      else { const idx = vList.findIndex(c => c.id === dstId); vList = idx === -1 ? [...vList, updatedItem] : [...vList.slice(0, idx), updatedItem, ...vList.slice(idx)] }
-    } else { hList = [...hList, updatedItem] }
-    const next = [...vList, ...hList]
-    onChange(next); saveUserCols(next)
-    setDraggingId(null); setOverTarget(null)
-  }
 
   function renderItem(col: ColDef, panel: 'visible' | 'hidden') {
     const isOver = overTarget?.id === col.id && overTarget?.panel === panel
     return (
       <div
         key={col.id}
-        draggable
-        onDragStart={() => setDraggingId(col.id)}
-        onDragEnd={() => { setDraggingId(null); setOverTarget(null) }}
-        onDragOver={e => { e.preventDefault(); e.stopPropagation(); if (overTarget?.id !== col.id || overTarget?.panel !== panel) setOverTarget({ id: col.id, panel }) }}
+        data-col-item={col.id}
+        onMouseDown={startDragMouse(col.id)}
+        onTouchStart={startDragTouch(col.id)}
         className={cn(
-          'flex items-center gap-2 rounded-lg px-2 py-1.5 text-sm select-none cursor-grab active:cursor-grabbing transition-colors',
+          'flex touch-none items-center gap-2 rounded-lg px-2 py-1.5 text-sm select-none cursor-grab active:cursor-grabbing transition-colors',
           draggingId === col.id && 'opacity-40',
           isOver ? 'bg-primary/10 ring-1 ring-primary/30' : 'hover:bg-accent',
           col.pinned && panel === 'visible' && !isOver && 'bg-primary/5',
@@ -178,6 +187,8 @@ function ColManager({ cols, onChange, onClose }: {
         {panel === 'visible' && (
           <button
             onClick={e => { e.stopPropagation(); const next = cols.map(c => c.id === col.id ? { ...c, pinned: !c.pinned } : c); onChange(next); saveUserCols(next) }}
+            onMouseDown={e => e.stopPropagation()}
+            onTouchStart={e => e.stopPropagation()}
             title={col.pinned ? t('users.cols.unpin') : t('users.cols.pin')}
             className={cn('flex size-5 shrink-0 items-center justify-center rounded transition-colors hover:bg-primary/10', col.pinned ? 'text-primary' : 'text-muted-foreground/30 hover:text-muted-foreground')}
           >
@@ -188,17 +199,33 @@ function ColManager({ cols, onChange, onClose }: {
     )
   }
 
+  if (!pos) return null
   return (
-    <div className="absolute right-0 top-full z-50 mt-1.5 w-[420px] max-w-[calc(100vw-1rem)] rounded-xl border border-border bg-card shadow-xl">
+    <>
+    {draggingId && dragPos && (
+      <div
+        className="pointer-events-none fixed z-[60] flex -translate-x-1/2 -translate-y-1/2 items-center gap-2 rounded-lg border border-primary/40 bg-card px-3 py-1.5 text-sm font-medium shadow-xl"
+        style={{ left: dragPos.x, top: dragPos.y }}
+      >
+        <GripVertical className="size-3.5 shrink-0 text-muted-foreground/40" />
+        {t(COL_LABEL[draggingId])}
+      </div>
+    )}
+    <div
+      className="fixed z-50 overflow-y-auto rounded-xl border border-border bg-card shadow-xl"
+      style={{ top: pos.top, bottom: pos.bottom, left: pos.left, width: pos.width, maxHeight: pos.maxHeight }}
+    >
       <div className="flex items-center justify-between border-b border-border px-3 py-2.5">
         <span className="text-sm font-semibold">{t('common.columns')}</span>
         <button onClick={onClose} className="text-muted-foreground hover:text-foreground transition-colors"><X className="size-4" /></button>
       </div>
       <div className="grid grid-cols-2 gap-2 p-3">
         <div
-          className="flex flex-col gap-0.5 min-h-[140px] max-h-[min(48vh,320px)] overflow-y-auto min-w-0 rounded-lg border border-dashed border-border p-1.5"
-          onDragOver={e => { e.preventDefault(); if (overTarget?.id !== '__panel__' || overTarget?.panel !== 'hidden') setOverTarget({ id: '__panel__', panel: 'hidden' }) }}
-          onDrop={e => { e.preventDefault(); handleDrop('hidden') }}
+          data-col-panel="hidden"
+          className={cn(
+            'flex flex-col gap-0.5 min-h-[140px] max-h-[min(48vh,320px)] overflow-y-auto min-w-0 rounded-lg border border-dashed p-1.5',
+            overTarget?.id === '__panel__' && overTarget.panel === 'hidden' ? 'border-primary/40 bg-primary/5' : 'border-border',
+          )}
         >
           <p className="px-1.5 pb-1 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">{t('users.cols.hidden')}</p>
           {hiddenCols.length === 0
@@ -206,9 +233,11 @@ function ColManager({ cols, onChange, onClose }: {
             : hiddenCols.map(col => renderItem(col, 'hidden'))}
         </div>
         <div
-          className="flex flex-col gap-0.5 min-h-[140px] max-h-[min(48vh,320px)] overflow-y-auto min-w-0 rounded-lg border border-dashed border-border p-1.5"
-          onDragOver={e => { e.preventDefault(); if (overTarget?.id !== '__panel__' || overTarget?.panel !== 'visible') setOverTarget({ id: '__panel__', panel: 'visible' }) }}
-          onDrop={e => { e.preventDefault(); handleDrop('visible') }}
+          data-col-panel="visible"
+          className={cn(
+            'flex flex-col gap-0.5 min-h-[140px] max-h-[min(48vh,320px)] overflow-y-auto min-w-0 rounded-lg border border-dashed p-1.5',
+            overTarget?.id === '__panel__' && overTarget.panel === 'visible' ? 'border-primary/40 bg-primary/5' : 'border-border',
+          )}
         >
           <p className="px-1.5 pb-1 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">{t('users.cols.visible')}</p>
           {visibleCols.map(col => renderItem(col, 'visible'))}
@@ -218,6 +247,7 @@ function ColManager({ cols, onChange, onClose }: {
         <button onClick={() => { onChange(DEFAULT_COLS); saveUserCols(DEFAULT_COLS) }} className="w-full rounded-lg px-2 py-1.5 text-xs text-muted-foreground transition-colors hover:bg-accent hover:text-foreground">{t('common.reset')}</button>
       </div>
     </div>
+    </>
   )
 }
 
@@ -237,38 +267,28 @@ function ExportModal({ cols, search, status, total, onClose }: {
   cols: ColDef[]; search: string; status: '' | '0' | '1'; total: number; onClose: () => void
 }) {
   const { t } = useI18n()
-  const [included, setIncluded] = useState<ColDef[]>(() => cols.filter(c => c.visible))
-  const [excluded, setExcluded] = useState<ColDef[]>(() => cols.filter(c => !c.visible))
+  // Single `visible`-flagged list (visible = included), same model as ColumnManager/the shared
+  // ExportModal — lets this share `useDragReorder` (mouse + touch, not native HTML5 `draggable`,
+  // which never fires from touch input) instead of a THIRD hand-rolled drag implementation. This
+  // was a separate, never-fixed copy: UserListPage doesn't import the shared `@/components/
+  // ExportModal` — it shadows the name with this page-local component (own doExport/columns).
+  const [exportCols, setExportCols] = useState<ColDef[]>(() => cols.map(c => ({ ...c })))
+  const { draggingId, overTarget, dragPos, startDragMouse, startDragTouch } = useDragReorder({ cols: exportCols, onChange: setExportCols })
+  const included = exportCols.filter(c => c.visible)
+  const excluded = exportCols.filter(c => !c.visible)
   const [format, setFormat] = useState<'csv' | 'xlsx'>('xlsx')
   const [exporting, setExporting] = useState(false)
-  const [draggingId, setDraggingId] = useState<string | null>(null)
-  const [overTarget, setOverTarget] = useState<{ id: string; panel: 'included' | 'excluded' } | null>(null)
-
-  function handleDrop(panel: 'included' | 'excluded') {
-    if (!draggingId) return
-    const srcItem = [...included, ...excluded].find(c => c.id === draggingId)!
-    let inc = included.filter(c => c.id !== draggingId)
-    let exc = excluded.filter(c => c.id !== draggingId)
-    if (panel === 'included') {
-      const dstId = overTarget?.id
-      if (!dstId || dstId === '__panel__') { inc = [...inc, srcItem] }
-      else { const idx = inc.findIndex(c => c.id === dstId); inc = idx === -1 ? [...inc, srcItem] : [...inc.slice(0, idx), srcItem, ...inc.slice(idx)] }
-    } else { exc = [...exc, srcItem] }
-    setIncluded(inc); setExcluded(exc)
-    setDraggingId(null); setOverTarget(null)
-  }
 
   function renderExItem(col: ColDef, panel: 'included' | 'excluded') {
-    const isOver = overTarget?.id === col.id && overTarget?.panel === panel
+    const isOver = overTarget?.id === col.id && overTarget?.panel === (panel === 'included' ? 'visible' : 'hidden')
     return (
       <div
         key={col.id}
-        draggable
-        onDragStart={() => setDraggingId(col.id)}
-        onDragEnd={() => { setDraggingId(null); setOverTarget(null) }}
-        onDragOver={e => { e.preventDefault(); e.stopPropagation(); if (overTarget?.id !== col.id || overTarget?.panel !== panel) setOverTarget({ id: col.id, panel }) }}
+        data-col-item={col.id}
+        onMouseDown={startDragMouse(col.id)}
+        onTouchStart={startDragTouch(col.id)}
         className={cn(
-          'flex items-center gap-2 rounded-lg px-2 py-1.5 text-sm select-none cursor-grab active:cursor-grabbing transition-colors',
+          'flex touch-none items-center gap-2 rounded-lg px-2 py-1.5 text-sm select-none cursor-grab active:cursor-grabbing transition-colors',
           draggingId === col.id && 'opacity-40',
           isOver ? 'bg-primary/10 ring-1 ring-primary/30' : 'hover:bg-accent',
         )}
@@ -320,6 +340,15 @@ function ExportModal({ cols, search, status, total, onClose }: {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm" onClick={e => { if (e.target === e.currentTarget) onClose() }}>
+      {draggingId && dragPos && (
+        <div
+          className="pointer-events-none fixed z-[70] flex -translate-x-1/2 -translate-y-1/2 items-center gap-2 rounded-lg border border-primary/40 bg-card px-3 py-1.5 text-sm font-medium shadow-xl"
+          style={{ left: dragPos.x, top: dragPos.y }}
+        >
+          <GripVertical className="size-3.5 shrink-0 text-muted-foreground/40" />
+          {t(COL_LABEL[draggingId])}
+        </div>
+      )}
       <div className="w-full max-w-[480px] rounded-2xl border border-border bg-card shadow-2xl">
         <div className="flex items-start justify-between border-b border-border px-5 py-4">
           <div>
@@ -341,9 +370,11 @@ function ExportModal({ cols, search, status, total, onClose }: {
           </div>
           <div className="grid grid-cols-2 gap-2">
             <div
-              className="flex flex-col gap-0.5 min-h-[100px] max-h-[min(48vh,320px)] overflow-y-auto min-w-0 rounded-lg border border-dashed border-border p-1.5"
-              onDragOver={e => { e.preventDefault(); if (overTarget?.id !== '__panel__' || overTarget?.panel !== 'excluded') setOverTarget({ id: '__panel__', panel: 'excluded' }) }}
-              onDrop={e => { e.preventDefault(); handleDrop('excluded') }}
+              data-col-panel="hidden"
+              className={cn(
+                'flex flex-col gap-0.5 min-h-[100px] max-h-[min(48vh,320px)] overflow-y-auto min-w-0 rounded-lg border border-dashed p-1.5',
+                overTarget?.id === '__panel__' && overTarget.panel === 'hidden' ? 'border-primary/40 bg-primary/5' : 'border-border',
+              )}
             >
               <p className="px-1.5 pb-1 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">{t('users.export.excluded')}</p>
               {excluded.length === 0
@@ -351,9 +382,11 @@ function ExportModal({ cols, search, status, total, onClose }: {
                 : excluded.map(col => renderExItem(col, 'excluded'))}
             </div>
             <div
-              className="flex flex-col gap-0.5 min-h-[100px] max-h-[min(48vh,320px)] overflow-y-auto min-w-0 rounded-lg border border-dashed border-border p-1.5"
-              onDragOver={e => { e.preventDefault(); if (overTarget?.id !== '__panel__' || overTarget?.panel !== 'included') setOverTarget({ id: '__panel__', panel: 'included' }) }}
-              onDrop={e => { e.preventDefault(); handleDrop('included') }}
+              data-col-panel="visible"
+              className={cn(
+                'flex flex-col gap-0.5 min-h-[100px] max-h-[min(48vh,320px)] overflow-y-auto min-w-0 rounded-lg border border-dashed p-1.5',
+                overTarget?.id === '__panel__' && overTarget.panel === 'visible' ? 'border-primary/40 bg-primary/5' : 'border-border',
+              )}
             >
               <p className="px-1.5 pb-1 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">{t('users.export.included')}</p>
               {included.length === 0
@@ -701,7 +734,7 @@ export default function UserListPage() {
                 onClick={() => setShowColMgr(v => !v)}>
                 <Columns3 className="size-3.5" />{t('common.columns')}
               </Button>
-              {showColMgr && <ColManager cols={cols} onChange={setCols} onClose={() => setShowColMgr(false)} />}
+              {showColMgr && <ColManager cols={cols} onChange={setCols} onClose={() => setShowColMgr(false)} anchorRef={colMgrRef} />}
             </div>
             {canExport && (
               <Button variant="outline" size="sm"

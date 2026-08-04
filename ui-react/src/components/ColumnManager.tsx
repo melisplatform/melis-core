@@ -1,8 +1,9 @@
-import { useState } from 'react'
+import { useLayoutEffect, useState, type RefObject } from 'react'
 import { GripVertical, X } from 'lucide-react'
 
 import { cn } from '@/lib/utils'
 import { useI18n } from '@/i18n/i18n-context'
+import { useDragReorder } from '@/hooks/useDragReorder'
 
 /**
  * Gestionnaire de colonnes réutilisable (masquer + RÉORDONNER par glisser-déposer).
@@ -23,53 +24,56 @@ export function visibleCols(cols: ColDef[]): ColDef[] {
   return cols.filter((c) => c.visible)
 }
 
-export function ColumnManager({ cols, labelFor, onChange, onClose, onReset }: {
+export function ColumnManager({ cols, labelFor, onChange, onClose, onReset, anchorRef }: {
   cols: ColDef[]
   labelFor: (id: string) => string
   onChange: (cols: ColDef[]) => void
   onClose: () => void
   onReset: () => void
+  /** Trigger button (or its wrapper) — the popup is positioned relative to IT, not centered on
+   * the viewport, so it stays visually attached to the button that opened it while still being
+   * clamped to fit on screen (mobile: was `fixed` + centered near the top, far from the button). */
+  anchorRef: RefObject<HTMLElement | null>
 }) {
   const { t } = useI18n()
-  const [draggingId, setDraggingId] = useState<string | null>(null)
-  const [overTarget, setOverTarget] = useState<{ id: string; panel: 'visible' | 'hidden' } | null>(null)
+  const { draggingId, overTarget, dragPos, startDragMouse, startDragTouch } = useDragReorder({ cols, onChange })
+  const [pos, setPos] = useState<{ top?: number; bottom?: number; left: number; width: number; maxHeight: number } | null>(null)
+
+  useLayoutEffect(() => {
+    const anchor = anchorRef.current
+    if (!anchor) return
+    const rect = anchor.getBoundingClientRect()
+    // Matches the page's own `p-6` content padding (24px) — clamping to the raw viewport edge
+    // (8px) made the popup visibly wider than the search input/button row above it.
+    const margin = 24
+    const spaceBelow = window.innerHeight - rect.bottom - margin
+    const spaceAbove = rect.top - margin
+    // Right-align with the anchor by default, but clamp `left` so the popup can never overflow
+    // the viewport's left edge — the anchor's own right edge isn't necessarily flush with the
+    // true viewport edge (page padding, flex-wrapped buttons), so anchoring purely via a CSS
+    // `right: 0` let the popup's left edge go negative/off-screen on narrow screens.
+    const width = Math.min(420, window.innerWidth - margin * 2)
+    const left = Math.min(Math.max(margin, rect.right - width), window.innerWidth - width - margin)
+    if (spaceBelow >= 200 || spaceBelow >= spaceAbove) {
+      setPos({ top: rect.bottom + 6, left, width, maxHeight: Math.max(160, spaceBelow - 6) })
+    } else {
+      setPos({ bottom: window.innerHeight - rect.top + 6, left, width, maxHeight: Math.max(160, spaceAbove - 6) })
+    }
+  }, [anchorRef])
 
   const shownCols  = cols.filter((c) => c.visible)
   const hiddenCols = cols.filter((c) => !c.visible)
-
-  function handleDrop(panel: 'visible' | 'hidden') {
-    if (!draggingId) return
-    const srcItem = cols.find((c) => c.id === draggingId)!
-    const updatedItem = { ...srcItem, visible: panel === 'visible' }
-    let vList = shownCols.filter((c) => c.id !== draggingId)
-    const hList = hiddenCols.filter((c) => c.id !== draggingId)
-    if (panel === 'visible') {
-      const dstId = overTarget?.id
-      if (!dstId || dstId === '__panel__') {
-        vList = [...vList, updatedItem]
-      } else {
-        const idx = vList.findIndex((c) => c.id === dstId)
-        vList = idx === -1 ? [...vList, updatedItem] : [...vList.slice(0, idx), updatedItem, ...vList.slice(idx)]
-      }
-      onChange([...vList, ...hList])
-    } else {
-      onChange([...vList, ...hList, updatedItem])
-    }
-    setDraggingId(null); setOverTarget(null)
-  }
 
   function renderItem(col: ColDef, panel: 'visible' | 'hidden') {
     const isOver = overTarget?.id === col.id && overTarget?.panel === panel
     return (
       <div
         key={col.id}
-        draggable
-        onDragStart={() => setDraggingId(col.id)}
-        onDragEnd={() => { setDraggingId(null); setOverTarget(null) }}
-        onDragOver={(e) => { e.preventDefault(); e.stopPropagation(); if (overTarget?.id !== col.id || overTarget?.panel !== panel) setOverTarget({ id: col.id, panel }) }}
-        onDrop={(e) => { e.preventDefault(); handleDrop(panel) }}
+        data-col-item={col.id}
+        onMouseDown={startDragMouse(col.id)}
+        onTouchStart={startDragTouch(col.id)}
         className={cn(
-          'flex items-center gap-2 rounded-lg px-2 py-1.5 text-sm select-none cursor-grab active:cursor-grabbing transition-colors',
+          'flex touch-none items-center gap-2 rounded-lg px-2 py-1.5 text-sm select-none cursor-grab active:cursor-grabbing transition-colors',
           draggingId === col.id && 'opacity-40',
           isOver ? 'bg-primary/10 ring-1 ring-primary/30' : 'hover:bg-accent',
         )}
@@ -80,17 +84,36 @@ export function ColumnManager({ cols, labelFor, onChange, onClose, onReset }: {
     )
   }
 
+  if (!pos) return null
   return (
-    <div className="absolute right-0 top-full z-50 mt-1.5 w-[420px] max-w-[calc(100vw-1rem)] rounded-xl border border-border bg-card shadow-xl">
+    <>
+    {/* Floating chip tracking the pointer while dragging — see useDragReorder.ts: on touch
+        there's no cursor, so without this the drag/highlight feedback alone can read as
+        "nothing is happening" even when the gesture is being tracked correctly. */}
+    {draggingId && dragPos && (
+      <div
+        className="pointer-events-none fixed z-[60] flex -translate-x-1/2 -translate-y-1/2 items-center gap-2 rounded-lg border border-primary/40 bg-card px-3 py-1.5 text-sm font-medium shadow-xl"
+        style={{ left: dragPos.x, top: dragPos.y }}
+      >
+        <GripVertical className="size-3.5 shrink-0 text-muted-foreground/40" />
+        {labelFor(draggingId)}
+      </div>
+    )}
+    <div
+      className="fixed z-50 overflow-y-auto rounded-xl border border-border bg-card shadow-xl"
+      style={{ top: pos.top, bottom: pos.bottom, left: pos.left, width: pos.width, maxHeight: pos.maxHeight }}
+    >
       <div className="flex items-center justify-between border-b border-border px-3 py-2.5">
         <span className="text-sm font-semibold">{t('common.columns')}</span>
         <button onClick={onClose} className="text-muted-foreground hover:text-foreground transition-colors"><X className="size-4" /></button>
       </div>
       <div className="grid grid-cols-2 gap-2 p-3">
         <div
-          className="flex flex-col gap-0.5 min-h-[140px] max-h-[min(48vh,320px)] overflow-y-auto min-w-0 rounded-lg border border-dashed border-border p-1.5"
-          onDragOver={(e) => { e.preventDefault(); if (overTarget?.id !== '__panel__' || overTarget?.panel !== 'hidden') setOverTarget({ id: '__panel__', panel: 'hidden' }) }}
-          onDrop={(e) => { e.preventDefault(); handleDrop('hidden') }}
+          data-col-panel="hidden"
+          className={cn(
+            'flex flex-col gap-0.5 min-h-[140px] max-h-[min(48vh,320px)] overflow-y-auto min-w-0 rounded-lg border border-dashed p-1.5',
+            overTarget?.id === '__panel__' && overTarget.panel === 'hidden' ? 'border-primary/40 bg-primary/5' : 'border-border',
+          )}
         >
           <p className="px-1.5 pb-1 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">{t('common.cols_hidden')}</p>
           {hiddenCols.length === 0
@@ -98,9 +121,11 @@ export function ColumnManager({ cols, labelFor, onChange, onClose, onReset }: {
             : hiddenCols.map((col) => renderItem(col, 'hidden'))}
         </div>
         <div
-          className="flex flex-col gap-0.5 min-h-[140px] max-h-[min(48vh,320px)] overflow-y-auto min-w-0 rounded-lg border border-dashed border-border p-1.5"
-          onDragOver={(e) => { e.preventDefault(); if (overTarget?.id !== '__panel__' || overTarget?.panel !== 'visible') setOverTarget({ id: '__panel__', panel: 'visible' }) }}
-          onDrop={(e) => { e.preventDefault(); handleDrop('visible') }}
+          data-col-panel="visible"
+          className={cn(
+            'flex flex-col gap-0.5 min-h-[140px] max-h-[min(48vh,320px)] overflow-y-auto min-w-0 rounded-lg border border-dashed p-1.5',
+            overTarget?.id === '__panel__' && overTarget.panel === 'visible' ? 'border-primary/40 bg-primary/5' : 'border-border',
+          )}
         >
           <p className="px-1.5 pb-1 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">{t('common.cols_visible')}</p>
           {shownCols.length === 0
@@ -112,5 +137,6 @@ export function ColumnManager({ cols, labelFor, onChange, onClose, onReset }: {
         <button onClick={onReset} className="w-full rounded-lg px-2 py-1.5 text-xs text-muted-foreground transition-colors hover:bg-accent hover:text-foreground">{t('common.reset')}</button>
       </div>
     </div>
+    </>
   )
 }
