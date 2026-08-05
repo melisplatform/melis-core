@@ -102,6 +102,12 @@ class MelisModuleManager
                 $uri1 = $tabUri[1];
 
             $melisSite = self::sanitize($_GET['melisSite'] ?? null);
+            // Un nom de module de site est un identifiant simple. melisSite sert à construire un chemin
+            // d'INCLUDE ($rootMelisSites/$melisSite/config/...), or sanitize() ne bloque pas « ../ » ni les
+            // séparateurs → on rejette toute traversée de chemin (LFI). Sécurité.
+            if (!empty($melisSite) && (strpbrk((string) $melisSite, '/\\') !== false || strpos((string) $melisSite, '..') !== false)) {
+                $melisSite = null;
+            }
 
             if ($uri1 == 'melis' || !empty($melisSite) || in_array($uri1, $modulesMelisBackOffice)) {
                 // Loading of the website needed for display in MelisCMS if needed

@@ -575,12 +575,15 @@ class MelisCoreMicroServiceController extends MelisAbstractActionController
         $charactersLength = strlen($characters);
         $randomString = '';
         for ($i = 0; $i < $length; $i++) {
-            $randomString .= $characters[rand(0, $charactersLength - 1)];
+            // random_int() = CSPRNG : une clé d'API microservice ne doit PAS être générée avec rand()
+            // (PRNG non cryptographique, sortie prédictible → clés devinables/brute-forçables). Sécurité.
+            $randomString .= $characters[random_int(0, $charactersLength - 1)];
         }
 
         $data = $this->getMicroServiceAuthTable()->getUserByApiKey($randomString)->current();
         if($data) {
-            $this->generateCode($length);
+            // Collision → régénérer (et RENVOYER le résultat : l'ancien code perdait la valeur récursive).
+            return $this->generateCode($length);
         }
         else {
             return $randomString;

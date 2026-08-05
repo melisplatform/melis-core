@@ -230,7 +230,8 @@ class MelisGenericTable extends MelisServiceManager
 		$whereValue = !empty($options['where']['value']) ? $options['where']['value'] : '';
 	
 		$order = !empty($options['order']['key']) ? $options['order']['key'] : '';
-		$orderDir = !empty($options['order']['dir']) ? $options['order']['dir'] : 'ASC';
+		// Direction STRICTE (ASC/DESC) : jamais la valeur brute concaténée telle quelle dans ORDER BY.
+		$orderDir = (!empty($options['order']['dir']) && strtoupper((string) $options['order']['dir']) === 'DESC') ? 'DESC' : 'ASC';
 	
 		$start = (int) $options['start'];
 		$limit = (int) $options['limit'] === -1 ? $this->getTotalData() : (int) $options['limit'];
@@ -257,11 +258,16 @@ class MelisGenericTable extends MelisServiceManager
 		
 		// check if there's an extra variable that should be included in the query
 		$dateFilter = $options['date_filter'];
-		$dateFilterSql = '';
-		
-		if(count($dateFilter)) {
-			if(!empty($dateFilter['startDate']) && !empty($dateFilter['endDate'])) {
-				$dateFilterSql = '`' . $dateFilter['key'] . '` BETWEEN \'' . $dateFilter['startDate'] . '\' AND \'' . $dateFilter['endDate'] . '\'';
+		// Filtre de date : prédicat Between PARAMÉTRÉ (bornes liées) + nom de colonne validé (identifiant
+		// simple via regex). AVANT : SQL brut concaténé (clé + dates) dans une Expression → injection SQL
+		// possible si un module passe des valeurs issues de la requête (plage de dates DataTable). Sécurité.
+		$dateFilterPredicate = null;
+		if(is_array($dateFilter) && count($dateFilter)) {
+			if(!empty($dateFilter['startDate']) && !empty($dateFilter['endDate']) && !empty($dateFilter['key'])
+				&& preg_match('/^[A-Za-z0-9_]+$/', (string) $dateFilter['key'])) {
+				$dateFilterPredicate = new \Laminas\Db\Sql\Predicate\Between(
+					(string) $dateFilter['key'], $dateFilter['startDate'], $dateFilter['endDate']
+				);
 			}
 		}
 
@@ -276,8 +282,8 @@ class MelisGenericTable extends MelisServiceManager
 					$likes[] = new Like($colKeys, '%'.$whereValue.'%');
 			}
 			
-			if(!empty($dateFilterSql)) {
-				$filters = array(new PredicateSet($likes,PredicateSet::COMBINED_BY_OR), new \Laminas\Db\Sql\Predicate\Expression($dateFilterSql));
+			if($dateFilterPredicate !== null) {
+				$filters = array(new PredicateSet($likes,PredicateSet::COMBINED_BY_OR), $dateFilterPredicate);
 			} else {
 				$filters = array(new PredicateSet($likes,PredicateSet::COMBINED_BY_OR));
 			}
@@ -296,8 +302,9 @@ class MelisGenericTable extends MelisServiceManager
 		if(!is_null($status))
 			$select->where("usr_status = ".$status );
 
-		// used when column ordering is clicked
-		if(!empty($order))
+		// used when column ordering is clicked — nom de colonne validé (identifiant simple) + direction
+		// déjà stricte : empêche l'injection SQL via ORDER BY quand la clé de tri vient de la requête.
+		if(!empty($order) && preg_match('/^[A-Za-z0-9_.]+$/', (string) $order))
 			$select->order($order . ' ' . $orderDir);
 
 //        $artistTable = new TableGateway($this->$this->getTableGateway()->getTable(), $this->$this->getTableGateway()->getAdapter());

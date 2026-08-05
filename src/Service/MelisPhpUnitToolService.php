@@ -146,13 +146,16 @@ class MelisPhpUnitToolService extends MelisCoreLogService
                 file_exists($bootstrapPath) &&
                 file_exists($moduleTestSavePath)) {
 
-                $execCommand = $phpCli. ' '.$phpUnit.' --bootstrap "'.$bootstrapPath.'" "'.$moduleTestSavePath.'" --log-junit "'.$testCfgDir.'/results.xml" --configuration "'.$puXml.'"';
+                // Arguments échappés (escapeshellarg) : ces chemins dérivent de noms de module/test qui
+                // peuvent venir d'un formulaire → sans échappement, un nom contenant des métacaractères
+                // shell (ou une `"`) permettrait une injection de commande. Sécurité (outil dev).
+                $execCommand = escapeshellarg($phpCli).' '.escapeshellarg($phpUnit).' --bootstrap '.escapeshellarg($bootstrapPath).' '.escapeshellarg($moduleTestSavePath).' --log-junit '.escapeshellarg($testCfgDir.'/results.xml').' --configuration '.escapeshellarg($puXml);
                 $output = '';
                 if($this->getOS() == 'windows') {
                     $output = shell_exec($execCommand);
                 }
                 else {
-                    $output = shell_exec($phpUnit.' --bootstrap "'.$bootstrapPath.'" "'.$moduleTestSavePath.'" --log-junit "'.$testCfgDir.'/results.xml" --configuration "'.$puXml.'"');
+                    $output = shell_exec(escapeshellarg($phpUnit).' --bootstrap '.escapeshellarg($bootstrapPath).' '.escapeshellarg($moduleTestSavePath).' --log-junit '.escapeshellarg($testCfgDir.'/results.xml').' --configuration '.escapeshellarg($puXml));
                 }
             }
             else {
@@ -396,7 +399,7 @@ class MelisPhpUnitToolService extends MelisCoreLogService
      */
     protected function shellExists($command)
     {
-        $output = shell_exec('which ' . $command);
+        $output = shell_exec('which ' . escapeshellarg((string) $command));
         if(!empty($output)) {
             return true;
         }
