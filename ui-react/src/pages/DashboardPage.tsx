@@ -380,7 +380,12 @@ export default function DashboardPage() {
     // est vide (un utilisateur sans aucun plugin n'a de toute façon rien à élaguer).
     if (Object.keys(allWidgetMap).length === 0) return
     const kept = layoutRef.current.filter((l) => allWidgetMap[widgetIdOf(l.i)])
-    if (kept.length !== layoutRef.current.length) persist(kept)
+    // `allowRemoval` : le registre est confirmé CHARGÉ ET NON VIDE (garde ci-dessus) — un item
+    // absent est donc un retrait légitime (plugin désinstallé/retiré des droits), pas un glitch de
+    // fetch. Sans ce flag, le filet anti-effacement de `persist` (2) bloquait silencieusement cette
+    // écriture (nombre de plugins en baisse) : la tuile disparaissait localement puis REVENAIT au
+    // rechargement suivant, le record serveur n'ayant jamais été corrigé.
+    if (kept.length !== layoutRef.current.length) persist(kept, { allowRemoval: true })
   }, [legacyLoaded, dbSynced, allWidgetMap, persist])
 
   // Auto-réparation des hauteurs héritées : une SEULE fois, quand le record serveur ET les défs
