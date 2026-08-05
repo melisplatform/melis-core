@@ -220,7 +220,8 @@ export function LegacyPluginContent({ pluginName }: { pluginName: string }) {
   // chargé (postMessage `__melisRetheme`, cf. PluginViewController) qui les applique via ses variables
   // CSS + l'attribut de scheme — instantané. `themeParams` est mémoïsé sur `[theme]`, donc cet effet
   // ne se déclenche qu'au montage (ignoré : l'URL porte déjà ce thème) puis à chaque changement.
-  // ⚠️ Les graphiques flot (peints dans un <canvas>) ne se recolorent pas par CSS — limite connue.
+  // Les graphiques flot (peints dans un <canvas>) ne suivent pas les variables CSS : le document du
+  // plugin les RE-TRACE lui-même à la réception de ce message (cf. PluginViewController).
   const themedOnce = useRef(false)
   useEffect(() => {
     if (!themedOnce.current) {
