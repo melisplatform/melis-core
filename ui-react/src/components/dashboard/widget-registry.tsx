@@ -77,8 +77,10 @@ export function buildLegacyWidgetDef(plugin: LegacyDashboardPlugin): WidgetDef {
     titleLabel: plugin.title || plugin.pluginName,
     description: plugin.description || undefined,
     // Icône DÉCLARÉE par le plugin dans sa config PHP (`datas.icon`, ex. `fa fa-calendar`), remontée
-    // par /dashboard/legacy-plugins — même source que le dashboard legacy. Wrench ne sert plus que
-    // de repli quand le plugin ne déclare rien (ou une classe FA inconnue du mapping).
+    // par /dashboard/legacy-plugins — même source que le dashboard legacy. Rendue avec l'icône
+    // lucide JUMELLE du dessin que montre le sélecteur du créateur de plugins (cf. fa-icons.ts, où
+    // les 24 classes proposées sont mappées une à une) : ce qu'on choisit à la création est ce qu'on
+    // voit sur la tuile. Wrench ne sert que de repli pour une classe hors de cette liste.
     icon: faToLucide(plugin.icon, Wrench),
     thumbnail: plugin.thumbnail || undefined,
     pluginName: plugin.pluginName,

@@ -13,13 +13,9 @@ import { routeForForward } from '@/lib/tool-routes'
 import { useI18n } from '@/i18n/i18n-context'
 import { useIsNarrow } from '@/hooks/useIsNarrow'
 import { useCan } from '@/lib/capabilities'
+import { FormErrorBanner, koNotify, okNotify, type FormIssue } from '@/shared/melis-form-errors'
 
 const TOOL_KEY = 'meliscore_tool_emails_mngt'
-
-/** Toast vers la chrome React. */
-function notify(kind: 'ok' | 'ko', title: string, message: string) {
-  window.postMessage({ __melisNotif: true, kind, title, message }, '*')
-}
 
 interface FormState {
   name: string; codename: string; fromName: string; fromEmail: string; replyTo: string
@@ -60,6 +56,8 @@ export default function EmailFormPage() {
   const [form, setForm] = useState<FormState | null>(null)
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
+  const [errors, setErrors] = useState<Partial<Record<keyof FormState, string>>>({})
+  const [saveError, setSaveError] = useState<string | null>(null)
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
@@ -74,14 +72,14 @@ export default function EmailFormPage() {
         for (const l of r.langs) contents[String(l.id)] = emptyContent()
         setLangs(r.langs); if (r.langs.length) setActiveLang(r.langs[0].id)
         setForm({ name: '', codename: '', fromName: '', fromEmail: '', replyTo: '', tags: '', layout: '', layoutTitle: '', layoutFtrInfo: '', contents })
-      }).catch((e) => notify('ko', t('emails.title'), String(e?.message ?? e))).finally(() => setLoading(false))
+      }).catch((e) => koNotify(t('emails.title'), String(e?.message ?? e))).finally(() => setLoading(false))
     } else {
       emailsApi.fetchEmail(id!).then(({ email, langs }) => {
         const contents: Record<string, EmailContent> = {}
         for (const l of langs) contents[String(l.id)] = email.contents[String(l.id)] ?? emptyContent()
         setLangs(langs); if (langs.length) setActiveLang(langs[0].id)
         setForm({ name: email.name, codename: email.codename, fromName: email.fromName, fromEmail: email.fromEmail, replyTo: email.replyTo, tags: email.tags, layout: email.layout, layoutTitle: email.layoutTitle, layoutFtrInfo: email.layoutFtrInfo, contents })
-      }).catch((e) => notify('ko', t('emails.title'), String(e?.message ?? e))).finally(() => setLoading(false))
+      }).catch((e) => koNotify(t('emails.title'), String(e?.message ?? e))).finally(() => setLoading(false))
     }
   }, [id, isNew]) // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -90,16 +88,34 @@ export default function EmailFormPage() {
     if (!isNew && form?.name) updateSubLabel(subTabPath, form.name)
   }, [isNew, form?.name, subTabPath, updateSubLabel])
 
-  function set<K extends keyof FormState>(key: K, value: FormState[K]) { setForm((f) => f ? { ...f, [key]: value } : f) }
+  function set<K extends keyof FormState>(key: K, value: FormState[K]) {
+    setForm((f) => f ? { ...f, [key]: value } : f)
+    setErrors((e) => (e[key] ? { ...e, [key]: undefined } : e))
+    setSaveError(null)
+  }
   function setContent(langId: number, patch: Partial<EmailContent>) {
     setForm((f) => f ? { ...f, contents: { ...f.contents, [String(langId)]: { ...f.contents[String(langId)], ...patch } } } : f)
   }
 
+  /** Required-field validation (parity with the server): name, code, sender name, sender email. */
+  function validate(f: FormState): Partial<Record<keyof FormState, string>> {
+    const errs: Partial<Record<keyof FormState, string>> = {}
+    if (!f.name.trim())      errs.name      = t('emails.err.required')
+    if (!f.codename.trim())  errs.codename  = t('emails.err.required')
+    if (!f.fromName.trim())  errs.fromName  = t('emails.err.required')
+    if (!f.fromEmail.trim()) errs.fromEmail = t('emails.err.required')
+    return errs
+  }
+
   async function save() {
     if (!form) return
-    if (!form.name.trim() || !form.codename.trim() || !form.fromName.trim() || !form.fromEmail.trim()) {
-      notify('ko', t('emails.title'), t('emails.err.required')); return
+    const errs = validate(form)
+    if (Object.keys(errs).length) {
+      setErrors(errs)
+      koNotify(t('emails.title'), t('emails.err.required'))
+      return
     }
+    setErrors({}); setSaveError(null)
     setSaving(true)
     try {
       await emailsApi.saveEmail({
@@ -108,21 +124,36 @@ export default function EmailFormPage() {
         layoutTitle: form.layoutTitle, layoutFtrInfo: form.layoutFtrInfo, contents: form.contents,
       })
       emailsApi.markEmailsListStale()
-      notify('ok', t('emails.title'), t('emails.saved'))
+      okNotify(t('emails.title'), t('emails.saved'))
       if (isNew) closeSubTab(`${base}/new`)
       navigate(base)
-    } catch (e) { notify('ko', t('emails.title'), String((e as Error)?.message ?? e)) }
+    } catch (e) {
+      const msg = String((e as Error)?.message ?? e)
+      setSaveError(msg)
+      koNotify(t('emails.title'), msg)
+    }
     finally { setSaving(false) }
   }
 
   if (loading || !form) return <div className="p-6 text-center text-sm text-muted-foreground">{t('common.loading')}</div>
 
-  const field = (label: string, value: string, onChange: (v: string) => void, opts: { readOnly?: boolean; placeholder?: string } = {}) => (
+  const field = (label: string, value: string, onChange: (v: string) => void, opts: { readOnly?: boolean; placeholder?: string; error?: string } = {}) => (
     <div>
       <label className="mb-1 block text-xs font-medium text-muted-foreground">{label}</label>
-      <Input value={value} onChange={(e) => onChange(e.target.value)} readOnly={opts.readOnly || !canSave} placeholder={opts.placeholder} />
+      <Input value={value} onChange={(e) => onChange(e.target.value)} readOnly={opts.readOnly || !canSave} placeholder={opts.placeholder}
+        className={cn(opts.error && 'border-destructive')} />
+      {opts.error && <p className="mt-1 text-xs text-destructive">{opts.error}</p>}
     </div>
   )
+
+  // Scannable summary above the fold: the missing required fields, plus any server-side save error.
+  // Inline field highlights below are kept.
+  const bannerIssues: FormIssue[] = []
+  if (errors.name)      bannerIssues.push({ label: t('emails.field.name'), message: errors.name })
+  if (errors.codename)  bannerIssues.push({ label: t('emails.field.code'), message: errors.codename })
+  if (errors.fromName)  bannerIssues.push({ label: t('emails.field.from_name'), message: errors.fromName })
+  if (errors.fromEmail) bannerIssues.push({ label: t('emails.field.from_email'), message: errors.fromEmail })
+  if (saveError)        bannerIssues.push({ message: saveError })
 
   return (
     <div className="flex flex-1 flex-col gap-6 p-6">
@@ -139,14 +170,16 @@ export default function EmailFormPage() {
         {canSave && <Button size="sm" className={cn('gap-1.5', narrow && 'shrink-0')} onClick={save} disabled={saving}><Save className="size-4" />{saving ? t('emails.saving') : t('common.save')}</Button>}
       </div>
 
+      {bannerIssues.length > 0 && <FormErrorBanner title={t('common.check_fields')} issues={bannerIssues} />}
+
       {/* Propriétés générales */}
       <section className="rounded-xl border border-border bg-card p-4 shadow-sm">
         <h3 className="text-sm font-semibold">{t('emails.section.general')}</h3>
         <div className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-2">
-          {field(t('emails.field.name'), form.name, (v) => set('name', v))}
-          {field(t('emails.field.code'), form.codename, (v) => set('codename', v.replace(/[^\w]/g, '')), { readOnly: !isNew, placeholder: 'my_email_code' })}
-          {field(t('emails.field.from_name'), form.fromName, (v) => set('fromName', v))}
-          {field(t('emails.field.from_email'), form.fromEmail, (v) => set('fromEmail', v))}
+          {field(t('emails.field.name'), form.name, (v) => set('name', v), { error: errors.name })}
+          {field(t('emails.field.code'), form.codename, (v) => set('codename', v.replace(/[^\w]/g, '')), { readOnly: !isNew, placeholder: 'my_email_code', error: errors.codename })}
+          {field(t('emails.field.from_name'), form.fromName, (v) => set('fromName', v), { error: errors.fromName })}
+          {field(t('emails.field.from_email'), form.fromEmail, (v) => set('fromEmail', v), { error: errors.fromEmail })}
           {field(t('emails.field.reply_to'), form.replyTo, (v) => set('replyTo', v))}
           {field(t('emails.field.tags'), form.tags, (v) => set('tags', v), { placeholder: 'TAG1,TAG2' })}
           {field(t('emails.field.layout'), form.layout, (v) => set('layout', v), { placeholder: 'module/.../layout.phtml' })}

@@ -3,7 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { SUBTABS_CHANGED, useSubTabs } from '@/components/tabs/sub-tab-store'
 import { routeForForward } from '@/lib/tool-routes'
 import {
-  Activity, Calendar, Check, Circle, Copy, Cpu, ExternalLink, Eye, EyeOff,
+  Activity, AlertCircle, Calendar, Check, Circle, Copy, Cpu, ExternalLink, Eye, EyeOff,
   KeyRound, Link as LinkIcon, Loader2, RefreshCw, RotateCcw, Save, Shield, ShieldCheck,
   ToggleLeft, ToggleRight, User, UserPlus,
 } from 'lucide-react'
@@ -21,6 +21,7 @@ import { useModuleActive } from '@/lib/bricks'
 import { useCan } from '@/lib/capabilities'
 import { useI18n } from '@/i18n/i18n-context'
 import type { I18nKey } from '@/i18n/dictionaries'
+import { FormErrorBanner, koNotify, type FormIssue } from '@/shared/melis-form-errors'
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
@@ -493,7 +494,9 @@ export default function UserFormPage() {
       }
       setTimeout(() => navigate(isEdit ? `${base}/${savedId}` : base), 600)
     } catch (err) {
-      setSaveError(err instanceof Error ? err.message : t('common.err_save'))
+      const msg = err instanceof Error ? err.message : t('common.err_save')
+      setSaveError(msg)
+      koNotify(t('users.title'), msg)
     } finally { setSaving(false) }
   }
 
@@ -520,6 +523,21 @@ export default function UserFormPage() {
   if (loading) {
     return <div className="flex h-full items-center justify-center"><Loader2 className="size-6 animate-spin text-muted-foreground" /></div>
   }
+
+  // Summary banner (above the fold): the specific client-validation fields in error, plus any
+  // server-side save error. Inline field highlights are kept — this is the scannable summary.
+  const fieldLabels: Partial<Record<keyof FormData, string>> = {
+    login: t('users.field.login'),
+    email: t('users.field.email'),
+    firstname: t('users.field.firstname'),
+    lastname: t('users.field.lastname'),
+    password: isEdit ? t('users.field.new_password') : t('users.field.password'),
+    confirmPassword: t('users.field.confirm'),
+  }
+  const bannerIssues: FormIssue[] = (Object.entries(errors) as [keyof FormData, string | undefined][])
+    .filter(([, msg]) => Boolean(msg))
+    .map(([key, msg]) => ({ label: fieldLabels[key] ?? key, message: msg as string }))
+  if (saveError) bannerIssues.push({ message: saveError })
 
   return (
     <form onSubmit={handleSubmit} className="flex h-full flex-col">
@@ -564,7 +582,11 @@ export default function UserFormPage() {
         })}
       </div>
 
-      {saveError && <div className="mx-6 mt-4 rounded-lg border border-destructive/40 bg-destructive/10 px-4 py-2.5 text-sm text-destructive">{saveError}</div>}
+      {bannerIssues.length > 0 && (
+        <div className="mx-6 mt-4">
+          <FormErrorBanner title={t('common.check_fields')} issues={bannerIssues} icon={<AlertCircle className="size-4" />} />
+        </div>
+      )}
 
       {/* ── Tab: Profil ──────────────────────────────────────────────────────── */}
       <div className={cn('flex flex-1 gap-6 overflow-auto p-6', activeTab !== 'profil' && 'hidden', narrow && 'flex-col')}>
