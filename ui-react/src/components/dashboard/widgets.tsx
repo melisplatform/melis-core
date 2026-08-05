@@ -124,6 +124,9 @@ export function LegacyPluginContent({ pluginName }: { pluginName: string }) {
   // ça peut prendre plusieurs secondes. On affiche un spinner tant que l'iframe n'a pas
   // fini de charger (onLoad) : couvre le 1er affichage ET chaque rechargement (remontage).
   const [loading, setLoading] = useState(true)
+  // Le contenu du plugin débute-t-il par une barre d'onglets ? Renseigné au `load` de l'iframe :
+  // dans ce cas la tuile annule son retrait HAUT pour que les onglets touchent l'en-tête (legacy).
+  const [tabsFlush, setTabsFlush] = useState(false)
   // Modale « Ajouter un commentaire » du plugin Workflow : le tool legacy l'ouvrait dans l'iframe
   // (où une petite tuile la rognait) ; l'iframe nous demande désormais de la rendre au niveau de
   // l'hôte, centrée sur la page (cf. WorkflowCommentDialog + le postMessage dans PluginViewController).
@@ -301,7 +304,19 @@ export function LegacyPluginContent({ pluginName }: { pluginName: string }) {
     // rétrécie sous cette taille → le wrapper dépasse le cadre `overflow-auto` de WidgetFrame, qui
     // affiche alors un ascenseur (droite/bas) au lieu de rogner. À taille normale/agrandie, `h-full`
     // domine et l'iframe remplit la tuile (pas d'ascenseur). Voir `contentPx` plus haut.
-    <div className="relative h-full w-full" style={contentPx ? { minHeight: contentPx } : undefined}>
+    // `marginTop` négatif : quand le plugin COMMENCE par une barre d'onglets, elle doit toucher
+    // l'en-tête de la tuile, comme dans le dashboard classique où les onglets font partie du cadre
+    // du widget. Le retrait vient du `p-4` (ou `p-2` en étroit) que WidgetFrame applique à TOUS les
+    // widgets ; rien à l'intérieur de l'iframe ne peut le compenser (le contenu ne déborde pas au-
+    // dessus du bord haut). On annule donc ce seul retrait haut, ici — les côtés et le bas gardent
+    // le leur, et les plugins sans onglets ne changent pas.
+    <div
+      className="relative h-full w-full"
+      style={{
+        ...(contentPx ? { minHeight: contentPx } : {}),
+        ...(tabsFlush ? { marginTop: narrow ? -8 : -16 } : {}),
+      }}
+    >
       {loading && (
         <div className="absolute inset-0 z-10 grid place-items-center bg-card/70">
           <Loader2 className="size-6 animate-spin text-muted-foreground" />
@@ -323,6 +338,15 @@ export function LegacyPluginContent({ pluginName }: { pluginName: string }) {
           // Rattrapage : si la largeur a changé pendant le chargement du plugin, l'URL porte l'état
           // périmé et le postMessage émis à ce moment-là n'avait pas d'écouteur en face.
           frameRef.current?.contentWindow?.postMessage({ __melisNarrow: true, narrow: narrowRef.current }, '*')
+          // Le plugin commence-t-il par une barre d'onglets générée ? (cf. marginTop plus haut)
+          // Lecture directe du DOM de l'iframe : elle est same-origin (contenu que nous produisons),
+          // donc pas besoin d'un postMessage de plus. En cas d'échec, on laisse le retrait par défaut.
+          try {
+            const doc = frameRef.current?.contentDocument
+            setTabsFlush(!!doc?.querySelector('.widget.widget-tabs .melis-dpc-tab'))
+          } catch {
+            /* iframe pas prête : on garde le comportement par défaut */
+          }
         }}
       />
       {confirm && (
