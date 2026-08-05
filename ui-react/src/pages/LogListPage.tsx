@@ -129,15 +129,17 @@ export default function LogListPage() {
   const [cols, setCols]         = useState<ColDef[]>(loadCols)
   const [showColMgr, setShowColMgr] = useState(false)
   const colMgrRef = useRef<HTMLDivElement>(null)
-  // Mobile-only: force the table down to just "title" regardless of the desktop ColumnManager
-  // preference, with the rest reachable via a per-row "+" — desktop behavior (cols as-is, no "+"
-  // column at all) is untouched since hasHidden/displayCols only diverge from `cols` when narrow.
+  // A Hidden column disappears entirely on both desktop and mobile — same rule everywhere, no "+"
+  // peek at Hidden ones. Desktop shows every Visible column inline. Mobile can't fit many columns,
+  // so only the FIRST Visible column (by the user's dragged order in ColManager) anchors inline;
+  // every OTHER Visible column surfaces behind the per-row "+" instead, in that same order.
   const [expanded, setExpanded] = useState<Set<number>>(new Set())
   const toggleExpand = (id: number) => setExpanded((s) => {
     const n = new Set(s); n.has(id) ? n.delete(id) : n.add(id); return n
   })
-  const displayCols = narrow ? cols.map(c => ({ ...c, visible: c.id === 'title' })) : cols
-  const hasHidden = narrow
+  const shownCols = cols.filter(c => c.visible)
+  const displayCols = narrow ? shownCols.map((c, i) => ({ ...c, visible: i === 0 })) : shownCols
+  const hasHidden = narrow && shownCols.length > 1
 
   // Scroll infini + tri server-side + keyset (backend en SQL brut via le trait).
   const {
