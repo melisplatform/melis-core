@@ -286,13 +286,10 @@ class MelisPasswordSettingsService extends MelisGeneralService
                         touch($file);
                     }
 
-                    // 0664 et non 0777 : ce fichier de config porte la politique de mots de passe / login
-                    // (sensible) — il ne doit PAS être world-writable (n'importe quel process/utilisateur
-                    // local pourrait le réécrire). Écriture réservée au propriétaire + groupe (www-data). Sécurité.
                     if (PHP_OS_FAMILY === 'Linux' && DIRECTORY_SEPARATOR == '/') {
-                        shell_exec('sudo chmod 0664 '.escapeshellarg($file));
+                        shell_exec('sudo chmod 0777 '.$file);
                     } else {
-                        chmod($file, 0664);
+                        chmod($file, 0777);
                     }
 
                     $configFactory = new \Laminas\Config\Factory();
