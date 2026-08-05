@@ -94,7 +94,8 @@ var MelisCoreDashboardBubbleUpdatesPlugin = {
 			});
 		})
 		.fail(function(xhr, textStatus, errorThrown) {
-            alert( translations.tr_meliscore_error_message );
+            // Échec silencieux : une bulle de dashboard qui ne peut pas charger ses données ne doit
+            // pas bloquer le chargement de la plateforme avec une alert (ticket 0010871).
         });
 	},
 
@@ -103,10 +104,11 @@ var MelisCoreDashboardBubbleUpdatesPlugin = {
 			type: "POST",
 			url: "/melis/dashboard-plugin/MelisCoreDashboardBubbleUpdatesPlugin/sleep"
 		}).done(function(response) {
-			console.log(response);
+			// (debug console.log retiré — bruit console au chargement, ticket 0010871)
 		})
 		.fail(function(xhr, textStatus, errorThrown) {
-            alert( translations.tr_meliscore_error_message );
+            // Échec silencieux : une bulle de dashboard qui ne peut pas charger ses données ne doit
+            // pas bloquer le chargement de la plateforme avec une alert (ticket 0010871).
         });
 	},
 };
