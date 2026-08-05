@@ -399,8 +399,18 @@ export default function DashboardPage() {
   useEffect(() => {
     if (!legacyLoaded || !dbSynced || !serverLayoutRef.current || healedRef.current) return
     healedRef.current = true
-    persist(layoutRef.current)
-  }, [legacyLoaded, dbSynced, persist])
+    // Filtre comme l'effet d'élagage ci-dessus (même critère : déf. absente d'un registre chargé
+    // ET non vide). SANS ce filtre, cet effet — déclenché par les MÊMES conditions
+    // (`legacyLoaded && dbSynced`) — s'exécute juste après celui d'élagage dans le même passage
+    // d'effets, mais lit `layoutRef.current` AVANT que le re-rendu déclenché par le `persist()` de
+    // l'élagage ne l'ait mis à jour : il repersistait alors la liste NON élaguée (12 tuiles), dont
+    // le nombre dépasse `lastSavedCountRef` fraîchement abaissé à 11 par l'élagage — le filet
+    // anti-effacement (2) ne bloque QUE les baisses, pas les hausses, donc rien ne l'arrêtait. La
+    // tuile orpheline revenait donc en base aussitôt après avoir été retirée, quel que soit l'ordre
+    // d'exécution des deux effets.
+    const kept = layoutRef.current.filter((l) => allWidgetMap[widgetIdOf(l.i)])
+    persist(kept, kept.length !== layoutRef.current.length ? { allowRemoval: true } : undefined)
+  }, [legacyLoaded, dbSynced, allWidgetMap, persist])
 
   // Émis par GridStack après un déplacement / redimensionnement utilisateur → action utilisateur
   // (peut légitimement réduire le nombre de tuiles, ex. via un drag qui en retire une).
