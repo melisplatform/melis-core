@@ -18,6 +18,7 @@ import { useI18n } from '@/i18n/i18n-context'
 import { ViewModeToggle, MelisClassicFrame, type ViewMode } from '@/components/MelisClassicView'
 import { toolHasViewToggle } from '@/lib/module-registry'
 import { getAccountTabs, ACCOUNT_TABS_EVENT } from '@/lib/account-tabs'
+import { FormErrorBanner, koNotify, okNotify, type FormIssue } from '@/shared/melis-form-errors'
 import * as api from '@/lib/account-api'
 
 const MELIS_KEY = 'meliscore_user_profile'
@@ -105,6 +106,8 @@ export default function AccountPage() {
   const [saving, setSaving] = useState(false)
   const [saved, setSaved] = useState(false)
   const [saveErr, setSaveErr] = useState<string | null>(null)
+  // Client-validation errors keyed by field (email / language / password confirmation).
+  const [errors, setErrors] = useState<{ email?: string; langId?: string; confirm?: string }>({})
 
   useEffect(() => {
     let alive = true
@@ -122,8 +125,25 @@ export default function AccountPage() {
     reader.readAsDataURL(file)
   }
 
+  /** Client-side validation (the server stays the source of truth and blocks anyway). */
+  function validate(): { email?: string; langId?: string; confirm?: string } {
+    const errs: { email?: string; langId?: string; confirm?: string } = {}
+    const mail = email.trim()
+    if (!mail || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(mail)) errs.email = t('account.err.email')
+    if (!langId) errs.langId = t('account.err.lang')
+    if (password && password !== confirm) errs.confirm = t('account.err.pass_match')
+    return errs
+  }
+
   async function handleSave() {
     if (!profile) return
+    const errs = validate()
+    if (Object.keys(errs).length) {
+      setErrors(errs); setSaved(false); setSaveErr(null)
+      koNotify(t('account.title'), t('common.check_fields'))
+      return
+    }
+    setErrors({})
     setSaving(true); setSaved(false); setSaveErr(null)
     try {
       const res = await api.saveAccount({
@@ -134,11 +154,14 @@ export default function AccountPage() {
         image, // undefined = inchangé
       })
       setSaved(true); setPassword(''); setConfirm('')
+      okNotify(t('account.title'), t('account.saved'))
       // Changement de langue du BO → recharger pour ré-initialiser l'i18n dans la nouvelle langue.
       if (res.reload) { window.location.reload(); return }
       setTimeout(() => setSaved(false), 2500)
     } catch (e) {
-      setSaveErr(errorMessage(t as never, String((e as Error)?.message ?? e)))
+      const msg = errorMessage(t as never, String((e as Error)?.message ?? e))
+      setSaveErr(msg)
+      koNotify(t('account.title'), msg)
     } finally {
       setSaving(false)
     }
@@ -154,6 +177,13 @@ export default function AccountPage() {
     setPreview(null)
     if (fileRef.current) fileRef.current.value = ''
   }
+
+  // Scannable summary above the fold: the client-validation fields in error, plus any server error.
+  const bannerIssues: FormIssue[] = []
+  if (errors.email)   bannerIssues.push({ label: t('account.email'), message: errors.email })
+  if (errors.langId)  bannerIssues.push({ label: t('account.language'), message: errors.langId })
+  if (errors.confirm) bannerIssues.push({ label: t('account.confirm_password'), message: errors.confirm })
+  if (saveErr)        bannerIssues.push({ message: saveErr })
 
   return (
     <div className="flex min-h-full flex-col">
@@ -250,22 +280,25 @@ export default function AccountPage() {
                 <div className="p-6">
                   {activeTab === PROFILE_TAB ? (
                     <div className="max-w-2xl space-y-5">
-                      <Field label={t('account.email')} required>
-                        <Input type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
+                      {bannerIssues.length > 0 && <FormErrorBanner title={t('common.check_fields')} issues={bannerIssues} />}
+                      <Field label={t('account.email')} required error={errors.email}>
+                        <Input type="email" value={email} onChange={(e) => { setEmail(e.target.value); setErrors((p) => ({ ...p, email: undefined })); setSaveErr(null) }}
+                          className={cn(errors.email && 'border-destructive')} />
                       </Field>
                       <Field label={t('account.password')}>
-                        <Input type="password" value={password} onChange={(e) => setPassword(e.target.value)}
+                        <Input type="password" value={password} onChange={(e) => { setPassword(e.target.value); setErrors((p) => ({ ...p, confirm: undefined })); setSaveErr(null) }}
                           placeholder={t('account.password_placeholder')} autoComplete="new-password" />
                       </Field>
-                      <Field label={t('account.confirm_password')}>
-                        <Input type="password" value={confirm} onChange={(e) => setConfirm(e.target.value)}
-                          placeholder={t('account.password_placeholder')} autoComplete="new-password" />
+                      <Field label={t('account.confirm_password')} error={errors.confirm}>
+                        <Input type="password" value={confirm} onChange={(e) => { setConfirm(e.target.value); setErrors((p) => ({ ...p, confirm: undefined })); setSaveErr(null) }}
+                          placeholder={t('account.password_placeholder')} autoComplete="new-password"
+                          className={cn(errors.confirm && 'border-destructive')} />
                       </Field>
-                      <Field label={t('account.language')} required>
+                      <Field label={t('account.language')} required error={errors.langId}>
                         <LanguageSelect
                           value={langId}
                           languages={profile.languages}
-                          onChange={setLangId}
+                          onChange={(id) => { setLangId(id); setErrors((p) => ({ ...p, langId: undefined })); setSaveErr(null) }}
                         />
                       </Field>
 
@@ -275,7 +308,6 @@ export default function AccountPage() {
                           {t('common.save')}
                         </Button>
                         {saved && <span className="inline-flex items-center gap-1 text-sm text-emerald-600"><Check className="size-4" />{t('account.saved')}</span>}
-                        {saveErr && <span className="text-sm text-destructive">{saveErr}</span>}
                       </div>
                     </div>
                   ) : (
@@ -358,13 +390,14 @@ function LanguageSelect({ value, languages, onChange }: {
   )
 }
 
-function Field({ label, required, children }: { label: string; required?: boolean; children: React.ReactNode }) {
+function Field({ label, required, error, children }: { label: string; required?: boolean; error?: string; children: React.ReactNode }) {
   return (
     <div>
       <label className="mb-1.5 block text-sm font-medium text-foreground">
         {label}{required && <span className="ml-0.5 text-destructive">*</span>}
       </label>
       {children}
+      {error && <p className="mt-1 text-xs text-destructive">{error}</p>}
     </div>
   )
 }

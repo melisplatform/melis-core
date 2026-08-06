@@ -3,6 +3,7 @@ import { createPortal } from 'react-dom'
 import { Loader2, Settings, X } from 'lucide-react'
 
 import { cn } from '@/lib/utils'
+import { faToLucide } from '@/lib/fa-icons'
 import { useIsNarrow } from '@/hooks/useIsNarrow'
 import { useI18n } from '@/i18n/i18n-context'
 
@@ -225,17 +226,23 @@ export function WidgetConfigDialog({
             visibles ; un défilement horizontal les cacherait derrière un geste à découvrir). */}
         {tabs.length > 1 && (
           <div className={cn('flex items-stretch gap-1 border-b border-border bg-muted/30 px-2', narrow && 'flex-wrap')}>
-            {tabs.map((tab, i) => (
-              <button key={tab.id} type="button" onClick={() => setActiveTab(i)}
-                style={{ borderBottom: i === activeTab ? '2px solid var(--color-primary)' : '2px solid transparent' }}
-                className={cn(
-                  'flex cursor-pointer items-center gap-1.5 px-3 py-2 text-xs font-medium transition-colors',
-                  i === activeTab ? 'text-foreground' : 'text-muted-foreground hover:text-foreground',
-                )}>
-                <Settings className="size-3 shrink-0" />
-                {tab.name}
-              </button>
-            ))}
+            {tabs.map((tab, i) => {
+              // Icône DÉCLARÉE par l'onglet dans la config du plugin (`tab_icon`, classe FA,
+              // cf. PluginViewController) — même vocabulaire que l'icône du plugin, rendue avec son
+              // équivalent lucide. L'engrenage ne sert que de repli si l'onglet n'en déclare pas.
+              const TabIcon = faToLucide(tab.icon, Settings)
+              return (
+                <button key={tab.id} type="button" onClick={() => setActiveTab(i)}
+                  style={{ borderBottom: i === activeTab ? '2px solid var(--color-primary)' : '2px solid transparent' }}
+                  className={cn(
+                    'flex cursor-pointer items-center gap-1.5 px-3 py-2 text-xs font-medium transition-colors',
+                    i === activeTab ? 'text-foreground' : 'text-muted-foreground hover:text-foreground',
+                  )}>
+                  <TabIcon className="size-3 shrink-0" />
+                  {tab.name}
+                </button>
+              )
+            })}
           </div>
         )}
 

@@ -11,10 +11,7 @@ import { routeForForward } from '@/lib/tool-routes'
 import { useCan } from '@/lib/capabilities'
 import { useIsNarrow } from '@/hooks/useIsNarrow'
 import { useI18n } from '@/i18n/i18n-context'
-
-function notify(kind: 'ok' | 'ko', title: string, message: string) {
-  window.postMessage({ __melisNotif: true, kind, title, message }, '*')
-}
+import { FormErrorBanner, koNotify, okNotify, type FormIssue } from '@/shared/melis-form-errors'
 
 interface FormData { name: string; marketplace: boolean; cache: boolean }
 const EMPTY_FORM: FormData = { name: '', marketplace: true, cache: true }
@@ -106,11 +103,13 @@ export default function PlatformFormPage() {
       })
       platformApi.markPlatformsListStale()
       setSaved(true)
-      notify('ok', t('platforms.title'), t('platforms.form.saved'))
+      okNotify(t('platforms.title'), t('platforms.form.saved'))
       if (!isEdit) closeSubTab(`${base}/new`)
       setTimeout(() => navigate(base), 600)
     } catch (err) {
-      setSaveError(err instanceof Error ? err.message : t('platforms.form.err_save'))
+      const msg = err instanceof Error ? err.message : t('platforms.form.err_save')
+      setSaveError(msg)
+      koNotify(t('platforms.title'), msg)
     } finally {
       setSaving(false)
     }
@@ -125,6 +124,12 @@ export default function PlatformFormPage() {
       .catch(() => null)
       .finally(() => setTimeout(() => setLoading(false), 300))
   }
+
+  // Scannable summary above the fold: the specific client-validation field in error, plus any
+  // server-side save error. Inline field highlight below is kept.
+  const bannerIssues: FormIssue[] = []
+  if (nameError) bannerIssues.push({ label: t('platforms.form.name'), message: nameError })
+  if (saveError) bannerIssues.push({ message: saveError })
 
   return (
     <div className="flex flex-col gap-6 p-6">
@@ -156,7 +161,7 @@ export default function PlatformFormPage() {
         </div>
       </div>
 
-      {saveError && <div className="rounded-lg border border-red-300 bg-red-50 px-4 py-2 text-sm text-red-700 dark:bg-red-950/20">{saveError}</div>}
+      {bannerIssues.length > 0 && <FormErrorBanner title={t('common.check_fields')} issues={bannerIssues} />}
 
       {loading ? (
         <div className="flex min-h-[40vh] items-center justify-center"><Loader2 className="size-6 animate-spin text-primary" /></div>

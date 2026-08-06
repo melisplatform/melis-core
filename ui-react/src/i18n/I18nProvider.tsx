@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState, type ReactNode } from 'react'
+import { Fragment, useCallback, useEffect, useMemo, useState, type ReactNode } from 'react'
 
 import { I18nContext, type I18nState } from './i18n-context'
 import {
@@ -55,6 +55,37 @@ function readInitialLang(): Lang {
   return DEFAULT_LANG
 }
 
+/**
+ * `<html lang>` est la SOURCE DE VÉRITÉ de la langue pour les BRIQUES de module : chacune fait son
+ * `document.documentElement.lang` au rendu (libellés des capacités dans l'éditeur de droits, dates,
+ * dictionnaires locaux…). Deux pièges, à l'origine de « les libellés sont en français alors que la
+ * session est en anglais » :
+ *   1. `index.html` est livré en dur avec `lang="fr"` et l'attribut n'était corrigé qu'APRÈS la
+ *      résolution de `/langs` (async, parfois lente : contention du verrou de session PHP). Tout ce
+ *      qui se monte pendant cette fenêtre — typiquement un onglet RESTAURÉ au reload, donc l'outil
+ *      sur lequel on travaillait — se rendait en français.
+ *   2. Les briques ne sont PAS réactives à l'attribut, et le `setState` du provider ne re-rend PAS
+ *      `children` (bailout React : même référence d'élément) → le mauvais libellé RESTE affiché.
+ * On applique donc la langue mise en cache DÈS LE CHARGEMENT DU MODULE (avant le premier rendu),
+ * et on remonte l'arbre si la réponse serveur dément le cache (cf. LANG_REMOUNT_WINDOW_MS).
+ */
+function applyDocLang(next: Lang): Lang {
+  const prev = document.documentElement.lang
+  if (prev !== next) document.documentElement.lang = next
+  return prev as Lang
+}
+
+// Exécuté à l'import (donc avant `createRoot().render()` de main.tsx) : le tout premier rendu voit
+// déjà la bonne langue dès lors que le navigateur a ouvert le BO au moins une fois (cache local).
+applyDocLang(readInitialLang())
+
+/**
+ * Fenêtre (ms depuis le chargement de la page) pendant laquelle un désaccord cache ↔ serveur
+ * autorise un REMONTAGE de l'arbre. Au boot c'est indolore (rien n'est encore saisi) ; passé ce
+ * délai on se contente de corriger l'attribut, pour ne jamais détruire le travail en cours.
+ */
+const LANG_REMOUNT_WINDOW_MS = 15_000
+
 export function I18nProvider({ children }: { children: ReactNode }) {
   const cached = readCachedLangs()
   const [lang, setLangState] = useState<Lang>(readInitialLang)
@@ -63,6 +94,8 @@ export function I18nProvider({ children }: { children: ReactNode }) {
   const [currentLangId, setCurrentLangId] = useState(cached?.current.id ?? 0)
   // Traductions serveur (melis-core PHP) : priment sur les valeurs statiques de dictionaries.ts.
   const [serverTr, setServerTr] = useState<Record<string, string>>({})
+  // Compteur de remontage : incrémenté seulement si la locale serveur dément celle du boot.
+  const [langEpoch, setLangEpoch] = useState(0)
 
   // Charge les traductions PHP pour la langue active. Route publique → disponible dès le login.
   useEffect(() => {
@@ -85,7 +118,11 @@ export function I18nProvider({ children }: { children: ReactNode }) {
       setCurrentLangId(data.current.id)
       const next = localeToLang(data.current.locale)
       setLangState(next)
-      document.documentElement.lang = next
+      // La locale de SESSION fait foi : si elle dément la langue appliquée au boot depuis le cache
+      // (ou le `lang="fr"` en dur d'index.html au tout premier chargement), on remonte l'arbre —
+      // sinon les briques déjà montées gardent leurs libellés dans l'ancienne langue.
+      const prev = applyDocLang(next)
+      if (prev !== next && performance.now() < LANG_REMOUNT_WINDOW_MS) setLangEpoch((e) => e + 1)
       try {
         localStorage.setItem(LOCALE_STORAGE_KEY, data.current.locale)
         localStorage.setItem(LANG_STORAGE_KEY, next)
@@ -97,7 +134,7 @@ export function I18nProvider({ children }: { children: ReactNode }) {
 
   const setLang = useCallback((next: Lang) => {
     setLangState(next)
-    document.documentElement.lang = next
+    applyDocLang(next)
     try { localStorage.setItem(LANG_STORAGE_KEY, next) } catch { /* best-effort */ }
   }, [])
 
@@ -161,5 +198,11 @@ export function I18nProvider({ children }: { children: ReactNode }) {
     [lang, setLang, t, langs, currentLocale, currentLangId, changeLocale],
   )
 
-  return <I18nContext.Provider value={value}>{children}</I18nContext.Provider>
+  // `key={langEpoch}` : voir applyDocLang — seul moyen générique de faire repartir les briques
+  // (non réactives à `<html lang>`) dans la bonne langue sans toucher aux 25+ modules.
+  return (
+    <I18nContext.Provider value={value}>
+      <Fragment key={langEpoch}>{children}</Fragment>
+    </I18nContext.Provider>
+  )
 }

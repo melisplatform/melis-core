@@ -10,6 +10,7 @@ import { useI18n } from '@/i18n/i18n-context'
 import { useTheme } from '@/theme/theme-context'
 import { useReactTheme, loadReactTheme } from '@/lib/react-theme'
 import { resetPassword } from '@/lib/melis-api'
+import { FormErrorBanner } from '@/shared/melis-form-errors'
 import wordmark from '@/assets/melis-wordmark.svg'
 import wordmarkWhite from '@/assets/melis-wordmark-white.svg'
 
@@ -92,12 +93,10 @@ export default function ResetPasswordPage() {
         ) : (
           <>
             {error && (
-              <div
-                role="alert"
-                className="mb-5 flex items-start gap-2.5 rounded-md border border-destructive/30 bg-secondary px-3.5 py-3 text-sm text-destructive"
-              >
-                <AlertCircle className="mt-0.5 size-4 shrink-0" />
-                <span dangerouslySetInnerHTML={{ __html: error }} />
+              // Unified banner; `html` because the server message may embed markup (was
+              // dangerouslySetInnerHTML before). Matches Login/ForgotPassword adoption.
+              <div className="mb-5">
+                <FormErrorBanner title={error} html icon={<AlertCircle className="mt-0.5 size-4 shrink-0" />} />
               </div>
             )}
 

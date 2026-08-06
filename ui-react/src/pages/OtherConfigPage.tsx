@@ -15,12 +15,9 @@ import { routeForForward } from '@/lib/tool-routes'
 import { useI18n } from '@/i18n/i18n-context'
 import { useIsNarrow } from '@/hooks/useIsNarrow'
 import { useCan } from '@/lib/capabilities'
+import { FormErrorBanner, koNotify, okNotify } from '@/shared/melis-form-errors'
 
 const TOOL_KEY = 'meliscore_tool_other_config'
-
-function notify(kind: 'ok' | 'ko', title: string, message: string) {
-  window.postMessage({ __melisNotif: true, kind, title, message }, '*')
-}
 
 // ─── Cache module-level (page montée en permanence) ────────────────────────────
 interface PageCache { config: OtherConfig | null; mode: ViewMode; iframeLoaded: boolean }
@@ -57,6 +54,7 @@ export default function OtherConfigPage() {
   const [cfg, setCfg] = useState<OtherConfig | null>(_cache?.config ?? null)
   const [loading, setLoading] = useState(!_cache?.config)
   const [saving, setSaving] = useState(false)
+  const [saveError, setSaveError] = useState<string | null>(null)
 
   const cacheRef = useRef({ cfg, mode, iframeLoaded })
   useEffect(() => { cacheRef.current = { cfg, mode, iframeLoaded } })
@@ -70,7 +68,7 @@ export default function OtherConfigPage() {
     setLoading(true)
     api.fetchOtherConfig()
       .then((c) => setCfg(c))
-      .catch((e) => notify('ko', t('otherconfig.title'), String(e?.message ?? e)))
+      .catch((e) => koNotify(t('otherconfig.title'), String(e?.message ?? e)))
       .finally(() => setLoading(false))
   }
   useEffect(() => { if (!_cache?.config) load() }, []) // eslint-disable-line react-hooks/exhaustive-deps
@@ -80,15 +78,17 @@ export default function OtherConfigPage() {
 
   async function save() {
     if (!cfg) return
-    setSaving(true)
+    setSaving(true); setSaveError(null)
     try {
       await api.saveOtherConfig(cfg)
-      notify('ok', t('otherconfig.title'), t('otherconfig.saved'))
+      okNotify(t('otherconfig.title'), t('otherconfig.saved'))
       _cache = null
       // La politique de mot de passe vient d'ici : purger le cache du formulaire utilisateur.
       invalidatePasswordPolicy()
     } catch (e) {
-      notify('ko', t('otherconfig.title'), String((e as Error)?.message ?? e))
+      const msg = String((e as Error)?.message ?? e)
+      setSaveError(msg)
+      koNotify(t('otherconfig.title'), msg)
     } finally { setSaving(false) }
   }
 
@@ -150,6 +150,7 @@ export default function OtherConfigPage() {
 
       {/* Vue React */}
       <div className={cn('flex flex-1 flex-col gap-6', effectiveMode === 'react' ? 'flex' : 'hidden')}>
+        {saveError && <FormErrorBanner title={t('common.check_fields')} issues={[{ message: saveError }]} />}
         {!canList ? (
           <p className="text-sm text-muted-foreground">{t('otherconfig.no_list')}</p>
         ) : loading || !cfg ? (

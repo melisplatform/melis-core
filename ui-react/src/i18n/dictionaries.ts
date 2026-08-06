@@ -332,6 +332,7 @@ const fr = {
   'common.cols_visible': 'Visibles',
   'common.cols_hidden': 'Masquées',
   'common.err_save': 'Erreur lors de la sauvegarde',
+  'common.check_fields': 'Veuillez vérifier les champs obligatoires.',
 
   // ── Utilisateurs ──
   'users.title': 'Utilisateurs',
@@ -1156,6 +1157,7 @@ const en: Record<I18nKey, string> = {
   'common.cols_visible': 'Visible',
   'common.cols_hidden': 'Hidden',
   'common.err_save': 'Error while saving',
+  'common.check_fields': 'Please check the required fields.',
 
   // ── Users ──
   'users.title': 'Users',

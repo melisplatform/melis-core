@@ -7,6 +7,7 @@ import { Label } from '@/components/ui/label'
 import { testDatabaseConnection, type DbConnectionInput } from '@/lib/setup-api'
 import { useI18n } from '@/i18n/i18n-context'
 import type { I18nKey } from '@/i18n/dictionaries'
+import { FormErrorBanner, type FormIssue } from '@/shared/melis-form-errors'
 
 const FIELD_LABEL: Record<string, I18nKey> = {
   hostname: 'setup.db.host',
@@ -44,12 +45,18 @@ export function Step20DatabaseConnection({ onStatusChange }: { onStatusChange?: 
     }
   }
 
+  // Scannable summary of the failing fields, above the fold. Inline field errors below are kept.
+  const bannerIssues: FormIssue[] = Object.entries(errors)
+    .filter(([, message]) => Boolean(message))
+    .map(([field, message]) => ({ label: FIELD_LABEL[field] ? t(FIELD_LABEL[field]) : undefined, message }))
+
   return (
     <div className="rounded-xl border border-border bg-card p-5">
       <h3 className="font-[var(--font-display)] text-sm font-semibold">{t('setup.db.title')}</h3>
       <p className="mt-0.5 text-xs text-muted-foreground">{t('setup.db.desc')}</p>
 
       <div className="mt-4 space-y-3 border-t border-border pt-4">
+        {bannerIssues.length > 0 && <FormErrorBanner title={t('common.check_fields')} issues={bannerIssues} />}
         {(['hostname', 'database', 'username', 'password'] as const).map((field) => (
           <div key={field} className="space-y-1.5">
             <Label htmlFor={`db-${field}`}>{t(FIELD_LABEL[field])}</Label>

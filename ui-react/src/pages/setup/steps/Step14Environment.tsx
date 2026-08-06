@@ -7,6 +7,7 @@ import { Label } from '@/components/ui/label'
 import { Checkbox } from '@/components/ui/checkbox'
 import { createEnvironment, type EnvironmentInput } from '@/lib/setup-api'
 import { useI18n } from '@/i18n/i18n-context'
+import { FormErrorBanner } from '@/shared/melis-form-errors'
 
 /** Step 1.3 — environnement courant + sites/domaines déclarés (mêmes champs que le carousel
  *  legacy `step-1.3.phtml`, mais lignes ajoutées/retirées en state React au lieu du DOM jQuery). */
@@ -105,7 +106,7 @@ export function Step14Environment({ onStatusChange }: { onStatusChange?: (passed
           </Button>
         </div>
 
-        {error && <p className="text-sm text-destructive">{error}</p>}
+        {error && <FormErrorBanner title={t('common.check_fields')} issues={[{ message: error }]} />}
 
         <div className="flex items-center gap-3">
           <Button type="button" onClick={handleSave} disabled={saving || !domain}>
