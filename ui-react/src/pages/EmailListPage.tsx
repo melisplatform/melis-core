@@ -1,6 +1,6 @@
 import { Fragment, useEffect, useRef, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
-import { ArrowDown, ArrowUp, ArrowUpDown, Database, Loader2, Mail, Pencil, Plus, RotateCcw, Search, Settings, Trash2, X } from 'lucide-react'
+import { ArrowDown, ArrowUp, ArrowUpDown, Columns3, Database, Loader2, Mail, Pencil, Plus, RotateCcw, Search, Settings, Trash2, X } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -14,11 +14,33 @@ import { MelisClassicFrame, ViewModeToggle, type ViewMode } from '@/components/M
 import { toolHasViewToggle } from '@/lib/module-registry'
 import { routeForForward } from '@/lib/tool-routes'
 import { useI18n } from '@/i18n/i18n-context'
+import type { I18nKey } from '@/i18n/dictionaries'
+import { ColumnManager, visibleCols, type ColDef } from '@/components/ColumnManager'
 import { ExpandToggle, HiddenColsRow } from '@/components/ExpandableRow'
 import { useIsNarrow } from '@/hooks/useIsNarrow'
 import { useCan } from '@/lib/capabilities'
 
 const TOOL_KEY = 'meliscore_tool_emails_mngt'
+
+// ─── Colonnes (sélection + ordre persistés en localStorage) ─────────────────────────
+const COL_ORDER = ['name', 'codename', 'fromName', 'fromEmail', 'source'] as const
+const COL_LABEL: Record<string, I18nKey> = {
+  name: 'emails.col.name', codename: 'emails.col.code', fromName: 'emails.col.from_name',
+  fromEmail: 'emails.col.from_email', source: 'emails.col.source',
+}
+const DEFAULT_COLS: ColDef[] = COL_ORDER.map(id => ({ id, visible: true }))
+const COL_KEY = 'melis-emails-cols-v1'
+function loadCols(): ColDef[] {
+  try {
+    const raw = localStorage.getItem(COL_KEY)
+    if (!raw) return DEFAULT_COLS
+    const saved: ColDef[] = JSON.parse(raw)
+    const ordered = saved.map(s => { const d = DEFAULT_COLS.find(c => c.id === s.id); return d ? { id: d.id, visible: s.visible } : null }).filter(Boolean) as ColDef[]
+    const missing = DEFAULT_COLS.filter(d => !saved.find(s => s.id === d.id))
+    return [...ordered, ...missing]
+  } catch { return DEFAULT_COLS }
+}
+function saveCols(cols: ColDef[]) { localStorage.setItem(COL_KEY, JSON.stringify(cols)) }
 
 interface ListCache {
   items: EmailListItem[]; total: number; cursor: string | null; hasMore: boolean
@@ -56,22 +78,28 @@ export default function EmailListPage() {
   const canEdit   = useCan(TOOL_KEY, 'edit')
   const canDelete = useCan(TOOL_KEY, 'delete')
 
-  // Mobile-only: force the table down to just "name", with the rest reachable via a per-row
-  // "+" — desktop behavior (all 5 columns, no "+" at all) is untouched since this tool has no
-  // ColumnManager/persisted col prefs to begin with, so `narrow` is the only branch.
+  const [cols, setCols] = useState<ColDef[]>(loadCols)
+  const [showColMgr, setShowColMgr] = useState(false)
+  const colMgrRef = useRef<HTMLDivElement>(null)
+  // A Hidden column disappears entirely on both desktop and mobile — same rule everywhere, no "+"
+  // peek at Hidden ones. Desktop shows every Visible column inline. Mobile can't fit many columns,
+  // so only the FIRST Visible column (by the user's dragged order in ColManager) anchors inline;
+  // every OTHER Visible column surfaces behind the per-row "+" instead, in that same order.
   const [expanded, setExpanded] = useState<Set<string>>(new Set())
   const toggleExpand = (codename: string) => setExpanded((s) => {
     const n = new Set(s); n.has(codename) ? n.delete(codename) : n.add(codename); return n
   })
-  const ALL_COLS = [
-    { id: 'name', label: t('emails.col.name') },
-    { id: 'codename', label: t('emails.col.code') },
-    { id: 'fromName', label: t('emails.col.from_name') },
-    { id: 'fromEmail', label: t('emails.col.from_email') },
-    { id: 'source', label: t('emails.col.source') },
-  ] as const
-  const displayColIds = narrow ? ['name'] : ALL_COLS.map((c) => c.id)
-  const hasHidden = narrow
+  const shownCols = cols.filter(c => c.visible)
+  const displayCols = narrow ? shownCols.map((c, i) => ({ ...c, visible: i === 0 })) : shownCols
+  const hasHidden = narrow && shownCols.length > 1
+
+  useEffect(() => {
+    if (!showColMgr) return
+    const h = (e: MouseEvent) => { if (colMgrRef.current && !colMgrRef.current.contains(e.target as Node)) setShowColMgr(false) }
+    document.addEventListener('mousedown', h)
+    return () => document.removeEventListener('mousedown', h)
+  }, [showColMgr])
+
   function cellContent(e: EmailListItem, id: string) {
     if (id === 'name') return <div className="flex items-center gap-2"><Mail className="size-4 text-muted-foreground" /><span className="font-medium">{e.name}</span></div>
     if (id === 'codename') return <code className="rounded bg-muted px-1.5 py-0.5 text-xs">{e.codename}</code>
@@ -194,12 +222,22 @@ export default function EmailListPage() {
               <Input value={search} onChange={(e) => setSearch(e.target.value)} placeholder={t('emails.search')} className="pl-9" />
               {search && <button onClick={() => setSearch('')} className="absolute right-2.5 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"><X className="size-4" /></button>}
             </div>
-            <div className={cn('flex items-center gap-2', !narrow && 'ml-auto', narrow && 'w-full')}>
+            <div className={cn('flex items-center gap-2', !narrow && 'ml-auto', narrow && 'w-full flex-wrap')}>
               <Button variant="outline" size="sm"
-                className={cn('gap-1.5', narrow && 'h-auto min-h-9 w-full justify-center whitespace-normal text-center')}
+                className={cn('gap-1.5', narrow && 'h-auto min-h-9 flex-[1_1_calc(50%_-_4px)] justify-center whitespace-normal text-center')}
                 onClick={resetFilters} title={t('common.reset_filters')}>
                 <RotateCcw className={cn('size-3.5', refreshing && 'animate-spin')} />{t('common.reset_filters')}
               </Button>
+              <div ref={colMgrRef} className={cn('relative', narrow && 'flex-[1_1_calc(50%_-_4px)]')}>
+                <Button variant="outline" size="sm"
+                  className={cn('gap-1.5', narrow && 'h-auto min-h-9 w-full justify-center whitespace-normal text-center')}
+                  onClick={() => setShowColMgr(v => !v)}>
+                  <Columns3 className="size-3.5" />{t('common.columns')}
+                </Button>
+                {showColMgr && <ColumnManager cols={cols} labelFor={(id) => t(COL_LABEL[id])} anchorRef={colMgrRef}
+                  onChange={(c) => { setCols(c); saveCols(c) }} onClose={() => setShowColMgr(false)}
+                  onReset={() => { setCols(DEFAULT_COLS); saveCols(DEFAULT_COLS) }} />}
+              </div>
             </div>
           </div>
 
@@ -208,17 +246,13 @@ export default function EmailListPage() {
               <thead className="border-b border-border bg-muted/40 text-xs uppercase tracking-wide text-muted-foreground">
                 <tr>
                   {hasHidden && <th className="w-8 px-2 py-3" />}
-                  {displayColIds.includes('name') && <SortHeader id="name" label={t('emails.col.name')} />}
-                  {displayColIds.includes('codename') && <SortHeader id="codename" label={t('emails.col.code')} />}
-                  {displayColIds.includes('fromName') && <SortHeader id="fromName" label={t('emails.col.from_name')} />}
-                  {displayColIds.includes('fromEmail') && <SortHeader id="fromEmail" label={t('emails.col.from_email')} />}
-                  {displayColIds.includes('source') && <SortHeader id="source" label={t('emails.col.source')} />}
+                  {visibleCols(displayCols).map(({ id }) => <SortHeader key={id} id={id as EmailSortKey} label={t(COL_LABEL[id])} />)}
                   <th className="w-20 px-4 py-3" />
                 </tr>
               </thead>
               <tbody className="divide-y divide-border">
                 {items.length === 0 && !loading ? (
-                  <tr><td colSpan={displayColIds.length + 1 + (hasHidden ? 1 : 0)} className="px-4 py-10 text-center text-sm text-muted-foreground">{t('emails.empty')}</td></tr>
+                  <tr><td colSpan={visibleCols(displayCols).length + 1 + (hasHidden ? 1 : 0)} className="px-4 py-10 text-center text-sm text-muted-foreground">{t('emails.empty')}</td></tr>
                 ) : items.map((e) => (
                   <Fragment key={e.codename}>
                   <tr className="group transition-colors hover:bg-muted/40">
@@ -227,7 +261,7 @@ export default function EmailListPage() {
                         <ExpandToggle expanded={expanded.has(e.codename)} onClick={() => toggleExpand(e.codename)} />
                       </td>
                     )}
-                    {displayColIds.map((id) => (
+                    {visibleCols(displayCols).map(({ id }) => (
                       <td key={id} className={cn('px-4 py-2.5', (id === 'fromName' || id === 'fromEmail') && 'text-muted-foreground')}>
                         {cellContent(e, id)}
                       </td>
@@ -240,10 +274,8 @@ export default function EmailListPage() {
                     </td>
                   </tr>
                   {expanded.has(e.codename) && (
-                    <HiddenColsRow cols={ALL_COLS.map((c) => ({ id: c.id, visible: displayColIds.includes(c.id) }))}
-                      labelFor={(id) => ALL_COLS.find((c) => c.id === id)?.label ?? id}
-                      renderValue={(id) => cellContent(e, id)}
-                      colSpan={displayColIds.length + 1 + (hasHidden ? 1 : 0)} />
+                    <HiddenColsRow cols={displayCols} labelFor={(id) => t(COL_LABEL[id])} renderValue={(id) => cellContent(e, id)}
+                      colSpan={visibleCols(displayCols).length + 1 + (hasHidden ? 1 : 0)} />
                   )}
                   </Fragment>
                 ))}
