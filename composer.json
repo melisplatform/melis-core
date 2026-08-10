@@ -62,9 +62,9 @@
 		"psr/container": "1.1.1",
 		"justinrainbow/json-schema": "^5.2.13 || ^6.5.1",
 		"matthiasmullie/minify": "^1.3",
-		"melisplatform/melis-asset-manager": "^5.2",
-		"melisplatform/melis-composerdeploy": "^5.2",
-		"melisplatform/melis-dbdeploy": "^5.2"
+		"melisplatform/melis-asset-manager": "^6.0",
+		"melisplatform/melis-composerdeploy": "^6.0",
+		"melisplatform/melis-dbdeploy": "^6.0"
 	},
 	"autoload": {
 		"psr-4": {
