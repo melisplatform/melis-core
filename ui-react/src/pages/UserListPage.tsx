@@ -1,0 +1,858 @@
+import { Fragment, useCallback, useEffect, useLayoutEffect, useRef, useState, type RefObject } from 'react'
+
+// ─── Module-level cache — survit au démontage du composant (navigation) ────────
+
+interface ListCache {
+  items: userApi.UserItem[]
+  total: number
+  cursor: string | null
+  hasMore: boolean
+  search: string
+  searchInput: string
+  statusFilter: '' | '0' | '1'
+  roleFilter: number | undefined
+  sortCol: userApi.UserSortKey
+  sortDir: 'asc' | 'desc'
+  stats: userApi.UserStats | null
+  roles: userApi.UserRole[]
+  mode: ViewMode
+  iframeLoaded: boolean
+}
+let _cache: ListCache | null = null
+import { useLocation, useNavigate } from 'react-router-dom'
+import { routeForForward } from '@/lib/tool-routes'
+import {
+  ArrowDown, ArrowUp, ArrowUpDown, Columns3, Edit2, FileDown, FileText, GripVertical,
+  Loader2, Pin, Plus, RotateCcw, Search, Shield, Trash2,
+  Users, UserCheck, UserX, X, type LucideIcon,
+} from 'lucide-react'
+
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Badge } from '@/components/ui/badge'
+import { cn } from '@/lib/utils'
+import * as userApi from '@/lib/user-api'
+import { fetchMe } from '@/lib/melis-api'
+import * as XLSX from 'xlsx'
+import { useTabs } from '@/components/tabs/tab-store'
+import { MelisClassicFrame, ViewModeToggle, type ViewMode } from '@/components/MelisClassicView'
+import { ExpandToggle, HiddenColsRow } from '@/components/ExpandableRow'
+import { useIsNarrow } from '@/hooks/useIsNarrow'
+import { useDragReorder } from '@/hooks/useDragReorder'
+import { toolHasViewToggle } from '@/lib/module-registry'
+import { useModuleActive } from '@/lib/bricks'
+import { useCan } from '@/lib/capabilities'
+import { useI18n } from '@/i18n/i18n-context'
+import type { I18nKey } from '@/i18n/dictionaries'
+
+const TOOL_KEY = 'meliscore_tool_user'
+
+// ─── KPI card ─────────────────────────────────────────────────────────────────
+
+function KpiCard({ icon: Icon, label, value, color }: {
+  icon: LucideIcon; label: string; value: number | null; color: string
+}) {
+  return (
+    <div className="flex items-center gap-3 rounded-xl border border-border bg-card p-4 shadow-sm">
+      <div className={cn('grid size-10 shrink-0 place-items-center rounded-lg', color)}>
+        <Icon className="size-5" />
+      </div>
+      <div className="min-w-0">
+        <p className="text-xs text-muted-foreground">{label}</p>
+        <p className="text-xl font-bold tabular-nums">
+          {value === null ? <span className="inline-block h-5 w-10 animate-pulse rounded bg-muted" /> : value}
+        </p>
+      </div>
+    </div>
+  )
+}
+
+// ─── Delete confirmation ───────────────────────────────────────────────────────
+
+function DeleteConfirm({ user, onConfirm, onCancel }: {
+  user: userApi.UserItem; onConfirm: () => void; onCancel: () => void
+}) {
+  const { t } = useI18n()
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+      <div className="w-full max-w-sm rounded-xl border border-border bg-card p-6 shadow-xl">
+        <h3 className="text-base font-semibold">{t('users.delete.title')}</h3>
+        <p className="mt-2 text-sm text-muted-foreground">
+          {t('users.delete.confirm', { name: `${user.firstname} ${user.lastname}`.trim(), login: user.login })}
+        </p>
+        <div className="mt-5 flex justify-end gap-2">
+          <Button variant="outline" size="sm" onClick={onCancel}>{t('common.cancel')}</Button>
+          <Button variant="outline" size="sm" onClick={onConfirm} className="border-red-300 text-red-600 hover:bg-red-50 dark:hover:bg-red-950/20">{t('common.delete')}</Button>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// ─── Column manager ───────────────────────────────────────────────────────────
+
+interface ColDef { id: string; visible: boolean; pinned?: boolean }
+const COL_ORDER = ['id', 'login', 'name', 'email', 'role', 'admin', 'status', 'lastLogin'] as const
+const COL_LABEL: Record<string, I18nKey> = {
+  id: 'users.col.id', login: 'users.col.login', name: 'users.col.name', email: 'users.col.email',
+  role: 'users.col.role', admin: 'users.col.admin', status: 'users.col.status', lastLogin: 'users.col.lastlogin',
+}
+const DEFAULT_COLS: ColDef[] = COL_ORDER.map(id => ({ id, visible: true, pinned: false }))
+const COL_KEY = 'melis-user-cols-v2'
+function loadUserCols(): ColDef[] {
+  try {
+    const raw = localStorage.getItem(COL_KEY)
+    if (!raw) return DEFAULT_COLS
+    const saved: ColDef[] = JSON.parse(raw)
+    const ordered = saved.map(s => { const d = DEFAULT_COLS.find(c => c.id === s.id); return d ? { id: d.id, visible: s.visible, pinned: s.pinned ?? false } : null }).filter(Boolean) as ColDef[]
+    const missing = DEFAULT_COLS.filter(d => !saved.find(s => s.id === d.id))
+    return [...ordered, ...missing]
+  } catch { return DEFAULT_COLS }
+}
+function saveUserCols(cols: ColDef[]) {
+  localStorage.setItem(COL_KEY, JSON.stringify(cols.map(c => ({ id: c.id, visible: c.visible, pinned: c.pinned ?? false }))))
+}
+
+/** Valeur brute pour le TRI (insensible à la langue). */
+function getCellSort(user: userApi.UserItem, id: string): string | number {
+  if (id === 'id')        return user.id
+  if (id === 'login')     return user.login
+  if (id === 'name')      return `${user.firstname} ${user.lastname}`.trim()
+  if (id === 'email')     return user.email
+  if (id === 'role')      return user.roleName || ''
+  if (id === 'admin')     return user.isAdmin ? 1 : 0
+  if (id === 'status')    return user.status
+  if (id === 'lastLogin') return user.lastLoginDate || ''
+  return ''
+}
+/** Texte affichable pour l'EXPORT (traduit). */
+function getCellExport(user: userApi.UserItem, id: string, t: (k: I18nKey, v?: Record<string, string | number>) => string): string | number {
+  if (id === 'admin')  return user.isAdmin ? t('common.yes') : t('common.no')
+  if (id === 'status') return user.status === 1 ? t('users.status.active') : t('users.status.inactive')
+  return getCellSort(user, id)
+}
+
+function ColManager({ cols, onChange, onClose, anchorRef }: {
+  cols: ColDef[]; onChange: (cols: ColDef[]) => void; onClose: () => void; anchorRef: RefObject<HTMLElement | null>
+}) {
+  const { t } = useI18n()
+  // Touch-compatible drag (Pointer Events, not native HTML5 draggable — that API never fires
+  // from touch input) — see hooks/useDragReorder.ts. `onChange` below wraps the caller's setter
+  // to also persist via saveUserCols, same as every other mutation in this component.
+  const { draggingId, overTarget, dragPos, startDragMouse, startDragTouch } = useDragReorder({
+    cols, onChange: (next) => { onChange(next); saveUserCols(next) },
+  })
+  // Positioned relative to the trigger button (clamped to the viewport), not centered on screen —
+  // see ColumnManager.tsx (shared component) for the full rationale.
+  const [pos, setPos] = useState<{ top?: number; bottom?: number; left: number; width: number; maxHeight: number } | null>(null)
+
+  useLayoutEffect(() => {
+    const anchor = anchorRef.current
+    if (!anchor) return
+    const rect = anchor.getBoundingClientRect()
+    // Matches the page's own `p-6` content padding (24px) — clamping to the raw viewport edge
+    // (8px) made the popup visibly wider than the search input/button row above it.
+    const margin = 24
+    const spaceBelow = window.innerHeight - rect.bottom - margin
+    const spaceAbove = rect.top - margin
+    const width = Math.min(420, window.innerWidth - margin * 2)
+    const left = Math.min(Math.max(margin, rect.right - width), window.innerWidth - width - margin)
+    if (spaceBelow >= 200 || spaceBelow >= spaceAbove) {
+      setPos({ top: rect.bottom + 6, left, width, maxHeight: Math.max(160, spaceBelow - 6) })
+    } else {
+      setPos({ bottom: window.innerHeight - rect.top + 6, left, width, maxHeight: Math.max(160, spaceAbove - 6) })
+    }
+  }, [anchorRef])
+
+  const visibleCols = cols.filter(c => c.visible)
+  const hiddenCols  = cols.filter(c => !c.visible)
+
+  function renderItem(col: ColDef, panel: 'visible' | 'hidden') {
+    const isOver = overTarget?.id === col.id && overTarget?.panel === panel
+    return (
+      <div
+        key={col.id}
+        data-col-item={col.id}
+        onMouseDown={startDragMouse(col.id)}
+        onTouchStart={startDragTouch(col.id)}
+        className={cn(
+          'flex touch-none items-center gap-2 rounded-lg px-2 py-1.5 text-sm select-none cursor-grab active:cursor-grabbing transition-colors',
+          draggingId === col.id && 'opacity-40',
+          isOver ? 'bg-primary/10 ring-1 ring-primary/30' : 'hover:bg-accent',
+          col.pinned && panel === 'visible' && !isOver && 'bg-primary/5',
+        )}
+      >
+        <GripVertical className="size-3.5 shrink-0 text-muted-foreground/40" />
+        <span className="flex-1 truncate">{t(COL_LABEL[col.id])}</span>
+        {panel === 'visible' && (
+          <button
+            onClick={e => { e.stopPropagation(); const next = cols.map(c => c.id === col.id ? { ...c, pinned: !c.pinned } : c); onChange(next); saveUserCols(next) }}
+            onMouseDown={e => e.stopPropagation()}
+            onTouchStart={e => e.stopPropagation()}
+            title={col.pinned ? t('users.cols.unpin') : t('users.cols.pin')}
+            className={cn('flex size-5 shrink-0 items-center justify-center rounded transition-colors hover:bg-primary/10', col.pinned ? 'text-primary' : 'text-muted-foreground/30 hover:text-muted-foreground')}
+          >
+            <Pin className={cn('size-3', col.pinned && 'fill-primary')} />
+          </button>
+        )}
+      </div>
+    )
+  }
+
+  if (!pos) return null
+  return (
+    <>
+    {draggingId && dragPos && (
+      <div
+        className="pointer-events-none fixed z-[60] flex -translate-x-1/2 -translate-y-1/2 items-center gap-2 rounded-lg border border-primary/40 bg-card px-3 py-1.5 text-sm font-medium shadow-xl"
+        style={{ left: dragPos.x, top: dragPos.y }}
+      >
+        <GripVertical className="size-3.5 shrink-0 text-muted-foreground/40" />
+        {t(COL_LABEL[draggingId])}
+      </div>
+    )}
+    <div
+      className="fixed z-50 overflow-y-auto rounded-xl border border-border bg-card shadow-xl"
+      style={{ top: pos.top, bottom: pos.bottom, left: pos.left, width: pos.width, maxHeight: pos.maxHeight }}
+    >
+      <div className="flex items-center justify-between border-b border-border px-3 py-2.5">
+        <span className="text-sm font-semibold">{t('common.columns')}</span>
+        <button onClick={onClose} className="text-muted-foreground hover:text-foreground transition-colors"><X className="size-4" /></button>
+      </div>
+      <div className="grid grid-cols-2 gap-2 p-3">
+        <div
+          data-col-panel="hidden"
+          className={cn(
+            'flex flex-col gap-0.5 min-h-[140px] max-h-[min(48vh,320px)] overflow-y-auto min-w-0 rounded-lg border border-dashed p-1.5',
+            overTarget?.id === '__panel__' && overTarget.panel === 'hidden' ? 'border-primary/40 bg-primary/5' : 'border-border',
+          )}
+        >
+          <p className="px-1.5 pb-1 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">{t('users.cols.hidden')}</p>
+          {hiddenCols.length === 0
+            ? <div className="flex flex-1 items-center justify-center py-4 text-[11px] text-muted-foreground/40">{t('common.drag_here')}</div>
+            : hiddenCols.map(col => renderItem(col, 'hidden'))}
+        </div>
+        <div
+          data-col-panel="visible"
+          className={cn(
+            'flex flex-col gap-0.5 min-h-[140px] max-h-[min(48vh,320px)] overflow-y-auto min-w-0 rounded-lg border border-dashed p-1.5',
+            overTarget?.id === '__panel__' && overTarget.panel === 'visible' ? 'border-primary/40 bg-primary/5' : 'border-border',
+          )}
+        >
+          <p className="px-1.5 pb-1 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">{t('users.cols.visible')}</p>
+          {visibleCols.map(col => renderItem(col, 'visible'))}
+        </div>
+      </div>
+      <div className="border-t border-border p-1.5">
+        <button onClick={() => { onChange(DEFAULT_COLS); saveUserCols(DEFAULT_COLS) }} className="w-full rounded-lg px-2 py-1.5 text-xs text-muted-foreground transition-colors hover:bg-accent hover:text-foreground">{t('common.reset')}</button>
+      </div>
+    </div>
+    </>
+  )
+}
+
+function ExcelIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="none">
+      <rect x="1" y="1" width="22" height="22" rx="3" fill="#217346" />
+      <line x1="7.5" y1="7.5" x2="16.5" y2="16.5" stroke="white" strokeWidth="2.5" strokeLinecap="round" />
+      <line x1="16.5" y1="7.5" x2="7.5" y2="16.5" stroke="white" strokeWidth="2.5" strokeLinecap="round" />
+    </svg>
+  )
+}
+
+// ─── Export modal ─────────────────────────────────────────────────────────────
+
+function ExportModal({ cols, search, status, total, onClose }: {
+  cols: ColDef[]; search: string; status: '' | '0' | '1'; total: number; onClose: () => void
+}) {
+  const { t } = useI18n()
+  // Single `visible`-flagged list (visible = included), same model as ColumnManager/the shared
+  // ExportModal — lets this share `useDragReorder` (mouse + touch, not native HTML5 `draggable`,
+  // which never fires from touch input) instead of a THIRD hand-rolled drag implementation. This
+  // was a separate, never-fixed copy: UserListPage doesn't import the shared `@/components/
+  // ExportModal` — it shadows the name with this page-local component (own doExport/columns).
+  const [exportCols, setExportCols] = useState<ColDef[]>(() => cols.map(c => ({ ...c })))
+  const { draggingId, overTarget, dragPos, startDragMouse, startDragTouch } = useDragReorder({ cols: exportCols, onChange: setExportCols })
+  const included = exportCols.filter(c => c.visible)
+  const excluded = exportCols.filter(c => !c.visible)
+  const [format, setFormat] = useState<'csv' | 'xlsx'>('xlsx')
+  const [exporting, setExporting] = useState(false)
+
+  function renderExItem(col: ColDef, panel: 'included' | 'excluded') {
+    const isOver = overTarget?.id === col.id && overTarget?.panel === (panel === 'included' ? 'visible' : 'hidden')
+    return (
+      <div
+        key={col.id}
+        data-col-item={col.id}
+        onMouseDown={startDragMouse(col.id)}
+        onTouchStart={startDragTouch(col.id)}
+        className={cn(
+          'flex touch-none items-center gap-2 rounded-lg px-2 py-1.5 text-sm select-none cursor-grab active:cursor-grabbing transition-colors',
+          draggingId === col.id && 'opacity-40',
+          isOver ? 'bg-primary/10 ring-1 ring-primary/30' : 'hover:bg-accent',
+        )}
+      >
+        <GripVertical className="size-3.5 shrink-0 text-muted-foreground/40" />
+        <span className="flex-1 truncate">{t(COL_LABEL[col.id])}</span>
+      </div>
+    )
+  }
+
+  async function doExport() {
+    if (included.length === 0) return
+    setExporting(true)
+    try {
+      const all: userApi.UserItem[] = []
+      let after: string | undefined = undefined
+      while (true) {
+        const res = await userApi.fetchUsers({ limit: 100, search, status, after })
+        all.push(...res.items)
+        if (!res.nextCursor) break
+        after = res.nextCursor
+      }
+      const header = included.map(c => t(COL_LABEL[c.id]))
+      const rows = all.map(u => included.map(c => getCellExport(u, c.id, t)))
+      const dateStr = new Date().toISOString().slice(0, 10)
+      const fileBase = t('users.export.filename')
+      if (format === 'xlsx') {
+        const ws = XLSX.utils.aoa_to_sheet([header, ...rows])
+        const wb = XLSX.utils.book_new()
+        XLSX.utils.book_append_sheet(wb, ws, t('users.title'))
+        XLSX.writeFile(wb, `${fileBase}-${dateStr}.xlsx`)
+      } else {
+        const csv = [header, ...rows]
+          .map(row => row.map(v => `"${String(v ?? '').replace(/"/g, '""')}"`).join(','))
+          .join('\n')
+        const blob = new Blob(['﻿' + csv], { type: 'text/csv;charset=utf-8;' })
+        const url  = URL.createObjectURL(blob)
+        const a    = Object.assign(document.createElement('a'), { href: url, download: `${fileBase}-${dateStr}.csv` })
+        document.body.appendChild(a); a.click(); document.body.removeChild(a)
+        URL.revokeObjectURL(url)
+      }
+      onClose()
+    } catch (e) {
+      alert(e instanceof Error ? e.message : t('users.export.error'))
+    } finally {
+      setExporting(false)
+    }
+  }
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm" onClick={e => { if (e.target === e.currentTarget) onClose() }}>
+      {draggingId && dragPos && (
+        <div
+          className="pointer-events-none fixed z-[70] flex -translate-x-1/2 -translate-y-1/2 items-center gap-2 rounded-lg border border-primary/40 bg-card px-3 py-1.5 text-sm font-medium shadow-xl"
+          style={{ left: dragPos.x, top: dragPos.y }}
+        >
+          <GripVertical className="size-3.5 shrink-0 text-muted-foreground/40" />
+          {t(COL_LABEL[draggingId])}
+        </div>
+      )}
+      <div className="w-full max-w-[480px] rounded-2xl border border-border bg-card shadow-2xl">
+        <div className="flex items-start justify-between border-b border-border px-5 py-4">
+          <div>
+            <h2 className="text-sm font-semibold">{t('users.export.title')}</h2>
+            <p className="mt-0.5 text-xs text-muted-foreground">{t('users.export.subtitle', { n: total })}</p>
+          </div>
+          <button onClick={onClose} className="ml-4 text-muted-foreground hover:text-foreground transition-colors"><X className="size-4" /></button>
+        </div>
+        <div className="p-4 space-y-4">
+          <div className="flex items-center rounded-lg border border-border bg-muted/40 p-1 gap-1">
+            <button onClick={() => setFormat('xlsx')}
+              className={cn('flex flex-1 items-center justify-center gap-2 rounded-md px-3 py-2 text-sm font-medium transition-colors', format === 'xlsx' ? 'bg-card shadow-sm text-foreground' : 'text-muted-foreground hover:text-foreground')}>
+              <ExcelIcon className="size-4" /> Excel (.xlsx)
+            </button>
+            <button onClick={() => setFormat('csv')}
+              className={cn('flex flex-1 items-center justify-center gap-2 rounded-md px-3 py-2 text-sm font-medium transition-colors', format === 'csv' ? 'bg-card shadow-sm text-foreground' : 'text-muted-foreground hover:text-foreground')}>
+              <FileText className="size-4" /> CSV (.csv)
+            </button>
+          </div>
+          <div className="grid grid-cols-2 gap-2">
+            <div
+              data-col-panel="hidden"
+              className={cn(
+                'flex flex-col gap-0.5 min-h-[100px] max-h-[min(48vh,320px)] overflow-y-auto min-w-0 rounded-lg border border-dashed p-1.5',
+                overTarget?.id === '__panel__' && overTarget.panel === 'hidden' ? 'border-primary/40 bg-primary/5' : 'border-border',
+              )}
+            >
+              <p className="px-1.5 pb-1 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">{t('users.export.excluded')}</p>
+              {excluded.length === 0
+                ? <div className="flex flex-1 items-center justify-center py-2 text-[11px] text-muted-foreground/40">{t('common.drag_here')}</div>
+                : excluded.map(col => renderExItem(col, 'excluded'))}
+            </div>
+            <div
+              data-col-panel="visible"
+              className={cn(
+                'flex flex-col gap-0.5 min-h-[100px] max-h-[min(48vh,320px)] overflow-y-auto min-w-0 rounded-lg border border-dashed p-1.5',
+                overTarget?.id === '__panel__' && overTarget.panel === 'visible' ? 'border-primary/40 bg-primary/5' : 'border-border',
+              )}
+            >
+              <p className="px-1.5 pb-1 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">{t('users.export.included')}</p>
+              {included.length === 0
+                ? <div className="flex flex-1 items-center justify-center py-2 text-[11px] text-muted-foreground/40">{t('common.drag_here')}</div>
+                : included.map(col => renderExItem(col, 'included'))}
+            </div>
+          </div>
+        </div>
+        <div className="flex justify-end gap-2 border-t border-border px-4 py-3">
+          <Button variant="outline" size="sm" onClick={onClose} disabled={exporting}>{t('common.cancel')}</Button>
+          <Button size="sm" onClick={doExport} disabled={exporting || included.length === 0} className="gap-1.5">
+            {exporting ? <Loader2 className="size-3.5 animate-spin" /> : <FileDown className="size-3.5" />}
+            {exporting ? t('users.export.exporting') : t('users.export.download', { fmt: format.toUpperCase() })}
+          </Button>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// ─── Page ─────────────────────────────────────────────────────────────────────
+
+export default function UserListPage() {
+  const navigate = useNavigate()
+  const location = useLocation()
+  const { openTab } = useTabs()
+  const { t } = useI18n()
+  const narrow = useIsNarrow()
+  const base = routeForForward('MelisCore/ToolUser') ?? '/users'
+
+  const [mode, setMode] = useState<ViewMode>(_cache?.mode ?? 'react')
+  const [iframeLoaded, setIframeLoaded] = useState(_cache?.iframeLoaded ?? false)
+  const showViewToggle = toolHasViewToggle('users')
+  const effectiveMode: ViewMode = showViewToggle ? mode : 'react'
+  const rolesModuleActive = useModuleActive('MelisSmallBusiness')
+
+  // Capacités (droits avancés) : masque les composants internes selon les droits de l'user.
+  const canList   = useCan(TOOL_KEY, 'list')
+  const canCreate = useCan(TOOL_KEY, 'create')
+  const canEdit   = useCan(TOOL_KEY, 'edit')
+  const canDelete = useCan(TOOL_KEY, 'delete')
+  const canExport = useCan(TOOL_KEY, 'export')
+
+  const [items, setItems]     = useState<userApi.UserItem[]>(_cache?.items ?? [])
+  const [total, setTotal]     = useState(_cache?.total ?? 0)
+  const [hasMore, setHasMore] = useState(_cache?.hasMore ?? false)
+  const cursorRef = useRef<string | null>(_cache?.cursor ?? null)
+  const [loading, setLoading] = useState(false)
+  const [stats, setStats]     = useState<userApi.UserStats | null>(_cache?.stats ?? null)
+  const [roles, setRoles]     = useState<userApi.UserRole[]>(_cache?.roles ?? [])
+
+  const [search, setSearch]           = useState(_cache?.search ?? '')
+  const [searchInput, setSearchInput] = useState(_cache?.searchInput ?? '')
+  const [statusFilter, setStatusFilter] = useState<'' | '0' | '1'>(_cache?.statusFilter ?? '')
+  const [roleFilter, setRoleFilter]   = useState<number | undefined>(_cache?.roleFilter)
+
+  const [refreshKey, setRefreshKey] = useState(0)
+  const [refreshing, setRefreshing] = useState(false)
+
+  function handleRefresh() {
+    _cache = null
+    setStats(null)
+    setItems([])
+    cursorRef.current = null
+    setRefreshing(true)
+    setRefreshKey(k => k + 1)
+    userApi.fetchUserStats().then(setStats).catch(() => null)
+    setTimeout(() => setRefreshing(false), 600)
+  }
+
+  // Réinitialise recherche + filtres + tri, puis recharge. setItems([]) est obligatoire :
+  // sans ça les lignes déjà affichées restent à l'écran et le clic paraît sans effet.
+  function resetFilters() {
+    _cache = null
+    setSearchInput('')
+    setSearch('')
+    setStatusFilter('')
+    setRoleFilter(undefined)
+    setSortCol('id')
+    setSortDir('desc')
+    setItems([])
+    cursorRef.current = null
+    setRefreshing(true)
+    setRefreshKey(k => k + 1)
+    userApi.fetchUserStats().then(setStats).catch(() => null)
+    setTimeout(() => setRefreshing(false), 600)
+  }
+
+  const [toDelete, setToDelete] = useState<userApi.UserItem | null>(null)
+  const [deleting, setDeleting] = useState(false)
+  // Id de l'utilisateur courant : on interdit de supprimer son propre compte (barrière serveur aussi).
+  const [myId, setMyId] = useState<number | null>(null)
+  useEffect(() => { fetchMe().then((m) => setMyId(m?.id ?? null)).catch(() => null) }, [])
+
+  const [rawCols, setCols]          = useState<ColDef[]>(loadUserCols)
+  // La colonne « Rôle » est apportée par MelisSmallBusiness : retirée quand le module est off.
+  const cols = rolesModuleActive ? rawCols : rawCols.filter(c => c.id !== 'role')
+  const [showColMgr, setShowColMgr] = useState(false)
+  const [showExport, setShowExport] = useState(false)
+  const colMgrRef = useRef<HTMLDivElement>(null)
+  // A Hidden column disappears entirely on both desktop and mobile — same rule everywhere, no "+"
+  // peek at Hidden ones. Desktop shows every Visible column inline. Mobile can't fit many columns,
+  // so only the FIRST Visible column (by the user's dragged order in ColManager) anchors inline;
+  // every OTHER Visible column surfaces behind the per-row "+" instead, in that same order.
+  const [expanded, setExpanded] = useState<Set<number>>(new Set())
+  const toggleExpand = (id: number) => setExpanded((s) => {
+    const n = new Set(s); n.has(id) ? n.delete(id) : n.add(id); return n
+  })
+  const shownCols = cols.filter(c => c.visible)
+  const displayCols = narrow ? shownCols.map((c, i) => ({ ...c, visible: i === 0 })) : shownCols
+  const hasHidden = narrow && shownCols.length > 1
+
+  const [sortCol, setSortCol] = useState<userApi.UserSortKey>(_cache?.sortCol ?? 'id')
+  const [sortDir, setSortDir] = useState<'asc' | 'desc'>(_cache?.sortDir ?? 'desc')
+
+  // Tri désormais server-side : changer de colonne/sens relance un chargement frais
+  // (via l'effet ci-dessous) — plus aucun tri client sur le sous-ensemble déjà chargé.
+  function toggleSort(id: userApi.UserSortKey) {
+    if (sortCol === id) setSortDir(d => d === 'asc' ? 'desc' : 'asc')
+    else { setSortCol(id); setSortDir(id === 'id' ? 'desc' : 'asc') }
+  }
+
+  const LIMIT = 25
+  const sentinelRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    if (location.pathname === base) {
+      openTab({ id: base, label: t('users.title'), path: base })
+      if (userApi.consumeUsersListStale()) {
+        cursorRef.current = null
+        setRefreshKey(k => k + 1)
+        userApi.fetchUserStats().then(setStats).catch(() => null)
+      }
+    }
+  }, [location.pathname, openTab, base, t])
+
+  const cacheRef = useRef<ListCache>({ items, total, cursor: cursorRef.current, hasMore, search, searchInput, statusFilter, roleFilter, sortCol, sortDir, stats, roles, mode, iframeLoaded })
+  useEffect(() => { cacheRef.current = { items, total, cursor: cursorRef.current, hasMore, search, searchInput, statusFilter, roleFilter, sortCol, sortDir, stats, roles, mode, iframeLoaded } })
+  useEffect(() => () => { _cache = cacheRef.current }, [])
+
+  useEffect(() => {
+    if (_cache?.stats) return
+    userApi.fetchUserStats().then(setStats).catch(() => null)
+  }, [])
+  useEffect(() => {
+    if (!rolesModuleActive) return
+    if (_cache?.roles?.length) return
+    userApi.fetchRoles().then(setRoles).catch(() => null)
+  }, [rolesModuleActive])
+
+  // Chargement keyset : reset=true → premier lot (remplace) ; reset=false → lot suivant
+  // (append) via le curseur. Un req-id invalide les réponses périmées (filtre/tri changé
+  // en cours de route) ; loadingRef sérialise les « load more ».
+  const loadingRef = useRef(false)
+  const reqIdRef = useRef(0)
+  const runLoad = useCallback(async (reset: boolean) => {
+    if (!reset && loadingRef.current) return
+    const myReq = ++reqIdRef.current
+    loadingRef.current = true
+    setLoading(true)
+    const after = reset ? undefined : (cursorRef.current ?? undefined)
+    try {
+      const res = await userApi.fetchUsers({ limit: LIMIT, search, status: statusFilter, roleId: roleFilter, sort: sortCol, dir: sortDir, after })
+      if (myReq !== reqIdRef.current) return
+      cursorRef.current = res.nextCursor
+      setHasMore(res.nextCursor !== null)
+      setTotal(res.total)
+      setItems((prev) => (reset ? res.items : [...prev, ...res.items]))
+    } catch { /* silent */ }
+    finally {
+      if (myReq === reqIdRef.current) { setLoading(false); loadingRef.current = false }
+    }
+  }, [search, statusFilter, roleFilter, sortCol, sortDir])
+
+  // Chargement frais quand filtres/tri changent (ou refresh). Au 1er montage avec cache
+  // restauré (items présents), on saute le refetch pour conserver le scroll accumulé.
+  const didInitRef = useRef(false)
+  useEffect(() => {
+    if (!didInitRef.current) {
+      didInitRef.current = true
+      if (_cache && _cache.items.length > 0) return
+    }
+    runLoad(true)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [search, statusFilter, roleFilter, sortCol, sortDir, refreshKey])
+
+  function applySearch() { setSearch(searchInput.trim()); setItems([]) }
+  function clearSearch() { setSearchInput(''); setSearch(''); setItems([]) }
+
+  // Scroll infini : sentinel visible → charge le lot suivant (runLoad gère l'anti-stack).
+  useEffect(() => {
+    if (!sentinelRef.current || !hasMore) return
+    const obs = new IntersectionObserver(
+      ([entry]) => { if (entry.isIntersecting) runLoad(false) },
+      { rootMargin: '120px' },
+    )
+    obs.observe(sentinelRef.current)
+    return () => obs.disconnect()
+  }, [hasMore, runLoad])
+
+  function handleDelete(user: userApi.UserItem) { setToDelete(user) }
+
+  async function confirmDelete() {
+    if (!toDelete) return
+    setDeleting(true)
+    try {
+      await userApi.deleteUser(toDelete.id)
+      setItems((prev) => prev.filter((u) => u.id !== toDelete.id))
+      setTotal((tt) => tt - 1)
+      setToDelete(null)
+      cursorRef.current = null
+      setRefreshKey((k) => k + 1)
+      userApi.fetchUserStats().then(setStats).catch(() => null)
+    } catch {
+      /* silent */
+    } finally {
+      setDeleting(false)
+    }
+  }
+
+  function fmtDate(d: string | null) {
+    if (!d) return '—'
+    try { return new Date(d).toLocaleDateString(undefined, { day: '2-digit', month: 'short', year: 'numeric' }) } catch { return d }
+  }
+
+  const visibleColIds = COL_ORDER.filter((id) => displayCols.find((c) => c.id === id)?.visible)
+  const totalCols = visibleColIds.length + 1 + (hasHidden ? 1 : 0)
+  const cellContent = (user: userApi.UserItem, id: string) => {
+    if (id === 'id') return user.id
+    if (id === 'login') return (
+      <div className="flex items-center gap-2">
+        {user.isOnline && <span className="size-2 shrink-0 rounded-full bg-emerald-500" title={t('users.online')} />}
+        <span className="font-medium">{user.login}</span>
+      </div>
+    )
+    if (id === 'name') return `${user.firstname} ${user.lastname}`
+    if (id === 'email') return user.email
+    if (id === 'role') return user.roleName || '—'
+    if (id === 'admin') return user.isAdmin
+      ? <Badge variant="default" className="text-violet-600 bg-violet-500/10 border-violet-200">{t('users.col.admin')}</Badge> : '—'
+    if (id === 'status') return user.status === 1
+      ? <Badge variant="default" className="text-emerald-600 bg-emerald-500/10 border-emerald-200">{t('users.status.active')}</Badge>
+      : <Badge variant="default" className="text-red-600 bg-red-500/10 border-red-200">{t('users.status.inactive')}</Badge>
+    if (id === 'lastLogin') return fmtDate(user.lastLoginDate)
+    return null
+  }
+
+  return (
+    <div className={cn('flex flex-col gap-6 p-6', effectiveMode === 'iframe' ? 'h-full' : 'flex-1')}>
+      {/* Header — narrow-only additions never remove/replace a desktop class, so at narrow=false
+          every className below renders byte-identical to the original desktop layout. */}
+      <div className="flex items-center justify-between gap-4">
+        <div className={cn('flex items-center gap-3', narrow && 'min-w-0')}>
+          <div className={narrow ? 'hidden' : 'grid size-10 shrink-0 place-items-center rounded-lg bg-primary/10 text-primary'}>
+            <Users className="size-5" />
+          </div>
+          <div className={cn(narrow && 'min-w-0')}>
+            <h1 className={cn('text-xl font-bold', narrow && 'truncate')}>{t('users.title')}</h1>
+            <p className={cn('text-sm text-muted-foreground', narrow && 'truncate')}>{t('users.subtitle')}</p>
+          </div>
+        </div>
+        {/* On narrow: icon row (toggle+refresh) stacks above the "+ New" button, which stretches
+            (w-full) to match that row's width — both stay grouped as a compact column to the
+            right of the title, never wrapping below it. Desktop keeps the original single row. */}
+        <div className={cn('flex items-center gap-2', narrow && 'shrink-0 flex-col')}>
+          <div className="flex items-center gap-2">
+            {showViewToggle && (
+              <ViewModeToggle mode={effectiveMode} compact={narrow} onChange={(m) => { setMode(m); if (m === 'iframe') setIframeLoaded(true) }} />
+            )}
+            <button type="button" onClick={handleRefresh} title={t('common.refresh')}
+              className="inline-flex size-8 shrink-0 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-accent hover:text-foreground">
+              <RotateCcw className={cn('size-3.5', refreshing && 'animate-spin')} />
+            </button>
+          </div>
+          {canCreate && (
+            <Button size="sm" className={cn(narrow && 'w-full')} onClick={() => navigate(`${base}/new`)}>
+              <Plus className="size-4" />{t('users.new')}
+            </Button>
+          )}
+        </div>
+      </div>
+
+      <MelisClassicFrame melisKey="meliscore_tool_user" title="User Management — Vue Melis"
+        visible={effectiveMode === 'iframe'} loaded={iframeLoaded} />
+
+      <div className={cn('flex flex-1 flex-col gap-4', effectiveMode === 'react' ? 'flex' : 'hidden')}>
+        {!canList ? (
+          <p className="text-sm text-muted-foreground">{t('users.no_list')}</p>
+        ) : (<>
+        {/* KPI */}
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+          <KpiCard icon={Users}     label={t('users.kpi.total')}    value={stats?.total      ?? null} color="bg-primary/10 text-primary" />
+          <KpiCard icon={UserCheck} label={t('users.kpi.active')}   value={stats?.active     ?? null} color="bg-emerald-500/10 text-emerald-600" />
+          <KpiCard icon={UserX}     label={t('users.kpi.inactive')} value={stats?.inactive   ?? null} color="bg-red-500/10 text-red-600" />
+          <KpiCard icon={Shield}    label={t('users.kpi.admins')}   value={stats?.adminCount ?? null} color="bg-violet-500/10 text-violet-600" />
+        </div>
+
+        {/* Filters */}
+        <div className="flex flex-wrap items-center gap-2">
+          <div className={narrow ? 'relative w-full' : 'relative flex-1 min-w-[180px] max-w-sm'}>
+            <Search className="absolute left-3 top-1/2 size-3.5 -translate-y-1/2 text-muted-foreground" />
+            <Input className="pl-9 pr-8 h-9 text-sm" placeholder={t('users.search')}
+              value={searchInput} onChange={(e) => setSearchInput(e.target.value)}
+              onKeyDown={(e) => e.key === 'Enter' && applySearch()} />
+            {searchInput && (
+              <button type="button" onClick={clearSearch}
+                className="absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground">
+                <X className="size-3.5" />
+              </button>
+            )}
+          </div>
+
+          <div className={cn('flex items-center rounded-lg border border-border bg-muted/40 p-1 gap-1', narrow && 'w-full')}>
+            {([
+              { val: '' as const,  label: t('users.filter.all'),     dot: null },
+              { val: '1' as const, label: t('users.filter.active'),  dot: 'bg-emerald-500' },
+              { val: '0' as const, label: t('users.filter.inactive'),dot: 'bg-red-500' },
+            ]).map(({ val, label, dot }) => (
+              <button key={val} type="button"
+                onClick={() => { setStatusFilter(val); setItems([]) }}
+                className={cn('flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-medium transition-colors', narrow && 'flex-1 justify-center',
+                  statusFilter === val ? 'bg-card shadow-sm text-foreground' : 'text-muted-foreground hover:text-foreground')}>
+                {dot && <span className={cn('size-1.5 rounded-full', dot)} />}
+                {label}
+              </button>
+            ))}
+          </div>
+
+          {rolesModuleActive && roles.length > 0 && (
+            <select value={roleFilter ?? ''}
+              onChange={(e) => { setRoleFilter(e.target.value ? parseInt(e.target.value) : undefined); setItems([]) }}
+              className={cn('h-9 rounded-md border border-input bg-background px-3 text-sm focus:outline-none focus:ring-1 focus:ring-ring', narrow && 'w-full')}>
+              <option value="">{t('users.filter.all_roles')}</option>
+              {roles.map((r) => <option key={r.id} value={r.id}>{r.name}</option>)}
+            </select>
+          )}
+
+          <div className={cn('flex items-center gap-2', narrow ? 'w-full flex-wrap' : 'ml-auto')}>
+            <Button variant="outline" size="sm"
+              className={cn('gap-1.5', narrow && 'h-auto min-h-9 flex-[1_1_calc(50%_-_4px)] justify-center whitespace-normal text-center')}
+              onClick={resetFilters} title={t('common.reset_filters')}>
+              <RotateCcw className={cn('size-3.5', refreshing && 'animate-spin')} />{t('common.reset_filters')}
+            </Button>
+            <div ref={colMgrRef} className={cn('relative', narrow && 'flex-[1_1_calc(50%_-_4px)]')}>
+              <Button variant="outline" size="sm"
+                className={cn('gap-1.5', narrow && 'h-auto min-h-9 w-full justify-center whitespace-normal text-center')}
+                onClick={() => setShowColMgr(v => !v)}>
+                <Columns3 className="size-3.5" />{t('common.columns')}
+              </Button>
+              {showColMgr && <ColManager cols={cols} onChange={setCols} onClose={() => setShowColMgr(false)} anchorRef={colMgrRef} />}
+            </div>
+            {canExport && (
+              <Button variant="outline" size="sm"
+                className={cn('gap-1.5', narrow && 'h-auto min-h-9 flex-[1_1_calc(50%_-_4px)] justify-center whitespace-normal text-center')}
+                onClick={() => setShowExport(true)}>
+                <FileDown className="size-3.5" />{t('users.export')}
+              </Button>
+            )}
+          </div>
+        </div>
+
+        {/* Table */}
+        <div className="overflow-x-auto rounded-xl border border-border bg-card shadow-sm">
+          <table className={cn('w-full text-sm', !narrow && 'min-w-[640px]')}>
+            <thead className="sticky top-0 border-b border-border bg-muted/60 text-xs uppercase tracking-wide text-muted-foreground">
+              <tr>
+                {hasHidden && <th className="w-8 px-2 py-3" />}
+                {COL_ORDER.map(id => {
+                  const col = displayCols.find(c => c.id === id)
+                  if (!col?.visible) return null
+                  const isSorted = sortCol === id
+                  const SIcon = isSorted ? (sortDir === 'asc' ? ArrowUp : ArrowDown) : ArrowUpDown
+                  const centered = id === 'admin' || id === 'status'
+                  return (
+                    <th key={id} className={cn('px-4 py-3 text-xs font-semibold uppercase tracking-wide text-muted-foreground whitespace-nowrap', id === 'id' && 'w-12', id === 'admin' && 'w-20', id === 'status' && 'w-24', id === 'lastLogin' && 'w-32')}>
+                      <button type="button" onClick={() => toggleSort(id)}
+                        className={cn('flex items-center gap-1 transition-colors hover:text-foreground', centered && 'mx-auto', isSorted && 'text-primary')}>
+                        {t(COL_LABEL[id])}
+                        <SIcon className={cn('size-3', isSorted ? 'opacity-100' : 'opacity-30')} />
+                        {col.pinned && <Pin className="size-3 fill-primary text-primary opacity-60" />}
+                      </button>
+                    </th>
+                  )
+                })}
+                <th className={cn('w-20 px-4 py-3', narrow && 'sticky right-0 bg-muted/60')} />
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-border">
+              {items.length === 0 && !loading ? (
+                <tr><td colSpan={totalCols} className="px-4 py-10 text-center text-sm text-muted-foreground">{t('users.empty')}</td></tr>
+              ) : (
+                items.map((user) => (
+                  <Fragment key={user.id}>
+                  <tr className="group transition-colors hover:bg-muted/40">
+                    {hasHidden && (
+                      <td className="px-2 py-2.5">
+                        <ExpandToggle expanded={expanded.has(user.id)} onClick={() => toggleExpand(user.id)} />
+                      </td>
+                    )}
+                    {displayCols.find(c => c.id === 'id')?.visible && <td className="px-4 py-2.5 tabular-nums text-muted-foreground">{user.id}</td>}
+                    {displayCols.find(c => c.id === 'login')?.visible && <td className="px-4 py-2.5">
+                      <div className="flex items-center gap-2">
+                        {user.isOnline && <span className="size-2 shrink-0 rounded-full bg-emerald-500" title={t('users.online')} />}
+                        <span className="font-medium">{user.login}</span>
+                      </div>
+                    </td>}
+                    {displayCols.find(c => c.id === 'name')?.visible && <td className="px-4 py-2.5 text-muted-foreground">{user.firstname} {user.lastname}</td>}
+                    {displayCols.find(c => c.id === 'email')?.visible && <td className="px-4 py-2.5 text-muted-foreground">{user.email}</td>}
+                    {displayCols.find(c => c.id === 'role')?.visible && <td className="px-4 py-2.5 text-muted-foreground">{user.roleName || '—'}</td>}
+                    {displayCols.find(c => c.id === 'admin')?.visible && <td className="px-4 py-2.5 text-center">
+                      {user.isAdmin ? <Badge variant="default" className="text-violet-600 bg-violet-500/10 border-violet-200">{t('users.col.admin')}</Badge> : '—'}
+                    </td>}
+                    {displayCols.find(c => c.id === 'status')?.visible && <td className="px-4 py-2.5 text-center">
+                      {user.status === 1
+                        ? <Badge variant="default" className="text-emerald-600 bg-emerald-500/10 border-emerald-200">{t('users.status.active')}</Badge>
+                        : <Badge variant="default" className="text-red-600 bg-red-500/10 border-red-200">{t('users.status.inactive')}</Badge>}
+                    </td>}
+                    {displayCols.find(c => c.id === 'lastLogin')?.visible && <td className="px-4 py-2.5 text-xs text-muted-foreground tabular-nums">{fmtDate(user.lastLoginDate)}</td>}
+                    <td className={cn('px-4 py-2.5', narrow && 'sticky right-0 bg-card group-hover:bg-muted/40')}>
+                      <div className="flex items-center justify-end gap-1">
+                        {canEdit && (
+                          <button type="button" onClick={() => navigate(`${base}/${user.id}`)} title={t('common.edit')}
+                            className="rounded p-1.5 hover:bg-accent transition-colors">
+                            <Edit2 className="size-3.5 text-muted-foreground" />
+                          </button>
+                        )}
+                        {canDelete && (
+                          user.id === myId ? (
+                            <button type="button" disabled title={t('users.delete.self')}
+                              className="rounded p-1.5 opacity-40 cursor-not-allowed">
+                              <Trash2 className="size-3.5 text-muted-foreground" />
+                            </button>
+                          ) : (
+                            <button type="button" onClick={() => handleDelete(user)} title={t('common.delete')}
+                              className="rounded p-1.5 hover:bg-destructive/10 transition-colors">
+                              <Trash2 className="size-3.5 text-destructive/70" />
+                            </button>
+                          )
+                        )}
+                      </div>
+                    </td>
+                  </tr>
+                  {expanded.has(user.id) && (
+                    <HiddenColsRow cols={displayCols} labelFor={(id) => t(COL_LABEL[id])} renderValue={(id) => cellContent(user, id)} colSpan={totalCols} />
+                  )}
+                  </Fragment>
+                ))
+              )}
+            </tbody>
+          </table>
+
+          <div ref={sentinelRef} className="h-1" />
+          {loading && (
+            <div className="flex items-center justify-center gap-2 py-4 text-xs text-muted-foreground">
+              <Loader2 className="size-3.5 animate-spin" />{t('common.loading')}
+            </div>
+          )}
+          {!hasMore && items.length > 0 && (
+            <div className="py-4 text-center text-xs text-muted-foreground">{t('users.count', { n: total })}</div>
+          )}
+        </div>
+        </>)}
+      </div>
+
+      {toDelete && <DeleteConfirm user={toDelete} onConfirm={confirmDelete} onCancel={() => !deleting && setToDelete(null)} />}
+      {showExport && <ExportModal cols={cols} search={search} status={statusFilter} total={total} onClose={() => setShowExport(false)} />}
+    </div>
+  )
+}

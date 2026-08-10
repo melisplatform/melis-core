@@ -70,88 +70,98 @@ class TreeToolsController extends MelisAbstractActionController
             foreach ($appsConfig['interface'] as $key => $toolSectionName) {
                 $isNavChild = false;
 
-                if ($melisCoreRights->canAccess($key)) {
+                // Gate on the resolved melisKey, not the toolstree ARRAY KEY: the allow-set, React and
+                // canAccess() all key on the melisKey, which can differ from the array key (e.g. the tool
+                // node `melistoolcreator_conf` whose melisKey is `melistoolcreator_tool`) — gating on the
+                // array key wrongly hid a granted tool for everyone.
+                // A pure CONTAINER (no forward of its own, just an `interface` of tools) is NEVER granted
+                // directly: the rights editor lists its child tools, so its own key is never in the
+                // allow-set. Gating the group on it hid it from every non-admin no matter what was
+                // granted — the same wrapper-node trap fixed in the React nav. Let a container through and
+                // derive its visibility from whether a child tool is actually granted (see $isNavChild),
+                // so nothing empty leaks.
+                $sectionKey         = $toolSectionName['conf']['melisKey'] ?? $key;
+                // A node is a pure CONTAINER only when its interface children are real NAVIGABLE tools
+                // (they carry an icon + left_menu_display). A leaf tool can ALSO declare `interface`
+                // children that are non-navigable action-rights buttons — icon-less, left_menu_display
+                // = false, EXCLUSION group (e.g. MelisCommerce Clients/Contacts add/export/delete/save).
+                // Counting those as "children" wrongly turned the tool into a container: with no
+                // navigable child, $isNavChild stays false, so its own toolsection_* config was never
+                // built (L146) → it rendered EMPTY and vanished from the legacy left menu even though
+                // canAccess() granted it. Gate the container flag on navigable children only.
+                $sectionHasNavChild = false;
+                foreach (($toolSectionName['interface'] ?? []) as $sectionChild) {
+                    if (!empty($sectionChild['conf']['icon']) && ($sectionChild['conf']['left_menu_display'] ?? true)) {
+                        $sectionHasNavChild = true;
+                        break;
+                    }
+                }
+                $sectionIsContainer = empty($toolSectionName['forward']) && $sectionHasNavChild;
 
-//                    var_dump($key);
-//
-//
-//                    if (!empty($toolSectionName['conf']['melisKey']))
-//                        if ($toolSectionName['conf']['melisKey'] == 'meliscommerce_toolstree_section')
-//                            print_r($toolSectionName);
+                if ($melisCoreRights->canAccess($sectionKey) || $sectionIsContainer) {
 
-                    $secondLvlTools = [];
                     // Second level, tools
                     if (isset($toolSectionName['interface'])) {
                         foreach ($toolSectionName['interface'] as $keyTool => $toolName) {
-                            $isToolNavChild = false;
+                            $leftMenuDisplay = $toolName['conf']['left_menu_display'] ?? true;
+                            $toolKey         = $toolName['conf']['melisKey'] ?? $keyTool;
+                            $toolIsContainer = empty($toolName['forward']) && !empty($toolName['interface']);
 
-                            $leftMenuDisplay = true;
-
-                            if ($melisCoreRights->canAccess($keyTool)) {
-                                //check if we want to display this tool in left menu
-                                if(isset($toolName['conf']['left_menu_display'])){
-                                    $leftMenuDisplay = $toolName['conf']['left_menu_display'];
-                                }
-
-                                if($leftMenuDisplay) {
-                                    $icon = (!empty($toolName['conf']['icon'])) ? $toolName['conf']['icon'] : 'fa-cube';
-
-                                    $tools[$key]['toolsection_children'][$keyTool] = [
-                                        'tool_id' => $toolName['conf']['id'] ?? $keyTool,
-                                        'tool_name' => $toolName['conf']['name'] ?? "<strike>$keyTool</strike>",
-                                        'tool_icon' => $icon,
-                                        'tool_forward' => isset($toolName['forward']) ? $toolName['forward'] : [],
-                                        'tool_melisKey' => $toolName['conf']['melisKey'] ?? $keyTool,
-                                        'toolsection_is_tool' => isset($toolName['forward']) && !empty($toolName['forward']) ? true : false
-                                    ];
-
-                                    $isNavChild = true;
+                            // Third level, child tools — resolve them FIRST (each gated on its own
+                            // melisKey) so a container L2's visibility can be derived from its children.
+                            $childTools = [];
+                            if (isset($toolName['interface'])) {
+                                foreach ($toolName['interface'] as $childKeyTool => $childToolname) {
+                                    // only nodes with an icon are navigable (4th-level panels have none)
+                                    if (empty($childToolname['conf']['icon'])) {
+                                        continue;
+                                    }
+                                    if (!($childToolname['conf']['left_menu_display'] ?? true)) {
+                                        continue;
+                                    }
+                                    $childKey = $childToolname['conf']['melisKey'] ?? $childKeyTool;
+                                    if ($melisCoreRights->canAccess($childKey)) {
+                                        $childTools[$childKeyTool] = [
+                                            'tool_id' => $childToolname['conf']['id'] ?? $childKeyTool,
+                                            'tool_name' => $childToolname['conf']['name'] ?? "<strike>$childKeyTool</strike>",
+                                            'tool_icon' => $childToolname['conf']['icon'],
+                                            'tool_forward' => $childToolname['forward'] ?? [],
+                                            'tool_melisKey' => $childToolname['conf']['melisKey'] ?? $childKeyTool,
+                                            'toolsection_is_tool' => !empty($childToolname['forward']),
+                                        ];
+                                    }
                                 }
                             }
 
-                            // add third level for tool others
-                            // if ($melisKey == 'melisothers_toolstree_section') {
-                                if (isset($toolName['interface'])) {
+                            // Show the L2 tool when it is directly granted, OR (container) when at least
+                            // one of its child tools is granted.
+                            $toolAccessible = $melisCoreRights->canAccess($toolKey) || !empty($childTools);
 
-                                    // third level, child tools
-                                    foreach ($toolName['interface'] as $childKeyTool => $childToolname) {
-                                        $leftMenuDisplay = true;
-                                        //check if we want to display this tool in left menu
-                                        if(isset($toolName['conf']['left_menu_display'])){
-                                            $leftMenuDisplay = $toolName['conf']['left_menu_display'];
-                                        }
+                            if ($toolAccessible && $leftMenuDisplay) {
+                                $icon = !empty($toolName['conf']['icon']) ? $toolName['conf']['icon'] : 'fa-cube';
 
-                                        if($leftMenuDisplay) {
-                                            // if config has icon value this will include to deplay in left menu in 4th level
-                                            if (!empty($childToolname['conf']['icon'])) {
-
-                                                $icon = (!empty($childToolname['conf']['icon'])) ? $childToolname['conf']['icon'] : 'fa-cube';
-
-                                                if ($icon) {
-                                                    $isToolNavChild = true;
-                                                }
-
-                                                if ($melisCoreRights->canAccess($childKeyTool)) {
-                                                    $tools[$key]['toolsection_children'][$keyTool]['toolsection_children'][$childKeyTool] = [
-                                                        'tool_id' => $childToolname['conf']['id'] ?? $keyTool,
-                                                        'tool_name' => $childToolname['conf']['name'] ?? "<strike>$childKeyTool</strike>",
-                                                        'tool_icon' => $icon,
-                                                        'tool_forward' => isset($childToolname['forward']) ? $childToolname['forward'] : [],
-                                                        'tool_melisKey' => $childToolname['conf']['melisKey'] ?? $keyTool,
-                                                        'toolsection_is_tool' => isset($childToolname['forward']) && !empty($childToolname['forward']) ? true : false
-                                                    ];
-                                                }
-                                            }
-                                        }
-                                    }
+                                $tools[$key]['toolsection_children'][$keyTool] = [
+                                    'tool_id' => $toolName['conf']['id'] ?? $keyTool,
+                                    'tool_name' => $toolName['conf']['name'] ?? "<strike>$keyTool</strike>",
+                                    'tool_icon' => $icon,
+                                    'tool_forward' => $toolName['forward'] ?? [],
+                                    'tool_melisKey' => $toolName['conf']['melisKey'] ?? $keyTool,
+                                    'toolsection_is_tool' => !empty($toolName['forward']),
+                                ];
+                                if (!empty($childTools)) {
+                                    $tools[$key]['toolsection_children'][$keyTool]['toolsection_children'] = $childTools;
                                 }
-                            // }
+                                $tools[$key]['toolsection_children'][$keyTool]['toolsection_has_nav_child'] = !empty($childTools);
 
-                            $tools[$key]['toolsection_children'][$keyTool]['toolsection_has_nav_child'] = $isToolNavChild;
+                                $isNavChild = true;
+                            }
                         }
                     }
 
-                    if ($isNavChild || !empty($toolSectionName['conf']['icon'])){
+                    // Show the section when it has a granted nav child, or (non-container) it is a real
+                    // tool/section that carries its own icon — preserving the original icon fallback while
+                    // keeping an empty container hidden.
+                    if ($isNavChild || (!$sectionIsContainer && !empty($toolSectionName['conf']['icon']))) {
 
                         $toolConfig = [
                             'toolsection_id' => $toolSectionName['conf']['id'] ?? $key,

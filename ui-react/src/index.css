@@ -1,0 +1,270 @@
+@import 'tailwindcss';
+
+/* Les pages React des modules vivent hors de ui-react/ (vendor/<module>/public/react).
+   Tailwind v4 s'enracine dans ui-react/ et ne les scanne pas par défaut → leurs
+   classes (ex. sm:grid-cols-4) ne sont pas générées et les layouts cassent.
+   On déclare ces dossiers comme sources supplémentaires. */
+@source "../../vendor/melisplatform/melis-core/public/react";
+@source "../../vendor/melisplatform/melis-cms-news/public/react";
+@source "../../vendor/melisplatform/melis-small-business/public/react";
+
+/* ============================================================================
+   Melis backoffice — système de thèmes
+   ----------------------------------------------------------------------------
+   Un thème = un jeu de variables CSS, basculé via l'attribut `data-theme` sur
+   <html> (posé par le ThemeProvider / le script anti-FOUC dans index.html).
+     • platform : charte Melis Platform (rouge, clair) — designsystem/colors_and_type.css
+     • studio   : charte Melis Studio AI (bleu électrique, sombre) — melis-studio.ai
+   Les `--brand-*` pilotent le panneau de marque de la page de login.
+   ========================================================================== */
+
+/* ---- Thème par défaut : Melis Platform (clair / rouge) ------------------- */
+:root,
+[data-theme='platform'] {
+  --radius: 0.75rem; /* 12px — cartes & blocs (--r-12) */
+
+  --background: #f2f4f8; /* mist-gray : fond d'app */
+  --foreground: #353f4f; /* ink */
+  --card: #ffffff;
+  --card-foreground: #353f4f;
+  --popover: #ffffff;
+  --popover-foreground: #353f4f;
+
+  --muted: #f4f4f9;
+  --muted-foreground: #6c757d;
+
+  --primary: #ff0000; /* rouge de marque */
+  --primary-foreground: #ffffff;
+  --secondary: #ffe6e6;
+  --secondary-foreground: #353f4f;
+  --accent: #ffe6e6;
+  --accent-foreground: #353f4f;
+
+  --destructive: #ff0000;
+  --destructive-foreground: #ffffff;
+
+  --border: #e3e6ec;
+  --input: #d8dce4;
+  --ring: #ff0000;
+  --success: #48af4b;
+
+  --shadow-card: 0 4px 12px 0 rgba(0, 0, 0, 0.08);
+
+  /* Panneau de marque (login) */
+  --brand-foreground: #ffffff;
+  --brand-gradient: radial-gradient(120% 120% at 15% 0%, #ff3b3b 0%, #ff0000 45%, #c40000 100%);
+  --brand-halo-1: rgba(255, 255, 255, 0.12);
+  --brand-halo-2: rgba(0, 0, 0, 0.12);
+  --brand-muted: rgba(255, 255, 255, 0.8);
+  --brand-faint: rgba(255, 255, 255, 0.6);
+}
+
+/* ---- Thème Melis Studio AI (sombre / bleu) ------------------------------ */
+[data-theme='studio'] {
+  --radius: 0.625rem; /* 10px — coins un poil plus serrés, plus "tech" */
+
+  --background: #070b14; /* bleu-nuit quasi noir */
+  --foreground: #e8edf6;
+  --card: #0e1626; /* surface sombre */
+  --card-foreground: #e8edf6;
+  --popover: #0e1626;
+  --popover-foreground: #e8edf6;
+
+  --muted: #131c2e;
+  --muted-foreground: #8a96ab;
+
+  --primary: #2f6bff; /* bleu électrique */
+  --primary-foreground: #ffffff;
+  --secondary: #131f38;
+  --secondary-foreground: #cdd7ea;
+  --accent: #16213a;
+  --accent-foreground: #e8edf6;
+
+  --destructive: #f05252;
+  --destructive-foreground: #ffffff;
+
+  --border: #1d2840;
+  --input: #263350;
+  --ring: #2f6bff;
+  --success: #34d399; /* teal/vert (cf. "Toujours actifs") */
+
+  --shadow-card: 0 10px 30px 0 rgba(0, 0, 0, 0.5);
+
+  /* Panneau de marque (login) — fond sombre + lueurs bleu/cyan */
+  --brand-foreground: #ffffff;
+  --brand-gradient: radial-gradient(100% 100% at 20% 8%, #1b2a6b 0%, #0c1530 48%, #070b14 100%);
+  --brand-halo-1: rgba(47, 107, 255, 0.38);
+  --brand-halo-2: rgba(34, 211, 238, 0.18);
+  --brand-muted: rgba(224, 232, 246, 0.72);
+  --brand-faint: rgba(224, 232, 246, 0.45);
+}
+
+/* Mapping des tokens dans le thème Tailwind v4 → utilitaires bg-primary,
+   text-muted-foreground, font-display, rounded-lg, shadow-card, etc.
+   Les `inline` repointent vers les vars ci-dessus → suivent le data-theme. */
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-success: var(--success);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  --font-sans: 'Rubik', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  --font-display: 'Plus Jakarta Sans', sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+
+  --radius-lg: var(--radius);
+  --radius-md: calc(var(--radius) - 4px);
+  --radius-sm: calc(var(--radius) - 6px);
+
+  --shadow-card: var(--shadow-card);
+}
+
+* {
+  border-color: var(--color-border);
+}
+
+html {
+  color-scheme: light;
+}
+[data-theme='studio'] {
+  color-scheme: dark;
+}
+
+/* ---- "Supprimer tous les plugins" (palette de widgets) ------------------- */
+/* En thème sombre, le `bg-destructive` plein (#f05252) détonne sur les surfaces
+   bleu-nuit. On reprend le traitement destructif sombre du reste du BO
+   (boutons "refuse" du workflow) : teinte rouge discrète + texte/bordure adoucis,
+   accordés au scheme. Le thème clair (platform) garde le rouge plein d'origine.
+   Sélecteur [data-theme] + classe → l'emporte sur les utilitaires Tailwind. */
+[data-theme='studio'] .dashboard-remove-all-btn {
+  background: rgba(240, 82, 82, 0.14);
+  color: #f87171;
+  border: 1px solid rgba(240, 82, 82, 0.42);
+}
+[data-theme='studio'] .dashboard-remove-all-btn:hover:not(:disabled) {
+  background: rgba(240, 82, 82, 0.24);
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-sans);
+  background-color: var(--color-background);
+  color: var(--color-foreground);
+  -webkit-font-smoothing: antialiased;
+  transition:
+    background-color 0.25s ease,
+    color 0.25s ease;
+}
+
+/* ---- GridStack : theming pour épouser nos cartes/thèmes ------------------ */
+.melis-dashboard-grid.grid-stack {
+  background: transparent;
+  /* Une grille vide a une hauteur nulle → aucune surface pour recevoir un widget glissé
+     depuis la palette. On lui garantit une zone de dépôt (cf. l'état vide de DashboardPage). */
+  min-height: 16rem;
+}
+/* Pendant un drag de widget : neutralise les iframes (widgets plugins legacy) pour
+   qu'elles n'avalent pas le mouseup — sinon GridStack ne retire jamais son clone
+   d'aide et il reste collé à l'écran (cf. DashboardGrid, classe posée au mousedown). */
+body.melis-widget-dragging iframe {
+  pointer-events: none !important;
+}
+/* Le contenu de cellule = simple conteneur transparent ; la carte (WidgetFrame)
+   rendue dedans via portail porte le fond/bordure/ombre. */
+.melis-dashboard-grid .grid-stack-item-content {
+  inset: 0;
+  overflow: visible;
+  background: transparent;
+  border: 0;
+  padding: 0;
+}
+/* Poignée de resize : on garde la géométrie native de GridStack (sinon la zone
+   de hit se décale), on ne fait qu'ajouter un marqueur visuel discret. */
+.melis-dashboard-grid .grid-stack-item > .ui-resizable-se {
+  background-image: none;
+}
+.melis-dashboard-grid .grid-stack-item > .ui-resizable-se::after {
+  content: '';
+  position: absolute;
+  right: 4px;
+  bottom: 4px;
+  width: 9px;
+  height: 9px;
+  border-right: 2px solid var(--color-muted-foreground);
+  border-bottom: 2px solid var(--color-muted-foreground);
+  border-bottom-right-radius: 3px;
+  opacity: 0.3;
+  transition: opacity 0.15s ease;
+}
+.melis-dashboard-grid .grid-stack-item:hover > .ui-resizable-se::after {
+  opacity: 0.85;
+}
+/* Placeholder pendant le déplacement. */
+.melis-dashboard-grid .grid-stack-placeholder > .placeholder-content {
+  background: color-mix(in srgb, var(--color-primary) 16%, transparent);
+  border: 1px dashed color-mix(in srgb, var(--color-primary) 55%, transparent);
+  border-radius: var(--radius);
+}
+
+/* ============================================================================
+   Scrollbars — fines, arrondies, theme-aware (dark + light + schemas custom)
+   ----------------------------------------------------------------------------
+   Couleur derivee de --color-muted-foreground via color-mix -> s'adapte
+   automatiquement a chaque theme. Les barres de tabs qui posent
+   scrollbar-width:none en inline restent masquees (override local).
+   ========================================================================== */
+/* Firefox (pas de ::-webkit-scrollbar) : barre fine colorée standard.
+   ⚠ On ne pose PAS scrollbar-width globalement : dès qu'il vaut ≠ auto,
+   Chromium IGNORE les ::-webkit-scrollbar ci-dessous (pouce arrondi custom). */
+@supports not selector(::-webkit-scrollbar) {
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: color-mix(in srgb, var(--color-muted-foreground) 45%, transparent) transparent;
+  }
+}
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: color-mix(in srgb, var(--color-muted-foreground) 45%, transparent);
+  border-radius: 999px;
+  border: 2px solid transparent; /* liseré transparent -> pouce "flottant" (≈6px visibles) */
+  background-clip: padding-box;
+  transition: background-color 0.15s ease;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: color-mix(in srgb, var(--color-muted-foreground) 70%, transparent);
+  background-clip: padding-box;
+}
+::-webkit-scrollbar-thumb:active {
+  background: color-mix(in srgb, var(--color-muted-foreground) 85%, transparent);
+  background-clip: padding-box;
+}
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+/* ============================================================================
+   Scrollbars — fines, arrondies, thème-aware (dark + light + schémas custom)
+   ----------------------------------------------------------------------------
+   Couleur dérivée de --color-muted-foreground via color-mix → sadapte

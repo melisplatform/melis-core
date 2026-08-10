@@ -35,6 +35,8 @@ use MelisCore\Listener\MelisCoreUserRecentLogsListener;
 use MelisCore\Listener\MelisCoreUrlPlatformSchemeListener;
 use MelisCore\Listener\MelisCoreOtherConfigListener;
 use MelisCore\Listener\MelisCoreUpdatePasswordHistoryListener;
+use MelisCore\Listener\MelisReactApiCapabilityPreserveUserListener;
+use MelisCore\Listener\MelisCoreRightsCacheListener;
 use Laminas\ModuleManager\ModuleManager;
 use Laminas\Mvc\ModuleRouteListener;
 use Laminas\Mvc\MvcEvent;
@@ -98,6 +100,11 @@ class Module
             (new MelisCoreTableColumnDisplayListener())->attach($eventManager);
             (new MelisCoreClearCacheListenerListener())->attach($eventManager);
             (new MelisCoreInsertDashboardPluginListener())->attach($eventManager);
+            // Préserve la section <meliscore_tool_capabilities> (droits avancés React) d'un USER
+            // quand l'ancien BO reconstruit usr_rights (event meliscore_tooluser_save_start).
+            (new MelisReactApiCapabilityPreserveUserListener())->attach($eventManager);
+            // Génère le cache de droits par utilisateur à la sauvegarde (user + rôle propagé).
+            (new MelisCoreRightsCacheListener())->attach($eventManager);
         }
     }
 
@@ -132,9 +139,20 @@ class Module
 
     public function initSession(MvcEvent $e)
     {
-        // set cookie attribute samesite
+        // Harden the session cookie params. Set UNCONDITIONALLY (not only when starting) so the
+        // hardened attributes are in effect for session_regenerate_id() at login even if another
+        // module started the session first: HttpOnly (JS can't read PHPSESSID → XSS can't steal it),
+        // SameSite=Strict, Secure over HTTPS, strict-mode (reject attacker-fixated ids).
+        ini_set('session.use_strict_mode', '1');
+        ini_set('session.cookie_samesite', 'Strict');
+        ini_set('session.cookie_httponly', '1');
+        ini_set('session.cookie_secure', empty($_SERVER['HTTPS']) ? '0' : '1');
         if (session_status() == PHP_SESSION_NONE) {
-            ini_set('session.cookie_samesite', 'Strict');
+            session_set_cookie_params([
+                'httponly' => true,
+                'samesite' => 'Strict',
+                'secure'   => !empty($_SERVER['HTTPS']),
+            ]);
             session_start();
         }
 
@@ -303,9 +321,18 @@ class Module
             exit;
         }
 
-        // INFO: If method is GET and not authenticated, redirect to login
+        // INFO: If method is GET and not authenticated, redirect to login — sauf pour une requête
+        // AJAX/XHR (ex: polling Messenger, preload TinyMCE, i18n DataTable tournant en tâche de
+        // fond sur une page publique comme /melis/setup) : suivre une redirection vers du HTML
+        // casse le parsing JSON côté client (attend du JSON, reçoit la page de login) — 401 laisse
+        // le handler d'erreur AJAX échouer proprement au lieu de spammer des 302 dans le Network tab.
         if ($method === 'GET' && !$isAuthenticated) {
             $e->stopPropagation();
+            $xhrHeader = $request->getHeaders()->get('X-Requested-With');
+            if ($xhrHeader && strtolower($xhrHeader->getFieldValue()) === 'xmlhttprequest') {
+                header('HTTP/1.0 401 Unauthorized');
+                exit;
+            }
             header('Location: /melis/login');
             exit;
         }
@@ -370,6 +397,8 @@ class Module
         $config = [];
         $configFiles = [
             include __DIR__ . '/../config/module.config.php',
+            include __DIR__ . '/../config/react-api.php',
+            include __DIR__ . '/../config/react.capabilities.php',
             include __DIR__ . '/../config/app.interface.php',
             include __DIR__ . '/../config/app.toolstree.php',
             include __DIR__ . '/../config/app.forms.php',

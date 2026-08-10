@@ -37,10 +37,58 @@ class MelisCoreDashboardPluginsRightsService extends MelisServiceManager impleme
 
     public function canAccess($key): bool
     {
+        // Super-administrateur (usr_admin=1) = accès TOTAL, indépendamment de son usr_rights.
+        try {
+            $identity = $this->getServiceManager()->get('MelisCoreAuth')->getIdentity();
+            if (!empty($identity) && !empty($identity->usr_admin)) {
+                return true;
+            }
+        } catch (\Throwable $e) { /* pas d'identité → on continue avec le gate normal */ }
+
+        // Plugins « plateforme » marqués exclude_rights_display (ex. l'Announcement) : accordés à tous,
+        // volontairement non gérables via l'arbre des droits → toujours accessibles.
+        if ($this->isAlwaysGrantedDashboardPlugin($key)) {
+            return true;
+        }
+
         $melisCoreAuth = $this->getServiceManager()->get('MelisCoreAuth');
         $xmlRights = $melisCoreAuth->getAuthRights();
-        $dashboardPlugins = $this->isAccessible($xmlRights, self::MELISCORE_DASHBOARDPLUGIN_PREFIX, $key);
-        return $dashboardPlugins;
+
+        // Utilisateur NON admin SANS aucun droit (XML vide/illisible) → AUCUN dashboard plugin.
+        // isAccessible() renvoyait historiquement true sur des droits vides (default-ALLOW) : un
+        // utilisateur sans droits voyait alors TOUS les dashboard plugins MelisCore (ticket 0010740).
+        $rightsObj = @simplexml_load_string(trim((string) $xmlRights));
+        if (empty($rightsObj)) {
+            return false;
+        }
+
+        return $this->isAccessible($xmlRights, self::MELISCORE_DASHBOARDPLUGIN_PREFIX, $key);
+    }
+
+    /**
+     * A dashboard plugin flagged `exclude_rights_display` is platform-wide: excluded from the rights
+     * tree (not toggleable) and granted to everyone (e.g. MelisCoreDashboardAnnouncementPlugin). Such
+     * a plugin must stay visible even for a user with no rights.
+     *
+     * @param string $key plugin class/melisKey
+     * @return bool
+     */
+    private function isAlwaysGrantedDashboardPlugin($key): bool
+    {
+        try {
+            $config = $this->getServiceManager()->get('MelisCoreConfig');
+            $base = '/meliscore/interface/' . self::MELISCORE_DASHBOARDPLUGIN_PREFIX
+                . '/interface/' . self::MELISDASHBOARDPLUGIN_PREFIX_TOOLS . '/interface/' . $key;
+            $node = $config->getItem($base);
+            $datas = $node['datas'] ?? null;
+            // Modules external to MelisCore declare their datas behind a conf.type indirection.
+            if ($datas === null && !empty($node['conf']['type'])) {
+                $datas = $config->getItem($node['conf']['type'])['datas'] ?? null;
+            }
+            return !empty($datas['exclude_rights_display']);
+        } catch (\Throwable $e) {
+            return false;
+        }
     }
 
     public function isAccessible($xmlRights, $sectionId, $itemId)
@@ -126,7 +174,13 @@ class MelisCoreDashboardPluginsRightsService extends MelisServiceManager impleme
             foreach ($appsConfig['interface'] as $appKey => $appSection) {
                 if(!isset($appSection['datas']['skip_plugin_container'])) {
                     if(!isset($appSection['datas']['exclude_rights_display'])) {//check if this plugins is excluded in rights display
-                        $selectedTools = $melisCoreUser->isItemRightChecked($userXml, self::MELISCORE_DASHBOARDPLUGIN_PREFIX, $appKey);
+                        // Honore le raccourci « All plugins » : React stocke <id>melis_dashboardplugin_root</id>
+                        // pour tout accorder. isItemRightChecked (branche générique, égalité stricte) l'ignore
+                        // → chaque plugin s'affichait DÉCOCHÉ en legacy alors que React les montre tous cochés.
+                        // isAccessible() (local) traite melis_dashboardplugin_root comme « tous » (L104), donc
+                        // un droit _root coche tous les plugins ; un droit par-plugin reste exact. Même famille
+                        // que la divergence _root de l'arbre d'outils.
+                        $selectedTools = $this->isAccessible($userXml, self::MELISCORE_DASHBOARDPLUGIN_PREFIX, $appKey);
                         $tools[$appCtr] = [
                             'key' => $appKey,
                             'title' => $appSection['datas']['name'] ?? $appKey,

@@ -1,0 +1,1 @@
+var e=`melis_core_gdpr`;function t(e,t,n){window.postMessage({__melisNotif:!0,kind:e,title:t,message:n},`*`)}export{t as n,e as t};

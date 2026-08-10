@@ -62,6 +62,10 @@ class MelisCoreAuthService
 
         // if (!empty($user) && is_object($user)) {
         if (!empty($user)) {
+            // NB: le bypass super-admin (usr_admin=1) est géré en aval par
+            // MelisCoreRightsService::isCurrentUserAdmin() (canAccess court-circuité). On NE renvoie
+            // PLUS '' ici : les vrais usr_rights de l'admin contiennent <meliscms_pages><id>-1</id>,
+            // indispensable à l'arbre de pages CMS (liste positive : XML vide = AUCUNE page).
             if (! $this->isRightsUpdated($user->usr_rights)) {
                 $user->usr_rights = $this->toNewXmlStructure($this->convertToNewRightsStructure());
             }

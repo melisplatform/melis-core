@@ -714,13 +714,26 @@ class MelisCoreGdprAutoDeleteController extends MelisAbstractActionController
         $dirToUpload = $_SERVER['DOCUMENT_ROOT'] . "/media/melis-gdpr-auto-delete/";
         // create folder
         if (! file_exists($dirToUpload)) {
-            mkdir($dirToUpload, 0777);
+            mkdir($dirToUpload, 0755, true);
         }
 
-        // upload file
-        move_uploaded_file($file['tmp_name'],$dirToUpload . $file['name']);
+        // SECURITY: this field is an email-layout logo (image only). NEVER trust the client filename
+        // or extension — a raw move_uploaded_file($file['name']) let an attacker drop shell.php into
+        // the web root (= RCE). Validate the actual content is an image, then store under a
+        // server-generated random name with a whitelisted extension.
+        $allowed = ['png' => 'image/png', 'jpg' => 'image/jpeg', 'jpeg' => 'image/jpeg', 'gif' => 'image/gif', 'webp' => 'image/webp'];
+        $info = @getimagesize($file['tmp_name']);
+        if ($info === false || !in_array($info['mime'], $allowed, true)) {
+            return '';
+        }
+        $ext      = array_search($info['mime'], $allowed, true);
+        $safeName = 'gdpr_' . bin2hex(random_bytes(16)) . '.' . $ext;
 
-        return "/media/melis-gdpr-auto-delete/" . $file['name'];
+        if (! move_uploaded_file($file['tmp_name'], $dirToUpload . $safeName)) {
+            return '';
+        }
+
+        return "/media/melis-gdpr-auto-delete/" . $safeName;
     }
 
     /**

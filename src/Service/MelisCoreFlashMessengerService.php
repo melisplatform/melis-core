@@ -52,10 +52,11 @@ class MelisCoreFlashMessengerService extends MelisServiceManager implements  Mel
 
         $tool       = $this->getServiceManager()->get('MelisCoreTool');
 
+        // Store the RAW (escaped) title/message — typically a translation key — so the bell can be
+        // re-translated to the active locale at READ time (getflashMessageAction). Pre-translating
+        // here would freeze the language and the messages would not follow a language switch.
         $title      = $tool->escapeHtml($title);
-        $title      = !empty($translatorSvc->getMessage($title, $locale))? $translatorSvc->getMessage($title, $locale) : $title;
         $message    = $tool->escapeHtml($message);
-        $message    = !empty($translatorSvc->getMessage($message, $locale))? $translatorSvc->getMessage($message, $locale) : $message;
         
         $curFlashMessages = $this->fmContainer->flashMessages;
         $newFlashMessage = array(

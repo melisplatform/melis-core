@@ -72,6 +72,20 @@ var gdprAutoDelete = {
         $("#tableGdprAutoDeleteConfig").DataTable().ajax.reload();
     },
     /**
+     * Reveal a zone of this tool, whatever its depth.
+     *
+     * The view rendered by zoneReload() re-emits the zone's own wrapper (same id, still
+     * carrying the "d-none" it is declared with), and zoneReload() injects it INSIDE the
+     * existing wrapper. After a reload two elements therefore share the id, and $("#id")
+     * only ever reaches the outer one: the inner copy would keep "d-none" and the content
+     * would stay invisible. Match by attribute so both copies are revealed.
+     *
+     * @param zoneId
+     */
+    showZone: function (zoneId) {
+        $('[id="' + zoneId + '"]').removeClass('d-none');
+    },
+    /**
      * show add/edit config zone
      * @param element
      */
@@ -80,13 +94,13 @@ var gdprAutoDelete = {
         //this.hideListConfig();
 
         // remove class d-none to show the add/edit config area
-        $("#id_meliscoregdpr_auto_delete_content_accordion_add_edit_config").removeClass('d-none');
-        
+        gdprAutoDelete.showZone('id_meliscoregdpr_auto_delete_content_accordion_add_edit_config');
+
         // zone reload to get forms
         melisCoreTool.pending(element);
 
         melisHelper.zoneReload('id_meliscoregdpr_auto_delete_content_accordion_add_edit_config', 'meliscoregdpr_auto_delete_content_accordion_add_edit_config', [], function() {
-            $("#id_meliscoregdpr_auto_delete_content_accordion_add_edit_config").removeClass('d-none');
+            gdprAutoDelete.showZone('id_meliscoregdpr_auto_delete_content_accordion_add_edit_config');
             melisCoreTool.done(element);
         });
     },
@@ -101,17 +115,17 @@ var gdprAutoDelete = {
      */
     openGdprAutoDeleteConfig : function (configId, siteId, module ) {
         // remove class d-none to show the add/edit config area
-        $("#id_meliscoregdpr_auto_delete_content_accordion_add_edit_config").removeClass('d-none');
+        gdprAutoDelete.showZone('id_meliscoregdpr_auto_delete_content_accordion_add_edit_config');
         melisHelper.zoneReload('id_meliscoregdpr_auto_delete_content_accordion_add_edit_config', 'meliscoregdpr_auto_delete_content_accordion_add_edit_config', { configId : configId , siteId : siteId, moduleName : module }, function () {
-            $("#id_meliscoregdpr_auto_delete_content_accordion_add_edit_config").removeClass('d-none');
+            gdprAutoDelete.showZone('id_meliscoregdpr_auto_delete_content_accordion_add_edit_config');
 
         });
     },
     openGdprAutoDeleteConfigBySiteModule : function (configId, siteId, module) {
         // remove class d-none to show the add/edit config area
-        $("#id_meliscoregdpr_auto_delete_content_accordion_add_edit_config_content").removeClass('d-none');
+        gdprAutoDelete.showZone('id_meliscoregdpr_auto_delete_content_accordion_add_edit_config_content');
         melisHelper.zoneReload('id_meliscoregdpr_auto_delete_content_accordion_add_edit_config_content', 'meliscoregdpr_auto_delete_content_accordion_add_edit_config_content', { configId : configId , siteId : siteId, moduleName : module }, function () {
-            $("#id_meliscoregdpr_auto_delete_content_accordion_add_edit_config_content").removeClass('d-none');
+            gdprAutoDelete.showZone('id_meliscoregdpr_auto_delete_content_accordion_add_edit_config_content');
             $("#mgdprc_site_id").prop('disabled', false);
             $("#mgdprc_module_name").prop('disabled', false);
 

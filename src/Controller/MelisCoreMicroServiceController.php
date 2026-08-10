@@ -131,9 +131,45 @@ class MelisCoreMicroServiceController extends MelisAbstractActionController
                                         $reflectionMethod = new \ReflectionMethod($servicePath, $method);
 
                                         /**
-                                         * allow method to accept dynamic arguments
+                                         * Build POSITIONAL arguments in the method's parameter order.
+                                         *
+                                         * The service methods take positional args (e.g. addUser($login, $status, …)),
+                                         * but the microservice form fields are named after the DB/business fields
+                                         * (uac_login, uac_status, …), NOT the parameter names — only their ORDER
+                                         * matches. Passing the associative $post straight to invokeArgs worked on
+                                         * PHP 7 (keys ignored, used positionally) but BREAKS on PHP 8, where string
+                                         * keys are treated as NAMED arguments → "Unknown named parameter $x".
+                                         *
+                                         * So we map the Nth declared parameter to the Nth form element's posted
+                                         * value (form elements are declared in parameter order); missing values
+                                         * fall back to the parameter default (or null). This restores the intended
+                                         * positional invocation and ignores any extra posted keys.
                                          */
-                                        $data = $reflectionMethod->invokeArgs($tmpInstance, $post);
+                                        $formElements = array_values($form->getElements());
+                                        $args = [];
+                                        foreach ($reflectionMethod->getParameters() as $i => $param) {
+                                            $elementName = isset($formElements[$i]) ? $formElements[$i]->getName() : null;
+                                            if ($elementName !== null && array_key_exists($elementName, $post)) {
+                                                $args[] = $post[$elementName];
+                                            } elseif ($param->isDefaultValueAvailable()) {
+                                                $args[] = $param->getDefaultValue();
+                                            } else {
+                                                $args[] = null;
+                                            }
+                                        }
+
+                                        // Never let a service-side error bubble up as a framework HTML 500 — this is a
+                                        // JSON API. Any exception (bad input, SQL error, …) is returned as a JSON error.
+                                        try {
+                                            $data = $reflectionMethod->invokeArgs($tmpInstance, $args);
+                                        } catch (\Throwable $e) {
+                                            return new JsonModel([
+                                                'success'  => false,
+                                                'message'  => $translator->translate('tr_meliscore_microservice_request_ko'),
+                                                'response' => [],
+                                                'errors'   => ['execution' => 'The service could not process the request with the given parameters.'],
+                                            ]);
+                                        }
                                         
 
                                         /**
@@ -202,6 +238,9 @@ class MelisCoreMicroServiceController extends MelisAbstractActionController
                                 $view->setTerminal(true);
                                 $view->form = $form;
                                 $view->methodName = $method;
+                                $view->apiKey = $apiKey;
+                                $view->module = $module;
+                                $view->serviceName = $service;
                                 return $view;
                             }
                         } else {
@@ -228,13 +267,34 @@ class MelisCoreMicroServiceController extends MelisAbstractActionController
                                         $view->setTerminal(true);
                                         $view->form = $this->getForm($form);
                                         $view->methodName = $method;
+                                        $view->apiKey = $apiKey;
+                                        $view->module = $module;
+                                        $view->serviceName = $service;
                                         return $view;
                                     }
                                     else {
 
                                         $tmpInstance = new $servicePath();
-                                        $tmpInstance->setgetServiceManager($this->getServiceManager());
+                                        $tmpInstance->setServiceManager($this->getServiceManager());
+
+                                        if (method_exists($servicePath, 'setEventManager')) {
+                                            $tmpInstance->setEventManager($this->getEventManager());
+                                        }
+
                                         $reflectionMethod = new \ReflectionMethod($servicePath, $method);
+
+                                        // No parameters to build — invoke directly. Keep this a JSON API:
+                                        // never let a service-side error bubble up as a framework HTML 500.
+                                        try {
+                                            $data = $reflectionMethod->invokeArgs($tmpInstance, []);
+                                        } catch (\Throwable $e) {
+                                            return new JsonModel([
+                                                'success'  => false,
+                                                'message'  => $translator->translate('tr_meliscore_microservice_request_ko'),
+                                                'response' => [],
+                                                'errors'   => ['execution' => 'The service could not process the request with the given parameters.'],
+                                            ]);
+                                        }
 
                                          // Check data if it's an Object
                                         if(is_object($data)){
@@ -579,10 +639,58 @@ class MelisCoreMicroServiceController extends MelisAbstractActionController
 
         }
      
-        $view->userExists   = $userExists;
-        $view->microservice = $microservice;
+        // Map each exposed module to its BO left-menu section (same grouping as the classic left
+        // menu), derived from the module's OWN app.interface.php: the `*_toolstree_section` it
+        // registers its tools under (e.g. MelisCmsProspects lives under "marketing", not "cms").
+        // Modules with no interface section (e.g. the rendering engine) fall back to the core section.
+        // Manual overrides: force a module into a specific section when its auto-derived section
+        // isn't the one we want to show here (e.g. the rendering engine and small-business tools
+        // are surfaced under the CMS section).
+        $sectionOverrides = array(
+            'MelisEngine'        => 'meliscms_toolstree_section',
+            'MelisSmallBusiness' => 'meliscms_toolstree_section',
+            // Comments has no toolstree section of its own (extends news/blog) — surface it under CMS.
+            'MelisCmsComments'   => 'meliscms_toolstree_section',
+            // Commerce splits its interface into config/interface/*.php (no single config/app.interface.php
+            // for the auto-deriver to read) — force it into its own Commerce section.
+            'MelisCommerce'      => 'meliscommerce_toolstree_section',
+        );
+
+        $moduleSections = array();
+        if ($userExists) {
+            $modulesSvc = $this->getServiceManager()->get('ModulesService');
+            foreach (array_keys($microservice) as $moduleName) {
+                if ($moduleName === 'conf') { continue; }
+                if (isset($sectionOverrides[$moduleName])) {
+                    $moduleSections[$moduleName] = $sectionOverrides[$moduleName];
+                    continue;
+                }
+                $section = 'meliscore_toolstree_section';
+                try {
+                    $path  = $modulesSvc->getModulePath($moduleName);
+                    $iface = $path ? $path . '/config/app.interface.php' : '';
+                    if ($iface && is_file($iface)) {
+                        $contents = file_get_contents($iface);
+                        if ($contents !== false && preg_match_all('/melis[a-z]+_toolstree_section/', $contents, $mm) && !empty($mm[0])) {
+                            $counts = array_count_values($mm[0]); // primary section = the most-used one
+                            arsort($counts);
+                            $section = (string) key($counts);
+                        }
+                    }
+                } catch (\Throwable $e) {
+                    // keep the default core section
+                }
+                $moduleSections[$moduleName] = $section;
+            }
+        }
+
+        $view->userExists     = $userExists;
+        $view->microservice   = $microservice;
+        $view->moduleSections = $moduleSections;
         $view->apiKey       = $apiKey;
         $view->title       = 'tr_meliscore_microservice_title';
+        // Standalone, self-contained styled page (Melis React look) — render without the legacy layout.
+        $view->setTerminal(true);
         return $view;
     }
 

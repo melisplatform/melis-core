@@ -70,6 +70,8 @@ CREATE TABLE IF NOT EXISTS `melis_core_user` (
   `usr_role_id` INT(11) NOT NULL DEFAULT 1,
   `usr_admin` INT NOT NULL DEFAULT 0,
   `usr_rights` TEXT NULL DEFAULT NULL,
+  `usr_rights_cache` LONGTEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
+  `usr_rights_cache_sig` VARCHAR(64) NULL DEFAULT NULL,
   `usr_image` MEDIUMBLOB NULL DEFAULT NULL,
   `usr_creation_date` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `usr_last_login_date` DATETIME NULL DEFAULT NULL,

@@ -1,5 +1,31 @@
 <?php
 return [
+    'tr_meliscore_ws_intro' => 'Token-authenticated JSON API. Each endpoint is called with POST; open one to try it with a form. All responses are JSON.',
+    'tr_meliscore_ws_apikey' => 'API key',
+    'tr_meliscore_ws_copy' => 'Copy',
+    'tr_meliscore_ws_copied' => 'Copied',
+    'tr_meliscore_ws_stat_modules' => 'Modules',
+    'tr_meliscore_ws_stat_services' => 'Services',
+    'tr_meliscore_ws_stat_endpoints' => 'Endpoints',
+    'tr_meliscore_ws_search_placeholder' => 'Filter endpoints, services or modules…',
+    'tr_meliscore_ws_menu_title' => 'Modules',
+    'tr_meliscore_ws_endpoint' => 'endpoint',
+    'tr_meliscore_ws_endpoints' => 'endpoints',
+    'tr_meliscore_ws_tryit' => 'Try it',
+    'tr_meliscore_ws_noresult' => 'No endpoint matches your search.',
+    'tr_meliscore_ws_footer' => 'Melis Platform · Web Services — this page lists the endpoints available for your API key.',
+    'tr_meliscore_ws_invalid_title' => 'Invalid or inactive API key',
+    'tr_meliscore_ws_invalid_text' => 'This web-services key was not found or has been deactivated. Please generate a new one from the user\'s account in the back-office.',
+    'tr_meliscore_ws_all_endpoints' => 'All endpoints',
+    'tr_meliscore_ws_parameters' => 'Parameters',
+    'tr_meliscore_ws_send' => 'Send request',
+    'tr_meliscore_ws_response' => 'Response',
+    'tr_meliscore_ws_pill_success' => 'success',
+    'tr_meliscore_ws_pill_validation' => 'validation',
+    'tr_meliscore_ws_pill_error' => 'error',
+    'tr_meliscore_ws_pill_nonjson' => 'non-JSON',
+    'tr_meliscore_ws_pill_network' => 'network',
+    'tr_meliscore_ws_desc_announcement' => 'Announcements shown on the back-office dashboard.',
     'en_EN' => 'English',
     'fr_FR' => 'French',
     'tr_meliscore_header Title' => 'Melis Platform',
@@ -168,7 +194,7 @@ return [
     'tr_meliscore_email_failed' => 'Invalid login or email',
     // Password Modification
     'tr_meliscore_email_password_modification_Subject' => 'Password modification',
-    'tr_meliscore_email_password_modification_html_Content' => '<p>Hi [NAME],</p><p>Your password on Melis Platform has been modified.<br />Your new password is : [PASSWORD]</p><p>Have a great day.</p>',
+    'tr_meliscore_email_password_modification_html_Content' => '<p>Hi [NAME],</p><p>Your password on Melis Platform has been modified.</p><p>Have a great day.</p>',
 
     // Reset Password
     'tr_meliscore_reset_password_header' => 'Reset your password',
@@ -234,6 +260,7 @@ return [
 
     'tr_meliscore_login_remember_me' => 'Remember my details',
     'tr_meliscore_login_header' => 'Login to your Account',
+    'tr_meliscore_react_beta_login_notice' => 'React beta version — The legacy interface remains available at {domain}/melis.',
 
     'tr_meliscore_common_choose' => 'Choose',
 

@@ -13,6 +13,7 @@ class MelisCoreImageService extends MelisServiceManager implements MelisCoreImag
     const EXT_PNG = 'png';
     const EXT_GIF = 'gif';
     const EXT_JPG = 'jpg';
+    const EXT_JPEG = 'jpeg';
     
     /**
      * Creates a 200x200 image thumbnail
@@ -24,8 +25,13 @@ class MelisCoreImageService extends MelisServiceManager implements MelisCoreImag
      */
     public function createThumbnail($savePath, $newImageName, $srcImageFile)
     {
+        // Sécurité : $newImageName provient généralement d'un upload (nom fourni par le client) et
+        // sert à construire le chemin d'écriture → basename() pour empêcher toute traversée de
+        // répertoire (mkdir/imagepng hors du dossier média). Défense en profondeur : les appelants
+        // assainissent aussi le nom, ce basename est un point d'étranglement unique.
+        $newImageName = basename((string) $newImageName);
         $getImageFile = $this->resizeImage($savePath, $srcImageFile, 'tmb_'.$newImageName, 250, 250);
-        
+
         return $getImageFile;
     }
     
@@ -42,7 +48,7 @@ class MelisCoreImageService extends MelisServiceManager implements MelisCoreImag
         
         $fileImage = $image;
         $outputImg = null;
-        $ext = pathinfo($newImageName, PATHINFO_EXTENSION);
+        $ext = strtolower(pathinfo($newImageName, PATHINFO_EXTENSION));
 
         $thumb = imagecreatetruecolor($width, $height);
         list($w, $h) = getimagesize($fileImage);
@@ -69,6 +75,7 @@ class MelisCoreImageService extends MelisServiceManager implements MelisCoreImag
                 $outputImg = imagegif($thumb, $savePath.'/'.$newImageName);
                 break;
             case self::EXT_JPG:
+            case self::EXT_JPEG:
                 $outputImg = imagejpeg($thumb, $savePath.'/'.$newImageName, 100);
                 break;
         }

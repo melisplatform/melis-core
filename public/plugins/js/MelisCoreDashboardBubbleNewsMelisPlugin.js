@@ -107,7 +107,8 @@ var MelisCoreDashboardBubbleNewsMelisPlugin = {
                 }
             });
         }).fail(function(xhr, textStatus, errorThrown) {
-            alert( translations.tr_meliscore_error_message );
+            // Échec silencieux : la bulle « Actualités Melis » interroge un flux distant qui peut
+            // échouer ; ne pas bloquer le chargement de la plateforme avec une alert (ticket 0010871).
         });
     }
 };

@@ -141,6 +141,7 @@ $(function() {
                             encode		: true
                         }).done(function(data) {
                             if (data.success == 1) {
+                                melisHelper.melisOkNotification(data.textTitle, data.textMessage);
                                 melisCoreTool.processing();
                                 setTimeout(function() {window.location.reload(true) }, 3000);
                             } else {

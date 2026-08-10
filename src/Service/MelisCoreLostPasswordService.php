@@ -291,7 +291,10 @@ class MelisCoreLostPasswordService extends MelisServiceManager implements MelisC
      */
     private function generateHash()
     {
-        return bin2hex(uniqid());
+        // CSPRNG: the reset token is the sole bearer credential to reset an account's password,
+        // so it must be unpredictable. uniqid() is derived from the server time (guessable) — use
+        // random_bytes for a 256-bit unguessable token.
+        return bin2hex(random_bytes(32));
     }
     
 }

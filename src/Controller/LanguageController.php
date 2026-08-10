@@ -105,8 +105,9 @@ class LanguageController extends MelisAbstractActionController
                 // Update user table
                 $datasUser = $melisUserTable->save(array('usr_lang_id' => $langId), $userId);
                 
-                $flashMsgSrv = $this->getServiceManager()->get('MelisCoreFlashMessenger');
-                $flashMsgSrv->clearFlashMessage();
+                // Do NOT clear the session notifications on a language change — they are stored as
+                // translation keys and re-translated at read time (getflashMessageAction), so the
+                // bell keeps its messages and shows them in the newly selected language.
                 $this->getEventManager()->trigger('meliscore_get_recent_user_logs', $this, array());
 
                 //clear cache when changing language

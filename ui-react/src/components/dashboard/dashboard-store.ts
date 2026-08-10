@@ -1,0 +1,113 @@
+import { WIDGET_MAP } from './widget-registry'
+
+/**
+ * Persistance de la disposition du dashboard.
+ *
+ * Équivalent React de la persistance Melis (`melis_core_dashboards.d_content`,
+ * XML <Plugins><plugin x-axis/y-axis/width/height></Plugins>). Stockage local
+ * isolé derrière load/save pour brancher l'endpoint Melis (`saveDashboardPlugins`)
+ * plus tard sans toucher l'UI.
+ *
+ * `i` = id d'INSTANCE (unique par item posé sur la grille), pas l'id du widget.
+ * Une première instance garde l'id "propre" (ex. `traffic`) pour rester compatible
+ * avec les layouts déjà sauvegardés ; toute instance supplémentaire du même widget
+ * (plugin posé plusieurs fois) reçoit un suffixe `__xxxxxx` (cf. makeInstanceId).
+ * Le suffixe est encodé DANS `i` (et non dans un champ à part) car le backend
+ * MelisReactApiController::dashboardLayoutAction ne persiste que `i/x/y/w/h` —
+ * un champ `widgetId` séparé ne survivrait pas à l'aller-retour XML.
+ */
+const STORAGE_KEY = 'melis-dashboard-v2'
+const INSTANCE_SUFFIX_RE = /__[0-9a-z]{6}$/
+
+/** Extrait l'id du widget (type) à partir d'un id d'instance. */
+export function widgetIdOf(instanceId: string): string {
+  return instanceId.replace(INSTANCE_SUFFIX_RE, '')
+}
+
+/** Génère un id d'instance unique pour une nouvelle occurrence d'un widget. */
+export function makeInstanceId(widgetId: string): string {
+  return `${widgetId}__${Math.random().toString(36).slice(2, 8)}`
+}
+
+/** Un widget positionné sur la grille (unités de grille, 12 colonnes). */
+export interface GridItem {
+  i: string
+  x: number
+  y: number
+  w: number
+  h: number
+  minW?: number
+  minH?: number
+  /** Hauteur DÉCLARÉE du plugin dans la grille legacy (cellules 80px), telle que lue dans le record
+   *  partagé. Conservée sur l'item pour pouvoir le RE-PERSISTER À L'IDENTIQUE même quand sa
+   *  définition est inconnue du registre (fetch `/legacy-plugins` pas encore résolu, en échec, ou
+   *  plugin non accordé) — sans elle, un tel item ne pourrait pas être réécrit et disparaîtrait du
+   *  record. Cf. `layoutToRecords` (DashboardPage). */
+  legacyH?: number
+  /** L'utilisateur a redimensionné la HAUTEUR de cette tuile à la main. Quand vrai, `h` est une
+   *  hauteur voulue (pas un ajustement au contenu) : elle est persistée (react-height) et l'auto-fit
+   *  ne la retouche plus, y compris après un rechargement (cf. DashboardPage / DashboardGrid). */
+  userSized?: boolean
+}
+
+function item(widgetId: string, x: number, y: number): GridItem {
+  const def = WIDGET_MAP[widgetId]
+  return { i: widgetId, x, y, w: def.w, h: def.h, minW: def.minW, minH: def.minH }
+}
+
+/** Disposition par défaut au premier chargement. */
+export function defaultLayout(): GridItem[] {
+  return [item('activity', 0, 0)]
+}
+
+/** Un id d'instance de widget « plugin legacy » (cf. buildLegacyWidgetDef). */
+const LEGACY_ID_PREFIX = 'legacy-'
+
+export function loadLayout(): GridItem[] {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY)
+    if (raw) {
+      const parsed = JSON.parse(raw) as GridItem[]
+      // Les plugins legacy N'ONT PAS d'entrée dans WIDGET_MAP (leurs défs viennent d'un fetch) :
+      // les filtrer sur ce registre vidait un dashboard composé UNIQUEMENT de plugins, et le
+      // `defaultLayout()` de repli réinjectait alors le widget « Recent activity » à chaque
+      // rafraîchissement — même après suppression. On les conserve donc sur leur préfixe d'id.
+      const clean = parsed.filter(
+        (l) => WIDGET_MAP[widgetIdOf(l.i)] || widgetIdOf(l.i).startsWith(LEGACY_ID_PREFIX),
+      )
+      // Un tableau vide STOCKÉ est un choix de l'utilisateur (il a tout retiré) : on le respecte,
+      // au lieu de retomber sur la disposition par défaut.
+      if (clean.length || Array.isArray(parsed)) {
+        // Réinjecte les contraintes min depuis le registre (inconnues pour les plugins legacy,
+        // que DashboardPage recale une fois leurs défs chargées).
+        return clean.map((l) => {
+          const def = WIDGET_MAP[widgetIdOf(l.i)]
+          return def ? { ...l, minW: def.minW, minH: def.minH } : l
+        })
+      }
+    }
+  } catch {
+    /* ignore */
+  }
+  return defaultLayout()
+}
+
+export function saveLayout(layout: GridItem[]): void {
+  try {
+    // `legacyH` fait partie du cache : c'est la seule trace de la hauteur DÉCLARÉE d'un plugin dont
+    // la déf. n'est pas (encore) chargée, et c'est elle qu'on réécrit dans le record partagé.
+    const slim = layout.map(({ i, x, y, w, h, legacyH }) => ({ i, x, y, w, h, legacyH }))
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(slim))
+  } catch {
+    /* best-effort */
+  }
+}
+
+export function resetLayout(): GridItem[] {
+  try {
+    localStorage.removeItem(STORAGE_KEY)
+  } catch {
+    /* ignore */
+  }
+  return defaultLayout()
+}

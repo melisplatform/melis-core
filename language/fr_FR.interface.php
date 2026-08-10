@@ -1,5 +1,31 @@
 <?php
 return [
+    'tr_meliscore_ws_intro' => 'API JSON authentifiée par jeton. Chaque endpoint s\'appelle en POST ; ouvrez-en un pour l\'essayer via un formulaire. Toutes les réponses sont en JSON.',
+    'tr_meliscore_ws_apikey' => 'Clé API',
+    'tr_meliscore_ws_copy' => 'Copier',
+    'tr_meliscore_ws_copied' => 'Copié',
+    'tr_meliscore_ws_stat_modules' => 'Modules',
+    'tr_meliscore_ws_stat_services' => 'Services',
+    'tr_meliscore_ws_stat_endpoints' => 'Endpoints',
+    'tr_meliscore_ws_search_placeholder' => 'Filtrer les endpoints, services ou modules…',
+    'tr_meliscore_ws_menu_title' => 'Modules',
+    'tr_meliscore_ws_endpoint' => 'endpoint',
+    'tr_meliscore_ws_endpoints' => 'endpoints',
+    'tr_meliscore_ws_tryit' => 'Essayer',
+    'tr_meliscore_ws_noresult' => 'Aucun endpoint ne correspond à votre recherche.',
+    'tr_meliscore_ws_footer' => 'Melis Platform · Web Services — cette page liste les endpoints disponibles pour votre clé API.',
+    'tr_meliscore_ws_invalid_title' => 'Clé API invalide ou inactive',
+    'tr_meliscore_ws_invalid_text' => 'Cette clé de web-services est introuvable ou a été désactivée. Générez-en une nouvelle depuis le compte utilisateur dans le back-office.',
+    'tr_meliscore_ws_all_endpoints' => 'Tous les endpoints',
+    'tr_meliscore_ws_parameters' => 'Paramètres',
+    'tr_meliscore_ws_send' => 'Envoyer la requête',
+    'tr_meliscore_ws_response' => 'Réponse',
+    'tr_meliscore_ws_pill_success' => 'succès',
+    'tr_meliscore_ws_pill_validation' => 'validation',
+    'tr_meliscore_ws_pill_error' => 'erreur',
+    'tr_meliscore_ws_pill_nonjson' => 'non-JSON',
+    'tr_meliscore_ws_pill_network' => 'réseau',
+    'tr_meliscore_ws_desc_announcement' => 'Annonces affichées sur le tableau de bord du back-office.',
     'en_EN' => 'English',
     'fr_FR' => 'French',
     'tr_meliscore_header Title' => 'Melis Platform',
@@ -169,7 +195,7 @@ return [
     'tr_meliscore_email_failed' => 'Login ou email invalide',
     // Password Modification
     'tr_meliscore_email_password_modification_Subject' => 'Password modification',
-    'tr_meliscore_email_password_modification_html_Content' => '<p>Bonjour [NAME],</p><p>Votre mot de passe sur Melis Platform a été modifié.<br/>Votre nouveau mot de passe est : [PASSWORD]</p><p>Bonne journée.</p>',
+    'tr_meliscore_email_password_modification_html_Content' => '<p>Bonjour [NAME],</p><p>Votre mot de passe sur Melis Platform a été modifié.</p><p>Bonne journée.</p>',
     
     // Reset Password
     'tr_meliscore_reset_password_header' => 'Réinitialiser mot de passe',
@@ -235,6 +261,7 @@ return [
 
     'tr_meliscore_login_remember_me' => 'Se rappeler de moi',
     'tr_meliscore_login_header' => 'Connexion à votre compte',
+    'tr_meliscore_react_beta_login_notice' => 'Version bêta React — L\'interface historique reste disponible sur {domain}/melis.',
     
     'tr_meliscore_common_choose' => 'Choisissez',
 

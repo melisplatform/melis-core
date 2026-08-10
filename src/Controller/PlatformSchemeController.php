@@ -300,7 +300,7 @@ class PlatformSchemeController extends MelisAbstractActionController
                                         file_put_contents($assetsFolder.'schemes.css', $content);
                                     }
                                     else {
-                                        mkdir($assetsFolder, 0777, true);
+                                        mkdir($assetsFolder, 0755, true);
                                         file_put_contents($assetsFolder.'schemes.css', $content);
                                     }
 
@@ -386,7 +386,7 @@ class PlatformSchemeController extends MelisAbstractActionController
                 file_put_contents($assetsFolder.'schemes.css', $content);
             }
             else {
-                mkdir($assetsFolder, 0777, true);
+                mkdir($assetsFolder, 0755, true);
                 file_put_contents($assetsFolder.'schemes.css', $content);
             }
             $message  = 'tr_meliscore_platform_scheme_success_restore_message';
