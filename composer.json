@@ -8,20 +8,20 @@
 		"email": "contact@melistechnology.com",
 		"source": "https://github.com/melisplatform/melis-core",
 		"issues": "https://github.com/melisplatform/melis-core/issues",
-		"docs": "https://www.melistechnology.com/melistechnology/resources/download-documentation/id/17#documentation"
+		"docs": "https://melisplatform.github.io/docs/"
 	},
 	"authors": [
 		{
 			"name": "Melis Technology",
 			"email": "contact@melistechnology.com",
-			"homepage": "https://www.melistechnology.com",
+			"homepage": "https://www.melisplatform.com/",
 			"role": "Developer"
 		}
 	],
 	"keywords": [
 		"cms",
 		"melis",
-		"zf2",
+		"laminas",
 		"module"
 	],
 	"extra": {
@@ -31,7 +31,7 @@
 		"melis-module-category": "core"
 	},
 	"require": {
-		"php": "^8.1|^8.3",
+		"php": "^8.3|^8.5",
 		"ext-intl": "*",
 		"ext-json": "*",
 		"ext-openssl": "*",
