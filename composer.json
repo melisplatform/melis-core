@@ -64,7 +64,9 @@
 		"matthiasmullie/minify": "^1.3",
 		"melisplatform/melis-asset-manager": "^6.0",
 		"melisplatform/melis-composerdeploy": "^6.0",
-		"melisplatform/melis-dbdeploy": "^6.0"
+		"melisplatform/melis-dbdeploy": "^6.0",
+		"melisplatform/melis-react-api": "^6.0",
+		"melisplatform/melis-react-override": "^6.0"
 	},
 	"autoload": {
 		"psr-4": {
