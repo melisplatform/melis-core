@@ -127,6 +127,13 @@ export function LegacyPluginContent({ pluginName }: { pluginName: string }) {
   // Le contenu du plugin débute-t-il par une barre d'onglets ? Renseigné au `load` de l'iframe :
   // dans ce cas la tuile annule son retrait HAUT pour que les onglets touchent l'en-tête (legacy).
   const [tabsFlush, setTabsFlush] = useState(false)
+  // L'ajustement de la tuile à la hauteur du contenu sert au DIMENSIONNEMENT INITIAL : la hauteur
+  // déclarée d'un plugin est une estimation souvent trop courte, et lui seul sait quand ses
+  // graphiques sont dessinés. Il reste donc armé au chargement (et à chaque rechargement), le temps
+  // que le contenu se pose — puis se désarme à la PREMIÈRE interaction dans le plugin : à partir de
+  // là, la taille affichée est celle que l'utilisateur a acceptée, et un contenu plus haut défile
+  // au lieu de faire grandir la tuile (comportement d'un widget du dashboard classique).
+  const autofitArmed = useRef(true)
   // Modale « Ajouter un commentaire » du plugin Workflow : le tool legacy l'ouvrait dans l'iframe
   // (où une petite tuile la rognait) ; l'iframe nous demande désormais de la rendre au niveau de
   // l'hôte, centrée sur la page (cf. WorkflowCommentDialog + le postMessage dans PluginViewController).
@@ -247,7 +254,14 @@ export function LegacyPluginContent({ pluginName }: { pluginName: string }) {
       // Plusieurs iframes de plugins coexistent : ne réagir qu'aux messages de LA nôtre.
       if (!frameRef.current || e.source !== frameRef.current.contentWindow) return
       // Plancher de hauteur de l'iframe → ascenseur du cadre React quand la tuile est plus courte.
+      // Toujours mis à jour : même tuile figée, un contenu plus haut doit rester ATTEIGNABLE
+      // (l'iframe dépasse le cadre `overflow-auto`, qui affiche alors un ascenseur).
       setContentPx(d.px)
+      // …mais on ne REDIMENSIONNE la tuile que tant que l'ajustement est « armé » (cf. autofitArmed) :
+      // sinon, chaque interaction dans le plugin rejoue l'ajustement. Un simple changement d'onglet
+      // fait varier la hauteur du contenu → la tuile grandit puis rétrécit, animée par gridstack :
+      // elle « bouge » sous le curseur alors que l'utilisateur a déjà choisi sa taille.
+      if (!autofitArmed.current) return
       const item = frameRef.current.closest('.grid-stack-item') as (HTMLElement & { gridstackNode?: { id?: string } }) | null
       const itemId = item?.gridstackNode?.id
       if (!itemId) return
@@ -344,6 +358,11 @@ export function LegacyPluginContent({ pluginName }: { pluginName: string }) {
           try {
             const doc = frameRef.current?.contentDocument
             setTabsFlush(!!doc?.querySelector('.widget.widget-tabs .melis-dpc-tab'))
+            // (Ré)arme l'ajustement pour ce chargement, puis le désarme au premier geste dans le
+            // plugin (cf. autofitArmed). `capture` : certains plugins arrêtent la propagation de
+            // leurs clics. `once` : un seul désarmement suffit.
+            autofitArmed.current = true
+            doc?.addEventListener('pointerdown', () => { autofitArmed.current = false }, { capture: true, once: true })
           } catch {
             /* iframe pas prête : on garde le comportement par défaut */
           }
