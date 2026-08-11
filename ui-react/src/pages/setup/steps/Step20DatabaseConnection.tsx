@@ -16,16 +16,53 @@ const FIELD_LABEL: Record<string, I18nKey> = {
   password: 'setup.db.password',
 }
 
+const EMPTY_FORM: DbConnectionInput = { hostname: '', database: '', username: '', password: '' }
+
+/**
+ * Le wizard ne monte QUE l'étape courante : revenir en arrière puis revenir ici DÉMONTE ce
+ * composant, et toute la saisie partait avec son `useState`. On relit donc les champs depuis
+ * sessionStorage au montage — même mécanique que la position dans le wizard
+ * (cf. useSetupWizardState), le pendant client du container de session PHP legacy.
+ *
+ * ⚠️ Le MOT DE PASSE est délibérément EXCLU du stockage : le reste n'est pas secret, lui si.
+ * Il est donc à ressaisir avant de relancer le test si l'on est repassé par une autre étape.
+ */
+const STORAGE_KEY = 'melis-setup-db-conn'
+
+function readStoredForm(): DbConnectionInput {
+  try {
+    const raw = sessionStorage.getItem(STORAGE_KEY)
+    if (!raw) return EMPTY_FORM
+    const saved = JSON.parse(raw) as Partial<DbConnectionInput>
+    return {
+      hostname: saved.hostname ?? '',
+      database: saved.database ?? '',
+      username: saved.username ?? '',
+      password: '',
+    }
+  } catch {
+    return EMPTY_FORM
+  }
+}
+
+function writeStoredForm({ hostname, database, username }: DbConnectionInput) {
+  try {
+    sessionStorage.setItem(STORAGE_KEY, JSON.stringify({ hostname, database, username }))
+  } catch { /* best-effort : stockage indisponible (mode privé, quota) */ }
+}
+
 /** Step 2.0 — test de connexion MySQL (mêmes champs que `install-db.phtml` legacy). */
 export function Step20DatabaseConnection({ onStatusChange }: { onStatusChange?: (passed: boolean) => void }) {
   const { t } = useI18n()
-  const [form, setForm] = useState<DbConnectionInput>({ hostname: '', database: '', username: '', password: '' })
+  const [form, setForm] = useState<DbConnectionInput>(readStoredForm)
   const [testing, setTesting] = useState(false)
   const [errors, setErrors] = useState<Record<string, string>>({})
   const [passed, setPassed] = useState(false)
 
   function set<K extends keyof DbConnectionInput>(key: K, value: string) {
-    setForm((f) => ({ ...f, [key]: value }))
+    const next = { ...form, [key]: value }
+    setForm(next)
+    writeStoredForm(next)
   }
 
   async function handleTest() {

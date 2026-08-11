@@ -21,8 +21,8 @@ return [
 
     'tr_melis_installer_new_user_pass_empty' => 'Please enter your password',
     'tr_melis_installer_new_user_pass_max' => 'Password too long',
-    'tr_melis_installer_new_user_pass_short' => 'Password too low, it should be more than 8 characters',
-    'tr_melis_installer_new_user_pass_invalid' => 'Password should have 8 characters with at least 1 letter and 1 number',
+    'tr_melis_installer_new_user_pass_short' => 'Password must be at least 8 characters',
+    'tr_melis_installer_new_user_pass_invalid' => 'Password must contain at least 1 letter and 1 number',
     'tr_melis_installer_new_user_pass_no_match' => 'Password does not match',
 
     'tr_melis_installer_new_user_first_name_empty' => 'Please enter your first name',
