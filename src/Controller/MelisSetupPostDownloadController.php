@@ -128,6 +128,14 @@ class MelisSetupPostDownloadController extends MelisAbstractActionController imp
 
                 try {
 
+                    // Re-running the setup on a platform that is already installed used to insert a
+                    // SECOND user with the same login (nothing here checked). Melis authenticates
+                    // with Laminas' DbTable adapter on `usr_login`, which fails on an AMBIGUOUS
+                    // identity — so the duplicate locked EVERYONE out of the back-office, whatever
+                    // the password. Observed 2026-08-11. Update that user instead of adding one.
+                    $existingUser = $tableUser->getEntryByField('usr_login', $userLogin)->current();
+                    $existingUserId = $existingUser ? $existingUser->usr_id : null;
+
                     $userId = $tableUser->save([
 
                         'usr_status' => 1,
@@ -164,7 +172,7 @@ class MelisSetupPostDownloadController extends MelisAbstractActionController imp
                                             <id>MelisCoreDashboardAnnouncementPlugin</id>
                                         </melis_dashboardplugin>
                                         </document>',
-                    ]);
+                    ], $existingUserId);
 
                     $installerSession = new Container('melisinstaller');
                     // save platforms
@@ -172,11 +180,20 @@ class MelisSetupPostDownloadController extends MelisAbstractActionController imp
                     $defaultPlatform = getenv('MELIS_PLATFORM');
                     $platforms = isset($installerSession['environments']) ? $installerSession['environments'] : null;
 
-                    $melisCorePlatformTable->save(['plf_name' => $defaultPlatform]);
+                    // Same idempotence problem as the user above: a plain save() inserts, so a
+                    // second run left two `dev` rows in melis_core_platform (observed 2026-08-11).
+                    // Consumers read the platform with ->current(), so a duplicate is silent but
+                    // wrong — and which row wins is arbitrary.
+                    $savePlatform = function (array $datas) use ($melisCorePlatformTable) {
+                        $existing = $melisCorePlatformTable->getEntryByField('plf_name', $datas['plf_name'])->current();
+                        $melisCorePlatformTable->save($datas, $existing ? $existing->plf_id : null);
+                    };
+
+                    $savePlatform(['plf_name' => $defaultPlatform]);
 
                     if (isset($platforms['new'])) {
                         foreach ($platforms['new'] as $platform) {
-                            $melisCorePlatformTable->save([
+                            $savePlatform([
                                 'plf_name' => $platform[0]['sdom_env'],
                                 'plf_update_marketplace' => 1,
                             ]);

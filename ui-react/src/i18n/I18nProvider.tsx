@@ -42,7 +42,19 @@ async function fetchLangsWithRetry(attempts = 4): Promise<BoLangs | null> {
   return null
 }
 
+/**
+ * L'INSTALLEUR (`/melis-react/setup`) est épinglé en ANGLAIS, indépendamment du défaut du BO.
+ * Il tourne pré-install/pré-auth : il n'y a pas encore de locale de session à suivre, et le
+ * backend lui-même retombe sur `en_EN` (cf. MelisReactApiController). On décide donc ici, avant
+ * le premier rendu, plutôt que depuis la page — sinon `fetchLangs()` (async) peut résoudre APRÈS
+ * le montage du wizard et le rebasculer en français.
+ * Volontairement NON persisté (ni localStorage, ni session) : le reste du BO garde son défaut.
+ */
+const SETUP_FORCED_LANG: Lang | null =
+  window.location.pathname.replace(/\/+$/, '').endsWith('/setup') ? 'en' : null
+
 function readInitialLang(): Lang {
+  if (SETUP_FORCED_LANG) return SETUP_FORCED_LANG
   try {
     // Prefer the cached platform locale (kept in sync on change), else the legacy lang cache.
     const loc = localStorage.getItem(LOCALE_STORAGE_KEY)
@@ -117,12 +129,16 @@ export function I18nProvider({ children }: { children: ReactNode }) {
       setCurrentLocale(data.current.locale)
       setCurrentLangId(data.current.id)
       const next = localeToLang(data.current.locale)
-      setLangState(next)
-      // La locale de SESSION fait foi : si elle dément la langue appliquée au boot depuis le cache
-      // (ou le `lang="fr"` en dur d'index.html au tout premier chargement), on remonte l'arbre —
-      // sinon les briques déjà montées gardent leurs libellés dans l'ancienne langue.
-      const prev = applyDocLang(next)
-      if (prev !== next && performance.now() < LANG_REMOUNT_WINDOW_MS) setLangEpoch((e) => e + 1)
+      // Sur l'installeur, la langue est épinglée (cf. SETUP_FORCED_LANG) : on met quand même le
+      // cache à jour pour le reste du BO, mais on ne suit pas la locale de session.
+      if (!SETUP_FORCED_LANG) {
+        setLangState(next)
+        // La locale de SESSION fait foi : si elle dément la langue appliquée au boot depuis le cache
+        // (ou le `lang="fr"` en dur d'index.html au tout premier chargement), on remonte l'arbre —
+        // sinon les briques déjà montées gardent leurs libellés dans l'ancienne langue.
+        const prev = applyDocLang(next)
+        if (prev !== next && performance.now() < LANG_REMOUNT_WINDOW_MS) setLangEpoch((e) => e + 1)
+      }
       try {
         localStorage.setItem(LOCALE_STORAGE_KEY, data.current.locale)
         localStorage.setItem(LANG_STORAGE_KEY, next)

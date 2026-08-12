@@ -7,7 +7,7 @@ import { Label } from '@/components/ui/label'
 import { testDatabaseConnection, type DbConnectionInput } from '@/lib/setup-api'
 import { useI18n } from '@/i18n/i18n-context'
 import type { I18nKey } from '@/i18n/dictionaries'
-import { FormErrorBanner, type FormIssue } from '@/shared/melis-form-errors'
+import { FormErrorBanner } from '@/shared/melis-form-errors'
 
 const FIELD_LABEL: Record<string, I18nKey> = {
   hostname: 'setup.db.host',
@@ -16,16 +16,53 @@ const FIELD_LABEL: Record<string, I18nKey> = {
   password: 'setup.db.password',
 }
 
+const EMPTY_FORM: DbConnectionInput = { hostname: '', database: '', username: '', password: '' }
+
+/**
+ * Le wizard ne monte QUE l'étape courante : revenir en arrière puis revenir ici DÉMONTE ce
+ * composant, et toute la saisie partait avec son `useState`. On relit donc les champs depuis
+ * sessionStorage au montage — même mécanique que la position dans le wizard
+ * (cf. useSetupWizardState), le pendant client du container de session PHP legacy.
+ *
+ * ⚠️ Le MOT DE PASSE est délibérément EXCLU du stockage : le reste n'est pas secret, lui si.
+ * Il est donc à ressaisir avant de relancer le test si l'on est repassé par une autre étape.
+ */
+const STORAGE_KEY = 'melis-setup-db-conn'
+
+function readStoredForm(): DbConnectionInput {
+  try {
+    const raw = sessionStorage.getItem(STORAGE_KEY)
+    if (!raw) return EMPTY_FORM
+    const saved = JSON.parse(raw) as Partial<DbConnectionInput>
+    return {
+      hostname: saved.hostname ?? '',
+      database: saved.database ?? '',
+      username: saved.username ?? '',
+      password: '',
+    }
+  } catch {
+    return EMPTY_FORM
+  }
+}
+
+function writeStoredForm({ hostname, database, username }: DbConnectionInput) {
+  try {
+    sessionStorage.setItem(STORAGE_KEY, JSON.stringify({ hostname, database, username }))
+  } catch { /* best-effort : stockage indisponible (mode privé, quota) */ }
+}
+
 /** Step 2.0 — test de connexion MySQL (mêmes champs que `install-db.phtml` legacy). */
 export function Step20DatabaseConnection({ onStatusChange }: { onStatusChange?: (passed: boolean) => void }) {
   const { t } = useI18n()
-  const [form, setForm] = useState<DbConnectionInput>({ hostname: '', database: '', username: '', password: '' })
+  const [form, setForm] = useState<DbConnectionInput>(readStoredForm)
   const [testing, setTesting] = useState(false)
   const [errors, setErrors] = useState<Record<string, string>>({})
   const [passed, setPassed] = useState(false)
 
   function set<K extends keyof DbConnectionInput>(key: K, value: string) {
-    setForm((f) => ({ ...f, [key]: value }))
+    const next = { ...form, [key]: value }
+    setForm(next)
+    writeStoredForm(next)
   }
 
   async function handleTest() {
@@ -45,10 +82,9 @@ export function Step20DatabaseConnection({ onStatusChange }: { onStatusChange?: 
     }
   }
 
-  // Scannable summary of the failing fields, above the fold. Inline field errors below are kept.
-  const bannerIssues: FormIssue[] = Object.entries(errors)
-    .filter(([, message]) => Boolean(message))
-    .map(([field, message]) => ({ label: FIELD_LABEL[field] ? t(FIELD_LABEL[field]) : undefined, message }))
+  // Le détail est sous chaque champ : le bandeau ne garde que le message général, sinon le
+  // même texte se lit deux fois.
+  const hasErrors = Object.values(errors).some(Boolean)
 
   return (
     <div className="rounded-xl border border-border bg-card p-5">
@@ -56,7 +92,7 @@ export function Step20DatabaseConnection({ onStatusChange }: { onStatusChange?: 
       <p className="mt-0.5 text-xs text-muted-foreground">{t('setup.db.desc')}</p>
 
       <div className="mt-4 space-y-3 border-t border-border pt-4">
-        {bannerIssues.length > 0 && <FormErrorBanner title={t('common.check_fields')} issues={bannerIssues} />}
+        {hasErrors && <FormErrorBanner title={t('common.check_fields')} />}
         {(['hostname', 'database', 'username', 'password'] as const).map((field) => (
           <div key={field} className="space-y-1.5">
             <Label htmlFor={`db-${field}`}>{t(FIELD_LABEL[field])}</Label>
@@ -65,8 +101,13 @@ export function Step20DatabaseConnection({ onStatusChange }: { onStatusChange?: 
               type={field === 'password' ? 'password' : 'text'}
               value={form[field]}
               onChange={(e) => set(field, e.target.value)}
+              aria-invalid={Boolean(errors[field])}
+              aria-describedby={errors[field] ? `db-${field}-error` : undefined}
+              className={errors[field] ? 'border-destructive' : undefined}
             />
-            {errors[field] && <p className="text-xs text-destructive">{errors[field]}</p>}
+            {errors[field] && (
+              <p id={`db-${field}-error`} className="text-xs text-destructive">{errors[field]}</p>
+            )}
           </div>
         ))}
 
