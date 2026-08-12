@@ -72,40 +72,62 @@ export default function SetupWizardPage() {
       </header>
 
       <main className="flex flex-1 flex-col p-6">
-        <div className="mx-auto flex w-full max-w-3xl flex-1 flex-col gap-6 py-4">
-            {/* Barre de progression */}
-            <ol className="flex items-center gap-1">
+        <div className="mx-auto flex w-full max-w-6xl flex-1 flex-col gap-6 py-4">
+            {/* Barre de progression — pastille au-dessus, libellé dessous, et le trait de
+                liaison coloré jusqu'à l'étape courante pour matérialiser l'avancement. */}
+            <ol className="flex items-start">
               {SETUP_STEPS.map((step, i) => {
                 // Une étape n'est atteignable que si elle est déjà derrière nous (ou que la
                 // précédente est validée) : le curseur doit le dire avant le clic. Après
                 // l'installation, seules les étapes AVANT restent hors d'atteinte.
                 const reachable =
                   (i <= wizard.index || wizard.isPassed(i - 1)) && !(backLocked && i < wizard.index)
-                return (
-                <li key={step.id} className="flex flex-1 items-center gap-1">
-                  <button
-                    type="button"
-                    onClick={() => { if (reachable) void (i > wizard.index ? goForward(i) : wizard.goTo(i)) }}
-                    aria-disabled={!reachable}
+                const done = (n: number) => n < wizard.index || wizard.isPassed(n)
+                const connector = (filled: boolean, hidden: boolean) => (
+                  <div
                     className={cn(
-                      'flex size-7 shrink-0 items-center justify-center rounded-full text-xs font-medium transition-colors',
-                      reachable ? 'cursor-pointer' : 'cursor-not-allowed',
-                      i === wizard.index
-                        ? 'bg-primary text-primary-foreground'
-                        : wizard.isPassed(i)
-                          ? 'bg-[var(--color-success)]/15 text-[var(--color-success)]'
-                          : 'bg-muted text-muted-foreground',
+                      'h-px flex-1',
+                      hidden ? 'bg-transparent' : filled ? 'bg-[var(--color-success)]/40' : 'bg-border',
                     )}
-                    title={backLocked && i < wizard.index ? `${t(step.labelKey)} — ${t('setup.locked')}` : t(step.labelKey)}
+                  />
+                )
+                return (
+                <li key={step.id} className="flex flex-1 flex-col items-center gap-2">
+                  <div className="flex w-full items-center">
+                    {connector(done(i - 1), i === 0)}
+                    <button
+                      type="button"
+                      onClick={() => { if (reachable) void (i > wizard.index ? goForward(i) : wizard.goTo(i)) }}
+                      aria-disabled={!reachable}
+                      aria-current={i === wizard.index ? 'step' : undefined}
+                      className={cn(
+                        'flex size-6 shrink-0 items-center justify-center rounded-full border transition-colors',
+                        reachable ? 'cursor-pointer' : 'cursor-not-allowed',
+                        i === wizard.index
+                          ? 'border-transparent bg-[var(--color-success)]/35'
+                          : wizard.isPassed(i)
+                            ? 'border-transparent bg-[var(--color-success)]/15 text-[var(--color-success)]'
+                            : 'border-border bg-card',
+                      )}
+                      title={backLocked && i < wizard.index ? `${t(step.labelKey)} — ${t('setup.locked')}` : t(step.labelKey)}
+                    >
+                      {wizard.isPassed(i) && i !== wizard.index && <Check className="size-3.5" />}
+                      <span className="sr-only">{t(step.labelKey)}</span>
+                    </button>
+                    {connector(done(i), i === SETUP_STEPS.length - 1)}
+                  </div>
+                  <span
+                    className={cn(
+                      'max-w-full truncate px-1 text-[11px] leading-tight',
+                      i === wizard.index ? 'font-semibold text-foreground' : 'text-muted-foreground',
+                    )}
                   >
-                    {wizard.isPassed(i) && i !== wizard.index ? <Check className="size-3.5" /> : i + 1}
-                  </button>
-                  {i < SETUP_STEPS.length - 1 && <div className="h-px flex-1 bg-border" />}
+                    {t(step.labelKey)}
+                  </span>
                 </li>
                 )
               })}
             </ol>
-            <p className="-mt-3 text-xs font-medium text-muted-foreground">{t(currentStep.labelKey)}</p>
 
             {currentStep.render((passed) => wizard.setStepPassed(wizard.index, passed), registerBeforeNext)}
 
@@ -114,8 +136,11 @@ export default function SetupWizardPage() {
               {backLocked ? (
                 // Verrou explicite plutôt qu'un bouton grisé sans explication.
                 <p className="max-w-md text-xs text-muted-foreground">{t('setup.locked')}</p>
+              ) : wizard.index === 0 ? (
+                // Première étape : rien derrière, on masque le bouton (le span garde Next à droite).
+                <span />
               ) : (
-                <Button type="button" variant="outline" onClick={wizard.back} disabled={wizard.index === 0 || advancing}>
+                <Button type="button" variant="outline" onClick={wizard.back} disabled={advancing}>
                   <ArrowLeft className="size-4" />
                   {t('setup.prev')}
                 </Button>

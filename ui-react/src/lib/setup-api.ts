@@ -326,7 +326,12 @@ export interface ModuleApplyState {
  * Demande au conteneur d'adopter le module de site choisi dans le wizard comme MELIS_MODULE.
  * À appeler AVANT `finalizeSetup`, qui débranche MelisInstaller et donc cette route.
  */
-export function applyModule(module?: string): Promise<{ state: string; module: string; current: string }> {
+export function applyModule(module?: string): Promise<{
+  /** `skipped` s'ajoute aux états ci-dessus : aucun module de site n'a été installé. */
+  state: ModuleApplyState['state'] | 'skipped'
+  module: string
+  current: string
+}> {
   return apiFetch('applyModule', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },

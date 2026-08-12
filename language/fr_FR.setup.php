@@ -5,7 +5,7 @@ return [
     'tr_melis_installer_new_user_email' => 'Email',
     'tr_melis_installer_new_user_email_info' => 'Email address of the user',
     'tr_melis_installer_new_user_password' => 'Password',
-    'tr_melis_installer_new_user_password_info' => 'User password (must be of 8 characters minimum and contain at least a letter and a number)',
+    'tr_melis_installer_new_user_password_info' => 'User password (at least 8 characters, including at least a lowercase letter and a number)',
     'tr_Melis_installer_new_user_confirm_password' => 'Confirm password',
     'tr_Melis_installer_new_user_confirm_password_info' => 'Password confirmation of the user',
     'tr_melis_installer_new_user_first_name' => 'First name',
@@ -22,7 +22,7 @@ return [
     'tr_melis_installer_new_user_pass_empty' => 'Please enter your password',
     'tr_melis_installer_new_user_pass_max' => 'Password too long',
     'tr_melis_installer_new_user_pass_short' => 'Password must be at least 8 characters',
-    'tr_melis_installer_new_user_pass_invalid' => 'Password must contain at least 1 letter and 1 number',
+    'tr_melis_installer_new_user_pass_invalid' => 'Password must contain at least 1 lowercase letter and 1 number',
     'tr_melis_installer_new_user_pass_no_match' => 'Password does not match',
 
     'tr_melis_installer_new_user_first_name_empty' => 'Please enter your first name',

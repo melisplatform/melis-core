@@ -40,11 +40,22 @@ interface ParsedErrors {
   global: FormIssue[]
 }
 
+/** Clés de validateur signalant une saisie absente (Laminas `NotEmpty`). */
+const EMPTY_VALIDATORS = new Set(['isEmpty', 'notEmpty'])
+
 /**
  * Décortique la réponse de `validate/submitModuleConfigurationForm`. Elle arrive sous la forme
  * d'une liste par module — `[{name, message, errors: {champ: {validateur: message, label}}}]` —
  * parfois réduite à la map de champs seule. Chaque message de validateur donne une entrée,
  * rattachée à son champ pour pouvoir être affichée sous l'input.
+ *
+ * Les formulaires des modules ne posent pas `break_chain_on_failure` : TOUS les validateurs
+ * d'un champ répondent, même ceux qui n'ont plus de sens. Un mot de passe de confirmation vide
+ * remontait ainsi « Veuillez saisir votre mot de passe », « au moins 8 caractères », « au moins
+ * 1 lettre et 1 chiffre » et « ne correspond pas » d'un coup — des exigences contradictoires
+ * pour un champ que l'utilisateur n'a tout simplement pas rempli. On ne garde donc que
+ * l'absence de saisie quand elle est signalée, et on dédoublonne les libellés identiques
+ * (plusieurs validateurs partagent souvent le même message).
  */
 function parseErrors(errors: unknown): ParsedErrors {
   const parsed: ParsedErrors = { fields: [], global: [] }
@@ -60,8 +71,13 @@ function parseErrors(errors: unknown): ParsedErrors {
       const entries = messages as Record<string, unknown>
       // `label` n'est pas un message de validateur mais le libellé du champ.
       const label = typeof entries.label === 'string' ? entries.label : field
-      Object.entries(entries).forEach(([validator, message]) => {
-        if (validator === 'label' || typeof message !== 'string') return
+      const raised = Object.entries(entries)
+        .filter((e): e is [string, string] => e[0] !== 'label' && typeof e[1] === 'string')
+      const missing = raised.filter(([validator]) => EMPTY_VALIDATORS.has(validator))
+      const seen = new Set<string>()
+      ;(missing.length ? missing : raised).forEach(([, message]) => {
+        if (seen.has(message)) return
+        seen.add(message)
         parsed.fields.push({ module, field, label, message })
       })
     })

@@ -292,7 +292,7 @@ export function Step31ModuleSelection({ onStatusChange, registerBeforeNext }: {
                   id="site-lang"
                   value={language}
                   onChange={(e) => setLanguage(e.target.value)}
-                  className="h-9 w-full rounded-md border border-input bg-transparent px-3 text-sm"
+                  className="flex h-11 w-full rounded-md border border-input bg-card px-3 py-2 text-sm text-foreground shadow-sm transition-colors focus-visible:border-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/30"
                 >
                   {catalog?.languages.map((l) => <option key={l.value} value={l.value}>{l.label}</option>)}
                 </select>

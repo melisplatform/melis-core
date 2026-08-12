@@ -7,7 +7,7 @@ import { Label } from '@/components/ui/label'
 import { testDatabaseConnection, type DbConnectionInput } from '@/lib/setup-api'
 import { useI18n } from '@/i18n/i18n-context'
 import type { I18nKey } from '@/i18n/dictionaries'
-import { FormErrorBanner, type FormIssue } from '@/shared/melis-form-errors'
+import { FormErrorBanner } from '@/shared/melis-form-errors'
 
 const FIELD_LABEL: Record<string, I18nKey> = {
   hostname: 'setup.db.host',
@@ -82,10 +82,9 @@ export function Step20DatabaseConnection({ onStatusChange }: { onStatusChange?: 
     }
   }
 
-  // Scannable summary of the failing fields, above the fold. Inline field errors below are kept.
-  const bannerIssues: FormIssue[] = Object.entries(errors)
-    .filter(([, message]) => Boolean(message))
-    .map(([field, message]) => ({ label: FIELD_LABEL[field] ? t(FIELD_LABEL[field]) : undefined, message }))
+  // Le détail est sous chaque champ : le bandeau ne garde que le message général, sinon le
+  // même texte se lit deux fois.
+  const hasErrors = Object.values(errors).some(Boolean)
 
   return (
     <div className="rounded-xl border border-border bg-card p-5">
@@ -93,7 +92,7 @@ export function Step20DatabaseConnection({ onStatusChange }: { onStatusChange?: 
       <p className="mt-0.5 text-xs text-muted-foreground">{t('setup.db.desc')}</p>
 
       <div className="mt-4 space-y-3 border-t border-border pt-4">
-        {bannerIssues.length > 0 && <FormErrorBanner title={t('common.check_fields')} issues={bannerIssues} />}
+        {hasErrors && <FormErrorBanner title={t('common.check_fields')} />}
         {(['hostname', 'database', 'username', 'password'] as const).map((field) => (
           <div key={field} className="space-y-1.5">
             <Label htmlFor={`db-${field}`}>{t(FIELD_LABEL[field])}</Label>
@@ -102,8 +101,13 @@ export function Step20DatabaseConnection({ onStatusChange }: { onStatusChange?: 
               type={field === 'password' ? 'password' : 'text'}
               value={form[field]}
               onChange={(e) => set(field, e.target.value)}
+              aria-invalid={Boolean(errors[field])}
+              aria-describedby={errors[field] ? `db-${field}-error` : undefined}
+              className={errors[field] ? 'border-destructive' : undefined}
             />
-            {errors[field] && <p className="text-xs text-destructive">{errors[field]}</p>}
+            {errors[field] && (
+              <p id={`db-${field}-error`} className="text-xs text-destructive">{errors[field]}</p>
+            )}
           </div>
         ))}
 

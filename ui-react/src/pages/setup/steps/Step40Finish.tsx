@@ -35,6 +35,9 @@ export function Step40Finish({ onStatusChange }: { onStatusChange?: (passed: boo
     setModuleWarning(null)
     try {
       const request = await applyModule()
+      // `skipped` : installation sans module de site (core seul / plateforme nue), rien à
+      // adopter — surtout pas d'attente ni d'avertissement.
+      if (request.state === 'skipped') return
       if (request.state === 'applied') {
         setModuleApplied(request.module)
         return
