@@ -3,24 +3,21 @@ import { AlertTriangle, CheckCircle2, Loader2 } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
 import { useI18n } from '@/i18n/i18n-context'
-import { applyModule, finalizeSetup, getModuleState } from '@/lib/setup-api'
-
-/** Give the container's applier time to reload Apache (it polls every 2s on its side). */
-const MODULE_POLL_INTERVAL = 1000
-const MODULE_POLL_ATTEMPTS = 30
-
-const sleep = (ms: number) => new Promise((resolve) => { setTimeout(resolve, ms) })
+import { finalizeSetup } from '@/lib/setup-api'
+import { adoptSiteModule } from '../adopt-module'
 
 /**
  * Last step — the legacy carousel's "Creation & result". The Finish button calls
  * `finalizeSetup` (which unplugs MelisInstaller and writes `config/melis.install`), then
  * sends the user to the back-office.
  *
- * Before that, it asks the container to adopt the chosen site module as MELIS_MODULE, so the
- * front site answers without editing `.env` by hand and restarting. This has to happen BEFORE
- * `finalizeSetup`, which unplugs MelisInstaller and takes the route carrying that request with
- * it. If this part fails the install still completes: the problem is reported, along with what
- * to do by hand.
+ * Before that, it re-asks the container to adopt the chosen site module as MELIS_MODULE, so the
+ * front site answers without editing `.env` by hand and restarting. The install step has
+ * normally done this already (it has to, for the site folder to be named right) — this is the
+ * safety net for a run where that failed or was skipped, and it costs nothing when the value is
+ * already in place. It still has to happen BEFORE `finalizeSetup`, which unplugs MelisInstaller
+ * and takes the route carrying that request with it. If this part fails the install still
+ * completes: the problem is reported, along with what to do by hand.
  */
 export function Step40Finish({ onStatusChange }: { onStatusChange?: (passed: boolean) => void }) {
   const { t } = useI18n()
@@ -30,33 +27,17 @@ export function Step40Finish({ onStatusChange }: { onStatusChange?: (passed: boo
   const [moduleWarning, setModuleWarning] = useState<string | null>(null)
 
   /**
-   * Drops the request, then waits for the applier to acknowledge it. Never throws.
    * Success is silent — only a failure or a request nobody picked up is worth telling the
    * user about, since there is a manual fix to do in those cases.
    */
   async function adoptModule() {
     setModuleWarning(null)
-    try {
-      const request = await applyModule()
-      // `skipped`: install with no site module (core only / bare platform). Nothing to
-      // adopt, so do not wait and do not warn.
-      if (request.state === 'skipped') return
-      if (request.state === 'applied') return
-      for (let i = 0; i < MODULE_POLL_ATTEMPTS; i++) {
-        await sleep(MODULE_POLL_INTERVAL)
-        const state = await getModuleState()
-        if (state.state === 'applied') return
-        if (state.state === 'failed') {
-          setModuleWarning(t('setup.finish.module_failed', { module: request.module }))
-          return
-        }
-      }
-      // No applier in this container (older image, or an install outside Docker): the
-      // request stays pending. Say so clearly instead of waiting forever.
-      setModuleWarning(t('setup.finish.module_pending', { module: request.module }))
-    } catch (e) {
-      setModuleWarning(e instanceof Error ? e.message : String(e))
-    }
+    const adoption = await adoptSiteModule()
+    // `skipped`: install with no site module (core only / bare platform). Nothing to adopt,
+    // so nothing to warn about either.
+    if (adoption.status === 'failed') setModuleWarning(t('setup.finish.module_failed', { module: adoption.module }))
+    if (adoption.status === 'pending') setModuleWarning(t('setup.finish.module_pending', { module: adoption.module }))
+    if (adoption.status === 'error') setModuleWarning(adoption.message)
   }
 
   async function handleFinish() {
