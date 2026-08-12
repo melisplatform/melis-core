@@ -880,7 +880,23 @@ class MelisCoreModulesService extends MelisServiceManager
                 return $host;
             }
         } catch (\Throwable $e) {}
-        return $_SERVER['HTTP_HOST'] ?? 'localhost';
+
+        // No host configured: derive it from the request, but keep only the HOSTNAME and pair it
+        // with the port the server actually LISTENS on. $_SERVER['HTTP_HOST'] as-is is the PUBLIC
+        // address, and behind a container port mapping or a proxy its port is not one the server
+        // can connect back to (e.g. localhost:8084 while Apache listens on :80 inside) — every
+        // asset fetch then comes back empty. The hostname itself must be preserved: Melis routes
+        // by domain, so replacing `melis.com` with `localhost` could land on another vhost.
+        $host = (string) ($_SERVER['HTTP_HOST'] ?? '');
+        // Strip the port (IPv6 literals keep their brackets: [::1]:8084 → [::1]).
+        $hostname = preg_replace('/:\d+$/', '', $host);
+        if ($hostname === '') {
+            $hostname = (string) ($_SERVER['SERVER_NAME'] ?? 'localhost');
+        }
+
+        $port = (int) ($_SERVER['SERVER_PORT'] ?? 0);
+
+        return $hostname . ($port && $port !== 80 && $port !== 443 ? ':' . $port : '');
     }
 
     private function combineAssets($array, $type, $fileName = 'bundle-all')
@@ -899,6 +915,14 @@ class MelisCoreModulesService extends MelisServiceManager
                 }
 
                 $contentString .= $cleanString;
+            }
+
+            // An empty result means every asset failed to load. Writing it would be worse than
+            // writing nothing: the file's mere EXISTENCE makes MelisGenerateBundleListener skip
+            // regeneration for good, and getAssets() then serves that empty bundle to the whole
+            // back-office. Leave the previous bundle (or no bundle) in place instead.
+            if (trim($contentString, " \t\n\r;") === '') {
+                return;
             }
 
             $path = $this->createDIR($type);
@@ -1141,6 +1165,21 @@ class MelisCoreModulesService extends MelisServiceManager
 //        $locale = $container['melis-lang-locale'];
 
         if(!str_contains($fileStr, '/get-translations')) {
+            // Read the file from disk whenever we can, instead of asking the platform for its OWN
+            // asset over HTTP. That round-trip is what silently produced EMPTY bundles:
+            //   - the host comes from getSafeAssetHost(), which falls back to $_SERVER['HTTP_HOST'];
+            //     behind a container/proxy that is the PUBLISHED address (e.g. localhost:8084) and
+            //     is not reachable from the server itself → every fetch returns nothing;
+            //   - the per-module files produced by minifyCss()/minifyJs() live in `etc/bundles/`,
+            //     which is outside the document root → fetching /bundles/... always 404s.
+            // Disk has neither problem, and it is also much faster.
+            $localPath = $this->resolveAssetPath($fileStr);
+            if ($localPath !== null) {
+                $text = (string) @file_get_contents($localPath);
+
+                return $removeComments ? preg_replace('!/\*.*?\*/!s', '', $text) : $text;
+            }
+
             if (function_exists('curl_version')) {
 
 //                if(str_contains($fileStr, '/get-translations'))
@@ -1174,6 +1213,65 @@ class MelisCoreModulesService extends MelisServiceManager
             return $text;
         }
         return "";
+    }
+
+    /**
+     * File on disk for an asset URL (absolute URL or root-relative path), or null when it isn't a
+     * static file we can locate — the caller then falls back to fetching it over HTTP.
+     *
+     * Mirrors MelisAssetManager's URL→module mapping, plus the two locations that mapping doesn't
+     * cover: the document root itself, and `etc/bundles/` (the per-module bundles this service
+     * writes, which are NOT web-exposed).
+     *
+     * @param string $url
+     * @return string|null
+     */
+    private function resolveAssetPath($url)
+    {
+        $path = parse_url((string) $url, PHP_URL_PATH);
+        if (empty($path)) {
+            return null;
+        }
+        $path = urldecode($path);
+        // Never let an asset list walk out of the tree.
+        if (str_contains($path, '..')) {
+            return null;
+        }
+
+        $docroot = rtrim($_SERVER['DOCUMENT_ROOT'] ?? '', '/');
+        if ($docroot === '') {
+            return null;
+        }
+
+        // 1. Plain file under public/
+        if (is_file($docroot . $path)) {
+            return $docroot . $path;
+        }
+
+        // 2. /bundles/... → etc/bundles/... (written by minifyCss()/minifyJs(), see createDIR())
+        $etcPath = $docroot . '/../etc' . $path;
+        if (is_file($etcPath)) {
+            return $etcPath;
+        }
+
+        // 3. /<ModuleAlias>/<asset> → <module>/public/<asset>
+        $parts = explode('/', ltrim($path, '/'));
+        if (count($parts) > 1) {
+            $modulePathFile = $docroot . '/../config/melis.modules.path.php';
+            $modulesPath = file_exists($modulePathFile) ? (require $modulePathFile) : [];
+            if (!empty($modulesPath[$parts[0]])) {
+                $modulePath = $modulesPath[$parts[0]];
+                if (!str_contains($modulePath, $docroot)) {
+                    $modulePath = $docroot . '/..' . $modulePath;
+                }
+                $candidate = $modulePath . '/public/' . implode('/', array_slice($parts, 1));
+                if (is_file($candidate)) {
+                    return $candidate;
+                }
+            }
+        }
+
+        return null;
     }
 
     /**
