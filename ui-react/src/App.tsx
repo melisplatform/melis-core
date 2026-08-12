@@ -14,6 +14,7 @@ import { MODULES } from '@/lib/module-registry'
 import { useBricks, useBricksVersion, bricksReady, brickRoute } from '@/lib/bricks'
 import { hasToolRoutes, labelForRoute, routeForForward, useToolRoutesVersion } from '@/lib/tool-routes'
 import LoginPage from '@/pages/LoginPage'
+import Verify2faPage from '@/pages/Verify2faPage'
 import ForgotPasswordPage from '@/pages/ForgotPasswordPage'
 import ResetPasswordPage from '@/pages/ResetPasswordPage'
 import SetupWizardPage from '@/pages/setup/SetupWizardPage'
@@ -176,6 +177,7 @@ export default function App() {
                   /melis/reset-password vers /melis quand MelisCoreAuth a déjà une identité. */}
               <Route element={<PublicOnlyRoute />}>
                 <Route path="/login" element={<LoginPage />} />
+                <Route path="/verify-2fa" element={<Verify2faPage />} />
                 <Route path="/forgot-password" element={<ForgotPasswordPage />} />
                 <Route path="/reset-password/:hash" element={<ResetPasswordPage />} />
               </Route>

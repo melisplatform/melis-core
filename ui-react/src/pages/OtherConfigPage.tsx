@@ -11,6 +11,8 @@ import { invalidatePasswordPolicy } from '@/lib/user-api'
 import { useTabs } from '@/components/tabs/tab-store'
 import { MelisClassicFrame, ViewModeToggle, type ViewMode } from '@/components/MelisClassicView'
 import { toolHasViewToggle } from '@/lib/module-registry'
+import { otherConfigSectionBricks, useBricks } from '@/lib/bricks'
+import { ToolErrorBoundary } from '@/components/ToolErrorBoundary'
 import { routeForForward } from '@/lib/tool-routes'
 import { useI18n } from '@/i18n/i18n-context'
 import { useIsNarrow } from '@/hooks/useIsNarrow'
@@ -45,6 +47,11 @@ export default function OtherConfigPage() {
 
   const canList = useCan(TOOL_KEY, 'list')
   const canEdit = useCan(TOOL_KEY, 'edit')
+
+  // Module-contributed Other Config sections (e.g. a 2FA settings module) — present only when
+  // the owning module is active; re-renders via useBricks() once brick bundles finish loading.
+  useBricks()
+  const extraSections = otherConfigSectionBricks()
 
   const showViewToggle = toolHasViewToggle('otherconfig')
   const [mode, setMode] = useState<ViewMode>(_cache?.mode ?? 'react')
@@ -232,6 +239,20 @@ export default function OtherConfigPage() {
               </Row>
             ))}
           </Section>
+
+          {/* 5+. Module-contributed sections (e.g. 2FA) — generic, melis-core doesn't know their
+              names. Each one is wrapped in its OWN ToolErrorBoundary: a module's section
+              throwing must never take down the rest of this page (the 4 sections above, and
+              critically the Save button) — same isolation guarantee persistent bricks get in
+              Shell.tsx. Absent entirely, extraSections is just [] and nothing renders here. */}
+          {extraSections.map((b) => {
+            const OtherConfigSection = b.OtherConfigSection!
+            return (
+              <ToolErrorBoundary key={b.id} label={b.label}>
+                <OtherConfigSection />
+              </ToolErrorBoundary>
+            )
+          })}
         </>)}
       </div>
     </div>

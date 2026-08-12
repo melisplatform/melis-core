@@ -20,6 +20,8 @@ export interface LoginResult {
   success: boolean
   /** Message d'erreur prêt à afficher (extrait de la réponse Melis). */
   message?: string
+  /** 2FA requise (mot de passe déjà validé) — hash à transmettre à la route React /verify-2fa. */
+  twoFaHash?: string
 }
 
 /** Réponse brute de /melis/authenticate. */
@@ -90,8 +92,87 @@ export async function login(
     return { success: false, message: 'Réponse inattendue du serveur Melis.' }
   }
 
-  if (data.success) return { success: true }
+  if (data.success) {
+    // `command` est le legacy jQuery eval() : "window.location.replace('/melis/verify-2fa?hash=...')"
+    // quand le mot de passe est correct mais que la 2FA reste à faire — `success` est déjà `true` à ce
+    // stade (le mot de passe est bon), donc on NE PEUT PAS s'y fier seul pour authentifier. La page
+    // legacy /melis/verify-2fa a son propre bug de rendu (zone PluginView non résolue pour un
+    // utilisateur non authentifié) — on extrait juste le hash et on laisse l'appelant naviguer vers
+    // la route React /verify-2fa (Verify2faPage), qui poste directement sur /melis/verify-2fa-code.
+    // Sur `success: true`, MelisAuthController::authenticateAction() ne produit QUE deux formes de
+    // `command` (vérifié en lisant tout le contrôleur + le listener melis-login-2fa qui l'étend) :
+    //   - "window.location.replace('/melis');" — login normal (2FA off, ou déjà passée)
+    //   - "window.location.replace('/melis/verify-2fa?hash=...');" — 2FA à faire
+    // Un ancien fallback ici suivait AUSSI tout redirect sans hash via `window.location.href =`,
+    // en pensant traiter un cas "inattendu" — mais c'est justement la forme du login normal (la
+    // SEULE qui arrive quand la 2FA est désactivée), donc dès que la 2FA était off ce fallback
+    // quittait l'app React vers /melis legacy juste après avoir affiché "Identifiants invalides"
+    // (le success:false retourné avant la navigation, le temps qu'elle s'exécute). Il n'existe
+    // aucun troisième cas côté PHP à gérer : un hash = 2FA, pas de hash = login réussi, point.
+    const hashMatch = data.command?.match(/[?&]hash=([^&'"]+)/)
+    if (hashMatch) {
+      return { success: false, twoFaHash: decodeURIComponent(hashMatch[1]) }
+    }
+    return { success: true }
+  }
   return { success: false, message: extractError(data.errors) ?? 'Identifiants invalides.' }
+}
+
+// ─── 2FA (route publique React /verify-2fa) ──────────────────────────────────
+
+export interface TwoFaVerifyResult {
+  success: boolean
+  message?: string
+  tries?: number
+  locked?: boolean
+}
+
+/** Vérifie le code reçu par email. POST /melis/verify-2fa-code — si succès, le serveur pose le
+ *  cookie de session (finalise le login sans re-demander le mot de passe). */
+export async function verifyTwoFaCode(hash: string, code: string): Promise<TwoFaVerifyResult> {
+  try {
+    const body = new URLSearchParams({ hash, code })
+    const res = await fetch('/melis/verify-2fa-code', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded', ...XHR_HEADER },
+      body,
+      credentials: 'include',
+    })
+    if (!res.ok) return { success: false, message: `Erreur serveur (${res.status}).` }
+    const data = (await res.json()) as {
+      success?: boolean
+      tries?: number
+      locked?: boolean
+      error?: { errorMessage?: string }
+    }
+    if (data.success) return { success: true }
+    return { success: false, message: data.error?.errorMessage, tries: data.tries, locked: data.locked }
+  } catch {
+    return { success: false, message: 'Serveur Melis injoignable.' }
+  }
+}
+
+export interface TwoFaRequestCodeResult {
+  success: boolean
+  message?: string
+}
+
+/** Demande le renvoi d'un nouveau code. POST /melis/request-2fa-code. */
+export async function requestNewTwoFaCode(hash: string): Promise<TwoFaRequestCodeResult> {
+  try {
+    const body = new URLSearchParams({ hash })
+    const res = await fetch('/melis/request-2fa-code', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded', ...XHR_HEADER },
+      body,
+      credentials: 'include',
+    })
+    if (!res.ok) return { success: false, message: `Erreur serveur (${res.status}).` }
+    const data = (await res.json()) as { success?: boolean; message?: string }
+    return { success: !!data.success, message: data.message }
+  } catch {
+    return { success: false, message: 'Serveur Melis injoignable.' }
+  }
 }
 
 /** Vérifie si une session Melis est active. */

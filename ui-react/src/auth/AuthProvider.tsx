@@ -86,21 +86,27 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }, [demo, authed])
 
+  // Le préchargement du dashboard part au chargement de `main.tsx`, donc AVANT le login quand on
+  // atterrit directement sur `/melis-react` en session neuve (fenêtre privée) : ses 4 requêtes ont
+  // pris un 401. On jette ces promesses mortes et on relance le préchargement, maintenant
+  // authentifié — sinon le dashboard les consommait à son montage et s'affichait vide/partiel
+  // jusqu'à un rechargement manuel (ticket « dashboard not loaded, I need to reload »). Partagé
+  // entre un login direct (pas de 2FA) et la fin de Verify2faPage (2FA complétée).
+  const completeAuth = useCallback<AuthState['completeAuth']>(() => {
+    resetDashboardPrefetch()
+    prefetchDashboard()
+    setAuthed(true)
+  }, [])
+
   const signIn = useCallback<AuthState['signIn']>(async (login, password, remember) => {
     const result = await melis.login(login, password, remember)
     if (result.success) {
-      // Le préchargement du dashboard part au chargement de `main.tsx`, donc AVANT ce login quand on
-      // atterrit directement sur `/melis-react` en session neuve (fenêtre privée) : ses 4 requêtes ont
-      // pris un 401. On jette ces promesses mortes et on relance le préchargement, maintenant
-      // authentifié — sinon le dashboard les consommait à son montage et s'affichait vide/partiel
-      // jusqu'à un rechargement manuel (ticket « dashboard not loaded, I need to reload »).
-      resetDashboardPrefetch()
-      prefetchDashboard()
-      setAuthed(true)
-      return undefined
+      completeAuth()
+      return {}
     }
-    return result.message ?? 'Identifiants invalides.'
-  }, [])
+    if (result.twoFaHash) return { twoFaHash: result.twoFaHash }
+    return { error: result.message ?? 'Identifiants invalides.' }
+  }, [completeAuth])
 
   const signOut = useCallback<AuthState['signOut']>(async () => {
     try {
@@ -116,7 +122,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [])
 
   return (
-    <AuthContext.Provider value={{ authed, loading, signIn, signOut }}>
+    <AuthContext.Provider value={{ authed, loading, signIn, completeAuth, signOut }}>
       {children}
     </AuthContext.Provider>
   )

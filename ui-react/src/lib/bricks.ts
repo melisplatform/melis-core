@@ -56,6 +56,12 @@ export interface BrickDef {
    * mounted across navigations, so its own state (an open chat session) survives.
    */
   Overlay?: ComponentType
+  /**
+   * A section rendered inside MelisCore's native Other Config page (System configuration ->
+   * Other Config), appended after the built-in sections -- lets a module contribute admin
+   * settings there without melis-core knowing about it by name.
+   */
+  OtherConfigSection?: ComponentType
 }
 
 /** `Module/Controller` → React route, fed to the menu so legacy entries link to bricks. */
@@ -109,7 +115,7 @@ export async function refreshActiveModules(): Promise<void> {
 }
 
 /** Where brick bundles self-register their components, keyed by brick id. */
-type RegisteredBrick = { Component?: ComponentType; Sidebar?: ComponentType; Header?: ComponentType; Overlay?: ComponentType }
+type RegisteredBrick = { Component?: ComponentType; Sidebar?: ComponentType; Header?: ComponentType; Overlay?: ComponentType; OtherConfigSection?: ComponentType }
 function componentRegistry(): Record<string, RegisteredBrick> {
   const w = window as unknown as { __MELIS_BRICK_COMPONENTS__?: Record<string, RegisteredBrick> }
   return (w.__MELIS_BRICK_COMPONENTS__ ??= {})
@@ -158,6 +164,11 @@ export function headerBricks(): BrickDef[] {
 /** All loaded bricks that ship a global overlay (rendered once at the shell root). */
 export function overlayBricks(): BrickDef[] {
   return bricks.filter((b) => b.Overlay)
+}
+
+/** All loaded bricks that contribute an Other Config section. */
+export function otherConfigSectionBricks(): BrickDef[] {
+  return bricks.filter((b) => b.OtherConfigSection)
 }
 
 /**
@@ -246,12 +257,13 @@ export async function loadBricks(): Promise<void> {
             if (m.forwardKey) delete BRICK_ROUTES[m.forwardKey]
             // Sidebar/Header/Overlay still valid without a Component page (e.g. Messenger bell,
             // MelisAI assistant).
-            if (reg?.Sidebar || reg?.Header || reg?.Overlay) {
+            if (reg?.Sidebar || reg?.Header || reg?.Overlay || reg?.OtherConfigSection) {
               bricks.push({
                 id: m.id, module: m.module, route: '', label: m.label,
                 forwardKey: m.forwardKey, melisKey: m.melisKey, subTabs: m.subTabs ?? false,
                 persistent: m.persistent ?? false,
                 Component: undefined, Sidebar: reg.Sidebar, Header: reg.Header, Overlay: reg.Overlay,
+                OtherConfigSection: reg.OtherConfigSection,
               })
             }
             notify()
@@ -266,6 +278,7 @@ export async function loadBricks(): Promise<void> {
           def.Sidebar = reg.Sidebar
           def.Header  = reg.Header
           def.Overlay = reg.Overlay
+          def.OtherConfigSection = reg.OtherConfigSection
           notify()
         }
         return { default: C }
@@ -285,6 +298,7 @@ export async function loadBricks(): Promise<void> {
         Sidebar:    undefined,
         Header:     undefined,
         Overlay:    undefined,
+        OtherConfigSection: undefined,
       })
     }
     bricks = next
@@ -317,7 +331,8 @@ export async function loadBricks(): Promise<void> {
             def.Sidebar = reg.Sidebar
             def.Header  = reg.Header
             def.Overlay = reg.Overlay
-            if (reg.Sidebar || reg.Header || reg.Overlay) notify()
+            def.OtherConfigSection = reg.OtherConfigSection
+            if (reg.Sidebar || reg.Header || reg.Overlay || reg.OtherConfigSection) notify()
           }
         })
         .catch(() => {})
