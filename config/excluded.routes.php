@@ -33,6 +33,20 @@ return [
                     'melis-backoffice/melis-react-api/auth-i18n',
                     'melis-backoffice/melis-react-api/auth-forgot-password',
                     'melis-backoffice/melis-react-api/auth-reset-password',
+                ],
+                // Zones PluginView (appconfigpath) qu'un visiteur NON authentifié a le droit de faire
+                // rendre — distinct de excluded_routes (qui protège la ROUTE HTTP de premier niveau) :
+                // MelisReactOverride\Controller\PluginViewController::generateAction() applique SA
+                // PROPRE garde anonyme (denyIfUnauthenticated(), défense-en-profondeur derrière
+                // checkIdentity) sur CHAQUE forward() interne vers le rendu de zone générique — y
+                // compris ceux déclenchés par une route déjà publique. Un module qui construit sa
+                // propre page pré-connexion (ex. melis-login-2fa/config/excluded.routes.php pour la
+                // saisie du code 2FA) doit AUSSI lister son melisKey ici, sinon ce garde-fou renvoie un
+                // 401 vide qui casse le rendu (TypeError « addChild() » côté appelant). '/meliscore_login'
+                // est le seul cas historique (formulaire de connexion lui-même) — modules libres d'en
+                // ajouter d'autres via le même ArrayUtils::merge que excluded_routes.
+                'public_zones' => [
+                    '/meliscore_login',
                 ]
             ]
         ]
