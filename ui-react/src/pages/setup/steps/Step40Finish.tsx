@@ -5,22 +5,22 @@ import { Button } from '@/components/ui/button'
 import { useI18n } from '@/i18n/i18n-context'
 import { applyModule, finalizeSetup, getModuleState } from '@/lib/setup-api'
 
-/** Laisse à l'applier du conteneur le temps de recharger Apache (poll de 2s côté conteneur). */
+/** Give the container's applier time to reload Apache (it polls every 2s on its side). */
 const MODULE_POLL_INTERVAL = 1000
 const MODULE_POLL_ATTEMPTS = 30
 
 const sleep = (ms: number) => new Promise((resolve) => { setTimeout(resolve, ms) })
 
 /**
- * Étape finale — « Creation & result » du carousel legacy : le bouton Terminer appelle
- * `finalizeSetup` (désactivation de MelisInstaller, écriture de `config/melis.install`),
- * puis redirige vers le back-office comme le legacy.
+ * Last step — the legacy carousel's "Creation & result". The Finish button calls
+ * `finalizeSetup` (which unplugs MelisInstaller and writes `config/melis.install`), then
+ * sends the user to the back-office.
  *
- * Avant cela, il demande au conteneur d'adopter comme MELIS_MODULE le nom de module saisi à
- * l'étape des modules, pour que le site front réponde sans édition manuelle du `.env` ni
- * redémarrage. C'est nécessairement AVANT `finalizeSetup`, qui débranche MelisInstaller et
- * emporte avec lui la route qui porte cette demande. Un échec de cette étape n'empêche pas de
- * terminer l'installation : il est signalé, avec la manipulation manuelle à faire.
+ * Before that, it asks the container to adopt the chosen site module as MELIS_MODULE, so the
+ * front site answers without editing `.env` by hand and restarting. This has to happen BEFORE
+ * `finalizeSetup`, which unplugs MelisInstaller and takes the route carrying that request with
+ * it. If this part fails the install still completes: the problem is reported, along with what
+ * to do by hand.
  */
 export function Step40Finish({ onStatusChange }: { onStatusChange?: (passed: boolean) => void }) {
   const { t } = useI18n()
@@ -28,34 +28,31 @@ export function Step40Finish({ onStatusChange }: { onStatusChange?: (passed: boo
   const [finished, setFinished] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [moduleWarning, setModuleWarning] = useState<string | null>(null)
-  const [moduleApplied, setModuleApplied] = useState<string | null>(null)
 
-  /** Dépose la demande puis attend l'acquittement de l'applier. Ne jette jamais. */
+  /**
+   * Drops the request, then waits for the applier to acknowledge it. Never throws.
+   * Success is silent — only a failure or a request nobody picked up is worth telling the
+   * user about, since there is a manual fix to do in those cases.
+   */
   async function adoptModule() {
     setModuleWarning(null)
     try {
       const request = await applyModule()
-      // `skipped` : installation sans module de site (core seul / plateforme nue), rien à
-      // adopter — surtout pas d'attente ni d'avertissement.
+      // `skipped`: install with no site module (core only / bare platform). Nothing to
+      // adopt, so do not wait and do not warn.
       if (request.state === 'skipped') return
-      if (request.state === 'applied') {
-        setModuleApplied(request.module)
-        return
-      }
+      if (request.state === 'applied') return
       for (let i = 0; i < MODULE_POLL_ATTEMPTS; i++) {
         await sleep(MODULE_POLL_INTERVAL)
         const state = await getModuleState()
-        if (state.state === 'applied') {
-          setModuleApplied(state.module)
-          return
-        }
+        if (state.state === 'applied') return
         if (state.state === 'failed') {
           setModuleWarning(t('setup.finish.module_failed', { module: request.module }))
           return
         }
       }
-      // Pas d'applier dans ce conteneur (image plus ancienne, install hors Docker) : la
-      // demande reste en attente, on le dit clairement plutôt que d'attendre indéfiniment.
+      // No applier in this container (older image, or an install outside Docker): the
+      // request stays pending. Say so clearly instead of waiting forever.
       setModuleWarning(t('setup.finish.module_pending', { module: request.module }))
     } catch (e) {
       setModuleWarning(e instanceof Error ? e.message : String(e))
@@ -76,8 +73,10 @@ export function Step40Finish({ onStatusChange }: { onStatusChange?: (passed: boo
       }
       setFinished(true)
       onStatusChange?.(true)
-      // Même redirection différée que le legacy, le temps que la page d'accueil réponde.
-      setTimeout(() => { window.location.replace('/melis') }, 5000)
+      // Land on the React back-office, the one this wizard belongs to — the legacy
+      // wizard is the one that sends you to /melis. Delayed like the legacy does, to
+      // give the back-office a moment to answer after the install.
+      setTimeout(() => { window.location.replace('/melis-react') }, 5000)
     } catch (e) {
       setError(e instanceof Error ? e.message : String(e))
       onStatusChange?.(false)
@@ -106,11 +105,6 @@ export function Step40Finish({ onStatusChange }: { onStatusChange?: (passed: boo
           {error && <span className="text-sm text-destructive">{error}</span>}
         </div>
 
-        {moduleApplied && (
-          <p className="text-xs text-muted-foreground">
-            {t('setup.finish.module_applied', { module: moduleApplied })}
-          </p>
-        )}
         {moduleWarning && (
           <p className="flex items-start gap-1.5 text-xs text-[var(--color-warning,#b45309)]">
             <AlertTriangle className="mt-0.5 size-3.5 shrink-0" />
