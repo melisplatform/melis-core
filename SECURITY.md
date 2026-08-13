@@ -31,6 +31,17 @@ handled case by case.
 We credit reporters in the release notes / advisory unless you ask us not to.
 If you would like a CVE, tell us and we will request one on your behalf.
 
+## Acknowledgements
+
+We thank the following researchers for privately and responsibly disclosing
+security issues in this module:
+
+- **Arpit Jain** ([@arpitjain099](https://github.com/arpitjain099)) — missing
+  tool-access check on several `ToolUserController` actions (`addNewUserInfo`,
+  `generateCreatePassRequest`, `getUserById`), allowing a low-privilege
+  authenticated back-office account to create an administrator and read other
+  users' records (CWE-862; residual of the CVE-2025-10352 fix).
+
 ---
 
 Thank you to the researchers who help keep Melis Platform users safe.
