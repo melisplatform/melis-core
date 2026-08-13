@@ -173,14 +173,22 @@ export default function App() {
             <TabBridge />
             <Routes>
               {/* Public — inaccessibles si une session est déjà ouverte (→ redirigé vers le
-                  dashboard), comme le legacy qui renvoie /melis/login, /melis/lost-password et
-                  /melis/reset-password vers /melis quand MelisCoreAuth a déjà une identité. */}
+                  dashboard), comme le legacy qui renvoie /melis/login et /melis/verify-2fa vers
+                  /melis quand MelisCoreAuth a déjà une identité. Pas de raison de revoir un
+                  formulaire de connexion une fois dans la session. */}
               <Route element={<PublicOnlyRoute />}>
                 <Route path="/login" element={<LoginPage />} />
                 <Route path="/verify-2fa" element={<Verify2faPage />} />
-                <Route path="/forgot-password" element={<ForgotPasswordPage />} />
-                <Route path="/reset-password/:hash" element={<ResetPasswordPage />} />
               </Route>
+              {/* Toujours accessibles, authentifié ou non : le lien "changer le mot de passe" du
+                  mail de 2FA doit fonctionner même si l'utilisateur est déjà connecté dans CE
+                  navigateur (session partagée entre onglets) — sinon PublicOnlyRoute le renvoie
+                  au dashboard avant qu'il ait pu soumettre le formulaire (le dashboard se
+                  remonte alors en plein milieu de l'interaction, d'où la cascade d'erreurs
+                  observée en pratique). Ni page ne dépend de useAuth(), rien à adapter côté
+                  Shell/dashboard. */}
+              <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+              <Route path="/reset-password/:hash" element={<ResetPasswordPage />} />
               <Route path="/setup" element={<SetupWizardPage />} />
 
               {/* Authentifié — Shell (sidebar + topbar) */}
