@@ -262,7 +262,7 @@ class MelisCoreGdprAutoDeleteController extends MelisAbstractActionController
     public function getGdprDeleteConfigDataAction()
     {
         /** @INFO: Access check (tool right) */
-        if (! $this->hasAccess('melis_core_gdpr_auto_delete')) {
+        if (! $this->hasAccess('melis_core_gdpr')) {
             return new JsonModel(['success' => 0, 'textTitle' => '', 'textMessage' => 'tr_meliscore_microservice_api_key_no_access', 'errors' => [], 'datas' => []]);
         }
         /** @INFO: End Access Check */
@@ -519,7 +519,7 @@ class MelisCoreGdprAutoDeleteController extends MelisAbstractActionController
     public function saveAutoDeleteConfigurationAction()
     {
         /** @INFO: Access check (tool right) */
-        if (! $this->hasAccess('melis_core_gdpr_auto_delete')) {
+        if (! $this->hasAccess('melis_core_gdpr')) {
             return new JsonModel(['success' => 0, 'textTitle' => '', 'textMessage' => 'tr_meliscore_microservice_api_key_no_access', 'errors' => [], 'datas' => []]);
         }
         /** @INFO: End Access Check */
@@ -684,7 +684,7 @@ class MelisCoreGdprAutoDeleteController extends MelisAbstractActionController
     public function deleteAction()
     {
         /** @INFO: Access check (tool right) */
-        if (! $this->hasAccess('melis_core_gdpr_auto_delete')) {
+        if (! $this->hasAccess('melis_core_gdpr')) {
             return new JsonModel(['success' => 0, 'textTitle' => '', 'textMessage' => 'tr_meliscore_microservice_api_key_no_access', 'errors' => [], 'datas' => []]);
         }
         /** @INFO: End Access Check */
