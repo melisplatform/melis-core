@@ -259,8 +259,9 @@ class ModulesController extends MelisAbstractActionController
      */
     public function getDependentsAction()
     {
-        /** @INFO: Access check (tool right) */
-        if (! $this->hasAccess('meliscore_tool_user_module_management')) {
+        /** @INFO: Access check (tool right). Read-only dependents lookup is also reused by the
+         *  MarketPlace "remove package" flow, so accept the MarketPlace tool right as well. */
+        if (! $this->hasAccess('meliscore_tool_user_module_management') && ! $this->hasAccess('melis_market_place_tool_display')) {
             return new JsonModel(['success' => 0, 'textTitle' => '', 'textMessage' => 'tr_meliscore_microservice_api_key_no_access', 'errors' => [], 'datas' => []]);
         }
         /** @INFO: End Access Check */
