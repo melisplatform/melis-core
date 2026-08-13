@@ -147,6 +147,11 @@ class MelisCoreOtherConfigController extends MelisAbstractActionController
 	 */
 	public function saveOtherConfigAction()
 	{
+		/** @INFO: Access check (tool right) */
+		if (! $this->hasAccess('meliscore_tool_other_config')) {
+			return new JsonModel(['success' => 0, 'textTitle' => '', 'textMessage' => 'tr_meliscore_microservice_api_key_no_access', 'errors' => [], 'datas' => []]);
+		}
+		/** @INFO: End Access Check */
 		$translator = $this->getServiceManager()->get('translator');
 		$data = $this->getRequest()->getPost()->toArray();
 		$response = [];
@@ -164,5 +169,10 @@ class MelisCoreOtherConfigController extends MelisAbstractActionController
 			}
 		}
 		return new JsonModel($response);
+	}
+
+	private function hasAccess($key): bool
+	{
+		return $this->getServiceManager()->get('MelisCoreRights')->canAccess($key);
 	}
 }

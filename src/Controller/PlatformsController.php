@@ -191,6 +191,11 @@ class PlatformsController extends MelisAbstractActionController
      */
     public function getPlatformsAction()
     {
+        /** @INFO: Access check (tool right) */
+        if (! $this->hasAccess(self::INTERFACE_KEY)) {
+            return new JsonModel(['success' => 0, 'textTitle' => '', 'textMessage' => 'tr_meliscore_microservice_api_key_no_access', 'errors' => [], 'datas' => []]);
+        }
+        /** @INFO: End Access Check */
         $platformTable = $this->getServiceManager()->get('MelisCoreTablePlatform');
         $translator = $this->getServiceManager()->get('translator');
         
@@ -286,8 +291,13 @@ class PlatformsController extends MelisAbstractActionController
      * 
      * @return \Laminas\View\Model\JsonModel
      */
-    public function savePlatformAction() 
+    public function savePlatformAction()
     {
+        /** @INFO: Access check (tool right) */
+        if (! $this->hasAccess(self::INTERFACE_KEY)) {
+            return new JsonModel(['success' => 0, 'textTitle' => '', 'textMessage' => 'tr_meliscore_microservice_api_key_no_access', 'errors' => [], 'datas' => []]);
+        }
+        /** @INFO: End Access Check */
         $this->getEventManager()->trigger('meliscore_platform_save_start', $this, []);
         $platformTable = $this->getServiceManager()->get('MelisCoreTablePlatform');
         $translator = $this->getServiceManager()->get('translator');
@@ -412,6 +422,11 @@ class PlatformsController extends MelisAbstractActionController
      */
     public function deletePlatformAction()
     {
+        /** @INFO: Access check (tool right) */
+        if (! $this->hasAccess(self::INTERFACE_KEY)) {
+            return new JsonModel(['success' => 0, 'textTitle' => '', 'textMessage' => 'tr_meliscore_microservice_api_key_no_access', 'errors' => [], 'datas' => []]);
+        }
+        /** @INFO: End Access Check */
         $response = array();
         $this->getEventManager()->trigger('meliscore_platform_delete_start', $this, $response);
         $translator = $this->getServiceManager()->get('translator');
@@ -462,6 +477,11 @@ class PlatformsController extends MelisAbstractActionController
     }
     public function removePlatformByIdAction()
     {
+        /** @INFO: Access check (tool right) */
+        if (! $this->hasAccess(self::INTERFACE_KEY)) {
+            return new JsonModel(['success' => 0, 'textTitle' => '', 'textMessage' => 'tr_meliscore_microservice_api_key_no_access', 'errors' => [], 'datas' => []]);
+        }
+        /** @INFO: End Access Check */
         $data = array();
         if($this->getRequest()->isPost())
         {

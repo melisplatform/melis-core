@@ -464,6 +464,11 @@ class LanguageController extends MelisAbstractActionController
 
     public function addLanguageAction()
     {
+        /** @INFO: Access check (tool right) */
+        if (! $this->hasAccess(self::INTERFACE_KEY)) {
+            return new JsonModel(['success' => 0, 'textTitle' => '', 'textMessage' => 'tr_meliscore_microservice_api_key_no_access', 'errors' => [], 'datas' => []]);
+        }
+        /** @INFO: End Access Check */
         $response = array();
         $this->getEventManager()->trigger('meliscore_language_new_start', $this, $response);
         $langTable = $this->getServiceManager()->get('MelisCoreTableLang');
@@ -546,6 +551,11 @@ class LanguageController extends MelisAbstractActionController
 
     public function deleteLanguageAction()
     {
+        /** @INFO: Access check (tool right) */
+        if (! $this->hasAccess(self::INTERFACE_KEY)) {
+            return new JsonModel(['success' => 0, 'textTitle' => '', 'textMessage' => 'tr_meliscore_microservice_api_key_no_access', 'errors' => [], 'datas' => []]);
+        }
+        /** @INFO: End Access Check */
         $response = array();
         $this->getEventManager()->trigger('meliscore_language_delete_start', $this, $response);
         $translator = $this->getServiceManager()->get('translator');

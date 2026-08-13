@@ -261,6 +261,11 @@ class MelisCoreGdprAutoDeleteController extends MelisAbstractActionController
      */
     public function getGdprDeleteConfigDataAction()
     {
+        /** @INFO: Access check (tool right) */
+        if (! $this->hasAccess('melis_core_gdpr_auto_delete')) {
+            return new JsonModel(['success' => 0, 'textTitle' => '', 'textMessage' => 'tr_meliscore_microservice_api_key_no_access', 'errors' => [], 'datas' => []]);
+        }
+        /** @INFO: End Access Check */
         // request
         $request = $this->getRequest();
         $tableData = [];
@@ -513,6 +518,11 @@ class MelisCoreGdprAutoDeleteController extends MelisAbstractActionController
      */
     public function saveAutoDeleteConfigurationAction()
     {
+        /** @INFO: Access check (tool right) */
+        if (! $this->hasAccess('melis_core_gdpr_auto_delete')) {
+            return new JsonModel(['success' => 0, 'textTitle' => '', 'textMessage' => 'tr_meliscore_microservice_api_key_no_access', 'errors' => [], 'datas' => []]);
+        }
+        /** @INFO: End Access Check */
         $request = $this->getRequest();
         $success = false;
         $errors = [];
@@ -673,6 +683,11 @@ class MelisCoreGdprAutoDeleteController extends MelisAbstractActionController
      */
     public function deleteAction()
     {
+        /** @INFO: Access check (tool right) */
+        if (! $this->hasAccess('melis_core_gdpr_auto_delete')) {
+            return new JsonModel(['success' => 0, 'textTitle' => '', 'textMessage' => 'tr_meliscore_microservice_api_key_no_access', 'errors' => [], 'datas' => []]);
+        }
+        /** @INFO: End Access Check */
         $request = $this->getRequest();
         $success = false;
         $errors = [];
@@ -880,5 +895,10 @@ class MelisCoreGdprAutoDeleteController extends MelisAbstractActionController
             'success' => $autoDelete['status'],
             'message' => $autoDelete['message'] ?? null
         ]);
+    }
+
+    private function hasAccess($key): bool
+    {
+        return $this->getServiceManager()->get('MelisCoreRights')->canAccess($key);
     }
 }

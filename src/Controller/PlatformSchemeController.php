@@ -59,6 +59,11 @@ class PlatformSchemeController extends MelisAbstractActionController
 
     public function saveAction()
     {
+        /** @INFO: Access check (tool right) */
+        if (! $this->hasAccess('meliscore_tool_platform_scheme')) {
+            return new JsonModel(['success' => 0, 'textTitle' => '', 'textMessage' => 'tr_meliscore_microservice_api_key_no_access', 'errors' => [], 'datas' => []]);
+        }
+        /** @INFO: End Access Check */
         $success      = 0;
         $errors       = array();
         $textTitle    = 'tr_meliscore_platform_scheme';
@@ -360,6 +365,11 @@ class PlatformSchemeController extends MelisAbstractActionController
      */
     public function resetToDefaultAction()
     {
+        /** @INFO: Access check (tool right) */
+        if (! $this->hasAccess('meliscore_tool_platform_scheme')) {
+            return new JsonModel(['success' => 0, 'textTitle' => '', 'textMessage' => 'tr_meliscore_microservice_api_key_no_access', 'errors' => [], 'datas' => []]);
+        }
+        /** @INFO: End Access Check */
         $success      = 0;
         $request      = $this->getRequest();
         /*$message      = 'Failed to restore platform scheme';

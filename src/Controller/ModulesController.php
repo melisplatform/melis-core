@@ -138,6 +138,11 @@ class ModulesController extends MelisAbstractActionController
      */
     public function saveModuleChangesAction()
     {
+        /** @INFO: Access check (tool right) */
+        if (! $this->hasAccess('meliscore_tool_user_module_management')) {
+            return new JsonModel(['success' => 0, 'textTitle' => '', 'textMessage' => 'tr_meliscore_microservice_api_key_no_access', 'errors' => [], 'datas' => []]);
+        }
+        /** @INFO: End Access Check */
         $translator = $this->getServiceManager()->get('translator');
         $request = $this->getRequest();
         $success = 0;
@@ -254,6 +259,11 @@ class ModulesController extends MelisAbstractActionController
      */
     public function getDependentsAction()
     {
+        /** @INFO: Access check (tool right) */
+        if (! $this->hasAccess('meliscore_tool_user_module_management')) {
+            return new JsonModel(['success' => 0, 'textTitle' => '', 'textMessage' => 'tr_meliscore_microservice_api_key_no_access', 'errors' => [], 'datas' => []]);
+        }
+        /** @INFO: End Access Check */
         $success = 0;
         $modules = array();
         $request = $this->getRequest();
@@ -284,6 +294,11 @@ class ModulesController extends MelisAbstractActionController
 
     public function getRequiredDependenciesAction()
     {
+        /** @INFO: Access check (tool right) */
+        if (! $this->hasAccess('meliscore_tool_user_module_management')) {
+            return new JsonModel(['success' => 0, 'textTitle' => '', 'textMessage' => 'tr_meliscore_microservice_api_key_no_access', 'errors' => [], 'datas' => []]);
+        }
+        /** @INFO: End Access Check */
         $success = 0;
         $modules = array();
         $request = $this->getRequest();
