@@ -561,6 +561,18 @@ class ToolUserController extends MelisAbstractActionController
      */
     public function addNewUserInfoAction()
     {
+        /** @INFO: Access check */
+        $canManageUser = $this->hasAccess(static::TOOL_KEY);
+        if (! $canManageUser) {
+            return new JsonModel([
+                'success' => 0,
+                'textTitle' => 'tr_meliscore_tool_user',
+                'textMessage' => 'tr_meliscore_microservice_api_key_no_access',
+                'errors' => [],
+                'datas' => []
+            ]);
+        }
+        /** @INFO: End Access Check */
         $data = [];
         $success = false;
         $errors = [];
@@ -775,6 +787,18 @@ class ToolUserController extends MelisAbstractActionController
      */
     public function generateCreatePassRequestAction()
     {
+        /** @INFO: Access check */
+        $canManageUser = $this->hasAccess(static::TOOL_KEY);
+        if (! $canManageUser) {
+            return new JsonModel([
+                'success' => 0,
+                'textTitle' => 'tr_meliscore_tool_user',
+                'textMessage' => 'tr_meliscore_microservice_api_key_no_access',
+                'errors' => [],
+                'datas' => []
+            ]);
+        }
+        /** @INFO: End Access Check */
 
         $response = array();
         $this->getEventManager()->trigger('meliscore_tooluser_resend_password_create_email_start', $this, $response);
@@ -810,6 +834,18 @@ class ToolUserController extends MelisAbstractActionController
 
     public function getUserByIdAction()
     {
+        /** @INFO: Access check */
+        $canManageUser = $this->hasAccess(static::TOOL_KEY);
+        if (! $canManageUser) {
+            return new JsonModel([
+                'success' => 0,
+                'textTitle' => 'tr_meliscore_tool_user',
+                'textMessage' => 'tr_meliscore_microservice_api_key_no_access',
+                'errors' => [],
+                'datas' => []
+            ]);
+        }
+        /** @INFO: End Access Check */
         $id = 0;
         $success = false;
         $userTable = $this->getServiceManager()->get('MelisCoreTableUser');
