@@ -1,5 +1,6 @@
 import { createContext, useContext, useEffect, useReducer, useCallback, type ReactNode } from 'react'
 import { LayoutDashboard } from 'lucide-react'
+import { DICTIONARIES, DEFAULT_LANG, LANG_STORAGE_KEY, isLang } from '@/i18n/dictionaries'
 
 // Tabs persist across a full reload (id/label/path only — icons aren't serialisable) so the
 // restored tabs keep their REAL labels instead of a raw key re-derived from the URL.
@@ -29,7 +30,14 @@ type Action =
 
 // ─── Reducer ─────────────────────────────────────────────────────────────────
 
-const DASHBOARD: Tab = { id: '/', label: 'Dashboard', path: '/', icon: LayoutDashboard }
+// Module scope (plain reducer, no hooks) — reads the same localStorage key I18nProvider
+// seeds/updates so the Dashboard tab's label still follows the BO language.
+function dashboardTab(): Tab {
+  let stored: string | null = null
+  try { stored = localStorage.getItem(LANG_STORAGE_KEY) } catch { /* localStorage unavailable */ }
+  const lang = isLang(stored) ? stored : DEFAULT_LANG
+  return { id: '/', label: DICTIONARIES[lang]['nav.dashboard'], path: '/', icon: LayoutDashboard }
+}
 
 function tabReducer(state: TabState, action: Action): TabState {
   switch (action.type) {
@@ -49,7 +57,7 @@ function tabReducer(state: TabState, action: Action): TabState {
       if (idx === -1) return state
       const next = state.tabs.filter((t) => t.id !== action.id)
       // Ensure at least the Dashboard tab remains
-      const tabs = next.length > 0 ? next : [DASHBOARD]
+      const tabs = next.length > 0 ? next : [dashboardTab()]
       const activeId =
         state.activeId !== action.id
           ? state.activeId
@@ -59,7 +67,7 @@ function tabReducer(state: TabState, action: Action): TabState {
 
     case 'CLOSE_ALL':
       // Keep only the Dashboard and make it active.
-      return { tabs: [DASHBOARD], activeId: '/' }
+      return { tabs: [dashboardTab()], activeId: '/' }
 
     case 'ACTIVATE':
       return { ...state, activeId: action.id }
@@ -106,15 +114,15 @@ function loadInitialState(): TabState {
     if (raw) {
       const parsed = JSON.parse(raw) as { tabs: { id: string; label: string; path: string }[]; activeId: string }
       // Restore the Dashboard with its icon; other tabs keep their saved label/path (no icon).
-      const tabs: Tab[] = (parsed.tabs ?? []).map((t) => (t.id === '/' ? DASHBOARD : { id: t.id, label: t.label, path: t.path }))
-      if (!tabs.some((t) => t.id === '/')) tabs.unshift(DASHBOARD)
+      const tabs: Tab[] = (parsed.tabs ?? []).map((t) => (t.id === '/' ? dashboardTab() : { id: t.id, label: t.label, path: t.path }))
+      if (!tabs.some((t) => t.id === '/')) tabs.unshift(dashboardTab())
       const activeId = tabs.some((t) => t.id === parsed.activeId) ? parsed.activeId : '/'
       return { tabs, activeId }
     }
   } catch {
     /* storage unavailable / malformed */
   }
-  return { tabs: [DASHBOARD], activeId: '/' }
+  return { tabs: [dashboardTab()], activeId: '/' }
 }
 
 export function TabProvider({ children }: { children: ReactNode }) {

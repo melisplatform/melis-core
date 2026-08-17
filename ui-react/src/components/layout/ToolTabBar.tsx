@@ -6,6 +6,7 @@ import { useBricks, brickRoute, bricksReady } from '@/lib/bricks'
 import { useToolTabs } from '@/components/tabs/tool-tab-bridge'
 import { melisKeyForRoute, toolBaseRoute, parseToolTabId, subtoolName, useToolRoutesVersion } from '@/lib/tool-routes'
 import { useToolView } from '@/lib/tool-view-mode'
+import { useI18n } from '@/i18n/i18n-context'
 
 /**
  * Sub-tab bar under the topbar showing the open screens of the active legacy tool (brick) —
@@ -35,6 +36,7 @@ function formatKey(key: string): string {
 
 export function ToolTabBar() {
   const { pathname } = useLocation()
+  const { t } = useI18n()
   const bricks = useBricks()
   useToolRoutesVersion()
   const { tabsFor, activate, close } = useToolTabs()
@@ -47,7 +49,7 @@ export function ToolTabBar() {
   })
   const zoneKey = melisKeyForRoute(pathname)
   const melisKey = brick?.melisKey ?? zoneKey
-  const listLabel = brick?.label ?? (zoneKey ? formatKey(zoneKey) : 'Liste')
+  const listLabel = brick?.label ?? (zoneKey ? formatKey(zoneKey) : t('layout.tool_list_tab'))
   const tabs = tabsFor(melisKey)
   const primary = tabs.find((t) => t.primary)
   const secondary = tabs.filter((t) => !t.primary)

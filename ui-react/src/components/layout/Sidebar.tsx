@@ -260,7 +260,7 @@ export function Sidebar({ collapsed: collapsedProp, isMobile = false, mobileOpen
           type="button"
           title={collapsed ? t('nav.dashboard') : undefined}
           onClick={() => {
-            openTab({ id: '/', label: 'Dashboard', path: '/', icon: LayoutDashboard })
+            openTab({ id: '/', label: t('nav.dashboard'), path: '/', icon: LayoutDashboard })
             navigate('/')
             if (isMobile) onClose?.()
           }}

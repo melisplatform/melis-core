@@ -952,4 +952,6 @@ return [
     'tr_melis_core_announcement_plugin_no_data' => 'No data available',
     'tr_melis_core_announcement_plugin_today' => 'Today',
     'tr_melis_core_announcement_plugin_tomorrow' => 'Tomorrow',
+    'tr_meliscore_toolstree_section_others' => 'Others',
+    'tr_meliscore_toolstree_section_custom' => 'Custom / Projects',
 ];
