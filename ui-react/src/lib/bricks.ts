@@ -121,21 +121,32 @@ function componentRegistry(): Record<string, RegisteredBrick> {
   return (w.__MELIS_BRICK_COMPONENTS__ ??= {})
 }
 
-const loadedScripts = new Set<string>()
+// Dedup by URL — INCLUDING in-flight loads. A single bundle can be requested many times
+// concurrently: a multi-brick module (e.g. melis-commerce ships 13 brick ids from ONE brick.js)
+// produces one `load(m)` prefetch per id, plus the React.lazy factory on first route visit —
+// all calling loadScript() with the same URL. Keying only on COMPLETED loads (a Set filled in
+// onload) let every concurrent caller append its own <script> before the first resolved, so the
+// same brick.js was fetched N times (visible with cache disabled). Caching the promise collapses
+// all concurrent and later calls onto a single network request.
+const scriptLoads = new Map<string, Promise<void>>()
 
 function loadScript(url: string): Promise<void> {
-  if (loadedScripts.has(url)) return Promise.resolve()
-  return new Promise((resolve, reject) => {
+  const existing = scriptLoads.get(url)
+  if (existing) return existing
+  const p = new Promise<void>((resolve, reject) => {
     const el = document.createElement('script')
     el.src = url
     el.async = true
-    el.onload = () => {
-      loadedScripts.add(url)
-      resolve()
-    }
+    el.onload = () => resolve()
     el.onerror = () => reject(new Error(`Failed to load brick bundle: ${url}`))
     document.head.appendChild(el)
+  }).catch((e) => {
+    // Don't cache a rejection: drop the entry so a later call can retry the (failed) load.
+    scriptLoads.delete(url)
+    throw e
   })
+  scriptLoads.set(url, p)
+  return p
 }
 
 export function getBricks(): BrickDef[] {
