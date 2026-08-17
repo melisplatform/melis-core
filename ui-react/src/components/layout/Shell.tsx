@@ -26,7 +26,8 @@ import { startTinyMceMobileFrameSync } from '@/lib/tinymce-mobile-frames'
 import { PERSISTENT_MODULES } from '@/lib/module-registry'
 import { ToolErrorBoundary } from '@/components/ToolErrorBoundary'
 import { useTabs } from '@/components/tabs/tab-store'
-import { melisKeyForRoute, routeForForward, useToolRoutesVersion } from '@/lib/tool-routes'
+import { melisKeyForRoute, labelForRoute, routeForForward, useToolRoutesVersion } from '@/lib/tool-routes'
+import { useI18n } from '@/i18n/i18n-context'
 import { lazyRetry } from '@/lib/lazy-retry'
 import { applyOverlayRunway } from '@/lib/overlay-runway'
 
@@ -143,6 +144,7 @@ function ShellInner() {
     window.addEventListener('resize', onResize, { passive: true })
     return () => window.removeEventListener('resize', onResize)
   }, [])
+  const { t } = useI18n()
   const location = useLocation()
   const bricks = useBricks()
   // Bricks contributing a global overlay (recomputed on every brick-list change via useBricks:
@@ -322,7 +324,7 @@ function ShellInner() {
               ses plugins legacy (iframes lourdes) tant qu'on n'a pas ouvert le tableau de bord. */}
           <div className={cn('h-full overflow-y-auto', !isDashboard && 'hidden')}>
             {dashboardVisited && (
-              <ToolErrorBoundary label="Dashboard">
+              <ToolErrorBoundary label={t('nav.dashboard')}>
                 <Suspense fallback={<PageLoader />}>
                   <DashboardPage />
                 </Suspense>
@@ -334,13 +336,17 @@ function ShellInner() {
               Jamais montées au boot : évite de fetcher des données pour des outils non visités. */}
           {PERSISTENT_MODULES.map((m) => {
             const List = m.list
+            const route = routeForForward(m.forwardKey)
+            // Nom TRADUIT du menu ; `m.label` (repli du registre) est figé en français et ne
+            // sert que de repli avant chargement du menu (même pattern que les briques).
+            const label = (route && labelForRoute(route)) ?? m.label
             return (
               <div
                 key={m.id}
                 className={cn('h-full overflow-y-auto', activePersistent?.id !== m.id && 'hidden')}
               >
                 {visitedModules.has(m.id) && (
-                  <ToolErrorBoundary label={m.label}>
+                  <ToolErrorBoundary label={label}>
                     <Suspense fallback={<PageLoader />}>
                       <List />
                     </Suspense>

@@ -8,6 +8,7 @@ import { ProtectedRoute } from '@/auth/ProtectedRoute'
 import { PublicOnlyRoute } from '@/auth/PublicOnlyRoute'
 import { ThemeProvider } from '@/theme/ThemeProvider'
 import { I18nProvider } from '@/i18n/I18nProvider'
+import { useI18n, type I18nState } from '@/i18n/i18n-context'
 import { TabProvider, useTabs } from '@/components/tabs/tab-store'
 import { Shell } from '@/components/layout/Shell'
 import { MODULES } from '@/lib/module-registry'
@@ -20,8 +21,8 @@ import ResetPasswordPage from '@/pages/ResetPasswordPage'
 import SetupWizardPage from '@/pages/setup/SetupWizardPage'
 
 /** Fallback label for a route that opens a tab without one (e.g. a deep link). */
-function deriveTabLabel(path: string): string {
-  if (path === '/') return 'Dashboard'
+function deriveTabLabel(path: string, t: I18nState['t']): string {
+  if (path === '/') return t('nav.dashboard')
   const m = path.match(/^\/melis-cms\/page\/(\d+)/)
   if (m) return `Page ${m[1]}`
   // Fallback label = the last path segment, prettified. Restored/opened tabs keep their real
@@ -39,6 +40,7 @@ function deriveTabLabel(path: string): string {
  */
 function TabBridge() {
   const { openTab, closeTab, syncRoute } = useTabs()
+  const { t } = useI18n()
   const location = useLocation()
   const navigate = useNavigate()
   const bricks = useBricks()
@@ -93,7 +95,7 @@ function TabBridge() {
           navigate(d.path, d.label ? { state: { melisTabLabel: d.label } } : undefined)
           return
         }
-        openTab({ id: d.path, label: d.label || deriveTabLabel(d.path), path: d.path })
+        openTab({ id: d.path, label: d.label || deriveTabLabel(d.path, t), path: d.path })
         navigate(d.path, d.label ? { state: { melisTabLabel: d.label } } : undefined)
         return
       }
@@ -104,7 +106,7 @@ function TabBridge() {
     }
     window.addEventListener('message', onMessage)
     return () => window.removeEventListener('message', onMessage)
-  }, [navigate, openTab, bricks])
+  }, [navigate, openTab, bricks, t])
   useEffect(() => {
     const path = location.pathname
     if (path === '/login' || path === '/setup') return
@@ -115,7 +117,10 @@ function TabBridge() {
     const tool = MODULES
       .map((m) => ({ route: routeForForward(m.forwardKey), label: m.label }))
       .find((m) => m.route && path.startsWith(m.route + '/'))
-    if (tool?.route) { syncRoute({ id: tool.route, label: tool.label, path: tool.route }); return }
+    // Titre d'onglet = le nom TRADUIT du menu ; `tool.label` (repli du registre) est figé en
+    // français et ne sert que de repli avant chargement du menu (même pattern que les briques
+    // ci-dessus — sans lui, un outil natif ouvert en session anglaise gardait un onglet français).
+    if (tool?.route) { syncRoute({ id: tool.route, label: labelForRoute(tool.route) ?? tool.label, path: tool.route }); return }
     // Bricks that opted into the native sub-tab pattern (manifest subTabs:true) behave like the
     // native tools above: collapse /[section]/[tool]/:id to the ONE tool top tab (the opened
     // records live in the host SubTabBar) — instead of spawning a stray per-id tab labelled "6".
@@ -135,8 +140,8 @@ function TabBridge() {
     // A label passed through navigation state (e.g. the Workflow eye → page name) wins over the
     // derived "Page N"/slug fallback, so the tab shows the real name from its first paint.
     const stateLabel = (location.state as { melisTabLabel?: string } | null)?.melisTabLabel
-    syncRoute({ id: path, label: stateLabel || deriveTabLabel(path), path })
-  }, [location.pathname, location.state, syncRoute, toolRoutesVersion, bricksVersion, bricks])
+    syncRoute({ id: path, label: stateLabel || deriveTabLabel(path, t), path })
+  }, [location.pathname, location.state, syncRoute, toolRoutesVersion, bricksVersion, bricks, t])
   return null
 }
 

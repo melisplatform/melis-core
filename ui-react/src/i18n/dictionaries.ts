@@ -890,6 +890,8 @@ const fr = {
   'layout.view_new': 'Nouveau',
   'layout.view_old': 'Ancien',
   'layout.oldview.otherconfig': 'Autres Configurations — Vue Melis',
+  'layout.open_tabs': 'Onglets ouverts',
+  'layout.tool_list_tab': 'Liste',
 
   // ── Dashboard (page) ──
   'dash.show_bar': 'Afficher la barre',
@@ -1778,6 +1780,8 @@ const en: Record<I18nKey, string> = {
   'layout.view_new': 'New',
   'layout.view_old': 'Old',
   'layout.oldview.otherconfig': 'Other Configurations — Melis view',
+  'layout.open_tabs': 'Open tabs',
+  'layout.tool_list_tab': 'List',
 
   // ── Dashboard (page) ──
   'dash.show_bar': 'Show the bar',

@@ -963,4 +963,6 @@ return [
     'tr_melis_core_announcement_plugin_no_data' => 'Aucune donn&eacute;e disponible',
     'tr_melis_core_announcement_plugin_today' => 'Aujourd\'hui',
     'tr_melis_core_announcement_plugin_tomorrow' => 'Demain',
+    'tr_meliscore_toolstree_section_others' => 'Autres',
+    'tr_meliscore_toolstree_section_custom' => 'Personnalisé / Projets',
 ];
