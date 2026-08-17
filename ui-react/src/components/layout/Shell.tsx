@@ -29,6 +29,7 @@ import { useTabs } from '@/components/tabs/tab-store'
 import { melisKeyForRoute, labelForRoute, routeForForward, useToolRoutesVersion } from '@/lib/tool-routes'
 import { useI18n } from '@/i18n/i18n-context'
 import { lazyRetry } from '@/lib/lazy-retry'
+import { applyOverlayRunway } from '@/lib/overlay-runway'
 
 // Ticket 0010791 : le Dashboard était le SEUL page-chunk chargé en `lazy()` brut (les autres passent
 // par `lazyRetry`). Après un déploiement, un onglet ouvert avant garde d'anciens hashs → le chunk
@@ -160,6 +161,28 @@ function ShellInner() {
 
   // Charge le thème du BO React (logo d'en-tête configurable) une fois, après login.
   useEffect(() => { loadReactTheme() }, [])
+
+  // Piste basse réservée aux overlays flottants des modules (bouton de l'assistant MelisAI) —
+  // posée ICI, sur le rendu global, pour TOUS les outils : aucun outil ni aucune brique n'a à s'en
+  // occuper. Rejouée à chaque mutation du contenu (outil ouvert, brique montée tardivement,
+  // sous-onglet) car la zone défilante n'est pas la même d'un outil à l'autre. Cf. overlay-runway.
+  const mainRef = useRef<HTMLElement>(null)
+  const hasOverlay = overlays.length > 0
+  useEffect(() => {
+    const run = () => applyOverlayRunway(mainRef.current, hasOverlay)
+    run()
+    let pending = false
+    const observer = new MutationObserver(() => {
+      // Une passe par frame au plus : les mutations arrivent en rafale au montage d'un outil, et
+      // `applyOverlayRunway` lit des tailles (donc force un layout).
+      if (pending) return
+      pending = true
+      requestAnimationFrame(() => { pending = false; run() })
+    })
+    if (mainRef.current) observer.observe(mainRef.current, { childList: true, subtree: true })
+    window.addEventListener('resize', run, { passive: true })
+    return () => { observer.disconnect(); window.removeEventListener('resize', run) }
+  }, [hasOverlay, location.pathname])
 
   // Propage le patch responsive TinyMCE dans les iframes même origine (édition de page, outils
   // legacy) : leur `window` a son propre global `tinymce`, que le script du shell n'atteint pas.
@@ -296,7 +319,7 @@ function ShellInner() {
         {!isMobile && <SubTabBar />}
         {!isMobile && <ToolTabBar />}
 
-        <main className="relative flex-1 overflow-hidden">
+        <main ref={mainRef} className="relative flex-1 overflow-hidden">
           {/* Dashboard — monté à la 1re visite puis gardé en DOM (hidden) : évite de charger
               ses plugins legacy (iframes lourdes) tant qu'on n'a pas ouvert le tableau de bord. */}
           <div className={cn('h-full overflow-y-auto', !isDashboard && 'hidden')}>
