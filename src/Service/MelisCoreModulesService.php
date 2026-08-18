@@ -29,6 +29,12 @@ class MelisCoreModulesService extends MelisServiceManager
     protected $composer;
 
     /**
+     * Cache of the lower cased module name => real module name map
+     * @var array|null
+     */
+    private static $moduleNamesByLowerCase = null;
+
+    /**
      * Returns the module name, module package, and its' version
      *
      * @param null $moduleName - provide the module name if you want to get the package specific information
@@ -385,21 +391,40 @@ class MelisCoreModulesService extends MelisServiceManager
                 $composer = json_decode($composerFile, true);
                 $requires = isset($composer['require']) ? $composer['require'] : null;
                 if ($requires) {
-                    $requires = array_map(function ($a) {
-                        // remove melisplatform prefix
-                        return str_replace(['melisplatform/', ' '], '', trim($a));
-                    }, array_keys($requires));
+                    $melisModules = [];
 
-                    $dependencies = $requires;
+                    foreach (array_keys($requires) as $require) {
+                        $require = trim($require);
+
+                        // skip platform requirements (php, ext-*, lib-*) that are not packages
+                        if (strpos($require, '/') === false) {
+                            continue;
+                        }
+
+                        // remove melisplatform prefix
+                        $package = str_replace(['melisplatform/', ' '], '', $require);
+
+                        /**
+                         * keep only the requirements that are actual Melis modules,
+                         * a package from another vendor (laminas, symfony, ...) is not a module
+                         * that can be activated in the Modules tool
+                         */
+                        if (strpos($require, 'melisplatform/') !== 0 && !$this->getModuleNameByPackageName($package, false)) {
+                            continue;
+                        }
+
+                        $melisModules[] = $package;
+                    }
+
+                    $dependencies = $melisModules;
                 }
             }
 
             if ($convertPackageNameToNamespace) {
                 $tmpDependencies = [];
-                $toolSvc = $this->getServiceManager()->get('MelisCoreTool');
 
                 foreach ($dependencies as $dependency) {
-                    $tmpDependencies[] = ucfirst($toolSvc->convertToNormalFunction($dependency));
+                    $tmpDependencies[] = $this->getModuleNameByPackageName($dependency);
                 }
 
                 $dependencies = $tmpDependencies;
@@ -407,6 +432,81 @@ class MelisCoreModulesService extends MelisServiceManager
         }
 
         return $dependencies;
+    }
+
+    /**
+     * Returns every module that must be active for the provided module to work,
+     * walking the dependency tree recursively: activating a module is useless if
+     * its own dependencies stay inactive
+     *
+     * @param $moduleName
+     * @param bool $convertPackageNameToNamespace
+     *
+     * @return array
+     */
+    public function getAllRequiredDependencies($moduleName, $convertPackageNameToNamespace = true)
+    {
+        $resolved = [];
+        $toProcess = [$moduleName];
+
+        while ($toProcess) {
+            $module = array_shift($toProcess);
+
+            foreach ($this->getDependencies($module, $convertPackageNameToNamespace) as $dependency) {
+                if ($dependency == $moduleName || in_array($dependency, $resolved)) {
+                    continue;
+                }
+
+                $resolved[] = $dependency;
+                $toProcess[] = $dependency;
+            }
+        }
+
+        return $resolved;
+    }
+
+    /**
+     * Returns the real module name (namespace) of a composer package name,
+     * example: melis-ai will return MelisAI (and NOT MelisAi)
+     *
+     * The name is guessed from the package name then matched against the existing
+     * modules without taking the casing into account, the same way getChildDependencies()
+     * compares them: guessing alone is unreliable as soon as the module name holds
+     * consecutive capitals (MelisAI, MelisAIToolCreator, ...)
+     *
+     * @param string $packageName - package name, with or without its vendor prefix
+     * @param bool $returnGuessIfNotFound - when no existing module matches,
+     *                                      "true" returns the guessed name, "false" returns null
+     *
+     * @return string|null
+     */
+    public function getModuleNameByPackageName($packageName, $returnGuessIfNotFound = true)
+    {
+        $packageName = trim($packageName);
+
+        // only keep the package name itself, without its vendor prefix
+        if (strpos($packageName, '/') !== false) {
+            $packageName = substr($packageName, strrpos($packageName, '/') + 1);
+        }
+
+        $toolSvc = $this->getServiceManager()->get('MelisCoreTool');
+        $guessedName = ucfirst($toolSvc->convertToNormalFunction($packageName));
+
+        if (is_null(self::$moduleNamesByLowerCase)) {
+            self::$moduleNamesByLowerCase = [];
+
+            foreach ($this->getAllModules() as $module) {
+                self::$moduleNamesByLowerCase[strtolower($module)] = $module;
+            }
+        }
+
+        $lowerCaseName = strtolower($guessedName);
+
+        if (isset(self::$moduleNamesByLowerCase[$lowerCaseName])) {
+            return self::$moduleNamesByLowerCase[$lowerCaseName];
+        }
+
+        return $returnGuessIfNotFound ? $guessedName : null;
     }
 
     /**

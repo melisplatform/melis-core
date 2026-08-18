@@ -309,7 +309,21 @@ class ModulesController extends MelisAbstractActionController
             $module = $tool->sanitize($request->getPost('module'));
 
             if($module) {
-                $modules = $this->getModuleSvc()->getDependencies($module);
+                $requiredModules = $this->getModuleSvc()->getAllRequiredDependencies($module);
+
+                /**
+                 * Only keep the dependencies the tool can actually switch on: a module
+                 * that is not listed in the tool (MelisCore, MelisAssetManager, ...) has
+                 * no switch, and an already active one has nothing to turn on
+                 */
+                $toolModules = $this->getModules();
+
+                foreach ($requiredModules as $requiredModule) {
+                    if (isset($toolModules[$requiredModule]) && !$toolModules[$requiredModule]) {
+                        $modules[] = $requiredModule;
+                    }
+                }
+
                 if($modules) {
                     $success = 1;
                 }
