@@ -30,6 +30,7 @@ const CLASS = 'melis-overlay-runway'
 const VAR = '--melis-overlay-runway'
 /** Hauteur réservée : bouton flottant de 52px + sa marge de 20px, arrondi. */
 const RUNWAY = '76px'
+const RUNWAY_PX = parseFloat(RUNWAY)
 /** Une zone défilante n'est « celle de l'outil » que si elle occupe l'essentiel de la hauteur. */
 const MIN_RATIO = 0.7
 
@@ -86,6 +87,29 @@ function tag(root: HTMLElement, found: Set<HTMLElement>): void {
 }
 
 /**
+ * La piste n'a de sens que sur une zone qui DÉFILE VRAIMENT.
+ *
+ * Le `::after` allonge la longueur défilable d'un conteneur en flux normal, mais dans un conteneur
+ * `flex-direction: column` de hauteur fixe (`h-full`) il devient un ITEM FLEX : sa hauteur (plus le
+ * `gap` du conteneur) est prise SUR les enfants, et un enfant en `flex-1` — typiquement le cadre qui
+ * porte l'iframe d'un outil legacy — rétrécit d'autant. Sur une page qui remplit exactement sa zone,
+ * la piste raccourcirait donc l'outil au lieu d'allonger son défilement.
+ *
+ * D'où ce garde-fou : on ne pose la classe que si le contenu déborde DÉJÀ, piste déduite. C'est
+ * stable dans les deux sens — un conteneur flex qui a absorbé le `::after` ne déborde pas, donc la
+ * classe est retirée et n'est pas reposée au passage suivant ; un outil réellement défilant (boutons
+ * de formulaire, pagination) déborde toujours de sa hauteur propre, donc il la garde.
+ *
+ * Contrepartie assumée : un contenu qui s'arrête juste avant le bas sans déborder ne réserve rien et
+ * reste partiellement sous le bouton. Les outils legacy, eux, sont couverts par `applyToFrames` :
+ * leur document défile pour son propre compte et reçoit le padding.
+ */
+function needsRunway(el: HTMLElement): boolean {
+  const reserved = el.classList.contains(CLASS) ? RUNWAY_PX : 0
+  return el.scrollHeight - reserved > el.clientHeight + 1
+}
+
+/**
  * Les outils legacy défilent dans LEUR document : ni la variable CSS ni la classe ne les
  * atteignent depuis la page hôte. On y reporte donc la même hauteur en `padding-bottom` sur le
  * <body> — ces pages sont de même origine (c'est la plateforme qui les rend), et un padding est
@@ -125,6 +149,13 @@ export function applyOverlayRunway(main: HTMLElement | null, enabled: boolean): 
 
   const found = new Set<HTMLElement>();
   if (enabled) tag(main, found);
+
+  // Écarter les zones qui ne défilent pas (cf. needsRunway). Mesuré AVANT toute modification de
+  // classe : poser ou retirer la piste sur une zone rejoue la mise en page, ce qui fausserait la
+  // mesure des suivantes.
+  for (const el of Array.from(found)) {
+    if (!needsRunway(el)) found.delete(el);
+  }
 
   // Retirer la classe des zones qui ne portent plus l'outil (outil fermé, panneau caché) avant de
   // la poser sur les zones courantes — sinon une brique démontée garderait sa piste.
