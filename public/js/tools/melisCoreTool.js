@@ -328,19 +328,36 @@ var melisCoreTool = (function (window) {
         /**
          * hideModal
          * Specifically for $hideModal.hide() as per bootstrap 5.3.3
+         *
+         * The element MUST be checked first: modals are created on demand
+         * (melisHelper.createModal appends them to #melis-modals-container), so a tool routinely
+         * asks to hide a modal that was never opened — e.g. blog.tool.js#fileModal hides BOTH the
+         * "image" and the "document" modal after an upload, but only one of them exists.
+         * Bootstrap's constructor bails out early on a missing element WITHOUT setting _config,
+         * then Modal keeps going and throws "can't access property backdrop, this._config is
+         * undefined" — which killed the rest of the caller (no modal closed, no zone reloaded, so
+         * an upload that actually succeeded looked broken). Nothing to hide is a no-op.
          */
         function hideModal( modalID ) {
             // works on page workflow button  
-            const $hideModal = bootstrap.Modal.getOrCreateInstance("#"+modalID);
+            const modalEl = document.getElementById( modalID );
+                if ( !modalEl ) return;
+
+            const $hideModal = bootstrap.Modal.getOrCreateInstance(modalEl);
                 $hideModal.hide();
         }
 
         /**
          * showModal
          * Specifically for $showModal.show() as per bootstrap 5.3.3
+         * Same guard as hideModal(): showing a modal that is not in the DOM throws instead of
+         * doing nothing, and takes the caller down with it.
          */
         function showModal( modalID ) {
-            const $showModal = new bootstrap.Modal("#"+modalID, { show: true, backdrop: true });
+            const modalEl = document.getElementById( modalID );
+                if ( !modalEl ) return;
+
+            const $showModal = new bootstrap.Modal(modalEl, { show: true, backdrop: true });
                 $showModal.show();
         }
 
