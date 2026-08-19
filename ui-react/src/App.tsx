@@ -13,7 +13,7 @@ import { TabProvider, useTabs } from '@/components/tabs/tab-store'
 import { Shell } from '@/components/layout/Shell'
 import { MODULES } from '@/lib/module-registry'
 import { useBricks, useBricksVersion, bricksReady, brickRoute } from '@/lib/bricks'
-import { hasToolRoutes, labelForRoute, routeForForward, useToolRoutesVersion } from '@/lib/tool-routes'
+import { hasToolRoutes, labelForRoute, routeForForward, routeForMelisKey, useToolRoutesVersion } from '@/lib/tool-routes'
 import LoginPage from '@/pages/LoginPage'
 import Verify2faPage from '@/pages/Verify2faPage'
 import ForgotPasswordPage from '@/pages/ForgotPasswordPage'
@@ -65,8 +65,18 @@ function TabBridge() {
   // uses below, then navigate — the existing route→tab sync effect takes it from there.
   useEffect(() => {
     const onMessage = (e: MessageEvent) => {
-      const d = e.data as { __melisOpenTool?: boolean; forwardKey?: string; path?: string; id?: string | number; label?: string } | null
+      const d = e.data as { __melisOpenTool?: boolean; forwardKey?: string; path?: string; melisKey?: string; id?: string | number; label?: string } | null
       if (!d || !d.__melisOpenTool) return
+      // `melisKey` : l'appelant ne connaît que la CLÉ MELIS de l'outil cible et pas sa route React
+      // — c'est le cas de l'icône « clé à molette » (`open_tool`) des formulaires de plugin, qui
+      // ne porte que `data-tool-meliskey`. On la résout via le registre alimenté par le menu
+      // (briques et outils natifs compris), puis on retombe sur le chemin `path` ci-dessous.
+      const path = d.path ?? (d.melisKey ? routeForMelisKey(d.melisKey) : null)
+      if (d.melisKey && !path) {
+        // Outil absent du menu (module inactif ou droits insuffisants) : on ne devine pas d'URL.
+        console.warn(`[melis] __melisOpenTool : aucune route pour le melisKey « ${d.melisKey} »`)
+        return
+      }
       // A caller can pass a ready-made React route (`path`) when the target tool has no forwardKey
       // in the registry — e.g. the CMS pages editor, a persistent brick at /melis-cms/page with no
       // forward (the Workflow dashboard plugin's "eye" and the Recent-page-activity plugin's rows
@@ -78,25 +88,27 @@ function TabBridge() {
       // l'onglet actif le temps de ce tick → on voit brièvement CETTE page avant que la page
       // demandée ne s'affiche. `label` (nom de page) est posé d'emblée → pas de « Page N » qui
       // clignote, et threadé via router state pour l'effet de synchro.
-      if (d.path) {
+      if (path) {
         // Une brique `subTabs:true` gère SES enregistrements dans sa propre barre de sous-onglets
         // (News, Slider…) : l'onglet du haut doit rester celui de l'OUTIL, sinon l'article s'ouvre
         // dans un onglet général frère de « Actualités » (au lieu d'un sous-onglet dessous).
         const owner = bricks.find((b) => {
           if (!b.subTabs) return false
           const r = brickRoute(b)
-          return !!r && (d.path === r || d.path!.startsWith(r + '/'))
+          return !!r && (path === r || path.startsWith(r + '/'))
         })
         if (owner) {
           const r = brickRoute(owner)!
           // Titre d'onglet = le nom TRADUIT du menu ; `owner.label` (manifeste de la brique) est
           // figé dans une seule langue et ne sert que de repli avant chargement du menu.
           openTab({ id: r, label: labelForRoute(r) ?? owner.label, path: r })
-          navigate(d.path, d.label ? { state: { melisTabLabel: d.label } } : undefined)
+          navigate(path, d.label ? { state: { melisTabLabel: d.label } } : undefined)
           return
         }
-        openTab({ id: d.path, label: d.label || deriveTabLabel(d.path, t), path: d.path })
-        navigate(d.path, d.label ? { state: { melisTabLabel: d.label } } : undefined)
+        // Libellé : celui fourni par l'appelant, sinon le nom TRADUIT de l'outil (menu) — une
+        // ouverture par melisKey n'en fournit aucun, et le nom du menu vaut mieux que le slug.
+        openTab({ id: path, label: d.label || labelForRoute(path) || deriveTabLabel(path, t), path })
+        navigate(path, d.label ? { state: { melisTabLabel: d.label } } : undefined)
         return
       }
       if (!d.forwardKey) return
