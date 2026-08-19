@@ -442,8 +442,24 @@ export interface ApiReactBrick {
 // prendre ~2,5s), ce qui retardait le prefetch du bundle messenger (la cloche topbar mettait du
 // temps à apparaître, de façon variable). On partage la requête EN VOL : un seul aller-retour tant
 // qu'une réponse n'est pas revenue. Effacée après résolution → une navigation ultérieure re-fetch.
-let _reactModulesInFlight: Promise<ApiReactBrick[]> | null = null
-export function fetchReactModules(): Promise<ApiReactBrick[]> {
+let _reactModulesInFlight: Promise<ReactModulesResult> | null = null
+
+/** Discovery payload: the active bricks + the URL of their CONCATENATED bundle. */
+export interface ReactModulesResult {
+  bricks: ApiReactBrick[]
+  /**
+   * ONE URL serving every brick above, glued together server-side
+   * (`/melis/react-api/bricks-bundle.js?v=<signature>`). Each per-brick `bundleUrl` is served by
+   * MelisAssetManager, i.e. costs a FULL Melis bootstrap (~0.3s measured) because module
+   * `public/` folders are outside the document root — ~50 bricks meant ~10s of cumulative PHP.
+   * The signature covers every brick file's mtime+size, so the response is immutable-cacheable.
+   * Null when the backend predates this endpoint → the shell falls back to per-brick loading.
+   */
+  bundleUrl: string | null
+}
+
+/** Full discovery payload (bricks + concatenated-bundle URL), concurrency-coalesced. */
+export function fetchReactModulesFull(): Promise<ReactModulesResult> {
   if (_reactModulesInFlight) return _reactModulesInFlight
   const pr = fetchReactModulesRaw()
   _reactModulesInFlight = pr
@@ -451,18 +467,27 @@ export function fetchReactModules(): Promise<ApiReactBrick[]> {
   return pr
 }
 
-async function fetchReactModulesRaw(): Promise<ApiReactBrick[]> {
+export function fetchReactModules(): Promise<ApiReactBrick[]> {
+  return fetchReactModulesFull().then((r) => r.bricks)
+}
+
+async function fetchReactModulesRaw(): Promise<ReactModulesResult> {
+  const empty: ReactModulesResult = { bricks: [], bundleUrl: null }
   try {
     const res = await fetch('/melis/react-api/react-modules', {
       headers: { ...XHR_HEADER },
       credentials: 'include',
     })
-    if (!res.ok) return []
-    const data = (await res.json()) as { success: boolean; data?: ApiReactBrick[] }
-    if (!data.success || !Array.isArray(data.data)) return []
-    return data.data
+    if (!res.ok) return empty
+    const data = (await res.json()) as {
+      success: boolean
+      data?: ApiReactBrick[]
+      bundle?: { url?: string }
+    }
+    if (!data.success || !Array.isArray(data.data)) return empty
+    return { bricks: data.data, bundleUrl: data.bundle?.url ?? null }
   } catch {
-    return []
+    return empty
   }
 }
 
