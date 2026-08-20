@@ -1220,7 +1220,7 @@ return [
                             'conf' => [
                                 'id' => 'melisothers_toolstree_section',
                                 'melisKey' => 'melisothers_toolstree_section',
-                                'name' => 'Others',
+                                'name' => 'tr_meliscore_toolstree_section_others',
                                 'icon' => '',
                                 'rights_checkbox_disable' => false,
                             ],
@@ -1237,7 +1237,7 @@ return [
                             'conf' => [
                                 'id' => 'meliscustom_toolstree_section',
                                 'melisKey' => 'meliscustom_toolstree_section',
-                                'name' => 'Custom / Projects',
+                                'name' => 'tr_meliscore_toolstree_section_custom',
                                 'icon' => '',
                                 'rights_checkbox_disable' => false,
                             ],

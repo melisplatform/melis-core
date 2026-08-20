@@ -21,6 +21,11 @@ interface ToolRouteEntry {
   route: string
   melisKey: string | null
   forwardKey: string | null
+  /** melisKey du NŒUD DE MENU de l'outil, enregistré même quand l'outil a une page React
+   *  (`melisKey` est alors null pour que le pool d'iframes ne le recouvre pas). Sert au sens
+   *  inverse — melisKey → route — pour les appelants qui ne connaissent que la clé Melis
+   *  (icône « clé à molette » `open_tool` des formulaires de plugin, cf. routeForMelisKey). */
+  navMelisKey?: string | null
   /** Nom de l'outil TEL QUE TRADUIT par le menu (`/react-api/menu` → node.name). Les libellés
    *  statiques des manifestes de briques ne le sont pas : c'est cette entrée qui donne le bon
    *  titre d'onglet dans la langue de la session. */
@@ -100,6 +105,7 @@ export function toolSlug(nodeKey: string, section: string): string {
 // ─── Registry ────────────────────────────────────────────────────────────────
 
 let routeToMelisKey: Record<string, string> = {}
+let melisKeyToRoute: Record<string, string> = {}
 let forwardToRoute: Record<string, string> = {}
 let routeToLabel: Record<string, string> = {}
 const listeners = new Set<() => void>()
@@ -108,8 +114,9 @@ function load() {
   try {
     const raw = sessionStorage.getItem(STORAGE_KEY)
     if (raw) {
-      const d = JSON.parse(raw) as { routeToMelisKey?: Record<string, string>; forwardToRoute?: Record<string, string>; routeToLabel?: Record<string, string> }
+      const d = JSON.parse(raw) as { routeToMelisKey?: Record<string, string>; melisKeyToRoute?: Record<string, string>; forwardToRoute?: Record<string, string>; routeToLabel?: Record<string, string> }
       routeToMelisKey = d.routeToMelisKey ?? {}
+      melisKeyToRoute = d.melisKeyToRoute ?? {}
       forwardToRoute = d.forwardToRoute ?? {}
       routeToLabel = d.routeToLabel ?? {}
     }
@@ -119,7 +126,7 @@ load()
 
 function persist() {
   try {
-    sessionStorage.setItem(STORAGE_KEY, JSON.stringify({ routeToMelisKey, forwardToRoute, routeToLabel }))
+    sessionStorage.setItem(STORAGE_KEY, JSON.stringify({ routeToMelisKey, melisKeyToRoute, forwardToRoute, routeToLabel }))
   } catch { /* ignore */ }
 }
 
@@ -135,6 +142,11 @@ export function registerTool(e: ToolRouteEntry): void {
     // React brick routes have no melisKey — clear any stale iframe key so ZoneFrames
     // doesn't overlay the brick with the legacy tool loaded in a previous render pass.
     delete routeToMelisKey[e.route]
+    changed = true
+  }
+  const navKey = e.navMelisKey ?? e.melisKey
+  if (navKey && melisKeyToRoute[navKey] !== e.route) {
+    melisKeyToRoute[navKey] = e.route
     changed = true
   }
   if (e.label && routeToLabel[e.route] !== e.label) {
@@ -155,6 +167,7 @@ export function registerTool(e: ToolRouteEntry): void {
  *  tool→route mappings (tools the user no longer has) don't keep routing after a menu refresh. */
 export function clearTools(): void {
   routeToMelisKey = {}
+  melisKeyToRoute = {}
   forwardToRoute = {}
   routeToLabel = {}
   try { sessionStorage.removeItem(STORAGE_KEY) } catch { /* ignore */ }
@@ -170,6 +183,16 @@ export function melisKeyForRoute(pathname: string): string | null {
 /** Nom TRADUIT (menu) d'un outil pour sa route /[section]/[tool], si le menu l'a déjà enregistré. */
 export function labelForRoute(route: string): string | null {
   return routeToLabel[toolBaseRoute(route)] ?? null
+}
+
+/**
+ * Route for a tool's melisKey (menu node key) — l'inverse de `melisKeyForRoute`, et valable AUSSI
+ * pour les outils React (briques/natifs), dont le melisKey n'est volontairement pas dans
+ * `routeToMelisKey`. Utilisé par le pont `__melisOpenTool` quand l'appelant (un outil legacy en
+ * iframe) ne connaît que la clé Melis de la cible.
+ */
+export function routeForMelisKey(melisKey: string): string | null {
+  return melisKeyToRoute[melisKey] ?? null
 }
 
 /** Route for a Melis `Module/Controller` forward key, if a tool maps to it. */

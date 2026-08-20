@@ -22,8 +22,8 @@ const w = window as unknown as {
   MelisReactJsxRuntime?: unknown
   MelisReactRouterDOM?: unknown
   MelisXLSX?: unknown
-  __MELIS_BRICK_COMPONENTS__?: Record<string, { Component?: ComponentType; Sidebar?: ComponentType; Header?: ComponentType; Overlay?: ComponentType }>
-  __melisRegisterBrick?: (b: { id: string; Component?: ComponentType; Sidebar?: ComponentType; Header?: ComponentType; Overlay?: ComponentType }) => void
+  __MELIS_BRICK_COMPONENTS__?: Record<string, { Component?: ComponentType; Sidebar?: ComponentType; Header?: ComponentType; Overlay?: ComponentType; OtherConfigSection?: ComponentType }>
+  __melisRegisterBrick?: (b: { id: string; Component?: ComponentType; Sidebar?: ComponentType; Header?: ComponentType; Overlay?: ComponentType; OtherConfigSection?: ComponentType }) => void
   /** Exposed for brick IIFE bundles that cannot import from the host. */
   __melisIsModuleActive?: (id: string) => boolean
   /** Vérification CENTRALE des droits (capacités actions/onglets) — cf. lib/caps.ts. Les briques
@@ -42,9 +42,10 @@ w.__melisIsModuleActive = isModuleActive
 w.__melisUseCaps = useCaps
 w.__melisRegisterBrick = (b) => {
   // A brick may register a routed page (Component), a left-sidebar panel (Sidebar), a topbar
-  // widget (Header, e.g. the messenger notification icon) and/or a global overlay (Overlay,
-  // e.g. the MelisAI floating assistant) — all optional, all modular.
-  if (b && b.id) w.__MELIS_BRICK_COMPONENTS__![b.id] = { Component: b.Component, Sidebar: b.Sidebar, Header: b.Header, Overlay: b.Overlay }
+  // widget (Header, e.g. the messenger notification icon), a global overlay (Overlay, e.g. the
+  // MelisAI floating assistant) and/or a section appended to MelisCore's Other Config page
+  // (OtherConfigSection, e.g. a 2FA settings card) — all optional, all modular.
+  if (b && b.id) w.__MELIS_BRICK_COMPONENTS__![b.id] = { Component: b.Component, Sidebar: b.Sidebar, Header: b.Header, Overlay: b.Overlay, OtherConfigSection: b.OtherConfigSection }
 }
 
 // Boot du dashboard EN PARALLÈLE de /me et /menu : quand on atterrit sur le dashboard, on lance dès

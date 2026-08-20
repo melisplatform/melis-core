@@ -20,6 +20,8 @@ export interface LoginResult {
   success: boolean
   /** Message d'erreur prêt à afficher (extrait de la réponse Melis). */
   message?: string
+  /** 2FA requise (mot de passe déjà validé) — hash à transmettre à la route React /verify-2fa. */
+  twoFaHash?: string
 }
 
 /** Réponse brute de /melis/authenticate. */
@@ -90,8 +92,87 @@ export async function login(
     return { success: false, message: 'Réponse inattendue du serveur Melis.' }
   }
 
-  if (data.success) return { success: true }
+  if (data.success) {
+    // `command` est le legacy jQuery eval() : "window.location.replace('/melis/verify-2fa?hash=...')"
+    // quand le mot de passe est correct mais que la 2FA reste à faire — `success` est déjà `true` à ce
+    // stade (le mot de passe est bon), donc on NE PEUT PAS s'y fier seul pour authentifier. La page
+    // legacy /melis/verify-2fa a son propre bug de rendu (zone PluginView non résolue pour un
+    // utilisateur non authentifié) — on extrait juste le hash et on laisse l'appelant naviguer vers
+    // la route React /verify-2fa (Verify2faPage), qui poste directement sur /melis/verify-2fa-code.
+    // Sur `success: true`, MelisAuthController::authenticateAction() ne produit QUE deux formes de
+    // `command` (vérifié en lisant tout le contrôleur + le listener melis-login-2fa qui l'étend) :
+    //   - "window.location.replace('/melis');" — login normal (2FA off, ou déjà passée)
+    //   - "window.location.replace('/melis/verify-2fa?hash=...');" — 2FA à faire
+    // Un ancien fallback ici suivait AUSSI tout redirect sans hash via `window.location.href =`,
+    // en pensant traiter un cas "inattendu" — mais c'est justement la forme du login normal (la
+    // SEULE qui arrive quand la 2FA est désactivée), donc dès que la 2FA était off ce fallback
+    // quittait l'app React vers /melis legacy juste après avoir affiché "Identifiants invalides"
+    // (le success:false retourné avant la navigation, le temps qu'elle s'exécute). Il n'existe
+    // aucun troisième cas côté PHP à gérer : un hash = 2FA, pas de hash = login réussi, point.
+    const hashMatch = data.command?.match(/[?&]hash=([^&'"]+)/)
+    if (hashMatch) {
+      return { success: false, twoFaHash: decodeURIComponent(hashMatch[1]) }
+    }
+    return { success: true }
+  }
   return { success: false, message: extractError(data.errors) ?? 'Identifiants invalides.' }
+}
+
+// ─── 2FA (route publique React /verify-2fa) ──────────────────────────────────
+
+export interface TwoFaVerifyResult {
+  success: boolean
+  message?: string
+  tries?: number
+  locked?: boolean
+}
+
+/** Vérifie le code reçu par email. POST /melis/verify-2fa-code — si succès, le serveur pose le
+ *  cookie de session (finalise le login sans re-demander le mot de passe). */
+export async function verifyTwoFaCode(hash: string, code: string): Promise<TwoFaVerifyResult> {
+  try {
+    const body = new URLSearchParams({ hash, code })
+    const res = await fetch('/melis/verify-2fa-code', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded', ...XHR_HEADER },
+      body,
+      credentials: 'include',
+    })
+    if (!res.ok) return { success: false, message: `Erreur serveur (${res.status}).` }
+    const data = (await res.json()) as {
+      success?: boolean
+      tries?: number
+      locked?: boolean
+      error?: { errorMessage?: string }
+    }
+    if (data.success) return { success: true }
+    return { success: false, message: data.error?.errorMessage, tries: data.tries, locked: data.locked }
+  } catch {
+    return { success: false, message: 'Serveur Melis injoignable.' }
+  }
+}
+
+export interface TwoFaRequestCodeResult {
+  success: boolean
+  message?: string
+}
+
+/** Demande le renvoi d'un nouveau code. POST /melis/request-2fa-code. */
+export async function requestNewTwoFaCode(hash: string): Promise<TwoFaRequestCodeResult> {
+  try {
+    const body = new URLSearchParams({ hash })
+    const res = await fetch('/melis/request-2fa-code', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded', ...XHR_HEADER },
+      body,
+      credentials: 'include',
+    })
+    if (!res.ok) return { success: false, message: `Erreur serveur (${res.status}).` }
+    const data = (await res.json()) as { success?: boolean; message?: string }
+    return { success: !!data.success, message: data.message }
+  } catch {
+    return { success: false, message: 'Serveur Melis injoignable.' }
+  }
 }
 
 /** Vérifie si une session Melis est active. */
@@ -361,8 +442,24 @@ export interface ApiReactBrick {
 // prendre ~2,5s), ce qui retardait le prefetch du bundle messenger (la cloche topbar mettait du
 // temps à apparaître, de façon variable). On partage la requête EN VOL : un seul aller-retour tant
 // qu'une réponse n'est pas revenue. Effacée après résolution → une navigation ultérieure re-fetch.
-let _reactModulesInFlight: Promise<ApiReactBrick[]> | null = null
-export function fetchReactModules(): Promise<ApiReactBrick[]> {
+let _reactModulesInFlight: Promise<ReactModulesResult> | null = null
+
+/** Discovery payload: the active bricks + the URL of their CONCATENATED bundle. */
+export interface ReactModulesResult {
+  bricks: ApiReactBrick[]
+  /**
+   * ONE URL serving every brick above, glued together server-side
+   * (`/melis/react-api/bricks-bundle.js?v=<signature>`). Each per-brick `bundleUrl` is served by
+   * MelisAssetManager, i.e. costs a FULL Melis bootstrap (~0.3s measured) because module
+   * `public/` folders are outside the document root — ~50 bricks meant ~10s of cumulative PHP.
+   * The signature covers every brick file's mtime+size, so the response is immutable-cacheable.
+   * Null when the backend predates this endpoint → the shell falls back to per-brick loading.
+   */
+  bundleUrl: string | null
+}
+
+/** Full discovery payload (bricks + concatenated-bundle URL), concurrency-coalesced. */
+export function fetchReactModulesFull(): Promise<ReactModulesResult> {
   if (_reactModulesInFlight) return _reactModulesInFlight
   const pr = fetchReactModulesRaw()
   _reactModulesInFlight = pr
@@ -370,18 +467,27 @@ export function fetchReactModules(): Promise<ApiReactBrick[]> {
   return pr
 }
 
-async function fetchReactModulesRaw(): Promise<ApiReactBrick[]> {
+export function fetchReactModules(): Promise<ApiReactBrick[]> {
+  return fetchReactModulesFull().then((r) => r.bricks)
+}
+
+async function fetchReactModulesRaw(): Promise<ReactModulesResult> {
+  const empty: ReactModulesResult = { bricks: [], bundleUrl: null }
   try {
     const res = await fetch('/melis/react-api/react-modules', {
       headers: { ...XHR_HEADER },
       credentials: 'include',
     })
-    if (!res.ok) return []
-    const data = (await res.json()) as { success: boolean; data?: ApiReactBrick[] }
-    if (!data.success || !Array.isArray(data.data)) return []
-    return data.data
+    if (!res.ok) return empty
+    const data = (await res.json()) as {
+      success: boolean
+      data?: ApiReactBrick[]
+      bundle?: { url?: string }
+    }
+    if (!data.success || !Array.isArray(data.data)) return empty
+    return { bricks: data.data, bundleUrl: data.bundle?.url ?? null }
   } catch {
-    return []
+    return empty
   }
 }
 

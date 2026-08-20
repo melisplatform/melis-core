@@ -138,6 +138,11 @@ class ModulesController extends MelisAbstractActionController
      */
     public function saveModuleChangesAction()
     {
+        /** @INFO: Access check (tool right) */
+        if (! $this->hasAccess('meliscore_tool_user_module_management')) {
+            return new JsonModel(['success' => 0, 'textTitle' => '', 'textMessage' => 'tr_meliscore_microservice_api_key_no_access', 'errors' => [], 'datas' => []]);
+        }
+        /** @INFO: End Access Check */
         $translator = $this->getServiceManager()->get('translator');
         $request = $this->getRequest();
         $success = 0;
@@ -254,6 +259,12 @@ class ModulesController extends MelisAbstractActionController
      */
     public function getDependentsAction()
     {
+        /** @INFO: Access check (tool right). Read-only dependents lookup is also reused by the
+         *  MarketPlace "remove package" flow, so accept the MarketPlace tool right as well. */
+        if (! $this->hasAccess('meliscore_tool_user_module_management') && ! $this->hasAccess('melis_market_place_tool_display')) {
+            return new JsonModel(['success' => 0, 'textTitle' => '', 'textMessage' => 'tr_meliscore_microservice_api_key_no_access', 'errors' => [], 'datas' => []]);
+        }
+        /** @INFO: End Access Check */
         $success = 0;
         $modules = array();
         $request = $this->getRequest();
@@ -284,6 +295,11 @@ class ModulesController extends MelisAbstractActionController
 
     public function getRequiredDependenciesAction()
     {
+        /** @INFO: Access check (tool right) */
+        if (! $this->hasAccess('meliscore_tool_user_module_management')) {
+            return new JsonModel(['success' => 0, 'textTitle' => '', 'textMessage' => 'tr_meliscore_microservice_api_key_no_access', 'errors' => [], 'datas' => []]);
+        }
+        /** @INFO: End Access Check */
         $success = 0;
         $modules = array();
         $request = $this->getRequest();
@@ -293,7 +309,21 @@ class ModulesController extends MelisAbstractActionController
             $module = $tool->sanitize($request->getPost('module'));
 
             if($module) {
-                $modules = $this->getModuleSvc()->getDependencies($module);
+                $requiredModules = $this->getModuleSvc()->getAllRequiredDependencies($module);
+
+                /**
+                 * Only keep the dependencies the tool can actually switch on: a module
+                 * that is not listed in the tool (MelisCore, MelisAssetManager, ...) has
+                 * no switch, and an already active one has nothing to turn on
+                 */
+                $toolModules = $this->getModules();
+
+                foreach ($requiredModules as $requiredModule) {
+                    if (isset($toolModules[$requiredModule]) && !$toolModules[$requiredModule]) {
+                        $modules[] = $requiredModule;
+                    }
+                }
+
                 if($modules) {
                     $success = 1;
                 }

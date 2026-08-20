@@ -185,7 +185,14 @@ class MelisReactApiUserController extends MelisAbstractActionController
             $langId    = (int) ($body['langId']  ?? 1);
             $tags      = trim((string) ($body['tags']     ?? ''));
             $password  = trim((string) ($body['password'] ?? ''));
-            $rights    = isset($body['rights']) ? (string) $body['rights'] : null;
+            // Normalisation défensive : ne JAMAIS stocker de séquences d'échappement LITTÉRALES
+            // ("\n"/"\r\n"/"\t") dans usr_rights. Le builder React envoie déjà de vrais retours-ligne
+            // (prouvé), mais un client tiers / un ancien chemin pourrait double-échapper → le XML
+            // devient inparsable proprement et getAuthRights() régénère des droits VIDES (arbre de
+            // pages CMS vide pour l'admin). On les remet en vrais espaces avant l'écriture DB.
+            $rights    = isset($body['rights'])
+                ? str_replace(['\\r\\n', '\\n', '\\t'], ["\n", "\n", "\t"], (string) $body['rights'])
+                : null;
 
             if (!$login || !$email || !$firstname || !$lastname) {
                 return $this->jsonResponse(

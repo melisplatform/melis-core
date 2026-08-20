@@ -304,6 +304,13 @@ export default function DashboardPage() {
         return wid.startsWith('legacy-') || !!WIDGET_MAP[wid]?.pluginName
       }).length
       if (recs.length < expected) return
+      // ⚠️ FILET ANTI-EFFACEMENT (1 bis) : un record VIDE ne part en base QUE sur « tout supprimer »
+      // (`clearAll`), le seul cas confirmé par l'utilisateur. Les effets d'élagage/normalisation
+      // arrivent ici avec `allowRemoval` (qui lève le filet 2) et un `kept` VIDE dès qu'AUCUNE déf.
+      // n'est connue — p.ex. quand tous les plugins du record appartiennent à des modules
+      // désactivés : l'affichage se vide légitimement, mais la base ne doit pas bouger. Sans ce
+      // filet on POSTe `[]`, et le serveur répond 409 « Refusing to clear the dashboard ».
+      if (recs.length === 0 && !opts?.clearAll) return
       // ⚠️ FILET ANTI-EFFACEMENT (2) — INVARIANT : le nombre de plugins du record serveur ne peut
       // DIMINUER que sur un RETRAIT EXPLICITE (croix d'une tuile, « tout supprimer »), jamais
       // autrement.

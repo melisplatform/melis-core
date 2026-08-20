@@ -29,6 +29,10 @@ function notify(kind: 'ok' | 'ko', title: string, message: string) {
 // ─── Cache module-level — survit au démontage (page montée en permanence) ──────
 interface PageCache {
   modules: ModuleItem[]
+  // Signature de l'état SERVEUR, à conserver telle quelle : la rederiver depuis `modules`
+  // au remontage prendrait les modifications en attente comme nouvelle référence, la page
+  // ne serait plus « dirty » et le bouton Enregistrer resterait grisé sur des changements réels.
+  initialSig: string
   mode: ViewMode
   iframeLoaded: boolean
 }
@@ -81,7 +85,7 @@ export default function ModulesPage() {
   const effectiveMode: ViewMode = showViewToggle ? mode : 'react'
 
   const [modules, setModules] = useState<ModuleItem[]>(_cache?.modules ?? [])
-  const [initialSig, setInitialSig] = useState<string>(_cache ? signature(_cache.modules) : '')
+  const [initialSig, setInitialSig] = useState<string>(_cache?.initialSig ?? '')
   const [loading, setLoading] = useState(!_cache)
   const [saving, setSaving] = useState(false)
 
@@ -90,8 +94,8 @@ export default function ModulesPage() {
   const [confirmDeactivate, setConfirmDeactivate] = useState<{ module: string; cascade: string[] } | null>(null)
   const [showSaveConfirm, setShowSaveConfirm] = useState(false)
 
-  const cacheRef = useRef({ modules, mode, iframeLoaded })
-  useEffect(() => { cacheRef.current = { modules, mode, iframeLoaded } })
+  const cacheRef = useRef({ modules, initialSig, mode, iframeLoaded })
+  useEffect(() => { cacheRef.current = { modules, initialSig, mode, iframeLoaded } })
   useEffect(() => () => { _cache = cacheRef.current }, [])
 
   useEffect(() => {
@@ -182,8 +186,10 @@ export default function ModulesPage() {
     setModules((prev) => prev.map((m) => ({ ...m, active: value })))
   }
 
+  // Annuler = revenir à l'état serveur. Le cache contient l'état COURANT (modifications
+  // comprises), le relire ne rétablirait rien : on recharge.
   function resetChanges() {
-    if (_cache) { setModules(_cache.modules); return }
+    _cache = null
     load()
   }
 

@@ -8,19 +8,21 @@ import { ProtectedRoute } from '@/auth/ProtectedRoute'
 import { PublicOnlyRoute } from '@/auth/PublicOnlyRoute'
 import { ThemeProvider } from '@/theme/ThemeProvider'
 import { I18nProvider } from '@/i18n/I18nProvider'
+import { useI18n, type I18nState } from '@/i18n/i18n-context'
 import { TabProvider, useTabs } from '@/components/tabs/tab-store'
 import { Shell } from '@/components/layout/Shell'
 import { MODULES } from '@/lib/module-registry'
 import { useBricks, useBricksVersion, bricksReady, brickRoute } from '@/lib/bricks'
-import { hasToolRoutes, labelForRoute, routeForForward, useToolRoutesVersion } from '@/lib/tool-routes'
+import { hasToolRoutes, labelForRoute, routeForForward, routeForMelisKey, useToolRoutesVersion } from '@/lib/tool-routes'
 import LoginPage from '@/pages/LoginPage'
+import Verify2faPage from '@/pages/Verify2faPage'
 import ForgotPasswordPage from '@/pages/ForgotPasswordPage'
 import ResetPasswordPage from '@/pages/ResetPasswordPage'
 import SetupWizardPage from '@/pages/setup/SetupWizardPage'
 
 /** Fallback label for a route that opens a tab without one (e.g. a deep link). */
-function deriveTabLabel(path: string): string {
-  if (path === '/') return 'Dashboard'
+function deriveTabLabel(path: string, t: I18nState['t']): string {
+  if (path === '/') return t('nav.dashboard')
   const m = path.match(/^\/melis-cms\/page\/(\d+)/)
   if (m) return `Page ${m[1]}`
   // Fallback label = the last path segment, prettified. Restored/opened tabs keep their real
@@ -38,6 +40,7 @@ function deriveTabLabel(path: string): string {
  */
 function TabBridge() {
   const { openTab, closeTab, syncRoute } = useTabs()
+  const { t } = useI18n()
   const location = useLocation()
   const navigate = useNavigate()
   const bricks = useBricks()
@@ -62,8 +65,18 @@ function TabBridge() {
   // uses below, then navigate — the existing route→tab sync effect takes it from there.
   useEffect(() => {
     const onMessage = (e: MessageEvent) => {
-      const d = e.data as { __melisOpenTool?: boolean; forwardKey?: string; path?: string; id?: string | number; label?: string } | null
+      const d = e.data as { __melisOpenTool?: boolean; forwardKey?: string; path?: string; melisKey?: string; id?: string | number; label?: string } | null
       if (!d || !d.__melisOpenTool) return
+      // `melisKey` : l'appelant ne connaît que la CLÉ MELIS de l'outil cible et pas sa route React
+      // — c'est le cas de l'icône « clé à molette » (`open_tool`) des formulaires de plugin, qui
+      // ne porte que `data-tool-meliskey`. On la résout via le registre alimenté par le menu
+      // (briques et outils natifs compris), puis on retombe sur le chemin `path` ci-dessous.
+      const path = d.path ?? (d.melisKey ? routeForMelisKey(d.melisKey) : null)
+      if (d.melisKey && !path) {
+        // Outil absent du menu (module inactif ou droits insuffisants) : on ne devine pas d'URL.
+        console.warn(`[melis] __melisOpenTool : aucune route pour le melisKey « ${d.melisKey} »`)
+        return
+      }
       // A caller can pass a ready-made React route (`path`) when the target tool has no forwardKey
       // in the registry — e.g. the CMS pages editor, a persistent brick at /melis-cms/page with no
       // forward (the Workflow dashboard plugin's "eye" and the Recent-page-activity plugin's rows
@@ -75,25 +88,27 @@ function TabBridge() {
       // l'onglet actif le temps de ce tick → on voit brièvement CETTE page avant que la page
       // demandée ne s'affiche. `label` (nom de page) est posé d'emblée → pas de « Page N » qui
       // clignote, et threadé via router state pour l'effet de synchro.
-      if (d.path) {
+      if (path) {
         // Une brique `subTabs:true` gère SES enregistrements dans sa propre barre de sous-onglets
         // (News, Slider…) : l'onglet du haut doit rester celui de l'OUTIL, sinon l'article s'ouvre
         // dans un onglet général frère de « Actualités » (au lieu d'un sous-onglet dessous).
         const owner = bricks.find((b) => {
           if (!b.subTabs) return false
           const r = brickRoute(b)
-          return !!r && (d.path === r || d.path!.startsWith(r + '/'))
+          return !!r && (path === r || path.startsWith(r + '/'))
         })
         if (owner) {
           const r = brickRoute(owner)!
           // Titre d'onglet = le nom TRADUIT du menu ; `owner.label` (manifeste de la brique) est
           // figé dans une seule langue et ne sert que de repli avant chargement du menu.
           openTab({ id: r, label: labelForRoute(r) ?? owner.label, path: r })
-          navigate(d.path, d.label ? { state: { melisTabLabel: d.label } } : undefined)
+          navigate(path, d.label ? { state: { melisTabLabel: d.label } } : undefined)
           return
         }
-        openTab({ id: d.path, label: d.label || deriveTabLabel(d.path), path: d.path })
-        navigate(d.path, d.label ? { state: { melisTabLabel: d.label } } : undefined)
+        // Libellé : celui fourni par l'appelant, sinon le nom TRADUIT de l'outil (menu) — une
+        // ouverture par melisKey n'en fournit aucun, et le nom du menu vaut mieux que le slug.
+        openTab({ id: path, label: d.label || labelForRoute(path) || deriveTabLabel(path, t), path })
+        navigate(path, d.label ? { state: { melisTabLabel: d.label } } : undefined)
         return
       }
       if (!d.forwardKey) return
@@ -103,7 +118,7 @@ function TabBridge() {
     }
     window.addEventListener('message', onMessage)
     return () => window.removeEventListener('message', onMessage)
-  }, [navigate, openTab, bricks])
+  }, [navigate, openTab, bricks, t])
   useEffect(() => {
     const path = location.pathname
     if (path === '/login' || path === '/setup') return
@@ -114,7 +129,10 @@ function TabBridge() {
     const tool = MODULES
       .map((m) => ({ route: routeForForward(m.forwardKey), label: m.label }))
       .find((m) => m.route && path.startsWith(m.route + '/'))
-    if (tool?.route) { syncRoute({ id: tool.route, label: tool.label, path: tool.route }); return }
+    // Titre d'onglet = le nom TRADUIT du menu ; `tool.label` (repli du registre) est figé en
+    // français et ne sert que de repli avant chargement du menu (même pattern que les briques
+    // ci-dessus — sans lui, un outil natif ouvert en session anglaise gardait un onglet français).
+    if (tool?.route) { syncRoute({ id: tool.route, label: labelForRoute(tool.route) ?? tool.label, path: tool.route }); return }
     // Bricks that opted into the native sub-tab pattern (manifest subTabs:true) behave like the
     // native tools above: collapse /[section]/[tool]/:id to the ONE tool top tab (the opened
     // records live in the host SubTabBar) — instead of spawning a stray per-id tab labelled "6".
@@ -134,8 +152,8 @@ function TabBridge() {
     // A label passed through navigation state (e.g. the Workflow eye → page name) wins over the
     // derived "Page N"/slug fallback, so the tab shows the real name from its first paint.
     const stateLabel = (location.state as { melisTabLabel?: string } | null)?.melisTabLabel
-    syncRoute({ id: path, label: stateLabel || deriveTabLabel(path), path })
-  }, [location.pathname, location.state, syncRoute, toolRoutesVersion, bricksVersion, bricks])
+    syncRoute({ id: path, label: stateLabel || deriveTabLabel(path, t), path })
+  }, [location.pathname, location.state, syncRoute, toolRoutesVersion, bricksVersion, bricks, t])
   return null
 }
 
@@ -172,13 +190,22 @@ export default function App() {
             <TabBridge />
             <Routes>
               {/* Public — inaccessibles si une session est déjà ouverte (→ redirigé vers le
-                  dashboard), comme le legacy qui renvoie /melis/login, /melis/lost-password et
-                  /melis/reset-password vers /melis quand MelisCoreAuth a déjà une identité. */}
+                  dashboard), comme le legacy qui renvoie /melis/login et /melis/verify-2fa vers
+                  /melis quand MelisCoreAuth a déjà une identité. Pas de raison de revoir un
+                  formulaire de connexion une fois dans la session. */}
               <Route element={<PublicOnlyRoute />}>
                 <Route path="/login" element={<LoginPage />} />
-                <Route path="/forgot-password" element={<ForgotPasswordPage />} />
-                <Route path="/reset-password/:hash" element={<ResetPasswordPage />} />
+                <Route path="/verify-2fa" element={<Verify2faPage />} />
               </Route>
+              {/* Toujours accessibles, authentifié ou non : le lien "changer le mot de passe" du
+                  mail de 2FA doit fonctionner même si l'utilisateur est déjà connecté dans CE
+                  navigateur (session partagée entre onglets) — sinon PublicOnlyRoute le renvoie
+                  au dashboard avant qu'il ait pu soumettre le formulaire (le dashboard se
+                  remonte alors en plein milieu de l'interaction, d'où la cascade d'erreurs
+                  observée en pratique). Ni page ne dépend de useAuth(), rien à adapter côté
+                  Shell/dashboard. */}
+              <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+              <Route path="/reset-password/:hash" element={<ResetPasswordPage />} />
               <Route path="/setup" element={<SetupWizardPage />} />
 
               {/* Authentifié — Shell (sidebar + topbar) */}

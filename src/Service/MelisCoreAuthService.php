@@ -66,6 +66,15 @@ class MelisCoreAuthService
             // MelisCoreRightsService::isCurrentUserAdmin() (canAccess court-circuité). On NE renvoie
             // PLUS '' ici : les vrais usr_rights de l'admin contiennent <meliscms_pages><id>-1</id>,
             // indispensable à l'arbre de pages CMS (liste positive : XML vide = AUCUNE page).
+
+            // Garde-fou : certains usr_rights (données importées / ancien chemin) contiennent des
+            // séquences d'échappement LITTÉRALES "\n"/"\t" au lieu de vrais espaces. Elles sont
+            // interprétées comme du TEXTE significatif dans les nœuds → le roundtrip simplexml→json
+            // de isRightsUpdated()/convertToNewRightsStructure() casse → droits RÉGÉNÉRÉS VIDES
+            // (l'admin perd <meliscms_pages><id>-1</id> → arbre de pages CMS vide). On normalise en
+            // vrais espaces pour tolérer ces données quelle que soit leur origine.
+            $user->usr_rights = $this->normalizeRightsWhitespace($user->usr_rights);
+
             if (! $this->isRightsUpdated($user->usr_rights)) {
                 $user->usr_rights = $this->toNewXmlStructure($this->convertToNewRightsStructure());
             }
@@ -74,6 +83,23 @@ class MelisCoreAuthService
         }
 
         return $rightsXML;
+    }
+
+    /**
+     * Normalise les séquences d'échappement LITTÉRALES ("\n", "\r\n", "\t") en vrais espaces dans un
+     * XML de droits. Les vrais retours-ligne/tabs sont insignifiants pour le XML des droits (aucun
+     * <id> n'en contient), mais des littéraux cassent le roundtrip simplexml→json (texte significatif)
+     * → droits régénérés vides. Idempotent : un XML déjà propre n'est pas modifié.
+     *
+     * @param  string|null $xml
+     * @return string|null
+     */
+    private function normalizeRightsWhitespace($xml)
+    {
+        if (!is_string($xml) || $xml === '') {
+            return $xml;
+        }
+        return str_replace(['\\r\\n', '\\n', '\\t'], ["\n", "\n", "\t"], $xml);
     }
 
     /**
@@ -113,7 +139,7 @@ class MelisCoreAuthService
         /** @var \MelisCore\Service\MelisCore $melisCoreAuth */
         $user = $this->getIdentity();
 
-        $oldRights = $user->usr_rights;
+        $oldRights = $this->normalizeRightsWhitespace($user->usr_rights);
 
         $oldRights = simplexml_load_string(trim($oldRights));
         $oldRights = json_decode(json_encode($oldRights),1);
@@ -274,7 +300,7 @@ class MelisCoreAuthService
      */
     public function isRightsUpdated($xmlRights)
     {
-        $rights = simplexml_load_string(trim($xmlRights));
+        $rights = simplexml_load_string(trim($this->normalizeRightsWhitespace($xmlRights)));
         $rights = json_decode(json_encode($rights),1);
 
         /** @var \MelisCore\Service\MelisCoreRightsService $rightsSvc */

@@ -47,6 +47,18 @@ return [
                 // ajouter d'autres via le même ArrayUtils::merge que excluded_routes.
                 'public_zones' => [
                     '/meliscore_login',
+                    // Rest of UserController's anonymous password-recovery flow (lost-password
+                    // form, the email link's reset-password page, and the set-password pages used
+                    // by new-account/renew-password emails) — same defense-in-depth anonymous-zone
+                    // gate as the login form itself: without these, denyIfUnauthenticated() returns
+                    // a bare 401 Response where a ViewModel was expected, and addChild() throws
+                    // (discovered via the "Change your password" link in the 2FA email, which
+                    // points at /meliscore_lost_password for a user who isn't logged in yet — the
+                    // other three share the exact same code path/bug, just never hit before).
+                    '/meliscore_lost_password',
+                    '/meliscore_reset_password',
+                    '/meliscore_generate_password',
+                    '/meliscore_renew_password',
                 ]
             ]
         ]

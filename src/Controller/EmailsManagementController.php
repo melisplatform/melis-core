@@ -155,6 +155,11 @@ class EmailsManagementController extends MelisAbstractActionController
      * Get Current Emails Entries
      * */
     public function getEmailsEntriesAction(){
+        /** @INFO: Access check (tool right) */
+        if (! $this->hasAccess(self::INTERFACE_KEY)) {
+            return new JsonModel(['success' => 0, 'textTitle' => '', 'textMessage' => 'tr_meliscore_microservice_api_key_no_access', 'errors' => [], 'datas' => []]);
+        }
+        /** @INFO: End Access Check */
 
         $BOEmails = $this->getServiceManager()->get('MelisCoreTableBOEmails');
         $translator = $this->getServiceManager()->get('translator');
@@ -665,6 +670,12 @@ class EmailsManagementController extends MelisAbstractActionController
      * Adding new Email
      * */
     public function saveEmailAction(){
+        /** @INFO: Access check (tool right) */
+        if (! $this->hasAccess(self::INTERFACE_KEY)) {
+            return new JsonModel(['success' => 0, 'textTitle' => '', 'textMessage' => 'tr_meliscore_microservice_api_key_no_access', 'errors' => [], 'datas' => []]);
+        }
+        /** @INFO: End Access Check */
+
         $translator = $this->getServiceManager()->get('translator');
 
         $request = $this->getRequest();
@@ -959,6 +970,11 @@ class EmailsManagementController extends MelisAbstractActionController
      * Deleting Email
      * */
     public function deleteEmailAction(){
+        /** @INFO: Access check (tool right) */
+        if (! $this->hasAccess(self::INTERFACE_KEY)) {
+            return new JsonModel(['success' => 0, 'textTitle' => '', 'textMessage' => 'tr_meliscore_microservice_api_key_no_access', 'errors' => [], 'datas' => []]);
+        }
+        /** @INFO: End Access Check */
 
         $translator = $this->getServiceManager()->get('translator');
 

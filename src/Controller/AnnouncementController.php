@@ -225,6 +225,11 @@ class AnnouncementController extends MelisAbstractActionController
      */
     public function saveAnnouncementAction()
     {
+        /** @INFO: Access check (tool right) */
+        if (! $this->hasAccess('melis_core_announcement_tool')) {
+            return new JsonModel(['success' => 0, 'textTitle' => '', 'textMessage' => 'tr_meliscore_microservice_api_key_no_access', 'errors' => [], 'datas' => []]);
+        }
+        /** @INFO: End Access Check */
         $translator = $this->getServiceManager()->get('translator');
         $success = 0;
         $textTitle = $translator->translate('tr_melis_core_announcement_tool');
@@ -290,6 +295,11 @@ class AnnouncementController extends MelisAbstractActionController
      */
     public function deleteAnnouncementAction()
     {
+        /** @INFO: Access check (tool right) */
+        if (! $this->hasAccess('melis_core_announcement_tool')) {
+            return new JsonModel(['success' => 0, 'textTitle' => '', 'textMessage' => 'tr_meliscore_microservice_api_key_no_access', 'errors' => [], 'datas' => []]);
+        }
+        /** @INFO: End Access Check */
         $translator = $this->getServiceManager()->get('translator');
         $success = 0;
         $textTitle = $translator->translate('tr_melis_core_announcement_tool_delete_title');
@@ -375,5 +385,10 @@ class AnnouncementController extends MelisAbstractActionController
         }
 
         return $errors;
+    }
+
+    private function hasAccess($key): bool
+    {
+        return $this->getServiceManager()->get('MelisCoreRights')->canAccess($key);
     }
 }

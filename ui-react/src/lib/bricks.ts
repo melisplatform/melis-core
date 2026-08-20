@@ -56,6 +56,12 @@ export interface BrickDef {
    * mounted across navigations, so its own state (an open chat session) survives.
    */
   Overlay?: ComponentType
+  /**
+   * A section rendered inside MelisCore's native Other Config page (System configuration ->
+   * Other Config), appended after the built-in sections -- lets a module contribute admin
+   * settings there without melis-core knowing about it by name.
+   */
+  OtherConfigSection?: ComponentType
 }
 
 /** `Module/Controller` → React route, fed to the menu so legacy entries link to bricks. */
@@ -109,27 +115,38 @@ export async function refreshActiveModules(): Promise<void> {
 }
 
 /** Where brick bundles self-register their components, keyed by brick id. */
-type RegisteredBrick = { Component?: ComponentType; Sidebar?: ComponentType; Header?: ComponentType; Overlay?: ComponentType }
+type RegisteredBrick = { Component?: ComponentType; Sidebar?: ComponentType; Header?: ComponentType; Overlay?: ComponentType; OtherConfigSection?: ComponentType }
 function componentRegistry(): Record<string, RegisteredBrick> {
   const w = window as unknown as { __MELIS_BRICK_COMPONENTS__?: Record<string, RegisteredBrick> }
   return (w.__MELIS_BRICK_COMPONENTS__ ??= {})
 }
 
-const loadedScripts = new Set<string>()
+// Dedup by URL — INCLUDING in-flight loads. A single bundle can be requested many times
+// concurrently: a multi-brick module (e.g. melis-commerce ships 13 brick ids from ONE brick.js)
+// produces one `load(m)` prefetch per id, plus the React.lazy factory on first route visit —
+// all calling loadScript() with the same URL. Keying only on COMPLETED loads (a Set filled in
+// onload) let every concurrent caller append its own <script> before the first resolved, so the
+// same brick.js was fetched N times (visible with cache disabled). Caching the promise collapses
+// all concurrent and later calls onto a single network request.
+const scriptLoads = new Map<string, Promise<void>>()
 
 function loadScript(url: string): Promise<void> {
-  if (loadedScripts.has(url)) return Promise.resolve()
-  return new Promise((resolve, reject) => {
+  const existing = scriptLoads.get(url)
+  if (existing) return existing
+  const p = new Promise<void>((resolve, reject) => {
     const el = document.createElement('script')
     el.src = url
     el.async = true
-    el.onload = () => {
-      loadedScripts.add(url)
-      resolve()
-    }
+    el.onload = () => resolve()
     el.onerror = () => reject(new Error(`Failed to load brick bundle: ${url}`))
     document.head.appendChild(el)
+  }).catch((e) => {
+    // Don't cache a rejection: drop the entry so a later call can retry the (failed) load.
+    scriptLoads.delete(url)
+    throw e
   })
+  scriptLoads.set(url, p)
+  return p
 }
 
 export function getBricks(): BrickDef[] {
@@ -158,6 +175,11 @@ export function headerBricks(): BrickDef[] {
 /** All loaded bricks that ship a global overlay (rendered once at the shell root). */
 export function overlayBricks(): BrickDef[] {
   return bricks.filter((b) => b.Overlay)
+}
+
+/** All loaded bricks that contribute an Other Config section. */
+export function otherConfigSectionBricks(): BrickDef[] {
+  return bricks.filter((b) => b.OtherConfigSection)
 }
 
 /**
@@ -195,15 +217,19 @@ export function useModuleActive(moduleName: string): boolean {
 }
 
 /**
- * Fetches the manifest of active bricks and registers their routes — WITHOUT loading any bundle.
- * Each brick's IIFE is downloaded lazily, only when its route is first visited (React.lazy +
- * Suspense). This avoids pulling down several MB of JS at boot when the user may never visit
- * most brick pages (a 10-module instance was downloading ~2 MB eagerly on every page load).
+ * Fetches the manifest of active bricks, registers their routes, and pulls their code in ONE
+ * request — the server-concatenated `/melis/react-api/bricks-bundle.js?v=<signature>`, which glues
+ * together every active module's brick.js. Routes still render through React.lazy + Suspense, but
+ * the factory now awaits that shared load instead of a per-brick script.
  *
- * Trade-off: Sidebar and Header components (e.g. the Messenger bell) are part of the IIFE, so
- * they are unavailable until the user visits the brick's route for the first time; they then
- * appear via notify(). If a Header must be visible from boot, mark the bundle "eager" in its
- * manifest and handle it here — that optimisation is deferred until needed.
+ * Why one request: a brick lives in its module's public/ folder, outside the document root, so it
+ * is served by MelisAssetManager — a full Melis bootstrap per file (~0.3s vs ~2ms for a static
+ * one). At ~50 bricks that was ~10s of cumulative PHP on a cold load. The bundle URL carries a
+ * signature over every brick's mtime+size and is cached `immutable` for a year, so a rebuild
+ * invalidates it and an unchanged install refetches nothing.
+ *
+ * Degrades gracefully: if the backend exposes no bundle URL (older melis-react-api) or the bundle
+ * fails to load, each brick falls back to its own script, widget-only bricks first (see below).
  *
  * Idempotent: a second call while loading/loaded is a no-op (use `resetBricks` to force a
  * re-fetch, e.g. after logout/login).
@@ -212,9 +238,32 @@ export async function loadBricks(): Promise<void> {
   if (status !== 'idle') return
   status = 'loading'
   try {
-    const list = await melisApi.fetchReactModules()
+    const { bricks: list, bundleUrl } = await melisApi.fetchReactModulesFull()
     setActiveModules(list.map((m) => m.module))
     const next: BrickDef[] = []
+
+    // ⚡ ONE request for every brick. Each per-brick URL is served by MelisAssetManager, i.e. costs
+    // a FULL Melis bootstrap (~0.3s measured against ~2ms for a genuinely static file), because a
+    // module's public/ folder is not under the document root. With ~50 bricks that was ~10s of
+    // cumulative PHP per cold load, throttled further by the php-fpm worker pool — the reason this
+    // loader used to stage its prefetch in two waves (widgets first) to get the Messenger bell in
+    // early. The backend now concatenates all active bricks into a single immutable-cached script
+    // (GET /melis/react-api/bricks-bundle.js?v=<signature>), so one round-trip brings everything
+    // and the staging is unnecessary: widgets register as soon as it lands.
+    //
+    // Started immediately (not awaited): the shell must render now, and Sidebar/Header/Overlay
+    // components only exist once brick code has executed.
+    const bundleLoad = bundleUrl ? loadScript(bundleUrl).then(() => true, () => false) : null
+
+    /**
+     * Ensures the code of one brick has executed. Prefers the concatenated bundle; if the backend
+     * doesn't offer one (older API) or it failed to load, falls back to that brick's own script —
+     * so a bundle problem degrades to the previous behaviour instead of an empty back-office.
+     */
+    const ensureCode = async (ownUrl: string): Promise<void> => {
+      if (bundleLoad && (await bundleLoad)) return
+      await loadScript(ownUrl).catch(() => {})
+    }
 
     for (const m of list) {
       if (!m.bundleUrl) continue
@@ -231,7 +280,7 @@ export async function loadBricks(): Promise<void> {
       // On error we return a no-op component rather than letting the promise reject
       // (which would propagate to the nearest error boundary and crash the shell).
       const LazyComponent = lazy(async (): Promise<{ default: ComponentType }> => {
-        await loadScript(bundleUrl).catch(() => {})
+        await ensureCode(bundleUrl)
         const reg = componentRegistry()[brickId]
         const C   = reg?.Component
 
@@ -246,12 +295,13 @@ export async function loadBricks(): Promise<void> {
             if (m.forwardKey) delete BRICK_ROUTES[m.forwardKey]
             // Sidebar/Header/Overlay still valid without a Component page (e.g. Messenger bell,
             // MelisAI assistant).
-            if (reg?.Sidebar || reg?.Header || reg?.Overlay) {
+            if (reg?.Sidebar || reg?.Header || reg?.Overlay || reg?.OtherConfigSection) {
               bricks.push({
                 id: m.id, module: m.module, route: '', label: m.label,
                 forwardKey: m.forwardKey, melisKey: m.melisKey, subTabs: m.subTabs ?? false,
                 persistent: m.persistent ?? false,
                 Component: undefined, Sidebar: reg.Sidebar, Header: reg.Header, Overlay: reg.Overlay,
+                OtherConfigSection: reg.OtherConfigSection,
               })
             }
             notify()
@@ -266,6 +316,7 @@ export async function loadBricks(): Promise<void> {
           def.Sidebar = reg.Sidebar
           def.Header  = reg.Header
           def.Overlay = reg.Overlay
+          def.OtherConfigSection = reg.OtherConfigSection
           notify()
         }
         return { default: C }
@@ -285,68 +336,67 @@ export async function loadBricks(): Promise<void> {
         Sidebar:    undefined,
         Header:     undefined,
         Overlay:    undefined,
+        OtherConfigSection: undefined,
       })
     }
     bricks = next
 
-    // Background-prefetch: load all bundles in parallel so Sidebar/Header/Overlay components
-    // register early (e.g. the CMS page-tree Sidebar, the Messenger bell, the MelisAI
-    // assistant — all need to appear from boot, not only after the user first visits the
-    // brick's route).
-    // Non-blocking: the loop fires-and-forgets; React.lazy benefits from the cache.
+    // Prefetch: with the concatenated bundle a single script carries every brick, so there is
+    // nothing to stage — `bundleLoad` above is already in flight. Once it lands, patch each def
+    // with whatever its brick registered (Sidebar / Header / Overlay / OtherConfigSection are only
+    // knowable after the code runs) and notify ONCE.
     //
-    // ⚡ PRIORITÉ aux briques « widget-only » (route ET forwardKey nuls) : leur SEULE raison d'être
-    // est un widget visible au boot (ex. la cloche Messenger). On appende leur <script> EN PREMIER
-    // pour qu'elles arrivent avant les bundles de pages (que l'utilisateur n'ouvrira peut-être
-    // jamais) dans la file — utile car le service PHP sérialise les requêtes sur le verrou de session.
-    // ⚠️ Trier ne suffisait PAS : appender les ~50 <script> dans le MÊME tour de boucle les lance
-    // tous en parallèle, et les bundles sont servis par PHP (MelisAssetManager) qui SÉRIALISE sur le
-    // verrou de session. La cloche Messenger arrivait donc bonne dernière — mesuré sur dev6 :
-    // widget visible à t+21 s après le chargement de la page. On charge donc les briques
-    // « widget-only » D'ABORD, puis on attend qu'elles soient là avant de lancer les bundles de
-    // pages (que l'utilisateur n'ouvrira peut-être jamais).
-    const load = (m: (typeof list)[number]) => {
-      const bundleUrl = m.bundleUrl
-      const brickId   = m.id
-      if (!bundleUrl) return Promise.resolve()
-      return loadScript(bundleUrl)
+    // Fallback path (no bundle URL, or the bundle failed): fetch each brick's own script, exactly
+    // as before — widget-only bricks (no route AND no forwardKey: their sole purpose is a widget
+    // visible from boot, e.g. the Messenger bell) go FIRST, because those requests are serialised
+    // by PHP and a page bundle the user may never open must not delay the bell.
+    const patchFromRegistry = (brickId: string): boolean => {
+      const reg = componentRegistry()[brickId]
+      const def = bricks.find((b) => b.id === brickId)
+      if (!def || !reg) return false
+      def.Sidebar = reg.Sidebar
+      def.Header  = reg.Header
+      def.Overlay = reg.Overlay
+      def.OtherConfigSection = reg.OtherConfigSection
+      return !!(reg.Sidebar || reg.Header || reg.Overlay || reg.OtherConfigSection)
+    }
+
+    const loadOwn = (m: (typeof list)[number]) => {
+      if (!m.bundleUrl) return Promise.resolve()
+      return loadScript(m.bundleUrl)
         .then(() => {
-          const reg = componentRegistry()[brickId]
-          const def = bricks.find((b) => b.id === brickId)
-          if (def && reg) {
-            def.Sidebar = reg.Sidebar
-            def.Header  = reg.Header
-            def.Overlay = reg.Overlay
-            if (reg.Sidebar || reg.Header || reg.Overlay) notify()
-          }
+          if (patchFromRegistry(m.id)) notify()
         })
         .catch(() => {})
     }
 
-    const isWidgetOnly = (m: (typeof list)[number]) => !m.route && !m.forwardKey
-    const widgetOnly   = list.filter((m) => m.bundleUrl && isWidgetOnly(m))
-    const pages        = list.filter((m) => m.bundleUrl && !isWidgetOnly(m))
-
-    // Une fois les widgets chargés, on NE LANCE PAS les bundles de pages tout de suite : les widgets
-    // viennent de se monter et déclenchent leurs PROPRES appels de données (ex. le compteur de
-    // messages non lus de la cloche). Ces appels passent par PHP, qui sérialise sur le verrou de
-    // session — lancés en même temps que ~50 bundles de pages, ils repassaient bons derniers et la
-    // pastille rouge n'apparaissait que plusieurs secondes après l'icône. On attend donc que le
-    // navigateur soit inactif (les fetch des widgets sont partis) avant d'amorcer la 2ᵉ vague ; ces
-    // bundles servent des outils que l'utilisateur n'ouvrira peut-être jamais, les différer est sans
-    // conséquence visible.
-    const startPages = () => pages.forEach((m) => void load(m))
-    const deferPages = () => {
-      const ric = (window as unknown as {
-        requestIdleCallback?: (cb: () => void, opts?: { timeout: number }) => void
-      }).requestIdleCallback
-      if (typeof ric === 'function') ric(startPages, { timeout: 2000 })
-      else window.setTimeout(startPages, 1200)
+    const prefetchOwnBundles = () => {
+      const isWidgetOnly = (m: (typeof list)[number]) => !m.route && !m.forwardKey
+      const widgetOnly   = list.filter((m) => m.bundleUrl && isWidgetOnly(m))
+      const pages        = list.filter((m) => m.bundleUrl && !isWidgetOnly(m))
+      // Wait for the widgets to be in (and their own data fetches to have left) before flooding
+      // PHP with page bundles: they share the session lock, and a red unread badge arriving
+      // seconds after its icon looks broken.
+      const startPages = () => pages.forEach((m) => void loadOwn(m))
+      void Promise.all(widgetOnly.map(loadOwn)).then(() => {
+        const ric = (window as unknown as {
+          requestIdleCallback?: (cb: () => void, opts?: { timeout: number }) => void
+        }).requestIdleCallback
+        if (typeof ric === 'function') ric(startPages, { timeout: 2000 })
+        else window.setTimeout(startPages, 1200)
+      })
     }
 
-    // Non bloquant pour loadBricks() : on n'attend pas cette chaîne (le shell doit se rendre tout
-    // de suite), on ordonne juste les deux vagues entre elles.
-    void Promise.all(widgetOnly.map(load)).then(deferPages)
+    if (bundleLoad) {
+      void bundleLoad.then((ok) => {
+        if (!ok) return prefetchOwnBundles()
+        let changed = false
+        for (const m of list) changed = patchFromRegistry(m.id) || changed
+        if (changed) notify()
+      })
+    } else {
+      prefetchOwnBundles()
+    }
   } catch {
     /* leave bricks empty on error */
   } finally {

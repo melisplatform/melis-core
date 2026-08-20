@@ -87,6 +87,12 @@ class MelisCoreGdprController extends MelisAbstractActionController
      */
     public function melisCoreGdprDeleteSelectedAction()
     {
+        /** @INFO: Access check (tool right) */
+        if (! $this->hasAccess('melis_core_gdpr')) {
+            return new JsonModel(['success' => 0, 'textTitle' => '', 'textMessage' => 'tr_meliscore_microservice_api_key_no_access', 'errors' => [], 'datas' => []]);
+        }
+        /** @INFO: End Access Check */
+
         $request = $this->getRequest();
         $success = 0;
 
@@ -337,5 +343,10 @@ class MelisCoreGdprController extends MelisAbstractActionController
         }
 
         return $errors;
+    }
+
+    private function hasAccess($key): bool
+    {
+        return $this->getServiceManager()->get('MelisCoreRights')->canAccess($key);
     }
 }

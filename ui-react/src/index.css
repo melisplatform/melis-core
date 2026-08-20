@@ -340,3 +340,21 @@ body.melis-widget-dragging iframe {
 .melis-legacy-forms .melis-legacy-invalid {
   border-color: var(--color-destructive);
 }
+
+/*
+ * Piste de défilement (« runway ») réservée sous le contenu des outils quand un module pose un
+ * overlay flottant — en pratique le bouton rond de l'assistant MelisAI, fixé en bas à droite.
+ *
+ * Un `::after` plutôt qu'un `padding-bottom` : le padding raccourcirait le conteneur, donc une
+ * page en pleine hauteur (`h-full`) laisserait en permanence une bande vide sous elle. Ici la
+ * hauteur n'est ajoutée qu'à la LONGUEUR DÉFILABLE : tant que le contenu tient dans l'écran, rien
+ * ne change à l'affichage ; c'est seulement en bas de course que la dernière ligne (boutons de
+ * formulaire, pagination…) vient se poser au-dessus du bouton flottant au lieu d'être dessous.
+ *
+ * La variable est posée par le shell : 0 si aucun module ne pose d'overlay (rien à réserver).
+ */
+.melis-overlay-runway::after {
+  display: block;
+  height: var(--melis-overlay-runway, 0px);
+  content: '';
+}

@@ -113,10 +113,14 @@ export default function LoginPage() {
     if (submitting) return
     setError(undefined)
     setSubmitting(true)
-    const message = await signIn(login.trim(), password, remember)
+    const result = await signIn(login.trim(), password, remember)
     setSubmitting(false)
-    if (message) {
-      setError(message)
+    if (result.twoFaHash) {
+      navigate(`/verify-2fa?hash=${encodeURIComponent(result.twoFaHash)}`)
+      return
+    }
+    if (result.error) {
+      setError(result.error)
       return
     }
     navigate('/', { replace: true })

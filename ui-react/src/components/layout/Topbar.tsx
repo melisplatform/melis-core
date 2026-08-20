@@ -512,7 +512,7 @@ function MobileSubTabs({ toolPath, onNavigate }: { toolPath: string; onNavigate:
 // panneau vertical déroulant ; les sous-onglets de l'outil actif sont nichés dessous.
 function MobileTabsPanel({ onNavigate }: { onNavigate: () => void }) {
   const { tabs, activeId, activateTab, closeTab } = useTabs()
-  const { lang } = useI18n()
+  const { t } = useI18n()
   const navigate = useNavigate()
 
   function activate(tab: Tab) {
@@ -534,7 +534,7 @@ function MobileTabsPanel({ onNavigate }: { onNavigate: () => void }) {
   return (
     <div className="max-h-[55vh] overflow-y-auto border-b border-border bg-card shadow-inner">
       <div className="px-3 py-2 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
-        {lang === 'fr' ? 'Onglets ouverts' : 'Open tabs'}
+        {t('layout.open_tabs')}
       </div>
       {tabs.map((tab) => {
         const isActive = tab.id === activeId

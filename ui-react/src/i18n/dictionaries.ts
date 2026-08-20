@@ -57,6 +57,21 @@ const fr = {
   'reset.err_length': 'Minimum 8 caractères.',
   'reset.err_invalid': 'Lien invalide ou expiré.',
   'reset.err_server': 'Erreur lors de la réinitialisation.',
+
+  // ── Vérification 2FA ──
+  'verify2fa.title': 'Vérification en deux étapes',
+  'verify2fa.subtitle': 'Saisissez le code reçu par email pour terminer la connexion.',
+  'verify2fa.code_label': 'Code de vérification',
+  'verify2fa.submit': 'Vérifier',
+  'verify2fa.submitting': 'Vérification…',
+  'verify2fa.resend': 'Recevoir un nouveau code',
+  'verify2fa.resending': 'Envoi…',
+  'verify2fa.resend_cooldown': 'Nouveau code dans {seconds}s',
+  'verify2fa.resent': 'Un nouveau code a été envoyé.',
+  'verify2fa.back_login': 'Retour à la connexion',
+  'verify2fa.err_invalid': 'Session de vérification invalide ou expirée.',
+  'verify2fa.err_invalid_code': 'Code invalide.',
+  'verify2fa.err_resend': 'Erreur lors de l’envoi du nouveau code.',
   // Footer plateforme (wording legacy melis-core) : © {year} {by} Melis Technology - {rights} - {version_label}: {version}
   'footer.by': 'par',
   'footer.rights': 'Tous droits réservés.',
@@ -875,6 +890,8 @@ const fr = {
   'layout.view_new': 'Nouveau',
   'layout.view_old': 'Ancien',
   'layout.oldview.otherconfig': 'Autres Configurations — Vue Melis',
+  'layout.open_tabs': 'Onglets ouverts',
+  'layout.tool_list_tab': 'Liste',
 
   // ── Dashboard (page) ──
   'dash.show_bar': 'Afficher la barre',
@@ -933,6 +950,21 @@ const en: Record<I18nKey, string> = {
   'reset.err_length': 'Minimum 8 characters.',
   'reset.err_invalid': 'Invalid or expired link.',
   'reset.err_server': 'Error during reset.',
+
+  // ── 2FA verification ──
+  'verify2fa.title': 'Two-factor verification',
+  'verify2fa.subtitle': 'Enter the code emailed to you to finish signing in.',
+  'verify2fa.code_label': 'Verification code',
+  'verify2fa.submit': 'Verify',
+  'verify2fa.submitting': 'Verifying…',
+  'verify2fa.resend': 'Receive a new code',
+  'verify2fa.resending': 'Sending…',
+  'verify2fa.resend_cooldown': 'New code in {seconds}s',
+  'verify2fa.resent': 'A new code has been sent.',
+  'verify2fa.back_login': 'Back to sign in',
+  'verify2fa.err_invalid': 'Invalid or expired verification session.',
+  'verify2fa.err_invalid_code': 'Invalid code.',
+  'verify2fa.err_resend': 'Failed to send a new code.',
   'footer.by': 'by',
   'footer.rights': 'All rights reserved.',
   'footer.version': 'Version',
@@ -1748,6 +1780,8 @@ const en: Record<I18nKey, string> = {
   'layout.view_new': 'New',
   'layout.view_old': 'Old',
   'layout.oldview.otherconfig': 'Other Configurations — Melis view',
+  'layout.open_tabs': 'Open tabs',
+  'layout.tool_list_tab': 'List',
 
   // ── Dashboard (page) ──
   'dash.show_bar': 'Show the bar',

@@ -55,7 +55,10 @@ function getToolRoute(node: melisApi.ApiMenuNode, section: string): string {
   // l'enregistre pour que TOUT titre d'onglet vienne du menu, y compris quand l'onglet est ouvert
   // sans passer par le menu (pont __melisOpenTool, deep-link) — les libellés des manifestes de
   // briques, eux, sont figés dans une seule langue.
-  registerTool({ route, melisKey: isReact ? null : node.melisKey, forwardKey: key, label: node.name })
+  // `navMelisKey` est TOUJOURS la clé du nœud de menu (React compris) : elle alimente le sens
+  // inverse melisKey → route, dont a besoin l'icône « clé à molette » des formulaires de plugin
+  // (elle ne transporte que le melisKey de l'outil cible). Cf. tool-routes.routeForMelisKey.
+  registerTool({ route, melisKey: isReact ? null : node.melisKey, navMelisKey: node.melisKey, forwardKey: key, label: node.name })
   return route
 }
 
