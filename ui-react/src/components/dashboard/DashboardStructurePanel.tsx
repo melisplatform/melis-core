@@ -19,6 +19,8 @@ import {
   MAX_ROW_ITEMS,
   MAX_WIDGET_HEIGHT,
   MAX_WIDGET_WIDTH,
+  MIN_WIDGET_HEIGHT,
+  MIN_WIDGET_WIDTH,
   removeItem,
   reorderWithinRow,
   rowKey,
@@ -39,32 +41,6 @@ function readPayload(e: DragEvent): DragPayload | null {
   } catch {
     return null
   }
-}
-
-/** Colonnes (1-12, unité de la grille du dashboard classique) ↔ pourcentage affiché dans le champ
- *  « W » — un simple HABILLAGE plus parlant que « colonnes sur 12 », rien de plus : la valeur
- *  RÉELLEMENT stockée/persistée reste continue (pas arrondie ici, ni dans `onSetWidth` — cf. son
- *  commentaire dans DashboardPage.tsx) pour que le widget bouge à CHAQUE frappe, pas seulement
- *  tous les ~8 % (ce que donnerait un arrondi immédiat à l'entier le plus proche). Seule la
- *  PERSISTANCE arrondit, là où le dashboard classique a réellement besoin d'un entier. */
-function colsToPercent(w: number): number {
-  return Math.round((w / MAX_WIDGET_WIDTH) * 100)
-}
-
-function percentToCols(pct: number): number {
-  return (pct / 100) * MAX_WIDGET_WIDTH
-}
-
-/** Même habillage que W, pour le champ « H » — lignes de grille (2-`MAX_WIDGET_HEIGHT`) ↔
- *  pourcentage de la hauteur MAXIMALE autorisée. Rien en aval n'impose d'entier ici (cf. le
- *  commentaire de `setWidgetHeight`/`reactH` dans DashboardPage.tsx), mais l'affichage/l'entrée
- *  restent en % pour la cohérence avec W. */
-function rowsToPercent(h: number): number {
-  return Math.round((h / MAX_WIDGET_HEIGHT) * 100)
-}
-
-function percentToRows(pct: number): number {
-  return (pct / 100) * MAX_WIDGET_HEIGHT
 }
 
 /**
@@ -167,13 +143,22 @@ export function DashboardStructurePanel({
   // canonique (arrondie) — le temps de la frappe, il reste fidèle à ce que l'utilisateur tape.
   const [widthDraft, setWidthDraft] = useState<Record<string, string>>({})
   const [heightDraft, setHeightDraft] = useState<Record<string, string>>({})
+  // Champ W en colonnes NATIVES (1-12, cf. GRID_WIDTH) — pas en pourcentage : GridStack n'a que 12
+  // colonnes en interne, un pas de pourcentage (1/100 de ligne) est donc plus petit qu'1/12 et se
+  // perdait dans l'arrondi avant même d'atteindre la grille, ce qui donnait l'impression que le
+  // widget ne bougeait pas tant que plusieurs frappes ne s'étaient pas cumulées jusqu'à franchir
+  // le prochain palier de colonne. En travaillant directement en colonnes, chaque pas EST un palier
+  // représentable → effet immédiat sur le dashboard.
   const applyWidthDraft = (id: string, raw: string) => {
-    const n = Number(raw)
-    if (Number.isFinite(n)) onSetWidth(id, percentToCols(n))
+    const n = Math.round(Number(raw))
+    if (Number.isFinite(n)) onSetWidth(id, Math.max(MIN_WIDGET_WIDTH, Math.min(MAX_WIDGET_WIDTH, n)))
   }
+  // Champ H en lignes de grille NATIVES (2-`MAX_WIDGET_HEIGHT`), même principe que W ci-dessus :
+  // pas de conversion pourcentage, chaque pas de la saisie correspond directement à une ligne de
+  // grille réelle, appliquée immédiatement au widget.
   const applyHeightDraft = (id: string, raw: string) => {
-    const n = Number(raw)
-    if (Number.isFinite(n)) onSetHeight(id, percentToRows(n))
+    const n = Math.round(Number(raw))
+    if (Number.isFinite(n)) onSetHeight(id, Math.max(MIN_WIDGET_HEIGHT, Math.min(MAX_WIDGET_HEIGHT, n)))
   }
   const clearWidthDraft = (id: string) =>
     setWidthDraft((d) => {
@@ -404,9 +389,9 @@ export function DashboardStructurePanel({
                         <span className="min-w-0 flex-1 truncate text-xs font-semibold text-foreground">{title}</span>
                       )}
                     </div>
-                    {/* Largeur (% de la ligne, cf. colsToPercent/percentToCols — la grille reste à
-                        12 colonnes fixes en interne, seul l'AFFICHAGE est en pourcentage, plus
-                        parlant) et hauteur (lignes de grille) : vrais champs numériques — repliés
+                    {/* Largeur en colonnes NATIVES (1-12, cf. GRID_WIDTH/MAX_WIDGET_WIDTH — pas de
+                        pourcentage : GridStack n'a que 12 colonnes en interne, cf. applyWidthDraft
+                        ci-dessus) et hauteur (lignes de grille) : vrais champs numériques — repliés
                         par défaut (cf. l'icône « règle » ci-dessous, même principe que le toggle de
                         largeur responsive de l'éditeur de page). La largeur n'est respectée QUE si
                         la ligne ne dépasse pas 12 colonnes au total (sinon repli en répartition
@@ -414,7 +399,7 @@ export function DashboardStructurePanel({
                         (userSized) : l'auto-fit ne la retouche plus. */}
                     {sizeOpen && (
                     // Empilés (H sous W) dès que la carte partage sa ligne avec un voisin — le
-                    // champ % + son suffixe tiennent mal côte à côte dans une carte réduite à une
+                    // champ + son suffixe tiennent mal côte à côte dans une carte réduite à une
                     // fraction de la largeur du panneau ; une seule carte par ligne a toute la
                     // place pour les garder côte à côte.
                     <div className={cn('flex gap-2.5', row.length > 1 ? 'flex-col' : 'items-center')}>
@@ -423,9 +408,10 @@ export function DashboardStructurePanel({
                         <div className="relative min-w-0 flex-1">
                           <input
                             type="number"
-                            min={0}
-                            max={100}
-                            value={widthDraft[item.i] ?? String(colsToPercent(item.w))}
+                            min={MIN_WIDGET_WIDTH}
+                            max={MAX_WIDGET_WIDTH}
+                            step={1}
+                            value={widthDraft[item.i] ?? String(Math.round(item.w))}
                             onMouseDown={(e) => e.stopPropagation()}
                             onClick={(e) => e.stopPropagation()}
                             onChange={(e) => {
@@ -441,7 +427,7 @@ export function DashboardStructurePanel({
                             title={t('widget.width_field')}
                             className="w-full min-w-0 rounded-md border border-border/70 bg-background py-1 pl-2 pr-5 text-xs tabular-nums text-foreground outline-none transition-colors focus:border-primary focus:ring-1 focus:ring-primary/30"
                           />
-                          <span className="pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 text-[10px] text-muted-foreground/60">%</span>
+                          <span className="pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 text-[10px] text-muted-foreground/60">/12</span>
                         </div>
                       </label>
                       <label className="flex flex-1 items-center gap-1 text-[10px] text-muted-foreground/70">
@@ -449,9 +435,10 @@ export function DashboardStructurePanel({
                         <div className="relative min-w-0 flex-1">
                           <input
                             type="number"
-                            min={0}
-                            max={100}
-                            value={heightDraft[item.i] ?? String(rowsToPercent(item.h))}
+                            min={MIN_WIDGET_HEIGHT}
+                            max={MAX_WIDGET_HEIGHT}
+                            step={1}
+                            value={heightDraft[item.i] ?? String(Math.round(item.h))}
                             onMouseDown={(e) => e.stopPropagation()}
                             onClick={(e) => e.stopPropagation()}
                             onChange={(e) => {
@@ -465,9 +452,8 @@ export function DashboardStructurePanel({
                             }}
                             aria-label={t('widget.height_field')}
                             title={t('widget.height_field')}
-                            className="w-full min-w-0 rounded-md border border-border/70 bg-background py-1 pl-2 pr-5 text-xs tabular-nums text-foreground outline-none transition-colors focus:border-primary focus:ring-1 focus:ring-primary/30"
+                            className="w-full min-w-0 rounded-md border border-border/70 bg-background px-2 py-1 text-xs tabular-nums text-foreground outline-none transition-colors focus:border-primary focus:ring-1 focus:ring-primary/30"
                           />
-                          <span className="pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 text-[10px] text-muted-foreground/60">%</span>
                         </div>
                       </label>
                     </div>

@@ -137,14 +137,17 @@ export function groupIntoRows(items: GridItem[]): GridItem[][] {
  * panneau de structure, pas de coordonnées libres à la souris.
  *
  * `w` de chaque widget est CONSERVÉ tel quel (champ numérique du panneau, cf. `MIN_WIDGET_WIDTH`/
- * `MAX_WIDGET_WIDTH`) SAUF dans deux cas : la somme de la ligne dépasse `GRID_WIDTH` (12) — ce qui
- * arrive typiquement juste après avoir rejoint deux widgets pleine largeur — auquel cas elle est
- * répartie à parts égales comme point de départ (l'utilisateur reprend ensuite la main sur chaque
- * valeur) ; OU le widget est SEUL sur sa ligne (déposé dans un interstice pour l'en extraire d'une
- * ligne partagée), auquel cas il prend TOUJOURS toute la largeur (12) plutôt que de garder l'ancienne
- * largeur (ex. 6, la moitié) héritée de la ligne qu'il vient de quitter — sinon la moitié restante de
- * sa ligne reste un « trou » que GridStack (dashboard, `float:false`) comble en y tirant le widget
- * suivant, qui semble alors rejoindre sa ligne au lieu de rester sur la sienne propre.
+ * `MAX_WIDGET_WIDTH`) SAUF si la somme de la ligne dépasse `GRID_WIDTH` (12) — ce qui arrive
+ * typiquement juste après avoir rejoint deux widgets pleine largeur — auquel cas elle est répartie
+ * à parts égales comme point de départ ; l'utilisateur reprend ensuite la main sur chaque valeur.
+ *
+ * ⚠️ Un widget seul sur sa ligne ne bascule PAS automatiquement à 12 ici : cette fonction tourne à
+ * CHAQUE réordonnancement/redimensionnement, y compris quand l'utilisateur réduit volontairement la
+ * largeur d'un widget déjà seul (champ W du panneau) — l'y forcer en permanence rendrait ce
+ * rétrécissement impossible (la valeur tapée revenait aussitôt à 100 %, cf. l'incident corrigé).
+ * Le passage à 100 % au moment où un widget devient seul (extrait d'une ligne partagée) vit donc
+ * UNE SEULE FOIS, côté `insertAsNewRow` ci-dessous — pas ici, qui doit rester un simple recalcul de
+ * position neutre.
  *
  * Chaque ligne commence à `y` = somme des hauteurs des lignes précédentes (hauteur de ligne =
  * la plus grande hauteur de ses widgets, pour ne jamais faire chevaucher la ligne suivante dans
@@ -164,12 +167,7 @@ export function renumberRows(rows: GridItem[][]): GridItem[] {
       // `w` reste CONTINU tant qu'on édite (cf. DashboardPage.setWidgetWidth) : une tolérance
       // (+0.01) absorbe le bruit d'arrondi flottant accumulé sur de nombreux ajustements successifs,
       // pour ne pas déclencher le repli « répartition égale » sur une ligne en réalité toujours à 12.
-      const w =
-        row.length === 1
-          ? GRID_WIDTH
-          : totalW > GRID_WIDTH + 0.01
-            ? evenWidths[Math.min(i, evenWidths.length - 1)]
-            : Math.max(1, it.w)
+      const w = totalW > GRID_WIDTH + 0.01 ? evenWidths[Math.min(i, evenWidths.length - 1)] : Math.max(1, it.w)
       out.push({ ...it, x, y, w })
       x += w
       rowHeight = Math.max(rowHeight, it.h)
@@ -219,13 +217,21 @@ export function removeItem(
 /** Insère un widget comme NOUVELLE ligne pleine largeur, juste avant la ligne `beforeKey` (fin de
  *  liste si `beforeKey` est `null`, ou si cette ligne a disparu entre-temps — cas où on dépose un
  *  widget juste à côté de l'endroit qu'il vient de quitter, devenu vide). C'est ce qui « éclate »
- *  un widget hors d'une ligne partagée : le déposer dans un INTERSTICE plutôt que sur un widget. */
+ *  un widget hors d'une ligne partagée : le déposer dans un INTERSTICE plutôt que sur un widget.
+ *
+ *  `w` forcé à `GRID_WIDTH` ICI, UNE SEULE FOIS au moment de l'extraction — pas dans `renumberRows`
+ *  (qui tourne à CHAQUE réordonnancement/redimensionnement et écraserait sinon en permanence un
+ *  rétrécissement volontaire ultérieur du champ W du panneau, cf. son commentaire). Un widget qui
+ *  garderait sa largeur d'avant (ex. 6, la moitié, héritée de la ligne partagée qu'il vient de
+ *  quitter) laisserait un « trou » que GridStack (dashboard, `float:false`) comble en y tirant le
+ *  widget suivant, qui semble alors rejoindre cette ligne au lieu de rester sur la sienne propre. */
 export function insertAsNewRow(rows: GridItem[][], beforeKey: string | null, item: GridItem): GridItem[][] {
-  if (beforeKey === null) return [...rows, [item]]
+  const fullWidth = { ...item, w: GRID_WIDTH }
+  if (beforeKey === null) return [...rows, [fullWidth]]
   const idx = rows.findIndex((r) => rowKey(r) === beforeKey)
-  if (idx === -1) return [...rows, [item]]
+  if (idx === -1) return [...rows, [fullWidth]]
   const next = rows.slice()
-  next.splice(idx, 0, [item])
+  next.splice(idx, 0, [fullWidth])
   return next
 }
 

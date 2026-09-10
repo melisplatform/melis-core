@@ -396,6 +396,15 @@ export function DashboardGrid({
       // desktop ne correspond alors plus à rien de cohérent à cette échelle — l'appliquer telle
       // quelle romprait le repli responsive plutôt que de le respecter.
       if (toResize.length && grid.getColumn() === GRID_COLS) {
+        // ⚠️ Deux tentatives pour éviter la collision temps réel de `float:false` sur un
+        // redimensionnement qui déplace aussi un voisin (déplacer les tuiles vers une ligne tampon,
+        // puis simplement réordonner qui est traité en premier) ont CHACUNE fait disparaître tout le
+        // dashboard — y compris la seconde, qui ne déplaçait pourtant jamais rien ailleurs qu'à la
+        // position FINALE. La cause réelle reste donc inconnue ; ni le déplacement temporaire ni
+        // l'ordre de traitement n'en sont individuellement responsables. Reste sur l'appel direct,
+        // le seul dont le comportement est confirmé stable même s'il peut demander plusieurs
+        // frappes pour un redimensionnement qui touche aussi un voisin — un dashboard qui répond
+        // lentement à un cas précis vaut largement mieux qu'un dashboard qui se vide.
         grid.load(
           toResize.map((it) => {
             const def = allWidgetsRef.current[widgetIdOf(it.i)]

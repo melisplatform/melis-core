@@ -296,18 +296,15 @@ export default function DashboardPage() {
         // tuile côté /melis (rendue à ×80px) → gros vide en bas. La hauteur reste ainsi celle
         // enregistrée pour cette instance dans les deux dashboards. (x/y conservés tels quels, mêmes
         // unités, 12 colonnes.)
-        // `w` ARRONDI ici seulement : localement (`l.w`) il reste volontairement CONTINU (cf.
-        // setWidgetWidth) pour un rendu React instantané à chaque frappe du champ largeur — mais
-        // le dashboard classique (sa vraie grille GridStack, colonnes entières) a besoin d'un
-        // entier. Arrondir seulement au moment de PERSISTER laisse le rendu React fluide sans
-        // jamais écrire une largeur invalide côté /melis.
+        // `w` ARRONDI ici par sécurité (déjà entier en pratique, cf. setWidgetWidth qui reçoit des
+        // colonnes natives 1-12 depuis le champ W du panneau) — le dashboard classique (sa vraie
+        // grille GridStack, colonnes entières) a de toute façon besoin d'un entier.
         return [{
           pluginName, pluginId: l.i, x: l.x, y: l.y, w: Math.round(l.w), h: legacyH,
           // Hauteur d'affichage React persistée UNIQUEMENT si l'utilisateur l'a réglée à la main
           // (`<react-height>`, ignorée par le dashboard classique). Sinon `null` → l'auto-fit
-          // reprend la main au prochain rendu. Arrondie ici (même principe que `w` ci-dessus) :
-          // `l.h` reste continu localement pour un rendu instantané à chaque frappe du champ
-          // hauteur, seule la valeur PERSISTÉE est arrondie.
+          // reprend la main au prochain rendu. Arrondie ici par sécurité (même principe que `w`
+          // ci-dessus, déjà entière en pratique depuis le champ H du panneau).
           reactH: l.userSized ? Math.round(l.h) : null,
         }]
       }),
@@ -509,11 +506,9 @@ export default function DashboardPage() {
   // d'origine (`userSized`/`reactH`) : l'auto-fit ne retouche plus cette tuile ensuite, et la
   // hauteur choisie est celle que persiste `layoutToRecords`.
   //
-  // ⚠️ PAS de `Math.round` ici, même logique que `setWidgetWidth` : `h` reste CONTINU localement
-  // pour que la tuile bouge à CHAQUE frappe du champ hauteur, sans palier. Contrairement à `w`,
-  // rien en aval n'impose un entier ici — `reactH` (ce que ce champ persiste) est un nœud
-  // React-only, IGNORÉ par le dashboard classique — mais on arrondit quand même à la persistance
-  // (`layoutToRecords`), par cohérence et pour ne pas écrire un bruit de précision flottante en base.
+  // `rows` arrive déjà en lignes de grille NATIVES ENTIÈRES (champ H du panneau, cf.
+  // DashboardStructurePanel/applyHeightDraft), même principe que `setWidgetWidth` — plus de
+  // conversion depuis un pourcentage ici.
   const setWidgetHeight = useCallback(
     (instanceId: string, rows: number) => {
       const h = Math.max(MIN_WIDGET_HEIGHT, Math.min(MAX_WIDGET_HEIGHT, rows))
@@ -532,12 +527,11 @@ export default function DashboardPage() {
   // réellement disponible (même logique qu'une poignée de redimensionnement qui bute sur la
   // colonne voisine). Une ligne d'un seul widget n'a pas de voisin : simple bornage.
   //
-  // ⚠️ PAS de `Math.round` ici : `w` reste CONTINU localement (ex. 6.4 colonnes), pour que le
-  // rendu React (pourcentage calculé depuis `w`, cf. DashboardStack) bouge à CHAQUE frappe du
-  // champ largeur (%) — arrondir ici quantifiait le résultat à seulement 12 valeurs possibles
-  // (~8,3 % chacune), donc plusieurs frappes consécutives retombaient sur la MÊME colonne et
-  // semblaient sans effet. L'arrondi n'intervient qu'à la persistance (`layoutToRecords`), là où
-  // le dashboard classique a réellement besoin d'un entier.
+  // `cols` arrive déjà en colonnes NATIVES ENTIÈRES (champ W du panneau, cf.
+  // DashboardStructurePanel/applyWidthDraft) — plus de conversion depuis un pourcentage ici : un
+  // pas de pourcentage (1/100 de ligne) est plus fin qu'1/12 de colonne, donc plusieurs frappes
+  // consécutives pouvaient retomber sur la même colonne côté GridStack (dashboard) et sembler
+  // sans effet. En colonnes, chaque pas EST un palier représentable par la grille.
   const setWidgetWidth = useCallback(
     (instanceId: string, cols: number) => {
       const w = Math.max(MIN_WIDGET_WIDTH, Math.min(MAX_WIDGET_WIDTH, cols))
