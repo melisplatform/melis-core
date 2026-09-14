@@ -310,7 +310,11 @@ export default function DashboardPage() {
       // n'est connue — p.ex. quand tous les plugins du record appartiennent à des modules
       // désactivés : l'affichage se vide légitimement, mais la base ne doit pas bouger. Sans ce
       // filet on POSTe `[]`, et le serveur répond 409 « Refusing to clear the dashboard ».
-      if (recs.length === 0 && !opts?.clearAll) return
+      // Un retrait EXPLICITE par l'utilisateur (croix d'une tuile, « tout supprimer ») est le seul
+      // chemin autorisé à vider le record. `allowRemoval` seul ne suffit pas : les effets d'élagage
+      // le portent aussi ; `userAction` seul non plus : un simple déplacement le porte.
+      const explicitEmpty = !!opts?.clearAll || (!!opts?.allowRemoval && !!opts?.userAction)
+      if (recs.length === 0 && !explicitEmpty) return
       // ⚠️ FILET ANTI-EFFACEMENT (2) — INVARIANT : le nombre de plugins du record serveur ne peut
       // DIMINUER que sur un RETRAIT EXPLICITE (croix d'une tuile, « tout supprimer »), jamais
       // autrement.
@@ -340,7 +344,7 @@ export default function DashboardPage() {
         // `allowEmpty` : le serveur REFUSE un record vide sauf demande EXPLICITE de l'utilisateur
         // (« tout supprimer », confirmé). Dernier filet contre un effacement complet du dashboard
         // partagé par un bug client — le cas s'est produit (d_content réduit à `<Plugins></Plugins>`).
-        melisApi.saveDashboardLayout(recs, { allowEmpty: !!opts?.clearAll })
+        melisApi.saveDashboardLayout(recs, { allowEmpty: explicitEmpty })
       }
     },
     [layoutToRecords, recordsSig],
