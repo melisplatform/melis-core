@@ -1,4 +1,4 @@
-import { useState, type DragEvent } from 'react'
+import { Fragment, useRef, useState, type DragEvent } from 'react'
 import {
   ChevronLeft,
   ChevronRight,
@@ -34,6 +34,31 @@ import { PluginConfirmDialog } from './PluginConfirmDialog'
 import { WidgetAddModal } from './WidgetAddModal'
 
 const PANEL_COLLAPSED_KEY = 'melis-dash-panel-collapsed'
+
+/*
+ * Miniature PROPORTIONNELLE du dashboard : chaque carte du panneau reproduit la taille RÉELLE de
+ * sa tuile dans la grille (même `w` en colonnes sur 12, même `h` en lignes de grille), pour que
+ * redimensionner un widget — à la souris dans le dashboard ou via les champs W/H ci-dessous — se
+ * reflète aussitôt ici, comme une copie réduite. Avant, toutes les cartes d'une ligne se
+ * partageaient la largeur à parts égales et avaient la même hauteur, quelle que soit la tuile.
+ */
+/** Largeur plancher d'une carte, en px : la poignée + l'icône doivent rester visibles même pour un
+ *  widget d'une seule colonne (1/12 du panneau ≈ 26px, inutilisable tel quel). Sous ce seuil, la
+ *  miniature n'est plus tout à fait à l'échelle — préférable à une carte inopérable. */
+const PANEL_MIN_CARD_PX = 72
+/** Hauteur d'une carte à la hauteur MINIMALE de grille (`MIN_WIDGET_HEIGHT`) ; en dessous de sa
+ *  hauteur naturelle (en-tête + boutons ≈ 74px), c'est cette dernière qui l'emporte. */
+const PANEL_CARD_BASE_PX = 60
+/** Pixels de carte ajoutés par ligne de grille au-delà du minimum (la grille fait 46px/ligne, cf.
+ *  grid-metrics — on réduit d'environ ×8 pour qu'une tuile de 40 lignes reste ≈ 290px ici). */
+const PANEL_PX_PER_GRID_ROW = 6
+/** Colonnes (sur 12) à partir desquelles la carte est assez large pour afficher son titre (≈ 130px
+ *  sur un panneau de 340px). En dessous, l'icône seule l'identifie et le nom passe en infobulle —
+ *  même seuil qu'avant (3 widgets égaux = 4 colonnes → masqué ; 2 = 6 colonnes → affiché), mais
+ *  fondé désormais sur la largeur RÉELLE de la carte et non sur le nombre de voisins. */
+const PANEL_TITLE_MIN_COLS = 5
+/** Colonnes en dessous desquelles les champs W/H s'empilent (H sous W) faute de place côte à côte. */
+const PANEL_STACK_FIELDS_BELOW_COLS = 8
 
 function readPayload(e: DragEvent): DragPayload | null {
   try {
@@ -204,6 +229,107 @@ export function DashboardStructurePanel({
     if (item) onRowsChange(insertAsNewRow(withoutItem, beforeKey, item))
   }
 
+  // Dépôt « libre » : la liste ENTIÈRE accepte le dépôt, pas seulement les cartes et les fins
+  // interstices de 8px entre les lignes (trop petits pour être visés : lâcher un widget dans le
+  // vide — sous la dernière ligne, entre deux cartes, à droite d'une ligne — ne faisait RIEN, et
+  // l'utilisateur en concluait qu'on ne peut déposer QUE sur une autre carte). Le conteneur sert de
+  // filet : tout dépôt qu'aucune carte/espace libre/interstice n'a intercepté est rabattu sur
+  // l'interstice le PLUS PROCHE verticalement du pointeur (nouvelle ligne pleine largeur à cet
+  // endroit), et l'interstice concerné est surligné pendant le survol pour l'annoncer.
+  const listRef = useRef<HTMLDivElement>(null)
+  const nearestGap = (clientY: number): number | null => {
+    const root = listRef.current
+    if (!root) return null
+    let best: number | null = null
+    let bestDist = Infinity
+    root.querySelectorAll<HTMLElement>('[data-testid^="widget-gap-"]').forEach((el) => {
+      const r = el.getBoundingClientRect()
+      const dist = Math.abs(clientY - (r.top + r.height / 2))
+      if (dist < bestDist) {
+        bestDist = dist
+        best = Number(el.dataset.testid?.slice('widget-gap-'.length))
+      }
+    })
+    return best
+  }
+  // Espace libre (colonnes non occupées) d'une ligne survolé pendant un glisser — visuel seulement.
+  // Clé `${rowIndex}:${insertBefore}` : une ligne peut avoir PLUSIEURS espaces libres (avant un
+  // widget décalé vers la droite dans le dashboard, et après le dernier), cf. rowSpacer.
+  const [dragOverSlot, setDragOverSlot] = useState<string | null>(null)
+  // Carte survolée pendant un glisser (« déposer ici = se mettre côte à côte ») — visuel seulement.
+  const [dragOverItem, setDragOverItem] = useState<string | null>(null)
+  const clearDragVisuals = () => {
+    setDragOverGap(null)
+    setDragOverSlot(null)
+    setDragOverItem(null)
+  }
+  // Dépôt dans un espace libre d'une ligne : le widget REJOINT cette ligne à cette position —
+  // `insertBefore` = index du widget qui se trouvera à sa droite (`row.length` = tout à droite).
+  // C'est ce que l'espace vide suggère : « il y a de la place ici ». Ligne déjà pleine
+  // (MAX_ROW_ITEMS) : repli sur une nouvelle ligne juste en dessous — le geste produit toujours un
+  // résultat visible plutôt qu'un dépôt silencieusement ignoré.
+  const dropAtRowSlot = (rowIndex: number, insertBefore: number, payload: DragPayload) => {
+    setDraggingId(null)
+    const row = rows[rowIndex]
+    if (!row) return
+    if (payload.rowIndex === rowIndex) {
+      // Même ligne : l'index cible se décale d'un cran quand le widget vient de la GAUCHE du point
+      // d'insertion (son retrait fait glisser tout ce qui suit d'une position).
+      const to = payload.itemIndex < insertBefore ? insertBefore - 1 : insertBefore
+      onRowsChange(reorderWithinRow(rows, rowIndex, payload.itemIndex, to))
+      return
+    }
+    if (row.length >= MAX_ROW_ITEMS) {
+      dropAsNewRow(rowIndex + 1, payload)
+      return
+    }
+    const targetKey = rowKey(row)
+    const { rows: withoutItem, item } = removeItem(rows, payload.rowIndex, payload.itemIndex)
+    if (!item) return
+    // `insertIntoRow` ajoute en FIN de ligne ; on ramène ensuite le widget à la position visée. La
+    // ligne cible se retrouve par son contenu (la suppression a pu faire disparaître des lignes
+    // vidées, donc décaler les index).
+    const joined = insertIntoRow(withoutItem, targetKey, item)
+    const idx = joined.findIndex((r) => r.some((it) => it.i === item.i))
+    if (idx === -1) return
+    onRowsChange(reorderWithinRow(joined, idx, joined[idx].length - 1, Math.min(insertBefore, joined[idx].length - 1)))
+  }
+  // Espace libre d'une ligne, À L'ÉCHELLE (`cols` colonnes sur 12, comme les cartes) : reproduit
+  // dans le panneau le vide que le widget laisse dans le dashboard — à sa gauche quand il est
+  // décalé vers la droite (x > 0 sans voisin : un widget seul lâché à la souris dans la colonne
+  // de droite du dashboard doit apparaître à DROITE ici aussi, pas collé à gauche), et à sa droite
+  // quand la ligne ne remplit pas 12 colonnes. Aussi une cible de dépôt (cf. dropAtRowSlot).
+  const rowSpacer = (rowIndex: number, cols: number, insertBefore: number) => {
+    const slot = `${rowIndex}:${insertBefore}`
+    return (
+      <div
+        key={`spacer-${slot}`}
+        data-testid={`widget-spacer-${slot}`}
+        onDragOver={(e) => {
+          e.preventDefault()
+          e.stopPropagation()
+          if (dragOverSlot !== slot) {
+            setDragOverGap(null)
+            setDragOverItem(null)
+            setDragOverSlot(slot)
+          }
+        }}
+        onDrop={(e) => {
+          e.preventDefault()
+          e.stopPropagation()
+          clearDragVisuals()
+          const payload = readPayload(e)
+          if (payload) dropAtRowSlot(rowIndex, insertBefore, payload)
+        }}
+        style={{ flexGrow: cols, flexBasis: 0 }}
+        className={cn(
+          'rounded-lg border border-dashed transition-colors',
+          dragOverSlot === slot && draggingId !== null ? 'border-primary bg-primary/10' : 'border-transparent',
+        )}
+      />
+    )
+  }
+
   // Collapsed desktop : simple bandeau, juste un bouton pour ré-ouvrir.
   if (!narrow && collapsed) {
     return (
@@ -228,14 +354,17 @@ export function DashboardStructurePanel({
     <div
       key={`gap-${gapIndex}`}
       data-testid={`widget-gap-${gapIndex}`}
+      // `stopPropagation` : le conteneur (cf. listRef) gère aussi ces événements en filet — sans
+      // l'arrêt ici, un dépôt sur l'interstice remontait jusqu'à lui et était traité DEUX fois.
       onDragOver={(e) => {
         e.preventDefault()
+        e.stopPropagation()
         if (dragOverGap !== gapIndex) setDragOverGap(gapIndex)
       }}
-      onDragLeave={() => setDragOverGap((cur) => (cur === gapIndex ? null : cur))}
       onDrop={(e) => {
         e.preventDefault()
-        setDragOverGap(null)
+        e.stopPropagation()
+        clearDragVisuals()
         const payload = readPayload(e)
         if (payload) dropAsNewRow(gapIndex, payload)
       }}
@@ -291,12 +420,50 @@ export function DashboardStructurePanel({
         </div>
       </div>
 
-      <div className="flex-1 space-y-1 overflow-y-auto p-2">
+      <div
+        ref={listRef}
+        data-testid="widget-list"
+        // Filet de dépôt sur toute la liste (cf. nearestGap) : ce qui n'a été intercepté ni par une
+        // carte, ni par l'espace libre d'une ligne, ni par un interstice atterrit dans l'interstice
+        // le plus proche du pointeur. Les enfants qui gèrent eux-mêmes le dépôt arrêtent la
+        // propagation, on ne voit donc ici QUE les dépôts « dans le vide ».
+        onDragOver={(e) => {
+          e.preventDefault()
+          const gap = nearestGap(e.clientY)
+          setDragOverSlot(null)
+          setDragOverItem(null)
+          if (gap !== dragOverGap) setDragOverGap(gap)
+        }}
+        onDragLeave={(e) => {
+          // Ne réagir qu'à la SORTIE de la liste — `dragleave` se déclenche aussi à chaque passage
+          // d'un enfant à l'autre, ce qui ferait clignoter la surbrillance.
+          const next = e.relatedTarget as Node | null
+          if (!next || !e.currentTarget.contains(next)) clearDragVisuals()
+        }}
+        onDrop={(e) => {
+          e.preventDefault()
+          clearDragVisuals()
+          const payload = readPayload(e)
+          const gap = nearestGap(e.clientY)
+          if (payload && gap !== null) dropAsNewRow(gap, payload)
+        }}
+        className="flex-1 space-y-1 overflow-y-auto p-2"
+      >
         {itemCount === 0 && (
           <p className="px-2 py-4 text-center text-xs text-muted-foreground">{t('widget.empty')}</p>
         )}
         {dropGap(0)}
-        {rows.map((row, rowIndex) => (
+        {rows.map((row, rowIndex) => {
+          // Colonnes NON occupées À DROITE de la ligne (une ligne peut totaliser moins de 12 : un
+          // widget seul réduit à 6 colonnes n'occupe que la moitié du dashboard) — matérialisées par
+          // un espace vide, pour que la carte garde la même proportion ET la même position que sa
+          // tuile. Calculé d'après `x + w` du DERNIER widget (pas la somme des largeurs) : les vides
+          // ENTRE widgets, dus à un `x` décalé, sont rendus séparément devant chaque carte (cf.
+          // leadCols dans la boucle). Jamais négatif : GridStack borne x + w à 12, et
+          // `renumberRows` ramène toute ligne > 12 à une répartition égale avant persist.
+          const last = row[row.length - 1]
+          const spareCols = Math.max(0, MAX_WIDGET_WIDTH - (last.x + Math.max(1, last.w)))
+          return (
           <div key={rowKey(row)}>
             <div className="flex gap-1.5">
               {row.map((item, itemIndex) => {
@@ -304,14 +471,39 @@ export function DashboardStructurePanel({
                 if (!def) return null
                 const title = def.titleLabel ?? t(def.titleKey)
                 const sizeOpen = sizeOpenFor.has(item.i)
+                // Largeur réelle de la tuile (colonnes sur 12) → part de la ligne du panneau ; hauteur
+                // réelle (lignes de grille) → hauteur de la carte. Cf. les constantes PANEL_* en tête.
+                const cols = Math.max(1, item.w)
+                const showTitle = narrow || cols >= PANEL_TITLE_MIN_COLS
+                const cardMinHeight = PANEL_CARD_BASE_PX + Math.max(0, item.h - MIN_WIDGET_HEIGHT) * PANEL_PX_PER_GRID_ROW
+                // Colonnes vides entre la fin du widget précédent (ou le bord gauche) et celui-ci :
+                // un `x` décalé dans le dashboard (widget lâché à la souris à droite, sans voisin à
+                // gauche) se traduit ici par le même vide À GAUCHE de la carte. Arrondi car `x` est
+                // entier mais `w` peut rester continu le temps d'une édition (cf. renumberRows).
+                const prev = itemIndex > 0 ? row[itemIndex - 1] : null
+                const prevEnd = prev ? prev.x + Math.max(1, prev.w) : 0
+                const leadCols = Math.max(0, Math.round(item.x - prevEnd))
                 return (
+                  <Fragment key={item.i}>
+                  {leadCols > 0 && rowSpacer(rowIndex, leadCols, itemIndex)}
                   <div
-                    key={item.i}
                     data-testid={`widget-item-${item.i}`}
-                    onDragOver={(e) => e.preventDefault()}
+                    // `stopPropagation` : ne pas laisser le filet du conteneur surligner un
+                    // interstice pendant qu'on survole une carte (le dépôt ira côte à côte, pas
+                    // dans une nouvelle ligne) — on surligne la carte elle-même à la place.
+                    onDragOver={(e) => {
+                      e.preventDefault()
+                      e.stopPropagation()
+                      if (dragOverItem !== item.i) {
+                        setDragOverGap(null)
+                        setDragOverSlot(null)
+                        setDragOverItem(item.i)
+                      }
+                    }}
                     onDrop={(e) => {
                       e.preventDefault()
                       e.stopPropagation()
+                      clearDragVisuals()
                       setDraggingId(null)
                       const payload = readPayload(e)
                       if (!payload) return
@@ -333,25 +525,33 @@ export function DashboardStructurePanel({
                     // Les contrôles internes (poignée, champs W/H, boutons) stoppent leur propre clic
                     // pour ne pas déclencher aussi ce flash à chaque réglage.
                     onClick={() => onHighlight(item.i)}
-                    // Ligne à 3 widgets (MAX_ROW_ITEMS) : chaque carte n'a plus la place pour son
-                    // titre (2-3 lettres tronquées, illisible) — l'icône seule l'identifie, et le nom
-                    // complet reste accessible en secours via l'infobulle NATIVE du navigateur
-                    // (`title=`), posée ici sur la carte entière plutôt que sur le texte (absent). À 2
-                    // widgets côte à côte, chacun garde une largeur suffisante pour son titre — pas
-                    // besoin de le masquer (cf. la même limite sur le `span` ci-dessous).
+                    // Carte trop étroite pour son titre (moins de PANEL_TITLE_MIN_COLS colonnes) :
+                    // l'icône seule l'identifie, et le nom complet reste accessible en secours via
+                    // l'infobulle NATIVE du navigateur (`title=`), posée ici sur la carte entière
+                    // plutôt que sur le texte (absent). Cf. la même condition sur le `span` ci-dessous.
                     //
                     // ⚠️ Tenté un temps via une VRAIE requête de conteneur CSS (`@container` +
-                    // `@[130px]:block`) pour que ce seuil s'adapte à la largeur RÉELLE de la carte —
-                    // annulé : le seuil en pixels était deviné sans pouvoir mesurer le rendu réel du
-                    // navigateur, et le résultat masquait le titre même à 2 widgets par ligne (carte
-                    // pourtant plus large que prévu). Revenu à `row.length`, seule valeur qu'on
-                    // connaît avec certitude ici.
-                    title={row.length > 2 && !narrow ? title : undefined}
+                    // `@[130px]:block`) — annulé : le seuil en pixels était deviné sans pouvoir
+                    // mesurer le rendu réel du navigateur. Le seuil en COLONNES est lui déterministe :
+                    // la carte occupe exactement `w`/12 de la ligne (cf. `flexGrow` ci-dessous).
+                    title={!showTitle ? title : undefined}
+                    // Miniature à l'échelle : `flexGrow: w` sur une base 0 répartit la ligne au prorata
+                    // des colonnes (le spacer de fin absorbe les colonnes libres), et la hauteur suit
+                    // le nombre de lignes de grille. `minWidth` empêche une carte d'1 colonne de
+                    // devenir inopérable. (Pas de classe Tailwind : valeurs calculées par widget.)
+                    style={{
+                      flexGrow: cols,
+                      flexBasis: 0,
+                      minWidth: PANEL_MIN_CARD_PX,
+                      minHeight: cardMinHeight,
+                    }}
                     className={cn(
-                      'group flex min-w-0 flex-1 cursor-pointer flex-col gap-1.5 rounded-lg border bg-card px-2.5 py-2 transition-all',
+                      'group flex min-w-0 cursor-pointer flex-col gap-1.5 rounded-lg border bg-card px-2.5 py-2 transition-all',
                       draggingId === item.i
                         ? 'border-primary/40 opacity-40'
-                        : 'border-border/70 hover:border-primary/30 hover:shadow-sm',
+                        : dragOverItem === item.i && draggingId !== null
+                          ? 'border-primary ring-2 ring-primary/30'
+                          : 'border-border/70 hover:border-primary/30 hover:shadow-sm',
                     )}
                   >
                     <div className="flex items-center gap-2">
@@ -366,7 +566,10 @@ export function DashboardStructurePanel({
                           e.dataTransfer.setData('text/plain', JSON.stringify({ rowIndex, itemIndex } satisfies DragPayload))
                           setDraggingId(item.i)
                         }}
-                        onDragEnd={() => setDraggingId(null)}
+                        onDragEnd={() => {
+                          setDraggingId(null)
+                          clearDragVisuals()
+                        }}
                         className="grid size-5 shrink-0 cursor-grab place-items-center rounded text-muted-foreground/40 transition-colors hover:bg-accent hover:text-muted-foreground active:cursor-grabbing"
                         title={t('widget.drag_reorder')}
                       >
@@ -379,13 +582,11 @@ export function DashboardStructurePanel({
                           <def.icon className="size-3.5" />
                         </div>
                       )}
-                      {/* Masqué seulement à 3 widgets côte à côte (MAX_ROW_ITEMS) : plus de place
-                          pour le titre (2-3 lettres tronquées, illisible, cf. l'infobulle sur la
-                          carte ci-dessus à la place) — l'icône seule l'identifie au repos. À 2 par
-                          ligne, chaque carte garde assez de largeur pour l'afficher (tronqué si
-                          besoin, mais lisible) ; toujours affiché en solo et en étroit (tiroir
-                          tactile, pas de survol au doigt). */}
-                      {(row.length <= 2 || narrow) && (
+                      {/* Masqué quand la carte est trop étroite (moins de PANEL_TITLE_MIN_COLS
+                          colonnes : 2-3 lettres tronquées, illisible, cf. l'infobulle sur la carte
+                          ci-dessus à la place) — l'icône seule l'identifie au repos. Toujours
+                          affiché en étroit (tiroir tactile, pas de survol au doigt). */}
+                      {showTitle && (
                         <span className="min-w-0 flex-1 truncate text-xs font-semibold text-foreground">{title}</span>
                       )}
                     </div>
@@ -398,11 +599,11 @@ export function DashboardStructurePanel({
                         égale, cf. renumberRows) ; la hauteur marque la tuile « réglée à la main »
                         (userSized) : l'auto-fit ne la retouche plus. */}
                     {sizeOpen && (
-                    // Empilés (H sous W) dès que la carte partage sa ligne avec un voisin — le
-                    // champ + son suffixe tiennent mal côte à côte dans une carte réduite à une
-                    // fraction de la largeur du panneau ; une seule carte par ligne a toute la
-                    // place pour les garder côte à côte.
-                    <div className={cn('flex gap-2.5', row.length > 1 ? 'flex-col' : 'items-center')}>
+                    // Empilés (H sous W) dès que la carte est réduite à une fraction du panneau
+                    // (moins de PANEL_STACK_FIELDS_BELOW_COLS colonnes) — le champ + son suffixe
+                    // tiennent mal côte à côte ; une carte large a toute la place pour les garder
+                    // côte à côte.
+                    <div className={cn('flex gap-2.5', cols < PANEL_STACK_FIELDS_BELOW_COLS ? 'flex-col' : 'items-center')}>
                       <label className="flex flex-1 items-center gap-1 text-[10px] text-muted-foreground/70">
                         W
                         <div className="relative min-w-0 flex-1">
@@ -458,7 +659,10 @@ export function DashboardStructurePanel({
                       </label>
                     </div>
                     )}
-                    <div className="flex items-center gap-0.5">
+                    {/* `mt-auto` : sur une carte grandie par `minHeight` (tuile haute), la barre de
+                        boutons reste collée en bas et l'espace libre se place entre l'en-tête et
+                        elle — silhouette d'une tuile, pas d'un bloc à moitié vide. */}
+                    <div className="mt-auto flex items-center gap-0.5">
                       <button
                         type="button"
                         onMouseDown={(e) => e.stopPropagation()}
@@ -507,12 +711,18 @@ export function DashboardStructurePanel({
                       </button>
                     </div>
                   </div>
+                  </Fragment>
                 )
               })}
+              {/* Colonnes libres À DROITE de la ligne (cf. spareCols) : à l'échelle, et cible de
+                  dépôt « rejoindre cette ligne en dernière position » (cf. dropAtRowSlot) — c'est
+                  là que l'utilisateur lâche spontanément « à côté de » quelque chose. */}
+              {spareCols > 0 && rowSpacer(rowIndex, spareCols, row.length)}
             </div>
             {dropGap(rowIndex + 1)}
           </div>
-        ))}
+          )
+        })}
       </div>
 
       <div className="shrink-0 border-t border-border p-3">
