@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { Bell, ChevronDown, ChevronUp, Download, MessageSquare, Newspaper, Plug } from 'lucide-react'
+import { Bell, ChevronDown, ChevronUp, Download, MessageSquare, Newspaper } from 'lucide-react'
 
-import { Button } from '@/components/ui/button'
 import { Collapsible } from '@/components/ui/collapsible'
 import { cn } from '@/lib/utils'
 import { useIsNarrow } from '@/hooks/useIsNarrow'
@@ -15,11 +14,17 @@ import {
   takeDashboardLayout,
 } from '@/lib/dashboard-prefetch'
 import { DashboardGrid } from '@/components/dashboard/DashboardGrid'
-import { WidgetPalette } from '@/components/dashboard/WidgetPalette'
+import { DashboardStructurePanel } from '@/components/dashboard/DashboardStructurePanel'
 import { WIDGET_MAP, buildLegacyWidgetDef, type WidgetDef } from '@/components/dashboard/widget-registry'
 import {
+  groupIntoRows,
   loadLayout,
   makeInstanceId,
+  MAX_WIDGET_HEIGHT,
+  MAX_WIDGET_WIDTH,
+  MIN_WIDGET_HEIGHT,
+  MIN_WIDGET_WIDTH,
+  renumberRows,
   saveLayout,
   widgetIdOf,
   type GridItem,
@@ -155,22 +160,28 @@ export default function DashboardPage() {
     })
   }, [])
 
+  // Repère « clique un widget dans le panneau → il flashe/se scrolle en vue dans le dashboard » —
+  // équivalent du survol/sélection du panneau de zones de l'éditeur de page (EditionCanvas.tsx),
+  // adapté en simple flash temporisé : ce dashboard n'a pas de notion de sélection persistante
+  // (pas d'édition en place), un flash suffit à repérer le widget. Un nouveau clic pendant le
+  // flash en cours relance son timer (`clearTimeout` avant d'en reposer un) plutôt que d'empiler
+  // les délais.
+  const [highlightedWidgetId, setHighlightedWidgetId] = useState<string | null>(null)
+  const highlightTimerRef = useRef<number | null>(null)
+  const highlightWidget = useCallback((instanceId: string) => {
+    setHighlightedWidgetId(instanceId)
+    if (highlightTimerRef.current !== null) window.clearTimeout(highlightTimerRef.current)
+    highlightTimerRef.current = window.setTimeout(() => {
+      setHighlightedWidgetId((cur) => (cur === instanceId ? null : cur))
+    }, 1600)
+  }, [])
+
   const [layout, setLayout] = useState<GridItem[]>(() => loadLayout())
   // Passe à `true` une fois le fetch DB résolu (succès OU échec). Tant qu'il est `false`, on retient
   // l'affichage de l'état vide : au montage `layout` peut être vide (cache localStorage absent/périmé
   // avant que la DB partagée ne le remplisse), et sans ce verrou le message « dashboard vide »
   // clignotait le temps du fetch alors que des plugins allaient s'afficher.
   const [dbSynced, setDbSynced] = useState(false)
-  const [paletteOpen, setPaletteOpen] = useState(false)
-
-  // Vignettes de la palette : différées jusqu'à la 1ʳᵉ ouverture. Fermée par défaut, la palette est
-  // pourtant TOUJOURS montée (animation de largeur) → sans ce verrou ses ~N images se chargeraient
-  // au premier rendu du dashboard, sur le chemin critique. Chaque vignette passe par MelisAssetManager
-  // (servie en PHP) qui sérialise sur le verrou de session ; on ne les tire donc qu'à l'ouverture.
-  const [paletteEverOpened, setPaletteEverOpened] = useState(false)
-  useEffect(() => {
-    if (paletteOpen) setPaletteEverOpened(true)
-  }, [paletteOpen])
 
   // Passe à `true` quand le record serveur a été chargé (≠ cache localStorage) → gate du heal effect.
   const serverLayoutRef = useRef(false)
@@ -208,7 +219,11 @@ export default function DashboardPage() {
       // « Remove all » côté /melis vide le record → on doit refléter ce vide côté React (effacer la
       // grille + le cache), sinon les plugins retirés restaient affichés depuis le localStorage.
       if (records) {
-        const dbLayout = recordsToLayout(records)
+        // Tri (y, x) purement cosmétique pour le premier affichage : un layout écrit par l'ancienne
+        // grille libre (avant ce panneau) peut avoir un ordre 2D quelconque. Aucun `persist` ici —
+        // le tableau ne devient réellement une pile (x/y/w renumérotés) qu'au premier réordonnancement/
+        // ajout/retrait de l'utilisateur (cf. renumberStack, déclenché depuis les handlers ci-dessous).
+        const dbLayout = recordsToLayout(records).sort((a, b) => a.y - b.y || a.x - b.x)
         setLayout(dbLayout)
         saveLayout(dbLayout)
         // Point de référence anti-doublon : ce que le serveur a DÉJÀ. Toute réconciliation au montage
@@ -264,19 +279,33 @@ export default function DashboardPage() {
         // utilisateur) le supprimait définitivement de la base.
         const pluginName = def?.pluginName ?? (wid.startsWith('legacy-') ? wid.slice('legacy-'.length) : '')
         if (!pluginName) return []
-        // Hauteur legacy : celle de la déf. si connue, sinon celle relevée dans le record au
-        // chargement (`legacyH`), sinon la hauteur de référence des plugins (4 lignes).
-        const legacyH = def?.legacyH ?? l.legacyH ?? 4
-        // On persiste la hauteur LEGACY DÉCLARÉE du plugin (`def.legacyH`), PAS la hauteur d'affichage
-        // React (`l.h`, ajustée au contenu en cellules 46px). Écrire `l.h` gonflait la tuile côté
-        // /melis (rendue à ×80px) → gros vide en bas. La hauteur reste ainsi celle de la config du
-        // plugin dans les deux dashboards. (x/y/w conservés : mêmes unités, 12 colonnes.)
+        // Hauteur legacy : celle DÉJÀ ENREGISTRÉE pour CETTE INSTANCE (`l.legacyH`, relevée dans le
+        // record au chargement) si on la connaît, sinon celle de la déf. (nouveau widget jamais
+        // sauvegardé), sinon la hauteur de référence des plugins (4 lignes).
+        //
+        // ⚠️ L'ordre importe : préférer `def.legacyH` (la hauteur GÉNÉRIQUE déclarée par la config PHP
+        // du TYPE de plugin) écraserait, à CHAQUE persist (n'importe quelle action : réordonner un
+        // AUTRE widget suffit), la hauteur que l'admin a personnalisée pour CETTE instance précise
+        // depuis le BO classique (GridStack y autorise le redimensionnement par instance). Vérifié sur
+        // un jeu de données réel riche (export vitogaz) : la hauteur varie bel et bien d'une instance à
+        // l'autre pour un même plugin — `def.legacyH` en priorité aurait aplati silencieusement toutes
+        // ces personnalisations dès le premier chargement du dashboard React par un utilisateur.
+        const legacyH = l.legacyH ?? def?.legacyH ?? 4
+        // On persiste la hauteur LEGACY DÉCLARÉE (celle de l'instance, cf. ci-dessus), PAS la hauteur
+        // d'affichage React (`l.h`, ajustée au contenu en cellules 46px). Écrire `l.h` gonflait la
+        // tuile côté /melis (rendue à ×80px) → gros vide en bas. La hauteur reste ainsi celle
+        // enregistrée pour cette instance dans les deux dashboards. (x/y conservés tels quels, mêmes
+        // unités, 12 colonnes.)
+        // `w` ARRONDI ici par sécurité (déjà entier en pratique, cf. setWidgetWidth qui reçoit des
+        // colonnes natives 1-12 depuis le champ W du panneau) — le dashboard classique (sa vraie
+        // grille GridStack, colonnes entières) a de toute façon besoin d'un entier.
         return [{
-          pluginName, pluginId: l.i, x: l.x, y: l.y, w: l.w, h: legacyH,
+          pluginName, pluginId: l.i, x: l.x, y: l.y, w: Math.round(l.w), h: legacyH,
           // Hauteur d'affichage React persistée UNIQUEMENT si l'utilisateur l'a réglée à la main
           // (`<react-height>`, ignorée par le dashboard classique). Sinon `null` → l'auto-fit
-          // reprend la main au prochain rendu.
-          reactH: l.userSized ? l.h : null,
+          // reprend la main au prochain rendu. Arrondie ici par sécurité (même principe que `w`
+          // ci-dessus, déjà entière en pratique depuis le champ H du panneau).
+          reactH: l.userSized ? Math.round(l.h) : null,
         }]
       }),
     [allWidgetMap],
@@ -423,27 +452,111 @@ export default function DashboardPage() {
     persist(kept, kept.length !== layoutRef.current.length ? { allowRemoval: true } : undefined)
   }, [legacyLoaded, dbSynced, allWidgetMap, persist])
 
-  // Émis par GridStack après un déplacement / redimensionnement utilisateur → action utilisateur
-  // (peut légitimement réduire le nombre de tuiles, ex. via un drag qui en retire une).
+  // Émis par DashboardStack après un ajustement automatique de hauteur → l'ORDRE/les LIGNES ne
+  // changent pas, seule la hauteur d'une tuile est recalculée : pas besoin de renuméroter x/y/w
+  // (déjà cohérents, une hauteur de ligne ne peut que grandir la place réservée aux voisines).
   const handleChange = useCallback((items: GridItem[]) => persist(items, { userAction: true }), [persist])
 
+  // Regroupement en LIGNES (1 à 3 widgets côte à côte) déduit de x/y — cf. groupIntoRows. Recalculé
+  // à chaque changement de `layout` ; c'est la forme que consomment le panneau de structure (pour
+  // afficher/réordonner les lignes) et la pile principale (pour le rendu côte à côte).
+  const rows = useMemo(() => groupIntoRows(layout), [layout])
+
+  // Réarrangement de lignes depuis le panneau de structure (réordonnancement de lignes, déplacement
+  // d'un widget d'une ligne à une autre, scission en nouvelle ligne...) : le panneau ne manipule que
+  // des LIGNES abstraites, `renumberRows` recalcule x/y/w concrets avant persistance — c'est ce qui
+  // permet au dashboard classique (/melis, qui rend x/y/w/h tels quels dans sa propre grille) de
+  // continuer à afficher un agencement 2D valide sans aucun changement côté PHP.
+  const handleRowsChange = useCallback(
+    (next: GridItem[][]) => persist(renumberRows(next), { userAction: true }),
+    [persist],
+  )
+
   // Ajoute toujours une NOUVELLE instance — le même plugin peut être posé plusieurs fois.
+  const makeItem = useCallback(
+    (widgetId: string): GridItem | null => {
+      const def = allWidgetMap[widgetId]
+      if (!def) return null
+      const instanceId = present.has(widgetId) ? makeInstanceId(widgetId) : widgetId
+      return { i: instanceId, x: 0, y: 0, w: def.w, h: def.h, minW: def.minW, minH: def.minH }
+    },
+    [present, allWidgetMap],
+  )
+
+  // Ajout en BAS du dashboard, comme nouvelle ligne pleine largeur (comportement du bouton « + » du
+  // panneau, hors ligne particulière — cf. `addToRow` pour ajouter à côté d'un widget existant).
   const addWidget = useCallback(
     (widgetId: string) => {
-      const def = allWidgetMap[widgetId]
-      if (!def) return
-      const instanceId = present.has(widgetId) ? makeInstanceId(widgetId) : widgetId
-      const maxY = layout.reduce((m, l) => Math.max(m, l.y + l.h), 0)
-      persist([...layout, { i: instanceId, x: 0, y: maxY, w: def.w, h: def.h, minW: def.minW, minH: def.minH }], { userAction: true })
+      const newItem = makeItem(widgetId)
+      if (!newItem) return
+      persist(renumberRows([...rows, [newItem]]), { userAction: true })
     },
-    [layout, present, allWidgetMap, persist],
+    [rows, makeItem, persist],
   )
 
   // `instanceId` = id complet de l'item de grille (l.i), pas l'id du widget —
-  // ne retire que l'instance ciblée, pas tous les exemplaires du même widget.
+  // ne retire que l'instance ciblée, pas tous les exemplaires du même widget. Les lignes devenues
+  // vides disparaissent d'elles-mêmes (`groupIntoRows` ne regroupe que ce qui reste).
   const removeWidget = useCallback(
-    (instanceId: string) => persist(layout.filter((l) => l.i !== instanceId), { userAction: true, allowRemoval: true }),
+    (instanceId: string) =>
+      persist(renumberRows(groupIntoRows(layout.filter((l) => l.i !== instanceId))), {
+        userAction: true,
+        allowRemoval: true,
+      }),
     [layout, persist],
+  )
+
+  // Hauteur manuelle (champ numérique du panneau) — même mécanisme que le redimensionnement manuel
+  // d'origine (`userSized`/`reactH`) : l'auto-fit ne retouche plus cette tuile ensuite, et la
+  // hauteur choisie est celle que persiste `layoutToRecords`.
+  //
+  // `rows` arrive déjà en lignes de grille NATIVES ENTIÈRES (champ H du panneau, cf.
+  // DashboardStructurePanel/applyHeightDraft), même principe que `setWidgetWidth` — plus de
+  // conversion depuis un pourcentage ici.
+  const setWidgetHeight = useCallback(
+    (instanceId: string, rows: number) => {
+      const h = Math.max(MIN_WIDGET_HEIGHT, Math.min(MAX_WIDGET_HEIGHT, rows))
+      const next = layout.map((l) => (l.i === instanceId ? { ...l, h, userSized: true } : l))
+      persist(renumberRows(groupIntoRows(next)), { userAction: true })
+    },
+    [layout, persist],
+  )
+
+  // Largeur manuelle (champ numérique du panneau, colonnes sur 12) — le VOISIN absorbe la
+  // différence (celui de droite, sinon celui de gauche si ce widget est déjà en dernière position
+  // de sa ligne), comme redimensionner une colonne de tableur : la ligne reste à somme constante,
+  // jamais besoin du repli « répartition égale » de `renumberRows` pour un simple ajustement.
+  // Si le voisin est déjà à `MIN_WIDGET_WIDTH`, il ne cède que ce qu'il peut — la largeur
+  // effectivement obtenue peut alors être inférieure à la valeur tapée, bornée par ce qui est
+  // réellement disponible (même logique qu'une poignée de redimensionnement qui bute sur la
+  // colonne voisine). Une ligne d'un seul widget n'a pas de voisin : simple bornage.
+  //
+  // `cols` arrive déjà en colonnes NATIVES ENTIÈRES (champ W du panneau, cf.
+  // DashboardStructurePanel/applyWidthDraft) — plus de conversion depuis un pourcentage ici : un
+  // pas de pourcentage (1/100 de ligne) est plus fin qu'1/12 de colonne, donc plusieurs frappes
+  // consécutives pouvaient retomber sur la même colonne côté GridStack (dashboard) et sembler
+  // sans effet. En colonnes, chaque pas EST un palier représentable par la grille.
+  const setWidgetWidth = useCallback(
+    (instanceId: string, cols: number) => {
+      const w = Math.max(MIN_WIDGET_WIDTH, Math.min(MAX_WIDGET_WIDTH, cols))
+      const nextRows = rows.map((row) => {
+        const idx = row.findIndex((it) => it.i === instanceId)
+        if (idx === -1) return row
+        const current = row[idx]
+        if (row.length < 2) return row.map((it, i) => (i === idx ? { ...it, w } : it))
+        const neighborIdx = idx + 1 < row.length ? idx + 1 : idx - 1
+        const neighbor = row[neighborIdx]
+        const neighborW = Math.max(MIN_WIDGET_WIDTH, Math.min(MAX_WIDGET_WIDTH, neighbor.w - (w - current.w)))
+        const actualW = current.w + (neighbor.w - neighborW)
+        return row.map((it, i) => {
+          if (i === idx) return { ...it, w: actualW }
+          if (i === neighborIdx) return { ...it, w: neighborW }
+          return it
+        })
+      })
+      persist(renumberRows(nextRows), { userAction: true })
+    },
+    [rows, persist],
   )
 
   // « Supprimer tous les plugins » — équivalent du `#dashboard-plugin-delete-all` legacy
@@ -455,11 +568,7 @@ export default function DashboardPage() {
 
   return (
     <DashboardDataContext.Provider value={{ stats }}>
-    {/* `relative` : référentiel de l'onglet d'ouverture, positionné en `right` pour coulisser avec
-        la palette. `overflow-hidden` : pendant l'animation de largeur, la palette (largeur interne
-        figée à 18rem) dépasse de son cadre — sans ça elle créerait une barre de défilement
-        horizontale sur toute la page. */}
-    <div className="relative flex h-full overflow-hidden">
+    <div className="flex h-full overflow-hidden">
       <div className="flex min-w-0 flex-1 flex-col">
         {/* Bulles du haut (News / Mises à jour / Notifications / Messages) —
             équivalent React des dashboard bubble plugins de MelisCore.
@@ -502,106 +611,43 @@ export default function DashboardPage() {
           </div>
         </Collapsible>
 
-        {/* Grille */}
+        {/* Lignes de widgets (1 à 3 côte à côte) — même ordre/agencement que le panneau de structure
+            à droite, comme le canevas de l'éditeur de page reflète son panneau de zones. */}
         <div className={cn('min-h-0 flex-1 overflow-auto pb-8 pt-4', narrow ? 'px-2' : 'px-5 sm:px-8')}>
-          {/* La grille reste TOUJOURS montée, même vide : c'est elle la cible de dépôt des
-              widgets glissés depuis la palette. La remplacer par l'état vide retirait
-              `.grid-stack` du DOM → après avoir retiré tous les widgets, plus rien n'acceptait
-              un drop (seul le clic sur « + » fonctionnait encore). L'état vide passe donc en
-              surimpression, en `pointer-events-none` pour ne pas intercepter le dépôt. */}
-          <div className="relative">
-            {layout.length === 0 && dbSynced && (
-              <div className="pointer-events-none absolute inset-0 grid place-items-center rounded-lg border border-dashed border-border text-center">
-                <div className="max-w-xs text-sm text-muted-foreground">{t('widget.empty')}</div>
-              </div>
-            )}
+          {layout.length === 0 && dbSynced ? (
+            <div className="grid h-full place-items-center rounded-lg border border-dashed border-border text-center">
+              <div className="max-w-xs text-sm text-muted-foreground">{t('widget.empty')}</div>
+            </div>
+          ) : (
             <DashboardGrid
               layout={layout}
               onChange={handleChange}
               onRemove={removeWidget}
               extraWidgetMap={extraWidgetMap}
+              highlightedId={highlightedWidgetId}
             />
-          </div>
+          )}
         </div>
       </div>
 
-      {/* Onglet d'ouverture — accroché au FLANC GAUCHE de la palette (legacy :
-          `#melisDashBoardPluginBtn`, `position:absolute; left:-38px`, dashboard.css:189).
-          Positionné en `right` par rapport à la page (et non dans le flux de l'en-tête) : c'est ce
-          qui lui permet de COULISSER en même temps que la palette. Fermé → collé au bord droit ;
-          ouvert → `right-72`, exactement la largeur de la palette, donc posé sur son bord.
-          Même durée/courbe que la palette : les deux bougent d'un seul bloc. */}
-      <Button
-        // Toujours `default` (aplat primaire, icône blanche) : c'est l'action principale du
-        // dashboard, elle doit rester repérable. En `outline` le bouton fermé se fondait dans
-        // l'en-tête et devenait invisible.
-        variant="default"
-        size="icon"
-        onClick={() => setPaletteOpen((v) => !v)}
-        title={t('widget.add')}
-        aria-label={t('widget.add')}
-        className={cn(
-          // `[&_svg]:size-5` et NON `size-5` sur l'icône : la base du Button impose
-          // `[&_svg]:size-4`, un sélecteur descendant qui l'emporte en spécificité sur une classe
-          // posée directement sur le <svg>. Il faut donc relever la taille depuis le bouton.
-          // Rayon arrondi À GAUCHE seulement, côté droit au ras du bord → la pastille rouge paraît
-          // accrochée au flanc (languette latérale).
-          // ⚠️ On passe par un rayon ARBITRAIRE en une seule déclaration `border-radius: 6px 0 0 6px`
-          // au lieu de `rounded-l-md rounded-r-none` : la base `Button` porte déjà `rounded-md`, que
-          // twMerge conserve à côté de `rounded-r-none`, et l'ordre CSS laisse le raccourci `rounded-md`
-          // reprendre les coins droits (bouton « toujours arrondi »). Un unique rayon arbitraire évince
-          // `rounded-md` (même groupe twMerge) et supprime tout conflit raccourci/longhand.
-          'absolute top-4 z-40 rounded-[0.375rem_0_0_0.375rem] transition-[right] duration-[400ms] ease-out [&_svg]:size-5',
-          // Mobile : la palette s'ouvre en SURIMPRESSION pleine largeur (cf. plus bas), il n'y a
-          // donc plus de flanc où accrocher la languette — on la masque le temps de l'ouverture
-          // (la palette a sa propre croix de fermeture). Desktop : comportement d'origine intact.
-          narrow
-            ? paletteOpen ? 'right-0 hidden' : 'right-0'
-            : paletteOpen ? 'right-72' : 'right-0',
-        )}
-      >
-        {/* Icône INVARIANTE (pas de bascule en croix à l'ouverture) : le bouton reste le
-            repère « plugins du dashboard », comme le legacy qui garde son `fa-plug` ouvert
-            comme fermé. `rotate-45` : plug en diagonale.
-            `strokeWidth` monté à 2.5 (défaut lucide : 2) — le trait fin se perdait sur l'aplat
-            rouge ; c'est le seul levier de graisse d'une icône lucide (pas de `font-weight`). */}
-        <Plug className="rotate-45" strokeWidth={2.5} />
-      </Button>
-
-      {/* Palette d'ajout de widgets — colonne flex qui COMPRIME la grille (comportement voulu),
-          animée en largeur 0 → 18rem, `transition: width 0.4s` (le legacy anime un `transform`,
-          mais il recouvre la grille au lieu de la pousser : ici c'est la largeur qui doit bouger
-          pour que la colonne de gauche suive).
-          `overflow-hidden` + `w-72` figée sur l'aside : le contenu garde sa largeur pleine et se
-          fait révéler par le cadre qui s'ouvre — sans ça la palette se re-disposerait à chaque
-          frame (texte qui saute pendant 400 ms).
-          Le panneau reste MONTÉ en permanence : c'est ce qui rend l'animation possible dans les
-          deux sens, et ça préserve l'état interne de la palette (scroll, drag-in GridStack). */}
-      {/* Mobile : la palette ne peut plus COMPRIMER la grille (18rem sur un écran de 360px ne
-          laisserait qu'une lichette de dashboard) — elle passe en surimpression pleine largeur,
-          posée sur la grille, et se referme par sa croix. Même animation de largeur, même montage
-          permanent (état interne + drag-in GridStack préservés) : seul le positionnement change. */}
-      <div
-        className={cn(
-          'flex overflow-hidden transition-[width] duration-[400ms] ease-out',
-          narrow
-            ? cn('absolute inset-y-0 right-0 z-50', paletteOpen ? 'w-full' : 'w-0')
-            : cn('shrink-0', paletteOpen ? 'w-72' : 'w-0'),
-        )}
-        aria-hidden={!paletteOpen}
-      >
-        <WidgetPalette
-          fullWidth={narrow}
-          present={present}
-          onAdd={addWidget}
-          onClose={() => setPaletteOpen(false)}
-          onRemoveAll={removeAllWidgets}
-          widgetCount={layout.length}
-          nativeWidgets={gatedNativeWidgets}
-          extraWidgets={legacyWidgets}
-          loadThumbnails={paletteEverOpened}
-        />
-      </div>
+      {/* Panneau de structure — équivalent du panneau droit de l'éditeur de page (EditionCanvas) :
+          lignes de widgets (1 à 3 côte à côte), réordonnancement/déplacement entre lignes,
+          sélecteur de taille, config/retrait par widget, « + » pour ouvrir le catalogue en modale.
+          Gère lui-même son repli desktop et son tiroir mobile (cf. DashboardStructurePanel). */}
+      <DashboardStructurePanel
+        rows={rows}
+        widgetMap={allWidgetMap}
+        onRowsChange={handleRowsChange}
+        onRemove={removeWidget}
+        onAdd={addWidget}
+        onSetHeight={setWidgetHeight}
+        onSetWidth={setWidgetWidth}
+        onRemoveAll={removeAllWidgets}
+        present={present}
+        nativeWidgets={gatedNativeWidgets}
+        extraWidgets={legacyWidgets}
+        onHighlight={highlightWidget}
+      />
     </div>
     </DashboardDataContext.Provider>
   )

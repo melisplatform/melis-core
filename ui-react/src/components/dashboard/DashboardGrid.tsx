@@ -67,11 +67,14 @@ export function DashboardGrid({
   onChange,
   onRemove,
   extraWidgetMap = {},
+  highlightedId = null,
 }: {
   layout: GridItem[]
   onChange: (items: GridItem[]) => void
   onRemove: (widgetId: string) => void
   extraWidgetMap?: Record<string, WidgetDef>
+  /** Widget à flasher/scroller en vue — cliqué depuis le panneau de structure (cf. DashboardPage). */
+  highlightedId?: string | null
 }) {
   const allWidgets = useMemo(
     () => ({ ...WIDGET_MAP, ...extraWidgetMap }),
@@ -364,69 +367,141 @@ export function DashboardGrid({
 
     const toAdd = layout.filter((l) => !inGrid.has(l.i))
     const toRemove = grid.engine.nodes.filter((n) => n.id && !want.has(n.id as string))
-
-    // Tuiles déjà en place dont la hauteur a changé côté React (recalage des plugins legacy une
-    // fois leurs défs chargées, cf. DashboardPage). Sans ça, GridStack garderait l'ancienne
-    // hauteur : le diff ci-dessus ne voit que les ajouts/suppressions.
-    //
-    // ⚠️ UNIQUEMENT en pleine largeur (12 col). Sous un breakpoint responsive, GridStack MET À
-    // L'ÉCHELLE les hauteurs (`columnOpts.layout: 'moveScale'`) : la hauteur appliquée ne peut
-    // alors jamais égaler celle du layout desktop, `toResize` ne se vide plus, et l'effet se
-    // relance à chaque rendu — la grille passe son temps à se réécrire et devient indéplaçable.
-    const toResize =
-      grid.getColumn() !== GRID_COLS
-        ? []
-        : grid.engine.nodes.filter((n) => {
-            const it = n.id ? want.get(n.id as string) : undefined
-            return it && (n.h !== it.h || n.w !== it.w)
-          })
+    // Tuiles déjà en place, dont la position/taille peut avoir changé côté React : recalage des
+    // plugins legacy une fois leurs défs chargées (hauteur), MAIS AUSSI tout réordonnancement fait
+    // depuis le panneau de structure (x/y, cf. DashboardStructurePanel → renumberRows) — les DEUX
+    // composants lisent/écrivent le MÊME `layout` (DashboardPage). Confié à `grid.load(items, false)`
+    // plutôt qu'à un diff+`update()` fait main par nœud : `load()` est l'API GridStack DÉDIÉE à faire
+    // correspondre une grille à un layout externe sauvegardé (elle appelle `update()` par id en
+    // interne, en ignorant tout item déjà à la bonne place) — plus fiable qu'une comparaison
+    // maison, sujette aux angles morts. `addRemove: false` : ajout/retrait restent gérés par `toAdd`/
+    // `toRemove` ci-dessous (identité `i` stable, pas besoin que `load()` s'en charge aussi).
+    const toResize = layout.filter((l) => inGrid.has(l.i))
 
     if (!toAdd.length && !toRemove.length && !toResize.length) return
 
     mutating.current = true
-    grid.batchUpdate()
+    // ⚠️ TOUT le corps du lot est en `try/finally` : une exception en plein milieu (ex. un widget
+    // sans `.el` retrouvé, une contrainte GridStack inattendue) laissait sinon `mutating.current`
+    // bloqué à `true` À VIE — plus aucun `grid.on('change', …)` n'était alors jamais transmis à
+    // React (garde `if (mutating.current) return`), ET le lot GridStack lui-même restait ouvert
+    // (jamais de `batchUpdate(false)`), les tuiles gelées dans leur état transitoire — symptôme
+    // observé : tout le dashboard vidé après une synchro qui a mal tourné. Le `finally` garantit que
+    // le lot se referme et que `mutating` retombe à `false` quoi qu'il arrive.
+    try {
+      grid.batchUpdate()
 
-    for (const n of toResize) {
-      const it = want.get(n.id as string)!
-      const def = allWidgetsRef.current[widgetIdOf(it.i)]
-      grid.update(n.el as HTMLElement, {
-        w: it.w,
-        h: it.h,
-        // Registry FIRST: a layout persisted before the auto-fit work carries the plugin's
-        // declared height as `minH`, which would clamp the tile straight back on resize.
-        minW: def?.minW ?? it.minW,
-        minH: def?.minH ?? it.minH,
-      })
+      // ⚠️ UNIQUEMENT en pleine largeur (12 col). Sous un breakpoint responsive, GridStack MET À
+      // L'ÉCHELLE les positions/hauteurs (`columnOpts.layout: 'moveScale'`) : la valeur du layout
+      // desktop ne correspond alors plus à rien de cohérent à cette échelle — l'appliquer telle
+      // quelle romprait le repli responsive plutôt que de le respecter.
+      if (toResize.length && grid.getColumn() === GRID_COLS) {
+        // ⚠️ Deux tentatives pour éviter la collision temps réel de `float:false` sur un
+        // redimensionnement qui déplace aussi un voisin (déplacer les tuiles vers une ligne tampon,
+        // puis simplement réordonner qui est traité en premier) ont CHACUNE fait disparaître tout le
+        // dashboard — y compris la seconde, qui ne déplaçait pourtant jamais rien ailleurs qu'à la
+        // position FINALE. La cause réelle reste donc inconnue ; ni le déplacement temporaire ni
+        // l'ordre de traitement n'en sont individuellement responsables. Reste sur l'appel direct,
+        // le seul dont le comportement est confirmé stable même s'il peut demander plusieurs
+        // frappes pour un redimensionnement qui touche aussi un voisin — un dashboard qui répond
+        // lentement à un cas précis vaut largement mieux qu'un dashboard qui se vide.
+        grid.load(
+          toResize.map((it) => {
+            const def = allWidgetsRef.current[widgetIdOf(it.i)]
+            return {
+              id: it.i,
+              x: Math.round(it.x),
+              y: Math.round(it.y),
+              w: Math.round(it.w),
+              h: Math.round(it.h),
+              // Registry FIRST: a layout persisted before the auto-fit work carries the plugin's
+              // declared height as `minH`, which would clamp the tile straight back on resize.
+              minW: def?.minW ?? it.minW,
+              minH: def?.minH ?? it.minH,
+            }
+          }),
+          false,
+        )
+      }
+
+      for (const it of toAdd) {
+        // Registry FIRST for the constraints (cf. the resize path above): a persisted `minH` from
+        // before the auto-fit work is the plugin's declared height and would pin the tile there.
+        // The saved `h` is now taken AS IS — auto-fit corrects it from the real content shortly
+        // after the iframe loads, and clamping it up here would fight a deliberate manual resize.
+        const def = allWidgetsRef.current[widgetIdOf(it.i)]
+        const el = grid.addWidget({
+          x: it.x,
+          y: it.y,
+          w: it.w,
+          h: it.h,
+          minW: def?.minW ?? it.minW,
+          minH: def?.minH ?? it.minH,
+          id: it.i,
+        })
+        const content = el.querySelector('.grid-stack-item-content') as HTMLElement
+        content.dataset.widgetId = widgetIdOf(it.i)
+      }
+
+      for (const n of toRemove) {
+        if (n.el) grid.removeWidget(n.el as HTMLElement, true)
+      }
+
+      // ⚠️ PAS `grid.batchUpdate(false)` ici : sa valeur par défaut EMPAQUETTE les tuiles (rappel
+      // gravité : `_packNodes()`, `doPack=true` par défaut, AUCUNE option publique pour le
+      // désactiver sur `GridStack.batchUpdate`) — ce qui écrasait silencieusement les positions
+      // qu'on venait de demander explicitement (`grid.load(...)` ci-dessus) par le rangement « le
+      // plus compact » choisi par GridStack, indépendant de l'agencement voulu par le panneau de
+      // structure. On termine donc le lot via `engine.batchUpdate(false, false)` — même méthode
+      // interne, mais avec `doPack` explicitement à `false`, exposée celle-ci en public sur
+      // l'engine (cf. gridstack-engine.d.ts).
+      grid.engine.batchUpdate(false, false)
+      // Effet de bord manquant de `grid.batchUpdate(false)` qu'on a court-circuité ci-dessus (repli
+      // sur l'engine pour éviter l'empaquetage) : recalcule la hauteur CSS du conteneur
+      // `.grid-stack` pour qu'elle suive le nouveau nombre de lignes. Privée (pas d'équivalent
+      // public dans gridstack.d.ts), d'où le contournement de type ici.
+      ;(grid as unknown as { _updateContainerHeight: () => void })._updateContainerHeight()
+    } catch (err) {
+      console.error('[DashboardGrid] sync failed, recovering', err)
+      // Repli MINIMAL : referme le lot SANS empaqueter (même raisonnement que ci-dessus — on ne
+      // veut pas qu'un rattrapage sur erreur réintroduise le bug de compactage) pour que GridStack
+      // sorte du mode batch quoi qu'il arrive, plutôt que de rester bloqué avec des tuiles gelées
+      // dans un état transitoire (parfois hors champ) — c'est CE blocage, pas l'erreur elle-même,
+      // qui faisait disparaître tout le dashboard.
+      try {
+        grid.engine.batchUpdate(false, false)
+      } catch {
+        /* ignore — au pire le prochain changement de layout retentera une synchro propre */
+      }
+    } finally {
+      mutating.current = false
     }
-
-    for (const it of toAdd) {
-      // Registry FIRST for the constraints (cf. the resize path above): a persisted `minH` from
-      // before the auto-fit work is the plugin's declared height and would pin the tile there.
-      // The saved `h` is now taken AS IS — auto-fit corrects it from the real content shortly
-      // after the iframe loads, and clamping it up here would fight a deliberate manual resize.
-      const def = allWidgetsRef.current[widgetIdOf(it.i)]
-      const el = grid.addWidget({
-        x: it.x,
-        y: it.y,
-        w: it.w,
-        h: it.h,
-        minW: def?.minW ?? it.minW,
-        minH: def?.minH ?? it.minH,
-        id: it.i,
-      })
-      const content = el.querySelector('.grid-stack-item-content') as HTMLElement
-      content.dataset.widgetId = widgetIdOf(it.i)
-    }
-
-    for (const n of toRemove) {
-      if (n.el) grid.removeWidget(n.el as HTMLElement, true)
-    }
-
-    grid.batchUpdate(false)
-    mutating.current = false
 
     setSlots(slotsFromGrid(grid))
   }, [layout]) // Dépend uniquement de layout, pas de slots.
+
+  // Flash + scroll en vue le widget cliqué depuis le panneau de structure (cf. `highlightWidget`,
+  // DashboardPage) — recherche directe dans les nœuds GridStack (pas de ref React par tuile ici,
+  // contrairement au panneau) : ajoute une classe CSS temporaire (cf. index.css) le temps du flash
+  // que DashboardPage retire déjà lui-même de son état après ~1,6s.
+  useEffect(() => {
+    if (!highlightedId) return
+    const node = gridRef.current?.engine.nodes.find((n) => n.id === highlightedId)
+    const el = node?.el as HTMLElement | undefined
+    if (!el) return
+    el.scrollIntoView({ block: 'center', behavior: 'smooth' })
+    el.classList.add('melis-widget-highlight')
+    const timer = window.setTimeout(() => el.classList.remove('melis-widget-highlight'), 1600)
+    // ⚠️ Retire aussi la classe ICI, pas seulement le timer : un clic sur un AUTRE widget avant les
+    // 1,6s change `highlightedId` → cet effet se nettoie AVANT que son propre timeout n'ait eu la
+    // chance de retirer la classe sur CET élément-ci — sans ce retrait explicite, le contour restait
+    // affiché indéfiniment sur le widget quitté (`clearTimeout` seul n'annule que l'ACTION future,
+    // pas l'état déjà posé sur le DOM). Sans effet si le timeout a déjà tourné (classe déjà absente).
+    return () => {
+      window.clearTimeout(timer)
+      el.classList.remove('melis-widget-highlight')
+    }
+  }, [highlightedId])
 
   return (
     <>
