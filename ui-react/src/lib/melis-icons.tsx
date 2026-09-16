@@ -28,6 +28,19 @@ const MelisMarketingIcon   = makeSolidM('#a855f7')  // purple
 const MelisCommerceIcon    = makeSolidM('#3b82f6')  // blue
 const MelisMarketplaceIcon = makeSolidM('#ef4444')  // red
 const MelisDefaultIcon     = makeSolidM('currentColor')
+/** « M » blanc, à poser SUR un aplat de la couleur du groupe (cf. lib/melis-colors.ts,
+ *  getMelisColor) — même rendu que le logo de groupe des fiches du marketplace (carré coloré
+ *  arrondi + M blanc). ⚠️ Les teintes ci-dessus sont DUPLIQUÉES dans melis-colors.ts : les faire
+ *  évoluer ensemble. */
+// Déclaré en fonction nommée (pas `makeSolidM('#fff')`) : la règle react-refresh
+// only-export-components ne reconnaît un composant qu'à une déclaration de fonction capitalisée.
+export function MelisMarkIcon({ className }: { className?: string }) {
+  return React.createElement('svg', { className, viewBox: '0 0 70 70', fill: '#fff' },
+    React.createElement('path', { d: M_PATH1 }),
+    React.createElement('path', { d: M_PATH2 }),
+    React.createElement('circle', { cx: '8.8', cy: '57.7', r: '8.8' }),
+  )
+}
 
 // Melis AI: pink → purple → cyan gradient (from melis-ai-hero.svg)
 export const MelisAiIcon = (({ className }: { className?: string }) =>
