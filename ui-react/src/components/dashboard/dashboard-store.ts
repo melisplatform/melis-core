@@ -149,30 +149,56 @@ export function groupIntoRows(items: GridItem[]): GridItem[][] {
  * UNE SEULE FOIS, côté `insertAsNewRow` ci-dessous — pas ici, qui doit rester un simple recalcul de
  * position neutre.
  *
- * Chaque ligne commence à `y` = somme des hauteurs des lignes précédentes (hauteur de ligne =
- * la plus grande hauteur de ses widgets, pour ne jamais faire chevaucher la ligne suivante dans
- * la grille RÉELLE du dashboard classique, qui respecte `x`/`y`/`w`/`h` tels quels). Appelé après
- * tout réordonnancement/ajout/retrait/changement de ligne/de taille, AVANT `persist()`.
+ * `y` : chaque widget « flotte » vers le haut dans SES colonnes (ligne de ciel par colonne) — le
+ * même rangement que GridStack (`float:false`) applique dans le dashboard. Avant (Mantis #0011020),
+ * chaque ligne démarrait à `y` = somme des hauteurs de lignes précédentes (hauteur de ligne = son
+ * widget le plus haut) : dès que deux voisins n'avaient plus la même hauteur (widget de gauche
+ * agrandi à la souris → GridStack remonte le widget de droite du dessous sous son voisin), la
+ * lecture par `y` identique donnait des « lignes » d'un seul widget, et ce recalcul en bandes les
+ * REPOUSSAIT toutes sous le widget le plus haut (trous dans la grille, tuiles déplacées à chaque
+ * ajout/retrait/réglage). Le rangement par colonnes est identique à l'ancien pour des lignes de
+ * hauteurs égales, et laisse l'agencement décalé EN PLACE sinon.
+ *
+ * `x` : CONSERVÉ tel quel quand l'ordre du tableau correspond déjà à la lecture gauche→droite
+ * (widgets sans chevauchement, dans les 12 colonnes) — un simple recalcul (ajout, retrait, champ H)
+ * ne déplace alors rien, y compris un widget seul lâché à la souris dans la colonne de droite.
+ * Sinon (réordonnancement, ligne rejointe, dépassement des 12 colonnes) : réempaqueté depuis la
+ * colonne 0 dans l'ordre du tableau. Appelé après tout réordonnancement/ajout/retrait/changement de
+ * ligne/de taille, AVANT `persist()`.
  */
 export function renumberRows(rows: GridItem[][]): GridItem[] {
-  let y = 0
+  // Ligne de ciel : bas (y + h) le plus bas atteint jusqu'ici dans chacune des 12 colonnes.
+  const skyline: number[] = new Array<number>(GRID_WIDTH).fill(0)
   const out: GridItem[] = []
   for (const row of rows) {
     if (!row.length) continue
     const totalW = row.reduce((s, it) => s + Math.max(1, it.w), 0)
+    // `w` reste CONTINU tant qu'on édite (cf. DashboardPage.setWidgetWidth) : une tolérance
+    // (+0.01) absorbe le bruit d'arrondi flottant accumulé sur de nombreux ajustements successifs,
+    // pour ne pas déclencher le repli « répartition égale » sur une ligne en réalité toujours à 12.
+    const overflow = totalW > GRID_WIDTH + 0.01
     const evenWidths = ROW_COLUMN_WIDTHS[Math.min(row.length, MAX_ROW_ITEMS)] ?? ROW_COLUMN_WIDTHS[MAX_ROW_ITEMS]
-    let x = 0
-    let rowHeight = 0
+    const keepX =
+      !overflow &&
+      row.every((it, i) => {
+        const prevEnd = i === 0 ? 0 : row[i - 1].x + Math.max(1, row[i - 1].w)
+        return it.x + 0.01 >= prevEnd && it.x + Math.max(1, it.w) <= GRID_WIDTH + 0.01
+      })
+    let nextX = 0
     row.forEach((it, i) => {
-      // `w` reste CONTINU tant qu'on édite (cf. DashboardPage.setWidgetWidth) : une tolérance
-      // (+0.01) absorbe le bruit d'arrondi flottant accumulé sur de nombreux ajustements successifs,
-      // pour ne pas déclencher le repli « répartition égale » sur une ligne en réalité toujours à 12.
-      const w = totalW > GRID_WIDTH + 0.01 ? evenWidths[Math.min(i, evenWidths.length - 1)] : Math.max(1, it.w)
+      const w = overflow ? evenWidths[Math.min(i, evenWidths.length - 1)] : Math.max(1, it.w)
+      const x = keepX ? it.x : nextX
+      // Bords ARRONDIS à la colonne la plus proche (pas floor/ceil) : deux voisins d'une ligne à
+      // largeurs continues partagent EXACTEMENT la même frontière (ex. 4.5), arrondie pareil des
+      // deux côtés → aucune colonne revendiquée par les deux, donc pas de fausse collision.
+      const c0 = Math.max(0, Math.min(GRID_WIDTH - 1, Math.round(x)))
+      const c1 = Math.max(c0 + 1, Math.min(GRID_WIDTH, Math.round(x + w)))
+      let y = 0
+      for (let c = c0; c < c1; c++) y = Math.max(y, skyline[c])
       out.push({ ...it, x, y, w })
-      x += w
-      rowHeight = Math.max(rowHeight, it.h)
+      for (let c = c0; c < c1; c++) skyline[c] = y + Math.max(1, it.h)
+      nextX = x + w
     })
-    y += rowHeight
   }
   return out
 }

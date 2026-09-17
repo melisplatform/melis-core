@@ -330,6 +330,27 @@ export function DashboardStructurePanel({
     )
   }
 
+  // Widget d'une ligne PRÉCÉDENTE qui recouvre encore les colonnes [c0, c1) à la hauteur `rowY`
+  // (plus haut que ses voisins : il « descend » dans les lignes suivantes, cf. renumberRows). Le
+  // panneau regroupe par `y` identique, donc l'espace qu'il occupe apparaîtrait sinon comme un
+  // VIDE (Mantis #0011020 : « crée un espace vide alors qu'il n'est pas vide »).
+  const coveringItem = (rowY: number, c0: number, c1: number): GridItem | null => {
+    if (c1 - c0 < 0.01) return null
+    for (const r of rows) {
+      for (const it of r) {
+        if (it.y < rowY && it.y + Math.max(1, it.h) > rowY && it.x < c1 - 0.01 && it.x + Math.max(1, it.w) > c0 + 0.01) return it
+      }
+    }
+    return null
+  }
+  // Espace d'une ligne : réellement LIBRE → espace à l'échelle + cible de dépôt (rowSpacer) ;
+  // OCCUPÉ par un widget plus haut venu d'au-dessus → RIEN du tout (ni espace réservé, ni cible de
+  // dépôt) : les cartes restantes de la ligne se partagent alors toute la largeur. La hauteur de
+  // la tuile haute se lit déjà sur SA carte (cf. cardMinHeight) ; réserver sa place ici ne donnait
+  // qu'un bloc vide (Mantis #0011020).
+  const rowGap = (rowIndex: number, cols: number, insertBefore: number, rowY: number, c0: number, c1: number) =>
+    coveringItem(rowY, c0, c1) ? null : rowSpacer(rowIndex, cols, insertBefore)
+
   // Collapsed desktop : simple bandeau, juste un bouton pour ré-ouvrir.
   if (!narrow && collapsed) {
     return (
@@ -485,7 +506,7 @@ export function DashboardStructurePanel({
                 const leadCols = Math.max(0, Math.round(item.x - prevEnd))
                 return (
                   <Fragment key={item.i}>
-                  {leadCols > 0 && rowSpacer(rowIndex, leadCols, itemIndex)}
+                  {leadCols > 0 && rowGap(rowIndex, leadCols, itemIndex, row[0].y, prevEnd, item.x)}
                   <div
                     data-testid={`widget-item-${item.i}`}
                     // `stopPropagation` : ne pas laisser le filet du conteneur surligner un
@@ -717,7 +738,7 @@ export function DashboardStructurePanel({
               {/* Colonnes libres À DROITE de la ligne (cf. spareCols) : à l'échelle, et cible de
                   dépôt « rejoindre cette ligne en dernière position » (cf. dropAtRowSlot) — c'est
                   là que l'utilisateur lâche spontanément « à côté de » quelque chose. */}
-              {spareCols > 0 && rowSpacer(rowIndex, spareCols, row.length)}
+              {spareCols > 0 && rowGap(rowIndex, spareCols, row.length, row[0].y, last.x + Math.max(1, last.w), MAX_WIDGET_WIDTH)}
             </div>
             {dropGap(rowIndex + 1)}
           </div>
