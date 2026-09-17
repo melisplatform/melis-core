@@ -97,16 +97,23 @@ export function WidgetAddModal({
           </div>
         </div>
 
-        <div className="flex-1 overflow-y-auto p-4">
+        <div className="flex-1 overflow-y-auto p-6">
           {filtered.length === 0 ? (
             <p className="py-8 text-center text-sm text-muted-foreground">{t('widget.no_results')}</p>
           ) : (
-            // Fiches calquées sur les cartes du marketplace (MarketPlacePage.tsx, PackageCard),
-            // ticket 0011018 : liseré haut coloré par groupe, logo de groupe (carré « M ») en haut
-            // à droite, et — au lieu d'une vignette 40px perdue au milieu — la miniature du plugin
-            // occupe TOUTE la moitié gauche de la fiche, le nom + la description (quand le plugin
-            // en a une) à droite. Toujours DEUX fiches par ligne, quelle que soit la largeur.
-            <div className="grid grid-cols-2 gap-3">
+            // Fiches COMPACTES (retour ticket 0011018, 2ᵉ passe : « trop chargé ») : liseré haut
+            // coloré par groupe + logo de groupe (carré « M ») en haut à droite — la COULEUR suffit à
+            // distinguer le module, donc ni nom de module ni description sur la fiche (la
+            // description reste en infobulle et dans la recherche). La miniature du plugin ne
+            // couvre plus toute la moitié gauche : petite vignette encadrée, avec sa marge, le nom
+            // à côté. Trois fiches par ligne à la largeur normale de la modale (moins en étroit).
+            //
+            // ⚠️ Colonnes en style INLINE (auto-fill), PAS `grid-cols-2 sm:grid-cols-3` : les briques
+            // des modules injectent leur propre CSS Tailwind (feuilles inline, chargées APRÈS celle
+            // de l'hôte) qui redéclare `.grid-cols-2` dans la même couche `utilities` — cette règle
+            // plus tardive l'emporte sur le variant `sm:` de l'hôte, et la grille restait à 2
+            // colonnes quelle que soit la largeur. Un style inline n'est écrasable par aucune brique.
+            <div className="grid gap-4" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))' }}>
               {filtered.map((w) => {
                 const added = present.has(w.id)
                 const sectionLabel = w.sectionLabel ?? t(w.sectionKey)
@@ -118,7 +125,7 @@ export function WidgetAddModal({
                     key={w.id}
                     type="button"
                     onClick={() => onAdd(w.id)}
-                    title={w.description || undefined}
+                    title={w.description ? `${title} — ${w.description}` : title}
                     className={cn(
                       'group relative flex cursor-pointer flex-col overflow-hidden rounded-lg border text-left transition-all hover:-translate-y-0.5 hover:shadow-md',
                       added
@@ -128,12 +135,11 @@ export function WidgetAddModal({
                   >
                     {/* Liseré haut à la couleur du groupe — même repère que sur une fiche du marketplace. */}
                     <span aria-hidden className="h-[3px] w-full shrink-0" style={{ background: color }} />
-                    <span className="flex min-h-[104px] flex-1">
-                      {/* Moitié gauche : miniature du plugin en couverture (object-cover), ou, sans
-                          miniature, l'icône du widget sur un fond teinté par le groupe — jamais de
-                          rectangle gris vide (même parti pris que le marketplace sans visuel). */}
+                    <span className="flex min-h-[76px] flex-1 items-center gap-3 py-3.5 pl-3.5 pr-10">
+                      {/* Vignette ENCADRÉE (pas en couverture) : miniature du plugin, ou l'icône du
+                          widget sur un fond teinté par le groupe quand il n'en a pas. */}
                       <span
-                        className="relative w-1/2 shrink-0 overflow-hidden"
+                        className="relative h-11 w-14 shrink-0 overflow-hidden rounded-md border border-border/60"
                         style={{ background: `linear-gradient(135deg, color-mix(in srgb, ${color} 18%, transparent), var(--color-muted, rgba(0,0,0,.05)))` }}
                       >
                         {w.thumbnail && loadThumbnails ? (
@@ -142,38 +148,31 @@ export function WidgetAddModal({
                             alt=""
                             draggable={false}
                             loading="lazy"
-                            className="absolute inset-0 size-full object-cover transition-transform duration-200 group-hover:scale-105"
+                            className="absolute inset-0 size-full object-cover"
                           />
                         ) : (
                           <span className="absolute inset-0 grid place-items-center" style={{ color }}>
-                            <w.icon className="size-9 opacity-70" />
+                            <w.icon className="size-5 opacity-80" />
                           </span>
                         )}
                       </span>
-                      {/* Moitié droite : nom, description (si le plugin en déclare une), module. Marge
-                          droite réservée au logo de groupe posé en absolu (cf. ci-dessous). */}
-                      <span className="flex min-w-0 flex-1 flex-col gap-1 py-2.5 pl-3 pr-9">
+                      <span className="flex min-w-0 flex-1 flex-col gap-1">
                         <span className="line-clamp-2 text-[13px] font-semibold leading-snug text-foreground transition-colors group-hover:text-primary">
                           {title}
                         </span>
-                        {w.description && (
-                          <span className="line-clamp-2 text-[11px] leading-snug text-muted-foreground">{w.description}</span>
+                        {added && (
+                          <span className="inline-flex w-fit items-center gap-1 rounded-full bg-primary/10 px-1.5 py-0.5 text-[10px] font-medium text-primary">
+                            <Check className="size-2.5" strokeWidth={3} />
+                            {t('widget.in_dashboard')}
+                          </span>
                         )}
-                        <span className="mt-auto flex items-center gap-1.5 pt-1 text-[10px] text-muted-foreground">
-                          <span className="truncate">{w.moduleLabel ?? sectionName}</span>
-                          {added && (
-                            <span className="ml-auto inline-flex shrink-0 items-center gap-1 rounded-full bg-primary/10 px-1.5 py-0.5 font-medium text-primary">
-                              <Check className="size-2.5" strokeWidth={3} />
-                              {t('widget.in_dashboard')}
-                            </span>
-                          )}
-                        </span>
                       </span>
                     </span>
                     {/* Logo de groupe — carré arrondi à la couleur du groupe + « M » blanc, coin haut
-                        droit, comme le `.melis-svg` des fiches du marketplace et du BO legacy. */}
+                        droit, comme le `.melis-svg` des fiches du marketplace et du BO legacy. C'est
+                        LUI (et le liseré) qui identifie le module, à la place d'un libellé. */}
                     <span
-                      className="absolute right-2 top-2.5 grid size-6 place-items-center rounded-md p-1 shadow-sm"
+                      className="absolute right-2.5 top-3 grid size-5 place-items-center rounded-md p-[3px] shadow-sm"
                       style={{ background: color }}
                       title={sectionName}
                     >
