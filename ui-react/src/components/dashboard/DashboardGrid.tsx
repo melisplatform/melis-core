@@ -1,6 +1,7 @@
 import { Component, useEffect, useMemo, useRef, useState, type ReactNode, type ErrorInfo } from 'react'
 import { createPortal } from 'react-dom'
-import { GridStack, type GridStackNode, type GridStackWidget } from 'gridstack'
+import { GridStack, Utils as GridStackUtils, type GridStackNode, type GridStackWidget } from 'gridstack'
+
 import { AlertTriangle, Loader2, RotateCcw } from 'lucide-react'
 
 import 'gridstack/dist/gridstack.min.css'
@@ -12,6 +13,10 @@ import { WidgetFrame } from './WidgetFrame'
 import { WidgetConfigDialog } from './WidgetConfigDialog'
 import { PluginConfirmDialog } from './PluginConfirmDialog'
 import { widgetIdOf, type GridItem } from './dashboard-store'
+import { installResizeScrollDownOnly } from './gridstack-resize-scroll'
+
+// Resizing a tile must never auto-scroll the page UP (Mantis #0011019) — see gridstack-resize-scroll.ts.
+installResizeScrollDownOnly(GridStackUtils)
 
 // ─── Error boundary per widget ────────────────────────────────────────────────
 
