@@ -115,19 +115,47 @@ const ROW_COLUMN_WIDTHS: Record<number, number[]> = {
 }
 
 /**
- * Regroupe une disposition PLATE en lignes, d'après `y` (une ligne = un groupe de widgets qui
- * partagent le même `y`), triées par `y` puis par `x` à l'intérieur d'une ligne — c'est cette
- * lecture qui fait qu'aucun champ « ligne » séparé n'est nécessaire : le regroupement est déduit
- * des mêmes `x`/`y`/`w` que ceux qu'écrit/lit déjà le dashboard classique.
+ * Regroupe une disposition PLATE en lignes — aucun champ « ligne » séparé n'est nécessaire : le
+ * regroupement est déduit des mêmes `x`/`y`/`w`/`h` que ceux qu'écrit/lit déjà le dashboard
+ * classique.
+ *
+ * Critère : la PROFONDEUR D'EMPILEMENT d'un widget dans ses colonnes (0 = rien au-dessus de lui,
+ * 1 = un widget au-dessus, …), PAS son `y` exact. Avant, une ligne = « même `y` » ; or dès que
+ * deux voisins n'ont pas la même hauteur (widget de gauche agrandi), les widgets du dessous
+ * n'ont plus le même `y` (13 et 14 par ex.) alors qu'ils forment visiblement la 2ᵉ rangée du
+ * dashboard — le panneau les montrait sur deux lignes séparées (Mantis #0011020). Avec la
+ * profondeur, « Recent page activity » (sous le widget de gauche) et « Calendar » (sous celui de
+ * droite) sont bien côte à côte dans le panneau. Pour des lignes de hauteurs égales, résultat
+ * identique au regroupement par `y`. Lignes triées par profondeur, widgets par `x` dans la ligne.
  */
 export function groupIntoRows(items: GridItem[]): GridItem[][] {
-  const byY = new Map<number, GridItem[]>()
-  for (const it of items) {
-    const row = byY.get(it.y) ?? []
-    row.push(it)
-    byY.set(it.y, row)
+  const sorted = items.slice().sort((a, b) => a.y - b.y || a.x - b.x)
+  const overlapX = (a: GridItem, b: GridItem) =>
+    a.x < b.x + Math.max(1, b.w) - 0.01 && b.x < a.x + Math.max(1, a.w) - 0.01
+  const depth = new Map<string, number>()
+  for (const it of sorted) {
+    let d = 0
+    for (const above of sorted) {
+      if (above === it) continue
+      // COMMENCE au-dessus (`y` plus petit) dans les mêmes colonnes — pas « finit avant que `it`
+      // commence » : pendant un changement de hauteur (champ H, avant renumberRows) le widget
+      // agrandi CHEVAUCHE transitoirement celui du dessous, qui serait sinon lu comme sans rien
+      // au-dessus (profondeur 0) et remonté dans la première ligne. Dans une disposition valide
+      // (sans chevauchement) les deux critères sont équivalents.
+      if (above.y < it.y - 0.01 && overlapX(above, it)) {
+        d = Math.max(d, (depth.get(above.i) ?? 0) + 1)
+      }
+    }
+    depth.set(it.i, d)
   }
-  return Array.from(byY.entries())
+  const byDepth = new Map<number, GridItem[]>()
+  for (const it of sorted) {
+    const d = depth.get(it.i) ?? 0
+    const row = byDepth.get(d) ?? []
+    row.push(it)
+    byDepth.set(d, row)
+  }
+  return Array.from(byDepth.entries())
     .sort(([a], [b]) => a - b)
     .map(([, row]) => row.slice().sort((a, b) => a.x - b.x))
 }
