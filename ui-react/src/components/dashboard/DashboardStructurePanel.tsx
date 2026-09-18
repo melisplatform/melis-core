@@ -1,4 +1,4 @@
-import { Fragment, useRef, useState, type DragEvent } from 'react'
+import { useRef, useState, type CSSProperties, type DragEvent } from 'react'
 import {
   ChevronLeft,
   ChevronRight,
@@ -35,6 +35,10 @@ import { WidgetAddModal } from './WidgetAddModal'
 
 const PANEL_COLLAPSED_KEY = 'melis-dash-panel-collapsed'
 
+/** Bord d'une carte survolé pendant un glisser (cf. zoneOf) : gauche/droite = rejoindre la ligne
+ *  avant/après cette carte ; haut/bas = nouvelle ligne au-dessus/en dessous. */
+type DropZone = 'left' | 'right' | 'top' | 'bottom'
+
 /*
  * Miniature PROPORTIONNELLE du dashboard : chaque carte du panneau reproduit la taille RÉELLE de
  * sa tuile dans la grille (même `w` en colonnes sur 12, même `h` en lignes de grille), pour que
@@ -42,16 +46,22 @@ const PANEL_COLLAPSED_KEY = 'melis-dash-panel-collapsed'
  * reflète aussitôt ici, comme une copie réduite. Avant, toutes les cartes d'une ligne se
  * partageaient la largeur à parts égales et avaient la même hauteur, quelle que soit la tuile.
  */
-/** Largeur plancher d'une carte, en px : la poignée + l'icône doivent rester visibles même pour un
- *  widget d'une seule colonne (1/12 du panneau ≈ 26px, inutilisable tel quel). Sous ce seuil, la
- *  miniature n'est plus tout à fait à l'échelle — préférable à une carte inopérable. */
-const PANEL_MIN_CARD_PX = 72
-/** Hauteur d'une carte à la hauteur MINIMALE de grille (`MIN_WIDGET_HEIGHT`) ; en dessous de sa
- *  hauteur naturelle (en-tête + boutons ≈ 74px), c'est cette dernière qui l'emporte. */
-const PANEL_CARD_BASE_PX = 60
-/** Pixels de carte ajoutés par ligne de grille au-delà du minimum (la grille fait 46px/ligne, cf.
- *  grid-metrics — on réduit d'environ ×8 pour qu'une tuile de 40 lignes reste ≈ 290px ici). */
-const PANEL_PX_PER_GRID_ROW = 6
+/** Gouttière de la mini-grille, en px (entre colonnes ET entre lignes) — l'équivalent réduit de
+ *  la marge de 8px de la grille du dashboard. */
+const PANEL_GRID_GAP_PX = 6
+/** Marge haute/basse autour de la mini-grille, en px : laisse la place à la barre de dépôt du
+ *  tout premier / tout dernier interstice (cf. dropGap, 8px de haut, centrée sur la ligne). */
+const PANEL_GRID_PAD_PX = 8
+/** Échelle verticale FIXE de la miniature : px par ligne de grille (46px dans le dashboard, soit
+ *  ≈ 1/5). Fixe, pour que les hauteurs restent comparables d'un dashboard à l'autre — une tuile
+ *  courte donne une carte COMPACTE (cf. PANEL_COMPACT_BELOW_PX) plutôt que de dilater l'échelle. */
+const PANEL_PX_PER_GRID_ROW = 9
+/** En dessous de cette hauteur de carte (px), la carte passe en mode COMPACT : une seule ligne,
+ *  les boutons (règle / config / retirer) à droite de l'en-tête au lieu d'une barre en bas. */
+const PANEL_COMPACT_BELOW_PX = 80
+/** Colonnes à partir desquelles une carte COMPACTE a la place d'afficher son titre (les boutons
+ *  occupent ≈ 72px de l'en-tête). En dessous, l'icône seule + infobulle. */
+const PANEL_TITLE_MIN_COLS_COMPACT = 9
 /** Colonnes (sur 12) à partir desquelles la carte est assez large pour afficher son titre (≈ 130px
  *  sur un panneau de 340px). En dessous, l'icône seule l'identifie et le nom passe en infobulle —
  *  même seuil qu'avant (3 widgets égaux = 4 colonnes → masqué ; 2 = 6 colonnes → affiché), mais
@@ -257,7 +267,19 @@ export function DashboardStructurePanel({
   // widget décalé vers la droite dans le dashboard, et après le dernier), cf. rowSpacer.
   const [dragOverSlot, setDragOverSlot] = useState<string | null>(null)
   // Carte survolée pendant un glisser (« déposer ici = se mettre côte à côte ») — visuel seulement.
-  const [dragOverItem, setDragOverItem] = useState<string | null>(null)
+  const [dragOverItem, setDragOverItem] = useState<{ id: string; zone: DropZone } | null>(null)
+  // Zone de dépôt SUR une carte, d'après la position du pointeur : bande haute / basse (25 %) →
+  // NOUVELLE LIGNE au-dessus / en dessous de cette carte ; sinon moitié gauche / droite → REJOINT
+  // la ligne de la carte, juste avant / juste après elle. Les quatre gestes restent donc possibles
+  // sur n'importe quelle carte, sans viser les fines barres d'interstice.
+  const zoneOf = (e: DragEvent<HTMLElement>): DropZone => {
+    const r = e.currentTarget.getBoundingClientRect()
+    const px = (e.clientX - r.left) / Math.max(1, r.width)
+    const py = (e.clientY - r.top) / Math.max(1, r.height)
+    if (py < 0.25) return 'top'
+    if (py > 0.75) return 'bottom'
+    return px < 0.5 ? 'left' : 'right'
+  }
   const clearDragVisuals = () => {
     setDragOverGap(null)
     setDragOverSlot(null)
@@ -299,7 +321,7 @@ export function DashboardStructurePanel({
   // décalé vers la droite (x > 0 sans voisin : un widget seul lâché à la souris dans la colonne
   // de droite du dashboard doit apparaître à DROITE ici aussi, pas collé à gauche), et à sa droite
   // quand la ligne ne remplit pas 12 colonnes. Aussi une cible de dépôt (cf. dropAtRowSlot).
-  const rowSpacer = (rowIndex: number, cols: number, insertBefore: number) => {
+  const rowSpacer = (rowIndex: number, insertBefore: number, style: CSSProperties) => {
     const slot = `${rowIndex}:${insertBefore}`
     return (
       <div
@@ -321,35 +343,17 @@ export function DashboardStructurePanel({
           const payload = readPayload(e)
           if (payload) dropAtRowSlot(rowIndex, insertBefore, payload)
         }}
-        style={{ flexGrow: cols, flexBasis: 0 }}
+        style={style}
         className={cn(
-          'rounded-lg border border-dashed transition-colors',
-          dragOverSlot === slot && draggingId !== null ? 'border-primary bg-primary/10' : 'border-transparent',
+          'relative min-h-0 min-w-0 rounded-lg border border-dashed transition-colors',
+          // Visibles dès qu'un glisser est en cours (carrés bleus pointillés = « déposable ici »),
+          // renforcés au survol — comme les repères de dépôt d'avant.
+          draggingId === null ? 'border-transparent' : dragOverSlot === slot ? 'border-primary bg-primary/10' : 'border-primary/40 bg-primary/5',
         )}
       />
     )
   }
 
-  // Widget d'une ligne PRÉCÉDENTE qui recouvre encore les colonnes [c0, c1) à la hauteur `rowY`
-  // (plus haut que ses voisins : il « descend » dans les lignes suivantes, cf. renumberRows). Le
-  // panneau regroupe par `y` identique, donc l'espace qu'il occupe apparaîtrait sinon comme un
-  // VIDE (Mantis #0011020 : « crée un espace vide alors qu'il n'est pas vide »).
-  const coveringItem = (rowY: number, c0: number, c1: number): GridItem | null => {
-    if (c1 - c0 < 0.01) return null
-    for (const r of rows) {
-      for (const it of r) {
-        if (it.y < rowY && it.y + Math.max(1, it.h) > rowY && it.x < c1 - 0.01 && it.x + Math.max(1, it.w) > c0 + 0.01) return it
-      }
-    }
-    return null
-  }
-  // Espace d'une ligne : réellement LIBRE → espace à l'échelle + cible de dépôt (rowSpacer) ;
-  // OCCUPÉ par un widget plus haut venu d'au-dessus → RIEN du tout (ni espace réservé, ni cible de
-  // dépôt) : les cartes restantes de la ligne se partagent alors toute la largeur. La hauteur de
-  // la tuile haute se lit déjà sur SA carte (cf. cardMinHeight) ; réserver sa place ici ne donnait
-  // qu'un bloc vide (Mantis #0011020).
-  const rowGap = (rowIndex: number, cols: number, insertBefore: number, rowY: number, c0: number, c1: number) =>
-    coveringItem(rowY, c0, c1) ? null : rowSpacer(rowIndex, cols, insertBefore)
 
   // Collapsed desktop : simple bandeau, juste un bouton pour ré-ouvrir.
   if (!narrow && collapsed) {
@@ -371,7 +375,7 @@ export function DashboardStructurePanel({
   // Interstice de dépôt entre deux groupes (et un dernier tout en bas) — déposer un widget ici en
   // fait une NOUVELLE ligne pleine largeur à cet endroit. Surbrillance au survol pour indiquer où
   // il atterrira, comme un point d'insertion de liste classique.
-  const dropGap = (gapIndex: number) => (
+  const dropGap = (gapIndex: number, style: CSSProperties) => (
     <div
       key={`gap-${gapIndex}`}
       data-testid={`widget-gap-${gapIndex}`}
@@ -389,12 +393,121 @@ export function DashboardStructurePanel({
         const payload = readPayload(e)
         if (payload) dropAsNewRow(gapIndex, payload)
       }}
+      style={{ ...style, marginLeft: 4, marginRight: 4 }}
       className={cn(
-        'mx-1 h-2 rounded-full transition-colors',
-        dragOverGap === gapIndex ? 'bg-primary shadow-[0_0_0_3px_color-mix(in_srgb,var(--color-primary)_20%,transparent)]' : 'bg-transparent',
+        'relative z-10 rounded-full transition-colors',
+        draggingId === null ? 'bg-transparent' : dragOverGap === gapIndex ? 'bg-primary shadow-[0_0_0_3px_color-mix(in_srgb,var(--color-primary)_20%,transparent)]' : 'bg-primary/25',
       )}
     />
   )
+
+  // Boutons d'une carte (règle W/H, configurer, retirer) — dans la barre du BAS d'une carte
+  // normale, ou À DROITE de l'en-tête d'une carte COMPACTE (tuile courte, cf. PANEL_COMPACT_BELOW_PX).
+  const actionButtons = (item: GridItem, def: WidgetDef, title: string) => {
+    const sizeOpen = sizeOpenFor.has(item.i)
+    return (
+      <>
+          <button
+            type="button"
+            onMouseDown={(e) => e.stopPropagation()}
+            onClick={(e) => {
+              e.stopPropagation()
+              toggleSizeOpen(item.i)
+            }}
+            className={cn(
+              'grid size-6 place-items-center rounded-full transition-colors',
+              sizeOpen
+                ? 'bg-primary/15 text-primary'
+                : 'text-muted-foreground/60 hover:bg-accent hover:text-foreground',
+            )}
+            aria-label={t('widget.size_toggle')}
+            aria-pressed={sizeOpen}
+            title={t('widget.size_toggle')}
+          >
+            <Ruler className="size-3.5" />
+          </button>
+          <span className="flex-1" />
+          <button
+            type="button"
+            onMouseDown={(e) => e.stopPropagation()}
+            onClick={(e) => {
+              e.stopPropagation()
+              setConfigFor({ instanceId: item.i, pluginName: def.pluginName, title })
+            }}
+            className="grid size-6 place-items-center rounded-full text-muted-foreground/60 transition-colors hover:bg-accent hover:text-foreground"
+            aria-label={t('layout.widget_configure')}
+            title={t('layout.widget_configure')}
+          >
+            <Settings className="size-3.5" />
+          </button>
+          <button
+            type="button"
+            onMouseDown={(e) => e.stopPropagation()}
+            onClick={(e) => {
+              e.stopPropagation()
+              setConfirmRemove({ instanceId: item.i, label: title })
+            }}
+            className="grid size-6 place-items-center rounded-full text-muted-foreground/60 transition-colors hover:bg-destructive/10 hover:text-destructive"
+            aria-label={t('layout.widget_remove')}
+            title={t('layout.widget_remove')}
+          >
+            <X className="size-4" />
+          </button>
+      </>
+    )
+  }
+
+  // ── Mini-grille À L'ÉCHELLE (Mantis #0011020) ────────────────────────────────────────────────
+  // Le panneau est une COPIE réduite du dashboard : grille CSS de 12 colonnes, chaque carte posée
+  // exactement aux x/y/w/h de sa tuile (même position, même largeur, même hauteur, en proportion).
+  // Les cibles de dépôt (interstices entre lignes, espaces libres) sont des CALQUES absolus calculés
+  // depuis les mêmes coordonnées ; les opérations de glisser-déposer, elles, continuent de raisonner
+  // en LIGNES (`rows`, cf. groupIntoRows) — rien ne change côté données.
+  const GAP = PANEL_GRID_GAP_PX
+  const PAD = PANEL_GRID_PAD_PX
+  const allItems = rows.flat()
+  const gx = (it: GridItem) => Math.max(0, Math.min(MAX_WIDGET_WIDTH - 1, Math.round(it.x)))
+  const gw = (it: GridItem) => Math.max(1, Math.min(MAX_WIDGET_WIDTH - gx(it), Math.round(it.w)))
+  const gy = (it: GridItem) => Math.max(0, Math.round(it.y))
+  const gh = (it: GridItem) => Math.max(1, Math.round(it.h))
+  const rowPx = PANEL_PX_PER_GRID_ROW
+  const spanHeight = (n: number) => n * rowPx + (n - 1) * GAP
+  // Par ligne (au sens groupIntoRows) : bande verticale couverte et colonnes libres dedans.
+  const rowBands = rows.map((row) => ({
+    top: Math.min(...row.map(gy)),
+    bottom: Math.max(...row.map((it) => gy(it) + gh(it))),
+  }))
+  const freeRegions = rows.flatMap((row, rowIndex) => {
+    const band = rowBands[rowIndex]
+    const occupied = new Array<boolean>(MAX_WIDGET_WIDTH).fill(false)
+    for (const it of allItems) {
+      if (gy(it) >= band.bottom || gy(it) + gh(it) <= band.top) continue
+      for (let c = gx(it); c < gx(it) + gw(it); c++) occupied[c] = true
+    }
+    const regions: { rowIndex: number; c0: number; n: number; insertBefore: number }[] = []
+    for (let c = 0; c < MAX_WIDGET_WIDTH; c++) {
+      if (occupied[c]) continue
+      let n = 1
+      while (c + n < MAX_WIDGET_WIDTH && !occupied[c + n]) n++
+      regions.push({ rowIndex, c0: c, n, insertBefore: row.filter((it) => gx(it) < c).length })
+      c += n - 1
+    }
+    return regions
+  })
+  // Interstices : ligne 0, puis le bas de chaque ligne (dernier = tout en bas).
+  const gapLines = [0, ...rowBands.map((b) => b.bottom)]
+  // ⚠️ Les calques de dépôt sont des ITEMS DE LA GRILLE (gridColumn/gridRow), pas des calques
+  // absolus calculés en px : une carte plus haute que sa tuile (en-tête + boutons ne tiennent pas
+  // dans un span court, champs W/H ouverts…) ÉTIRE sa ligne de grille, et un calque positionné en
+  // px d'après l'échelle nominale se retrouvait alors À CHEVAL sur la carte. Posés dans la grille,
+  // ils suivent les pistes réelles quoi qu'il arrive. Une barre d'interstice vit dans la piste
+  // qu'elle borde (alignée sur son bord bas, ou haut pour la toute première) et déborde de la
+  // moitié de la gouttière pour se centrer sur la ligne.
+  const BAR = 8
+  const gapStyle = (line: number): CSSProperties =>
+    line === 0
+      ? { gridColumn: '1 / -1', gridRow: '1', alignSelf: 'start', height: BAR, marginTop: -(GAP / 2 + BAR / 2) }
+      : { gridColumn: '1 / -1', gridRow: String(line), alignSelf: 'end', height: BAR, marginBottom: -(GAP / 2 + BAR / 2) }
 
   const panel = (
     <aside
@@ -473,41 +586,40 @@ export function DashboardStructurePanel({
         {itemCount === 0 && (
           <p className="px-2 py-4 text-center text-xs text-muted-foreground">{t('widget.empty')}</p>
         )}
-        {dropGap(0)}
-        {rows.map((row, rowIndex) => {
-          // Colonnes NON occupées À DROITE de la ligne (une ligne peut totaliser moins de 12 : un
-          // widget seul réduit à 6 colonnes n'occupe que la moitié du dashboard) — matérialisées par
-          // un espace vide, pour que la carte garde la même proportion ET la même position que sa
-          // tuile. Calculé d'après `x + w` du DERNIER widget (pas la somme des largeurs) : les vides
-          // ENTRE widgets, dus à un `x` décalé, sont rendus séparément devant chaque carte (cf.
-          // leadCols dans la boucle). Jamais négatif : GridStack borne x + w à 12, et
-          // `renumberRows` ramène toute ligne > 12 à une répartition égale avant persist.
-          const last = row[row.length - 1]
-          const spareCols = Math.max(0, MAX_WIDGET_WIDTH - (last.x + Math.max(1, last.w)))
-          return (
-          <div key={rowKey(row)}>
-            <div className="flex gap-1.5">
-              {row.map((item, itemIndex) => {
+        {itemCount > 0 && (
+        <div className="relative" style={{ paddingTop: PAD, paddingBottom: PAD }}>
+          <div
+            data-testid="widget-grid"
+            style={{ display: 'grid', gridTemplateColumns: 'repeat(12, minmax(0, 1fr))', gridAutoRows: `minmax(${rowPx}px, auto)`, gap: GAP }}
+          >
+            {/* Calques de dépôt (items de grille, cf. gapStyle) : barre « nouvelle ligne » sur
+                chaque ligne de grille qui sépare deux lignes (et tout en haut / en bas), zones
+                d'espace LIBRE (colonnes qu'aucune tuile ne couvre sur la bande de la ligne) pour
+                « rejoindre cette ligne ici » (cf. dropAtRowSlot). Rendus AVANT les cartes : une
+                carte reste au-dessus d'une barre qui déborde d'un pixel sur elle. */}
+            {gapLines.map((line, gapIndex) => dropGap(gapIndex, gapStyle(line)))}
+            {freeRegions.map((r) =>
+              rowSpacer(r.rowIndex, r.insertBefore, {
+                gridColumn: `${r.c0 + 1} / span ${r.n}`,
+                gridRow: `${rowBands[r.rowIndex].top + 1} / span ${rowBands[r.rowIndex].bottom - rowBands[r.rowIndex].top}`,
+              }),
+            )}
+            {rows.flatMap((row, rowIndex) =>
+              row.map((item, itemIndex) => {
                 const def = widgetMap[widgetIdOf(item.i)]
                 if (!def) return null
                 const title = def.titleLabel ?? t(def.titleKey)
                 const sizeOpen = sizeOpenFor.has(item.i)
-                // Largeur réelle de la tuile (colonnes sur 12) → part de la ligne du panneau ; hauteur
-                // réelle (lignes de grille) → hauteur de la carte. Cf. les constantes PANEL_* en tête.
-                const cols = Math.max(1, item.w)
-                const showTitle = narrow || cols >= PANEL_TITLE_MIN_COLS
-                const cardMinHeight = PANEL_CARD_BASE_PX + Math.max(0, item.h - MIN_WIDGET_HEIGHT) * PANEL_PX_PER_GRID_ROW
-                // Colonnes vides entre la fin du widget précédent (ou le bord gauche) et celui-ci :
-                // un `x` décalé dans le dashboard (widget lâché à la souris à droite, sans voisin à
-                // gauche) se traduit ici par le même vide À GAUCHE de la carte. Arrondi car `x` est
-                // entier mais `w` peut rester continu le temps d'une édition (cf. renumberRows).
-                const prev = itemIndex > 0 ? row[itemIndex - 1] : null
-                const prevEnd = prev ? prev.x + Math.max(1, prev.w) : 0
-                const leadCols = Math.max(0, Math.round(item.x - prevEnd))
+                // Largeur réelle de la tuile (colonnes sur 12) : sert aussi à décider si le titre
+                // tient (cf. PANEL_TITLE_MIN_COLS) et si les champs W/H s'empilent.
+                const cols = gw(item)
+                // Tuile courte → carte COMPACTE (une ligne, boutons dans l'en-tête), sinon la barre de
+                // boutons reste en bas (mt-auto) et l'espace libre s'étire entre les deux.
+                const compact = spanHeight(gh(item)) < PANEL_COMPACT_BELOW_PX
+                const showTitle = narrow || cols >= (compact ? PANEL_TITLE_MIN_COLS_COMPACT : PANEL_TITLE_MIN_COLS)
                 return (
-                  <Fragment key={item.i}>
-                  {leadCols > 0 && rowGap(rowIndex, leadCols, itemIndex, row[0].y, prevEnd, item.x)}
                   <div
+                    key={item.i}
                     data-testid={`widget-item-${item.i}`}
                     // `stopPropagation` : ne pas laisser le filet du conteneur surligner un
                     // interstice pendant qu'on survole une carte (le dépôt ira côte à côte, pas
@@ -515,31 +627,29 @@ export function DashboardStructurePanel({
                     onDragOver={(e) => {
                       e.preventDefault()
                       e.stopPropagation()
-                      if (dragOverItem !== item.i) {
+                      const zone = zoneOf(e)
+                      if (dragOverItem?.id !== item.i || dragOverItem.zone !== zone) {
                         setDragOverGap(null)
                         setDragOverSlot(null)
-                        setDragOverItem(item.i)
+                        setDragOverItem({ id: item.i, zone })
                       }
                     }}
                     onDrop={(e) => {
                       e.preventDefault()
                       e.stopPropagation()
+                      const zone = zoneOf(e)
                       clearDragVisuals()
                       setDraggingId(null)
                       const payload = readPayload(e)
                       if (!payload) return
-                      if (payload.rowIndex === rowIndex) {
-                        onRowsChange(reorderWithinRow(rows, rowIndex, payload.itemIndex, itemIndex))
-                        return
-                      }
-                      // Ligne cible déjà pleine (MAX_ROW_ITEMS) : dépôt refusé, TEL QUEL — on ne
-                      // retire même pas le widget de sa position d'origine (contrairement à avant :
-                      // le retirer PUIS constater que `insertIntoRow` refuse de le rejoindre le
-                      // faisait disparaître, plus nulle part où le remettre). Rien ne bouge.
-                      if (row.length >= MAX_ROW_ITEMS) return
-                      const targetKey = rowKey(row)
-                      const { rows: withoutItem, item: dragged } = removeItem(rows, payload.rowIndex, payload.itemIndex)
-                      if (dragged) onRowsChange(insertIntoRow(withoutItem, targetKey, dragged))
+                      if (payload.rowIndex === rowIndex && payload.itemIndex === itemIndex) return // lâché sur soi-même
+                      // Haut / bas : nouvelle ligne pleine largeur juste au-dessus / en dessous de
+                      // cette carte (même effet que l'interstice correspondant).
+                      if (zone === 'top') return dropAsNewRow(rowIndex, payload)
+                      if (zone === 'bottom') return dropAsNewRow(rowIndex + 1, payload)
+                      // Gauche / droite : rejoint la ligne de cette carte, juste avant / juste après
+                      // elle (ligne pleine → nouvelle ligne en dessous, cf. dropAtRowSlot).
+                      dropAtRowSlot(rowIndex, zone === 'left' ? itemIndex : itemIndex + 1, payload)
                     }}
                     // Repère le widget dans le dashboard (flash + scroll, cf. onHighlight) — sur
                     // TOUTE la carte plutôt qu'une zone dédiée, comme une ligne de calque cliquable.
@@ -554,24 +664,29 @@ export function DashboardStructurePanel({
                     // ⚠️ Tenté un temps via une VRAIE requête de conteneur CSS (`@container` +
                     // `@[130px]:block`) — annulé : le seuil en pixels était deviné sans pouvoir
                     // mesurer le rendu réel du navigateur. Le seuil en COLONNES est lui déterministe :
-                    // la carte occupe exactement `w`/12 de la ligne (cf. `flexGrow` ci-dessous).
+                    // la carte occupe exactement `w`/12 de la grille (cf. `gridColumn` ci-dessous).
                     title={!showTitle ? title : undefined}
-                    // Miniature à l'échelle : `flexGrow: w` sur une base 0 répartit la ligne au prorata
-                    // des colonnes (le spacer de fin absorbe les colonnes libres), et la hauteur suit
-                    // le nombre de lignes de grille. `minWidth` empêche une carte d'1 colonne de
-                    // devenir inopérable. (Pas de classe Tailwind : valeurs calculées par widget.)
+                    // Miniature à l'échelle : la carte occupe EXACTEMENT les colonnes et lignes de
+                    // grille de sa tuile (gridColumn / gridRow), comme une copie réduite du dashboard.
+                    // (Pas de classe Tailwind : valeurs calculées par widget.)
                     style={{
-                      flexGrow: cols,
-                      flexBasis: 0,
-                      minWidth: PANEL_MIN_CARD_PX,
-                      minHeight: cardMinHeight,
+                      gridColumn: `${gx(item) + 1} / span ${gw(item)}`,
+                      gridRow: `${gy(item) + 1} / span ${gh(item)}`,
                     }}
                     className={cn(
-                      'group flex min-w-0 cursor-pointer flex-col gap-1.5 rounded-lg border bg-card px-2.5 py-2 transition-all',
+                      'group relative z-20 flex min-w-0 cursor-pointer flex-col gap-1.5 rounded-lg border bg-card px-2.5 py-2 transition-all',
                       draggingId === item.i
                         ? 'border-primary/40 opacity-40'
-                        : dragOverItem === item.i && draggingId !== null
-                          ? 'border-primary ring-2 ring-primary/30'
+                        : dragOverItem?.id === item.i && draggingId !== null
+                          ? cn(
+                              // Le « carré bleu » d'avant (bordure + halo) + un liseré sur le bord visé
+                              // (gauche/droite = rejoindre la ligne avant/après, haut/bas = nouvelle ligne).
+                              'border-primary ring-2 ring-primary/30 bg-primary/5',
+                              dragOverItem.zone === 'left' && 'shadow-[inset_4px_0_0_var(--color-primary)]',
+                              dragOverItem.zone === 'right' && 'shadow-[inset_-4px_0_0_var(--color-primary)]',
+                              dragOverItem.zone === 'top' && 'shadow-[inset_0_4px_0_var(--color-primary)]',
+                              dragOverItem.zone === 'bottom' && 'shadow-[inset_0_-4px_0_var(--color-primary)]',
+                            )
                           : 'border-border/70 hover:border-primary/30 hover:shadow-sm',
                     )}
                   >
@@ -609,6 +724,9 @@ export function DashboardStructurePanel({
                           affiché en étroit (tiroir tactile, pas de survol au doigt). */}
                       {showTitle && (
                         <span className="min-w-0 flex-1 truncate text-xs font-semibold text-foreground">{title}</span>
+                      )}
+                      {compact && (
+                        <span className="ml-auto flex shrink-0 items-center gap-0.5">{actionButtons(item, def, title)}</span>
                       )}
                     </div>
                     {/* Largeur en colonnes NATIVES (1-12, cf. GRID_WIDTH/MAX_WIDGET_WIDTH — pas de
@@ -683,67 +801,18 @@ export function DashboardStructurePanel({
                     {/* `mt-auto` : sur une carte grandie par `minHeight` (tuile haute), la barre de
                         boutons reste collée en bas et l'espace libre se place entre l'en-tête et
                         elle — silhouette d'une tuile, pas d'un bloc à moitié vide. */}
+                    {!compact && (
                     <div className="mt-auto flex items-center gap-0.5">
-                      <button
-                        type="button"
-                        onMouseDown={(e) => e.stopPropagation()}
-                        onClick={(e) => {
-                          e.stopPropagation()
-                          toggleSizeOpen(item.i)
-                        }}
-                        className={cn(
-                          'grid size-6 place-items-center rounded-full transition-colors',
-                          sizeOpen
-                            ? 'bg-primary/15 text-primary'
-                            : 'text-muted-foreground/60 hover:bg-accent hover:text-foreground',
-                        )}
-                        aria-label={t('widget.size_toggle')}
-                        aria-pressed={sizeOpen}
-                        title={t('widget.size_toggle')}
-                      >
-                        <Ruler className="size-3.5" />
-                      </button>
-                      <span className="flex-1" />
-                      <button
-                        type="button"
-                        onMouseDown={(e) => e.stopPropagation()}
-                        onClick={(e) => {
-                          e.stopPropagation()
-                          setConfigFor({ instanceId: item.i, pluginName: def.pluginName, title })
-                        }}
-                        className="grid size-6 place-items-center rounded-full text-muted-foreground/60 transition-colors hover:bg-accent hover:text-foreground"
-                        aria-label={t('layout.widget_configure')}
-                        title={t('layout.widget_configure')}
-                      >
-                        <Settings className="size-3.5" />
-                      </button>
-                      <button
-                        type="button"
-                        onMouseDown={(e) => e.stopPropagation()}
-                        onClick={(e) => {
-                          e.stopPropagation()
-                          setConfirmRemove({ instanceId: item.i, label: title })
-                        }}
-                        className="grid size-6 place-items-center rounded-full text-muted-foreground/60 transition-colors hover:bg-destructive/10 hover:text-destructive"
-                        aria-label={t('layout.widget_remove')}
-                        title={t('layout.widget_remove')}
-                      >
-                        <X className="size-4" />
-                      </button>
+                      {actionButtons(item, def, title)}
                     </div>
+                    )}
                   </div>
-                  </Fragment>
                 )
-              })}
-              {/* Colonnes libres À DROITE de la ligne (cf. spareCols) : à l'échelle, et cible de
-                  dépôt « rejoindre cette ligne en dernière position » (cf. dropAtRowSlot) — c'est
-                  là que l'utilisateur lâche spontanément « à côté de » quelque chose. */}
-              {spareCols > 0 && rowGap(rowIndex, spareCols, row.length, row[0].y, last.x + Math.max(1, last.w), MAX_WIDGET_WIDTH)}
-            </div>
-            {dropGap(rowIndex + 1)}
+              }),
+            )}
           </div>
-          )
-        })}
+        </div>
+        )}
       </div>
 
       <div className="shrink-0 border-t border-border p-3">
