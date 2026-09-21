@@ -520,7 +520,24 @@ class MelisAuthController extends MelisAbstractActionController
                             ];
                         }
                     } else {
-                        // User is inactive (admin lock, or timer not lapsed)
+                        /**
+                         * No account matches the login that was typed.
+                         *
+                         * (The comments below are inherited and misleading: this is the else of
+                         * `if (!empty($userData))`, so an inactive account never reaches it -
+                         * an inactive account is handled inside the block above.)
+                         *
+                         * Nothing was recorded here before, so somebody trying a list of logins
+                         * stayed invisible: the failure counters only ever count attempts
+                         * against accounts that exist (DEKRA item 21.0).
+                         *
+                         * Only the log knows the account is unknown - the response stays the
+                         * same as for a wrong password, otherwise the login form would tell an
+                         * attacker which logins exist.
+                         */
+                        $this->getServiceManager()->get('MelisCoreSecurityAudit')
+                            ->logLoginFailureUnknownUser($postValues['usr_login']);
+
                         
                         // We check lock status again to decide if we show the alert or the special lock notification
                         // Since the complex lock notification logic is already handled above based on $numberOfFailedLoginAttempts
@@ -543,7 +560,7 @@ class MelisAuthController extends MelisAbstractActionController
                     $errorTitle = $translator->translate('tr_meliscore_common_error');
                     $errorTxt = $translator->translate('tr_meliscore_login_auth_Failed authentication');
                     $jsCommand = $this->buildAlertDangerCommand('#loginprompt', $errorTitle . '!', $errorTxt);
-                    
+
                     $result = [
                         'success' => false,
                         'errors' => ['empty' => $errorTxt],

@@ -189,6 +189,7 @@ return [
     'tr_meliscore_email_lost_password_html_Content' => '<p>Hi [USER_LOGIN],</p><p>Please click this <a title="link" href="[URL]">link</a>&nbsp; to reset your password.</p>',
     'tr_meliscore_email_lost_password_text_Content' => 'Hi [USER_LOGIN], please click this [URL] to reset your password.',
     'tr_meliscore_email_lost_password_request_success' => 'An email has been sent to reset your password',
+    'tr_meliscore_email_lost_password_request_generic' => 'If an account matches these details, an email has been sent to reset the password',
     'tr_meliscore_email_lost_password_request_failed'  => 'Unable to send an email, invalid email or login',
     'tr_meliscore_email_lost_password_request_form_empty' => 'Please complete the form',
     'tr_meliscore_email_failed' => 'Invalid login or email',
@@ -954,4 +955,14 @@ return [
     'tr_melis_core_announcement_plugin_tomorrow' => 'Tomorrow',
     'tr_meliscore_toolstree_section_others' => 'Others',
     'tr_meliscore_toolstree_section_custom' => 'Custom / Projects',
+    // Security audit trail (DEKRA item 21.0)
+    'tr_meliscore_logs_tool_log_ip' => 'IP address',
+    'tr_meliscore_logs_tool_log_anonymous' => 'Anonymous',
+    'tr_meliscore_security_log_login_ok' => 'Login',
+    'tr_meliscore_security_log_logout' => 'Logout',
+    'tr_meliscore_security_log_login_unknown' => 'Login attempt on an unknown account',
+    'tr_meliscore_security_log_export' => 'Data export',
+    'tr_meliscore_security_log_sensitive_read' => 'Sensitive data read',
+    'tr_meliscore_security_log_file' => 'Media library',
+    'tr_meliscore_security_log_alert' => 'Security alert',
 ];

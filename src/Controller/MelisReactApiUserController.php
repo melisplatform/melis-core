@@ -382,8 +382,52 @@ class MelisReactApiUserController extends MelisAbstractActionController
         }
 
         try {
-            $db = $this->getServiceManager()->get('Laminas\Db\Adapter\AdapterInterface');
+            $sm = $this->getServiceManager();
+            $db = $sm->get('Laminas\Db\Adapter\AdapterInterface');
+
+            // Login lu avant la suppression : les jetons de mot de passe en attente sont indexes dessus
+            $rows  = iterator_to_array($db->query('SELECT usr_login FROM melis_core_user WHERE usr_id = ?', [$id]));
+            $login = !empty($rows) ? ((array) $rows[0])['usr_login'] : null;
+
             $db->query('DELETE FROM melis_core_user WHERE usr_id = ?', [$id]);
+
+            // Purge des demandes de mot de passe en attente : sans cela un lien envoye par mail
+            // avant la suppression resterait utilisable sur un login qui n'existe plus.
+            $sm->get('MelisCoreLostPassword')->deleteRequestsByLogin($login);
+            $sm->get('MelisCoreCreatePassword')->deleteRequestsByLogin($login);
+
+            return $this->jsonResponse(['success' => true, 'data' => null]);
+        } catch (\Throwable $e) {
+            return $this->errorResponse($e);
+        }
+    }
+
+    // ─── POST /users/export ───────────────────────────────────────────────────
+
+    /**
+     * Records a user data export made by the React back-office.
+     *
+     * The React list builds its CSV/Excel file in the browser, from rows it already holds, so
+     * the server never sees the export. This endpoint is what the page calls just before
+     * generating the file, so an export leaves the same trace whichever interface performed it
+     * (DEKRA item 21.0). It writes a log entry and nothing else.
+     */
+    public function exportAction(): HttpResponse
+    {
+        if ($deny = $this->denyUnlessAccess()) { return $deny; }
+        if ($denyCap = $this->denyUnlessCan('export')) { return $denyCap; }
+
+        try {
+            $body   = json_decode((string) $this->getRequest()->getContent(), true) ?: [];
+            $rows   = (int) ($body['rows'] ?? 0);
+            $format = (string) ($body['format'] ?? '');
+
+            $this->getServiceManager()->get('MelisCoreSecurityAudit')->logExport('meliscore_tool_user', $rows, [
+                'format'  => $format,
+                'filters' => is_array($body['filters'] ?? null) ? $body['filters'] : [],
+                'source'  => 'react',
+            ]);
+
             return $this->jsonResponse(['success' => true, 'data' => null]);
         } catch (\Throwable $e) {
             return $this->errorResponse($e);
@@ -433,6 +477,11 @@ class MelisReactApiUserController extends MelisAbstractActionController
         if ($id <= 0) {
             return $this->jsonResponse(['success' => false, 'error' => 'Invalid ID'], 400);
         }
+
+        // Connection history of another user is personal data (DEKRA item 21.0). Same entry as
+        // the legacy tool writes, so both interfaces leave the same trace.
+        $this->getServiceManager()->get('MelisCoreSecurityAudit')
+            ->logSensitiveRead('user connection history', $id);
 
         try {
             $db   = $this->getServiceManager()->get('Laminas\Db\Adapter\AdapterInterface');
@@ -499,6 +548,11 @@ class MelisReactApiUserController extends MelisAbstractActionController
         if ($id <= 0) {
             return $this->jsonResponse(['success' => false, 'error' => 'Invalid ID'], 400);
         }
+
+        // Displaying a user's API key: a leaked key is what the audit found (item 6.0), so
+        // reading one leaves a trace. The key itself is never written to the log.
+        $this->getServiceManager()->get('MelisCoreSecurityAudit')
+            ->logSensitiveRead('user microservice API key', $id);
 
         try {
             $db   = $this->getServiceManager()->get('Laminas\Db\Adapter\AdapterInterface');

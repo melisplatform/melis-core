@@ -210,3 +210,25 @@ export async function saveMicroservice(
     body: JSON.stringify({ action }),
   })
 }
+
+/**
+ * Journalise un export de données utilisateurs (piste d'audit, item DEKRA 21.0).
+ *
+ * Le fichier est construit dans le navigateur à partir des lignes déjà chargées : le serveur ne
+ * voit donc jamais l'export. Cet appel est ce qui lui permet de l'enregistrer, exactement comme
+ * le back-office legacy le fait pour son propre export CSV.
+ *
+ * L'échec n'est jamais bloquant : on n'empêche pas un export parce que sa trace n'a pas pu être
+ * écrite — l'appelant ignore la promesse rejetée.
+ */
+export async function logExport(
+  rows: number,
+  format: string,
+  filters: Record<string, string | number | undefined> = {},
+): Promise<void> {
+  await apiFetch<null>('/melis/react-api/users/export', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ rows, format, filters }),
+  })
+}

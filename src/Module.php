@@ -13,7 +13,9 @@ use Laminas\ModuleManager\ModuleEvent;
 use MelisCore\Listener\MelisChangeLangOnCreatePassListener;
 use MelisCore\Listener\MelisCoreClearCacheListenerListener;
 use MelisCore\Listener\MelisCoreDashboardPluginRightsTreeViewListener;
+use MelisCore\Listener\MelisCoreAuthorizationListener;
 use MelisCore\Listener\MelisCoreAuthSuccessListener;
+use MelisCore\Listener\MelisCoreSecurityAuditListener;
 use MelisCore\Listener\MelisCoreCheckUserRightsListener;
 use MelisCore\Listener\MelisCoreDashboardMenuListener;
 use MelisCore\Listener\MelisCoreFlashMessengerListener;
@@ -94,9 +96,14 @@ class Module
             (new MelisCoreTinyMCEConfigurationListener())->attach($eventManager);
             (new MelisCoreMicroServiceRouteParamListener())->attach($eventManager);
             (new MelisCoreAuthSuccessListener())->attach($eventManager);
+            (new MelisCoreSecurityAuditListener())->attach($eventManager);
             (new MelisCorePhpWarningListener())->attach($eventManager);
             (new MelisCoreDashboardPluginRightsTreeViewListener())->attach($eventManager);
             (new MelisCoreUrlAccessCheckerListenner())->attach($eventManager);
+            // Garde-fou d'autorisation GLOBAL du back-office (audit DEKRA 7.0) : checkIdentity()
+            // ci-dessus n'authentifie que ; ce listener décide de l'ACCÈS À L'OUTIL avant le
+            // dispatch. Démarre en mode `report` (trace seule, rien n'est bloqué).
+            (new MelisCoreAuthorizationListener())->attach($eventManager);
             (new MelisCoreTableColumnDisplayListener())->attach($eventManager);
             (new MelisCoreClearCacheListenerListener())->attach($eventManager);
             (new MelisCoreInsertDashboardPluginListener())->attach($eventManager);
@@ -405,6 +412,7 @@ class Module
             include __DIR__ . '/../config/otherconfig.php',
             include __DIR__ . '/../config/app.tools.php',
             include __DIR__ . '/../config/app.emails.php',
+            include __DIR__ . '/../config/app.security.php',
             include __DIR__ . '/../config/diagnostic.config.php',
             include __DIR__ . '/../config/app.microservice.php',
             include __DIR__ . '/../config/setup/download.config.php',
