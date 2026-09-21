@@ -1,9 +1,11 @@
 import { useRef, useState, type CSSProperties, type DragEvent } from 'react'
+import { createPortal } from 'react-dom'
 import {
   ChevronLeft,
   ChevronRight,
   GripVertical,
   LayoutGrid,
+  MoreHorizontal,
   Plus,
   Ruler,
   Settings,
@@ -62,6 +64,18 @@ const PANEL_COMPACT_BELOW_PX = 80
 /** Colonnes à partir desquelles une carte COMPACTE a la place d'afficher son titre (les boutons
  *  occupent ≈ 72px de l'en-tête). En dessous, l'icône seule + infobulle. */
 const PANEL_TITLE_MIN_COLS_COMPACT = 9
+/** Colonnes en dessous desquelles les 3 boutons d'action (règle / config / retirer) n'ont plus la
+ *  place de tenir — SEUIL DIFFÉRENT selon où ils s'affichent (retour DEKRA #0011020 : illisibles/
+ *  chevauchants sur les cartes étroites, PUIS retour utilisateur : des cartes pourtant assez
+ *  larges pour les 3 boutons se repliaient quand même) :
+ *   - carte NORMALE (barre du bas séparée, cf. PANEL_COMPACT_BELOW_PX) : les 3 boutons (≈ 76px +
+ *     gouttières) sont SEULS dans leur rangée, sans concurrence — tiennent dès 4 colonnes
+ *     (≈ 104px, ≈ 84px de zone utile une fois le padding de la carte déduit).
+ *   - carte COMPACTE (poignée + vignette + les 3 boutons TOUS dans l'en-tête, une seule ligne) :
+ *     il faut EN PLUS la place de la poignée (20px) et de la vignette (28px) + leurs gouttières
+ *     → seuil bien plus haut (≈ 160px de zone utile), 7 colonnes. */
+const PANEL_BUTTONS_COLLAPSE_BELOW_COLS_NORMAL = 4
+const PANEL_BUTTONS_COLLAPSE_BELOW_COLS_COMPACT = 7
 /** Colonnes (sur 12) à partir desquelles la carte est assez large pour afficher son titre (≈ 130px
  *  sur un panneau de 340px). En dessous, l'icône seule l'identifie et le nom passe en infobulle —
  *  même seuil qu'avant (3 widgets égaux = 4 colonnes → masqué ; 2 = 6 colonnes → affiché), mais
@@ -154,6 +168,10 @@ export function DashboardStructurePanel({
 
   const [configFor, setConfigFor] = useState<{ instanceId: string; pluginName?: string; title: string } | null>(null)
   const [confirmRemove, setConfirmRemove] = useState<{ instanceId: string; label: string } | null>(null)
+  // Carte trop étroite pour ses 3 boutons séparés (cf. PANEL_BUTTONS_COLLAPSE_BELOW_COLS) : lequel a
+  // son menu « ⋯ » ouvert, avec de quoi construire ses 3 actions (même ancrage par bord droit que
+  // les autres popovers ancrés à un bouton de ce fichier/l'éditeur de page).
+  const [overflowMenuFor, setOverflowMenuFor] = useState<{ instanceId: string; pluginName?: string; title: string; right: number; y: number } | null>(null)
 
   // Champs largeur/hauteur repliés par défaut (comme le toggle de largeur responsive de l'éditeur
   // de page, EditionCanvas.tsx) — l'icône « règle » les révèle à la demande, pour ne pas imposer
@@ -403,8 +421,41 @@ export function DashboardStructurePanel({
 
   // Boutons d'une carte (règle W/H, configurer, retirer) — dans la barre du BAS d'une carte
   // normale, ou À DROITE de l'en-tête d'une carte COMPACTE (tuile courte, cf. PANEL_COMPACT_BELOW_PX).
-  const actionButtons = (item: GridItem, def: WidgetDef, title: string) => {
+  // Carte trop étroite (cf. PANEL_BUTTONS_COLLAPSE_BELOW_COLS) : un seul bouton « ⋯ » ouvre les 3
+  // actions dans un petit menu porté, plutôt que 3 ronds qui se chevauchent.
+  // `btnsCollapsed` : calculé PAR L'APPELANT (cf. plus bas), qui seul sait si la carte est compacte
+  // ou non — le seuil de repli diffère selon le cas (cf. les 2 constantes ci-dessus).
+  const actionButtons = (item: GridItem, def: WidgetDef, title: string, btnsCollapsed: boolean) => {
     const sizeOpen = sizeOpenFor.has(item.i)
+    if (btnsCollapsed) {
+      return (
+        <button
+          type="button"
+          onMouseDown={(e) => e.stopPropagation()}
+          onClick={(e) => {
+            e.stopPropagation()
+            const r = (e.currentTarget as HTMLElement).getBoundingClientRect()
+            setOverflowMenuFor((m) =>
+              m?.instanceId === item.i
+                ? null
+                : { instanceId: item.i, pluginName: def.pluginName, title, right: Math.max(8, window.innerWidth - r.right), y: r.bottom + 4 },
+            )
+          }}
+          className={cn(
+            'grid size-6 shrink-0 place-items-center rounded-full transition-colors',
+            overflowMenuFor?.instanceId === item.i
+              ? 'bg-primary/15 text-primary'
+              : 'text-muted-foreground/60 hover:bg-accent hover:text-foreground',
+          )}
+          aria-label={t('widget.more_actions')}
+          aria-haspopup="menu"
+          aria-expanded={overflowMenuFor?.instanceId === item.i}
+          title={t('widget.more_actions')}
+        >
+          <MoreHorizontal className="size-3.5" />
+        </button>
+      )
+    }
     return (
       <>
           <button
@@ -616,6 +667,17 @@ export function DashboardStructurePanel({
                 // Tuile courte → carte COMPACTE (une ligne, boutons dans l'en-tête), sinon la barre de
                 // boutons reste en bas (mt-auto) et l'espace libre s'étire entre les deux.
                 const compact = spanHeight(gh(item)) < PANEL_COMPACT_BELOW_PX
+                // Carte trop étroite pour ses 3 boutons séparés : le bouton « ⋯ », seul contenu de sa
+                // rangée, est alors CENTRÉ plutôt que collé à un bord — plaqué à gauche (barre du bas)
+                // ou à droite (en-tête compact), il avait l'air d'un point isolé, décroché du reste de
+                // la carte (retour utilisateur : « we need to center the button »). Seuil DIFFÉRENT
+                // selon `compact` (cf. les 2 constantes) : une carte normale n'a que les 3 boutons,
+                // seuls, dans la barre du bas (tient dès 4 colonnes) ; une carte compacte doit EN PLUS
+                // loger poignée + vignette dans la MÊME rangée (ne tient qu'à partir de 7) — avec un
+                // seuil unique, des cartes pourtant assez larges pour la barre du bas se repliaient
+                // quand même (retour utilisateur, cf. les widgets « Recent page activity »/« Announcement »
+                // à 4 colonnes : bien assez de place pour vignette + 3 boutons dans leur barre séparée).
+                const btnsCollapsed = cols < (compact ? PANEL_BUTTONS_COLLAPSE_BELOW_COLS_COMPACT : PANEL_BUTTONS_COLLAPSE_BELOW_COLS_NORMAL)
                 const showTitle = narrow || cols >= (compact ? PANEL_TITLE_MIN_COLS_COMPACT : PANEL_TITLE_MIN_COLS)
                 return (
                   <div
@@ -687,14 +749,31 @@ export function DashboardStructurePanel({
                               dragOverItem.zone === 'top' && 'shadow-[inset_0_4px_0_var(--color-primary)]',
                               dragOverItem.zone === 'bottom' && 'shadow-[inset_0_-4px_0_var(--color-primary)]',
                             )
-                          : 'border-border/70 hover:border-primary/30 hover:shadow-sm',
+                          // Menu « ⋯ » ouvert pour CETTE carte (cf. overflowMenuFor) : identifie quel
+                          // widget le popover porté concerne — sinon, une fois le bouton lui-même
+                          // masqué derrière le menu, rien ne relie visuellement le popover à sa carte
+                          // sur un panneau qui en affiche plusieurs à la fois.
+                          : overflowMenuFor?.instanceId === item.i
+                            ? 'border-primary/40 bg-primary/10'
+                            : 'border-border/70 hover:border-primary/30 hover:shadow-sm',
                     )}
                   >
-                    <div className="flex items-center gap-2">
+                    <div className={cn('relative flex items-center gap-2', btnsCollapsed && 'justify-center')}>
                       {/* Poignée de glisser-déposer : SEULE ELLE démarre le glisser (pas toute la
                           carte), pour ne pas entrer en conflit avec les champs/boutons cliquables
                           dessous. Déposer sur un AUTRE widget les met côte à côte ; dans un
-                          interstice, en fait une nouvelle ligne. */}
+                          interstice, en fait une nouvelle ligne. Carte trop étroite (collapsed) :
+                          justify-center (ci-dessus) centre aussi la poignée (+ vignette si visible,
+                          cas non compact) plutôt que de les laisser calées à gauche — sans effet pour
+                          la variante compacte, où la poignée est déjà sortie du flux (cf. juste en
+                          dessous) et le bouton seul restant occupe déjà toute la largeur. Retour
+                          utilisateur : la poignée de glisser devait, elle aussi, être centrée.
+                          Carte compacte ET trop étroite (collapsed) : sortie du flux normal (absolute)
+                          plutôt que premier enfant flex — sinon elle continue de retenir sa largeur
+                          dans le calcul du flex-1 ci-dessous, qui ne centre alors plus le bouton
+                          « ⋯ » par rapport à la carte ENTIÈRE mais seulement par rapport à l'espace
+                          restant après elle (retour utilisateur : bouton pas centré). Toujours
+                          fonctionnelle (glisser marche pareil), juste posée en superposition légère. */}
                       <span
                         draggable
                         onDragStart={(e) => {
@@ -706,17 +785,30 @@ export function DashboardStructurePanel({
                           setDraggingId(null)
                           clearDragVisuals()
                         }}
-                        className="grid size-5 shrink-0 cursor-grab place-items-center rounded text-muted-foreground/40 transition-colors hover:bg-accent hover:text-muted-foreground active:cursor-grabbing"
+                        className={cn(
+                          'grid size-5 shrink-0 cursor-grab place-items-center rounded text-muted-foreground/40 transition-colors hover:bg-accent hover:text-muted-foreground active:cursor-grabbing',
+                          compact && btnsCollapsed && 'absolute left-0 top-1/2 z-10 -translate-y-1/2',
+                        )}
                         title={t('widget.drag_reorder')}
                       >
                         <GripVertical className="size-3.5" />
                       </span>
-                      {def.thumbnail ? (
-                        <img src={def.thumbnail} alt="" draggable={false} className="pointer-events-none size-7 shrink-0 rounded-md border border-border/70 object-cover" />
-                      ) : (
-                        <div className="grid size-7 shrink-0 place-items-center rounded-md bg-[color-mix(in_srgb,var(--color-primary)_12%,transparent)] text-primary">
-                          <def.icon className="size-3.5" />
-                        </div>
+                      {/* Vignette masquée sur toute carte trop étroite pour ses boutons (collapsed,
+                          compacte ou non) : sinon poignée + vignette forment un bloc décalé à
+                          gauche que `justify-center` centre comme un TOUT plutôt que chaque élément
+                          individuellement — la poignée restait décalée du vrai centre de la carte
+                          d'environ la moitié de la largeur de la vignette. Seule la poignée doit
+                          rester identifiable ici (retour utilisateur : la poignée de glisser aussi
+                          doit être centrée) ; l'icône du widget n'apporte rien à cette largeur, le
+                          titre étant de toute façon déjà masqué. */}
+                      {!btnsCollapsed && (
+                        def.thumbnail ? (
+                          <img src={def.thumbnail} alt="" draggable={false} className="pointer-events-none size-7 shrink-0 rounded-md border border-border/70 object-cover" />
+                        ) : (
+                          <div className="grid size-7 shrink-0 place-items-center rounded-md bg-[color-mix(in_srgb,var(--color-primary)_12%,transparent)] text-primary">
+                            <def.icon className="size-3.5" />
+                          </div>
+                        )
                       )}
                       {/* Masqué quand la carte est trop étroite (moins de PANEL_TITLE_MIN_COLS
                           colonnes : 2-3 lettres tronquées, illisible, cf. l'infobulle sur la carte
@@ -726,7 +818,9 @@ export function DashboardStructurePanel({
                         <span className="min-w-0 flex-1 truncate text-xs font-semibold text-foreground">{title}</span>
                       )}
                       {compact && (
-                        <span className="ml-auto flex shrink-0 items-center gap-0.5">{actionButtons(item, def, title)}</span>
+                        <span className={cn('flex items-center gap-0.5', btnsCollapsed ? 'min-w-0 flex-1 justify-center' : 'ml-auto shrink-0')}>
+                          {actionButtons(item, def, title, btnsCollapsed)}
+                        </span>
                       )}
                     </div>
                     {/* Largeur en colonnes NATIVES (1-12, cf. GRID_WIDTH/MAX_WIDGET_WIDTH — pas de
@@ -802,8 +896,8 @@ export function DashboardStructurePanel({
                         boutons reste collée en bas et l'espace libre se place entre l'en-tête et
                         elle — silhouette d'une tuile, pas d'un bloc à moitié vide. */}
                     {!compact && (
-                    <div className="mt-auto flex items-center gap-0.5">
-                      {actionButtons(item, def, title)}
+                    <div className={cn('mt-auto flex items-center gap-0.5', btnsCollapsed && 'justify-center')}>
+                      {actionButtons(item, def, title, btnsCollapsed)}
                     </div>
                     )}
                   </div>
@@ -851,6 +945,67 @@ export function DashboardStructurePanel({
       ) : (
         panel
       )}
+
+      {overflowMenuFor && (() => {
+        const { instanceId, pluginName, title, right, y } = overflowMenuFor
+        const sizeOpen = sizeOpenFor.has(instanceId)
+        const close = () => setOverflowMenuFor(null)
+        // w-48 (192px) + texte text-sm faisait presque la moitié du panneau (340px) pour un menu de
+        // 3 lignes — beaucoup trop massif à côté de la carte miniature qui l'a ouvert (retour
+        // utilisateur : « the popup are too big »). Resserré à l'échelle du reste du panneau (mêmes
+        // tailles que les libellés de carte, cf. text-xs ailleurs dans ce fichier).
+        const menuItem = 'flex w-full items-center gap-1.5 rounded-md px-2 py-1.5 text-left text-xs text-foreground transition-colors hover:bg-accent'
+        return createPortal(
+          <>
+            <div data-testid="widget-overflow-backdrop" onClick={close} className="fixed inset-0 z-[70]" />
+            <div
+              role="menu"
+              data-testid={`widget-overflow-menu-${instanceId}`}
+              onClick={(e) => e.stopPropagation()}
+              style={{ right, top: y }}
+              className="fixed z-[71] w-36 rounded-lg border border-border bg-card p-1 shadow-lg"
+            >
+              <button
+                type="button"
+                role="menuitem"
+                className={cn(menuItem, sizeOpen && 'bg-primary/10 text-primary')}
+                onClick={() => {
+                  toggleSizeOpen(instanceId)
+                  close()
+                }}
+              >
+                <Ruler className="size-3 shrink-0 text-muted-foreground" />
+                {t('widget.size_toggle')}
+              </button>
+              <button
+                type="button"
+                role="menuitem"
+                className={menuItem}
+                onClick={() => {
+                  setConfigFor({ instanceId, pluginName, title })
+                  close()
+                }}
+              >
+                <Settings className="size-3 shrink-0 text-muted-foreground" />
+                {t('layout.widget_configure')}
+              </button>
+              <button
+                type="button"
+                role="menuitem"
+                className={cn(menuItem, 'text-destructive hover:bg-destructive/10')}
+                onClick={() => {
+                  setConfirmRemove({ instanceId, label: title })
+                  close()
+                }}
+              >
+                <X className="size-3 shrink-0" />
+                {t('layout.widget_remove')}
+              </button>
+            </div>
+          </>,
+          document.body,
+        )
+      })()}
 
       {configFor && (
         <WidgetConfigDialog
