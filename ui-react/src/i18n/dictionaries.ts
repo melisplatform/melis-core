@@ -138,6 +138,7 @@ const fr = {
   'widget.width_field': 'Largeur (% de la ligne)',
   'widget.size_toggle': 'Largeur / hauteur',
   'widget.resize': 'Glisser pour redimensionner',
+  'widget.more_actions': 'Plus d’actions',
 
   'common.coming_soon': 'Bientôt disponible',
   'common.coming_soon_sub': 'Cet écran fait partie des prochains jalons du prototype.',
@@ -1039,6 +1040,7 @@ const en: Record<I18nKey, string> = {
   'widget.width_field': 'Width (% of the row)',
   'widget.size_toggle': 'Width / height',
   'widget.resize': 'Drag to resize',
+  'widget.more_actions': 'More actions',
 
   'common.coming_soon': 'Coming soon',
   'common.coming_soon_sub': 'This screen is part of the prototype’s next milestones.',
