@@ -89,6 +89,8 @@ return array(
     'tr_meliscore_tool_user_usr_file_button' => 'Select image',
 
     'tr_meliscore_user_password_change_succes' => 'Password successfully changed.',
+    'tr_meliscore_user_password_change_error' => 'This link is invalid or has expired. Please request a new one.',
+    'tr_meliscore_reset_password_request_new' => 'Request a new link',
 
     'tr_meliscore_login_password_enc_update' => 'We have changed our encryption algorithm, please update your password to secure your account. To do so click on <strong>Forgot password</strong> to create a new password. We apologize for the inconvenience.',
 

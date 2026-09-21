@@ -37,6 +37,7 @@ return array(
                         'active' => 1,
                     ),
                     'pwd_request_expiry' => 1440, //minutes (1440 min = 24 hrs)
+                    'pwd_request_min_delay' => 2, //minutes between two reset emails for one account
                     'pwd_expiry' => 720, //minutes (720 hrs = 30 days)
                     'export' => array(
                         'csv' => array(

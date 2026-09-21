@@ -95,11 +95,11 @@ class UserController extends MelisAbstractActionController
         $appConfigForm = $melisMelisCoreConfig->getItem($pathAppConfigForm);
         $translator = $this->getServiceManager()->get('translator');
         
-        $success = false;
-        $errors  = array();
-        $message = '';
+        // The answer never depends on whether the account exists, otherwise this public form
+        // tells an attacker which login/email pairs are valid (account enumeration). Same
+        // message, same structure, whether an email was sent or not.
+        $message = $translator->translate('tr_meliscore_email_lost_password_request_generic');
 
-        
         if($this->getRequest()->isPost())
         {
             $login = $this->getRequest()->getPost('usr_login');
@@ -110,33 +110,15 @@ class UserController extends MelisAbstractActionController
             $userData = $userTable->getDataByLoginAndEmail($login, $email);
             $userData = $userData->current();
             
-            if($userData) 
+            // An email only leaves for a real account, and addLostPassRequest() applies the
+            // rate limit. Its result is deliberately ignored here.
+            if($userData && $melisLostPass->userExists($login))
             {
-                if($melisLostPass->userExists($login))
-                {
-                    $success = $melisLostPass->addLostPassRequest($login, $email);
-                    if($success)
-                    {
-                        $message = $translator->translate('tr_meliscore_email_lost_password_request_success');
-                    }
-                    else
-                    {
-                        $message = $translator->translate('tr_meliscore_email_lost_password_request_failed');
-                    }
-                }
-                else
-                {
-                    $message = $translator->translate('tr_meliscore_email_lost_password_request_failed');
-                }
-            }
-            else 
-            {
-                $success = false;
-                $message = $translator->translate('tr_meliscore_email_failed');
+                $melisLostPass->addLostPassRequest($login, $email);
             }
         }
         
-        return new JsonModel(array('success' => $success, 'message' => $message));
+        return new JsonModel(array('success' => true, 'message' => $message));
     }
     
     /**
@@ -217,11 +199,21 @@ class UserController extends MelisAbstractActionController
                             // password and confirm password matching
                             if($password == $confirmPass)
                             {
-                                $melisLostPass->processUpdatePassword($rhash, $password);   
-                                $textMessage = "tr_meliscore_user_password_change_succes";
-                                $success = 1;
+                                // The service revalidates the token: an expired link must not
+                                // report a successful password change.
+                                if($melisLostPass->processUpdatePassword($rhash, $password))
+                                {
+                                    $textMessage = "tr_meliscore_user_password_change_succes";
+                                    $success = 1;
 
-                                header( "location:/melis/login");
+                                    header( "location:/melis/login");
+                                }
+                                else
+                                {
+                                    $success = 0;
+                                    $hashExists = false;
+                                    $textMessage = 'tr_meliscore_user_password_change_error';
+                                }
                             }
                             else
                             {

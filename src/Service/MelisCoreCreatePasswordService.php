@@ -465,6 +465,21 @@ class MelisCoreCreatePasswordService extends MelisGeneralService implements Meli
     }
     
     /**
+     * Deletes every pending create password request of a login (called when an account is deleted)
+     * @param String $login
+     * @return void
+     */
+    public function deleteRequestsByLogin($login)
+    {
+        if (empty($login))
+            return;
+
+        /** @var MelisCreatePasswordTable $table */
+        $table = $this->getServiceManager()->get('MelisCreatePasswordTable');
+        $table->deleteByField('mcp_login', $login);
+    }
+
+    /**
      * Deletes a specific record in the create password table
      * @param unknown $hash
      */

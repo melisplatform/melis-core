@@ -87,6 +87,8 @@ return array(
     'tr_meliscore_tool_user_usr_file_button' => 'Sélectionner une image',
 
     'tr_meliscore_user_password_change_succes' => 'Mot de passe modifié avec succès.',
+    'tr_meliscore_user_password_change_error' => 'Ce lien est invalide ou a expiré. Merci d\'en demander un nouveau.',
+    'tr_meliscore_reset_password_request_new' => 'Demander un nouveau lien',
 
     'tr_meliscore_login_password_enc_update' => 'Nous avons changé notre algorithme de cryptage, veuillez mettre à jour votre mot de passe pour sécuriser votre compte. Pour cela cliquez sur <strong>Mot de passe oublié</strong> pour créer un nouveau mot de passe. Nous nous excusons pour la gêne occasionnée.',
 

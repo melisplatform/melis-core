@@ -46,10 +46,18 @@ class MelisReactApiAuthController extends MelisAbstractActionController
             return $this->jsonResponse(['success' => true]);
         }
 
+        // Rate limit : un email de réinitialisation par compte et par délai configuré
+        // (meliscore/datas/pwd_request_min_delay). Même réponse qu'un envoi réussi.
+        $melisLostPass = $sm->get('MelisCoreLostPassword');
+        if ($melisLostPass->isRequestThrottled($login)) {
+            return $this->jsonResponse(['success' => true]);
+        }
+
         // Générer un nouveau hash — CSPRNG (uniqid = temps serveur, prédictible → brute-force du token)
         $hash = bin2hex(random_bytes(32));
 
         // Insérer ou mettre à jour l'entrée dans la table lost_password
+        // ($existing est conservé pour restaurer la ligne si l'email ne part pas)
         $lostPassTable = $sm->get('MelisLostPasswordTable');
         $existing      = $lostPassTable->getEntryByField('rh_login', $login)->current();
         if ($existing) {
@@ -81,15 +89,38 @@ class MelisReactApiAuthController extends MelisAbstractActionController
         // Envoyer via le template email existant LOSTPASSWORD (mêmes tags que le legacy)
         $langId       = $userData->usr_lang_id ?? null;
         $melisEmailBO = $sm->get('MelisCoreBOEmailService');
-        $success      = (bool) $melisEmailBO->sendBoEmailByCode(
-            'LOSTPASSWORD',
-            ['USER_Login' => $login, 'URL' => $resetUrl],
-            $email,
-            $login,
-            $langId
-        );
+        // Une panne de transport ne doit pas remonter : un 500 sur un compte réel face à un
+        // 200 sur un compte inconnu redonnerait l'énumération via la page d'erreur.
+        try {
+            $success = (bool) $melisEmailBO->sendBoEmailByCode(
+                'LOSTPASSWORD',
+                ['USER_Login' => $login, 'URL' => $resetUrl],
+                $email,
+                $login,
+                $langId
+            );
+        } catch (\Throwable $e) {
+            $success = false;
+        }
 
-        return $this->jsonResponse(['success' => $success]);
+        // Un rh_date frais laissé par un envoi échoué bloquerait l'utilisateur (rate limit)
+        // pour un email jamais parti. On annule l'écriture : ligne neuve supprimée, ligne
+        // existante remise à son état précédent (le lien déjà reçu reste valide).
+        if (!$success) {
+            if ($existing) {
+                $lostPassTable->update(
+                    ['rh_hash' => $existing->rh_hash, 'rh_date' => $existing->rh_date],
+                    'rh_login',
+                    $login
+                );
+            } else {
+                $lostPassTable->deleteByField('rh_login', $login);
+            }
+        }
+
+        // Réponse toujours identique : un success=false sur une panne d'envoi distinguerait un
+        // compte réel (email tenté) d'un compte inconnu (sortie anticipée plus haut).
+        return $this->jsonResponse(['success' => true]);
     }
 
     /**
@@ -110,18 +141,18 @@ class MelisReactApiAuthController extends MelisAbstractActionController
         $confirmPass = (string) $this->getRequest()->getPost('usr_pass_confirm', '');
 
         if (!$hash) {
-            return $this->jsonResponse(['success' => false, 'message' => 'Invalid or expired link.']);
+            return $this->jsonResponse(['success' => false, 'code' => 'invalid_token']);
         }
 
         $sm            = $this->getServiceManager();
         $melisLostPass = $sm->get('MelisCoreLostPassword');
 
         if (!$melisLostPass->hashExists($hash)) {
-            return $this->jsonResponse(['success' => false, 'message' => 'Invalid or expired link.']);
+            return $this->jsonResponse(['success' => false, 'code' => 'invalid_token']);
         }
 
         if ($password !== $confirmPass) {
-            return $this->jsonResponse(['success' => false, 'message' => 'Passwords do not match.']);
+            return $this->jsonResponse(['success' => false, 'code' => 'password_mismatch']);
         }
 
         // Valider la complexité du mot de passe (mêmes règles que resetOldPasswordAction)
@@ -134,11 +165,16 @@ class MelisReactApiAuthController extends MelisAbstractActionController
         } catch (\Throwable) {
             // Validateur indisponible — contrôle minimal sur la longueur
             if (strlen($password) < 8) {
-                return $this->jsonResponse(['success' => false, 'message' => 'Password must be at least 8 characters.']);
+                return $this->jsonResponse(['success' => false, 'code' => 'password_too_short']);
             }
         }
 
-        $melisLostPass->processUpdatePassword($hash, $password);
+        // Le jeton est revalide par le service : un lien expire ne doit pas repondre "success".
+        // On renvoie un CODE, pas un message : c'est React qui affiche le libelle traduit
+        // (les messages en dur ici s'affichaient en anglais quelle que soit la langue).
+        if (!$melisLostPass->processUpdatePassword($hash, $password)) {
+            return $this->jsonResponse(['success' => false, 'code' => 'invalid_token']);
+        }
 
         return $this->jsonResponse(['success' => true]);
     }
