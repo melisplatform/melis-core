@@ -162,18 +162,20 @@ class Module
 
     public function initSession(MvcEvent $e)
     {
-        // Harden the session cookie params. Set UNCONDITIONALLY (not only when starting) so the
-        // hardened attributes are in effect for session_regenerate_id() at login even if another
-        // module started the session first: HttpOnly (JS can't read PHPSESSID → XSS can't steal it),
-        // SameSite=Strict, Secure over HTTPS, strict-mode (reject attacker-fixated ids).
-        ini_set('session.use_strict_mode', '1');
-        ini_set('session.cookie_samesite', 'Strict');
-        ini_set('session.cookie_httponly', '1');
+        // Harden the session cookie params: HttpOnly (JS can't read PHPSESSID -> XSS can't steal
+        // it), SameSite=Strict, Secure over HTTPS, strict-mode (reject attacker-fixated ids).
         // HTTPS is detected through the proxy too (TLS ends at the ingress, so $_SERVER['HTTPS']
         // is empty inside the container and a `Secure` cookie would otherwise never be set).
+        // Only while no session is active yet: on PHP 8 ini_set() on session.* is refused with a
+        // warning once a session has been started, so setting them unconditionally never applied
+        // anything and, with display_errors on, leaked warning HTML into every response (React API
+        // JSON unparsable, "headers already sent" on the legacy back-office).
         $isHttps = MelisCoreCsrfService::isHttps();
-        ini_set('session.cookie_secure', $isHttps ? '1' : '0');
         if (session_status() == PHP_SESSION_NONE) {
+            ini_set('session.use_strict_mode', '1');
+            ini_set('session.cookie_samesite', 'Strict');
+            ini_set('session.cookie_httponly', '1');
+            ini_set('session.cookie_secure', $isHttps ? '1' : '0');
             session_set_cookie_params([
                 'httponly' => true,
                 'samesite' => 'Strict',
