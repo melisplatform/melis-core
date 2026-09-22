@@ -308,15 +308,25 @@ export function DashboardStructurePanel({
   // C'est ce que l'espace vide suggère : « il y a de la place ici ». Ligne déjà pleine
   // (MAX_ROW_ITEMS) : repli sur une nouvelle ligne juste en dessous — le geste produit toujours un
   // résultat visible plutôt qu'un dépôt silencieusement ignoré.
-  const dropAtRowSlot = (rowIndex: number, insertBefore: number, payload: DragPayload) => {
+  // `atX` : colonne de DÉPART de l'espace libre visé (cf. rowSpacer/freeRegions). Sans elle, un
+  // widget SEUL sur sa ligne lâché dans l'espace libre à sa gauche ne bougeait pas : `reorderWithinRow`
+  // (0 → 0) est un no-op, `renumberRows` conserve alors `x` tel quel (keepX) — « je n'arrive pas à
+  // déplacer le plugin vers la gauche » (rapport utilisateur). On pose donc explicitement le widget
+  // au début de l'espace libre où il a été déposé ; si sa largeur y déborde sur un voisin,
+  // `renumberRows` retombe sur son réempaquetage gauche→droite.
+  const placeAt = (next: GridItem[][], rowIdx: number, instanceId: string, atX: number | undefined) =>
+    atX === undefined ? next : next.map((r, i) => (i === rowIdx ? r.map((it) => (it.i === instanceId ? { ...it, x: atX } : it)) : r))
+  const dropAtRowSlot = (rowIndex: number, insertBefore: number, payload: DragPayload, atX?: number) => {
     setDraggingId(null)
     const row = rows[rowIndex]
     if (!row) return
+    const moving = rows[payload.rowIndex]?.[payload.itemIndex]
+    if (!moving) return
     if (payload.rowIndex === rowIndex) {
       // Même ligne : l'index cible se décale d'un cran quand le widget vient de la GAUCHE du point
       // d'insertion (son retrait fait glisser tout ce qui suit d'une position).
       const to = payload.itemIndex < insertBefore ? insertBefore - 1 : insertBefore
-      onRowsChange(reorderWithinRow(rows, rowIndex, payload.itemIndex, to))
+      onRowsChange(placeAt(reorderWithinRow(rows, rowIndex, payload.itemIndex, to), rowIndex, moving.i, atX))
       return
     }
     if (row.length >= MAX_ROW_ITEMS) {
@@ -332,14 +342,14 @@ export function DashboardStructurePanel({
     const joined = insertIntoRow(withoutItem, targetKey, item)
     const idx = joined.findIndex((r) => r.some((it) => it.i === item.i))
     if (idx === -1) return
-    onRowsChange(reorderWithinRow(joined, idx, joined[idx].length - 1, Math.min(insertBefore, joined[idx].length - 1)))
+    onRowsChange(placeAt(reorderWithinRow(joined, idx, joined[idx].length - 1, Math.min(insertBefore, joined[idx].length - 1)), idx, item.i, atX))
   }
   // Espace libre d'une ligne, À L'ÉCHELLE (`cols` colonnes sur 12, comme les cartes) : reproduit
   // dans le panneau le vide que le widget laisse dans le dashboard — à sa gauche quand il est
   // décalé vers la droite (x > 0 sans voisin : un widget seul lâché à la souris dans la colonne
   // de droite du dashboard doit apparaître à DROITE ici aussi, pas collé à gauche), et à sa droite
   // quand la ligne ne remplit pas 12 colonnes. Aussi une cible de dépôt (cf. dropAtRowSlot).
-  const rowSpacer = (rowIndex: number, insertBefore: number, style: CSSProperties) => {
+  const rowSpacer = (rowIndex: number, insertBefore: number, c0: number, style: CSSProperties) => {
     const slot = `${rowIndex}:${insertBefore}`
     return (
       <div
@@ -359,9 +369,13 @@ export function DashboardStructurePanel({
           e.stopPropagation()
           clearDragVisuals()
           const payload = readPayload(e)
-          if (payload) dropAtRowSlot(rowIndex, insertBefore, payload)
+          if (payload) dropAtRowSlot(rowIndex, insertBefore, payload, c0)
         }}
-        style={style}
+        // Bordure transparente EN LIGNE hors glisser : la classe `border-transparent` seule était
+        // écrasée par la feuille Tailwind d'une brick de module (chargée après celle de l'hôte, même
+        // couche, cf. le piège « brick CSS overrides host utilities ») — les espaces libres restaient
+        // dessinés en pointillés en permanence, le panneau paraissait « cassé » (rapport utilisateur).
+        style={{ ...style, ...(draggingId === null ? { borderColor: 'transparent', background: 'transparent' } : {}) }}
         className={cn(
           'relative min-h-0 min-w-0 rounded-lg border border-dashed transition-colors',
           // Visibles dès qu'un glisser est en cours (carrés bleus pointillés = « déposable ici »),
@@ -411,7 +425,9 @@ export function DashboardStructurePanel({
         const payload = readPayload(e)
         if (payload) dropAsNewRow(gapIndex, payload)
       }}
-      style={{ ...style, marginLeft: 4, marginRight: 4 }}
+      // Fond transparent EN LIGNE hors glisser — même raison que rowSpacer (classe écrasable par la
+      // feuille d'une brick).
+      style={{ ...style, marginLeft: 4, marginRight: 4, ...(draggingId === null ? { background: 'transparent', boxShadow: 'none' } : {}) }}
       className={cn(
         'relative z-10 rounded-full transition-colors',
         draggingId === null ? 'bg-transparent' : dragOverGap === gapIndex ? 'bg-primary shadow-[0_0_0_3px_color-mix(in_srgb,var(--color-primary)_20%,transparent)]' : 'bg-primary/25',
@@ -650,7 +666,7 @@ export function DashboardStructurePanel({
                 carte reste au-dessus d'une barre qui déborde d'un pixel sur elle. */}
             {gapLines.map((line, gapIndex) => dropGap(gapIndex, gapStyle(line)))}
             {freeRegions.map((r) =>
-              rowSpacer(r.rowIndex, r.insertBefore, {
+              rowSpacer(r.rowIndex, r.insertBefore, r.c0, {
                 gridColumn: `${r.c0 + 1} / span ${r.n}`,
                 gridRow: `${rowBands[r.rowIndex].top + 1} / span ${rowBands[r.rowIndex].bottom - rowBands[r.rowIndex].top}`,
               }),
