@@ -335,10 +335,17 @@ class MelisCoreLostPasswordService extends MelisServiceManager implements MelisC
         // reset page would still answer "success". Check the user table itself.
         if($this->isDataExists($login) && $this->userExists($login))
         {
+            $hash = $melisCoreAuth->encryptPassword($newPass);
             $userTable->update(array(
-                'usr_password' => $melisCoreAuth->encryptPassword($newPass),
+                'usr_password' => $hash,
                 'usr_last_pass_update_date' => date('Y-m-d H:i:s')
             ),'usr_login', $login);
+
+            // Password history (audit item 16.0): every path that sets a password records it.
+            $user = $userTable->getEntryByField('usr_login', $login)->current();
+            if ($user) {
+                $this->getServiceManager()->get('MelisPasswordPolicyService')->recordHistory((int) $user->usr_id, $hash);
+            }
             
             $success = true;
         }

@@ -22,6 +22,8 @@ namespace MelisCore\Service;
  *   - a classic Apache server has rsyslog, which can forward to a remote SIEM: 'syslog'
  *   - 'file' suits an agent (Filebeat, Fluent Bit, Wazuh) that tails a path
  *
+ * Several destinations can be combined, comma separated ('stderr,file').
+ *
  * Default is 'none': until an environment opts in, behaviour is exactly what it was before.
  *
  * @see config/app.security.php
@@ -48,16 +50,20 @@ class MelisCoreSecurityLogWriterService extends MelisGeneralService
             return;
         }
 
-        switch ($target) {
-            case 'stderr':
-                $this->writeToStderr($line);
-                break;
-            case 'syslog':
-                $this->writeToSyslog($line);
-                break;
-            case 'file':
-                $this->writeToFile($line, $config);
-                break;
+        // Several destinations at once are allowed, comma separated: a file is easy to grep,
+        // while stderr is the copy the application itself cannot erase.
+        foreach (array_filter(array_map('trim', explode(',', $target))) as $destination) {
+            switch ($destination) {
+                case 'stderr':
+                    $this->writeToStderr($line);
+                    break;
+                case 'syslog':
+                    $this->writeToSyslog($line);
+                    break;
+                case 'file':
+                    $this->writeToFile($line, $config);
+                    break;
+            }
         }
     }
 

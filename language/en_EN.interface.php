@@ -1,5 +1,6 @@
 <?php
 return [
+    'tr_meliscore_rate_limit_too_many_attempts' => 'Too many attempts. Please retry in %d seconds.',
     'tr_meliscore_ws_intro' => 'Token-authenticated JSON API. Each endpoint is called with POST; open one to try it with a form. All responses are JSON.',
     'tr_meliscore_ws_apikey' => 'API key',
     'tr_meliscore_ws_copy' => 'Copy',

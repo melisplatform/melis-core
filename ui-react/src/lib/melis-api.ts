@@ -16,10 +16,30 @@
 
 const XHR_HEADER = { 'X-Requested-With': 'XMLHttpRequest' } as const
 
+/**
+ * HTTP 429 posé par MelisCoreRateLimitListener (audit 17.0) : `{ success:false, error:'too_many_attempts',
+ * retry_after:N, message }`. Retourne `{ message, retryAfter }` ou null si ce n'est pas un 429.
+ */
+async function readRateLimited(res: Response): Promise<{ message: string; retryAfter: number } | null> {
+  if (res.status !== 429) return null
+  let retryAfter = Number(res.headers.get('Retry-After') ?? 0) || 0
+  let message = ''
+  try {
+    const data = (await res.json()) as { retry_after?: number; message?: string }
+    retryAfter = Number(data.retry_after ?? retryAfter) || retryAfter
+    message = data.message ?? ''
+  } catch {
+    /* corps non JSON : on garde le header */
+  }
+  return { message: message || `Too many attempts. Please retry in ${retryAfter} seconds.`, retryAfter }
+}
+
 export interface LoginResult {
   success: boolean
   /** Message d'erreur prêt à afficher (extrait de la réponse Melis). */
   message?: string
+  /** HTTP 429 (rate limit) : secondes à attendre avant de pouvoir réessayer. */
+  retryAfter?: number
   /** 2FA requise (mot de passe déjà validé) — hash à transmettre à la route React /verify-2fa. */
   twoFaHash?: string
 }
@@ -81,6 +101,10 @@ export async function login(
     return { success: false, message: 'Serveur Melis injoignable. Le backend est-il démarré ?' }
   }
 
+  const limited = await readRateLimited(res)
+  if (limited) {
+    return { success: false, message: limited.message, retryAfter: limited.retryAfter }
+  }
   if (!res.ok) {
     return { success: false, message: `Erreur serveur (${res.status}).` }
   }
@@ -254,6 +278,14 @@ export async function fetchZoneView(melisKey: string): Promise<ZoneViewResult | 
 export interface PasswordResetResult {
   success: boolean
   message?: string
+  /**
+   * Code d'erreur machine renvoye par le serveur (invalid_token, password_mismatch,
+   * password_too_short). Le libelle est choisi cote React pour qu'il suive la langue
+   * de l'interface -- le serveur ne renvoie plus de message en dur.
+   */
+  code?: string
+  /** HTTP 429 (rate limit) : secondes à attendre avant de pouvoir réessayer. */
+  retryAfter?: number
 }
 
 /**
@@ -272,6 +304,8 @@ export async function requestPasswordReset(
       headers: { 'Content-Type': 'application/x-www-form-urlencoded', ...XHR_HEADER },
       body,
     })
+    const limited = await readRateLimited(res)
+    if (limited) return { success: false, message: limited.message, retryAfter: limited.retryAfter }
     if (!res.ok) return { success: false, message: `Erreur serveur (${res.status}).` }
     return (await res.json()) as PasswordResetResult
   } catch {
@@ -299,6 +333,8 @@ export async function resetPassword(
       headers: { 'Content-Type': 'application/x-www-form-urlencoded', ...XHR_HEADER },
       body,
     })
+    const limited = await readRateLimited(res)
+    if (limited) return { success: false, message: limited.message, retryAfter: limited.retryAfter }
     if (!res.ok) return { success: false, message: `Erreur serveur (${res.status}).` }
     return (await res.json()) as PasswordResetResult
   } catch {

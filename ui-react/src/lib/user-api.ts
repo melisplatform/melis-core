@@ -167,6 +167,10 @@ export interface PasswordPolicy {
   requireUpper: boolean
   requireDigit: boolean
   requireSpecial: boolean
+  /** password history window in days (0 = history rule off) */
+  historyDays?: number
+  /** common-password blocklist + "must not contain login/e-mail" rule (always on server-side) */
+  blocklist?: boolean
 }
 
 // Cache mémoire de la politique : sert uniquement à peindre le formulaire immédiatement.

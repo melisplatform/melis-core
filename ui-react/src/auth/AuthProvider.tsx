@@ -105,7 +105,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       return {}
     }
     if (result.twoFaHash) return { twoFaHash: result.twoFaHash }
-    return { error: result.message ?? 'Identifiants invalides.' }
+    return { error: result.message ?? 'Identifiants invalides.', retryAfter: result.retryAfter }
   }, [completeAuth])
 
   const signOut = useCallback<AuthState['signOut']>(async () => {

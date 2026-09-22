@@ -5,6 +5,8 @@ import { createContext, useContext } from 'react'
 export interface SignInOutcome {
   error?: string
   twoFaHash?: string
+  /** Rate limit (HTTP 429) : secondes à attendre avant un nouvel essai. */
+  retryAfter?: number
 }
 
 export interface AuthState {

@@ -153,6 +153,23 @@ class UserController extends MelisAbstractActionController
      * Renders to the reset password view and process it after clicking the reset button
      * @return \Laminas\View\Model\ViewModel
      */
+    /**
+     * Password validator carrying the whole server-side policy (complexity, blocklist,
+     * history) for the account behind $login. Audit item 16.0.
+     */
+    private function passwordValidatorFor($login)
+    {
+        $options = ['serviceManager' => $this->getServiceManager(), 'login' => $login];
+        if ($login) {
+            $user = $this->getServiceManager()->get('MelisCoreTableUser')->getEntryByField('usr_login', $login)->current();
+            if ($user) {
+                $options['userId'] = $user->usr_id;
+                $options['email']  = $user->usr_email;
+            }
+        }
+        return new \MelisCore\Validator\MelisPasswordValidatorWithConfig($options);
+    }
+
     public function resetPasswordAction() 
     {
         $pathAppConfigForm = '/meliscore/forms/meliscore_resetpass';
@@ -188,12 +205,12 @@ class UserController extends MelisAbstractActionController
             
             $password = $this->getRequest()->getPost('usr_pass');
             $confirmPass = $this->getRequest()->getPost('usr_pass_confirm');
-            $passValidator = new \MelisCore\Validator\MelisPasswordValidator();
+            $passValidator = $this->passwordValidatorFor($login);
             
-                if(strlen($password) >= 8) {
+                if(true) { // length is enforced by the password policy
                     // if(strlen($confirmPass) >= 8) {
                         //$passValidator = new \Laminas\Validator\Regex(array('pattern' => '/^(?=.*?[0-9])(?=.*?[a-z])(?=.*?[A-Z])(?=.*?[^\w\s]).{8,}$/'));
-                        $passValidator = new \MelisCore\Validator\MelisPasswordValidator();
+                        $passValidator = $this->passwordValidatorFor($login);
                         if($passValidator->isValid($password))
                         {
                             // password and confirm password matching
@@ -223,7 +240,7 @@ class UserController extends MelisAbstractActionController
                         }
                         else {
                                 $success = 0;
-                                $textMessage = 'tr_meliscore_tool_user_usr_password_regex_not_match';
+                                $textMessage = implode('<br>', $passValidator->getMessages());
                         } // password regex validator
                     // }
                     // else {
@@ -294,7 +311,7 @@ class UserController extends MelisAbstractActionController
         {
             $password = $this->getRequest()->getPost('usr_pass');
             $confirmPass = $this->getRequest()->getPost('usr_pass_confirm');
-            $passValidator = new \MelisCore\Validator\MelisPasswordValidatorWithConfig(['serviceManager' => $this->getServiceManager()]);
+            $passValidator = $this->passwordValidatorFor($login);
 
             // password and confirm password matching
             if ($password == $confirmPass) {
@@ -439,12 +456,12 @@ class UserController extends MelisAbstractActionController
             if($isUserExist && $isRequestNotExpired) {
                 $password = $this->getRequest()->getPost('usr_pass');
                 $confirmPass = $this->getRequest()->getPost('usr_pass_confirm');
-                $passValidator = new \MelisCore\Validator\MelisPasswordValidator();
+                $passValidator = $this->passwordValidatorFor($login);
 
-                if (strlen($password) >= 8) {
+                if (true) { // length is enforced by the password policy
                     // if (strlen($confirmPass) >= 8) {
                         //$passValidator = new \Laminas\Validator\Regex(array('pattern' => '/^(?=.*?[0-9])(?=.*?[a-z])(?=.*?[A-Z])(?=.*?[^\w\s]).{8,}$/'));
-                        $passValidator = new \MelisCore\Validator\MelisPasswordValidator();
+                        $passValidator = $this->passwordValidatorFor($login);
                         if ($passValidator->isValid($password)) {
                             // password and confirm password matching
                             if ($password == $confirmPass) {
@@ -458,7 +475,7 @@ class UserController extends MelisAbstractActionController
                             } // password and confirm password matching
                         } else {
                             $success = 0;
-                            $textMessage = 'tr_meliscore_tool_user_usr_password_regex_not_match';
+                            $textMessage = implode('<br>', $passValidator->getMessages());
                         } // password regex validator
                     // } else {
                     //     $success = 0;
@@ -561,12 +578,12 @@ class UserController extends MelisAbstractActionController
             if($isUserExist && $isRequestNotExpired) {
                 $password = $this->getRequest()->getPost('usr_pass');
                 $confirmPass = $this->getRequest()->getPost('usr_pass_confirm');
-                $passValidator = new \MelisCore\Validator\MelisPasswordValidator();
+                $passValidator = $this->passwordValidatorFor($login);
 
-                if (strlen($password) >= 8) {
+                if (true) { // length is enforced by the password policy
                     // if (strlen($confirmPass) >= 8) {
                         //$passValidator = new \Laminas\Validator\Regex(array('pattern' => '/^(?=.*?[0-9])(?=.*?[a-z])(?=.*?[A-Z])(?=.*?[^\w\s]).{8,}$/'));
-                        $passValidator = new \MelisCore\Validator\MelisPasswordValidator();
+                        $passValidator = $this->passwordValidatorFor($login);
                         if ($passValidator->isValid($password)) {
                             // password and confirm password matching
                             if ($password == $confirmPass) {
@@ -580,7 +597,7 @@ class UserController extends MelisAbstractActionController
                             } // password and confirm password matching
                         } else {
                             $success = 0;
-                            $textMessage = 'tr_meliscore_tool_user_usr_password_regex_not_match';
+                            $textMessage = implode('<br>', $passValidator->getMessages());
                         } // password regex validator
                     // } else {
                     //     $success = 0;
@@ -667,7 +684,7 @@ class UserController extends MelisAbstractActionController
         {
             $password = $this->getRequest()->getPost('usr_pass');
             $confirmPass = $this->getRequest()->getPost('usr_pass_confirm');
-            $passValidator = new \MelisCore\Validator\MelisPasswordValidatorWithConfig(['serviceManager' => $this->getServiceManager()]);
+            $passValidator = $this->passwordValidatorFor($login);
             
             if($isRequestNotExpired && $isUserExist) {
                 if ($password == $confirmPass) {

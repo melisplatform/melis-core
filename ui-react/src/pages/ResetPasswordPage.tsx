@@ -62,10 +62,6 @@ export default function ResetPasswordPage() {
       setError(t('reset.err_match'))
       return
     }
-    if (password.length < 8) {
-      setError(t('reset.err_length'))
-      return
-    }
 
     setSubmitting(true)
     const result = await resetPassword(hash!, password, confirm)

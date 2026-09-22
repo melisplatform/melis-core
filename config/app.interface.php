@@ -6,6 +6,17 @@ use Laminas\Session\Container;
 $container = new Container('meliscore');
 $locale = $container['melis-lang-locale'];
 
+// Cache-busting stamp for MelisCore's concatenated bundles. They are served with a one-day
+// Cache-Control and no validator, so without it a browser keeps running yesterday's bundle after a
+// deploy - which, since the bundle now carries the CSRF emitter (audit 10.0), means every legacy
+// tool answering 403 until the user hard-refreshes. The file's mtime changes only when the bundle
+// is rebuilt, so the URL stays stable and cacheable in between.
+$bundleStamp = static function ($file) {
+    $path = __DIR__ . '/../public/build/' . $file;
+
+    return '?v=' . (is_file($path) ? filemtime($path) : '0');
+};
+
 return array(
     'plugins' => array(
         'meliscore' => array(
@@ -249,6 +260,9 @@ return array(
                 ),
                 'js' => array(
                     '/melis/get-translations?locale=' . $locale,
+                    // CSRF token echoed back on every state-changing request (audit 10.0).
+                    // Loaded FIRST: it patches XMLHttpRequest, which every tool below then uses.
+                    '/MelisCore/js/core/melisCsrf.js',
                     '/MelisCore/assets/components/library/jquery/jquery.min.js',
                     '/MelisCore/assets/components/library/jquery-ui/js/jquery-ui.min.js',
                     '/MelisCore/assets/components/library/jquery/jquery-migrate.min.js',
@@ -339,11 +353,11 @@ return array(
 
                     // lists of assets that will be loaded in the layout
                     'css' => [
-                        '/MelisCore/build/css/bundle.css',
+                        '/MelisCore/build/css/bundle.css' . $bundleStamp('css/bundle.css'),
                     ],
                     'js' => [
                         '/melis/get-translations?locale=' . $locale,
-                        '/MelisCore/build/js/bundle.js',
+                        '/MelisCore/build/js/bundle.js' . $bundleStamp('js/bundle.js'),
                     ]
                 ]
             ),
@@ -696,6 +710,10 @@ return array(
                 ),
                 'js' => array(
                     '/melis/get-translations?locale=' . $locale,
+                    // CSRF token echoed back on every state-changing request (audit 10.0). The
+                    // login page has its own short JS list (no bundle.js), so it needs its own
+                    // entry: without it the login POST to /melis/authenticate carries no token.
+                    '/MelisCore/js/core/melisCsrf.js',
                     '/MelisCore/assets/components/library/jquery/jquery.min.js?v=v1.2.3',
                     '/MelisCore/js/tools/melisCoreTool.js',
                     '/MelisCore/js/core/login.js',

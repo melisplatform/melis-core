@@ -407,6 +407,8 @@ return [
             'MelisCoreSecurityAudit'                => \MelisCore\Service\MelisCoreSecurityAuditService::class,
             'MelisCoreSecurityLogWriter'            => \MelisCore\Service\MelisCoreSecurityLogWriterService::class,
             'MelisCoreSecurityAlert'                => \MelisCore\Service\MelisCoreSecurityAlertService::class,
+            // Rate limiting with progressive delay (DEKRA item 17.0): login, password reset, coupons.
+            'MelisCoreRateLimit'                    => \MelisCore\Service\MelisCoreRateLimitService::class,
             'MelisPhpUnitTool'                      => \MelisCore\Service\MelisPhpUnitToolService::class,
             'MelisCoreMicroServiceTestService'      => \MelisCore\Service\MelisCoreMicroServiceTestService::class,
             'MelisCorePlatformSchemeService'        => \MelisCore\Service\MelisCorePlatformSchemeService::class,
@@ -420,6 +422,7 @@ return [
             'MelisCoreGdprAutoDeleteToolService'    => \MelisCore\Service\MelisCoreGdprAutoDeleteToolService::class,
             'MelisPasswordSettingsService'          => \MelisCore\Service\MelisPasswordSettingsService::class,
             'MelisUpdatePasswordHistoryService'     => \MelisCore\Service\MelisUpdatePasswordHistoryService::class,
+            'MelisPasswordPolicyService'            => \MelisCore\Service\MelisPasswordPolicyService::class,
             'MelisCoreCacheSystemService'           => \MelisCore\Service\MelisCoreCacheSystemService::class,
             'MelisCoreAnnouncementService'           => \MelisCore\Service\MelisCoreAnnouncementService::class,
 

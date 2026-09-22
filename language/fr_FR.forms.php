@@ -62,6 +62,8 @@ return array(
     'tr_meliscore_other_config_password_no_lower' => 'Le mot de passe doit contenir au moins une (1) lettre minuscule.',
     'tr_meliscore_other_config_password_no_upper' => 'Le mot de passe doit contenir au moins une (1) lettre MAJUSCULE.',
     'tr_meliscore_other_config_password_no_special_character' => 'Le mot de passe doit contenir un caractère spécial. Ex: @#$%',
+    'tr_meliscore_other_config_password_too_common' => 'Ce mot de passe est trop courant, veuillez en choisir un autre.',
+    'tr_meliscore_other_config_password_contains_login' => 'Le mot de passe ne doit pas contenir votre identifiant ni votre adresse e-mail.',
     'tr_meliscore_other_config_password_no_match' => 'Les deux mots de passe ne correspondent pas.',
     'tr_meliscore_other_config_password_duplicate' => 'Votre mot de passe a été utilisé dans les %u derniers jours. Veuiller en choisir un autre.',
 

@@ -460,8 +460,12 @@ class PluginViewController extends MelisAbstractActionController
                         $ctrlPath = $itemConfig['forward']['module'] . '/' . $ctrlPath;
                     };
                     $ctrlPath = $ctrlPath . '/' . $itemConfig['forward']['action'];
+                    // Audit 13.0: the exception message is internal (SQL, absolute paths,
+                    // service names). Only the controller path and a correlation id are shown;
+                    // the detail goes to the PHP log (grep MELIS_API_ERROR).
                     $view->setVariable('meliscore_error_dispatch',
-                        'Error: ' . $ctrlPath . '<br />' . $e->getMessage());
+                        'Error: ' . $ctrlPath . '<br />'
+                        . \MelisCore\Support\MelisErrorReference::message($e, 'PluginView/' . $ctrlPath));
                 }
             } else {
                 // Use the default template because no forward item was found in appConfig

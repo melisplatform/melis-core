@@ -1327,7 +1327,11 @@ class ToolUserController extends MelisAbstractActionController
                     // check if the user exists
                     if ($userInfo) {
                         if (!empty($password) || !empty($confirmPass)) {
-                            $passValidator = new \MelisCore\Validator\MelisPasswordValidatorWithConfig(['serviceManager' => $this->getServiceManager()]);
+                            $passValidator = new \MelisCore\Validator\MelisPasswordValidatorWithConfig([
+                                'serviceManager' => $this->getServiceManager(),
+                                'login'  => $userInfo['usr_login'] ?? null,
+                                'email'  => $postValues['usr_email'] ?? ($userInfo['usr_email'] ?? null),
+                            ]);
 
                             if ($password == $confirmPass) {
                                 $userTable = $this->getServiceManager()->get('MelisCoreTableUser');
@@ -1781,6 +1785,21 @@ class ToolUserController extends MelisAbstractActionController
             $start             = (int) $post['start'];
             $length            = (int) $post['length'];
             $userId            = (int) $post['usr_id'];
+
+            /**
+             * IDOR (audit DEKRA 7.0) : `usr_id` arrivait du POST sans le moindre contrôle. Le
+             * champ est posé côté navigateur (`setUserDateConnection` dans users.tools.js, à
+             * partir de la ligne sélectionnée), donc n'importe quel compte connecté pouvait le
+             * remplacer et lire l'historique de connexion de N'IMPORTE QUEL utilisateur.
+             *
+             * On filtre selon L'APPELANT, jamais selon l'identifiant reçu : sans droit sur
+             * l'outil Utilisateurs, la seule réponse possible est son propre historique. Un
+             * utilisateur habilité (et l'admin) garde le comportement d'origine.
+             */
+            if (!$this->hasAccess(static::TOOL_KEY)) {
+                $identity = $this->getServiceManager()->get('MelisCoreAuth')->getIdentity();
+                $userId   = (int) (!empty($identity->usr_id) ? $identity->usr_id : 0);
+            }
 
             /**
              * Connection history of another user is personal data. Only the first draw is

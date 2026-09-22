@@ -214,7 +214,8 @@ class MelisReactApiUserController extends MelisAbstractActionController
             // (config/otherconfig.php) surchargés par app.login.php → la règle « min 8 caractères »
             // s'applique même sans app.login.php, comme attendu.
             if ($password !== '') {
-                $pwdErrors = $this->validatePasswordComplexity($password);
+                $pwdErrors = $this->getServiceManager()->get('MelisPasswordPolicyService')
+                    ->check($password, $id, $login, $email);
                 if ($pwdErrors) {
                     return $this->jsonResponse([
                         'success' => false,
@@ -233,19 +234,23 @@ class MelisReactApiUserController extends MelisAbstractActionController
                 $rightsParams = $rights !== null ? [$rights] : [];
 
                 if ($password) {
+                    $passwordHash = $auth->encryptPassword($password);
                     $db->query(
                         "UPDATE melis_core_user
                          SET usr_login=?, usr_email=?, usr_firstname=?, usr_lastname=?,
-                             usr_role_id=?, usr_status=?, usr_admin=?, usr_lang_id=?, usr_tags=?, usr_password=?
+                             usr_role_id=?, usr_status=?, usr_admin=?, usr_lang_id=?, usr_tags=?, usr_password=?,
+                             usr_last_pass_update_date=NOW()
                              $rightsSql
                          WHERE usr_id=?",
                         array_merge(
                             [$login, $email, $firstname, $lastname, $roleId, $status, $isAdmin, $langId, $tags,
-                             $auth->encryptPassword($password)],
+                             $passwordHash],
                             $rightsParams,
                             [$id]
                         )
                     );
+                    // Password history (audit item 16.0)
+                    $this->getServiceManager()->get('MelisPasswordPolicyService')->recordHistory($id, $passwordHash);
                 } else {
                     $db->query(
                         "UPDATE melis_core_user
@@ -329,11 +334,13 @@ class MelisReactApiUserController extends MelisAbstractActionController
                     (usr_login, usr_email, usr_firstname, usr_lastname, usr_role_id, usr_status, usr_admin, usr_lang_id, usr_tags, usr_password, usr_rights)
                  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
                 [$login, $email, $firstname, $lastname, $roleId, $status, $isAdmin, $langId, $tags,
-                 $auth->encryptPassword($password), $rights ?? '']
+                 $passwordHash = $auth->encryptPassword($password), $rights ?? '']
             );
             $newId = (int) iterator_to_array(
                 $db->query('SELECT LAST_INSERT_ID() AS id', [])
             )[0]['id'];
+            // Password history (audit item 16.0)
+            $this->getServiceManager()->get('MelisPasswordPolicyService')->recordHistory($newId, $passwordHash);
 
             // Le cache de droits du nouvel utilisateur est généré par MelisCoreRightsCacheListener sur
             // l'event `meliscore_tooluser_savenew_end` ci-dessous (il lit les droits en DB). Pas de
@@ -678,68 +685,13 @@ class MelisReactApiUserController extends MelisAbstractActionController
         if ($denyCap = $this->denyUnlessCan('list')) { return $denyCap; }
 
         try {
-            $cfg = $this->effectiveLoginConfig();
-            return $this->jsonResponse(['success' => true, 'data' => [
-                'minLength'     => (int) ($cfg['password_complexity_number_of_characters'] ?: 0),
-                'requireLower'  => !empty($cfg['password_complexity_use_lower_case']),
-                'requireUpper'  => !empty($cfg['password_complexity_use_upper_case']),
-                'requireDigit'  => !empty($cfg['password_complexity_use_digit']),
-                'requireSpecial' => !empty($cfg['password_complexity_use_special_characters']),
-            ]]);
+            return $this->jsonResponse(['success' => true, 'data' => $this->getServiceManager()->get('MelisPasswordPolicyService')->describe()]);
         } catch (\Throwable $e) {
             return $this->errorResponse($e);
         }
     }
 
     // ─── Helpers ──────────────────────────────────────────────────────────────
-
-    /**
-     * Config connexion/mot de passe effective : défauts `meliscore/datas/otherconfig_default/login`
-     * (config/otherconfig.php, toujours présents) surchargés par `meliscore/datas/login`
-     * (app.login.php mergé au boot quand il existe). Même source que le legacy.
-     */
-    private function effectiveLoginConfig(): array
-    {
-        $melisConfig = $this->getServiceManager()->get('MelisCoreConfig');
-        $defaults = $melisConfig->getItem('meliscore/datas/otherconfig_default/login') ?: [];
-        $saved    = $melisConfig->getItem('meliscore/datas/login') ?: [];
-        return array_merge(is_array($defaults) ? $defaults : [], is_array($saved) ? $saved : []);
-    }
-
-    /**
-     * Applique les 5 règles de complexité du legacy (MelisPasswordValidatorWithConfig) et renvoie
-     * la liste des messages d'erreur traduits (vide = OK). Une règle ne s'applique que si sa clé
-     * de config est « vraie » (non vide) — identique à l'implémentation legacy.
-     */
-    private function validatePasswordComplexity(string $password): array
-    {
-        $cfg        = $this->effectiveLoginConfig();
-        $translator = $this->getServiceManager()->get('translator');
-        $errors     = [];
-
-        $minChars = (int) ($cfg['password_complexity_number_of_characters'] ?? 0);
-        if ($minChars > 0 && strlen($password) < $minChars) {
-            $errors[] = str_replace(
-                '%min%',
-                (string) $minChars,
-                $translator->translate('tr_meliscore_other_config_password_too_short')
-            );
-        }
-        if (!empty($cfg['password_complexity_use_lower_case']) && !preg_match('/[a-z]/', $password)) {
-            $errors[] = $translator->translate('tr_meliscore_other_config_password_no_lower');
-        }
-        if (!empty($cfg['password_complexity_use_digit']) && !preg_match('/\d/', $password)) {
-            $errors[] = $translator->translate('tr_meliscore_other_config_password_no_digit');
-        }
-        if (!empty($cfg['password_complexity_use_upper_case']) && !preg_match('/[A-Z]/', $password)) {
-            $errors[] = $translator->translate('tr_meliscore_other_config_password_no_upper');
-        }
-        if (!empty($cfg['password_complexity_use_special_characters']) && !preg_match('/[\p{P}\p{S}]/u', $password)) {
-            $errors[] = $translator->translate('tr_meliscore_other_config_password_no_special_character');
-        }
-
-        return $errors;
-    }
 
     private function formatUser(array $r, bool $withLang = false): array
     {

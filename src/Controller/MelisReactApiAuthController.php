@@ -157,7 +157,16 @@ class MelisReactApiAuthController extends MelisAbstractActionController
 
         // Valider la complexité du mot de passe (mêmes règles que resetOldPasswordAction)
         try {
-            $passValidator = new \MelisCore\Validator\MelisPasswordValidatorWithConfig(['serviceManager' => $sm]);
+            $options = ['serviceManager' => $sm];
+            foreach ($melisLostPass->getPasswordRequestData($hash) as $row) {
+                $options['login'] = $row->rh_login;
+                $user = $sm->get('MelisCoreTableUser')->getEntryByField('usr_login', $row->rh_login)->current();
+                if ($user) {
+                    $options['userId'] = $user->usr_id;
+                    $options['email']  = $user->usr_email;
+                }
+            }
+            $passValidator = new \MelisCore\Validator\MelisPasswordValidatorWithConfig($options);
             if (!$passValidator->isValid($password)) {
                 $messages = implode(' ', $passValidator->getMessages());
                 return $this->jsonResponse(['success' => false, 'message' => $messages]);
