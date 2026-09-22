@@ -93,10 +93,26 @@ class MelisCoreAuthorizationListener implements ListenerAggregateInterface
 
         $controller = (string) $routeMatch->getParam('controller', '');
         $action     = (string) $routeMatch->getParam('action', '');
-        $toolKey    = $this->resolveToolKey($sm, $controller, $action);
+        $candidates = $this->resolveToolKey($sm, $controller, $action);
         $mode       = $this->getMode($sm);
 
+        // Première candidate que l'arbre des droits sait accorder (cf. isGrantableKey).
+        $toolKey = null;
+        foreach ((array) $candidates as $candidate) {
+            if ($this->isGrantableKey($sm, $candidate)) {
+                $toolKey = $candidate;
+                break;
+            }
+        }
+
         if ($toolKey === null) {
+            if (!empty($candidates)) {
+                // Le contrôleur annonce une clé, mais aucune n'est accordable : on journalise.
+                $this->log('UNMAPPED', $mode, $routeName, $controller, $action, $candidates[0]);
+
+                return;
+            }
+
             // Inventaire : ce contrôleur n'annonce pas d'outil. On ne bloque qu'en mode strict.
             $this->log('UNMAPPED', $mode, $routeName, $controller, $action, null);
 
@@ -113,7 +129,44 @@ class MelisCoreAuthorizationListener implements ListenerAggregateInterface
     }
 
     /**
-     * Clé d'outil annoncée par la classe du contrôleur routé, ou null.
+     * La clé est-elle accordable par l'arbre des droits (sections + outils de
+     * getToolSectionMap, sous leur clé de config ET leur melisKey résolu) ?
+     */
+    private function isGrantableKey($sm, $key)
+    {
+        static $grantable = null;
+
+        if ($grantable === null) {
+            $grantable = [];
+            try {
+                $collect = function ($nodes, $depth) use (&$collect, &$grantable) {
+                    foreach ((array) $nodes as $node) {
+                        if (!is_array($node)) {
+                            continue;
+                        }
+                        if ($depth > 0) {
+                            foreach (['key', 'melisKey'] as $field) {
+                                if (!empty($node[$field]) && is_string($node[$field])) {
+                                    $grantable[$node[$field]] = true;
+                                }
+                            }
+                        }
+                        if (!empty($node['children'])) {
+                            $collect($node['children'], $depth + 1);
+                        }
+                    }
+                };
+                $collect($sm->get('MelisCoreRights')->getToolSectionMap(), 0);
+            } catch (\Throwable $e) {
+                $grantable = []; // arbre illisible : plus aucune clé n'est « accordable » → on ne bloque pas
+            }
+        }
+
+        return isset($grantable[$key]);
+    }
+
+    /**
+     * Clés d'outil annoncées par la classe du contrôleur routé (par ordre de préférence), ou null.
      *
      * Aucune instanciation : le nom de contrôleur est traduit en classe via la configuration
      * `controllers` (invokables/aliases/factories), puis lu par réflexion.
@@ -133,18 +186,27 @@ class MelisCoreAuthorizationListener implements ListenerAggregateInterface
                 $wanted = $this->normalizeAction($action);
                 foreach ($map as $mappedAction => $mappedKey) {
                     if ($this->normalizeAction($mappedAction) === $wanted && !empty($mappedKey)) {
-                        return (string) $mappedKey;
+                        return [(string) $mappedKey];
                     }
                 }
             }
 
-            foreach (['MELIS_KEY', 'TOOL_KEY'] as $constant) {
+            // INTERFACE_KEY est inclus à dessein : plusieurs contrôleurs legacy (Platforms,
+            // Langues, Emails, Langues CMS, Platform IDs CMS, liste Blog) portent leur clé de
+            // DROIT sous ce nom, `TOOL_KEY` désignant chez eux un identifiant d'outil interne
+            // que l'arbre des droits ne connaît pas. Les candidates sont renvoyées dans l'ordre
+            // et l'appelant retient la première que l'arbre sait accorder.
+            $candidates = [];
+            foreach (['MELIS_KEY', 'TOOL_KEY', 'INTERFACE_KEY'] as $constant) {
                 if ($reflection->hasConstant($constant)) {
                     $key = $reflection->getConstant($constant);
                     if (is_string($key) && $key !== '') {
-                        return $key;
+                        $candidates[] = $key;
                     }
                 }
+            }
+            if ($candidates) {
+                return $candidates;
             }
         } catch (\Throwable $ignored) {
             // Classe illisible : traité comme non résolu (jamais comme une autorisation).
