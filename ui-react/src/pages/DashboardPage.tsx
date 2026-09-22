@@ -515,11 +515,14 @@ export default function DashboardPage() {
   // conversion depuis un pourcentage ici.
   const setWidgetHeight = useCallback(
     (instanceId: string, rows: number) => {
-      const h = Math.max(MIN_WIDGET_HEIGHT, Math.min(MAX_WIDGET_HEIGHT, rows))
+      // Même plancher que la grille (`minH` du widget, cf. setWidgetWidth) : sinon panneau et
+      // dashboard n'affichaient plus la même hauteur.
+      const minH = Math.max(MIN_WIDGET_HEIGHT, allWidgetMap[widgetIdOf(instanceId)]?.minH ?? MIN_WIDGET_HEIGHT)
+      const h = Math.max(minH, Math.min(MAX_WIDGET_HEIGHT, rows))
       const next = layout.map((l) => (l.i === instanceId ? { ...l, h, userSized: true } : l))
       persist(renumberRows(groupIntoRows(next)), { userAction: true })
     },
-    [layout, persist],
+    [layout, persist, allWidgetMap],
   )
 
   // Largeur manuelle (champ numérique du panneau, colonnes sur 12) — le VOISIN absorbe la
@@ -538,7 +541,12 @@ export default function DashboardPage() {
   // sans effet. En colonnes, chaque pas EST un palier représentable par la grille.
   const setWidgetWidth = useCallback(
     (instanceId: string, cols: number) => {
-      const w = Math.max(MIN_WIDGET_WIDTH, Math.min(MAX_WIDGET_WIDTH, cols))
+      // Borné aussi par le `minW` PROPRE du widget (registre), pas seulement par le minimum global :
+      // la grille (GridStack) applique ce plancher de toute façon, et un `w` en dessous dans le
+      // layout React faisait diverger panneau (1 colonne) et dashboard (2) — colonne vide entre deux
+      // tuiles jointives (rapport utilisateur).
+      const minW = Math.max(MIN_WIDGET_WIDTH, allWidgetMap[widgetIdOf(instanceId)]?.minW ?? MIN_WIDGET_WIDTH)
+      const w = Math.max(minW, Math.min(MAX_WIDGET_WIDTH, cols))
       const nextRows = rows.map((row) => {
         const idx = row.findIndex((it) => it.i === instanceId)
         if (idx === -1) return row
@@ -556,7 +564,7 @@ export default function DashboardPage() {
       })
       persist(renumberRows(nextRows), { userAction: true })
     },
-    [rows, persist],
+    [rows, persist, allWidgetMap],
   )
 
   // « Supprimer tous les plugins » — équivalent du `#dashboard-plugin-delete-all` legacy
