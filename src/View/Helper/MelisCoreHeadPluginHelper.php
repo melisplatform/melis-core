@@ -69,10 +69,41 @@ class MelisCoreHeadPluginHelper extends AbstractHelper
                 }
             }
         }
+
+        if ($path == 'meliscore_login') {
+            $jsFiles = $this->withCsrfEmitterFirst($jsFiles);
+        }
 		
 		return [
             'js' => $jsFiles,
             'css' => $cssFiles
         ];
 	}
+
+    /**
+     * The CSRF emitter (audit 10.0) on the login page, whatever the mode: plain file list,
+     * per-module bundles, or a pre-built login bundle (`etc/bundles/js/bundle-all-login.js`).
+     * That last one replaces the whole list, and a bundle built before the emitter existed
+     * silently drops it: every legacy login POST then fails with "Invalid CSRF token". Loading
+     * the file on its own, first, does not depend on when the bundle was last built; the script
+     * installs itself once, so a bundle that also contains it is harmless.
+     *
+     * @param string[] $jsFiles
+     * @return string[]
+     */
+    private function withCsrfEmitterFirst(array $jsFiles)
+    {
+        $emitter = '/MelisCore/js/core/melisCsrf.js';
+        $jsFiles = array_values(array_filter($jsFiles, function ($file) use ($emitter) {
+            return strpos((string) $file, $emitter) === false;
+        }));
+
+        // Keep the translations first: the emitter needs nothing, the rest may need both.
+        $translations = [];
+        if (!empty($jsFiles) && strpos((string) $jsFiles[0], '/melis/get-translations') === 0) {
+            $translations = [array_shift($jsFiles)];
+        }
+
+        return array_merge($translations, [$emitter], $jsFiles);
+    }
 }

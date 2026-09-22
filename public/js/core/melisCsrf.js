@@ -16,6 +16,10 @@
  *     runs its handlers without dispatching an event a native listener would see.
  */
 (function () {
+    // Loaded twice (own <script> + inside a bundle): a second XHR patch would send the header
+    // twice ("token, token") and fail the check. Install once.
+    if (window.__melisCsrfInstalled) return;
+    window.__melisCsrfInstalled = true;
     var HEADER = 'X-Melis-Csrf';
     var FIELD = 'melis_csrf';
     var SAFE = /^(GET|HEAD|OPTIONS)$/i;
