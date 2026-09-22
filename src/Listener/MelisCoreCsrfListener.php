@@ -116,7 +116,7 @@ class MelisCoreCsrfListener implements ListenerAggregateInterface
 
         $this->log('DENY', $reason, $mode, $method, $path);
 
-        return $mode === 'enforce' ? $this->deny($e) : null;
+        return $mode === 'enforce' ? $this->deny($e, $reason) : null;
     }
 
     /** null when the request is legitimate, otherwise the failure reason (for the log). */
@@ -203,12 +203,23 @@ class MelisCoreCsrfListener implements ListenerAggregateInterface
      * 403. JSON for API/XHR calls (the React front expects `{success,error}`), plain text otherwise.
      * Returning a Response from EVENT_ROUTE short-circuits the dispatch: the controller never runs,
      * so the forged request has no side effect at all.
+     *
+     * The reason travels back in `X-Melis-Csrf-Reason` (origin / token-missing / token-mismatch).
+     * It is the same string written to the PHP log, repeated where an operator can actually read
+     * it: the browser's network panel. That is the only way to tell these three apart on an
+     * environment whose logs are out of reach, and it hands an attacker nothing - a cross-site
+     * forgery cannot read the response it provokes, which is what makes CSRF blind in the first
+     * place. The body stays generic.
      */
-    private function deny(MvcEvent $e)
+    private function deny(MvcEvent $e, $reason = '')
     {
         $request  = $e->getRequest();
         $response = $e->getResponse();
         $response->setStatusCode(403);
+
+        if ($reason !== '') {
+            $response->getHeaders()->addHeaderLine('X-Melis-Csrf-Reason', $reason);
+        }
 
         $xhr    = $request->getHeaders()->get('X-Requested-With');
         $isXhr  = $xhr && strtolower($xhr->getFieldValue()) === 'xmlhttprequest';
