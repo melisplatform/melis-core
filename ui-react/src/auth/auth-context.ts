@@ -7,6 +7,8 @@ export interface SignInOutcome {
   twoFaHash?: string
   /** Rate limit (HTTP 429) : secondes à attendre avant un nouvel essai. */
   retryAfter?: number
+  /** Mot de passe expiré : URL du formulaire de renouvellement à suivre (navigation complète). */
+  redirectUrl?: string
 }
 
 export interface AuthState {

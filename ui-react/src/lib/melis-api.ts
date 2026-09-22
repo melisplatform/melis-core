@@ -42,6 +42,9 @@ export interface LoginResult {
   retryAfter?: number
   /** 2FA requise (mot de passe déjà validé) — hash à transmettre à la route React /verify-2fa. */
   twoFaHash?: string
+  /** Mot de passe correct mais expiré (politique de validité) : URL legacy du formulaire de
+   *  renouvellement (`/melis/renew-password/<hash>`) que le serveur demande de suivre. */
+  redirectUrl?: string
 }
 
 /** Réponse brute de /melis/authenticate. */
@@ -138,6 +141,12 @@ export async function login(
       return { success: false, twoFaHash: decodeURIComponent(hashMatch[1]) }
     }
     return { success: true }
+  }
+  // Mot de passe correct mais expiré : le serveur répond success:false + command de redirection
+  // vers le formulaire legacy de renouvellement. Le legacy eval() la commande ; ici on la suit.
+  const renew = data.command?.match(/window\.location\.replace\('([^']*renew-password[^']*)'\)/)
+  if (renew) {
+    return { success: false, redirectUrl: renew[1], message: extractError(data.errors) }
   }
   return { success: false, message: extractError(data.errors) ?? 'Identifiants invalides.' }
 }

@@ -94,6 +94,7 @@ return array(
     'tr_meliscore_user_password_change_error' => 'This link is invalid or has expired. Please request a new one.',
     'tr_meliscore_reset_password_request_new' => 'Request a new link',
 
+    'tr_meliscore_login_password_expired' => 'Your password has expired (password validity policy). You are being redirected to the renewal form.',
     'tr_meliscore_login_password_enc_update' => 'We have changed our encryption algorithm, please update your password to secure your account. To do so click on <strong>Forgot password</strong> to create a new password. We apologize for the inconvenience.',
 
     // Platform Scheme

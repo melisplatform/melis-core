@@ -598,7 +598,7 @@ class MelisAuthController extends MelisAbstractActionController
                             $result = [
                                 'success' => false,
                                 'command' => "window.location.replace('{$url}');",
-                                'errors' => ['empty' => $translator->translate('tr_meliscore_login_password_enc_update')],
+                                'errors' => ['empty' => $translator->translate('tr_meliscore_login_password_expired')],
                             ];
                         }
                     } else {
