@@ -61,12 +61,18 @@
     function stampForm(form) {
         if (!form || form.tagName !== 'FORM') return;
         if ((form.getAttribute('method') || 'get').toUpperCase() === 'GET') return;
-        if (form.querySelector('input[name="' + FIELD + '"]')) return;
-
         var value = token();
         if (!value) return;
 
-        var input = document.createElement('input');
+        // Re-stamp with the CURRENT cookie: a form submitted more than once otherwise keeps the
+        // token of its first submit and is refused with reason=token-mismatch for good.
+        var input = form.querySelector('input[name="' + FIELD + '"]');
+        if (input) {
+            input.value = value;
+            return;
+        }
+
+        input = document.createElement('input');
         input.type = 'hidden';
         input.name = FIELD;
         input.value = value;

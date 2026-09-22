@@ -59,12 +59,22 @@
     function stampForm(form) {
         if (!form || form.tagName !== 'FORM') return;
         if ((form.getAttribute('method') || 'get').toUpperCase() === 'GET') return;
-        if (form.querySelector('input[name="' + FIELD + '"]')) return;
 
         var value = token();
         if (!value) return;
 
-        var input = document.createElement('input');
+        // A form submitted more than once - a login the user retries after a typo, any tool form
+        // reused without a page load - keeps the field stamped the first time. Re-stamping it
+        // with the CURRENT cookie is what matters: the token is renewed whenever the session is
+        // (login, a restarted server handing out a fresh session), and a field still carrying the
+        // previous one is refused with reason=token-mismatch on every later attempt, for good.
+        var input = form.querySelector('input[name="' + FIELD + '"]');
+        if (input) {
+            input.value = value;
+            return;
+        }
+
+        input = document.createElement('input');
         input.type = 'hidden';
         input.name = FIELD;
         input.value = value;
