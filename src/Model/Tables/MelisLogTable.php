@@ -187,9 +187,12 @@ class MelisLogTable extends MelisGenericTable
 
 		if (!empty($logTypeId) && !empty($userId) && !empty($date)) {
 			$select->columns(['count' => new \Laminas\Db\Sql\Expression('COUNT(*)')])
-				->where('log_type_id = ' . $logTypeId)
-				->where('log_user_id = ' . $userId)
-				->where('log_date_added >= "' . $date . '"');
+				->where->equalTo('log_type_id', (int) $logTypeId)
+				->equalTo('log_user_id', (int) $userId)
+				// Strictly AFTER the reference date (last successful login / password change /
+				// unlock): with ">=" the failures logged in the same second as a successful login
+				// were counted again and locked the account on the next 1-2 mistakes (audit item 16.0).
+				->greaterThan('log_date_added', (string) $date);
 		}
 
 		$resultSet = $this->getTableGateway()->selectWith($select);
@@ -205,9 +208,9 @@ class MelisLogTable extends MelisGenericTable
 
 		if (!empty($logTypeId) && !empty($userId)) {
 			$select->columns(['log_date_added'])
-				->where('log_type_id = ' . $logTypeId)
-				->where('log_user_id = ' . $userId)
-				->order('log_id DESC')
+				->where->equalTo('log_type_id', (int) $logTypeId)
+				->equalTo('log_user_id', (int) $userId);
+				$select->order('log_id DESC')
 				->limit(1);
 		}
 
@@ -226,9 +229,9 @@ class MelisLogTable extends MelisGenericTable
 
 		if (!empty($logTypeId) && !empty($userId)) {
 			$select->columns(['log_date_added'])
-				->where('log_type_id = ' . $logTypeId)
-				->where('log_user_id = ' . $userId)
-				->order('log_id DESC')
+				->where->equalTo('log_type_id', (int) $logTypeId)
+				->equalTo('log_user_id', (int) $userId);
+				$select->order('log_id DESC')
 				->limit(1);
 		}
 

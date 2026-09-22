@@ -152,7 +152,7 @@ class MelisUserTable extends MelisGenericTable
         }
 
         if (!empty($where['orderBy']) && !empty($where['orderDirection'])) {
-            $select->order($where['orderBy'] . ' ' . $where['orderDirection']);
+            MelisGenericTable::addSafeOrder($select, $where['orderBy'], $where['orderDirection']);
         }
         $resultSet = $this->tableGateway->selectWith($select);
 
@@ -171,8 +171,9 @@ class MelisUserTable extends MelisGenericTable
     {
         $select = $this->tableGateway->getSql()->select();
 
-        $select->where("usr_email = '$email'");
-        $select->where("usr_id != '$userId'");
+        // Bound parameters: the email comes straight from the user form (audit item 11.0).
+        $select->where->equalTo('usr_email', (string) $email);
+        $select->where->notEqualTo('usr_id', (int) $userId);
 
         return $this->tableGateway->selectWith($select);
     }
