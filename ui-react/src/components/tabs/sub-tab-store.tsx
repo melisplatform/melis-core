@@ -16,7 +16,15 @@ function loadInitialState(): SubTabState {
     if (raw) {
       const parsed = JSON.parse(raw) as SubTabState
       if (parsed && typeof parsed === 'object' && parsed.sections && typeof parsed.sections === 'object') {
-        return { sections: parsed.sections }
+        // Purge les sous-onglets fantômes `<section>/undefined` persistés par un formulaire qui
+        // construisait son chemin avec un `:id` absent (route /new — cf. Emails, 0011048) : ils ne
+        // correspondent à aucun enregistrement et ne seraient jamais refermés.
+        const sections: Record<string, SectionState> = {}
+        for (const [key, sec] of Object.entries(parsed.sections)) {
+          const tabs = Array.isArray(sec?.tabs) ? sec.tabs : []
+          sections[key] = { tabs: tabs.filter(t => !t.path?.endsWith('/undefined')) }
+        }
+        return { sections }
       }
     }
   } catch { /* storage indisponible / corrompu */ }
