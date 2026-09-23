@@ -46,7 +46,9 @@ export default function EmailFormPage() {
 
   // Édition = sous-onglet DANS l'outil (façon Utilisateurs), pas un onglet de shell top-level.
   // La SubTabBar (montée dans le Shell) matche la section `base` et rend la barre « ← retour | <nom> ».
-  const subTabPath = `${base}/${id}`
+  // La route `/new` n'a pas de `:id` (id undefined) → chemin explicite, sinon l'onglet « nouveau »
+  // était enregistré sous `${base}/undefined`, jamais fermé après création (0011048).
+  const subTabPath = isNew ? `${base}/new` : `${base}/${id}`
   const { openTab: openSubTab, closeTab: closeSubTab, updateLabel: updateSubLabel } = useSubTabs(base)
 
   const canSave = useCan(TOOL_KEY, isNew ? 'create' : 'edit')
@@ -59,13 +61,18 @@ export default function EmailFormPage() {
   const [errors, setErrors] = useState<Partial<Record<keyof FormState, string>>>({})
   const [saveError, setSaveError] = useState<string | null>(null)
 
+  // Dépend de subTabPath : react-router réutilise l'instance entre deux `/:id` (passage d'un
+  // sous-onglet à l'autre), le composant n'est donc pas remonté.
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     openSubTab({ id: subTabPath, label: isNew ? t('emails.new') : (id ?? ''), path: subTabPath })
-  }, [])
+  }, [subTabPath])
 
   useEffect(() => {
     setLoading(true)
+    // Vide le formulaire précédent : sinon son nom est appliqué au libellé du nouvel onglet
+    // (effet updateSubLabel ci-dessous) avant la fin du chargement.
+    setForm(null)
     if (isNew) {
       emailsApi.fetchEmails().then((r) => {
         const contents: Record<string, EmailContent> = {}
@@ -125,7 +132,7 @@ export default function EmailFormPage() {
       })
       emailsApi.markEmailsListStale()
       okNotify(t('emails.title'), t('emails.saved'))
-      if (isNew) closeSubTab(`${base}/new`)
+      if (isNew) closeSubTab(subTabPath)
       navigate(base)
     } catch (e) {
       const msg = String((e as Error)?.message ?? e)
