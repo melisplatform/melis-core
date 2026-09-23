@@ -60,7 +60,26 @@ class MelisCoreHeadPluginHelper extends AbstractHelper
                     $cssFiles[] = '/melis/get-login-css-bundles'.$time;
                 }
 
-                if (file_exists($bundleFolder . '/'.ModulesController::BUNDLE_FOLDER_NAME.'/js/bundle-all-login.js')) {
+                $loginJsBundle = $bundleFolder . '/'.ModulesController::BUNDLE_FOLDER_NAME.'/js/bundle-all-login.js';
+
+                // A login bundle older than melisCsrf.js is IGNORED, and the plain file list used
+                // instead until it is rebuilt.
+                //
+                // The bundle embeds its own copy of the emitter. A copy built before the emitter
+                // gained its `window.__melisCsrfInstalled` guard patches XMLHttpRequest a SECOND
+                // time, on top of the standalone file this page always loads. Both wrappers then
+                // call setRequestHeader('X-Melis-Csrf', token) on the same request, the browser
+                // joins them into "token, token", and the gate refuses every login with
+                // reason=token-mismatch - while fetch(), which the emitter does not patch, keeps
+                // working, so the React back-office is unaffected and only the legacy login breaks.
+                //
+                // Comparing mtimes heals that on its own: no shell access needed on the server, and
+                // the bundle is used again as soon as it is rebuilt from the current emitter.
+                $emitterFile = __DIR__ . '/../../../public/js/core/melisCsrf.js';
+                $bundleUsable = is_file($loginJsBundle)
+                    && (!is_file($emitterFile) || filemtime($loginJsBundle) >= filemtime($emitterFile));
+
+                if ($bundleUsable) {
                     $container = new Container('meliscore');
                     $locale = $container['melis-lang-locale'];
                     $jsFiles = [];
