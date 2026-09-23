@@ -73,6 +73,26 @@ class MelisCoreCsrfListener implements ListenerAggregateInterface
 
     public function onRoute(MvcEvent $e)
     {
+        $result = $this->gate($e);
+
+        // The token field is transport only. Once checked, drop it from the POST so controllers
+        // that persist `getPost()->toArray()` as is (many legacy tools do) never try to write a
+        // `melis_csrf` column.
+        $request = $e->getRequest();
+        if ($request instanceof HttpRequest
+            && strpos((string) $request->getUri()->getPath(), self::BACKOFFICE_PATH_PREFIX) === 0
+        ) {
+            $post = $request->getPost();
+            if ($post->offsetExists(MelisCoreCsrfService::FIELD_NAME)) {
+                $post->offsetUnset(MelisCoreCsrfService::FIELD_NAME);
+            }
+        }
+
+        return $result;
+    }
+
+    private function gate(MvcEvent $e)
+    {
         if (php_sapi_name() === 'cli') {
             return;
         }
