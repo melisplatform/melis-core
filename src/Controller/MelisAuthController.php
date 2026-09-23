@@ -65,8 +65,6 @@ class MelisAuthController extends MelisAbstractActionController
      */
     private function buildFailedAuthResult()
     {
-        $this->rateLimitHit();
-
         $translator = $this->getServiceManager()->get('translator');
         $errorTitle = $translator->translate('tr_meliscore_common_error');
         $errorTxt = $translator->translate('tr_meliscore_login_auth_Failed authentication');
@@ -76,44 +74,6 @@ class MelisAuthController extends MelisAbstractActionController
             'errors' => ['empty' => $errorTxt],
             'command' => $this->buildAlertDangerCommand('#loginprompt', $errorTitle . '!', $errorTxt),
         ];
-    }
-
-    /**
-     * Keys of the login rate limit for the current request: the client IP and the account
-     * typed in (audit item 17.0). MelisCoreRateLimitListener refuses the request upfront when
-     * one of them is locked; the controller only reports the outcome.
-     */
-    private function rateLimitKeys()
-    {
-        $limiter = $this->getServiceManager()->get('MelisCoreRateLimit');
-        $keys    = ['ip:' . $limiter->clientIp()];
-        $login   = trim((string) $this->getRequest()->getPost('usr_login', ''));
-        if ($login !== '') {
-            $keys[] = 'user:' . $login;
-        }
-
-        return [$limiter, $keys];
-    }
-
-    /** One failed attempt, on the IP and on the account. */
-    private function rateLimitHit()
-    {
-        try {
-            list($limiter, $keys) = $this->rateLimitKeys();
-            $limiter->hit('login', $keys);
-        } catch (\Throwable $ignored) {
-            // never let the limiter break the login
-        }
-    }
-
-    /** Right password: the account counter is forgotten. The IP counter only expires. */
-    private function rateLimitClear()
-    {
-        try {
-            list($limiter, $keys) = $this->rateLimitKeys();
-            $limiter->clear('login', array_filter($keys, function ($k) { return strpos($k, 'user:') === 0; }));
-        } catch (\Throwable $ignored) {
-        }
     }
 
     /**
@@ -341,7 +301,6 @@ class MelisAuthController extends MelisAbstractActionController
                     $userPassword = $userData->usr_password;
                     $passwordOk = $melisCoreAuth->isPasswordCorrect($password, $userPassword);
                     if ($passwordOk) {
-                        $this->rateLimitClear();
                         // this will be used in setCredential method
                         $password = $userPassword;
                         $passwordHistory = $this->getServiceManager()->get('MelisUpdatePasswordHistoryService');
@@ -571,7 +530,6 @@ class MelisAuthController extends MelisAbstractActionController
                                                     'datas' => [],
                                                 ];
                                                 $this->getEventManager()->trigger('meliscore_login_attempt_end', $this, array_merge($result, ['typeCode' => self::ACCOUNT_LOCKED, 'itemId' => $userData->usr_id]));
-                                                $this->rateLimitHit();
                                             } else {
                                                 // Wrong password, lock policy armed but threshold not reached:
                                                 // same body as any other failure (the former "too many failed

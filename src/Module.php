@@ -18,7 +18,6 @@ use MelisCore\Listener\MelisCoreAuthSuccessListener;
 use MelisCore\Listener\MelisCoreSecurityAuditListener;
 use MelisCore\Listener\MelisCoreApiErrorSanitizerListener;
 use MelisCore\Listener\MelisCoreCsrfListener;
-use MelisCore\Listener\MelisCoreRateLimitListener;
 use MelisCore\Listener\MelisCoreCheckUserRightsListener;
 use MelisCore\Listener\MelisCoreDashboardMenuListener;
 use MelisCore\Listener\MelisCoreFlashMessengerListener;
@@ -111,10 +110,6 @@ class Module
             // Garde-fou CSRF GLOBAL du back-office (audit DEKRA 10.0) : vérifie le jeton de session
             // + l'origine sur chaque requête qui modifie l'état. Démarre en mode `report`.
             (new MelisCoreCsrfListener())->attach($eventManager);
-            // Rate limiting avec délai progressif (audit DEKRA 17.0) : login + réinitialisation
-            // de mot de passe, par IP et par compte ; 429 + Retry-After une fois les essais
-            // gratuits consommés (les coupons appellent le service directement).
-            (new MelisCoreRateLimitListener())->attach($eventManager);
             // Scrubbe les réponses JSON d'erreur du back-office (audit DEKRA 13.0) : le message
             // d'exception, le file:line et la stack trace que les contrôleurs React API
             // renvoyaient tels quels sont remplacés par un message générique + un identifiant

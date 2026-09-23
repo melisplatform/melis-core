@@ -103,45 +103,6 @@ return [
                     //                 (still logged). This is the very leak the listener closes -
                     //                 never set it on a shared or public environment.
                     'api_error_mode'     => $env('MELIS_API_ERROR_MODE', 'sanitize'),
-
-                    // Rate limiting with progressive delay (item 17.0). MelisCoreRateLimitService
-                    // counts the failed attempts per key (IP, and account for the login) in the
-                    // table melis_core_rate_limit; MelisCoreRateLimitListener applies it before
-                    // dispatch on the login and password-reset routes, the coupon validation
-                    // calls it directly (front-office plugin, no dedicated route).
-                    // 'enforce' = DEFAULT. Once the free attempts are spent, every further
-                    //             failure locks the key for base_delay * 2^n seconds (capped at
-                    //             max_delay): HTTP 429 + Retry-After. A success on the login
-                    //             clears the account counter, the IP counter only expires.
-                    // 'report'  = escape hatch: nothing blocked, every lock written to the PHP
-                    //             log (grep MELIS_RATELIMIT).
-                    // 'off'     = no counting at all.
-                    'rate_limit_mode'    => $env('MELIS_RATE_LIMIT_MODE', 'enforce'),
-                    'rate_limit'         => [
-                        // free_attempts : failures allowed before the first delay
-                        // base_delay    : seconds of the first lock, doubled on each failure
-                        // max_delay     : cap of the lock, seconds
-                        // window        : seconds without an attempt after which the counter
-                        //                 starts again from zero
-                        'login' => [
-                            'free_attempts' => (int) $env('MELIS_RATE_LIMIT_LOGIN_FREE', 5),
-                            'base_delay'    => 2,
-                            'max_delay'     => 900,
-                            'window'        => 900,
-                        ],
-                        'reset' => [
-                            'free_attempts' => (int) $env('MELIS_RATE_LIMIT_RESET_FREE', 5),
-                            'base_delay'    => 30,
-                            'max_delay'     => 3600,
-                            'window'        => 3600,
-                        ],
-                        'coupon' => [
-                            'free_attempts' => (int) $env('MELIS_RATE_LIMIT_COUPON_FREE', 10),
-                            'base_delay'    => 5,
-                            'max_delay'     => 600,
-                            'window'        => 600,
-                        ],
-                    ],
                 ],
             ],
         ],

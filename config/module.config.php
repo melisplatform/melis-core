@@ -407,8 +407,6 @@ return [
             'MelisCoreSecurityAudit'                => \MelisCore\Service\MelisCoreSecurityAuditService::class,
             'MelisCoreSecurityLogWriter'            => \MelisCore\Service\MelisCoreSecurityLogWriterService::class,
             'MelisCoreSecurityAlert'                => \MelisCore\Service\MelisCoreSecurityAlertService::class,
-            // Rate limiting with progressive delay (DEKRA item 17.0): login, password reset, coupons.
-            'MelisCoreRateLimit'                    => \MelisCore\Service\MelisCoreRateLimitService::class,
             'MelisPhpUnitTool'                      => \MelisCore\Service\MelisPhpUnitToolService::class,
             'MelisCoreMicroServiceTestService'      => \MelisCore\Service\MelisCoreMicroServiceTestService::class,
             'MelisCorePlatformSchemeService'        => \MelisCore\Service\MelisCorePlatformSchemeService::class,

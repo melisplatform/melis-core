@@ -1,6 +1,5 @@
 <?php
 return [
-    'tr_meliscore_rate_limit_too_many_attempts' => 'Trop de tentatives. Merci de réessayer dans %d secondes.',
     'tr_meliscore_ws_intro' => 'API JSON authentifiée par jeton. Chaque endpoint s\'appelle en POST ; ouvrez-en un pour l\'essayer via un formulaire. Toutes les réponses sont en JSON.',
     'tr_meliscore_ws_apikey' => 'Clé API',
     'tr_meliscore_ws_copy' => 'Copier',

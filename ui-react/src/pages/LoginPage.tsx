@@ -119,20 +119,10 @@ export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false)
   const [error, setError] = useState<string | undefined>()
   const [submitting, setSubmitting] = useState(false)
-  // Rate limit (HTTP 429, audit 17.0) : compte à rebours avant de réactiver le bouton.
-  const [retryIn, setRetryIn] = useState(0)
-
-  useEffect(() => {
-    if (retryIn <= 0) return
-    const id = window.setTimeout(() => setRetryIn((s) => s - 1), 1000)
-    return () => window.clearTimeout(id)
-  }, [retryIn])
-
-  const locked = retryIn > 0
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault()
-    if (submitting || locked) return
+    if (submitting) return
     setError(undefined)
     setSubmitting(true)
     const result = await signIn(login.trim(), password, remember)
@@ -144,11 +134,6 @@ export default function LoginPage() {
     if (result.redirectUrl) {
       // Mot de passe expiré : formulaire legacy de renouvellement, hors du routeur React.
       window.location.assign(result.redirectUrl)
-      return
-    }
-    if (result.retryAfter) {
-      setRetryIn(result.retryAfter)
-      setError(undefined)
       return
     }
     if (result.error) {
@@ -240,9 +225,9 @@ export default function LoginPage() {
             </p>
           </div>
 
-          {(error || locked) && (
+          {error && (
             <FormErrorBanner
-              title={locked ? t('login.too_many_attempts', { seconds: retryIn }) : emphasisOnlyHtml(error!)}
+              title={emphasisOnlyHtml(error)}
               html
               icon={<AlertCircle className="size-4" />}
               style={{ marginBottom: '1.25rem' }}
@@ -312,7 +297,7 @@ export default function LoginPage() {
               {t('login.remember')}
             </label>
 
-            <Button type="submit" size="lg" className="w-full" disabled={submitting || locked}>
+            <Button type="submit" size="lg" className="w-full" disabled={submitting}>
               {submitting ? (
                 <>
                   <Loader2 className="size-4 animate-spin" />

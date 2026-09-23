@@ -122,19 +122,10 @@ $(function() {
                     melisCoreTool.alertDanger('#loginprompt', translations.tr_meliscore_common_error + "!", errorTxt || "A critical server-driven UI error occurred.");
                 }
             }            
-        }).fail(function(xhr) {
+        }).fail(function() {
             // This is the error handler for AJAX connection/server-side PHP fatal errors
             $("form#idformmeliscorelogin").find("input").prop("disabled", false);
-
-            // 429 = rate limit (MelisCoreRateLimitListener, audit 17.0): show the server's
-            // "retry in N seconds" text in the form instead of the generic alert.
-            if (xhr && xhr.status === 429) {
-                var limited = xhr.responseJSON || {};
-                var txt = limited.message || (limited.errors && limited.errors.empty) || translations.tr_meliscore_error_message;
-                melisCoreTool.alertDanger('#loginprompt', translations.tr_meliscore_common_error + "!", txt);
-                return;
-            }
-
+            
             alert( translations.tr_meliscore_error_message );
         });
         event.preventDefault();
