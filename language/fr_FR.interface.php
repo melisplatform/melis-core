@@ -194,6 +194,11 @@ return [
     'tr_meliscore_email_lost_password_request_generic' => 'Si un compte correspond à ces informations, un email de réinitialisation a été envoyé.',
     'tr_meliscore_email_lost_password_request_failed'  => 'Unable to send an email, invalid email or login',
     'tr_meliscore_email_lost_password_request_form_empty' => 'Please complete the form',
+
+    // Mot de passe expiré (même lien de réinitialisation que Mot de passe perdu, non demandé par l'utilisateur)
+    'tr_meliscore_email_password_expired_Subject' => 'Votre mot de passe a expiré',
+    'tr_meliscore_email_password_expired_html_Content' => '<p>Bonjour [USER_LOGIN],</p><p>Votre mot de passe a expiré et ne permet plus de vous connecter. Veuillez cliquer sur ce <a href="[URL]">lien</a> pour en choisir un nouveau.</p>',
+    'tr_meliscore_email_password_expired_text_Content' => 'Bonjour [USER_LOGIN], votre mot de passe a expiré et ne permet plus de vous connecter. Veuillez cliquer sur ce [URL] pour en choisir un nouveau.',
     'tr_meliscore_email_failed' => 'Login ou email invalide',
     // Password Modification
     'tr_meliscore_email_password_modification_Subject' => 'Password modification',

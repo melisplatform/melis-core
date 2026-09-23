@@ -193,6 +193,11 @@ return [
     'tr_meliscore_email_lost_password_request_generic' => 'If an account matches these details, an email has been sent to reset the password',
     'tr_meliscore_email_lost_password_request_failed'  => 'Unable to send an email, invalid email or login',
     'tr_meliscore_email_lost_password_request_form_empty' => 'Please complete the form',
+
+    // Password Expired (same reset link as Lost Password, the user did not ask for it)
+    'tr_meliscore_email_password_expired_Subject' => 'Your password has expired',
+    'tr_meliscore_email_password_expired_html_Content' => '<p>Hi [USER_LOGIN],</p><p>Your password has expired and can no longer be used to sign in. Please click this <a title="link" href="[URL]">link</a> to choose a new one.</p>',
+    'tr_meliscore_email_password_expired_text_Content' => 'Hi [USER_LOGIN], your password has expired and can no longer be used to sign in. Please click this [URL] to choose a new one.',
     'tr_meliscore_email_failed' => 'Invalid login or email',
     // Password Modification
     'tr_meliscore_email_password_modification_Subject' => 'Password modification',

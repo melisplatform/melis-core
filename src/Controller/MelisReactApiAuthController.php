@@ -46,77 +46,13 @@ class MelisReactApiAuthController extends MelisAbstractActionController
             return $this->jsonResponse(['success' => true]);
         }
 
-        // Rate limit : un email de réinitialisation par compte et par délai configuré
-        // (meliscore/datas/pwd_request_min_delay). Même réponse qu'un envoi réussi.
-        $melisLostPass = $sm->get('MelisCoreLostPassword');
-        if ($melisLostPass->isRequestThrottled($login)) {
-            return $this->jsonResponse(['success' => true]);
-        }
-
-        // Générer un nouveau hash — CSPRNG (uniqid = temps serveur, prédictible → brute-force du token)
-        $hash = bin2hex(random_bytes(32));
-
-        // Insérer ou mettre à jour l'entrée dans la table lost_password
-        // ($existing est conservé pour restaurer la ligne si l'email ne part pas)
-        $lostPassTable = $sm->get('MelisLostPasswordTable');
-        $existing      = $lostPassTable->getEntryByField('rh_login', $login)->current();
-        if ($existing) {
-            $lostPassTable->update(
-                ['rh_hash' => $hash, 'rh_date' => date('Y-m-d H:i:s')],
-                'rh_login',
-                $login
-            );
-        } else {
-            $lostPassTable->save([
-                'rh_id'    => null,
-                'rh_login' => $login,
-                'rh_email' => $email,
-                'rh_hash'  => $hash,
-                'rh_date'  => date('Y-m-d H:i:s'),
-            ]);
-        }
-
-        // Construire l'URL React depuis la config plateforme (scheme + host)
-        $melisConfig = $sm->get('MelisCoreConfig');
-        $cfg         = $melisConfig->getItem('meliscore/datas/' . getenv('MELIS_PLATFORM'));
-        if (empty($cfg)) {
-            $cfg = $melisConfig->getItem('meliscore/datas/default');
-        }
-        $scheme   = $cfg['platform_scheme'] ?? 'https';
-        $host     = $cfg['host'] ?? ($_SERVER['HTTP_HOST'] ?? 'localhost');
-        $resetUrl = $scheme . '://' . $host . '/melis-react/reset-password/' . $hash;
-
-        // Envoyer via le template email existant LOSTPASSWORD (mêmes tags que le legacy)
-        $langId       = $userData->usr_lang_id ?? null;
-        $melisEmailBO = $sm->get('MelisCoreBOEmailService');
-        // Une panne de transport ne doit pas remonter : un 500 sur un compte réel face à un
-        // 200 sur un compte inconnu redonnerait l'énumération via la page d'erreur.
-        try {
-            $success = (bool) $melisEmailBO->sendBoEmailByCode(
-                'LOSTPASSWORD',
-                ['USER_Login' => $login, 'URL' => $resetUrl],
-                $email,
-                $login,
-                $langId
-            );
-        } catch (\Throwable $e) {
-            $success = false;
-        }
-
-        // Un rh_date frais laissé par un envoi échoué bloquerait l'utilisateur (rate limit)
-        // pour un email jamais parti. On annule l'écriture : ligne neuve supprimée, ligne
-        // existante remise à son état précédent (le lien déjà reçu reste valide).
-        if (!$success) {
-            if ($existing) {
-                $lostPassTable->update(
-                    ['rh_hash' => $existing->rh_hash, 'rh_date' => $existing->rh_date],
-                    'rh_login',
-                    $login
-                );
-            } else {
-                $lostPassTable->deleteByField('rh_login', $login);
-            }
-        }
+        // Génération du jeton, écriture en BDD, envoi de l'email et rollback si le transport
+        // échoue : tout est dans le service, partagé avec le mot de passe expiré traité par
+        // MelisAuthController::authenticateAction(). Le rate limit (un email par compte et par
+        // délai configuré, meliscore/datas/pwd_request_min_delay) y est appliqué aussi, et rend
+        // false — même réponse qu'un envoi réussi, on ne distingue rien vers l'extérieur.
+        $sm->get('MelisCoreLostPassword')
+            ->sendReactResetLink($login, $email, $userData->usr_lang_id ?? null);
 
         // Réponse toujours identique : un success=false sur une panne d'envoi distinguerait un
         // compte réel (email tenté) d'un compte inconnu (sortie anticipée plus haut).

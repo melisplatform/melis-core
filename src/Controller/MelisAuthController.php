@@ -589,16 +589,24 @@ class MelisAuthController extends MelisAbstractActionController
                                     }
                                 }
                         } else {
-                            // Correct password, but it has expired (password validity policy):
-                            // send the user to the renewal form. Only reachable when the
-                            // password matched, so nothing is revealed to anybody else.
-                            $melisCreatePwdSvc = $this->getServiceManager()->get('MelisCoreCreatePassword');
-                            $url = $melisCreatePwdSvc->createExpiredPasswordRequest($userData->usr_login, $userData->usr_email);
+                            // Correct password, but it has expired (password validity policy).
+                            // The reset link is MAILED to the address on the account instead of
+                            // being handed out in the response: the user follows it from the
+                            // mailbox and only types the new password, no form to fill in again.
+                            // Only reachable when the password matched, so this neither reveals
+                            // the account to anybody else nor lets it be used to send mail at will
+                            // (the service throttles per account on top of that).
+                            $this->getServiceManager()->get('MelisCoreLostPassword')
+                                ->sendReactResetLink($userData->usr_login, $userData->usr_email, $userData->usr_lang_id ?? null, 'PASSWORDEXPIRED');
+
+                            // Same text whether the mail just left or the throttle held it back:
+                            // a second login attempt must not report on the first one's mail.
+                            $errorTxt = $translator->translate('tr_meliscore_login_password_expired_email_sent');
 
                             $result = [
                                 'success' => false,
-                                'command' => "window.location.replace('{$url}');",
-                                'errors' => ['empty' => $translator->translate('tr_meliscore_login_password_expired')],
+                                'command' => $this->buildAlertDangerCommand('#loginprompt', $translator->translate('tr_meliscore_common_error') . '!', $errorTxt),
+                                'errors' => ['empty' => $errorTxt],
                             ];
                         }
                     } else {

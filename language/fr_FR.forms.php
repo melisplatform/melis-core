@@ -93,6 +93,7 @@ return array(
     'tr_meliscore_reset_password_request_new' => 'Demander un nouveau lien',
 
     'tr_meliscore_login_password_expired' => 'Votre mot de passe a expiré (politique de validité des mots de passe). Vous allez être redirigé vers le formulaire de renouvellement.',
+    'tr_meliscore_login_password_expired_email_sent' => 'Votre mot de passe a expiré (politique de validité des mots de passe). Nous avons envoyé un lien à votre adresse email pour en choisir un nouveau.',
     'tr_meliscore_login_password_enc_update' => 'Nous avons changé notre algorithme de cryptage, veuillez mettre à jour votre mot de passe pour sécuriser votre compte. Pour cela cliquez sur <strong>Mot de passe oublié</strong> pour créer un nouveau mot de passe. Nous nous excusons pour la gêne occasionnée.',
 
     // Platform Scheme

@@ -81,6 +81,91 @@ class MelisCoreLostPasswordService extends MelisServiceManager implements MelisC
 
         return $success;
     }
+
+    /**
+     * Issues a reset token for $login and mails the REACT reset link to $email.
+     *
+     * Same row/rollback/throttle contract as addLostPassRequest(), but the link points at the
+     * React page (/melis-react/reset-password/<hash>) instead of the legacy one. Two callers,
+     * same link, different BO email template ($emailCode) because the two situations do not
+     * say the same thing to the user:
+     *  - LOSTPASSWORD: MelisReactApiAuthController::forgotPasswordAction(), the user asked,
+     *  - PASSWORDEXPIRED: MelisAuthController::authenticateAction() when the password is correct
+     *    but expired — the user asked for nothing, the platform tells them it is no longer valid.
+     *
+     * @param  string   $login
+     * @param  string   $email
+     * @param  int|null $langId    language of the email template (user language)
+     * @param  string   $emailCode BO email code (see config/app.emails.php)
+     * @return bool     true when the mail left, false on throttle or transport failure
+     */
+    public function sendReactResetLink($login, $email, $langId = null, $emailCode = 'LOSTPASSWORD')
+    {
+        if($this->isRequestThrottled($login))
+            return false;
+
+        $table = $this->getServiceManager()->get('MelisLostPasswordTable');
+
+        // Kept to restore the row if the email cannot be sent
+        $previous = $table->getEntryByField('rh_login', $login)->current();
+
+        $hash = $this->generateHash();
+
+        if($previous) {
+            // resend: the token is regenerated so any link already sent is revoked
+            $table->update(array(
+                'rh_hash' => $hash,
+                'rh_date' => date('Y-m-d H:i:s')
+            ), 'rh_login', $login);
+        }
+        else {
+            $table->save(array(
+                'rh_id' => null,
+                'rh_login' => $login,
+                'rh_email' => $email,
+                'rh_hash' => $hash,
+                'rh_date' => date('Y-m-d H:i:s')
+            ));
+        }
+
+        $melisConfig = $this->getServiceManager()->get('MelisCoreConfig');
+        $cfg = $melisConfig->getItem('meliscore/datas/'.getenv('MELIS_PLATFORM'));
+        if (empty($cfg))
+            $cfg = $melisConfig->getItem('meliscore/datas/default');
+
+        $scheme = $cfg['platform_scheme'] ?? 'https';
+        $host   = $cfg['host'] ?? ($_SERVER['HTTP_HOST'] ?? 'localhost');
+        $url    = $scheme.'://'.$host.'/melis-react/reset-password/'.$hash;
+
+        // A transport failure must not surface: it would answer 500 on a real account and 200
+        // on an unknown one, which is the enumeration leak again, through the error page.
+        try {
+            $success = (bool) $this->getServiceManager()->get('MelisCoreBOEmailService')
+                ->sendBoEmailByCode($emailCode, array('USER_Login' => $login, 'URL' => $url), $email, $login, $langId);
+        } catch (\Throwable $e) {
+            $success = false;
+        }
+
+        // A fresh rh_date left behind by a failed send would throttle the user on an email
+        // that never left. Undo the write: a brand new row goes away, an existing one gets
+        // its previous token and date back (so a link already received stays valid).
+        if(!$success)
+        {
+            if($previous)
+            {
+                $table->update(array(
+                    'rh_hash' => $previous->rh_hash,
+                    'rh_date' => $previous->rh_date
+                ), 'rh_login', $login);
+            }
+            else
+            {
+                $table->deleteByField('rh_login', $login);
+            }
+        }
+
+        return $success;
+    }
     
     /**
      * Processes the password reset and deletes the existing record in the lost password table
