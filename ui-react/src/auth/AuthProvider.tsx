@@ -3,6 +3,7 @@ import { useCallback, useEffect, useState, type ReactNode } from 'react'
 import * as melis from '@/lib/melis-api'
 import { loadBricks, resetBricks } from '@/lib/bricks'
 import { prefetchDashboard, resetDashboardPrefetch } from '@/lib/dashboard-prefetch'
+import { clearOpenTabs } from '@/components/tabs/workspace-reset'
 import { AuthContext, type AuthState } from './auth-context'
 
 const DEMO_STORAGE_KEY = 'melis-demo'
@@ -93,6 +94,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   // jusqu'à un rechargement manuel (ticket « dashboard not loaded, I need to reload »). Partagé
   // entre un login direct (pas de 2FA) et la fin de Verify2faPage (2FA complétée).
   const completeAuth = useCallback<AuthState['completeAuth']>(() => {
+    // Plan de travail neuf pour l'utilisateur qui arrive : une session expirée (ou un logout côté
+    // serveur) ne passe pas par signOut, donc les onglets du précédent survivraient sans ça.
+    clearOpenTabs()
     resetDashboardPrefetch()
     prefetchDashboard()
     setAuthed(true)
@@ -115,6 +119,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     } catch {
       /* ignore */
     }
+    // Les onglets ouverts sont ceux de l'utilisateur sortant : ils ne doivent pas rester en
+    // sessionStorage ni dans les stores montés pour le suivant (ticket 0011049).
+    clearOpenTabs()
     await melis.logout()
     resetBricks()
     // Rien du dashboard de l'utilisateur sortant ne doit être servi au suivant.
