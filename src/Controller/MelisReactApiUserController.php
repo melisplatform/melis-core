@@ -214,7 +214,8 @@ class MelisReactApiUserController extends MelisAbstractActionController
             // (config/otherconfig.php) surchargés par app.login.php → la règle « min 8 caractères »
             // s'applique même sans app.login.php, comme attendu.
             if ($password !== '') {
-                $pwdErrors = $this->validatePasswordComplexity($password);
+                $pwdErrors = $this->getServiceManager()->get('MelisPasswordPolicyService')
+                    ->check($password, $id, $login, $email);
                 if ($pwdErrors) {
                     return $this->jsonResponse([
                         'success' => false,
@@ -233,19 +234,23 @@ class MelisReactApiUserController extends MelisAbstractActionController
                 $rightsParams = $rights !== null ? [$rights] : [];
 
                 if ($password) {
+                    $passwordHash = $auth->encryptPassword($password);
                     $db->query(
                         "UPDATE melis_core_user
                          SET usr_login=?, usr_email=?, usr_firstname=?, usr_lastname=?,
-                             usr_role_id=?, usr_status=?, usr_admin=?, usr_lang_id=?, usr_tags=?, usr_password=?
+                             usr_role_id=?, usr_status=?, usr_admin=?, usr_lang_id=?, usr_tags=?, usr_password=?,
+                             usr_last_pass_update_date=NOW()
                              $rightsSql
                          WHERE usr_id=?",
                         array_merge(
                             [$login, $email, $firstname, $lastname, $roleId, $status, $isAdmin, $langId, $tags,
-                             $auth->encryptPassword($password)],
+                             $passwordHash],
                             $rightsParams,
                             [$id]
                         )
                     );
+                    // Password history (audit item 16.0)
+                    $this->getServiceManager()->get('MelisPasswordPolicyService')->recordHistory($id, $passwordHash);
                 } else {
                     $db->query(
                         "UPDATE melis_core_user
@@ -329,11 +334,13 @@ class MelisReactApiUserController extends MelisAbstractActionController
                     (usr_login, usr_email, usr_firstname, usr_lastname, usr_role_id, usr_status, usr_admin, usr_lang_id, usr_tags, usr_password, usr_rights)
                  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
                 [$login, $email, $firstname, $lastname, $roleId, $status, $isAdmin, $langId, $tags,
-                 $auth->encryptPassword($password), $rights ?? '']
+                 $passwordHash = $auth->encryptPassword($password), $rights ?? '']
             );
             $newId = (int) iterator_to_array(
                 $db->query('SELECT LAST_INSERT_ID() AS id', [])
             )[0]['id'];
+            // Password history (audit item 16.0)
+            $this->getServiceManager()->get('MelisPasswordPolicyService')->recordHistory($newId, $passwordHash);
 
             // Le cache de droits du nouvel utilisateur est généré par MelisCoreRightsCacheListener sur
             // l'event `meliscore_tooluser_savenew_end` ci-dessous (il lit les droits en DB). Pas de
@@ -382,8 +389,52 @@ class MelisReactApiUserController extends MelisAbstractActionController
         }
 
         try {
-            $db = $this->getServiceManager()->get('Laminas\Db\Adapter\AdapterInterface');
+            $sm = $this->getServiceManager();
+            $db = $sm->get('Laminas\Db\Adapter\AdapterInterface');
+
+            // Login lu avant la suppression : les jetons de mot de passe en attente sont indexes dessus
+            $rows  = iterator_to_array($db->query('SELECT usr_login FROM melis_core_user WHERE usr_id = ?', [$id]));
+            $login = !empty($rows) ? ((array) $rows[0])['usr_login'] : null;
+
             $db->query('DELETE FROM melis_core_user WHERE usr_id = ?', [$id]);
+
+            // Purge des demandes de mot de passe en attente : sans cela un lien envoye par mail
+            // avant la suppression resterait utilisable sur un login qui n'existe plus.
+            $sm->get('MelisCoreLostPassword')->deleteRequestsByLogin($login);
+            $sm->get('MelisCoreCreatePassword')->deleteRequestsByLogin($login);
+
+            return $this->jsonResponse(['success' => true, 'data' => null]);
+        } catch (\Throwable $e) {
+            return $this->errorResponse($e);
+        }
+    }
+
+    // ─── POST /users/export ───────────────────────────────────────────────────
+
+    /**
+     * Records a user data export made by the React back-office.
+     *
+     * The React list builds its CSV/Excel file in the browser, from rows it already holds, so
+     * the server never sees the export. This endpoint is what the page calls just before
+     * generating the file, so an export leaves the same trace whichever interface performed it
+     * (DEKRA item 21.0). It writes a log entry and nothing else.
+     */
+    public function exportAction(): HttpResponse
+    {
+        if ($deny = $this->denyUnlessAccess()) { return $deny; }
+        if ($denyCap = $this->denyUnlessCan('export')) { return $denyCap; }
+
+        try {
+            $body   = json_decode((string) $this->getRequest()->getContent(), true) ?: [];
+            $rows   = (int) ($body['rows'] ?? 0);
+            $format = (string) ($body['format'] ?? '');
+
+            $this->getServiceManager()->get('MelisCoreSecurityAudit')->logExport('meliscore_tool_user', $rows, [
+                'format'  => $format,
+                'filters' => is_array($body['filters'] ?? null) ? $body['filters'] : [],
+                'source'  => 'react',
+            ]);
+
             return $this->jsonResponse(['success' => true, 'data' => null]);
         } catch (\Throwable $e) {
             return $this->errorResponse($e);
@@ -433,6 +484,11 @@ class MelisReactApiUserController extends MelisAbstractActionController
         if ($id <= 0) {
             return $this->jsonResponse(['success' => false, 'error' => 'Invalid ID'], 400);
         }
+
+        // Connection history of another user is personal data (DEKRA item 21.0). Same entry as
+        // the legacy tool writes, so both interfaces leave the same trace.
+        $this->getServiceManager()->get('MelisCoreSecurityAudit')
+            ->logSensitiveRead('user connection history', $id);
 
         try {
             $db   = $this->getServiceManager()->get('Laminas\Db\Adapter\AdapterInterface');
@@ -499,6 +555,11 @@ class MelisReactApiUserController extends MelisAbstractActionController
         if ($id <= 0) {
             return $this->jsonResponse(['success' => false, 'error' => 'Invalid ID'], 400);
         }
+
+        // Displaying a user's API key: a leaked key is what the audit found (item 6.0), so
+        // reading one leaves a trace. The key itself is never written to the log.
+        $this->getServiceManager()->get('MelisCoreSecurityAudit')
+            ->logSensitiveRead('user microservice API key', $id);
 
         try {
             $db   = $this->getServiceManager()->get('Laminas\Db\Adapter\AdapterInterface');
@@ -624,68 +685,13 @@ class MelisReactApiUserController extends MelisAbstractActionController
         if ($denyCap = $this->denyUnlessCan('list')) { return $denyCap; }
 
         try {
-            $cfg = $this->effectiveLoginConfig();
-            return $this->jsonResponse(['success' => true, 'data' => [
-                'minLength'     => (int) ($cfg['password_complexity_number_of_characters'] ?: 0),
-                'requireLower'  => !empty($cfg['password_complexity_use_lower_case']),
-                'requireUpper'  => !empty($cfg['password_complexity_use_upper_case']),
-                'requireDigit'  => !empty($cfg['password_complexity_use_digit']),
-                'requireSpecial' => !empty($cfg['password_complexity_use_special_characters']),
-            ]]);
+            return $this->jsonResponse(['success' => true, 'data' => $this->getServiceManager()->get('MelisPasswordPolicyService')->describe()]);
         } catch (\Throwable $e) {
             return $this->errorResponse($e);
         }
     }
 
     // ─── Helpers ──────────────────────────────────────────────────────────────
-
-    /**
-     * Config connexion/mot de passe effective : défauts `meliscore/datas/otherconfig_default/login`
-     * (config/otherconfig.php, toujours présents) surchargés par `meliscore/datas/login`
-     * (app.login.php mergé au boot quand il existe). Même source que le legacy.
-     */
-    private function effectiveLoginConfig(): array
-    {
-        $melisConfig = $this->getServiceManager()->get('MelisCoreConfig');
-        $defaults = $melisConfig->getItem('meliscore/datas/otherconfig_default/login') ?: [];
-        $saved    = $melisConfig->getItem('meliscore/datas/login') ?: [];
-        return array_merge(is_array($defaults) ? $defaults : [], is_array($saved) ? $saved : []);
-    }
-
-    /**
-     * Applique les 5 règles de complexité du legacy (MelisPasswordValidatorWithConfig) et renvoie
-     * la liste des messages d'erreur traduits (vide = OK). Une règle ne s'applique que si sa clé
-     * de config est « vraie » (non vide) — identique à l'implémentation legacy.
-     */
-    private function validatePasswordComplexity(string $password): array
-    {
-        $cfg        = $this->effectiveLoginConfig();
-        $translator = $this->getServiceManager()->get('translator');
-        $errors     = [];
-
-        $minChars = (int) ($cfg['password_complexity_number_of_characters'] ?? 0);
-        if ($minChars > 0 && strlen($password) < $minChars) {
-            $errors[] = str_replace(
-                '%min%',
-                (string) $minChars,
-                $translator->translate('tr_meliscore_other_config_password_too_short')
-            );
-        }
-        if (!empty($cfg['password_complexity_use_lower_case']) && !preg_match('/[a-z]/', $password)) {
-            $errors[] = $translator->translate('tr_meliscore_other_config_password_no_lower');
-        }
-        if (!empty($cfg['password_complexity_use_digit']) && !preg_match('/\d/', $password)) {
-            $errors[] = $translator->translate('tr_meliscore_other_config_password_no_digit');
-        }
-        if (!empty($cfg['password_complexity_use_upper_case']) && !preg_match('/[A-Z]/', $password)) {
-            $errors[] = $translator->translate('tr_meliscore_other_config_password_no_upper');
-        }
-        if (!empty($cfg['password_complexity_use_special_characters']) && !preg_match('/[\p{P}\p{S}]/u', $password)) {
-            $errors[] = $translator->translate('tr_meliscore_other_config_password_no_special_character');
-        }
-
-        return $errors;
-    }
 
     private function formatUser(array $r, bool $withLang = false): array
     {

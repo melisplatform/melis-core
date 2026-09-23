@@ -17,8 +17,11 @@ export interface LogItem {
   typeCode: string
   status: number
   itemId: number | null
-  userId: number
-  userName: string
+  /** null pour un évènement de sécurité sans utilisateur connecté (tentative sur un compte inconnu). */
+  userId: number | null
+  userName: string | null
+  /** IP du client à l'origine de l'évènement ; vide pour les entrées antérieures à l'audit. */
+  ip: string
   date: string
 }
 

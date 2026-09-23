@@ -32,9 +32,9 @@ class MelisBOEmailsDetailsTable extends MelisGenericTable
     public function getEmailDetailsByEmailId($emailId, $langId = null){
         $select = $this->tableGateway->getSql()->select();
         
-        $select->where('boed_email_id ='.$emailId);
+        $select->where->equalTo('boed_email_id', (int) $emailId);
         if($langId != null){
-            $select->where('boed_lang_id ='.$langId);
+            $select->where->equalTo('boed_lang_id', (int) $langId);
         }
         
         $resultSet = $this->tableGateway->selectWith($select);

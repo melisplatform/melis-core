@@ -452,11 +452,18 @@ class MelisCoreCreatePasswordService extends MelisGeneralService implements Meli
 
         if($this->isDataExists($login))
         {
+            $hash = $melisCoreAuth->encryptPassword($newPass);
             $userTable->update(array(
                 'usr_status' => 1,
                 'usr_last_pass_update_date' => date('Y-m-d H:i:s'),
-                'usr_password' => $melisCoreAuth->encryptPassword($newPass)
+                'usr_password' => $hash
             ),'usr_login', $login);
+
+            // Password history (audit item 16.0): every path that sets a password records it.
+            $user = $userTable->getEntryByField('usr_login', $login)->current();
+            if ($user) {
+                $this->getServiceManager()->get('MelisPasswordPolicyService')->recordHistory((int) $user->usr_id, $hash);
+            }
             
             $success = true;
         }
@@ -464,6 +471,21 @@ class MelisCoreCreatePasswordService extends MelisGeneralService implements Meli
         return $success;
     }
     
+    /**
+     * Deletes every pending create password request of a login (called when an account is deleted)
+     * @param String $login
+     * @return void
+     */
+    public function deleteRequestsByLogin($login)
+    {
+        if (empty($login))
+            return;
+
+        /** @var MelisCreatePasswordTable $table */
+        $table = $this->getServiceManager()->get('MelisCreatePasswordTable');
+        $table->deleteByField('mcp_login', $login);
+    }
+
     /**
      * Deletes a specific record in the create password table
      * @param unknown $hash

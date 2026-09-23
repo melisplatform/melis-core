@@ -866,7 +866,9 @@ class MelisCoreModulesService extends MelisServiceManager
     {
         $plugin = new MelisCoreHeadPluginHelper();
         $plugin->setServiceManager($this->getServiceManager());
-        $assets = $plugin->__invoke('/meliscore_login');
+        // Third argument: building, not rendering - keeps melisCsrf.js out of the bundle,
+        // it is injected on its own by the helper when the login page is rendered.
+        $assets = $plugin->__invoke('/meliscore_login', false, true);
 
         if (!empty($assets)) {
             foreach ($assets as $type => $files) {

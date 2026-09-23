@@ -89,6 +89,29 @@ class LogController extends MelisAbstractActionController
     }
 
     /**
+     * Display name of the user behind a log entry.
+     *
+     * @param  object $userTbl
+     * @param  int|null $userId
+     * @param  object $translator
+     * @return string
+     */
+    private function getLogUserName($userTbl, $userId, $translator)
+    {
+        if (empty($userId)) {
+            return $translator->translate('tr_meliscore_logs_tool_log_anonymous');
+        }
+
+        $user = $userTbl->getEntryById($userId)->current();
+
+        if (empty($user)) {
+            return $translator->translate('tr_meliscore_user_deleted') . ' (' . $userId . ')';
+        }
+
+        return $user->usr_firstname . ' ' . $user->usr_lastname;
+    }
+
+    /**
      * Render Log Tool Table limit
      *
      * @return \Laminas\View\Model\ViewModel
@@ -225,6 +248,10 @@ class LogController extends MelisAbstractActionController
         $melisTool = $this->getServiceManager()->get('MelisCoreTool');
         $translator = $this->getServiceManager()->get('translator');
 
+        // Names this tool in the audit entry written by exportDataToCsv. The exported file name
+        // is passed explicitly below and takes precedence, so this does not change the download.
+        $melisTool->setMelisToolKey('meliscore', 'meliscore_logs_tool');
+
         $request = $this->getRequest();
         $queryValues = $request->getQuery()->toArray();
 
@@ -260,7 +287,10 @@ class LogController extends MelisAbstractActionController
                 'log_id' => $log['log_id'],
                 'log_date' => $log['log_date_added'],
                 'log_type_name' => $translator->translate($log['log_title']),
-                'log_user' => $userTbl->getEntryById($log['log_user_id'])->current()->usr_firstname . " " . $userTbl->getEntryById($log['log_user_id'])->current()->usr_lastname,
+                // Security events have no user (login attempt on an unknown account), and a
+                // deleted user leaves rows behind: in both cases there is no row to read, so
+                // reading usr_firstname on it would abort the whole export.
+                'log_user' => $this->getLogUserName($userTbl, $log['log_user_id'], $translator),
                 'log_message' => $logSrv->getLogType($log['log_type_id'])->logt_code,
                 'log_item_id' => $log['log_item_id'],
             ));
@@ -509,6 +539,13 @@ class LogController extends MelisAbstractActionController
             $pageUserIds = array_unique(array_map(fn($v) => $v->getLog()->log_user_id, $logs));
             $usersMap    = [];
             foreach ($pageUserIds as $uid) {
+                // Security events can have no user at all: a login attempt on an account that
+                // does not exist is logged with a NULL user id (DEKRA item 21.0).
+                if (empty($uid)) {
+                    $usersMap[$uid] = $translator->translate('tr_meliscore_logs_tool_log_anonymous');
+                    continue;
+                }
+
                 $userData = $melisUserTable->getEntryById($uid)->current();
                 $usersMap[$uid] = !empty($userData)
                     ? ucfirst(mb_strtolower($userData->usr_firstname, 'UTF-8')) . ' ' . ucfirst(mb_strtolower($userData->usr_lastname, 'UTF-8'))
@@ -535,6 +572,8 @@ class LogController extends MelisAbstractActionController
                     'log_type'       => sprintf($logTypeBtn, $logType->logt_id, $logType->logt_code),
                     'log_item_id'    => $melisTool->escapeHtml($log->log_item_id),
                     'log_user'       => $melisTool->escapeHtml($usersMap[$log->log_user_id] ?? ''),
+                    // Empty until flyway V36 has added the column, and for the older rows.
+                    'log_ip'         => $melisTool->escapeHtml($log->log_ip ?? ''),
                     'log_date_added' => date($melisTranslation->getDateFormatByLocate($locale), strtotime($log->log_date_added)),
                 ));
             }

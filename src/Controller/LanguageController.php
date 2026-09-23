@@ -135,31 +135,57 @@ class LanguageController extends MelisAbstractActionController
      */
     public function getTranslationsAction()
     {
-       $locale = $this->getRequest()->getQuery('locale');
-//         Get the current language
-       if(empty($locale)) {
-            $container = new Container('meliscore');
-            $locale = $container['melis-lang-locale'];
-       }
-
-        $translator = $this->getServiceManager()->get('translator');
+        // SECURITY (DEKRA audit, action #19): this route is PUBLIC (excluded_routes) and is loaded as a
+        // <script> by the back-office. Its output must therefore
+        //  1. never depend on the caller's session — it used to fall back to the locale stored in the
+        //     session when the parameter was missing, so the same URL answered differently to an
+        //     anonymous and to an authenticated browser (session-state oracle, XSSI-readable since a
+        //     <script> include executes cross-origin). Every caller now gets the locale it asked for,
+        //     or the platform default (en_EN) — the back-office always passes ?locale= explicitly
+        //     (app.interface.php / MelisCoreHeadPluginHelper), so nothing changes for it;
+        //  2. only accept a well-formed locale (xx_XX, same rule as MelisReactApiLanguageController)
+        //     — the raw parameter was interpolated unescaped into the generated JavaScript
+        //     (reflected XSS: /get-translations?locale=";…). An unknown but well-formed locale just
+        //     yields an empty translation set;
+        //  3. be emitted as JavaScript literals via json_encode (keys, values, locale, date format)
+        //     — a translation containing a quote or a </script> sequence also broke out of the
+        //     single-quoted strings the old concatenation produced.
+        $defaultLocale = 'en_EN';
         $melisTranslation = $this->getServiceManager()->get('MelisCoreTranslation');
 
-        // Set the headers of this route
+        $locale = (string) $this->getRequest()->getQuery('locale', '');
+        if (!preg_match('/^[a-zA-Z]{2}_[a-zA-Z]{2}$/', $locale)) {
+            $locale = $defaultLocale;
+        }
+
+        // Set the headers of this route. `nosniff`: the body is script, never to be re-interpreted
+        // as anything else; caching stays public because the content is now session-independent.
         $response = $this->getResponse();
         $response->getHeaders()
             ->addHeaderLine('Content-Type', 'text/javascript; charset=utf-8')
+            ->addHeaderLine('X-Content-Type-Options', 'nosniff')
             ->addHeaderLine('Cache-Control', 'public, max-age=86400, immutable');
 
+        // JSON_HEX_* : the literals are embedded in a <script>-served body, so <, >, &, ' and " are
+        // escaped as \uXXXX and can't terminate a string, a tag or a script block.
+        $jsFlags = JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP | JSON_UNESCAPED_UNICODE;
+        $js = static function ($value) use ($jsFlags): string {
+            return json_encode((string) $value, $jsFlags) ?: '""';
+        };
+
+        // Catalogue built from the language files of the requested locale only — NOT from the
+        // translator's session-loaded files (getTranslationMessages()), which made the body depend
+        // on the caller's session and ignored the locale parameter altogether. Values arrive raw
+        // (no pre-escaped quotes); json_encode is the single escaping step.
         $translationCompilation = '';
-        foreach($melisTranslation->getTranslationMessages($locale) as $transKey => $transValue)
+        foreach($melisTranslation->getTranslationMessagesForLocale($locale, $defaultLocale) as $transKey => $transValue)
         {
-            $translationCompilation .= "translations['".$transKey."'] = '" . $transValue . "';".PHP_EOL;
+            $translationCompilation .= 'translations[' . $js($transKey) . '] = ' . $js($transValue) . ';' . PHP_EOL;
         }
 
         $scriptContent = '';
-        $scriptContent .= 'var melisLangId = "' . $locale . '";' . PHP_EOL;
-        $scriptContent .= 'var melisDateFormat = "'. $melisTranslation->getDateFormat($locale) . '";'. PHP_EOL;
+        $scriptContent .= 'var melisLangId = ' . $js($locale) . ';' . PHP_EOL;
+        $scriptContent .= 'var melisDateFormat = ' . $js($melisTranslation->getDateFormat($locale)) . ';' . PHP_EOL;
         $scriptContent .= 'var translations = new Object();'. PHP_EOL;
         $scriptContent .= $translationCompilation;
         $response->setContent($scriptContent);

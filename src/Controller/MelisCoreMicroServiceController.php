@@ -459,6 +459,14 @@ class MelisCoreMicroServiceController extends MelisAbstractActionController
                 $url = $scheme . '://' . $host.'/melis/api/'.$authData->msoa_api_key;
 
 
+                /**
+                 * The API key of a user is being displayed. A leaked key is exactly what the
+                 * audit found (item 6.0), so reading one has to leave a trace (item 21.0).
+                 * The key itself is never written to the log.
+                 */
+                $this->getServiceManager()->get('MelisCoreSecurityAudit')
+                    ->logSensitiveRead('user microservice API key', $userId);
+
                 $data['api_key'] = $authData->msoa_api_key;
                 $data['status']  = $authData->msoa_status;
                 $data['user_id'] = $userId;
@@ -497,6 +505,11 @@ class MelisCoreMicroServiceController extends MelisAbstractActionController
                 $authData = $this->getMicroServiceAuthTable()->getUser($userId)->current();
 
                 if ($authData) {
+
+                    // A new API key now exists for this user: worth knowing when a key has to
+                    // be revoked or traced back.
+                    $this->getServiceManager()->get('MelisCoreSecurityAudit')
+                        ->logSensitiveRead('user microservice API key generated', $userId);
 
                     $uri = $request->getUri();
                     $host = $uri->getHost();

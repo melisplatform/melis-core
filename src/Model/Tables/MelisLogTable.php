@@ -187,9 +187,12 @@ class MelisLogTable extends MelisGenericTable
 
 		if (!empty($logTypeId) && !empty($userId) && !empty($date)) {
 			$select->columns(['count' => new \Laminas\Db\Sql\Expression('COUNT(*)')])
-				->where('log_type_id = ' . $logTypeId)
-				->where('log_user_id = ' . $userId)
-				->where('log_date_added >= "' . $date . '"');
+				->where->equalTo('log_type_id', (int) $logTypeId)
+				->equalTo('log_user_id', (int) $userId)
+				// Strictly AFTER the reference date (last successful login / password change /
+				// unlock): with ">=" the failures logged in the same second as a successful login
+				// were counted again and locked the account on the next 1-2 mistakes (audit item 16.0).
+				->greaterThan('log_date_added', (string) $date);
 		}
 
 		$resultSet = $this->getTableGateway()->selectWith($select);
@@ -205,9 +208,9 @@ class MelisLogTable extends MelisGenericTable
 
 		if (!empty($logTypeId) && !empty($userId)) {
 			$select->columns(['log_date_added'])
-				->where('log_type_id = ' . $logTypeId)
-				->where('log_user_id = ' . $userId)
-				->order('log_id DESC')
+				->where->equalTo('log_type_id', (int) $logTypeId)
+				->equalTo('log_user_id', (int) $userId);
+				$select->order('log_id DESC')
 				->limit(1);
 		}
 
@@ -226,9 +229,9 @@ class MelisLogTable extends MelisGenericTable
 
 		if (!empty($logTypeId) && !empty($userId)) {
 			$select->columns(['log_date_added'])
-				->where('log_type_id = ' . $logTypeId)
-				->where('log_user_id = ' . $userId)
-				->order('log_id DESC')
+				->where->equalTo('log_type_id', (int) $logTypeId)
+				->equalTo('log_user_id', (int) $userId);
+				$select->order('log_id DESC')
 				->limit(1);
 		}
 
@@ -239,5 +242,85 @@ class MelisLogTable extends MelisGenericTable
 		}
 
 		return null;
+	}
+
+	/**
+	 * Counts log rows since a date, for the security detection rules.
+	 *
+	 * Values are bound through the where() predicates (not concatenated into the SQL string),
+	 * because unlike the other counts here one of them is an IP coming from the request.
+	 *
+	 * @param int[]       $typeIds     log types to count
+	 * @param string      $since       'Y-m-d H:i:s'
+	 * @param string|null $ip          restrict to one client IP
+	 * @param int|null    $userId      restrict to one user
+	 * @param string|null $messageLike SQL LIKE pattern on log_message
+	 * @return int
+	 */
+	public function countSince(array $typeIds, $since, $ip = null, $userId = null, $messageLike = null)
+	{
+		if (empty($typeIds) || empty($since)) {
+			return 0;
+		}
+
+		$select = $this->getTableGateway()->getSql()->select();
+		$select->columns(['total' => new \Laminas\Db\Sql\Expression('COUNT(*)')])
+			->where->in('log_type_id', $typeIds)
+			->greaterThanOrEqualTo('log_date_added', $since);
+
+		if (!empty($ip)) {
+			$select->where->equalTo('log_ip', $ip);
+		}
+
+		if (!empty($userId)) {
+			$select->where->equalTo('log_user_id', $userId);
+		}
+
+		if (!empty($messageLike)) {
+			$select->where->like('log_message', $messageLike);
+		}
+
+		$resultSet = $this->getTableGateway()->selectWith($select);
+		$rows      = $resultSet->toArray();
+
+		return empty($rows) ? 0 : (int) $rows[0]['total'];
+	}
+
+	/**
+	 * Counts log rows older than a date (retention purge).
+	 *
+	 * @param string $before 'Y-m-d H:i:s'
+	 * @return int
+	 */
+	public function countBefore($before)
+	{
+		if (empty($before)) {
+			return 0;
+		}
+
+		$select = $this->getTableGateway()->getSql()->select();
+		$select->columns(['total' => new \Laminas\Db\Sql\Expression('COUNT(*)')])
+			->where->lessThan('log_date_added', $before);
+
+		$rows = $this->getTableGateway()->selectWith($select)->toArray();
+
+		return empty($rows) ? 0 : (int) $rows[0]['total'];
+	}
+
+	/**
+	 * Deletes log rows older than a date (retention purge).
+	 *
+	 * @param string $before 'Y-m-d H:i:s'
+	 * @return int number of deleted rows
+	 */
+	public function deleteBefore($before)
+	{
+		if (empty($before)) {
+			return 0;
+		}
+
+		return (int) $this->getTableGateway()->delete(function ($delete) use ($before) {
+			$delete->where->lessThan('log_date_added', $before);
+		});
 	}
 }

@@ -55,7 +55,10 @@ function errorMessage(t: (k: never) => string, raw: string): string {
     tr_meliscore_tool_user_usr_password_not_match: 'account.err.pass_match',
   }
   const key = map[raw]
-  return key ? (t as (k: string) => string)(key) : (t as (k: string) => string)('account.save_error')
+  if (key) return (t as (k: string) => string)(key)
+  // Password-policy errors come back already translated by the server (one line per rule).
+  if (raw && !raw.startsWith('tr_')) return raw
+  return (t as (k: string) => string)('account.save_error')
 }
 
 export default function AccountPage() {

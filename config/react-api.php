@@ -324,6 +324,17 @@ return [
                                     ],
                                 ],
                             ],
+                            'users-export' => [
+                                'type'    => 'Segment',
+                                'options' => [
+                                    'route'    => '/users/export[/]',
+                                    'defaults' => [
+                                        '__NAMESPACE__' => 'MelisCore\Controller',
+                                        'controller'    => 'MelisReactApiUser',
+                                        'action'        => 'export',
+                                    ],
+                                ],
+                            ],
                             'users-stats' => [
                                 'type'    => 'Segment',
                                 'options' => [
