@@ -17,7 +17,15 @@ class MelisCoreHeadPluginHelper extends AbstractHelper
         $this->serviceManager = $serviceManager;
     }
 
-    public function __invoke($path = '/', $returnBundle = false)
+    /**
+     * @param string $path
+     * @param bool   $returnBundle  serve the prebuilt bundle rather than the file list
+     * @param bool   $forBundling   TRUE when MelisCoreModulesService is BUILDING a bundle from
+     *                              this list, as opposed to rendering a page. The two cannot be
+     *                              told apart by $returnBundle: the builder and a render with
+     *                              bundling turned off both pass false.
+     */
+    public function __invoke($path = '/', $returnBundle = false, $forBundling = false)
 	{
 		$melisAppConfig = $this->serviceManager->get('MelisCoreConfig');
 		
@@ -90,7 +98,14 @@ class MelisCoreHeadPluginHelper extends AbstractHelper
         }
 
         if ($path == 'meliscore_login') {
-            $jsFiles = $this->withCsrfEmitterFirst($jsFiles);
+            // The emitter is kept OUT of the login bundle and injected on its own at render time.
+            // A bundle that embeds its own copy is a second copy on the same page, which only the
+            // emitter's install guard then stops from patching XMLHttpRequest twice - and a bundle
+            // built before that guard existed did exactly that, sending the header twice and
+            // failing every login. Never bundling it means there is nothing to guard against.
+            $jsFiles = $forBundling
+                ? $this->withoutCsrfEmitter($jsFiles)
+                : $this->withCsrfEmitterFirst($jsFiles);
         }
 		
 		return [
@@ -110,6 +125,16 @@ class MelisCoreHeadPluginHelper extends AbstractHelper
      * @param string[] $jsFiles
      * @return string[]
      */
+    /** The emitter, in any stamped form, removed: used while a bundle is being built. */
+    private function withoutCsrfEmitter(array $jsFiles)
+    {
+        $emitter = '/MelisCore/js/core/melisCsrf.js';
+
+        return array_values(array_filter($jsFiles, function ($item) use ($emitter) {
+            return strpos((string) $item, $emitter) === false;
+        }));
+    }
+
     private function withCsrfEmitterFirst(array $jsFiles)
     {
         $emitter = '/MelisCore/js/core/melisCsrf.js';
