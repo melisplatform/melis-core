@@ -62,7 +62,7 @@ return [
                     // 'report'  = nothing blocked, every decision written to the PHP log
                     //             (grep MELIS_ACCESS_GATE). Inventory phase. DEFAULT.
                     // 'enforce' = a denial becomes a real 403 before dispatch.
-                    'access_gate_mode'   => $env('MELIS_ACCESS_GATE_MODE', 'report'),
+                    'access_gate_mode'   => $env('MELIS_ACCESS_GATE_MODE', 'enforce'),
 
                     // With mode=enforce only: also deny a route whose controller declares NO tool
                     // key (deny by default). Turn on last, once the report log is clean.
