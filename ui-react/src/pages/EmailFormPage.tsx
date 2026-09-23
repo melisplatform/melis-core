@@ -125,15 +125,21 @@ export default function EmailFormPage() {
     setErrors({}); setSaveError(null)
     setSaving(true)
     try {
-      await emailsApi.saveEmail({
+      const saved = await emailsApi.saveEmail({
         isNew, codename: form.codename.trim(), name: form.name.trim(), fromName: form.fromName.trim(),
         fromEmail: form.fromEmail.trim(), replyTo: form.replyTo.trim(), tags: form.tags, layout: form.layout,
         layoutTitle: form.layoutTitle, layoutFtrInfo: form.layoutFtrInfo, contents: form.contents,
       })
       emailsApi.markEmailsListStale()
       okNotify(t('emails.title'), t('emails.saved'))
-      if (isNew) closeSubTab(subTabPath)
-      navigate(base)
+      if (isNew) {
+        // Création : le sous-onglet « nouveau » est remplacé par celui de l'email créé, rouvert
+        // sur ses données enregistrées (0011048). replace → « précédent » ne ramène pas sur /new.
+        closeSubTab(subTabPath)
+        navigate(`${base}/${saved?.codename || form.codename.trim()}`, { replace: true })
+      } else {
+        navigate(base)
+      }
     } catch (e) {
       const msg = String((e as Error)?.message ?? e)
       setSaveError(msg)
