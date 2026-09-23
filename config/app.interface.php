@@ -17,6 +17,17 @@ $bundleStamp = static function ($file) {
     return '?v=' . (is_file($path) ? filemtime($path) : '0');
 };
 
+// Same problem, same cure, for the standalone CSRF emitter (audit 10.0). It is served with a
+// one-day Cache-Control and no validator either, and its URL carried no stamp at all - so a
+// browser that had loaded it once kept running that copy for a day after every deploy. A fix to
+// the emitter then never reached the page it was written for, and the login form went on posting
+// whatever token it had stamped, refused with reason=token-mismatch.
+$csrfEmitter = static function () {
+    $path = __DIR__ . '/../public/js/core/melisCsrf.js';
+
+    return '/MelisCore/js/core/melisCsrf.js?v=' . (is_file($path) ? filemtime($path) : '0');
+};
+
 return array(
     'plugins' => array(
         'meliscore' => array(
@@ -262,7 +273,7 @@ return array(
                     '/melis/get-translations?locale=' . $locale,
                     // CSRF token echoed back on every state-changing request (audit 10.0).
                     // Loaded FIRST: it patches XMLHttpRequest, which every tool below then uses.
-                    '/MelisCore/js/core/melisCsrf.js',
+                    $csrfEmitter(),
                     '/MelisCore/assets/components/library/jquery/jquery.min.js',
                     '/MelisCore/assets/components/library/jquery-ui/js/jquery-ui.min.js',
                     '/MelisCore/assets/components/library/jquery/jquery-migrate.min.js',
@@ -713,7 +724,7 @@ return array(
                     // CSRF token echoed back on every state-changing request (audit 10.0). The
                     // login page has its own short JS list (no bundle.js), so it needs its own
                     // entry: without it the login POST to /melis/authenticate carries no token.
-                    '/MelisCore/js/core/melisCsrf.js',
+                    $csrfEmitter(),
                     '/MelisCore/assets/components/library/jquery/jquery.min.js?v=v1.2.3',
                     '/MelisCore/js/tools/melisCoreTool.js',
                     '/MelisCore/js/core/login.js',

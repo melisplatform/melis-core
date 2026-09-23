@@ -94,8 +94,17 @@ class MelisCoreHeadPluginHelper extends AbstractHelper
     private function withCsrfEmitterFirst(array $jsFiles)
     {
         $emitter = '/MelisCore/js/core/melisCsrf.js';
-        $jsFiles = array_values(array_filter($jsFiles, function ($file) use ($emitter) {
-            return strpos((string) $file, $emitter) === false;
+
+        // Stamped with the file's mtime, like the bundles: the emitter is served with a one-day
+        // Cache-Control and no validator, so an unstamped URL means a browser keeps the copy it
+        // already has for a day after a deploy - and a fix to the emitter never reaches the login
+        // page. The URL stays stable, hence cacheable, until the file actually changes.
+        $file = __DIR__ . '/../../../public/js/core/melisCsrf.js';
+        $stamped = $emitter . '?v=' . (is_file($file) ? filemtime($file) : '0');
+
+        // Filter on the unstamped path so an entry carrying any stamp is matched too.
+        $jsFiles = array_values(array_filter($jsFiles, function ($item) use ($emitter) {
+            return strpos((string) $item, $emitter) === false;
         }));
 
         // Keep the translations first: the emitter needs nothing, the rest may need both.
@@ -104,6 +113,6 @@ class MelisCoreHeadPluginHelper extends AbstractHelper
             $translations = [array_shift($jsFiles)];
         }
 
-        return array_merge($translations, [$emitter], $jsFiles);
+        return array_merge($translations, [$stamped], $jsFiles);
     }
 }
