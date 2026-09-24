@@ -23,6 +23,14 @@ class LanguageController extends MelisAbstractActionController
     const INTERFACE_KEY = 'meliscore_tool_language';
 
     /**
+     * Actions partagées (audit DEKRA 7.0) : les libellés DataTables sont chargés par
+     * melisDataTable.js dans TOUS les outils — connexion seule, pas le droit Langues.
+     */
+    const TOOL_KEY_MAP = [
+        'getDataTableTranslations' => '@login',
+    ];
+
+    /**
      * Shows language button in right corner of header
      *
      * @return \Laminas\View\Model\ViewModel

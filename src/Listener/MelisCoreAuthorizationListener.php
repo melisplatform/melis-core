@@ -31,6 +31,12 @@ use Laminas\Mvc\MvcEvent;
  * Cas particulier — un contrôleur qui sert PLUSIEURS outils déclare en plus :
  *     const TOOL_KEY_MAP = ['getUserConnectionData' => 'user_view_date_connection_tool'];
  * (clé = nom d'action, comparé sans tiret/casse ; sinon la constante de classe s'applique).
+ * La valeur peut aussi être :
+ *   - une LISTE de clés — l'action est partagée par plusieurs outils, UNE seule suffit :
+ *         'getOrderListData' => ['meliscommerce_order_list_page', 'meliscommerce_clients_list_page'],
+ *   - `'@login'` (self::LOGIN_ONLY) — lecture appelée par n'importe quel outil (sélecteur de page,
+ *     liste d'auteurs…) : connexion requise, aucun droit d'outil. Tracé `OPEN`, jamais refusé,
+ *     y compris en mode strict — c'est une exception DÉCLARÉE, pas un oubli.
  *
  * DEUX MODES (`meliscore/datas/security/access_gate_mode`, env `MELIS_ACCESS_GATE_MODE`) :
  *   - `report` (défaut) : rien n'est bloqué, chaque décision est tracée dans le journal PHP. C'est
@@ -52,6 +58,9 @@ class MelisCoreAuthorizationListener implements ListenerAggregateInterface
 
     /** Arbre de routes protégé (le back-office). */
     const BACKOFFICE_ROUTE_PREFIX = 'melis-backoffice';
+
+    /** Valeur de TOOL_KEY_MAP : action réservée aux comptes connectés, sans droit d'outil. */
+    const LOGIN_ONLY = '@login';
 
     public function attach(EventManagerInterface $events, $priority = -100)
     {
@@ -93,8 +102,39 @@ class MelisCoreAuthorizationListener implements ListenerAggregateInterface
 
         $controller = (string) $routeMatch->getParam('controller', '');
         $action     = (string) $routeMatch->getParam('action', '');
-        $candidates = $this->resolveToolKey($sm, $controller, $action);
         $mode       = $this->getMode($sm);
+
+        // Règle propre à l'action (TOOL_KEY_MAP) : prioritaire sur la clé de classe.
+        $rule = $this->resolveActionRule($sm, $controller, $action);
+
+        if ($rule === self::LOGIN_ONLY) {
+            $this->log('OPEN', $mode, $routeName, $controller, $action, self::LOGIN_ONLY);
+
+            return;
+        }
+
+        if (is_array($rule) && count($rule) > 1) {
+            // Action partagée : UNE des clés accordables suffit.
+            $grantable = array_values(array_filter($rule, function ($key) use ($sm) {
+                return $this->isGrantableKey($sm, $key);
+            }));
+            if (!$grantable) {
+                $this->log('UNMAPPED', $mode, $routeName, $controller, $action, $rule[0]);
+
+                return;
+            }
+            foreach ($grantable as $key) {
+                if ($sm->get('MelisCoreRights')->canAccess($key)) {
+                    return;
+                }
+            }
+            $toolKey = implode('|', $grantable);
+            $this->log('DENY', $mode, $routeName, $controller, $action, $toolKey);
+
+            return $mode === 'enforce' ? $this->deny($e, $toolKey) : null;
+        }
+
+        $candidates = $rule !== null ? $rule : $this->resolveToolKey($sm, $controller, $action);
 
         // Première candidate que l'arbre des droits sait accorder (cf. isGrantableKey).
         $toolKey = null;
@@ -166,6 +206,42 @@ class MelisCoreAuthorizationListener implements ListenerAggregateInterface
     }
 
     /**
+     * Règle de TOOL_KEY_MAP pour l'action routée : self::LOGIN_ONLY, une liste de clés, ou null
+     * (pas d'entrée → la clé de classe s'applique).
+     */
+    private function resolveActionRule($sm, $controller, $action)
+    {
+        $class = $this->resolveControllerClass($sm, $controller);
+        if ($class === null) {
+            return null;
+        }
+
+        try {
+            $reflection = new \ReflectionClass($class);
+            if (!$reflection->hasConstant('TOOL_KEY_MAP')) {
+                return null;
+            }
+
+            $wanted = $this->normalizeAction($action);
+            foreach ((array) $reflection->getConstant('TOOL_KEY_MAP') as $mappedAction => $mappedKey) {
+                if ($this->normalizeAction($mappedAction) !== $wanted || empty($mappedKey)) {
+                    continue;
+                }
+                if ($mappedKey === self::LOGIN_ONLY) {
+                    return self::LOGIN_ONLY;
+                }
+                $keys = array_values(array_filter(array_map('strval', (array) $mappedKey)));
+
+                return $keys ?: null;
+            }
+        } catch (\Throwable $ignored) {
+            // Classe illisible : traité comme non résolu (jamais comme une autorisation).
+        }
+
+        return null;
+    }
+
+    /**
      * Clés d'outil annoncées par la classe du contrôleur routé (par ordre de préférence), ou null.
      *
      * Aucune instanciation : le nom de contrôleur est traduit en classe via la configuration
@@ -180,16 +256,6 @@ class MelisCoreAuthorizationListener implements ListenerAggregateInterface
 
         try {
             $reflection = new \ReflectionClass($class);
-
-            if ($reflection->hasConstant('TOOL_KEY_MAP')) {
-                $map    = (array) $reflection->getConstant('TOOL_KEY_MAP');
-                $wanted = $this->normalizeAction($action);
-                foreach ($map as $mappedAction => $mappedKey) {
-                    if ($this->normalizeAction($mappedAction) === $wanted && !empty($mappedKey)) {
-                        return [(string) $mappedKey];
-                    }
-                }
-            }
 
             // INTERFACE_KEY est inclus à dessein : plusieurs contrôleurs legacy (Platforms,
             // Langues, Emails, Langues CMS, Platform IDs CMS, liste Blog) portent leur clé de
