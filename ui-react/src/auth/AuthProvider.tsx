@@ -4,6 +4,7 @@ import * as melis from '@/lib/melis-api'
 import { loadBricks, resetBricks } from '@/lib/bricks'
 import { prefetchDashboard, resetDashboardPrefetch } from '@/lib/dashboard-prefetch'
 import { clearOpenTabs } from '@/components/tabs/workspace-reset'
+import { clearTools } from '@/lib/tool-routes'
 import { AuthContext, type AuthState } from './auth-context'
 
 const DEMO_STORAGE_KEY = 'melis-demo'
@@ -97,6 +98,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     // Plan de travail neuf pour l'utilisateur qui arrive : une session expirée (ou un logout côté
     // serveur) ne passe pas par signOut, donc les onglets du précédent survivraient sans ça.
     clearOpenTabs()
+    // Idem pour le registre des routes d'outils : celles du précédent ne doivent pas monter une
+    // page ou une brique avant que le menu du nouvel utilisateur ne l'ait reconstruit.
+    clearTools()
     resetDashboardPrefetch()
     prefetchDashboard()
     setAuthed(true)
@@ -122,6 +126,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     // Les onglets ouverts sont ceux de l'utilisateur sortant : ils ne doivent pas rester en
     // sessionStorage ni dans les stores montés pour le suivant (ticket 0011049).
     clearOpenTabs()
+    clearTools()
     await melis.logout()
     resetBricks()
     // Rien du dashboard de l'utilisateur sortant ne doit être servi au suivant.
