@@ -130,7 +130,10 @@ $(function() {
         });
         event.preventDefault();
     });
-    
+    // The Connect button is rendered disabled (app.forms.php) so a click or Enter before this file
+    // has loaded cannot post the form natively to /melis/login; the AJAX login is wired now.
+    $("#login_submit").prop("disabled", false);
+
     // CHANGE LANGUAGE
     window.melisChangeLanguage = function(langId){
         var datastring = { langId: langId };
