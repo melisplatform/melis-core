@@ -77,7 +77,7 @@ class MelisGdprDeleteConfigTable extends MelisGenericTable
         }
         // order direction and order by
         if (!empty($orderBy) && !empty($orderDirection)) {
-            $select->order($orderBy . ' ' . $orderDirection);
+            MelisGenericTable::addSafeOrder($select, $orderBy, $orderDirection);
         }
 
         return $this->getTableGateway()->selectWith($select);

@@ -7,6 +7,15 @@
  *
  */
 return [
+    /**
+     * Console command that applies the audit log retention period (DEKRA item 21.0).
+     * Nothing schedules it: see the command's documentation.
+     */
+    'laminas-cli' => [
+        'commands' => [
+            'melis:security:purge-logs' => \MelisCore\Command\PurgeSecurityLogsCommand::class,
+        ],
+    ],
     'router' => [
         'routes' => [
             'melis-backoffice' => [
@@ -393,6 +402,11 @@ return [
             'MelisCoreEmailSendingService'          => \MelisCore\Service\MelisCoreEmailSendingService::class,
             'ModulesService'                        => \MelisCore\Service\MelisCoreModulesService::class,
             'MelisCoreLogService'                   => \MelisCore\Service\MelisCoreLogService::class,
+            // Security audit trail (DEKRA item 21.0). Shared by the legacy back-office and
+            // the React API, so an action is logged the same way whichever one performed it.
+            'MelisCoreSecurityAudit'                => \MelisCore\Service\MelisCoreSecurityAuditService::class,
+            'MelisCoreSecurityLogWriter'            => \MelisCore\Service\MelisCoreSecurityLogWriterService::class,
+            'MelisCoreSecurityAlert'                => \MelisCore\Service\MelisCoreSecurityAlertService::class,
             'MelisPhpUnitTool'                      => \MelisCore\Service\MelisPhpUnitToolService::class,
             'MelisCoreMicroServiceTestService'      => \MelisCore\Service\MelisCoreMicroServiceTestService::class,
             'MelisCorePlatformSchemeService'        => \MelisCore\Service\MelisCorePlatformSchemeService::class,
@@ -406,6 +420,7 @@ return [
             'MelisCoreGdprAutoDeleteToolService'    => \MelisCore\Service\MelisCoreGdprAutoDeleteToolService::class,
             'MelisPasswordSettingsService'          => \MelisCore\Service\MelisPasswordSettingsService::class,
             'MelisUpdatePasswordHistoryService'     => \MelisCore\Service\MelisUpdatePasswordHistoryService::class,
+            'MelisPasswordPolicyService'            => \MelisCore\Service\MelisPasswordPolicyService::class,
             'MelisCoreCacheSystemService'           => \MelisCore\Service\MelisCoreCacheSystemService::class,
             'MelisCoreAnnouncementService'           => \MelisCore\Service\MelisCoreAnnouncementService::class,
 
@@ -442,6 +457,9 @@ return [
              * that match on the onCreate() conditions
              */
             \MelisCore\Factory\MelisAbstractFactory::class
+        ],
+        'factories' => [
+            \MelisCore\Command\PurgeSecurityLogsCommand::class => \MelisCore\Command\PurgeSecurityLogsCommandFactory::class,
         ]
     ],
     'controllers' => [

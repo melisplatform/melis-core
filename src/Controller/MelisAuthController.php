@@ -32,6 +32,17 @@ class MelisAuthController extends MelisAbstractActionController
     const ACCOUNT_LOCKED = 'ACCOUNT_LOCKED';
     const ACCOUNT_UNLOCKED = 'ACCOUNT_UNLOCKED';
 
+    /**
+     * A failed login never answers faster than this (milliseconds).
+     *
+     * The dummy bcrypt check levels the hashing time between an unknown login and a
+     * wrong password, but an existing account still pays for the lock bookkeeping
+     * (failed-attempts count, log rows) and for the cost of its own stored hash
+     * (older accounts are cost 10, current ones cost 12). Padding every failure to a
+     * common floor removes what is left of that difference (audit item 18.0).
+     */
+    const AUTH_FAILURE_MIN_RESPONSE_MS = 600;
+
     private function buildAlertDangerCommand($selector, $title, $message)
     {
         return sprintf(
@@ -40,6 +51,46 @@ class MelisAuthController extends MelisAbstractActionController
             json_encode((string) $title),
             json_encode((string) $message)
         );
+    }
+
+    /**
+     * The one and only failed-login response body.
+     *
+     * Every failure that must not reveal anything about the account (unknown
+     * login, wrong password, wrong password while a lock policy is armed,
+     * account currently locked) goes through here so that the JSON is
+     * byte-identical - same keys, same message, same size (audit item 18.0).
+     * Anything meant for the log listeners travels in the event payload only,
+     * never in the HTTP body: see authFailureEventPayload().
+     */
+    private function buildFailedAuthResult()
+    {
+        $translator = $this->getServiceManager()->get('translator');
+        $errorTitle = $translator->translate('tr_meliscore_common_error');
+        $errorTxt = $translator->translate('tr_meliscore_login_auth_Failed authentication');
+
+        return [
+            'success' => false,
+            'errors' => ['empty' => $errorTxt],
+            'command' => $this->buildAlertDangerCommand('#loginprompt', $errorTitle . '!', $errorTxt),
+        ];
+    }
+
+    /**
+     * Params of the meliscore_login_attempt_end event for a failed attempt:
+     * the log listener (MelisFlashMessengerController::logAction) needs
+     * success/textTitle/textMessage/typeCode/itemId. Kept out of the response.
+     */
+    private function authFailureEventPayload($typeCode, $userId, $text)
+    {
+        return [
+            'success' => false,
+            'textTitle' => $text,
+            'textMessage' => $text,
+            'datas' => [],
+            'typeCode' => $typeCode,
+            'itemId' => $userId,
+        ];
     }
 
     private function buildKoNotificationCommand($icon, $message)
@@ -181,6 +232,7 @@ class MelisAuthController extends MelisAbstractActionController
      */
     public function authenticateAction()
     {
+        $startedAt = hrtime(true);
         $request = $this->getRequest();
         $translator = $this->getServiceManager()->get('translator');
         $melisCoreAuth = $this->getServiceManager()->get('MelisCoreAuth');
@@ -247,7 +299,8 @@ class MelisAuthController extends MelisAbstractActionController
                     $isPassExpired = false;
 
                     $userPassword = $userData->usr_password;
-                    if ($melisCoreAuth->isPasswordCorrect($password, $userPassword)) {
+                    $passwordOk = $melisCoreAuth->isPasswordCorrect($password, $userPassword);
+                    if ($passwordOk) {
                         // this will be used in setCredential method
                         $password = $userPassword;
                         $passwordHistory = $this->getServiceManager()->get('MelisUpdatePasswordHistoryService');
@@ -327,9 +380,12 @@ class MelisAuthController extends MelisAbstractActionController
                                 $melisCoreAuth->getAdapter()->setIdentity($postValues['usr_login'])
                                     ->setCredential($password);
 
-                                $authResult = $melisCoreAuth->authenticate();
+                                // A wrong password was already established by the bcrypt check
+                                // above: do not run the DB adapter for it, so that this path
+                                // does the same work as the unknown-login one (audit item 18.0).
+                                $authResult = $passwordOk ? $melisCoreAuth->authenticate() : null;
 
-                                if ($authResult->isValid()) {
+                                if ($authResult !== null && $authResult->isValid()) {
                                     $user = $melisCoreAuth->getAdapter()->getResultRowObject();
 
                                     $authEvent = $this->getEventManager()->trigger('melis_core_auth_pre_success', $this, [
@@ -359,6 +415,9 @@ class MelisAuthController extends MelisAbstractActionController
                                         // defeat session fixation, then write the identity into the fresh session.
                                         if (session_status() === PHP_SESSION_ACTIVE) {
                                             session_regenerate_id(true);
+                                            // New CSRF token too: the one of the anonymous session
+                                            // must not survive into the authenticated one.
+                                            \MelisCore\Service\MelisCoreCsrfService::regenerate();
                                         }
                                         // Write session
                                         $melisCoreAuth->getStorage()->write($user);
@@ -407,11 +466,6 @@ class MelisAuthController extends MelisAbstractActionController
                                         } else {
                                             $config = $this->getServiceManager()->get('MelisCoreConfig')->getItem('meliscore/datas/otherconfig_default/login');
                                         }
-                                        
-                                        // Generic error setup
-                                        $errorTitle = $translator->translate('tr_meliscore_common_error');
-                                        $errorTxt = $translator->translate('tr_meliscore_login_auth_Failed authentication');
-                                        $jsCommand = $this->buildAlertDangerCommand('#loginprompt', $errorTitle . '!', $errorTxt);
 
                                         // If login account lock is activated
                                         if (isset($config['login_account_lock_status']) && !empty($config['login_account_lock_status'])) {
@@ -477,81 +531,75 @@ class MelisAuthController extends MelisAbstractActionController
                                                 ];
                                                 $this->getEventManager()->trigger('meliscore_login_attempt_end', $this, array_merge($result, ['typeCode' => self::ACCOUNT_LOCKED, 'itemId' => $userData->usr_id]));
                                             } else {
-                                                // dd('t');
-                                                // Auth Failed with lock enabled but not locked yet - use the general failed message
-                                                $errorLogMessage = $translator->translate('tr_meliscore_login_auth_failed_too_many_failed_attempts');
-                                                $jsCommand = $this->buildAlertDangerCommand('#loginprompt', $errorTitle . '!', $errorLogMessage);
-                                                
-                                                $result = [
-                                                    'success' => false,
-                                                    'errors' => ['empty' => $errorLogMessage],
-                                                    'command' => $jsCommand,
-                                                    'textTitle' => 'Wrong credentials on login',
-                                                    'textMessage' => 'Wrong credentials on login',
-                                                    'datas' => [],
-                                                ];
-                                                $this->getEventManager()->trigger('meliscore_login_attempt_end', $this, array_merge($result, ['typeCode' => self::WRONG_LOGIN_CREDENTIALS, 'itemId' => $userData->usr_id]));
+                                                // Wrong password, lock policy armed but threshold not reached:
+                                                // same body as any other failure (the former "too many failed
+                                                // attempts" wording told an attacker the account exists).
+                                                $result = $this->buildFailedAuthResult();
+                                                $this->getEventManager()->trigger('meliscore_login_attempt_end', $this,
+                                                    $this->authFailureEventPayload(self::WRONG_LOGIN_CREDENTIALS, $userData->usr_id, 'Wrong credentials on login'));
                                             }
                                         } else {
-                                            // Auth Failed - Lock disabled
-                                            $result = [
-                                                'success' => false,
-                                                'errors' => ['empty' => $errorTxt],
-                                                'command' => $jsCommand,
-                                                'textTitle' => 'Wrong credentials on login',
-                                                'textMessage' => 'Wrong credentials on login',
-                                                'datas' => [],
-                                            ];
-                                            $this->getEventManager()->trigger('meliscore_login_attempt_end', $this, array_merge($result, ['typeCode' => self::WRONG_LOGIN_CREDENTIALS, 'itemId' => $userData->usr_id]));
+                                            // Wrong password, lock policy disabled
+                                            $result = $this->buildFailedAuthResult();
+                                            $this->getEventManager()->trigger('meliscore_login_attempt_end', $this,
+                                                $this->authFailureEventPayload(self::WRONG_LOGIN_CREDENTIALS, $userData->usr_id, 'Wrong credentials on login'));
                                         }
                                     }
                                 }
-                            }
                         } else {
-                            // COMMAND INJECTION: Password Expired (Redirect)
-                            $melisCreatePwdSvc = $this->getServiceManager()->get('MelisCoreCreatePassword');
-                            $url = $melisCreatePwdSvc->createExpiredPasswordRequest($userData->usr_login,$userData->usr_email);
-                            $jsRedirectCommand = "window.location.replace('{$url}');";
-                            
+                            // Correct password, but it has expired (password validity policy).
+                            // The reset link is MAILED to the address on the account instead of
+                            // being handed out in the response: the user follows it from the
+                            // mailbox and only types the new password, no form to fill in again.
+                            // Only reachable when the password matched, so this neither reveals
+                            // the account to anybody else nor lets it be used to send mail at will
+                            // (the service throttles per account on top of that).
+                            $this->getServiceManager()->get('MelisCoreLostPassword')
+                                ->sendReactResetLink($userData->usr_login, $userData->usr_email, $userData->usr_lang_id ?? null, 'PASSWORDEXPIRED');
+
+                            // Same text whether the mail just left or the throttle held it back:
+                            // a second login attempt must not report on the first one's mail.
+                            $errorTxt = $translator->translate('tr_meliscore_login_password_expired_email_sent');
+
                             $result = [
                                 'success' => false,
-                                'command' => $jsRedirectCommand, // <-- NEW COMMAND (Redirect)
-                                'errors' => ['empty' => $translator->translate('tr_meliscore_login_password_enc_update')],
+                                'command' => $this->buildAlertDangerCommand('#loginprompt', $translator->translate('tr_meliscore_common_error') . '!', $errorTxt),
+                                'errors' => ['empty' => $errorTxt],
                             ];
                         }
                     } else {
-                        // User is inactive (admin lock, or timer not lapsed)
-                        
-                        // We check lock status again to decide if we show the alert or the special lock notification
-                        // Since the complex lock notification logic is already handled above based on $numberOfFailedLoginAttempts
-                        // and sets the $result, we reuse the generic command for standard inactive user.
-                        
-                        $errorTitle = $translator->translate('tr_meliscore_common_error');
-                        $errorTxt = $translator->translate('tr_meliscore_login_auth_Failed authentication');
-                        $jsCommand = $this->buildAlertDangerCommand('#loginprompt', $errorTitle . '!', $errorTxt);
-                        
-                        $result = [
-                            'success' => false,
-                            'errors' => ['empty' => $errorTxt],
-                            'command' => $jsCommand, // <-- NEW COMMAND
-                        ];
-
-                        // Account locked UI flags are no longer strictly needed but log logic remains
+                        // Account exists but is inactive (locked by the lock policy and the
+                        // timer has not lapsed, or disabled by an administrator).
+                        // Same body as any other failure: the state of the account is not
+                        // revealed to somebody who does not hold its password.
+                        //
+                        // This branch used to hand out the password-RENEWAL redirect (its
+                        // "else" was mistaken for the one of the expiry check above): five
+                        // wrong passwords locked the account, and the sixth attempt answered
+                        // with a valid reset link for it, password or not.
+                        $result = $this->buildFailedAuthResult();
                     }
                 } else {
-                    // User Data is Empty/Not Found
-                    $errorTitle = $translator->translate('tr_meliscore_common_error');
-                    $errorTxt = $translator->translate('tr_meliscore_login_auth_Failed authentication');
-                    $jsCommand = $this->buildAlertDangerCommand('#loginprompt', $errorTitle . '!', $errorTxt);
-                    
-                    $result = [
-                        'success' => false,
-                        'errors' => ['empty' => $errorTxt],
-                        'command' => $jsCommand,
-                    ];
+                    /**
+                     * No account matches the login that was typed.
+                     *
+                     * 1. Burn the bcrypt time that a wrong password would have cost,
+                     *    otherwise the response time tells an attacker whether the
+                     *    login exists (audit item 18.0).
+                     * 2. Record the attempt: the failure counters only ever count
+                     *    attempts against accounts that exist, so somebody trying a
+                     *    list of logins stayed invisible (audit item 21.0).
+                     * 3. Answer exactly like a wrong password.
+                     */
+                    $melisCoreAuth->verifyDummyPassword($postValues['usr_password']);
+
+                    $this->getServiceManager()->get('MelisCoreSecurityAudit')
+                        ->logLoginFailureUnknownUser($postValues['usr_login']);
+
+                    $result = $this->buildFailedAuthResult();
                 }
             } else {
-                // Form Validation Errors
+                // Form validation errors (missing login or password)
                 $errorMessage = $translator->translate('tr_meliscore_common_error');
                 $formMessages = $loginForm->getMessages();
                 $firstErrorMessage = '';
@@ -560,14 +608,32 @@ class MelisAuthController extends MelisAbstractActionController
                     break;
                 }
                 $jsCommand = $this->buildAlertDangerCommand('#loginprompt', $errorMessage . '!', $firstErrorMessage);
-                
+
                 $result = [
                     'success' => false,
                     'errors' => $formMessages,
                     'command' => $jsCommand,
                 ];
             }
+        }
+
+        if (empty($result['success'])) {
+            $this->padFailureResponseTime($startedAt);
+        }
+
         return new JsonModel($result);
+    }
+
+    /**
+     * Sleep until AUTH_FAILURE_MIN_RESPONSE_MS have elapsed since $startedAt (hrtime).
+     */
+    private function padFailureResponseTime($startedAt)
+    {
+        $elapsedUs = (int) ((hrtime(true) - $startedAt) / 1000);
+        $floorUs = self::AUTH_FAILURE_MIN_RESPONSE_MS * 1000;
+        if ($elapsedUs < $floorUs) {
+            usleep($floorUs - $elapsedUs);
+        }
     }
 
     protected function getLoginConfig()

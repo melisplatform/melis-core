@@ -117,7 +117,7 @@ class MelisReactApiUserProfileController extends MelisAbstractActionController
             // Mot de passe : optionnel. Si fourni → ≥ 8, regex MelisPasswordValidator, == confirmation.
             $newPassHash = null;
             if ($password !== '' || $confirm !== '') {
-                $err = $this->validatePassword($password, $confirm);
+                $err = $this->validatePassword($password, $confirm, $userId, $email);
                 if ($err !== null) {
                     return $this->jsonResponse(['success' => false, 'error' => $err], 400);
                 }
@@ -146,6 +146,10 @@ class MelisReactApiUserProfileController extends MelisAbstractActionController
             $params[] = $userId;
 
             $db->query('UPDATE melis_core_user SET ' . implode(', ', $sets) . ' WHERE usr_id = ?', $params);
+            if ($newPassHash !== null) {
+                // Password history (audit item 16.0)
+                $this->getServiceManager()->get('MelisPasswordPolicyService')->recordHistory($userId, $newPassHash);
+            }
 
             // Met à jour la session (header/avatar/langue reflétés sans reconnexion).
             try {
@@ -191,22 +195,20 @@ class MelisReactApiUserProfileController extends MelisAbstractActionController
      * Valide un couple mot de passe / confirmation. Retourne une clé d'erreur (tr_…) ou null si OK.
      * Mêmes règles que le legacy UserProfileController::validatePassword.
      */
-    private function validatePassword(string $password, string $confirm): ?string
+    private function validatePassword(string $password, string $confirm, int $userId, string $email): ?string
     {
-        if (strlen($password) < 8) {
-            return 'tr_meliscore_tool_user_usr_password_error_low';
-        }
-        if (strlen($confirm) < 8) {
-            return 'tr_meliscore_tool_user_usr_confirm_password_error_low';
-        }
-        $validator = new \MelisCore\Validator\MelisPasswordValidator();
-        if (!$validator->isValid($password)) {
-            return 'tr_meliscore_tool_user_usr_password_regex_not_match';
-        }
         if ($password !== $confirm) {
             return 'tr_meliscore_tool_user_usr_password_not_match';
         }
-        return null;
+        // Whole server-side policy (complexity, blocklist, history) — audit item 16.0.
+        // Returns translated messages (not tr_ keys): the React page shows them as-is.
+        $login  = '';
+        try {
+            $identity = $this->getServiceManager()->get('MelisCoreAuth')->getIdentity();
+            $login    = (string) ($identity->usr_login ?? '');
+        } catch (\Throwable) {}
+        $errors = $this->getServiceManager()->get('MelisPasswordPolicyService')->check($password, $userId, $login, $email);
+        return $errors ? implode(' • ', $errors) : null;
     }
 
     private function getCurrentUserId(): ?int

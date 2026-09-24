@@ -64,6 +64,8 @@ return array(
     'tr_meliscore_other_config_password_no_lower' => 'Password needs to contain at least one (1) lower case',
     'tr_meliscore_other_config_password_no_upper' => 'Password needs to contain at least one (1) UPPER CASE',
     'tr_meliscore_other_config_password_no_special_character' => 'Password needs to contain 1 special character, ex: @#$%',
+    'tr_meliscore_other_config_password_too_common' => 'This password is too common, please choose another one',
+    'tr_meliscore_other_config_password_contains_login' => 'The password must not contain your login or e-mail address',
     'tr_meliscore_other_config_password_no_match' => 'The two passwords don\'t match',
     'tr_meliscore_other_config_password_duplicate' => 'The password has been used in the past %u% days, please choose another.',
 
@@ -89,7 +91,11 @@ return array(
     'tr_meliscore_tool_user_usr_file_button' => 'Select image',
 
     'tr_meliscore_user_password_change_succes' => 'Password successfully changed.',
+    'tr_meliscore_user_password_change_error' => 'This link is invalid or has expired. Please request a new one.',
+    'tr_meliscore_reset_password_request_new' => 'Request a new link',
 
+    'tr_meliscore_login_password_expired' => 'Your password has expired (password validity policy). You are being redirected to the renewal form.',
+    'tr_meliscore_login_password_expired_email_sent' => 'Your password has expired (password validity policy). We have sent a link to your email address to choose a new one.',
     'tr_meliscore_login_password_enc_update' => 'We have changed our encryption algorithm, please update your password to secure your account. To do so click on <strong>Forgot password</strong> to create a new password. We apologize for the inconvenience.',
 
     // Platform Scheme

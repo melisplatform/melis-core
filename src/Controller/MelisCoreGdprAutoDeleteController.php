@@ -19,6 +19,12 @@ use Laminas\View\Model\ViewModel;
 
 class MelisCoreGdprAutoDeleteController extends MelisAbstractActionController
 {
+    /**
+     * Outil auquel ce contrôleur appartient (audit DEKRA 7.0) : MelisCoreAuthorizationListener
+     * vérifie canAccess() sur cette clé AVANT le dispatch.
+     */
+    const MELIS_KEY = 'melis_core_gdpr';
+
     const SAVE_LOG_TYPE = 'CORE_GDPR_AUTO_DELETE_ADD';
     const UPDATE_LOG_TYPE = 'CORE_GDPR_AUTO_DELETE_UPDATE';
     const DELETE_LOG_TYPE = 'CORE_GDPR_AUTO_DELETE_DELETE';
@@ -888,8 +894,32 @@ class MelisCoreGdprAutoDeleteController extends MelisAbstractActionController
     /**
      * @return JsonModel
      */
+    /**
+     * Point d'entrée CRON de la purge RGPD (audit DEKRA 7.0).
+     *
+     * La route `melis-backoffice/gdpr-autodelete-cron` figure dans `excluded_routes` : elle est
+     * donc PUBLIQUE — `checkIdentity()` la laisse passer sans authentification — et elle déclenche
+     * une SUPPRESSION de données. N'importe qui capable d'atteindre l'hôte pouvait appeler
+     * `/melis/gdprautodelete/` en boucle.
+     *
+     * Un appelant cron n'a pas de session : on ne peut pas exiger une identité. Trois voies
+     * d'appel légitimes, et rien d'autre :
+     *   1. la CLI (console/conteneur) ;
+     *   2. un jeton partagé, `MELIS_GDPR_CRON_TOKEN` (en-tête `X-Melis-Cron-Token` ou paramètre
+     *      `token`), comparé en temps constant ;
+     *   3. un utilisateur du back-office authentifié ayant le droit sur l'outil RGPD (exécution
+     *      manuelle).
+     *
+     * Sans jeton configuré, un appel HTTP distant est REFUSÉ : pour un point d'entrée destructif,
+     * s'arrêter est le seul défaut acceptable. Le refus est tracé (journal de sécurité + log PHP)
+     * afin qu'un cron existant qui cesserait de purger soit visible immédiatement.
+     */
     public function runGdprAutoDeleteCronAction()
     {
+        if ($denied = $this->denyUnlessCronCaller()) {
+            return $denied;
+        }
+
         $autoDelete = $this->getServiceManager()->get('MelisCoreGdprAutoDeleteService')->run();
         return new JsonModel([
             'success' => $autoDelete['status'],
@@ -900,5 +930,74 @@ class MelisCoreGdprAutoDeleteController extends MelisAbstractActionController
     private function hasAccess($key): bool
     {
         return $this->getServiceManager()->get('MelisCoreRights')->canAccess($key);
+    }
+
+    /**
+     * Autorise la CLI, un jeton cron valide, ou un utilisateur habilité sur l'outil RGPD.
+     *
+     * @return \Laminas\View\Model\JsonModel|null JSON 403 si refusé, null si autorisé.
+     */
+    private function denyUnlessCronCaller()
+    {
+        if (php_sapi_name() === 'cli') {
+            return null;
+        }
+
+        $sm      = $this->getServiceManager();
+        $request = $this->getRequest();
+
+        // 1. Jeton partagé (le cas d'usage cron).
+        $expected = (string) $this->cronToken();
+        if ($expected !== '') {
+            $header = $request->getHeaders()->has('X-Melis-Cron-Token')
+                ? (string) $request->getHeaders()->get('X-Melis-Cron-Token')->getFieldValue()
+                : '';
+            $given = $header !== '' ? $header : (string) $this->params()->fromQuery('token', '');
+
+            if ($given !== '' && hash_equals($expected, $given)) {
+                return null;
+            }
+        }
+
+        // 2. Exécution manuelle depuis le back-office par un utilisateur habilité.
+        try {
+            if ($sm->get('MelisCoreAuth')->hasIdentity() && $this->hasAccess('melis_core_gdpr')) {
+                return null;
+            }
+        } catch (\Throwable $e) {
+            // Service d'authentification indisponible : on refuse (voir plus bas).
+        }
+
+        $reason = $expected === ''
+            ? 'no MELIS_GDPR_CRON_TOKEN configured'
+            : 'missing or invalid cron token';
+
+        error_log('MELIS_GDPR_CRON denied (' . $reason . ') - set MELIS_GDPR_CRON_TOKEN and call the URL with header X-Melis-Cron-Token');
+
+        try {
+            $sm->get('MelisCoreSecurityAudit')
+                ->logSecurityAlert('gdpr_cron_unauthorized', 'GDPR auto-delete cron refused: ' . $reason, 0);
+        } catch (\Throwable $e) {
+            // Journal indisponible : le error_log ci-dessus reste la trace.
+        }
+
+        $this->getResponse()->setStatusCode(403);
+
+        return new JsonModel([
+            'success' => false,
+            'message' => 'Forbidden',
+        ]);
+    }
+
+    /** Jeton cron attendu (config `meliscore/datas/security/gdpr_cron_token`), '' si non configuré. */
+    private function cronToken()
+    {
+        try {
+            $config = $this->getServiceManager()->get('MelisCoreConfig')->getItem('meliscore/datas/security');
+
+            return is_array($config) && !empty($config['gdpr_cron_token']) ? (string) $config['gdpr_cron_token'] : '';
+        } catch (\Throwable $e) {
+            return '';
+        }
     }
 }

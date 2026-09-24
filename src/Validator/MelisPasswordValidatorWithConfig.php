@@ -2,9 +2,17 @@
 
 namespace MelisCore\Validator;
 
-use Laminas\Validator;
 use Laminas\Validator\AbstractValidator;
+use MelisCore\Service\MelisPasswordPolicyService;
 
+/**
+ * Laminas validator wrapper around MelisPasswordPolicyService (the single password policy).
+ *
+ * Options:
+ *   serviceManager  required to read the configured policy, translations and history
+ *   userId          when set, the password history rule is applied too
+ *   login / email   when set, a password containing them is rejected
+ */
 class MelisPasswordValidatorWithConfig extends AbstractValidator
 {
     const TOO_SHORT = 'length';
@@ -12,8 +20,15 @@ class MelisPasswordValidatorWithConfig extends AbstractValidator
     const NO_DIGIT  = 'digit';
     const NO_UPPER  = 'upper';
     const NO_SPECIAL_CHARACTER = 'special_character';
-    
+    const TOO_COMMON = 'too_common';
+    const CONTAINS_LOGIN = 'contains_login';
+    const DUPLICATE = 'duplicate';
+    const POLICY = 'policy';
+
     protected $serviceManager;
+    protected $userId = null;
+    protected $login = null;
+    protected $email = null;
 
     protected $messageTemplates = array(
         self::TOO_SHORT => "Password needs to be at least %min% characters long",
@@ -21,99 +36,84 @@ class MelisPasswordValidatorWithConfig extends AbstractValidator
         self::NO_DIGIT  => "Password must contain at least one digit character",
         self::NO_UPPER  => "Password needs to contain at least one (1) UPPER CASE",
         self::NO_SPECIAL_CHARACTER  => "Password needs to contain 1 special character, ex: @#$%",
+        self::TOO_COMMON => "This password is too common",
+        self::CONTAINS_LOGIN => "The password must not contain your login or e-mail",
+        self::DUPLICATE => "This password has been used recently",
+        self::POLICY => "%reason%",
     );
-    
-    /**
-     * @var array
-     */
+
     protected $messageVariables = array(
-        'min' => array('options' => 'min'),
+        'min'    => array('options' => 'min'),
+        'reason' => 'reason',
     );
-    
+
     protected $options = array(
-        'min'      => 8,       // Default/Minimum length
+        'min' => 12,
     );
+
+    protected $reason = '';
 
     public function __construct($options = array())
     {
-        if ($options && is_array($options) && array_key_exists('serviceManager', $options))
-        {
-            //get render mode from request
-            $this->serviceManager = $options['serviceManager'];
-            unset($options['serviceManager']);
+        if ($options && is_array($options)) {
+            foreach (['serviceManager', 'userId', 'login', 'email'] as $key) {
+                if (array_key_exists($key, $options)) {
+                    $this->{$key} = $options[$key];
+                    unset($options[$key]);
+                }
+            }
         }
 
         parent::__construct($options);
     }
-    
+
     public function getServiceManager()
     {
         return $this->serviceManager;
     }
-    
+
+    public function setServiceManager($serviceManager)
+    {
+        $this->serviceManager = $serviceManager;
+        return $this;
+    }
+
+    /** @return MelisPasswordPolicyService */
+    public function policy()
+    {
+        if ($this->serviceManager) {
+            return $this->serviceManager->get('MelisPasswordPolicyService');
+        }
+        // No service manager: hard defaults, untranslated messages (defensive fallback only).
+        return new MelisPasswordPolicyService();
+    }
+
     public function config($name)
     {
-        return $this->getServiceManager()->get('MelisCoreConfig')->getItem('meliscore/datas/login')[$name] ?? null;
+        return $this->policy()->getConfig()[$name] ?? null;
     }
 
-    public function auth()
-    {
-        return $this->getServiceManager()->get('MelisCoreAuth');
-    }
-
-    public function translator()
-    {
-        return $this->getServiceManager()->get('translator');
-    }
-    
     public function isValid($password)
     {
         $this->setValue($password);
-        $isValid = true;
 
-        if (!empty($this->config('password_complexity_number_of_characters'))) {
-            $minimumNumberOfCharacters = $this->config('password_complexity_number_of_characters');
+        $errors = $this->policy()->check(
+            (string) $password,
+            $this->userId ? (int) $this->userId : null,
+            $this->login !== null ? (string) $this->login : null,
+            $this->email !== null ? (string) $this->email : null
+        );
 
-            if (strlen($password) < $minimumNumberOfCharacters) {
-                $this->options['min'] = $minimumNumberOfCharacters;
-                $this->setMessage($this->translator()->translate('tr_meliscore_other_config_password_too_short'), self::TOO_SHORT);
-                $this->error(self::TOO_SHORT);
-                $isValid = false;
-            }
-        }
-        
-        if (!empty($this->config('password_complexity_use_lower_case'))) {
-            if (!preg_match('/[a-z]/', $password)) {
-                $this->setMessage($this->translator()->translate('tr_meliscore_other_config_password_no_lower'), self::NO_LOWER);
-                $this->error(self::NO_LOWER);
-                $isValid = false;
-            }
-        }
-        
-        if (!empty($this->config('password_complexity_use_digit'))) {
-            if (!preg_match('/\d/', $password)) {
-                $this->setMessage($this->translator()->translate('tr_meliscore_other_config_password_no_digit'), self::NO_DIGIT);
-                $this->error(self::NO_DIGIT);
-                $isValid = false;
-            }
+        if (!$errors) {
+            return true;
         }
 
-        if (!empty($this->config('password_complexity_use_upper_case'))) {
-            if (!preg_match('/[A-Z]/', $password)) {
-                $this->setMessage($this->translator()->translate('tr_meliscore_other_config_password_no_upper'), self::NO_UPPER);
-                $this->error(self::NO_UPPER);
-                $isValid = false;
-            }
+        // One Laminas error per policy message, so forms display each translated rule.
+        foreach ($errors as $i => $message) {
+            $this->reason = $message;
+            $this->abstractOptions['messages'][self::POLICY . '_' . $i] = $message;
         }
 
-        if (!empty($this->config('password_complexity_use_special_characters'))) {
-            if (!preg_match('/[\p{P}\p{S}]/u', $password)) {
-                $this->setMessage($this->translator()->translate('tr_meliscore_other_config_password_no_special_character'), self::NO_SPECIAL_CHARACTER);
-                $this->error(self::NO_SPECIAL_CHARACTER);
-                $isValid = false;
-            }
-        }
-
-        return $isValid;
+        return false;
     }
 }
