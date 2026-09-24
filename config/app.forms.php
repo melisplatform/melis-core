@@ -607,11 +607,6 @@ return array(
 					                'value' => 'tr_meliscore_login_form_submittext_Connect',
 					                'id' => 'login_submit',
 					                'class' => 'btn btn-primary btn-block',
-					                // Désactivé tant que login.js n'a pas branché la connexion AJAX
-					                // (/melis/authenticate) : sur une connexion lente, un clic ou « Entrée »
-					                // avant son chargement postait le formulaire en natif vers /melis/login
-					                // → 403 CSRF puis simple rechargement de la page. login.js le réactive.
-					                'disabled' => 'disabled',
 					            ),
 					        ),
 					    ),
