@@ -25,6 +25,17 @@ use MelisCore\View\Helper\MelisCoreHeadPluginHelper;
  */
 class ModulesController extends MelisAbstractActionController
 {
+    /**
+     * Outil auquel ce contrôleur appartient (audit DEKRA 7.0) : MelisCoreAuthorizationListener
+     * vérifie canAccess() sur cette clé AVANT le dispatch.
+     */
+    const MELIS_KEY = 'meliscore_tool_user_module_management';
+
+    /** Actions partagées avec d'autres outils : une des clés suffit, '@login' = connexion seule. */
+    const TOOL_KEY_MAP = [
+        'getDependents' => ['meliscore_tool_user_module_management', 'melis_market_place_tool_display'], // aussi appelé par la Market Place
+    ];
+
     const BUNDLE_FOLDER_NAME = 'bundles';
 
     const MODULE_LOADER_FILE = 'config/melis.module.load.php';

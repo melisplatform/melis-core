@@ -138,9 +138,9 @@ class MelisReactApiEmailsController extends MelisAbstractActionController
                 $cfgC = $cfg['contents'][$l['locale']] ?? [];
                 $contents[(string) $l['id']] = [
                     'boedId'  => (int) ($d['boed_id'] ?? 0),
-                    'subject' => (string) ($d['boed_subject'] ?? $this->tr($cfgC['subject'] ?? '')),
-                    'html'    => (string) ($d['boed_html'] ?? $this->tr($cfgC['html'] ?? '')),
-                    'text'    => (string) ($d['boed_text'] ?? $this->tr($cfgC['text'] ?? '')),
+                    'subject' => (string) ($d['boed_subject'] ?? $this->tr($cfgC['subject'] ?? '', $l['locale'])),
+                    'html'    => (string) ($d['boed_html'] ?? $this->tr($cfgC['html'] ?? '', $l['locale'])),
+                    'text'    => (string) ($d['boed_text'] ?? $this->tr($cfgC['text'] ?? '', $l['locale'])),
                 ];
             }
 
@@ -259,11 +259,24 @@ class MelisReactApiEmailsController extends MelisAbstractActionController
         return $this->getServiceManager();
     }
 
-    /** Traduit une valeur de config si c'est une clé (tr_…), sinon la renvoie telle quelle. */
-    private function tr($value): string
+    /**
+     * Traduit une valeur de config si c'est une clé (tr_…), sinon la renvoie telle quelle.
+     *
+     * Traduite dans la langue DE L'ONGLET ($locale), comme à l'envoi (MelisCoreBOEmailService →
+     * MelisCoreTranslation::getMessage) : le translator seul suit la langue de la session, si bien
+     * que tous les onglets affichaient la même langue (onglet Français en anglais) — et un
+     * enregistrement écrivait ce texte anglais dans la ligne française.
+     */
+    private function tr($value, string $locale = ''): string
     {
         $value = (string) $value;
         if ($value === '') { return ''; }
+        if ($locale !== '') {
+            try {
+                $msg = $this->sm()->get('MelisCoreTranslation')->getMessage($value, $locale);
+                if (is_string($msg) && $msg !== '') { return $msg; }
+            } catch (\Throwable) { /* repli sur le translator ci-dessous */ }
+        }
         try { return (string) $this->sm()->get('translator')->translate($value); }
         catch (\Throwable) { return $value; }
     }
