@@ -165,6 +165,11 @@ class MelisCoreDashboardPluginsRightsService extends MelisServiceManager impleme
 
         $appConfigPaths = $this->getMelisKeyPaths();
 
+        // No rights yet (new user/role) = no dashboard plugin, as canAccess() decides (0010740).
+        // isAccessible() default-allows on empty XML, which ticked every plugin in the new-user
+        // tree under an unticked root: root shown bold, then checked by the first click (0011066).
+        $hasRights = !empty(@simplexml_load_string(trim((string) $userXml)));
+
         $tools = [];
         foreach ($appConfigPaths as $idx => $path) {
             $appConfigPath = $melisKeys[$path];
@@ -180,7 +185,7 @@ class MelisCoreDashboardPluginsRightsService extends MelisServiceManager impleme
                         // isAccessible() (local) traite melis_dashboardplugin_root comme « tous » (L104), donc
                         // un droit _root coche tous les plugins ; un droit par-plugin reste exact. Même famille
                         // que la divergence _root de l'arbre d'outils.
-                        $selectedTools = $this->isAccessible($userXml, self::MELISCORE_DASHBOARDPLUGIN_PREFIX, $appKey);
+                        $selectedTools = $hasRights && $this->isAccessible($userXml, self::MELISCORE_DASHBOARDPLUGIN_PREFIX, $appKey);
                         $tools[$appCtr] = [
                             'key' => $appKey,
                             'title' => $appSection['datas']['name'] ?? $appKey,
