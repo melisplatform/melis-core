@@ -19,6 +19,12 @@ use Laminas\View\Model\ViewModel;
 
 class MelisCoreGdprAutoDeleteController extends MelisAbstractActionController
 {
+    /**
+     * Outil auquel ce contrôleur appartient (audit DEKRA 7.0) : MelisCoreAuthorizationListener
+     * vérifie canAccess() sur cette clé AVANT le dispatch.
+     */
+    const MELIS_KEY = 'melis_core_gdpr';
+
     const SAVE_LOG_TYPE = 'CORE_GDPR_AUTO_DELETE_ADD';
     const UPDATE_LOG_TYPE = 'CORE_GDPR_AUTO_DELETE_UPDATE';
     const DELETE_LOG_TYPE = 'CORE_GDPR_AUTO_DELETE_DELETE';

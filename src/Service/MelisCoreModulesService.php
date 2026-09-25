@@ -1201,10 +1201,10 @@ class MelisCoreModulesService extends MelisServiceManager
             //make sure file does not exist yet in destination
             //if(!file_exists($path.'/'.$fileName)){
                 //make sure file source exist
-                if(file_exists($dir.$completFilePath)){
-                    if(!is_writable($dir.$completFilePath))
-                        chmod($dir.$completFilePath, 0777);
-
+                // Copying only needs to READ the source: no chmod on it. The vendor/module assets
+                // may belong to another user than the web server (e.g. dev4), where chmod() failed
+                // with "Operation not permitted" warnings printed on /melis.
+                if(file_exists($dir.$completFilePath) && is_readable($dir.$completFilePath)){
                     if(is_dir($dir.$completFilePath)){
                         $this->copyDir($dir.$completFilePath, $path.'/'.$fileName);
                     }else {
@@ -1226,8 +1226,8 @@ class MelisCoreModulesService extends MelisServiceManager
         if(!file_exists($dst))
             mkdir($dst, 0755);
 
-        //make sure destination is writable
-        if(!is_writable($dst))
+        //make sure destination is writable (chmod only succeeds for the owner: don't try otherwise)
+        if(!is_writable($dst) && $this->isOwnedByProcess($dst))
             chmod($dst, 0777);
 
         // Loop through the files in source directory
@@ -1246,6 +1246,20 @@ class MelisCoreModulesService extends MelisServiceManager
             }
         }
         closedir($dir);
+    }
+
+    /**
+     * Whether the path belongs to the user running PHP (only the owner may chmod it).
+     * Without the posix extension we can't tell: assume yes (previous behaviour).
+     * @param string $path
+     * @return bool
+     */
+    private function isOwnedByProcess($path)
+    {
+        if (!function_exists('posix_geteuid')) {
+            return true;
+        }
+        return @fileowner($path) === posix_geteuid();
     }
 
     /**

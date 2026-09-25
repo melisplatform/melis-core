@@ -20,6 +20,12 @@ use MelisCore\Service\MelisCoreRightsService;
 */
 class MelisCoreOtherConfigController extends MelisAbstractActionController
 {
+    /**
+     * Outil auquel ce contrôleur appartient (audit DEKRA 7.0) : MelisCoreAuthorizationListener
+     * vérifie canAccess() sur cette clé AVANT le dispatch.
+     */
+    const MELIS_KEY = 'meliscore_tool_system_config';
+
 	/**
 	 * Renders the Melis CMS Dashboard container for other configuration.
 	 *
