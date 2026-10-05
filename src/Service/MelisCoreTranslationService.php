@@ -41,6 +41,12 @@ class MelisCoreTranslationService extends Translator implements MelisCoreTransla
     private $translatedByLocaleMemo = [];
 
     /**
+     * Per-request memo of getTranslationMessagesForLocale() (locale => catalogue).
+     * @var array<string, array<string, string>>
+     */
+    private $catalogueForLocaleMemo = [];
+
+    /**
      * @param ServiceManager $service
      */
     public function setServiceManager(ServiceManager $service)
@@ -109,6 +115,121 @@ class MelisCoreTranslationService extends Translator implements MelisCoreTransla
 
         return $messages;
 
+    }
+
+    /**
+     * Full back-office translation catalogue of ONE locale, built from the modules' language files
+     * alone — i.e. independent of the session and of what the runtime translator happens to have
+     * loaded (SECURITY, DEKRA audit action #19: the public /melis/get-translations route must answer
+     * identically to every caller).
+     *
+     * getTranslationMessages() above cannot do that: it re-registers the files the translator loaded
+     * for the CURRENT session (chosen from the session locale by every module's createTranslations()
+     * at bootstrap) under whatever locale is requested — so an anonymous request for en_EN returned
+     * the French set when the session was French, and the `locale` parameter had no effect at all.
+     * It also pre-escapes quotes with a backslash for the old string concatenation, which json_encode
+     * must not receive.
+     *
+     * Rules mirror what the modules' bootstraps load, deterministically:
+     *  - only the modules BOOTED for this request (Laminas ModuleManager — the back-office set for
+     *    /melis/*; it depends on the URL, never on the session), not every package present in
+     *    vendor/ (MelisInstaller, for instance, ships a language folder but is not loaded);
+     *  - every translation file found in the module's language/ folder and its sub-folders
+     *    (`<locale>.<type>.php`: interface, forms, install, setup, … — MelisCommerce keeps one set
+     *    per sub-module in language/<sub>/), in the bootstraps' order (interface, forms, install,
+     *    setup, then the rest), later file wins for a key defined twice;
+     *  - two layers: the whole fallback-locale catalogue first, the whole requested-locale
+     *    catalogue on top. A key missing from a partial translation thus falls back to English
+     *    instead of showing its raw key, while a translated value can never be overwritten by the
+     *    English fallback of ANOTHER module that happens to define the same key;
+     *  - a customised file listed in module/MelisModuleConfig/config/translation.list.php replaces
+     *    the module's own file, exactly as createTranslations() does.
+     *
+     * @param string $locale         Well-formed locale (xx_XX) — validated by the caller.
+     * @param string $fallbackLocale Locale whose files define the base catalogue (platform default).
+     * @return array<string, string> translation key => text
+     */
+    public function getTranslationMessagesForLocale(string $locale, string $fallbackLocale = 'en_EN'): array
+    {
+        $memoKey = $locale . '|' . $fallbackLocale;
+        if (isset($this->catalogueForLocaleMemo[$memoKey])) {
+            return $this->catalogueForLocaleMemo[$memoKey];
+        }
+
+        $modulesSvc = $this->getServiceManager()->get('ModulesService');
+
+        // Customised translations (Translations tool): "<Module>/<locale>.<type>.php" entries whose
+        // file lives under module/MelisModuleConfig/languages/. Paths are relative to the project
+        // root, the working directory set by public/index.php — same convention as the bootstraps.
+        $overrideDir  = 'module/MelisModuleConfig/languages/';
+        $overrideList = [];
+        if (is_file('module/MelisModuleConfig/config/translation.list.php')) {
+            $overrideList = (array) include 'module/MelisModuleConfig/config/translation.list.php';
+        }
+
+        $sm = $this->getServiceManager();
+        $modules = $sm->has('ModuleManager')
+            ? array_keys((array) $sm->get('ModuleManager')->getLoadedModules(false))
+            : (array) $modulesSvc->getAllModules();
+
+        $locales  = array_values(array_unique([$fallbackLocale, $locale]));
+        $pattern  = '/^(' . implode('|', array_map('preg_quote', $locales)) . ')\.(.+)\.php$/';
+        $layers   = array_fill_keys($locales, []); // locale => catalogue
+
+        foreach ($modules as $module) {
+            $dir = rtrim((string) $modulesSvc->getModulePath($module), '/') . '/language';
+            if ($dir === '/language' || !is_dir($dir)) {
+                continue;
+            }
+
+            // "<sub-folder>/<type>" => [locale => file], so that the two locales of a same file are
+            // applied together, fallback first, in a stable (sorted) order.
+            $byType = [];
+            $files = new \RecursiveIteratorIterator(
+                new \RecursiveDirectoryIterator($dir, \FilesystemIterator::SKIP_DOTS)
+            );
+            foreach ($files as $file) {
+                /** @var \SplFileInfo $file */
+                if (!$file->isFile() || !preg_match($pattern, $file->getFilename(), $m)) {
+                    continue;
+                }
+                $sub = trim(str_replace('\\', '/', substr($file->getPath(), strlen($dir))), '/');
+                $byType[($sub === '' ? '' : $sub . '/') . $m[2]][$m[1]] = $file->getPathname();
+            }
+            // Same order as the bootstraps (interface, forms, install, setup, …): when a key is
+            // defined in two files of one module, the later file wins — keep it the same file.
+            $order = ['interface' => 0, 'forms' => 1, 'install' => 2, 'setup' => 3];
+            uksort($byType, static function (string $a, string $b) use ($order): int {
+                $ra = $order[basename($a)] ?? 9;
+                $rb = $order[basename($b)] ?? 9;
+                return $ra <=> $rb ?: strcmp($a, $b);
+            });
+
+            foreach ($byType as $type => $perLocale) {
+                $baseType = basename($type);
+                foreach ($locales as $loc) {
+                    $file = $perLocale[$loc] ?? null;
+                    $custom = $module . '/' . $loc . '.' . $baseType . '.php';
+                    if (in_array($custom, $overrideList, true) && is_file($overrideDir . $custom)) {
+                        $file = $overrideDir . $custom;
+                    }
+                    if ($file === null) {
+                        continue;
+                    }
+                    $data = include $file;
+                    if (is_array($data) && $data) {
+                        $layers[$loc] = array_replace($layers[$loc], $data);
+                    }
+                }
+            }
+        }
+
+        $messages = [];
+        foreach ($locales as $loc) { // fallback first, requested locale on top
+            $messages = array_replace($messages, $layers[$loc]);
+        }
+
+        return $this->catalogueForLocaleMemo[$memoKey] = $messages;
     }
 
     /**

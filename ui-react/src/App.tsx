@@ -1,6 +1,6 @@
-import { Suspense, useEffect } from 'react'
+import { Suspense, useEffect, type ComponentType } from 'react'
 import { lazyRetry } from '@/lib/lazy-retry'
-import { BrowserRouter, Navigate, Route, Routes, useLocation, useNavigate } from 'react-router-dom'
+import { BrowserRouter, Navigate, Route, Routes, useLocation, useNavigate, useParams } from 'react-router-dom'
 import { Loader2 } from 'lucide-react'
 
 import { AuthProvider } from '@/auth/AuthProvider'
@@ -172,6 +172,13 @@ function PageLoader() {
   )
 }
 
+/** Native form remounted per record: react-router reuses the element between two `/:id`, so without
+ *  the key the previous record's name relabelled the clicked sub-tab until it loaded (0011048). */
+function FormForId({ Form }: { Form: ComponentType }) {
+  const { id } = useParams()
+  return <Form key={id} />
+}
+
 export default function App() {
   // React bricks of active modules, discovered + loaded at runtime (modular UI).
   const bricks = useBricks()
@@ -242,7 +249,7 @@ export default function App() {
                             />
                             <Route
                               path={`${route}/:id`}
-                              element={<Suspense fallback={<PageLoader />}><Form /></Suspense>}
+                              element={<Suspense fallback={<PageLoader />}><FormForId Form={Form} /></Suspense>}
                             />
                           </>
                         )}

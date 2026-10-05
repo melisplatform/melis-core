@@ -1,5 +1,7 @@
 import { createContext, useCallback, useContext, useEffect, useReducer } from 'react'
 
+import { SUBTABS_STORAGE_KEY, WORKSPACE_RESET } from './workspace-reset'
+
 export interface SubTab { id: string; label: string; path: string }
 
 interface SectionState { tabs: SubTab[] }
@@ -7,7 +9,6 @@ interface SubTabState { sections: Record<string, SectionState> }
 
 // Les sous-onglets ouverts survivent à un reload complet (comme les onglets du shell) : ils ne sont
 // perdus que si l'utilisateur les ferme. SubTab = { id, label, path } → entièrement sérialisable.
-const SUBTABS_STORAGE_KEY = 'melis-open-subtabs'
 
 function loadInitialState(): SubTabState {
   try {
@@ -15,7 +16,15 @@ function loadInitialState(): SubTabState {
     if (raw) {
       const parsed = JSON.parse(raw) as SubTabState
       if (parsed && typeof parsed === 'object' && parsed.sections && typeof parsed.sections === 'object') {
-        return { sections: parsed.sections }
+        // Purge les sous-onglets fantômes `<section>/undefined` persistés par un formulaire qui
+        // construisait son chemin avec un `:id` absent (route /new — cf. Emails, 0011048) : ils ne
+        // correspondent à aucun enregistrement et ne seraient jamais refermés.
+        const sections: Record<string, SectionState> = {}
+        for (const [key, sec] of Object.entries(parsed.sections)) {
+          const tabs = Array.isArray(sec?.tabs) ? sec.tabs : []
+          sections[key] = { tabs: tabs.filter(t => !t.path?.endsWith('/undefined')) }
+        }
+        return { sections }
       }
     }
   } catch { /* storage indisponible / corrompu */ }
@@ -27,8 +36,10 @@ type Action =
   | { type: 'CLOSE';        section: string; id: string }
   | { type: 'CLOSE_ALL';    section: string }
   | { type: 'UPDATE_LABEL'; section: string; id: string; label: string }
+  | { type: 'RESET' }
 
 function reducer(state: SubTabState, action: Action): SubTabState {
+  if (action.type === 'RESET') return { sections: {} }
   const section = state.sections[action.section] ?? { tabs: [] }
   switch (action.type) {
     case 'OPEN': {
@@ -88,6 +99,13 @@ export function SubTabProvider({ children }: { children: React.ReactNode }) {
     }
     window.addEventListener('melis:tab-closed', onClosed)
     return () => window.removeEventListener('melis:tab-closed', onClosed)
+  }, [])
+
+  // Changement d'utilisateur → aucun sous-onglet du précédent ne survit.
+  useEffect(() => {
+    const onReset = () => dispatch({ type: 'RESET' })
+    window.addEventListener(WORKSPACE_RESET, onReset)
+    return () => window.removeEventListener(WORKSPACE_RESET, onReset)
   }, [])
 
   return <SubTabContext.Provider value={{ state, dispatch }}>{children}</SubTabContext.Provider>

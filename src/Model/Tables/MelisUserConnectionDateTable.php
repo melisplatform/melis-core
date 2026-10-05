@@ -53,7 +53,7 @@ class MelisUserConnectionDateTable extends MelisGenericTable
          }
 
          if(!empty($orderBy)) {
-             $select->order($orderBy . ' ' . $orderDirection);
+             MelisGenericTable::addSafeOrder($select, $orderBy, $orderDirection);
          }
 
          $getCount = $this->tableGateway->selectWith($select);
@@ -108,7 +108,7 @@ class MelisUserConnectionDateTable extends MelisGenericTable
 
 
          if(!empty($orderBy)) {
-             $select->order($orderBy . ' ' . $orderDirection);
+             MelisGenericTable::addSafeOrder($select, $orderBy, $orderDirection);
          }
 
          $getCount = $this->tableGateway->selectWith($select);

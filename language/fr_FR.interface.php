@@ -190,8 +190,14 @@ return [
     'tr_meliscore_email_lost_password_html_Content' => '<p>Bonjour [USER_LOGIN],</p><p>Veuillez cliquer sur ce <a href="[URL]">lien</a> pour changer votre mot de passe.</p>',
     'tr_meliscore_email_lost_password_text_Content' => 'Bonjour [USER_LOGIN], Veuillez cliquer sur ce [URL] pour changer votre mot de passe.',
     'tr_meliscore_email_lost_password_request_success' => 'Un email vous a été envoyé pour réinitialiser votre mot de passe.',
+    'tr_meliscore_email_lost_password_request_generic' => 'Si un compte correspond à ces informations, un email de réinitialisation a été envoyé.',
     'tr_meliscore_email_lost_password_request_failed'  => 'Unable to send an email, invalid email or login',
     'tr_meliscore_email_lost_password_request_form_empty' => 'Please complete the form',
+
+    // Mot de passe expiré (même lien de réinitialisation que Mot de passe perdu, non demandé par l'utilisateur)
+    'tr_meliscore_email_password_expired_Subject' => 'Votre mot de passe a expiré',
+    'tr_meliscore_email_password_expired_html_Content' => '<p>Bonjour [USER_LOGIN],</p><p>Votre mot de passe a expiré et ne permet plus de vous connecter. Veuillez cliquer sur ce <a href="[URL]">lien</a> pour en choisir un nouveau.</p>',
+    'tr_meliscore_email_password_expired_text_Content' => 'Bonjour [USER_LOGIN], votre mot de passe a expiré et ne permet plus de vous connecter. Veuillez cliquer sur ce [URL] pour en choisir un nouveau.',
     'tr_meliscore_email_failed' => 'Login ou email invalide',
     // Password Modification
     'tr_meliscore_email_password_modification_Subject' => 'Password modification',
@@ -965,4 +971,14 @@ return [
     'tr_melis_core_announcement_plugin_tomorrow' => 'Demain',
     'tr_meliscore_toolstree_section_others' => 'Autres',
     'tr_meliscore_toolstree_section_custom' => 'Personnalisé / Projets',
+    // Piste d'audit de sécurité (DEKRA item 21.0)
+    'tr_meliscore_logs_tool_log_ip' => 'Adresse IP',
+    'tr_meliscore_logs_tool_log_anonymous' => 'Anonyme',
+    'tr_meliscore_security_log_login_ok' => 'Connexion',
+    'tr_meliscore_security_log_logout' => 'Déconnexion',
+    'tr_meliscore_security_log_login_unknown' => 'Tentative de connexion sur un compte inconnu',
+    'tr_meliscore_security_log_export' => 'Export de données',
+    'tr_meliscore_security_log_sensitive_read' => 'Lecture de données sensibles',
+    'tr_meliscore_security_log_file' => 'Médiathèque',
+    'tr_meliscore_security_log_alert' => 'Alerte de sécurité',
 ];

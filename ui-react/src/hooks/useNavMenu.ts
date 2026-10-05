@@ -6,7 +6,7 @@ import { REACT_ROUTES } from '@/lib/module-registry'
 import { BRICK_ROUTES, useBricks } from '@/lib/bricks'
 import { getMelisIcon } from '@/lib/melis-icons'
 import { faToLucide } from '@/lib/fa-icons'
-import { sectionSlug, toolSlug, toolSlugForForward, registerTool } from '@/lib/tool-routes'
+import { sectionSlug, toolSlug, toolSlugForForward, registerTool, rebuildMenuTools } from '@/lib/tool-routes'
 import { NAV_SECTIONS, type NavSection } from '@/components/layout/nav'
 import { useI18n } from '@/i18n/i18n-context'
 import type { I18nKey } from '@/i18n/dictionaries'
@@ -206,7 +206,11 @@ export function useNavMenu(): NavMenuState {
   }, [])
 
   const nodes = useMemo(
-    () => (apiData ? apiData.map((node) => collapseSingleTool(apiNodeToNavNode(node, 0))) : staticToNavNodes(NAV_SECTIONS, t)),
+    // A real menu REBUILDS the route registry (rebuildMenuTools): routes of tools the user no
+    // longer has are dropped, so they fall through to ZonePage's "Access denied".
+    () => (apiData
+      ? rebuildMenuTools(() => apiData.map((node) => collapseSingleTool(apiNodeToNavNode(node, 0))))
+      : staticToNavNodes(NAV_SECTIONS, t)),
     // `bricks` is a dependency so the tree re-maps once bricks (and BRICK_ROUTES) load.
     [apiData, t, bricks],
   )

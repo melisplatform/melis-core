@@ -112,7 +112,66 @@ class MelisCoreRightsService extends MelisServiceManager implements MelisCoreRig
         }
     }
 
+    /**
+     * Accès à un outil pour l'utilisateur courant.
+     *
+     * FONCTION TOTALE : elle renvoie TOUJOURS un booléen, elle ne laisse JAMAIS remonter
+     * d'exception. C'est une propriété de sécurité, pas une commodité : le gabarit
+     * `denyUnlessAccess()` recopié dans les contrôleurs React entoure l'appel d'un
+     * `try { ... } catch (\Throwable) {}` puis laisse passer la requête — une exception ici
+     * (base injoignable, service absent, XML de droits corrompu) sautait donc par-dessus le 403
+     * et VALAIT AUTORISATION (fail-open, audit DEKRA 7.0). En échouant fermé ici, à l'unique
+     * endroit où la décision est prise, les ~1131 appels du plateau sont couverts d'un coup.
+     *
+     * Conséquence assumée : si le service de droits est réellement cassé, l'utilisateur reçoit un
+     * refus (y compris un admin) au lieu d'obtenir tout. L'incident est tracé dans le journal de
+     * sécurité, une fois par erreur distincte et par requête (canAccess() est appelé en boucle).
+     */
     public function canAccess($key): bool
+    {
+        try {
+            return $this->canAccessInner($key);
+        } catch (\Throwable $e) {
+            $this->reportRightsFailure($key, $e);
+
+            return false;
+        }
+    }
+
+    /** @var array - erreurs déjà journalisées pour cette requête (anti-flood). */
+    private $rightsFailureReported = [];
+
+    /**
+     * Trace un échec du service de droits sans jamais pouvoir échouer elle-même : la cause la plus
+     * probable (base injoignable) est aussi celle qui ferait échouer l'écriture du journal.
+     *
+     * Dédoublonné sur l'ERREUR (classe + message), PAS sur la clé d'outil : le menu appelle
+     * canAccess() une fois par melisKey, donc une panne réelle produirait autrement une centaine de
+     * lignes par requête. La première clé rencontrée est conservée à titre d'exemple.
+     */
+    private function reportRightsFailure($key, \Throwable $e): void
+    {
+        $error = get_class($e) . ': ' . $e->getMessage();
+
+        if (isset($this->rightsFailureReported[$error])) {
+            return;
+        }
+        $this->rightsFailureReported[$error] = true;
+
+        $message = $error . ' (1st key: ' . (string) $key . ')';
+
+        // Toujours disponible, sans base ni service : le filet de sécurité du filet de sécurité.
+        error_log('MelisCoreRights::canAccess failed, access denied - ' . $message);
+
+        try {
+            $this->getServiceManager()->get('MelisCoreSecurityAudit')
+                ->logSecurityAlert('rights_service_error', $message, 0);
+        } catch (\Throwable $ignored) {
+            // Journal indisponible : le error_log ci-dessus reste la trace.
+        }
+    }
+
+    private function canAccessInner($key): bool
     {
         // Super-administrateur (usr_admin=1) = accès TOTAL, sans dépendre de son usr_rights (dont le
         // leftmenu peut être une liste positive incomplète, ex. sections Commerce/AI vides). Court-

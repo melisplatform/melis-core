@@ -16,6 +16,12 @@ use Laminas\Http\PhpEnvironment\Response as HttpResponse;
 class MelisCoreGdprController extends MelisAbstractActionController
 {
     /**
+     * Outil auquel ce contrôleur appartient (audit DEKRA 7.0) : MelisCoreAuthorizationListener
+     * vérifie canAccess() sur cette clé AVANT le dispatch.
+     */
+    const MELIS_KEY = 'melis_core_gdpr';
+
+    /**
      * This will get the data from the service which will get
      * user info from modules that listens to the event.
      * @return JsonModel

@@ -33,6 +33,32 @@ return array(
                         ),
                     ),
                 ),
+                // Password expired (password validity policy): same reset link as LOSTPASSWORD,
+                // different wording — the user did not ask for anything, the platform is telling
+                // them their password is no longer valid. Sent by
+                // MelisCoreLostPasswordService::sendReactResetLink() from the login answer.
+                'PASSWORDEXPIRED' => array(
+                    'email_name' => 'Password Expired',
+                    'layout' => 'melis-core/view/layout/layoutEmail.phtml',
+                    'headers' => array(
+                        'from' => 'noreply@melistechnology.com',
+                        'from_name' => 'Melis Technology',
+                        'replyTo' => 'noreply@melistechnology.com',
+                        'tags' => 'USER_LOGIN,URL',
+                    ),
+                    'contents' => array(
+                        'en_EN' => array(
+                            'subject' => 'tr_meliscore_email_password_expired_Subject',
+                            'html' => 'tr_meliscore_email_password_expired_html_Content',
+                            'text' => 'tr_meliscore_email_password_expired_text_Content',
+                        ),
+                        'fr_FR' => array(
+                            'subject' => 'tr_meliscore_email_password_expired_Subject',
+                            'html' => 'tr_meliscore_email_password_expired_html_Content',
+                            'text' => 'tr_meliscore_email_password_expired_text_Content',
+                        ),
+                    ),
+                ),
                 'ACCOUNTCREATION' => array(
                     'email_name' => 'Account Creation',
                     'layout' => 'melis-core/view/layout/layoutEmail.phtml',

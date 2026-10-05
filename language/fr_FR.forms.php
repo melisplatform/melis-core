@@ -62,6 +62,8 @@ return array(
     'tr_meliscore_other_config_password_no_lower' => 'Le mot de passe doit contenir au moins une (1) lettre minuscule.',
     'tr_meliscore_other_config_password_no_upper' => 'Le mot de passe doit contenir au moins une (1) lettre MAJUSCULE.',
     'tr_meliscore_other_config_password_no_special_character' => 'Le mot de passe doit contenir un caractère spécial. Ex: @#$%',
+    'tr_meliscore_other_config_password_too_common' => 'Ce mot de passe est trop courant, veuillez en choisir un autre.',
+    'tr_meliscore_other_config_password_contains_login' => 'Le mot de passe ne doit pas contenir votre identifiant ni votre adresse e-mail.',
     'tr_meliscore_other_config_password_no_match' => 'Les deux mots de passe ne correspondent pas.',
     'tr_meliscore_other_config_password_duplicate' => 'Votre mot de passe a été utilisé dans les %u derniers jours. Veuiller en choisir un autre.',
 
@@ -87,7 +89,11 @@ return array(
     'tr_meliscore_tool_user_usr_file_button' => 'Sélectionner une image',
 
     'tr_meliscore_user_password_change_succes' => 'Mot de passe modifié avec succès.',
+    'tr_meliscore_user_password_change_error' => 'Ce lien est invalide ou a expiré. Merci d\'en demander un nouveau.',
+    'tr_meliscore_reset_password_request_new' => 'Demander un nouveau lien',
 
+    'tr_meliscore_login_password_expired' => 'Votre mot de passe a expiré (politique de validité des mots de passe). Vous allez être redirigé vers le formulaire de renouvellement.',
+    'tr_meliscore_login_password_expired_email_sent' => 'Votre mot de passe a expiré (politique de validité des mots de passe). Nous avons envoyé un lien à votre adresse email pour en choisir un nouveau.',
     'tr_meliscore_login_password_enc_update' => 'Nous avons changé notre algorithme de cryptage, veuillez mettre à jour votre mot de passe pour sécuriser votre compte. Pour cela cliquez sur <strong>Mot de passe oublié</strong> pour créer un nouveau mot de passe. Nous nous excusons pour la gêne occasionnée.',
 
     // Platform Scheme

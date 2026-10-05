@@ -92,7 +92,7 @@ class MelisReactApiLogController extends MelisAbstractActionController
                 'from'         => 'melis_core_log l',
                 'joins'        => 'LEFT JOIN melis_core_log_type t ON t.logt_id = l.log_type_id',
                 'selectCols'   => 'l.log_id, l.log_title, l.log_message, l.log_action_status, '
-                                . 'l.log_type_id, l.log_item_id, l.log_user_id, l.log_date_added, t.logt_code',
+                                . 'l.log_type_id, l.log_item_id, l.log_user_id, l.log_ip, l.log_date_added, t.logt_code',
                 'filterWhere'  => $filterWhere,
                 'filterParams' => $filterParams,
                 'sortMap'      => $sortMap,
@@ -106,7 +106,10 @@ class MelisReactApiLogController extends MelisAbstractActionController
 
             // Noms d'utilisateurs (batch, dédupliqué — évite le N+1).
             $userIds = [];
-            foreach ($rows as $row) { $userIds[(int) ((array) $row)['log_user_id']] = true; }
+            foreach ($rows as $row) {
+                $uid = ((array) $row)['log_user_id'];
+                if ($uid !== null) { $userIds[(int) $uid] = true; }
+            }
             $userNames = $this->userNames(array_keys($userIds));
 
             // Titre/message sont des clés de traduction (`tr_...`) → traduire (parité legacy),
@@ -129,8 +132,13 @@ class MelisReactApiLogController extends MelisAbstractActionController
                     'typeCode' => (string) ($r['logt_code'] ?? ''),
                     'status'   => (int) $r['log_action_status'],
                     'itemId'   => $itemId,
-                    'userId'   => (int) $r['log_user_id'],
-                    'userName' => $userNames[(int) $r['log_user_id']] ?? ('#' . (int) $r['log_user_id']),
+                    // NULL for a security event with nobody logged in (a login attempt on an
+                    // account that does not exist): the front shows it as anonymous.
+                    'userId'   => $r['log_user_id'] !== null ? (int) $r['log_user_id'] : null,
+                    'userName' => $r['log_user_id'] !== null
+                        ? ($userNames[(int) $r['log_user_id']] ?? ('#' . (int) $r['log_user_id']))
+                        : null,
+                    'ip'       => isset($r['log_ip']) ? (string) $r['log_ip'] : '',
                     'date'     => (string) $r['log_date_added'],
                 ];
             }

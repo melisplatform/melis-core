@@ -1186,6 +1186,7 @@ window.removeTinyMceAndMelisEditorScripts = function(doc) {
                 src.indexOf("dragndrop") !== -1 ||
                 src.indexOf("findpage.tool.js") !== -1 ||
                 src.indexOf("plugins.edition.js") !== -1 ||
+                src.indexOf("meliscsrf.js") !== -1 ||
                 src.indexOf("front.pagelock.js") !== -1 ||
                 src.indexOf("plugin.melisdragdropzone.js") !== -1 ||
                 src.indexOf("plugin.melistagHTML.init.js") !== -1 ||

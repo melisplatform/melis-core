@@ -66,11 +66,11 @@ function KpiCard({ icon: Icon, label, value, color }: {
 }
 
 // ─── Colonnes (sélection + ordre persistés en localStorage) ─────────────────────────
-const COL_ORDER = ['id', 'date', 'type', 'title', 'message', 'user', 'itemId'] as const
+const COL_ORDER = ['id', 'date', 'type', 'title', 'message', 'user', 'ip', 'itemId'] as const
 const COL_LABEL: Record<string, I18nKey> = {
   id: 'logs.col.id', date: 'logs.col.date', type: 'logs.col.type',
   title: 'logs.col.title', message: 'logs.col.message', user: 'logs.col.user',
-  itemId: 'logs.col.itemId',
+  ip: 'logs.col.ip', itemId: 'logs.col.itemId',
 }
 const DEFAULT_COLS: ColDef[] = COL_ORDER.map(id => ({ id, visible: id !== 'id' }))
 const COL_KEY = 'melis-log-cols-v1'
@@ -229,7 +229,9 @@ export default function LogListPage() {
       </div>
     )
     if (id === 'message') return l.message
-    if (id === 'user') return <Badge variant="muted" className="font-normal">{l.userName}</Badge>
+    // userName est null quand personne n'était connecté (tentative sur un compte inconnu).
+    if (id === 'user') return <Badge variant="muted" className="font-normal">{l.userName ?? t('logs.anonymous')}</Badge>
+    if (id === 'ip') return l.ip || '—'
     if (id === 'itemId') return l.itemId ?? '—'
     return null
   }
@@ -360,7 +362,7 @@ export default function LogListPage() {
                   {visibleCols(displayCols).map(({ id }) => (
                     <td key={id} className={cn('px-4 py-2.5 align-top',
                       (id === 'id' || id === 'itemId') && 'tabular-nums text-muted-foreground',
-                      (id === 'date' || id === 'user') && 'whitespace-nowrap',
+                      (id === 'date' || id === 'user' || id === 'ip') && 'whitespace-nowrap',
                       id === 'message' && 'text-muted-foreground max-w-[440px] break-words',
                       id === 'title' && 'max-w-[300px] break-words',
                       id === 'date' && 'text-muted-foreground')}>

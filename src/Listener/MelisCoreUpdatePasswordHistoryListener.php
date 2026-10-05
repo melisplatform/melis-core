@@ -27,8 +27,6 @@ class MelisCoreUpdatePasswordHistoryListener extends MelisGeneralListener implem
         	[
                 'meliscore_tooluser_save_info_end', 
                 'meliscore_tooluser_savenew_info_end',
-                'meliscore_user_reset_old_password_end',
-                'meliscore_user_create_password_end',
                 'meliscore_update_password_history',
             ], 
         	function($event){

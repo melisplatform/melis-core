@@ -765,7 +765,17 @@ class ToolUserController extends MelisAbstractActionController
             $id = $this->getRequest()->getPost('id');
 
             if (is_numeric($id)) {
+                // Read the login before the row is gone: pending password tokens are keyed on it
+                $user = $userTable->getEntryById($id)->current();
+                $login = !empty($user->usr_login) ? $user->usr_login : null;
+
                 $userTable->deleteById($id);
+
+                // Purge any pending lost/create password request, otherwise a token emailed
+                // before the deletion would stay usable against a login that no longer exists.
+                $this->getServiceManager()->get('MelisCoreLostPassword')->deleteRequestsByLogin($login);
+                $this->getServiceManager()->get('MelisCoreCreatePassword')->deleteRequestsByLogin($login);
+
                 $success = 1;
                 $textMessage = 'tr_meliscore_tool_user_delete_success';
             }
@@ -1317,7 +1327,11 @@ class ToolUserController extends MelisAbstractActionController
                     // check if the user exists
                     if ($userInfo) {
                         if (!empty($password) || !empty($confirmPass)) {
-                            $passValidator = new \MelisCore\Validator\MelisPasswordValidatorWithConfig(['serviceManager' => $this->getServiceManager()]);
+                            $passValidator = new \MelisCore\Validator\MelisPasswordValidatorWithConfig([
+                                'serviceManager' => $this->getServiceManager(),
+                                'login'  => $userInfo['usr_login'] ?? null,
+                                'email'  => $postValues['usr_email'] ?? ($userInfo['usr_email'] ?? null),
+                            ]);
 
                             if ($password == $confirmPass) {
                                 $userTable = $this->getServiceManager()->get('MelisCoreTableUser');
@@ -1509,8 +1523,31 @@ class ToolUserController extends MelisAbstractActionController
     }
 
 
+    /**
+     * Export CSV de la liste des utilisateurs (audit DEKRA 7.0).
+     *
+     * L'action n'avait AUCUN contrôle d'accès : n'importe quel compte connecté au back-office —
+     * y compris sans le moindre droit sur l'outil Utilisateurs — pouvait télécharger la table
+     * complète des comptes (vérifié : 154 Ko de CSV pour un compte n'ayant que News/Blog).
+     * Le refus est un vrai 403 et non un JsonModel : ce que le navigateur attend ici est un
+     * fichier, pas une structure lue par du JS.
+     *
+     * La journalisation, elle, est déjà centralisée : MelisCoreToolService::exportDataToCsv()
+     * écrit l'entrée USER_EXPORT pour tous les exports de la plateforme (item 21.0).
+     */
     public function exportToCsvAction()
     {
+        /** @INFO: Access check */
+        if (!$this->hasAccess(static::TOOL_KEY)) {
+            $response = $this->getResponse();
+            $response->setStatusCode(403);
+            $response->getHeaders()->addHeaderLine('Content-Type', 'text/plain; charset=utf-8');
+            $response->setContent('403 Forbidden');
+
+            return $response;
+        }
+        /** @INFO: End Access Check */
+
         $userTable = $this->getServiceManager()->get('MelisCoreTableUser');
         $translator = $this->getServiceManager()->get('translator');
         $melisTool = $this->getServiceManager()->get('MelisCoreTool');
@@ -1527,6 +1564,15 @@ class ToolUserController extends MelisAbstractActionController
         for ($x = 0; $x < count($userData); $x++) {
             $userData[$x]['usr_rights'] = '';
             $userData[$x]['usr_image'] = '';
+            // The password hashes were exported in clear in the CSV, next to the logins.
+            // Anyone who obtains the file can run an offline cracking attack at leisure, so the
+            // column is blanked like the two above.
+            $userData[$x]['usr_password'] = '';
+            // Vider usr_rights sans vider son CACHE ne cachait rien : usr_rights_cache contient
+            // l'allow-set résolu (`{"allow":{"<melisKey>":1,...}}`) et sa signature — soit
+            // exactement les droits qu'on vient d'effacer, en clair, dans le même fichier.
+            $userData[$x]['usr_rights_cache'] = '';
+            $userData[$x]['usr_rights_cache_sig'] = '';
         }
 
         return $melisTool->exportDataToCsv($userData);
@@ -1739,6 +1785,32 @@ class ToolUserController extends MelisAbstractActionController
             $start             = (int) $post['start'];
             $length            = (int) $post['length'];
             $userId            = (int) $post['usr_id'];
+
+            /**
+             * IDOR (audit DEKRA 7.0) : `usr_id` arrivait du POST sans le moindre contrôle. Le
+             * champ est posé côté navigateur (`setUserDateConnection` dans users.tools.js, à
+             * partir de la ligne sélectionnée), donc n'importe quel compte connecté pouvait le
+             * remplacer et lire l'historique de connexion de N'IMPORTE QUEL utilisateur.
+             *
+             * On filtre selon L'APPELANT, jamais selon l'identifiant reçu : sans droit sur
+             * l'outil Utilisateurs, la seule réponse possible est son propre historique. Un
+             * utilisateur habilité (et l'admin) garde le comportement d'origine.
+             */
+            if (!$this->hasAccess(static::TOOL_KEY)) {
+                $identity = $this->getServiceManager()->get('MelisCoreAuth')->getIdentity();
+                $userId   = (int) (!empty($identity->usr_id) ? $identity->usr_id : 0);
+            }
+
+            /**
+             * Connection history of another user is personal data. Only the first draw is
+             * logged: that is the moment the modal is opened, while the following draws are
+             * just paging and searching inside the same consultation - logging those would
+             * bury the trail under noise.
+             */
+            if ($draw === 1) {
+                $this->getServiceManager()->get('MelisCoreSecurityAudit')
+                    ->logSensitiveRead('user connection history', $userId);
+            }
 
             $data              = $userTbl->getUserConnectionData($userId, null, $searchValue, $searchableCols, $selColOrder, $orderDirection, $start, $length)->toArray();
             $dataCount         = $userTbl->getTotalData();

@@ -228,6 +228,10 @@ class UserProfileController extends MelisAbstractActionController
                             
                             //save the user data
                             $res = $userTable->save($data, $this->getCurrentUserId());
+                            if ($res && !empty($newPass)) {
+                                // Password history (audit item 16.0)
+                                $this->getServiceManager()->get('MelisPasswordPolicyService')->recordHistory((int) $this->getCurrentUserId(), $newPass);
+                            }
                             
                             //check if saving was success
                             if($res)
@@ -368,7 +372,13 @@ class UserProfileController extends MelisAbstractActionController
                 //check the length of the confirm password
                 if(strlen($confirmPass) >= 8)
                 {
-                    $passValidator = new \MelisCore\Validator\MelisPasswordValidator();
+                    $identity = $melisCoreAuth->getIdentity();
+                    $passValidator = new \MelisCore\Validator\MelisPasswordValidatorWithConfig([
+                        'serviceManager' => $this->getServiceManager(),
+                        'userId' => $identity->usr_id ?? null,
+                        'login'  => $identity->usr_login ?? null,
+                        'email'  => $identity->usr_email ?? null,
+                    ]);
                     if($passValidator->isValid($password))
                     {
                         // password and confirm password matching
@@ -395,7 +405,7 @@ class UserProfileController extends MelisAbstractActionController
                     {
                         $errors = array(
                             'usr_password' => array(
-                                'invalidPassword' => $translator->translate('tr_meliscore_tool_user_usr_password_regex_not_match'),
+                                'invalidPassword' => implode('<br>', $passValidator->getMessages()),
                                 'label' => 'Password',
                             )
                         );

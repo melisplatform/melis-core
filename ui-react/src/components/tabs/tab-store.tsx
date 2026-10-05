@@ -1,10 +1,10 @@
 import { createContext, useContext, useEffect, useReducer, useCallback, type ReactNode } from 'react'
 import { LayoutDashboard } from 'lucide-react'
 import { DICTIONARIES, DEFAULT_LANG, LANG_STORAGE_KEY, isLang } from '@/i18n/dictionaries'
+import { TABS_STORAGE_KEY, WORKSPACE_RESET } from './workspace-reset'
 
 // Tabs persist across a full reload (id/label/path only — icons aren't serialisable) so the
 // restored tabs keep their REAL labels instead of a raw key re-derived from the URL.
-const TABS_STORAGE_KEY = 'melis-open-tabs'
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -27,6 +27,7 @@ type Action =
   | { type: 'ACTIVATE'; id: string }
   | { type: 'SYNC'; tab: Tab }
   | { type: 'REORDER'; fromIndex: number; toIndex: number }
+  | { type: 'RESET' }
 
 // ─── Reducer ─────────────────────────────────────────────────────────────────
 
@@ -66,6 +67,7 @@ function tabReducer(state: TabState, action: Action): TabState {
     }
 
     case 'CLOSE_ALL':
+    case 'RESET':
       // Keep only the Dashboard and make it active.
       return { tabs: [dashboardTab()], activeId: '/' }
 
@@ -142,6 +144,13 @@ export function TabProvider({ children }: { children: ReactNode }) {
       /* best-effort */
     }
   }, [state])
+
+  // Changement d'utilisateur (déconnexion ou nouvelle connexion) → plan de travail neuf.
+  useEffect(() => {
+    const onReset = () => dispatch({ type: 'RESET' })
+    window.addEventListener(WORKSPACE_RESET, onReset)
+    return () => window.removeEventListener(WORKSPACE_RESET, onReset)
+  }, [])
 
   const openTab     = useCallback((tab: Tab) => dispatch({ type: 'OPEN',    tab }),             [])
   const closeTab    = useCallback((id: string) => dispatch({ type: 'CLOSE',  id }),              [])

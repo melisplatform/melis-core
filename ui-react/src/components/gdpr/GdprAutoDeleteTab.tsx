@@ -325,12 +325,18 @@ export default function GdprAutoDeleteTab() {
         {/* Emails d'alerte multilingues */}
         <section className="rounded-xl border border-border bg-card p-4 shadow-sm">
           <h3 className="text-sm font-semibold">{t('gdpr.ad.section_emails')}</h3>
-          <div className="mt-3 flex flex-col gap-4 sm:flex-row">
-            <div className="flex shrink-0 flex-row gap-1 overflow-x-auto sm:w-40 sm:flex-col sm:overflow-visible">
+          <div className="mt-3 flex flex-col gap-4">
+            {/* Onglets de langue côte à côte, au-dessus des emails, à toutes les largeurs (0011052) ;
+                retour à la ligne si trop nombreux. Pas de `flex-row` (inutile : `flex` est en ligne par
+                défaut) : la classe Bootstrap legacy `.flex-row{flex-direction:row!important}`, présente
+                sur la page, la rendait non fiable. */}
+            <div className="flex flex-wrap gap-1">
               {meta.langs.map((l) => (
                 <button key={l.id} type="button" onClick={() => setActiveLang(l.id)}
                   className={cn(
-                    'flex cursor-pointer items-center justify-between gap-2 rounded-lg px-3 py-2 text-left text-sm font-medium transition-colors',
+                    // shrink-0 + nowrap : chaque onglet garde sa largeur (libellé + drapeau ne débordent
+                    // plus de la pastille, le drapeau n'est plus écrasé).
+                    'flex shrink-0 cursor-pointer items-center gap-2 whitespace-nowrap rounded-lg px-3 py-2 text-left text-sm font-medium transition-colors',
                     activeLang === l.id ? 'bg-red-600 text-white' : 'bg-muted/50 text-muted-foreground hover:bg-muted hover:text-foreground'
                   )}>
                   <span>{l.name}</span>

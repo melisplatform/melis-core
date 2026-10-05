@@ -20,6 +20,7 @@ use Laminas\Db\Sql\Predicate\PredicateSet;
 use Laminas\Db\Sql\Predicate\Like;
 use Laminas\Db\Sql\Predicate\Operator;
 use Laminas\Db\Sql\Predicate\Predicate;
+use Laminas\Db\Sql\Predicate\Between;
 use Laminas\Hydrator\ObjectPropertyHydrator;
 use Laminas\ServiceManager\ServiceManager;
 use MelisCore\Model\Hydrator\MelisResultSet;
@@ -49,6 +50,85 @@ class MelisGenericTable extends MelisServiceManager
 	public function getTableGateway()
 	{
 		return $this->tableGateway;
+	}
+
+	/**
+	 * True when $name is a plain SQL identifier ("column" or "table.column").
+	 * Identifiers cannot be bound as parameters, so they are whitelisted instead
+	 * before being placed in ORDER BY or a date filter.
+	 */
+	public static function isSqlIdentifier($name)
+	{
+		return is_string($name) && preg_match('/^[A-Za-z0-9_]+(\.[A-Za-z0-9_]+)?$/', $name) === 1;
+	}
+
+	/**
+	 * Normalises a sort direction to strictly 'ASC' or 'DESC'.
+	 */
+	public static function sqlSortDirection($direction)
+	{
+		return strtoupper(trim((string) $direction)) === 'DESC' ? 'DESC' : 'ASC';
+	}
+
+	/**
+	 * Adds an ORDER BY to $select only when the column is a whitelisted identifier
+	 * and the direction is ASC/DESC. Accepts "col", "col DIR", "col DIR, col2 DIR",
+	 * or an array (['col' => 'DIR'] or ['col DIR']). Anything else is ignored
+	 * rather than concatenated into the query.
+	 */
+	public static function addSafeOrder(Select $select, $column, $direction = null)
+	{
+		if (is_array($column)) {
+			foreach ($column as $key => $value) {
+				if (is_int($key)) {
+					self::addSafeOrder($select, $value);
+				} else {
+					self::addSafeOrder($select, $key, $value);
+				}
+			}
+			return;
+		}
+
+		$column = trim((string) $column);
+		if ($column === '') {
+			return;
+		}
+
+		if (strpos($column, ',') !== false) {
+			foreach (explode(',', $column) as $part) {
+				self::addSafeOrder($select, $part, $direction);
+			}
+			return;
+		}
+
+		if (preg_match('/^`?([A-Za-z0-9_.]+)`?\s+(ASC|DESC)$/i', $column, $matches)) {
+			$column = $matches[1];
+			$direction = $matches[2];
+		}
+
+		$column = trim($column, '`');
+		if (!self::isSqlIdentifier($column)) {
+			return;
+		}
+
+		$select->order($column . ' ' . self::sqlSortDirection($direction));
+	}
+
+	/**
+	 * Builds the DataTable date-range filter as a bound BETWEEN predicate.
+	 * Expects ['key' => column, 'startDate' => ..., 'endDate' => ...].
+	 * Returns null when the filter is empty or the column is not an identifier.
+	 */
+	public static function dateFilterPredicate($dateFilter, $startSuffix = '', $endSuffix = '')
+	{
+		if (!is_array($dateFilter) || empty($dateFilter['startDate']) || empty($dateFilter['endDate'])) {
+			return null;
+		}
+		$key = isset($dateFilter['key']) ? trim((string) $dateFilter['key'], '`') : '';
+		if (!self::isSqlIdentifier($key)) {
+			return null;
+		}
+		return new Between($key, $dateFilter['startDate'] . $startSuffix, $dateFilter['endDate'] . $endSuffix);
 	}
 
 	/**
@@ -256,14 +336,9 @@ class MelisGenericTable extends MelisServiceManager
 		$columns = $options['columns'];
 		
 		// check if there's an extra variable that should be included in the query
-		$dateFilter = $options['date_filter'];
-		$dateFilterSql = '';
-		
-		if(count($dateFilter)) {
-			if(!empty($dateFilter['startDate']) && !empty($dateFilter['endDate'])) {
-				$dateFilterSql = '`' . $dateFilter['key'] . '` BETWEEN \'' . $dateFilter['startDate'] . '\' AND \'' . $dateFilter['endDate'] . '\'';
-			}
-		}
+		$dateFilter = $options['date_filter'] ?? [];
+		// Bound BETWEEN predicate (column whitelisted, dates bound by the driver) instead of raw SQL.
+		$dateFilterPredicate = self::dateFilterPredicate($dateFilter);
 
 		// this is used when searching
 		if(!empty($where) && !empty($whereValue)) {
@@ -276,8 +351,8 @@ class MelisGenericTable extends MelisServiceManager
 					$likes[] = new Like($colKeys, '%'.$whereValue.'%');
 			}
 			
-			if(!empty($dateFilterSql)) {
-				$filters = array(new PredicateSet($likes,PredicateSet::COMBINED_BY_OR), new \Laminas\Db\Sql\Predicate\Expression($dateFilterSql));
+			if($dateFilterPredicate !== null) {
+				$filters = array(new PredicateSet($likes,PredicateSet::COMBINED_BY_OR), $dateFilterPredicate);
 			} else {
 				$filters = array(new PredicateSet($likes,PredicateSet::COMBINED_BY_OR));
 			}
@@ -294,11 +369,10 @@ class MelisGenericTable extends MelisServiceManager
 		}
 
 		if(!is_null($status))
-			$select->where("usr_status = ".$status );
+			$select->where->equalTo('usr_status', (int) $status);
 
-		// used when column ordering is clicked
-		if(!empty($order))
-			$select->order($order . ' ' . $orderDir);
+		// used when column ordering is clicked (column whitelisted, direction strict ASC/DESC)
+		self::addSafeOrder($select, $order, $orderDir);
 
 //        $artistTable = new TableGateway($this->$this->getTableGateway()->getTable(), $this->$this->getTableGateway()->getAdapter());
 //        $res = $artistTable->selectWith($select);

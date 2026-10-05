@@ -22,6 +22,11 @@ export interface LoginResult {
   message?: string
   /** 2FA requise (mot de passe déjà validé) — hash à transmettre à la route React /verify-2fa. */
   twoFaHash?: string
+  /** Redirection legacy demandée par le serveur (`window.location.replace(...renew-password...)`).
+   *  Le mot de passe expiré ne passe plus par là (le serveur envoie le lien de réinitialisation
+   *  par email et répond un simple message) ; on garde le suivi de cette commande pour une
+   *  installation encore sur l'ancien comportement. */
+  redirectUrl?: string
 }
 
 /** Réponse brute de /melis/authenticate. */
@@ -114,6 +119,12 @@ export async function login(
       return { success: false, twoFaHash: decodeURIComponent(hashMatch[1]) }
     }
     return { success: true }
+  }
+  // Ancien comportement du mot de passe expiré : success:false + command de redirection vers le
+  // formulaire legacy de renouvellement. Le legacy eval() la commande ; ici on la suit.
+  const renew = data.command?.match(/window\.location\.replace\('([^']*renew-password[^']*)'\)/)
+  if (renew) {
+    return { success: false, redirectUrl: renew[1], message: extractError(data.errors) }
   }
   return { success: false, message: extractError(data.errors) ?? 'Identifiants invalides.' }
 }
@@ -254,6 +265,12 @@ export async function fetchZoneView(melisKey: string): Promise<ZoneViewResult | 
 export interface PasswordResetResult {
   success: boolean
   message?: string
+  /**
+   * Code d'erreur machine renvoye par le serveur (invalid_token, password_mismatch,
+   * password_too_short). Le libelle est choisi cote React pour qu'il suive la langue
+   * de l'interface -- le serveur ne renvoie plus de message en dur.
+   */
+  code?: string
 }
 
 /**

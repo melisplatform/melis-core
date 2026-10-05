@@ -391,6 +391,11 @@ export default function UserFormPage() {
   const [saveError, setSaveError] = useState<string | null>(null)
   const [saved, setSaved]     = useState(false)
   const [activeTab, setActiveTab] = useState<Tab>('profil')
+  // Connections and Microservice tabs each trigger a SENSITIVE_READ audit entry on the
+  // server (DEKRA item 21.0). They are mounted only once the user actually opens them
+  // (then kept mounted, hidden by CSS, so their state survives tab switches) - otherwise
+  // opening any user form would log two sensitive reads the user never made.
+  const [visitedTabs, setVisitedTabs] = useState<Set<Tab>>(() => new Set(['profil']))
   const [pwPolicy, setPwPolicy] = useState<userApi.PasswordPolicy | null>(userApi.cachedPasswordPolicy())
   const rolesModuleActive = useModuleActive('MelisSmallBusiness')
 
@@ -411,7 +416,7 @@ export default function UserFormPage() {
   useEffect(() => {
     if (!isEdit || !userId) return
     const cached = _formCache.get(subTabPath)
-    if (cached) { setForm(cached.form); if (cached.roles.length) setRoles(cached.roles); setActiveTab(cached.activeTab); return }
+    if (cached) { setForm(cached.form); if (cached.roles.length) setRoles(cached.roles); setActiveTab(cached.activeTab); setVisitedTabs(v => new Set(v).add(cached.activeTab)); return }
     setLoading(true)
     userApi.fetchUserById(userId)
       .then((user) => setForm({
@@ -573,7 +578,7 @@ export default function UserFormPage() {
           return (
             <button key={tab.id} type="button"
               disabled={!isEdit && (tab.id === 'connections' || tab.id === 'microservice')}
-              onClick={() => setActiveTab(tab.id)}
+              onClick={() => { setActiveTab(tab.id); setVisitedTabs(v => v.has(tab.id) ? v : new Set(v).add(tab.id)) }}
               className={cn('relative -mb-px flex items-center gap-1.5 border-b-2 px-4 py-3 text-sm font-medium transition-colors disabled:opacity-40 disabled:cursor-not-allowed',
                 activeTab === tab.id ? 'border-primary text-primary' : 'border-transparent text-muted-foreground hover:text-foreground')}>
               <Icon className="size-3.5 shrink-0" />{t(tab.labelKey)}
@@ -718,14 +723,14 @@ export default function UserFormPage() {
       </div>
 
       {/* ── Tab: Connections ─────────────────────────────────────────────────── */}
-      {isEdit && userId && (
+      {isEdit && userId && visitedTabs.has('connections') && (
         <div className={cn('flex flex-1 flex-col overflow-hidden', activeTab !== 'connections' && 'hidden')}>
           <ConnectionsTab userId={userId} />
         </div>
       )}
 
       {/* ── Tab: Microservice ────────────────────────────────────────────────── */}
-      {isEdit && userId && (
+      {isEdit && userId && visitedTabs.has('microservice') && (
         <div className={cn('flex flex-1 flex-col overflow-hidden', activeTab !== 'microservice' && 'hidden')}>
           <MicroserviceTab userId={userId} />
         </div>

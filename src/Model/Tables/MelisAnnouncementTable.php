@@ -75,7 +75,7 @@ class MelisAnnouncementTable extends MelisGenericTable
         }
 
         if(!empty($orderColumn))
-            $select->order($orderColumn .' '. $order);
+            MelisGenericTable::addSafeOrder($select, $orderColumn, $order);
 
         $resultData = $this->getTableGateway()->selectWith($select);
         return $resultData;

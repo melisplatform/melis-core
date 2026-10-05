@@ -729,6 +729,14 @@ class MelisCoreToolService extends MelisServiceManager implements MelisCoreToolS
         */
     public function exportDataToCsv($data, $fileName = null, $customSeparator = null, $customIsEnclosed = null)
     {
+        /**
+         * Every CSV export of the platform goes through this method - users, logs, prospects,
+         * templates, newsletters, commerce categories, SQL tool - so this is where an export is
+         * recorded, once, for all tools at the same time (DEKRA item 21.0). Logging it in each
+         * controller instead would mean patching seven modules and missing the next one written.
+         */
+        $this->logExportToAuditTrail($data, $fileName);
+
         $melisCoreConfig = $this->getServiceManager()->get('MelisCoreConfig');
 
         $csvConfig = $melisCoreConfig->getItem('meliscore/datas/default/export/csv');
@@ -1402,5 +1410,44 @@ class MelisCoreToolService extends MelisServiceManager implements MelisCoreToolS
             return $formatter->format($dateTime);
         }
         return null;
+    }
+
+    /**
+     * Records a CSV export in the audit trail.
+     *
+     * The tool is named after its melis tool key when the caller set one, otherwise after the
+     * exported file name. The filters in use are taken from the request query, which is where
+     * every export of the back-office puts them.
+     *
+     * @param array       $data     rows about to be exported
+     * @param string|null $fileName
+     */
+    private function logExportToAuditTrail($data, $fileName)
+    {
+        try {
+            $toolName = $this->_usedKey;
+
+            if (empty($toolName)) {
+                $toolName = !empty($fileName) ? $fileName : 'export';
+            }
+
+            $context = [];
+            $request = $this->getServiceManager()->get('request');
+
+            if (method_exists($request, 'getQuery')) {
+                $query = $request->getQuery()->toArray();
+                // Keep the filters, drop what only describes the file format.
+                unset($query['log_delimiter'], $query['log_enclosure']);
+
+                if (!empty($query)) {
+                    $context['filters'] = $query;
+                }
+            }
+
+            $this->getServiceManager()->get('MelisCoreSecurityAudit')
+                ->logExport($toolName, is_array($data) ? count($data) : 0, $context);
+        } catch (\Exception $e) {
+            // Auditing an export must never prevent the export itself.
+        }
     }
 }

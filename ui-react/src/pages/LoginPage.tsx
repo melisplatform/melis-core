@@ -16,6 +16,18 @@ import { FormErrorBanner } from '@/shared/melis-form-errors'
 import { cn } from '@/lib/utils'
 import wordmark from '@/assets/melis-wordmark.svg'
 import wordmarkWhite from '@/assets/melis-wordmark-white.svg'
+/** Les messages d'erreur du serveur Melis sont traduits et peuvent contenir un balisage
+ *  d'emphase (`<strong>Forgot password</strong>`). On échappe TOUT le message, puis on ne
+ *  réautorise que `<b>`/`<strong>` : le gras s'affiche, tout autre balisage reste du texte. */
+function emphasisOnlyHtml(value: string): string {
+  const escaped = value
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+  return escaped.replace(/&lt;(\/?)(b|strong)&gt;/gi, '<$1$2>')
+}
+
 const flagSrc = (l: Lang) => `/MelisCore/images/lang/${LANG_LOCALE[l]}.png`
 const Flag = ({ l }: { l: Lang }) => (
   <img src={flagSrc(l)} alt="" className="h-3.5 w-auto rounded-[2px] object-cover" />
@@ -119,6 +131,11 @@ export default function LoginPage() {
       navigate(`/verify-2fa?hash=${encodeURIComponent(result.twoFaHash)}`)
       return
     }
+    if (result.redirectUrl) {
+      // Mot de passe expiré : formulaire legacy de renouvellement, hors du routeur React.
+      window.location.assign(result.redirectUrl)
+      return
+    }
     if (result.error) {
       setError(result.error)
       return
@@ -210,7 +227,8 @@ export default function LoginPage() {
 
           {error && (
             <FormErrorBanner
-              title={error}
+              title={emphasisOnlyHtml(error)}
+              html
               icon={<AlertCircle className="size-4" />}
               style={{ marginBottom: '1.25rem' }}
             />

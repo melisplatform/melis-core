@@ -46,7 +46,9 @@ export default function EmailFormPage() {
 
   // Édition = sous-onglet DANS l'outil (façon Utilisateurs), pas un onglet de shell top-level.
   // La SubTabBar (montée dans le Shell) matche la section `base` et rend la barre « ← retour | <nom> ».
-  const subTabPath = `${base}/${id}`
+  // La route `/new` n'a pas de `:id` (id undefined) → chemin explicite, sinon l'onglet « nouveau »
+  // était enregistré sous `${base}/undefined`, jamais fermé après création (0011048).
+  const subTabPath = isNew ? `${base}/new` : `${base}/${id}`
   const { openTab: openSubTab, closeTab: closeSubTab, updateLabel: updateSubLabel } = useSubTabs(base)
 
   const canSave = useCan(TOOL_KEY, isNew ? 'create' : 'edit')
@@ -59,13 +61,18 @@ export default function EmailFormPage() {
   const [errors, setErrors] = useState<Partial<Record<keyof FormState, string>>>({})
   const [saveError, setSaveError] = useState<string | null>(null)
 
+  // Dépend de subTabPath : react-router réutilise l'instance entre deux `/:id` (passage d'un
+  // sous-onglet à l'autre), le composant n'est donc pas remonté.
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     openSubTab({ id: subTabPath, label: isNew ? t('emails.new') : (id ?? ''), path: subTabPath })
-  }, [])
+  }, [subTabPath])
 
   useEffect(() => {
     setLoading(true)
+    // Vide le formulaire précédent : sinon son nom est appliqué au libellé du nouvel onglet
+    // (effet updateSubLabel ci-dessous) avant la fin du chargement.
+    setForm(null)
     if (isNew) {
       emailsApi.fetchEmails().then((r) => {
         const contents: Record<string, EmailContent> = {}
@@ -118,15 +125,21 @@ export default function EmailFormPage() {
     setErrors({}); setSaveError(null)
     setSaving(true)
     try {
-      await emailsApi.saveEmail({
+      const saved = await emailsApi.saveEmail({
         isNew, codename: form.codename.trim(), name: form.name.trim(), fromName: form.fromName.trim(),
         fromEmail: form.fromEmail.trim(), replyTo: form.replyTo.trim(), tags: form.tags, layout: form.layout,
         layoutTitle: form.layoutTitle, layoutFtrInfo: form.layoutFtrInfo, contents: form.contents,
       })
       emailsApi.markEmailsListStale()
       okNotify(t('emails.title'), t('emails.saved'))
-      if (isNew) closeSubTab(`${base}/new`)
-      navigate(base)
+      if (isNew) {
+        // Création : le sous-onglet « nouveau » est remplacé par celui de l'email créé, rouvert
+        // sur ses données enregistrées (0011048). replace → « précédent » ne ramène pas sur /new.
+        closeSubTab(subTabPath)
+        navigate(`${base}/${saved?.codename || form.codename.trim()}`, { replace: true })
+      } else {
+        navigate(base)
+      }
     } catch (e) {
       const msg = String((e as Error)?.message ?? e)
       setSaveError(msg)

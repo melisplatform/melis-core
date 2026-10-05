@@ -15,6 +15,11 @@ import App from './App.tsx'
 import { isModuleActive } from '@/lib/bricks'
 import { useCaps, type CapsApi } from '@/lib/caps'
 import { prefetchDashboard } from '@/lib/dashboard-prefetch'
+import { installCsrf } from '@/lib/csrf'
+
+// Avant TOUT appel réseau (y compris le prefetch du dashboard plus bas) : chaque requête qui
+// modifie l'état renvoie le jeton CSRF de session (audit 10.0, cf. lib/csrf.ts).
+installCsrf()
 
 const w = window as unknown as {
   MelisReact?: unknown

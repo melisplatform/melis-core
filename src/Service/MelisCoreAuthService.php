@@ -125,6 +125,29 @@ class MelisCoreAuthService
     }
 
     /**
+     * Bcrypt hash of a random string, same algorithm and cost as encryptPassword()
+     * produces today (PASSWORD_DEFAULT = bcrypt cost 12 since PHP 8.4). It never
+     * matches anything: its only purpose is to be verified against when the login
+     * typed does not belong to any account, so that an unknown login costs the
+     * same bcrypt time as a wrong password on a current account.
+     * Regenerate if the default cost changes: password_hash(random, PASSWORD_DEFAULT).
+     */
+    const DUMMY_PASSWORD_HASH = '$2y$12$RmYP9.M5FZgJ4zqFyivu8e.kUjVK0cFnHYyROGVj9vhnZqGjajboy';
+
+    /**
+     * Burn the same bcrypt time as isPasswordCorrect() without any account.
+     *
+     * Called on the "unknown login" path of the login so that the response
+     * time no longer reveals whether the login exists (audit item 18.0).
+     *
+     * @param string $providedPassword
+     */
+    public function verifyDummyPassword($providedPassword)
+    {
+        password_verify((string) $providedPassword, self::DUMMY_PASSWORD_HASH);
+    }
+
+    /**
      * @return array
      */
     protected function convertToNewRightsStructure()

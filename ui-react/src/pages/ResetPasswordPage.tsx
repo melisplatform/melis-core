@@ -14,6 +14,13 @@ import { FormErrorBanner } from '@/shared/melis-form-errors'
 import wordmark from '@/assets/melis-wordmark.svg'
 import wordmarkWhite from '@/assets/melis-wordmark-white.svg'
 
+/** Codes d'erreur du serveur -> cles i18n (le serveur ne renvoie plus de texte en dur). */
+const ERROR_KEYS = {
+  invalid_token: 'reset.err_invalid',
+  password_mismatch: 'reset.err_match',
+  password_too_short: 'reset.err_length',
+} as const
+
 export default function ResetPasswordPage() {
   const { t } = useI18n()
   const { theme } = useTheme()
@@ -30,6 +37,13 @@ export default function ResetPasswordPage() {
   const [submitting, setSubmitting] = useState(false)
   const [done, setDone] = useState(false)
   const [error, setError] = useState<string | undefined>()
+
+  /** Code connu -> libelle traduit ; sinon message du serveur (validateur PHP, deja traduit). */
+  function errorLabel(result: { code?: string; message?: string }) {
+    const key = result.code ? ERROR_KEYS[result.code as keyof typeof ERROR_KEYS] : undefined
+    if (key) return t(key)
+    return result.message ?? t('reset.err_server')
+  }
 
   if (!hash) {
     return (
@@ -48,10 +62,6 @@ export default function ResetPasswordPage() {
       setError(t('reset.err_match'))
       return
     }
-    if (password.length < 8) {
-      setError(t('reset.err_length'))
-      return
-    }
 
     setSubmitting(true)
     const result = await resetPassword(hash!, password, confirm)
@@ -61,7 +71,7 @@ export default function ResetPasswordPage() {
       setDone(true)
       setTimeout(() => navigate('/login', { replace: true }), 3000)
     } else {
-      setError(result.message ?? t('reset.err_server'))
+      setError(errorLabel(result))
     }
   }
 

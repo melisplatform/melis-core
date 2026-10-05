@@ -2,90 +2,34 @@
 
 namespace MelisCore\Validator;
 
-use Laminas\Validator;
-use Laminas\Validator\AbstractValidator;
-class MelisPasswordValidator extends AbstractValidator
+/**
+ * @deprecated Kept for backward compatibility only. It used to enforce a hard-coded
+ * "8 characters + 1 lower case + 1 digit" rule that ignored the configured policy.
+ * It now behaves exactly like MelisPasswordValidatorWithConfig; pass a 'serviceManager'
+ * option to get the configured policy, translations and password history.
+ */
+class MelisPasswordValidator extends MelisPasswordValidatorWithConfig
 {
-    
-    const TOO_SHORT = 'length';
-    const NO_LOWER  = 'lower';
-    const NO_DIGIT  = 'digit';
-    
-    protected $messageTemplates = array(
-        self::TOO_SHORT => "'%value%' must be at least %min% characters in length",
-        self::NO_LOWER  => "'%value%' must contain at least one lowercase letter",
-        self::NO_DIGIT  => "'%value%' must contain at least one digit character"
-    );
-    
-    /**
-     * @var array
-     */
-    protected $messageVariables = array(
-        'min' => array('options' => 'min'),
-    );
-    
-    protected $options = array(
-        'min'      => 8,       // Default/Minimum length
-    );
-    
-
     public function __construct($options = array())
     {
+        // Legacy signature: new MelisPasswordValidator($min)
         if (!is_array($options)) {
-            $options     = func_get_args();
+            $options = func_get_args();
             $temp['min'] = array_shift($options);
             $options = $temp;
         }
-        
+
         parent::__construct($options);
     }
-    
-    /**
-     * Returns the min option
-     *
-     * @return int
-     */
+
     public function getMin()
     {
         return $this->options['min'];
     }
-    
-    /**
-     * Sets the min option
-     *
-     * @param  int $min
-     * @throws Exception\InvalidArgumentException
-     * @return StringLength Provides a fluent interface
-     */
+
     public function setMin($min)
     {
         $this->options['min'] = max(0, (int) $min);
         return $this;
-    }
-    
-
-    
-    public function isValid($value)
-    {
-        $this->setValue($value);
-        
-        $isValid = true;
-        
-        if (strlen($value) < 8) {
-            $this->error(self::TOO_SHORT);
-            $isValid = false;
-        }
-        
-        if (!preg_match('/[a-z]/', $value)) {
-            $this->error(self::NO_LOWER);
-            $isValid = false;
-        }
-        
-        if (!preg_match('/\d/', $value)) {
-            $this->error(self::NO_DIGIT, $value);
-            $isValid = false;
-        }
-            
-        return $isValid;
     }
 }

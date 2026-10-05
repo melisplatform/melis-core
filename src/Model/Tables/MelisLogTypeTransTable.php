@@ -32,11 +32,11 @@ class MelisLogTypeTransTable extends MelisGenericTable
 	{
 	    $select = $this->tableGateway->getSql()->select();
 	    
-	    $select->where('logtt_type_id = '.$logTypeId);
+	    $select->where->equalTo('logtt_type_id', (int) $logTypeId);
 	    
 	    if (!is_null($langId) && is_numeric($langId))
 	    {
-	        $select->where('logtt_lang_id = '.$langId);
+	        $select->where->equalTo('logtt_lang_id', (int) $langId);
 	    }
 
 	    $resultSet = $this->tableGateway->selectWith($select);

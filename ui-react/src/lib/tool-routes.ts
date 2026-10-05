@@ -130,8 +130,46 @@ function persist() {
   } catch { /* ignore */ }
 }
 
+/** Routes registered by the current menu rebuild (null = no rebuild running). */
+let rebuildSeen: Set<string> | null = null
+/** Routes registered OUTSIDE a menu rebuild (e.g. "My account" by the Topbar) — kept by rebuilds. */
+const extraRoutes = new Set<string>()
+
+/**
+ * Rebuild the menu's part of the registry from scratch. `build` registers the tools of the
+ * menu the user has NOW; afterwards every route it did not register is dropped — tools removed
+ * from the user's rights since, or left in sessionStorage by a previous user of this browser
+ * tab. Without this the registry only ever grew, so a stale route kept mounting a native page
+ * or brick the user can no longer open (its API then answered 403 on an empty screen) instead
+ * of falling through to ZonePage's "Access denied". Listeners are notified ONCE at the end, so
+ * the open page is never unmounted mid-rebuild.
+ */
+export function rebuildMenuTools<T>(build: () => T): T {
+  const before = JSON.stringify({ routeToMelisKey, melisKeyToRoute, forwardToRoute, routeToLabel })
+  rebuildSeen = new Set<string>()
+  let result: T
+  try {
+    result = build()
+  } finally {
+    const keep = rebuildSeen
+    rebuildSeen = null
+    const kept = (route: string) => keep.has(route) || extraRoutes.has(route)
+    for (const r of Object.keys(routeToMelisKey)) if (!kept(r)) delete routeToMelisKey[r]
+    for (const r of Object.keys(routeToLabel)) if (!kept(r)) delete routeToLabel[r]
+    for (const [k, r] of Object.entries(forwardToRoute)) if (!kept(r)) delete forwardToRoute[k]
+    for (const [k, r] of Object.entries(melisKeyToRoute)) if (!kept(r)) delete melisKeyToRoute[k]
+    if (JSON.stringify({ routeToMelisKey, melisKeyToRoute, forwardToRoute, routeToLabel }) !== before) {
+      persist()
+      listeners.forEach((l) => l())
+    }
+  }
+  return result
+}
+
 /** Register one tool's route mapping (called while building the nav tree). */
 export function registerTool(e: ToolRouteEntry): void {
+  if (rebuildSeen) rebuildSeen.add(e.route)
+  else extraRoutes.add(e.route)
   let changed = false
   if (e.melisKey != null) {
     if (routeToMelisKey[e.route] !== e.melisKey) {
@@ -157,7 +195,8 @@ export function registerTool(e: ToolRouteEntry): void {
     forwardToRoute[e.forwardKey] = e.route
     changed = true
   }
-  if (changed) {
+  // During a rebuild the single persist + notify happens at the end (rebuildMenuTools).
+  if (changed && !rebuildSeen) {
     persist()
     listeners.forEach((l) => l())
   }
@@ -170,6 +209,7 @@ export function clearTools(): void {
   melisKeyToRoute = {}
   forwardToRoute = {}
   routeToLabel = {}
+  extraRoutes.clear()
   try { sessionStorage.removeItem(STORAGE_KEY) } catch { /* ignore */ }
   listeners.forEach((l) => l())
 }

@@ -5,6 +5,8 @@ import { createContext, useContext } from 'react'
 export interface SignInOutcome {
   error?: string
   twoFaHash?: string
+  /** Mot de passe expiré : URL du formulaire de renouvellement à suivre (navigation complète). */
+  redirectUrl?: string
 }
 
 export interface AuthState {

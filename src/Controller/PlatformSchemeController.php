@@ -23,6 +23,12 @@ use Laminas\Validator;
  */
 class PlatformSchemeController extends MelisAbstractActionController
 {
+    /**
+     * Outil auquel ce contrôleur appartient (audit DEKRA 7.0) : MelisCoreAuthorizationListener
+     * vérifie canAccess() sur cette clé AVANT le dispatch.
+     */
+    const MELIS_KEY = 'meliscore_tool_platform_scheme';
+
 
     const SCHEME_FOLDER_PERMISSION = 0755;
 
