@@ -13,10 +13,15 @@ import { WidgetFrame } from './WidgetFrame'
 import { WidgetConfigDialog } from './WidgetConfigDialog'
 import { PluginConfirmDialog } from './PluginConfirmDialog'
 import { widgetIdOf, type GridItem } from './dashboard-store'
+import { DDDraggable } from 'gridstack/dist/dd-draggable'
 import { installResizeScrollDownOnly } from './gridstack-resize-scroll'
+import { installDragScrollByPointer } from './gridstack-drag-scroll'
 
 // Resizing a tile must never auto-scroll the page UP (Mantis #0011019) — see gridstack-resize-scroll.ts.
 installResizeScrollDownOnly(GridStackUtils)
+// Dragging a tile auto-scrolls only when the pointer nears the top/bottom edge, not merely because the
+// tile is taller than what is visible — see gridstack-drag-scroll.ts.
+installDragScrollByPointer(DDDraggable)
 
 // ─── Error boundary per widget ────────────────────────────────────────────────
 
