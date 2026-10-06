@@ -4,8 +4,9 @@ import type { LucideIcon } from 'lucide-react'
 // ─── Melis "M" module icons ──────────────────────────────────────────────────
 //
 // Icône Melis colorée (M plein, viewBox 0 0 70 70) déclinée par module. PARTAGÉE entre la
-// navigation de gauche (useNavMenu) et la palette de widgets du dashboard (WidgetPalette) pour
-// qu'elles rendent STRICTEMENT la même icône par section (même glyphe, même couleur).
+// navigation de gauche (useNavMenu) et le catalogue d'ajout de widgets du dashboard
+// (WidgetAddModal) pour qu'elles rendent STRICTEMENT la même icône par section (même glyphe,
+// même couleur).
 
 const M_PATH1 = 'M57.4,0c-4.8,0-8.6,3.9-8.6,8.6v49.2c0,4.8,3.9,8.6,8.6,8.6s8.6-3.9,8.6-8.6V8.7C66,3.9,62.2,0,57.4,0Z'
 const M_PATH2 = 'M16.3,4.6C14,.4,8.8-1.2,4.6,1,.4,3.2-1.2,8.5,1,12.7l26.1,49.3c2.2,4.2,7.4,5.8,11.7,3.6,4.2-2.2,5.8-7.4,3.6-11.7L16.3,4.6Z'
@@ -27,6 +28,19 @@ const MelisMarketingIcon   = makeSolidM('#a855f7')  // purple
 const MelisCommerceIcon    = makeSolidM('#3b82f6')  // blue
 const MelisMarketplaceIcon = makeSolidM('#ef4444')  // red
 const MelisDefaultIcon     = makeSolidM('currentColor')
+/** « M » blanc, à poser SUR un aplat de la couleur du groupe (cf. lib/melis-colors.ts,
+ *  getMelisColor) — même rendu que le logo de groupe des fiches du marketplace (carré coloré
+ *  arrondi + M blanc). ⚠️ Les teintes ci-dessus sont DUPLIQUÉES dans melis-colors.ts : les faire
+ *  évoluer ensemble. */
+// Déclaré en fonction nommée (pas `makeSolidM('#fff')`) : la règle react-refresh
+// only-export-components ne reconnaît un composant qu'à une déclaration de fonction capitalisée.
+export function MelisMarkIcon({ className }: { className?: string }) {
+  return React.createElement('svg', { className, viewBox: '0 0 70 70', fill: '#fff' },
+    React.createElement('path', { d: M_PATH1 }),
+    React.createElement('path', { d: M_PATH2 }),
+    React.createElement('circle', { cx: '8.8', cy: '57.7', r: '8.8' }),
+  )
+}
 
 // Melis AI: pink → purple → cyan gradient (from melis-ai-hero.svg)
 export const MelisAiIcon = (({ className }: { className?: string }) =>

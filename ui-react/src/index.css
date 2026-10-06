@@ -221,6 +221,14 @@ body.melis-widget-dragging iframe {
   border: 1px dashed color-mix(in srgb, var(--color-primary) 55%, transparent);
   border-radius: var(--radius);
 }
+/* Flash temporaire d'un widget cliqué depuis le panneau de structure (cf. DashboardGrid). */
+.melis-dashboard-grid .grid-stack-item.melis-widget-highlight {
+  border-radius: var(--radius);
+  box-shadow:
+    0 0 0 2px var(--color-primary),
+    0 0 0 6px color-mix(in srgb, var(--color-primary) 20%, transparent);
+  transition: box-shadow 0.3s ease;
+}
 
 /* ============================================================================
    Scrollbars — fines, arrondies, theme-aware (dark + light + schemas custom)
