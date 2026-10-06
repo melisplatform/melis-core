@@ -58,6 +58,9 @@ const WEB_OPTIONS: WebOptionDef[] = [
 /** `data-dependency` des radios « Site to Install » du legacy — identique pour tous les sites. */
 const SITE_DEPENDENCIES = ['MelisEngine', 'MelisFront', 'MelisCms', 'MelisCmsNews', 'MelisCmsSlider', 'MelisCmsProspects']
 
+/** Packages retirés du catalogue : jamais affichés, donc jamais cochables ni envoyés. */
+const HIDDEN_PACKAGES = ['melisplatform/melis-design']
+
 /** Options sans site démo : la valeur stockée en session est l'option elle-même. */
 const NON_SITE_OPTIONS = ['MelisCoreOnly', 'None', 'NewSite']
 
@@ -106,7 +109,8 @@ export function Step31ModuleSelection({ onStatusChange, registerBeforeNext }: {
     setLoading(true)
     setLoadError(null)
     try {
-      const data = await listAvailableModules()
+      const fetched = await listAvailableModules()
+      const data = { ...fetched, modules: fetched.modules.filter((m) => !HIDDEN_PACKAGES.includes(m.package)) }
       setCatalog(data)
       // Étape de saisie : rien à valider, Suivant est ouvert dès que le catalogue est là.
       onStatusChange?.(true)
