@@ -84,6 +84,12 @@ class Module
         $moduleSvc->unloadModule('MelisInstaller');
 
         if (!$this->isInInstallMode($e)) {
+            // Setup terminé (MelisInstaller déchargé par finalizeSetup) : l'assistant React
+            // /melis-react/setup ne doit plus être accessible, même en saisissant l'URL directement.
+            $eventManager->attach(MvcEvent::EVENT_ROUTE, function ($e) {
+                $this->blockSetupAfterInstall($e);
+            });
+
             // url platform scheme redirector
 
             (new MelisCoreOtherConfigListener())->attach($eventManager);
@@ -371,6 +377,28 @@ class Module
         return true;
     }
 
+
+    /**
+     * Redirige /melis-react/setup[/...] vers /melis-react une fois l'installation terminée.
+     * La route SPA (MelisReactOverride) reste chargée après le setup, donc sans ce garde-fou
+     * l'assistant serait encore servi alors que ses endpoints MelisInstaller n'existent plus.
+     */
+    private function blockSetupAfterInstall(MvcEvent $e)
+    {
+        $routeMatch = $e->getRouteMatch();
+        if (!$routeMatch || $routeMatch->getMatchedRouteName() !== 'meliscore-melis-react-spa') {
+            return;
+        }
+
+        $spaPath = (string) $routeMatch->getParam('spa', '');
+        if (!preg_match('#^/setup(/|$)#i', $spaPath)) {
+            return;
+        }
+
+        $e->stopPropagation();
+        header('Location: /melis-react');
+        exit;
+    }
 
     private function isInInstallMode($e)
     {
