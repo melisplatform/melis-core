@@ -59,7 +59,7 @@ const WEB_OPTIONS: WebOptionDef[] = [
 const SITE_DEPENDENCIES = ['MelisEngine', 'MelisFront', 'MelisCms', 'MelisCmsNews', 'MelisCmsSlider', 'MelisCmsProspects']
 
 /** Packages retirés du catalogue : jamais affichés, donc jamais cochables ni envoyés. */
-const HIDDEN_PACKAGES = ['melisplatform/melis-design']
+const HIDDEN_PACKAGES = ['melisplatform/melis-design', 'melisplatform/melis-cms-twig', 'melisplatform/melis-tipimail']
 
 /** Options sans site démo : la valeur stockée en session est l'option elle-même. */
 const NON_SITE_OPTIONS = ['MelisCoreOnly', 'None', 'NewSite']
