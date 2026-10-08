@@ -16,7 +16,7 @@ use Interop\Container\ContainerInterface;
  */
 class PurgeSecurityLogsCommandFactory
 {
-    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    public function __invoke(ContainerInterface $container, $requestedName, ?array $options = null)
     {
         $instance = new $requestedName();
         $instance->setServiceManager($container);

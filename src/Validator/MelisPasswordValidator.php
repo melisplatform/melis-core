@@ -12,11 +12,11 @@ class MelisPasswordValidator extends MelisPasswordValidatorWithConfig
 {
     public function __construct($options = array())
     {
+        $args = func_get_args();
+
         // Legacy signature: new MelisPasswordValidator($min)
         if (!is_array($options)) {
-            $options = func_get_args();
-            $temp['min'] = array_shift($options);
-            $options = $temp;
+            $options = ['min' => array_shift($args)];
         }
 
         parent::__construct($options);
