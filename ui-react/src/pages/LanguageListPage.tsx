@@ -2,11 +2,11 @@ import { Fragment, useEffect, useRef, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import {
   ArrowDown, ArrowUp, ArrowUpDown, Columns3, Languages, Loader2, Pencil, Plus,
-  RotateCcw, Search, Star, Trash2, X, type LucideIcon,
+  RotateCcw, Star, Trash2, type LucideIcon,
 } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
+import { FilterToolbar } from '@/components/ui/filter-toolbar'
 import { Badge } from '@/components/ui/badge'
 import { cn } from '@/lib/utils'
 import * as languageApi from '@/lib/language-api'
@@ -275,24 +275,21 @@ export default function LanguageListPage() {
         </div>
 
         {/* Filtres */}
-        <div className="flex flex-wrap items-center gap-2">
-          <div className={narrow ? 'relative w-full' : 'relative flex-1 min-w-[220px]'}>
-            <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
-            <Input value={searchInput} onChange={e => setSearchInput(e.target.value)}
-              onKeyDown={e => e.key === 'Enter' && applySearch()}
-              placeholder={t('languages.search')} className="pl-9" />
-            {searchInput && <button onClick={clearSearch}
-              className="absolute right-2.5 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"><X className="size-4" /></button>}
-          </div>
-          <div className={cn('flex items-center gap-2', narrow && 'w-full flex-wrap')}>
+        <FilterToolbar
+          search={searchInput}
+          onSearchChange={setSearchInput}
+          onSearchSubmit={applySearch}
+          onSearchClear={clearSearch}
+          searchPlaceholder={t('languages.search')}
+          actions={<>
             <Button variant="outline" size="sm"
-              className={cn('gap-1.5', narrow && 'h-auto min-h-9 flex-[1_1_calc(50%_-_4px)] justify-center whitespace-normal text-center')}
+              className={cn('gap-1.5', narrow && 'w-full justify-center')}
               onClick={resetFilters} title={t('common.reset_filters')}>
               <RotateCcw className={cn('size-3.5', refreshing && 'animate-spin')} />{t('common.reset_filters')}
             </Button>
-            <div ref={colMgrRef} className={cn('relative', narrow && 'flex-[1_1_calc(50%_-_4px)]')}>
+            <div ref={colMgrRef} className={cn('relative', narrow && 'w-full')}>
               <Button variant="outline" size="sm"
-                className={cn('gap-1.5', narrow && 'h-auto min-h-9 w-full justify-center whitespace-normal text-center')}
+                className={cn('gap-1.5', narrow && 'w-full justify-center')}
                 onClick={() => setShowColMgr(v => !v)}>
                 <Columns3 className="size-3.5" />{t('common.columns')}
               </Button>
@@ -300,8 +297,8 @@ export default function LanguageListPage() {
                 onChange={(c) => { setCols(c); saveCols(c) }} onClose={() => setShowColMgr(false)}
                 onReset={() => { setCols(DEFAULT_COLS); saveCols(DEFAULT_COLS) }} />}
             </div>
-          </div>
-        </div>
+          </>}
+        />
 
         {/* Table */}
         <div className="rounded-xl border border-border bg-card shadow-sm overflow-x-auto">

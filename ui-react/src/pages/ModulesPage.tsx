@@ -2,11 +2,11 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { useLocation } from 'react-router-dom'
 import {
   AlertTriangle, GripVertical, Package, PackageCheck, PackageX, RotateCcw,
-  Save, Search, Sparkles, Undo2, X,
+  Save, Sparkles, Undo2,
 } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
+import { FilterToolbar } from '@/components/ui/filter-toolbar'
 import { Badge } from '@/components/ui/badge'
 import { cn } from '@/lib/utils'
 import * as modulesApi from '@/lib/modules-api'
@@ -295,43 +295,43 @@ export default function ModulesPage() {
           <p className="text-sm text-muted-foreground">{t('modules.no_list')}</p>
         ) : (<>
           {/* Barre d'actions */}
-          <div className="flex flex-wrap items-center gap-2">
-            <div className={narrow ? 'relative w-full' : 'relative flex-1 min-w-[220px]'}>
-              <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
-              <Input value={search} onChange={(e) => setSearch(e.target.value)}
-                placeholder={t('modules.search')} className="pl-9" />
-              {search && <button onClick={() => setSearch('')}
-                className="absolute right-2.5 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"><X className="size-4" /></button>}
-            </div>
-            <Badge variant="muted" className="gap-1.5 px-2.5 py-1">
-              <PackageCheck className="size-3.5 text-primary" />
-              {t('modules.active_count', { active: activeCount, total: modules.length })}
-            </Badge>
-            {canEdit && (
-              <>
+          <FilterToolbar
+            search={search}
+            onSearchChange={setSearch}
+            onSearchSubmit={() => {}}
+            onSearchClear={() => setSearch('')}
+            searchPlaceholder={t('modules.search')}
+            filters={
+              <Badge variant="muted" className="gap-1.5 px-2.5 py-1">
+                <PackageCheck className="size-3.5 text-primary" />
+                {t('modules.active_count', { active: activeCount, total: modules.length })}
+              </Badge>
+            }
+            actions={<>
+              {canEdit && (
+                <>
+                  <Button variant="outline" size="sm"
+                    className={cn(narrow && 'w-full justify-center')}
+                    onClick={() => setAll(true)}>{t('modules.select_all')}</Button>
+                  <Button variant="outline" size="sm"
+                    className={cn(narrow && 'w-full justify-center')}
+                    onClick={() => setAll(false)}>{t('modules.deselect_all')}</Button>
+                </>
+              )}
+              {dirty && (
                 <Button variant="outline" size="sm"
-                  className={cn(narrow && 'h-auto min-h-9 flex-[1_1_calc(50%_-_4px)] justify-center whitespace-normal text-center')}
-                  onClick={() => setAll(true)}>{t('modules.select_all')}</Button>
-                <Button variant="outline" size="sm"
-                  className={cn(narrow && 'h-auto min-h-9 flex-[1_1_calc(50%_-_4px)] justify-center whitespace-normal text-center')}
-                  onClick={() => setAll(false)}>{t('modules.deselect_all')}</Button>
-              </>
-            )}
-            {dirty && (
+                  className={cn('gap-1.5 text-amber-600', narrow && 'w-full justify-center')}
+                  onClick={resetChanges}>
+                  <Undo2 className="size-3.5" />{t('modules.reset')}
+                </Button>
+              )}
               <Button variant="outline" size="sm"
-                className={cn('gap-1.5 text-amber-600', narrow && 'h-auto min-h-9 flex-[1_1_calc(50%_-_4px)] justify-center whitespace-normal text-center')}
-                onClick={resetChanges}>
-                <Undo2 className="size-3.5" />{t('modules.reset')}
-              </Button>
-            )}
-            <div className={cn('flex items-center gap-2', !narrow && 'ml-auto', narrow && 'w-full')}>
-              <Button variant="outline" size="sm"
-                className={cn('gap-1.5', narrow && 'h-auto min-h-9 w-full justify-center whitespace-normal text-center')}
+                className={cn('gap-1.5', narrow && 'w-full justify-center')}
                 onClick={resetFilters} title={t('common.reset_filters')}>
                 <RotateCcw className={cn('size-3.5', loading && 'animate-spin')} />{t('common.reset_filters')}
               </Button>
-            </div>
-          </div>
+            </>}
+          />
 
           {/* Indice de réordonnancement */}
           <p className="text-xs text-muted-foreground">
