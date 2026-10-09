@@ -102,6 +102,7 @@ class MelisReactApiUserProfileController extends MelisAbstractActionController
             $langId   = (int) ($body['langId'] ?? 0);
             $password = (string) ($body['password'] ?? '');
             $confirm  = (string) ($body['confirmPassword'] ?? '');
+            $current  = (string) ($body['currentPassword'] ?? '');
             $image    = $body['image'] ?? null; // data URI, '' (efface), ou null (inchangé)
 
             // Email obligatoire + format.
@@ -117,6 +118,13 @@ class MelisReactApiUserProfileController extends MelisAbstractActionController
             // Mot de passe : optionnel. Si fourni → ≥ 8, regex MelisPasswordValidator, == confirmation.
             $newPassHash = null;
             if ($password !== '' || $confirm !== '') {
+                // Changing the password requires the current one (verified server-side).
+                $pwRows     = iterator_to_array($db->query('SELECT usr_password FROM melis_core_user WHERE usr_id = ?', [$userId]));
+                $storedHash = (string) ($pwRows[0]['usr_password'] ?? '');
+                $auth       = $this->getServiceManager()->get('MelisCoreAuth');
+                if ($current === '' || !$auth->isPasswordCorrect($current, $storedHash)) {
+                    return $this->jsonResponse(['success' => false, 'error' => 'tr_meliscore_tool_user_usr_current_password_not_match'], 400);
+                }
                 $err = $this->validatePassword($password, $confirm, $userId, $email);
                 if ($err !== null) {
                     return $this->jsonResponse(['success' => false, 'error' => $err], 400);

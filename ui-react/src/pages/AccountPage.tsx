@@ -53,6 +53,7 @@ function errorMessage(t: (k: never) => string, raw: string): string {
     tr_meliscore_tool_user_usr_confirm_password_error_low: 'account.err.pass_low',
     tr_meliscore_tool_user_usr_password_regex_not_match: 'account.err.pass_regex',
     tr_meliscore_tool_user_usr_password_not_match: 'account.err.pass_match',
+    tr_meliscore_tool_user_usr_current_password_not_match: 'account.err.current_pass',
   }
   const key = map[raw]
   if (key) return (t as (k: string) => string)(key)
@@ -100,6 +101,7 @@ export default function AccountPage() {
   // Form state (onglet Profil).
   const [email, setEmail] = useState('')
   const [langId, setLangId] = useState(0)
+  const [currentPassword, setCurrentPassword] = useState('')
   const [password, setPassword] = useState('')
   const [confirm, setConfirm] = useState('')
   const [image, setImage] = useState<string | undefined>(undefined) // undefined = inchangé
@@ -110,7 +112,7 @@ export default function AccountPage() {
   const [saved, setSaved] = useState(false)
   const [saveErr, setSaveErr] = useState<string | null>(null)
   // Client-validation errors keyed by field (email / language / password confirmation).
-  const [errors, setErrors] = useState<{ email?: string; langId?: string; confirm?: string }>({})
+  const [errors, setErrors] = useState<{ email?: string; langId?: string; confirm?: string; current?: string }>({})
 
   useEffect(() => {
     let alive = true
@@ -129,12 +131,13 @@ export default function AccountPage() {
   }
 
   /** Client-side validation (the server stays the source of truth and blocks anyway). */
-  function validate(): { email?: string; langId?: string; confirm?: string } {
-    const errs: { email?: string; langId?: string; confirm?: string } = {}
+  function validate(): { email?: string; langId?: string; confirm?: string; current?: string } {
+    const errs: { email?: string; langId?: string; confirm?: string; current?: string } = {}
     const mail = email.trim()
     if (!mail || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(mail)) errs.email = t('account.err.email')
     if (!langId) errs.langId = t('account.err.lang')
     if (password && password !== confirm) errs.confirm = t('account.err.pass_match')
+    if ((password || confirm) && !currentPassword) errs.current = t('account.err.current_required')
     return errs
   }
 
@@ -152,11 +155,12 @@ export default function AccountPage() {
       const res = await api.saveAccount({
         email: email.trim(),
         langId,
+        currentPassword: currentPassword || undefined,
         password: password || undefined,
         confirmPassword: confirm || undefined,
         image, // undefined = inchangé
       })
-      setSaved(true); setPassword(''); setConfirm('')
+      setSaved(true); setCurrentPassword(''); setPassword(''); setConfirm('')
       okNotify(t('account.title'), t('account.saved'))
       // Changement de langue du BO → recharger pour ré-initialiser l'i18n dans la nouvelle langue.
       if (res.reload) { window.location.reload(); return }
@@ -185,6 +189,7 @@ export default function AccountPage() {
   const bannerIssues: FormIssue[] = []
   if (errors.email)   bannerIssues.push({ label: t('account.email'), message: errors.email })
   if (errors.langId)  bannerIssues.push({ label: t('account.language'), message: errors.langId })
+  if (errors.current) bannerIssues.push({ label: t('account.current_password'), message: errors.current })
   if (errors.confirm) bannerIssues.push({ label: t('account.confirm_password'), message: errors.confirm })
   if (saveErr)        bannerIssues.push({ message: saveErr })
 
@@ -287,6 +292,11 @@ export default function AccountPage() {
                       <Field label={t('account.email')} required error={errors.email}>
                         <Input type="email" value={email} onChange={(e) => { setEmail(e.target.value); setErrors((p) => ({ ...p, email: undefined })); setSaveErr(null) }}
                           className={cn(errors.email && 'border-destructive')} />
+                      </Field>
+                      <Field label={t('account.current_password')} error={errors.current}>
+                        <Input type="password" value={currentPassword} onChange={(e) => { setCurrentPassword(e.target.value); setErrors((p) => ({ ...p, current: undefined })); setSaveErr(null) }}
+                          placeholder={t('account.current_password_placeholder')} autoComplete="current-password"
+                          className={cn(errors.current && 'border-destructive')} />
                       </Field>
                       <Field label={t('account.password')}>
                         <Input type="password" value={password} onChange={(e) => { setPassword(e.target.value); setErrors((p) => ({ ...p, confirm: undefined })); setSaveErr(null) }}

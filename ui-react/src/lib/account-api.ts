@@ -33,6 +33,8 @@ export interface AccountSavePayload {
   /** Optionnel : renseigné seulement pour changer le mot de passe. */
   password?: string
   confirmPassword?: string
+  /** Mot de passe actuel, requis par le serveur pour confirmer un changement. */
+  currentPassword?: string
   /** data URI (nouvel avatar), '' (efface) ou undefined (inchangé). */
   image?: string
 }

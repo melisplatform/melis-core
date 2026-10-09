@@ -122,6 +122,8 @@ return [
     'tr_meliscore_tool_user_col_last_name' => 'Nom',
     'tr_meliscore_tool_user_col_last_name tooltip' => 'Nom de famille de l&#39;utilisateur',
     'tr_meliscore_tool_user_col_role' => 'Rôle',
+    'tr_meliscore_tool_user_col_current_password' => 'Mot de passe actuel',
+    'tr_meliscore_tool_user_col_current_password tooltip' => 'Votre mot de passe actuel, requis pour en définir un nouveau',
     'tr_meliscore_tool_user_col_password' => 'Mot de passe',
     'tr_meliscore_tool_user_col_password tooltip' => 'Mot de passe utilisateur (doit être de 8 caractères minimum et contenir au moins une lettre et un chiffre)',
     'tr_meliscore_tool_user_col_confirm_password' => 'Mot de passe (2)',
