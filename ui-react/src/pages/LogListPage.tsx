@@ -2,11 +2,11 @@ import { Fragment, useEffect, useRef, useState } from 'react'
 import { useLocation } from 'react-router-dom'
 import {
   Activity, AlertTriangle, ArrowDown, ArrowUp, ArrowUpDown, CalendarDays, CheckCircle2,
-  Columns3, Loader2, RotateCcw, Search, Tags, X, type LucideIcon,
+  Columns3, Loader2, RotateCcw, Tags, type LucideIcon,
 } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
+import { FilterToolbar } from '@/components/ui/filter-toolbar'
 import { Badge } from '@/components/ui/badge'
 import { cn } from '@/lib/utils'
 import * as logApi from '@/lib/log-api'
@@ -273,50 +273,48 @@ export default function LogListPage() {
         </div>
 
         {/* Filtres */}
-        <div className="flex flex-wrap items-center gap-2">
-          <div className={narrow ? 'relative w-full' : 'relative flex-1 min-w-[220px]'}>
-            <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
-            <Input value={searchInput} onChange={e => setSearchInput(e.target.value)}
-              onKeyDown={e => e.key === 'Enter' && applySearch()}
-              placeholder={t('logs.search')} className="pl-9" />
-            {searchInput && <button onClick={clearSearch}
-              className="absolute right-2.5 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"><X className="size-4" /></button>}
-          </div>
-
-          <select className={cn(selectCls, narrow && 'w-full')} value={type ?? ''} onChange={e => setType(e.target.value ? Number(e.target.value) : null)}>
-            <option value="">{t('logs.filter.type_all')}</option>
-            {filters?.types.map(ty => <option key={ty.id} value={ty.id}>{ty.code}</option>)}
-          </select>
-
-          {filters && filters.titles.length > 0 && (
-            <select className={cn(selectCls, narrow ? 'w-full' : 'max-w-[200px]')} value={title ?? ''} onChange={e => setTitle(e.target.value || null)}>
-              <option value="">{t('logs.filter.title_all')}</option>
-              {filters.titles.map(ti => <option key={ti.key} value={ti.key}>{ti.label}</option>)}
+        <FilterToolbar
+          search={searchInput}
+          onSearchChange={setSearchInput}
+          onSearchSubmit={applySearch}
+          onSearchClear={clearSearch}
+          searchPlaceholder={t('logs.search')}
+          activeCount={(type != null ? 1 : 0) + (title ? 1 : 0) + (user != null ? 1 : 0) + (startDate ? 1 : 0) + (endDate ? 1 : 0)}
+          filters={<>
+            <select className={cn(selectCls, narrow && 'w-full')} value={type ?? ''} onChange={e => setType(e.target.value ? Number(e.target.value) : null)}>
+              <option value="">{t('logs.filter.type_all')}</option>
+              {filters?.types.map(ty => <option key={ty.id} value={ty.id}>{ty.code}</option>)}
             </select>
-          )}
 
-          {filters && filters.users.length > 0 && (
-            <select className={cn(selectCls, narrow && 'w-full')} value={user ?? ''} onChange={e => setUser(e.target.value ? Number(e.target.value) : null)}>
-              <option value="">{t('logs.filter.user_all')}</option>
-              {filters.users.map(u => <option key={u.id} value={u.id}>{u.name}</option>)}
-            </select>
-          )}
+            {filters && filters.titles.length > 0 && (
+              <select className={cn(selectCls, narrow ? 'w-full' : 'max-w-[200px]')} value={title ?? ''} onChange={e => setTitle(e.target.value || null)}>
+                <option value="">{t('logs.filter.title_all')}</option>
+                {filters.titles.map(ti => <option key={ti.key} value={ti.key}>{ti.label}</option>)}
+              </select>
+            )}
 
-          <div className={cn('flex items-center gap-2', narrow && 'w-full')}>
-            <input type="date" className={cn(selectCls, narrow && 'flex-1')} title={t('logs.filter.from')} value={startDate} onChange={e => setStartDate(e.target.value)} />
-            <input type="date" className={cn(selectCls, narrow && 'flex-1')} title={t('logs.filter.to')} value={endDate} onChange={e => setEndDate(e.target.value)} />
-          </div>
+            {filters && filters.users.length > 0 && (
+              <select className={cn(selectCls, narrow && 'w-full')} value={user ?? ''} onChange={e => setUser(e.target.value ? Number(e.target.value) : null)}>
+                <option value="">{t('logs.filter.user_all')}</option>
+                {filters.users.map(u => <option key={u.id} value={u.id}>{u.name}</option>)}
+              </select>
+            )}
 
-          <div className={cn('flex items-center gap-2', narrow && 'w-full')}>
+            <div className={cn('flex items-center gap-2', narrow && 'w-full')}>
+              <input type="date" className={cn(selectCls, narrow && 'flex-1')} title={t('logs.filter.from')} value={startDate} onChange={e => setStartDate(e.target.value)} />
+              <input type="date" className={cn(selectCls, narrow && 'flex-1')} title={t('logs.filter.to')} value={endDate} onChange={e => setEndDate(e.target.value)} />
+            </div>
+          </>}
+          actions={<>
             <Button variant="outline" size="sm"
-              className={cn('gap-1.5', narrow && 'h-auto min-h-9 flex-[1_1_calc(50%_-_4px)] justify-center whitespace-normal text-center')}
+              className={cn('gap-1.5', narrow && 'w-full justify-center')}
               onClick={resetFilters} title={t('common.reset_filters')}>
               <RotateCcw className={cn('size-3.5', refreshing && 'animate-spin')} />{t('common.reset_filters')}
             </Button>
 
-            <div ref={colMgrRef} className={cn('relative', narrow && 'flex-[1_1_calc(50%_-_4px)]')}>
+            <div ref={colMgrRef} className={cn('relative', narrow && 'w-full')}>
               <Button variant="outline" size="sm"
-                className={cn('gap-1.5', narrow && 'h-auto min-h-9 w-full justify-center whitespace-normal text-center')}
+                className={cn('gap-1.5', narrow && 'w-full justify-center')}
                 onClick={() => setShowColMgr(v => !v)}>
                 <Columns3 className="size-3.5" />{t('common.columns')}
               </Button>
@@ -324,8 +322,8 @@ export default function LogListPage() {
                 onChange={(c) => { setCols(c); saveCols(c) }} onClose={() => setShowColMgr(false)}
                 onReset={() => { setCols(DEFAULT_COLS); saveCols(DEFAULT_COLS) }} />}
             </div>
-          </div>
-        </div>
+          </>}
+        />
 
         {/* Table */}
         <div className="overflow-x-auto rounded-xl border border-border bg-card shadow-sm">

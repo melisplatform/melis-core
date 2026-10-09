@@ -1,9 +1,9 @@
 import { Fragment, useEffect, useRef, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
-import { ArrowDown, ArrowUp, ArrowUpDown, Columns3, Database, Loader2, Mail, Pencil, Plus, RotateCcw, Search, Settings, Trash2, X } from 'lucide-react'
+import { ArrowDown, ArrowUp, ArrowUpDown, Columns3, Database, Loader2, Mail, Pencil, Plus, RotateCcw, Settings, Trash2 } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
+import { FilterToolbar } from '@/components/ui/filter-toolbar'
 import { Badge } from '@/components/ui/badge'
 import { cn } from '@/lib/utils'
 import * as emailsApi from '@/lib/emails-api'
@@ -216,21 +216,21 @@ export default function EmailListPage() {
         {!canList ? (
           <p className="text-sm text-muted-foreground">{t('emails.no_list')}</p>
         ) : (<>
-          <div className="flex flex-wrap items-center gap-2">
-            <div className={narrow ? 'relative w-full' : 'relative flex-1 min-w-[220px]'}>
-              <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
-              <Input value={search} onChange={(e) => setSearch(e.target.value)} placeholder={t('emails.search')} className="pl-9" />
-              {search && <button onClick={() => setSearch('')} className="absolute right-2.5 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"><X className="size-4" /></button>}
-            </div>
-            <div className={cn('flex items-center gap-2', !narrow && 'ml-auto', narrow && 'w-full flex-wrap')}>
+          <FilterToolbar
+            search={search}
+            onSearchChange={setSearch}
+            onSearchSubmit={() => {}}
+            onSearchClear={() => setSearch('')}
+            searchPlaceholder={t('emails.search')}
+            actions={<>
               <Button variant="outline" size="sm"
-                className={cn('gap-1.5', narrow && 'h-auto min-h-9 flex-[1_1_calc(50%_-_4px)] justify-center whitespace-normal text-center')}
+                className={cn('gap-1.5', narrow && 'w-full justify-center')}
                 onClick={resetFilters} title={t('common.reset_filters')}>
                 <RotateCcw className={cn('size-3.5', refreshing && 'animate-spin')} />{t('common.reset_filters')}
               </Button>
-              <div ref={colMgrRef} className={cn('relative', narrow && 'flex-[1_1_calc(50%_-_4px)]')}>
+              <div ref={colMgrRef} className={cn('relative', narrow && 'w-full')}>
                 <Button variant="outline" size="sm"
-                  className={cn('gap-1.5', narrow && 'h-auto min-h-9 w-full justify-center whitespace-normal text-center')}
+                  className={cn('gap-1.5', narrow && 'w-full justify-center')}
                   onClick={() => setShowColMgr(v => !v)}>
                   <Columns3 className="size-3.5" />{t('common.columns')}
                 </Button>
@@ -238,8 +238,8 @@ export default function EmailListPage() {
                   onChange={(c) => { setCols(c); saveCols(c) }} onClose={() => setShowColMgr(false)}
                   onReset={() => { setCols(DEFAULT_COLS); saveCols(DEFAULT_COLS) }} />}
               </div>
-            </div>
-          </div>
+            </>}
+          />
 
           <div className="overflow-x-auto rounded-xl border border-border bg-card shadow-sm">
             <table className={cn('w-full text-sm', !narrow && 'min-w-[720px]')}>

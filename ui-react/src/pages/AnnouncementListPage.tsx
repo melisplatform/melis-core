@@ -2,11 +2,11 @@ import { Fragment, useEffect, useRef, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import {
   ArrowDown, ArrowUp, ArrowUpDown, CheckCircle2, Circle, Columns3, FileDown, Loader2, Megaphone,
-  Pencil, Plus, RotateCcw, Search, Trash2, X, type LucideIcon,
+  Pencil, Plus, RotateCcw, Trash2, type LucideIcon,
 } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
+import { FilterToolbar } from '@/components/ui/filter-toolbar'
 import { Badge } from '@/components/ui/badge'
 import { cn } from '@/lib/utils'
 import * as annApi from '@/lib/announcement-api'
@@ -317,39 +317,38 @@ export default function AnnouncementListPage() {
         </div>
 
         {/* Filtres */}
-        <div className="flex flex-wrap items-center gap-2">
-          <div className={narrow ? 'relative w-full' : 'relative flex-1 min-w-[220px]'}>
-            <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
-            <Input value={searchInput} onChange={e => setSearchInput(e.target.value)}
-              onKeyDown={e => e.key === 'Enter' && applySearch()}
-              placeholder={t('ann.search')} className="pl-9" />
-            {searchInput && <button onClick={clearSearch}
-              className="absolute right-2.5 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"><X className="size-4" /></button>}
-          </div>
-          <div className={cn('flex items-center rounded-lg border border-border bg-muted/40 p-1 gap-1', narrow && 'w-full')}>
-            {([
-              { val: '' as const,  label: t('ann.filter.all'),      dot: null },
-              { val: '1' as const, label: t('ann.status.active'),   dot: 'bg-emerald-500' },
-              { val: '0' as const, label: t('ann.status.inactive'), dot: 'bg-red-500' },
-            ]).map(({ val, label, dot }) => (
-              <button key={val} type="button" onClick={() => setStatus(val)}
-                className={cn('flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-medium transition-colors', narrow && 'flex-1 justify-center',
-                  status === val ? 'bg-card shadow-sm text-foreground' : 'text-muted-foreground hover:text-foreground')}>
-                {dot && <span className={cn('size-1.5 rounded-full', dot)} />}
-                {label}
-              </button>
-            ))}
-          </div>
-
-          <div className={cn('flex items-center gap-2', narrow ? 'w-full flex-wrap' : 'ml-auto')}>
+        <FilterToolbar
+          search={searchInput}
+          onSearchChange={setSearchInput}
+          onSearchSubmit={applySearch}
+          onSearchClear={clearSearch}
+          searchPlaceholder={t('ann.search')}
+          activeCount={status !== '' ? 1 : 0}
+          filters={
+            <div className={cn('flex items-center rounded-lg border border-border bg-muted/40 p-1 gap-1', narrow && 'w-full')}>
+              {([
+                { val: '' as const,  label: t('ann.filter.all'),      dot: null },
+                { val: '1' as const, label: t('ann.status.active'),   dot: 'bg-emerald-500' },
+                { val: '0' as const, label: t('ann.status.inactive'), dot: 'bg-red-500' },
+              ]).map(({ val, label, dot }) => (
+                <button key={val} type="button" onClick={() => setStatus(val)}
+                  className={cn('flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-medium transition-colors', narrow && 'flex-1 justify-center',
+                    status === val ? 'bg-card shadow-sm text-foreground' : 'text-muted-foreground hover:text-foreground')}>
+                  {dot && <span className={cn('size-1.5 rounded-full', dot)} />}
+                  {label}
+                </button>
+              ))}
+            </div>
+          }
+          actions={<>
             <Button variant="outline" size="sm"
-              className={cn('gap-1.5', narrow && 'h-auto min-h-9 flex-[1_1_calc(50%_-_4px)] justify-center whitespace-normal text-center')}
+              className={cn('gap-1.5', narrow && 'w-full justify-center')}
               onClick={resetFilters} title={t('common.reset_filters')}>
               <RotateCcw className={cn('size-3.5', refreshing && 'animate-spin')} />{t('common.reset_filters')}
             </Button>
-            <div ref={colMgrRef} className={cn('relative', narrow && 'flex-[1_1_calc(50%_-_4px)]')}>
+            <div ref={colMgrRef} className={cn('relative', narrow && 'w-full')}>
               <Button variant="outline" size="sm"
-                className={cn('gap-1.5', narrow && 'h-auto min-h-9 w-full justify-center whitespace-normal text-center')}
+                className={cn('gap-1.5', narrow && 'w-full justify-center')}
                 onClick={() => setShowColMgr(v => !v)}>
                 <Columns3 className="size-3.5" />{t('common.columns')}
               </Button>
@@ -359,13 +358,13 @@ export default function AnnouncementListPage() {
             </div>
             {canExport && (
               <Button variant="outline" size="sm"
-                className={cn('gap-1.5', narrow && 'h-auto min-h-9 flex-[1_1_calc(50%_-_4px)] justify-center whitespace-normal text-center')}
+                className={cn('gap-1.5', narrow && 'w-full justify-center')}
                 onClick={() => setShowExport(true)}>
                 <FileDown className="size-3.5" />{t('common.export')}
               </Button>
             )}
-          </div>
-        </div>
+          </>}
+        />
 
         {/* Table */}
         <div className="rounded-xl border border-border bg-card shadow-sm overflow-x-auto">
