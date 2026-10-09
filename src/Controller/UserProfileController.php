@@ -174,12 +174,13 @@ class UserProfileController extends MelisAbstractActionController
             
             $password  = $this->getRequest()->getPost('usr_password');
             $confirmPass = $this->getRequest()->getPost('usr_confirm_password');
+            $currentPass = $this->getRequest()->getPost('usr_current_password');
             $userId = $this->getCurrentUserInfo()[0]['usr_id'];
             $userImage = $this->getCurrentUserInfo()[0]['usr_image'];
             $userLangIdCurrent = $this->getCurrentUserInfo()[0]['usr_lang_id'];
-            
+
             //validate the password
-            $passValidator = $this->validatePassword($password, $confirmPass, $translator, $melisCoreAuth);
+            $passValidator = $this->validatePassword($password, $confirmPass, $currentPass, $translator, $melisCoreAuth);
             
             if($userUpdateForm->isValid())//validate form
             {
@@ -224,6 +225,7 @@ class UserProfileController extends MelisAbstractActionController
                             $newPass = $passValidator['newPass'];
                             // remove confirm pass when updating
                             unset($data['usr_confirm_password']);
+                            unset($data['usr_current_password']);
                             $data['usr_password'] = !empty($newPass) ? $newPass : $this->getCurrentUserInfo()[0]['usr_password'];
                             
                             //save the user data
@@ -357,15 +359,27 @@ class UserProfileController extends MelisAbstractActionController
      * @param melisCoreAuth $melisCoreAuth
      * @return array
      */
-    private function validatePassword($password, $confirmPass, $translator, $melisCoreAuth)
+    private function validatePassword($password, $confirmPass, $currentPass, $translator, $melisCoreAuth)
     {
         $errors = array();
         $success = false;
         $newPass = "";
-        
+
         //check if user wants to update his / her password
         if(!empty($password) || !empty($confirmPass))
         {
+            //the current password must be provided and correct before any change is allowed
+            $currentHash = $this->getCurrentUserInfo()[0]['usr_password'] ?? '';
+            if(empty($currentPass) || !$melisCoreAuth->isPasswordCorrect($currentPass, $currentHash))
+            {
+                $errors = array(
+                    'usr_current_password' => array(
+                        'invalidPassword' => $translator->translate('tr_meliscore_tool_user_usr_current_password_not_match'),
+                        'label' => 'Current password',
+                    ),
+                );
+                return array("success"=>false, "errors"=>$errors, 'newPass'=>"");
+            }
             //check the length of the password
             if(strlen($password) >= 8)
             {

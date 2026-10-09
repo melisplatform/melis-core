@@ -1155,6 +1155,26 @@ return [
 
                                 [
                                     'spec' => [
+                                        'name' => 'usr_current_password',
+                                        'type' => 'Password',
+                                        'options' => [
+                                            'label' => 'tr_meliscore_tool_user_col_current_password',
+                                            'tooltip' => 'tr_meliscore_tool_user_col_current_password tooltip',
+                                            'label_options' => [
+                                                'disable_html_escape' => true,
+                                            ],
+                                        ],
+                                        'attributes' => [
+                                            'id' => 'id_usr_profile_current_password',
+                                            'value' => '',
+                                            'placeholder' => 'tr_meliscore_login_pass_placeholder',
+                                            'class' => 'form-control',
+                                            'autocomplete' => 'current-password',
+                                        ],
+                                    ],
+                                ],
+                                [
+                                    'spec' => [
                                         'name' => 'usr_password',
                                         'type' => 'Password',
                                         'options' => [
@@ -1169,6 +1189,7 @@ return [
                                             'value' => '',
                                             'placeholder' => 'tr_meliscore_login_pass_placeholder',
                                             'class' => 'form-control',
+                                            'autocomplete' => 'new-password',
                                         ],
                                     ],
                                 ],

@@ -741,6 +741,8 @@ const fr = {
   'account.change_photo': 'Changer la photo',
   'account.remove_photo': 'Retirer la photo',
   'account.email': 'Email',
+  'account.current_password': 'Mot de passe actuel',
+  'account.current_password_placeholder': 'Requis pour modifier le mot de passe',
   'account.password': 'Mot de passe',
   'account.confirm_password': 'Confirmer le mot de passe',
   'account.password_placeholder': 'Laisser vide pour conserver le mot de passe actuel',
@@ -752,6 +754,8 @@ const fr = {
   'account.err.pass_low': 'Le mot de passe doit contenir au moins 8 caractères.',
   'account.err.pass_regex': 'Le mot de passe ne respecte pas les règles de complexité.',
   'account.err.pass_match': 'Les deux mots de passe ne correspondent pas.',
+  'account.err.current_required': 'Veuillez saisir votre mot de passe actuel.',
+  'account.err.current_pass': 'Le mot de passe actuel est incorrect.',
 
   // ── Wizard d'installation (setup) ──
   'setup.prev': 'Précédent',
@@ -1645,6 +1649,8 @@ const en: Record<I18nKey, string> = {
   'account.change_photo': 'Change photo',
   'account.remove_photo': 'Remove photo',
   'account.email': 'Email',
+  'account.current_password': 'Current password',
+  'account.current_password_placeholder': 'Required to change the password',
   'account.password': 'Password',
   'account.confirm_password': 'Confirm password',
   'account.password_placeholder': 'Leave empty to keep the current password',
@@ -1656,6 +1662,8 @@ const en: Record<I18nKey, string> = {
   'account.err.pass_low': 'The password must be at least 8 characters.',
   'account.err.pass_regex': 'The password does not meet the complexity rules.',
   'account.err.pass_match': 'The two passwords do not match.',
+  'account.err.current_required': 'Please enter your current password.',
+  'account.err.current_pass': 'The current password is incorrect.',
 
   // ── Setup wizard ──
   'setup.prev': 'Previous',
