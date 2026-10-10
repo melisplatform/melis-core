@@ -25,12 +25,15 @@ class MelisReactApiPlatformSchemeReactController extends MelisAbstractActionCont
 
     private const MELIS_KEY = 'meliscore_tool_platform_scheme';
 
-    /** Champs mono-valeur (images). camelCase (API) => clé en base. */
     private const FIELDS = [
         'headerLogo'      => 'header_logo',
         'loginLogo'       => 'login_logo',
         'loginBackground' => 'login_background',
+        'mainColor'       => 'main_color',
+        'mainColorDark'   => 'main_color_dark',
     ];
+
+    private const COLOR_FIELDS = ['mainColor', 'mainColorDark'];
 
     /** Champs TRADUISIBLES (par langue du BO). camelCase (API) => clé en base. */
     private const TRANS_FIELDS = [
@@ -87,12 +90,15 @@ class MelisReactApiPlatformSchemeReactController extends MelisAbstractActionCont
             $in   = is_array($body['scheme'] ?? null) ? $body['scheme'] : [];
             $inTr = is_array($body['translations'] ?? null) ? $body['translations'] : [];
 
-            // Champs mono-valeur.
             $kv = [];
             foreach (self::FIELDS as $api => $dbKey) {
-                if (array_key_exists($api, $in)) {
-                    $kv[$dbKey] = $in[$api] === null ? null : (string) $in[$api];
+                if (!array_key_exists($api, $in)) { continue; }
+                $value = $in[$api] === null ? null : trim((string) $in[$api]);
+                if ($value !== null && in_array($api, self::COLOR_FIELDS, true)
+                    && !preg_match('/^#(?:[0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/', $value)) {
+                    $value = '';
                 }
+                $kv[$dbKey] = $value;
             }
             if (!empty($kv)) { $this->schemeSvc()->setMany($kv); }
 

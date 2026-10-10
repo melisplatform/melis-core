@@ -23,6 +23,10 @@ export interface ReactScheme {
   loginLogo: string
   /** Panneau gauche du login : image de fond (vide = dégradé du thème). */
   loginBackground: string
+  /** Couleur principale du thème clair (hex). Vide = défaut in-app. */
+  mainColor: string
+  /** Couleur principale du thème sombre (hex). Vide = défaut in-app. */
+  mainColorDark: string
   /** Textes traduisibles du login (titre/sous-titre) par langue du BO. */
   translations: ReactSchemeTranslations
   /** Langues du back-office (pour l'éditeur : drapeaux + résolution côté login). */
@@ -33,6 +37,7 @@ export interface ReactScheme {
 
 export const EMPTY_SCHEME: ReactScheme = {
   headerLogo: '', loginLogo: '', loginBackground: '',
+  mainColor: '', mainColorDark: '',
   translations: { loginTitle: {}, loginSubtitle: {} },
   languages: [],
   version: '',
@@ -51,7 +56,7 @@ async function apiFetch<T>(url: string, opts?: RequestInit): Promise<T> {
 }
 
 interface RawScheme {
-  scheme: { headerLogo: string; loginLogo: string; loginBackground: string }
+  scheme: { headerLogo: string; loginLogo: string; loginBackground: string; mainColor: string; mainColorDark: string }
   translations: ReactSchemeTranslations
   languages: ThemeLang[]
   version: string
@@ -63,6 +68,8 @@ export async function fetchReactScheme(): Promise<ReactScheme> {
     headerLogo: d.scheme?.headerLogo ?? '',
     loginLogo: d.scheme?.loginLogo ?? '',
     loginBackground: d.scheme?.loginBackground ?? '',
+    mainColor: d.scheme?.mainColor ?? '',
+    mainColorDark: d.scheme?.mainColorDark ?? '',
     translations: {
       loginTitle: d.translations?.loginTitle ?? {},
       loginSubtitle: d.translations?.loginSubtitle ?? {},
@@ -73,7 +80,7 @@ export async function fetchReactScheme(): Promise<ReactScheme> {
 }
 
 export interface ReactSchemeSavePayload {
-  scheme: { headerLogo: string; loginLogo: string; loginBackground: string }
+  scheme: { headerLogo: string; loginLogo: string; loginBackground: string; mainColor: string; mainColorDark: string }
   translations: ReactSchemeTranslations
 }
 
