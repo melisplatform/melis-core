@@ -985,7 +985,7 @@ class MelisCoreGdprAutoDeleteService extends MelisGeneralService
                 $messageText,
                 $this->getSmtpConfig());
         } catch (\Exception $error) {
-            if (!strpos($error->getMessage(), 'Could not read from smtp.gmail.com')) {
+            if (strpos($error->getMessage(), 'Could not read from smtp.gmail.com') === false) {
                 $this->errors = "Technical issue";
 
             }
@@ -1099,7 +1099,7 @@ class MelisCoreGdprAutoDeleteService extends MelisGeneralService
         if (! empty($dbTags)) {
             // explode tags
             foreach ($dbTags as $tag) {
-                if (strpos($content, "[" . $tag . "]")) {
+                if (strpos($content, "[" . $tag . "]") !== false) {
                     if (isset($moduleTags[$tag]) && !empty($moduleTags[$tag])) {
                         // replace
                         $content = str_replace('[' . $tag . ']', $moduleTags[$tag] , $content);
