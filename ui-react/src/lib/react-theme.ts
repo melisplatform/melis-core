@@ -16,15 +16,37 @@ function emit() { subs.forEach((f) => f()) }
 
 export function getReactTheme(): ReactScheme { return _theme }
 
+function setColorVar(name: string, color: string): void {
+  const root = document.documentElement
+  const value = color.trim()
+  if (value) root.style.setProperty(name, value)
+  else root.style.removeProperty(name)
+}
+
+/**
+ * Applique les couleurs de la plateforme sur <html> : `light` pour le thème clair, `dark` pour le
+ * thème sombre (studio). index.css mappe la couleur active sur --melis-main-color ; une valeur vide
+ * restaure le défaut du thème.
+ */
+export function applyMainColors(light: string, dark: string): void {
+  setColorVar('--melis-main-color-light', light)
+  setColorVar('--melis-main-color-dark', dark)
+}
+
 export function setReactTheme(patch: Partial<ReactScheme>): void {
   _theme = { ..._theme, ...patch }
+  if ('mainColor' in patch || 'mainColorDark' in patch) applyMainColors(_theme.mainColor, _theme.mainColorDark)
   emit()
 }
 
 export async function loadReactTheme(force = false): Promise<void> {
   if (_loaded && !force) return
   _loaded = true
-  try { _theme = await fetchReactScheme(); emit() } catch { /* non bloquant : on garde les valeurs par défaut */ }
+  try {
+    _theme = await fetchReactScheme()
+    applyMainColors(_theme.mainColor, _theme.mainColorDark)
+    emit()
+  } catch { /* non bloquant : on garde les valeurs par défaut */ }
 }
 
 function subscribe(cb: () => void) { subs.add(cb); return () => subs.delete(cb) }

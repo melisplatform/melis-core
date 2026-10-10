@@ -4,6 +4,7 @@ import { Image as ImageIcon, LogIn, Palette, RotateCcw, Save, Upload, X } from '
 
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import { ColorField } from '@/components/ui/color-field'
 import { cn } from '@/lib/utils'
 import {
   EMPTY_SCHEME, fetchReactScheme, resetReactScheme, saveReactScheme,
@@ -26,6 +27,12 @@ import { useCan } from '@/lib/capabilities'
  */
 
 const TOOL_KEY = 'meliscore_tool_platform_scheme'
+
+/** Couleurs par défaut, alignées sur les thèmes `platform` (clair) et `studio` (sombre) d'index.css. */
+const DEFAULT_COLOR = '#ff0000'
+const DEFAULT_COLOR_DARK = '#2f6bff'
+const COLOR_PRESETS = ['#ff0000', '#2f6bff', '#0f9d58', '#7c3aed', '#f59e0b', '#0f172a']
+const COLOR_PRESETS_DARK = ['#2f6bff', '#ff4d4d', '#34d399', '#a78bfa', '#fbbf24', '#e8edf6']
 
 function notify(kind: 'ok' | 'ko', title: string, message: string) {
   window.postMessage({ __melisNotif: true, kind, title, message }, '*')
@@ -184,8 +191,10 @@ export default function PlatformSchemePage() {
   const [activeLang, setActiveLang] = useState(0)
   const curLang = activeLang || scheme.languages[0]?.id || 0
 
-  function setSingle<K extends 'headerLogo' | 'loginLogo' | 'loginBackground'>(key: K, value: string) {
+  function setSingle<K extends 'headerLogo' | 'loginLogo' | 'loginBackground' | 'mainColor' | 'mainColorDark'>(key: K, value: string) {
     setScheme((s) => ({ ...s, [key]: value }))
+    // Aperçu instantané des couleurs pendant l'édition.
+    if (key === 'mainColor' || key === 'mainColorDark') setReactTheme({ [key]: value })
   }
   function setTrans(field: 'loginTitle' | 'loginSubtitle', langId: number, value: string) {
     setScheme((s) => ({ ...s, translations: { ...s.translations, [field]: { ...s.translations[field], [String(langId)]: value } } }))
@@ -206,7 +215,10 @@ export default function PlatformSchemePage() {
     setSaving(true)
     try {
       await saveReactScheme({
-        scheme: { headerLogo: scheme.headerLogo, loginLogo: scheme.loginLogo, loginBackground: scheme.loginBackground },
+        scheme: {
+          headerLogo: scheme.headerLogo, loginLogo: scheme.loginLogo, loginBackground: scheme.loginBackground,
+          mainColor: scheme.mainColor, mainColorDark: scheme.mainColorDark,
+        },
         translations: scheme.translations,
       })
       setReactTheme(scheme) // application instantanée (shell + login)
@@ -277,6 +289,15 @@ export default function PlatformSchemePage() {
         ) : loading ? (
           <p className="text-sm text-muted-foreground">{t('common.loading')}</p>
         ) : (<>
+          <Section icon={Palette} title={t('scheme.section_color')}>
+            <ColorField label={t('scheme.main_color_light')} value={scheme.mainColor}
+              onChange={(v) => setSingle('mainColor', v)} defaultValue={DEFAULT_COLOR}
+              presets={COLOR_PRESETS} disabled={!canEdit} hint={t('scheme.main_color_hint')} />
+            <ColorField label={t('scheme.main_color_dark')} value={scheme.mainColorDark}
+              onChange={(v) => setSingle('mainColorDark', v)} defaultValue={DEFAULT_COLOR_DARK}
+              presets={COLOR_PRESETS_DARK} disabled={!canEdit} hint={t('scheme.main_color_dark_hint')} />
+          </Section>
+
           <Section icon={ImageIcon} title={t('scheme.section_backoffice')}>
             <ImageField label={t('scheme.header_logo')} value={scheme.headerLogo} note={t('scheme.logo_default_note')}
               canEdit={canEdit} onChange={(v) => setSingle('headerLogo', v)} />
