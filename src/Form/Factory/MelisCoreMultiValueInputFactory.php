@@ -22,7 +22,6 @@ class MelisCoreMultiValueInputFactory extends Text
     public function __invoke(ContainerInterface $container, $requestedName)
     {
         $element = new Text;
-        // added melis-multi-val-input for multiple input
         $element->setAttribute('data-tags', '');
         $element->setAttribute('class', 'melis-multi-val-input');
         

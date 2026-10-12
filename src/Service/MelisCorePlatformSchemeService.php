@@ -36,11 +36,9 @@ class MelisCorePlatformSchemeService extends MelisGeneralService
     public function getCurrentScheme($colorsOnly = false)
     {
 
-        // Event parameters prepare
         $arrayParameters = $this->makeArrayFromParameters(__METHOD__, func_get_args());
         $results         = null;
 
-        // Sending service start event
         $arrayParameters = $this->sendEvent('melis_core_package_scheme_get_current_scheme_start', $arrayParameters);
 
         $table = $this->schemeTable();
@@ -51,7 +49,6 @@ class MelisCorePlatformSchemeService extends MelisGeneralService
             $schemeData = $table->getDefaultScheme($colorsOnly)->current();
         }
 
-        // check if scheme has data
         if($schemeData) {
 
             $entScheme = new MelisCorePlatformScheme();
@@ -75,7 +72,6 @@ class MelisCorePlatformSchemeService extends MelisGeneralService
 
         // Adding results to parameters for events treatment if needed
         $arrayParameters['results'] = $results;
-        // Sending service end event
         $arrayParameters = $this->sendEvent('melis_core_package_scheme_get_current_scheme_end', $arrayParameters);
 
         return $arrayParameters['results'];
@@ -90,11 +86,9 @@ class MelisCorePlatformSchemeService extends MelisGeneralService
      */
     public function saveScheme($data, $id, $setAsActive = false)
     {
-        // Event parameters prepare
         $arrayParameters = $this->makeArrayFromParameters(__METHOD__, func_get_args());
         $results = false;
 
-        // Sending service start event
         $arrayParameters = $this->sendEvent('melis_core_package_scheme_save_start', $arrayParameters);
 
         $data        = $arrayParameters['data'];
@@ -109,7 +103,6 @@ class MelisCorePlatformSchemeService extends MelisGeneralService
 
         // Adding results to parameters for events treatment if needed
         $arrayParameters['results'] = $results;
-        // Sending service end event
         $arrayParameters = $this->sendEvent('melis_core_package_scheme_save_end', $arrayParameters);
 
         return $arrayParameters['results'];
@@ -122,11 +115,9 @@ class MelisCorePlatformSchemeService extends MelisGeneralService
      */
     public function resetScheme($id)
     {
-        // Event parameters prepare
         $arrayParameters = $this->makeArrayFromParameters(__METHOD__, func_get_args());
         $results = false;
 
-        // Sending service start event
         $arrayParameters = $this->sendEvent('melis_core_package_scheme_reset_start', $arrayParameters);
         $defaultSchemeData = $this->schemeTable()->getDefaultScheme()->current();
 
@@ -145,7 +136,6 @@ class MelisCorePlatformSchemeService extends MelisGeneralService
             $success = $this->schemeTable()->save($data, $id);
             if($success) {
 
-                //generate scheme file time
                 $platformTable = $this->getServiceManager()->get('MelisCoreTablePlatform');
                 $platformData = $platformTable->getEntryByField('plf_name', getenv('MELIS_PLATFORM'))->current();
                 if(!empty($platformData)){
@@ -158,7 +148,6 @@ class MelisCorePlatformSchemeService extends MelisGeneralService
 
         // Adding results to parameters for events treatment if needed
         $arrayParameters['results'] = $results;
-        // Sending service end event
         $arrayParameters = $this->sendEvent('melis_core_package_scheme_reset_end', $arrayParameters);
 
         return $arrayParameters['results'];

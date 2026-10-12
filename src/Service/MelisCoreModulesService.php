@@ -96,9 +96,7 @@ class MelisCoreModulesService extends MelisServiceManager
             }
         }
 
-
         $modules = $tmpModules;
-
 
         if (!is_null($moduleName)) {
             return isset($modules[$moduleName]) ? $modules[$moduleName] : null;
@@ -401,7 +399,6 @@ class MelisCoreModulesService extends MelisServiceManager
                             continue;
                         }
 
-                        // remove melisplatform prefix
                         $package = str_replace(['melisplatform/', ' '], '', $require);
 
                         /**
@@ -673,7 +670,6 @@ class MelisCoreModulesService extends MelisServiceManager
 
         array_push($activeModules, $module);
 
-        // Creating/updating module.load.php including new module
         return $this->createModuleLoader('config/', $activeModules, $defaultModules);
     }
 
@@ -711,7 +707,6 @@ class MelisCoreModulesService extends MelisServiceManager
                 $insertAtIdx = $moduleCount - 1;
                 array_splice($modules, $insertAtIdx, 0, $module);
 
-                // create the module.load file
                 $this->createModuleLoader('config/', $modules, [], []);
             }
         }
@@ -818,7 +813,6 @@ class MelisCoreModulesService extends MelisServiceManager
                 elseif ($type == 'js')
                     $this->minifyJs($moduleFileHolder, $arrayPaths);
 
-                //hot fix
                 $newModuleFildeHolder = [];
                 if(!empty($moduleFileHolder)){
                     foreach($moduleFileHolder as $module => $moduleFiles){
@@ -832,7 +826,6 @@ class MelisCoreModulesService extends MelisServiceManager
                  * We merge all bundled files
                  */
                 $allAssets = array_merge($vendorFileHolder, $moduleFileHolderAlreadyBundled, $newModuleFildeHolder);
-//                $allAssets = array_merge($vendorFileHolder, $moduleFileHolderAlreadyBundled, $arrayPaths);
                 /**
                  * Combine all
                  */
@@ -849,7 +842,6 @@ class MelisCoreModulesService extends MelisServiceManager
              */
             $this->copyNeededAssets();
 
-            //save bundle cache time
             $platformTable = $this->getServiceManager()->get('MelisCoreTablePlatform');
             $platformData = $platformTable->getEntryByField('plf_name', getenv('MELIS_PLATFORM'))->current();
 
@@ -859,9 +851,6 @@ class MelisCoreModulesService extends MelisServiceManager
         }
     }
 
-    /**
-     * Function to bundle all login page assets
-     */
     private function bundleLoginAssets()
     {
         $plugin = new MelisCoreHeadPluginHelper();
@@ -927,7 +916,6 @@ class MelisCoreModulesService extends MelisServiceManager
                 $moduleFilePart = explode('/', $modulePath);
                 if (!empty($moduleFilePart)) {
                     if ($moduleFilePart[1] == 'module') {//in module
-                        //check if bundle is enable
                         $appsConfig = $melisAppConfig->getItem(end($moduleFilePart));
                         if (empty($appsConfig))
                             $appsConfig = $melisAppConfig->getItem(strtolower(end($moduleFilePart)));
@@ -1083,7 +1071,6 @@ class MelisCoreModulesService extends MelisServiceManager
         }
     }
 
-
     /**
      * @param $css
      * @param $filePath
@@ -1096,9 +1083,6 @@ class MelisCoreModulesService extends MelisServiceManager
         if (!empty($filePath)) {
             $filePath = explode('/', $filePath);
             $moduleName = $filePath[1] ?? 'MelisCore';
-            /**
-             * Check if file is from module
-             */
             $assetManagerService = $this->getServiceManager()->get('MelisAssetManagerModulesService');
             $modulePath = $assetManagerService->getModulePath($filePath[1], false);
             if (!empty($modulePath)) {
@@ -1111,21 +1095,14 @@ class MelisCoreModulesService extends MelisServiceManager
 
         $path = '/' . $moduleName . '/' . $postPath;
 
-        // Clear out the line breaks
         $content = str_replace('<br />', '', $css);
 
-        // Clear out bogus whitespace
         $content = preg_replace('/\(\s+/', '(', $content);
         $content = preg_replace('/\s+\)/', ')', $content);
 
-        // Clear out quotes
-//        $content = preg_replace('/(?:\'|\")/', '', $content);
-
-        // Replaces repeating ../ patterns
         $content = preg_replace('/(?:\.\.\/)+(.*?\))/', $path . '$1', $content);
 
         // Prepend the path to lines that do not have a "//" anywhere
-//        $content = preg_replace('/(url\((?!.*\/\/))/i', '$1'.$path, $content);
 
         /**
          * This will fixed the problem on not getting the image/icon since the file /melis as folder,
@@ -1144,9 +1121,6 @@ class MelisCoreModulesService extends MelisServiceManager
         return $content;
     }
 
-    /**
-     * This function copy necessary files
-     */
     private function copyNeededAssets()
     {
         $moduleService = $this->getServiceManager()->get('MelisAssetManagerModulesService');
@@ -1183,7 +1157,6 @@ class MelisCoreModulesService extends MelisServiceManager
     private function copyFile($fileNeeded, $type, $moduleName, $isFromVendor)
     {
         $docroot = $_SERVER['DOCUMENT_ROOT'];
-//        $bundleFolder = $docroot.'/../etc';
         $bundleFolder = $docroot;
 
         $path = $bundleFolder;// . '/' . ModulesController::BUNDLE_FOLDER_NAME . '/'.$type;
@@ -1199,7 +1172,6 @@ class MelisCoreModulesService extends MelisServiceManager
             $completFilePath = $moduleName.'/public'.$file;
 
             //make sure file does not exist yet in destination
-            //if(!file_exists($path.'/'.$fileName)){
                 //make sure file source exist
                 // Copying only needs to READ the source: no chmod on it. The vendor/module assets
                 // may belong to another user than the web server (e.g. dev4), where chmod() failed
@@ -1211,7 +1183,6 @@ class MelisCoreModulesService extends MelisServiceManager
                         copy($dir . $completFilePath, $path . '/' . $fileName);
                     }
                 }
-            //}
         }
     }
 
@@ -1230,14 +1201,11 @@ class MelisCoreModulesService extends MelisServiceManager
         if(!is_writable($dst) && $this->isOwnedByProcess($dst))
             chmod($dst, 0777);
 
-        // Loop through the files in source directory
         while( $file = readdir($dir) ) {
 
             if (( $file != '.' ) && ( $file != '..' )) {
                 if ( is_dir($src . '/' . $file) )
                 {
-                    // Recursively calling custom copy function
-                    // for sub directory
                     $this->copyDir($src . '/' . $file, $dst . '/' . $file);
                 }
                 else {
@@ -1277,13 +1245,10 @@ class MelisCoreModulesService extends MelisServiceManager
      */
     private function getFileContent($fileStr, $removeComments = true)
     {
-//        $container = new Container('meliscore');
-//        $locale = $container['melis-lang-locale'];
 
         if(!str_contains($fileStr, '/get-translations')) {
             // Read the file from disk whenever we can, instead of asking the platform for its OWN
             // asset over HTTP. That round-trip is what silently produced EMPTY bundles:
-            //   - the host comes from getSafeAssetHost(), which falls back to $_SERVER['HTTP_HOST'];
             //     behind a container/proxy that is the PUBLISHED address (e.g. localhost:8084) and
             //     is not reachable from the server itself → every fetch returns nothing;
             //   - the per-module files produced by minifyCss()/minifyJs() live in `etc/bundles/`,
@@ -1298,21 +1263,16 @@ class MelisCoreModulesService extends MelisServiceManager
 
             if (function_exists('curl_version')) {
 
-//                if(str_contains($fileStr, '/get-translations'))
-//                    $fileStr .= '?locale=' . $locale;
-
                 $ch = curl_init();
                 curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
                 curl_setopt($ch, CURLOPT_URL, $fileStr);
                 curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, FALSE);
                 curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
                 curl_setopt($ch, CURLOPT_SSL_ENABLE_ALPN, false);
-                //to fixed problem on redirect
                 curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
                 $text = curl_exec($ch);
                 curl_close($ch);
             } else {
-                //to fixed problem on redirect
                 $options = [
                     "http" => [
                         "method" => "GET",
@@ -1359,7 +1319,6 @@ class MelisCoreModulesService extends MelisServiceManager
             return null;
         }
 
-        // 1. Plain file under public/
         if (is_file($docroot . $path)) {
             return $docroot . $path;
         }
@@ -1370,7 +1329,6 @@ class MelisCoreModulesService extends MelisServiceManager
             return $etcPath;
         }
 
-        // 3. /<ModuleAlias>/<asset> → <module>/public/<asset>
         $parts = explode('/', ltrim($path, '/'));
         if (count($parts) > 1) {
             $modulePathFile = $docroot . '/../config/melis.modules.path.php';

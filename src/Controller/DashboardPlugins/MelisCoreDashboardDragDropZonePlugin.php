@@ -43,7 +43,6 @@ class MelisCoreDashboardDragDropZonePlugin extends MelisCoreDashboardTemplatingP
                 foreach ($plugins['plugins']->plugin As $xKey => $xVal) {
                     $pluginName = (string)$xVal->attributes()->plugin;
 
-                    // Checking if the plugin is active
                     if (in_array($pluginName, $activePlugins)) {
                         $plugin = $pluginManager->get($pluginName);
                         $pluginModel = $plugin->render(
@@ -128,9 +127,6 @@ class MelisCoreDashboardDragDropZonePlugin extends MelisCoreDashboardTemplatingP
                             $pluginXmlData .= "\t".'<y-axis><![CDATA['.$yAxis.']]></y-axis>'."\n";
                             $pluginXmlData .= "\t".'<height><![CDATA['.$height.']]></height>'."\n";
                             $pluginXmlData .= "\t".'<width><![CDATA['.$width.']]></width>'."\n";
-                            /**
-                             * Adding custom xml data from plugin 
-                             */
                             $pluginXmlData .= $plugin->savePluginConfigToXml($config);
                             $pluginXmlData .= '</plugin>';
                         }

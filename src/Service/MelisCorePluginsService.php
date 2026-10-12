@@ -28,24 +28,18 @@ class MelisCorePluginsService extends MelisGeneralService
      */
     public function getTemplatingPlugins()
     {
-        // Event parameters prepare
         $arrayParameters = $this->makeArrayFromParameters(__METHOD__, func_get_args());
         $results = array();
-        // Sending service start event
         $arrayParameters = $this->sendEvent('melis_core_get_templating_plugins_start', $arrayParameters);
-        // Implementation start
         $melisConfig = $this->getServiceManager()->get('config');
-        // get plugin config
         $plugins = $melisConfig['plugins'];
         $dashboardPlugins = [];
         // put plugins into a variable
         if (! empty($plugins)) {
         	$templatingPluygins = [];
             foreach ($plugins as $moduleName => $val) {
-                // get templating plugins.
                 if (isset($val['plugins']) && ! empty($val['plugins'])) {
                     $templatingPluygins[$moduleName] = [];
-                    // templating plugins
                     foreach ($val['plugins'] as $pluginName => $pluginConfig) {
                         if ($pluginName != "MelisFrontDragDropZonePlugin") {
                             array_push($templatingPluygins[$moduleName],$pluginName);
@@ -57,7 +51,6 @@ class MelisCorePluginsService extends MelisGeneralService
         }
         // Adding results to parameters for events treatment if needed
         $arrayParameters['results'] =  $results;
-        // Sending service end event
         $arrayParameters = $this->sendEvent('melis_core_get_templating_plugins_end', $arrayParameters);
 
         return $arrayParameters['results'];
@@ -69,12 +62,9 @@ class MelisCorePluginsService extends MelisGeneralService
      */
     public function getDashboardPlugins($pluginNameOnly = false)
     {
-        // Event parameters prepare
         $arrayParameters = $this->makeArrayFromParameters(__METHOD__, func_get_args());
         $results = array();
-        // Sending service start event
         $arrayParameters = $this->sendEvent('melis_core_get_dashboard_plugins_start', $arrayParameters);
-        // Implementation start
         $melisConfig = $this->getServiceManager()->get('MelisCoreConfig');
         $dashboardPlugins = $melisConfig->getItem('/meliscore/interface/melis_dashboardplugin/interface/melisdashboardplugin_section');
         $plugins = [];
@@ -96,7 +86,6 @@ class MelisCorePluginsService extends MelisGeneralService
 
         // Adding results to parameters for events treatment if needed
         $arrayParameters['results'] =  $results;
-        // Sending service end event
         $arrayParameters = $this->sendEvent('melis_core_get_dashboard_plugins_end', $arrayParameters);
 
         return $arrayParameters['results'];
@@ -110,7 +99,6 @@ class MelisCorePluginsService extends MelisGeneralService
     {
         $status = false;
         if (is_array($pluginData) && !empty($pluginData)) {
-            // save plugin info in db
             $id = $this->pluginsTbl->save($pluginData);
             if (! empty($id)) {
                 $status = true;
@@ -129,24 +117,19 @@ class MelisCorePluginsService extends MelisGeneralService
     {
         $status = false;
         $pluginData = $this->pluginsTbl->getEntryByField('plugin_name',$pluginName)->current();
-        // get date installed
         if (! empty($pluginData)) {
             $dateInstalled = $pluginData->plugin_date_installed;
             $newPluginNotificationDuration = $this->getNewPluginNotifMenuDuration();
             $dateElapse = null;
-            // add 10 days
-            // for templating plugins
             if ($pluginData->plugin_type == self::TEMPLATING_PLUGIN_TYPE) {
                 $dateElapse    = strtotime("+$newPluginNotificationDuration day",strtotime($dateInstalled));
             }
-            // for dashboard plugins
             if ($pluginData->plugin_type == self::DASHBOARD_PLUGIN_TYPE) {
                 $dateElapse    = strtotime("+$newPluginNotificationDuration day",strtotime($dateInstalled));
             }
 
             $dateElapse    = date('Y-m-d h:i:s', $dateElapse);
             $dateToday     = date('Y-m-d h:i:s');
-            // compare two date time
             if ($dateToday < $dateElapse) {
                 $status = true;
             }
@@ -165,12 +148,10 @@ class MelisCorePluginsService extends MelisGeneralService
     {
         $modulePlugins = [];
         if (! empty($moduleName)) {
-            // dashboard plugins
             $dashboardPlugins = $this->getDashboardPlugins();
             if (isset($dashboardPlugins[$moduleName]) && ! empty($dashboardPlugins[$moduleName])) {
                 $modulePlugins['dashboard'] = $dashboardPlugins[$moduleName];
             }
-            // templating plugins
             $templatingPlugins = $this->getTemplatingPlugins();
             if (isset($templatingPlugins[$moduleName]) && ! empty($templatingPlugins[$moduleName])) {
                 $modulePlugins['templating'] = $templatingPlugins[$moduleName];
@@ -201,15 +182,12 @@ class MelisCorePluginsService extends MelisGeneralService
         if (!empty($container['melis-packagist-categories']) && !$reloadModules)
             return $container['melis-packagist-categories'];
 
-        // get the marketplace sections for the modules
         $marketPlaceModuleCategories = @file_get_contents("http://marketplace.melisplatform.com/melis-packagist/get-package-group", true);
         // decode to make it an array
         $marketPlaceModuleCategories = json_decode($marketPlaceModuleCategories);
         $simplifiedModuleCategories = [];
         if (! empty($marketPlaceModuleCategories)) {
-            // simplified data into one array
             foreach ($marketPlaceModuleCategories as $idx => $val) {
-                // check category if it is empty
                 // we will not include section(s) does'nt have any modules under
                 if ($val->module_count > 0) {
                     $simplifiedModuleCategories[$idx] = $val->mp_group_name;
@@ -229,14 +207,11 @@ class MelisCorePluginsService extends MelisGeneralService
     public function checkDashboardPlugins()
     {
         $newPlugins = [];
-        // get dashboard plugins
         $dashboardPlugins  = $this->getDashboardPlugins();
-        // save dashboard plugins
         if (! empty($dashboardPlugins)) {
             foreach ($dashboardPlugins as $moduleName => $plugins) {
                 if (is_array($plugins) && ! empty($plugins)) {
                     foreach ($plugins as $idx => $pluginName) {
-                        // check if plugin is already exists
                         // we only save for those plugins that are not on db
                         $pluginData = $this->pluginsTbl->getEntryByField('plugin_name',$pluginName)->current();
                         if (empty($pluginData) || !$pluginData) {
@@ -265,14 +240,11 @@ class MelisCorePluginsService extends MelisGeneralService
     public function checkTemplatingPlugins()
     {
         $newPlugins = [];
-        // get templating plugins
         $templatingPlugins = $this->getTemplatingPlugins();
-        // save templating plugins
         if (! empty($templatingPlugins)) {
             foreach ($templatingPlugins as $moduleName => $plugins) {
                 if (is_array($plugins) && ! empty($plugins)) {
                     foreach ($plugins as $idx => $pluginName) {
-                        // check if plugin is already exists
                         // we only save for those plugins that are not on db
                         $pluginData = $this->pluginsTbl->getEntryByField('plugin_name',$pluginName)->current();
                         if (empty($pluginData) || !$pluginData) {
@@ -304,18 +276,13 @@ class MelisCorePluginsService extends MelisGeneralService
      */
     public function getNewPluginMenuHandlerNotifDuration()
     {
-        // Event parameters prepare
         $arrayParameters = $this->makeArrayFromParameters(__METHOD__, func_get_args());
-        // Sending service start event
         $arrayParameters = $this->sendEvent('melis_core_get_new_plugin_menu_handler_notif_duration_start', $arrayParameters);
-        // Implementation start
         $melisConfig = $this->getServiceManager()->get('config');
-        // get plugin config
         $pluginMenuHandlerDuration = $melisConfig['plugins']['meliscore']['datas']['new_plugin_notification']['menu_handler'] ?? "5";
 
         // Adding results to parameters for events treatment if needed
         $arrayParameters['results'] =  $pluginMenuHandlerDuration;
-        // Sending service end event
         $arrayParameters = $this->sendEvent('melis_core_get_new_plugin_menu_handler_notif_duration_end', $arrayParameters);
 
         return $arrayParameters['results'];
@@ -327,17 +294,12 @@ class MelisCorePluginsService extends MelisGeneralService
      */
     public function getNewPluginNotifMenuDuration()
     {
-        // Event parameters prepare
         $arrayParameters = $this->makeArrayFromParameters(__METHOD__, func_get_args());
-        // Sending service start event
         $arrayParameters = $this->sendEvent('melis_core_get_new_plugin_notif_menu_duration_start', $arrayParameters);
-        // Implementation start
         $melisConfig = $this->getServiceManager()->get('config');
-        // get plugin config
         $newPluginNotifInsideMenu = $melisConfig['plugins']['meliscore']['datas']['new_plugin_notification']['inside_menu'] ?? "10";
         // Adding results to parameters for events treatment if needed
         $arrayParameters['results'] =  $newPluginNotifInsideMenu;
-        // Sending service end event
         $arrayParameters = $this->sendEvent('melis_core_get_new_plugin_notif_menu_duration_end', $arrayParameters);
 
         return $arrayParameters['results'];
@@ -360,13 +322,11 @@ class MelisCorePluginsService extends MelisGeneralService
             // json_decode to make it an arrays
             $melisPublicModulesWithSection = json_decode($melisPublicModulesWithSection);
             foreach ($melisPublicModulesWithSection as $idx => $moduleInfo) {
-                // remove 'melisplatform/' word
                 $packageName = str_replace('melisplatform/','',$moduleInfo->packageName);
                 /*
                  * special case for plugin config of module name
                  */
                 if ($pluginModuleName) {
-                    // remove dashes
                     $packageName = str_replace('-','',$packageName);
                 }
                 if ($dashboardPlugin) {

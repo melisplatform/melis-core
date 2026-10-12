@@ -23,7 +23,6 @@ class MelisCoreTranslationService extends Translator implements MelisCoreTransla
      */
     protected $fmContainer;
 
-
     protected $updated;
 
     /**
@@ -92,14 +91,12 @@ class MelisCoreTranslationService extends Translator implements MelisCoreTransla
                     $this->addTranslationFile('phparray', $transValues['filename'], 'default', $locale);
                 }
 
-                // Load Translation Messages
                 if (!isset($this->messages[$textDomain][$locale])) {
                     $this->loadMessages($textDomain, $locale);
                 }
 
                 // This is where the translated mesage are stored
                 $translatedMessages =  (array)$this->messages[$textDomain][$locale];
-
 
                 $messages = array();
                 $key = '';
@@ -110,8 +107,6 @@ class MelisCoreTranslationService extends Translator implements MelisCoreTransla
             }
 
         }
-
-
 
         return $messages;
 
@@ -268,14 +263,11 @@ class MelisCoreTranslationService extends Translator implements MelisCoreTransla
         foreach($moduleFolders as $module) {
             if(file_exists($module.'/language')) {
                 
-                // get the directory
                 $iterator = new \RecursiveDirectoryIterator($module . "/language", \RecursiveDirectoryIterator::SKIP_DOTS);
                 $files = new \RecursiveIteratorIterator($iterator,\RecursiveIteratorIterator::CHILD_FIRST);
                 /** @var \SplFileInfo $file */
-                // get the files under the directory
                 foreach($files as $file) {
                     if (stristr($file->getBasename(),$locale)){
-                        // get the translation based on locale
                         $tmpTrans[]= include $file->getFileInfo()->getPathname();
                     } else if (stristr($file->getBasename(),"en_EN")){
                         // fall back locale
@@ -383,10 +375,8 @@ class MelisCoreTranslationService extends Translator implements MelisCoreTransla
         $fullPathVendorModules = array();
         $fullPathUserModules   = array();
 
-        // get the full path of User Modules
         foreach($userModules as $uModule) {
             $uPath = $moduleSvc->getModulePath($uModule) . '/language/';
-            // if(file_exists($uPath) && is_writable($uPath)) {
             if(file_exists($uPath)) {
                 $fullPathUserModules[] = array('module' => $uModule, 'path' => $uPath);
             }
@@ -394,7 +384,6 @@ class MelisCoreTranslationService extends Translator implements MelisCoreTransla
 
         foreach($vendorModules as $vModule) {
             $vPath = $moduleSvc->getModulePath($vModule) . '/language/';
-            //if(file_exists($vPath) && is_writable($vPath)) {
             if(file_exists($vPath)) {
                 $fullPathVendorModules[] = array('module' => $vModule, 'path' => $vPath);
             }
@@ -484,7 +473,6 @@ class MelisCoreTranslationService extends Translator implements MelisCoreTransla
 
                 if (is_dir($path.$value)) {
 
-                    // recursive for commerce folder setup
                     $result = $this->createOrUpdateTranslationFiles($path.$value, $module, $locale);
 
                 }
@@ -509,10 +497,8 @@ class MelisCoreTranslationService extends Translator implements MelisCoreTransla
                             $defaultFile .= '.'.$tmp[$c];
                         }
 
-                        // check if __dir__/languages/[module]/[locale].interface.* exists
                         if(!file_exists($newDir.'/'.$transFile)){
 
-                            //create new blank interface translation then copy contents
                             $this->createTranslationFile($newDir, $transFile);
                             $result = copy($path.'/'.$defaultFile, $newDir.'/'.$transFile);
 
@@ -524,7 +510,6 @@ class MelisCoreTranslationService extends Translator implements MelisCoreTransla
 
                             if($transDiff){
 
-                                // update current translation if there are new ones
                                 $result = $this->updateTranslations($newDir.'/'.$transFile, $transDiff);
                             }
                         }
@@ -662,7 +647,6 @@ class MelisCoreTranslationService extends Translator implements MelisCoreTransla
             $newUniqueLocales[] = $locale;
         }
 
-
         return $newUniqueLocales;
     }
 
@@ -728,8 +712,6 @@ class MelisCoreTranslationService extends Translator implements MelisCoreTransla
         if(!empty($newItems)){
             $translationList = $newItems + $translationList;
         }
-
-        // for array formating, readability
 
         $content = "<?php". PHP_EOL . "\t return array(" . PHP_EOL;
 

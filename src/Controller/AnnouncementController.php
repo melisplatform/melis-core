@@ -9,7 +9,6 @@
 
 namespace MelisCore\Controller;
 
-
 use Laminas\Session\Container;
 use Laminas\View\Model\JsonModel;
 use Laminas\View\Model\ViewModel;
@@ -23,26 +22,10 @@ class AnnouncementController extends MelisAbstractActionController
      */
     public function renderToolAction()
     {
-//        $noAccessPrompt = '';
 //
-//        $translator = $this->getServiceManager()->get('translator');
-//        $melisCoreRights = $this->getServiceManager()->get('MelisCoreRights');
-//        if(!$melisCoreRights->canAccess($this::TOOL_KEY)) {
-//            $noAccessPrompt = $translator->translate('tr_vitogaz_common_no_access');
-//        }else{
 //            //check if user is not dir com
-//            $usrService = $this->getServiceManager()->get('VitogazUsersService');
-//            $userInfo = $usrService->getLoggedInUser();
-//            $rolesData = $usrService->getRoleConfigByName('DIR_COM');
-//            if (! empty($userInfo)) {
-//                if($userInfo->usr_role_id != $rolesData['role_id']){
-//                    $noAccessPrompt = $translator->translate('tr_vitogaz_common_no_access');
-//                }
-//            }
-//        }
 
         $view = new ViewModel();
-//        $view->noAccess = $noAccessPrompt;
         return $view;
     }
 
@@ -254,17 +237,12 @@ class AnnouncementController extends MelisAbstractActionController
                 if(empty($announcementId))
                     $typeCode = 'CORE_ANNOUNCEMENT_ADD';
 
-
-                //get current user
                 $melisCoreAuth = $this->getServiceManager()->get('MelisCoreAuth');
                 $userAuthDatas =  $melisCoreAuth->getStorage()->read();
                 $data['mca_user_id'] = (int) $userAuthDatas->usr_id;
 
                 $data['mca_date'] = !empty($data['mca_date']) ? $this->getTool()->localeDateToSql($data['mca_date'], 'H:i:s') : date('Y-m-d H:i:s');
                 unset($data['mca_id']);
-                /**
-                 * Save announcement
-                 */
                 $result = $service->saveAnnouncement($data, $announcementId);
 
                 if($result) {

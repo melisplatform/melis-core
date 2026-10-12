@@ -62,12 +62,10 @@ class MelisCoreDashboardAnnouncementPlugin extends MelisCoreDashboardTemplatingP
         $_defaultProfile = '/MelisCore/images/profile/default_picture.jpg';
         foreach($announcements as $key => $val){
             $announcements[$key]['date_str'] = $this->getDate($val['mca_date']);
-            //get user info
             $userDatas =  $tableUser->getEntryById($announcements[$key]['mca_user_id'])->current();
             $announcements[$key]['user_name'] = (!empty($userDatas)) ? $userDatas->usr_firstname .' '.$userDatas->usr_lastname : null;
             $announcements[$key]['user_image'] = !empty($userDatas->usr_image) ? 'data:image/jpeg;base64,'. base64_encode($userDatas->usr_image) : $_defaultProfile;
         }
-        //check if it has data
         if(!empty($announcements))
             $hasData = true;
 
@@ -75,7 +73,6 @@ class MelisCoreDashboardAnnouncementPlugin extends MelisCoreDashboardTemplatingP
         $request = $this->getServiceManager()->get('request');
         $pageCurrent = !empty($request->getPost('next'))   ? $request->getPost('next') : 1;
 
-        // Pagination
         $paginator = new Paginator(new ArrayAdapter($announcements));
         $paginator->setCurrentPageNumber($pageCurrent)
             ->setItemCountPerPage(3);

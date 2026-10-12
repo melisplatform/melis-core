@@ -25,7 +25,6 @@ class MelisTinyMceController extends MelisAbstractActionController
         $selector = '';//$postValues['selector'];
         $options = [];//!empty($postValues['options']) ? $postValues['options'] : array();
 
-        // Get the list of TinyMce configuration files declared
         $config = $this->getServiceManager()->get('config');
         $configTinyMce = $config['tinyMCE'];
 
@@ -38,44 +37,28 @@ class MelisTinyMceController extends MelisAbstractActionController
                 $tinyMceConfig = [];
 
                 $configDir = $config;
-                // Getting the module name
                 $nameModuleTab = explode('/', $configDir);
                 $nameModule = $nameModuleTab[0];
-                // Getting the path of the Module
                 $path = $modulesSvc->getModulePath($nameModule);
                 // Generating the directory of the requested TinyMCE configuration
                 $tinyMceConfig = $path . str_replace($nameModule, '', $configDir);
 
                 if (is_file($tinyMceConfig)) {
 
-                    // Getting the tinyMCE configuration from php file
                     $tinyMceConfig = include($tinyMceConfig);
-                    // Assigning selector of the tinyMCE
                     $tinyMceConfig['selector'] = '';
-                    // Set Language of the TinyMCE
                     $container = new Container('meliscore');
                     $locale = $container['melis-lang-locale'];
                     $tinyMceConfig['language'] = ($locale != 'en_EN') ? $locale : 'en';
-        
-                    // if (!empty($options)) {
-        
+
                     //     // Parsing boolean values from posted string values
-                    //     $options = array_map(function($val){
-                    //         if (in_array($val, ["true", "false"]))
-                    //             return ($val == "true") ?? false;
-                    //         else
-                    //             return $val;
-                    //     }, $options);
         
                     //     // Merging Default TinyMCE configuration with Options from request
-                    //     $tinyMceConfig = array_merge($tinyMceConfig, $options);
-                    // }
 
                     // Trigger event for modification of the configuration
                     $config = $this->getEventManager()->trigger('meliscore_tinymce_config', $this);
                     $tmpCfg = [];
 
-                    // reconstruct data
                     foreach ($config as $configKey => $cfg) {
 
                         if ($cfg) {
@@ -85,7 +68,6 @@ class MelisTinyMceController extends MelisAbstractActionController
                         }
 
                         if (isset($cfg['exclude']) && !empty($cfg['exclude'])) {
-                            // remove the excluded configuration(s)
                             foreach ($cfg['exclude'] as $exclude) {
                                 if (isset($tmpCfg[$exclude])) {
                                     unset($tmpCfg[$exclude]);
@@ -97,7 +79,6 @@ class MelisTinyMceController extends MelisAbstractActionController
                     // merge reconstructed data to tinyMCE configuration
                     foreach ($tmpCfg as $idx => $cfg) {
                         if ($cfg) {
-                            // get the merged and additional tinyMCE configurations
                             $tinyMceConfig = \Laminas\Stdlib\ArrayUtils::merge($tinyMceConfig, $cfg);
                         }
                     }
@@ -118,35 +99,27 @@ class MelisTinyMceController extends MelisAbstractActionController
 
         if ($request->isPost()) {
             $modulesSvc = $this->getServiceManager()->get('ModulesService');
-            // Getting the Posted Values
             $postValues = $request->getPost()->toArray();
 
             $type = $postValues['type'];
             $selector = $postValues['selector'];
             $options = !empty($postValues['options']) ? $postValues['options'] : array();
 
-            // Get the list of TinyMce configuration files declared
             $config = $this->getServiceManager()->get('config');
             $configTinyMce = $config['tinyMCE'];
 
-            // Checking if the type requested is exist on configuration
             if (isset($configTinyMce[$type])) {
                 $configDir = $configTinyMce[$type];
-                // Getting the module name
                 $nameModuleTab = explode('/', $configDir);
                 $nameModule = $nameModuleTab[0];
-                // Getting the path of the Module
                 $path = $modulesSvc->getModulePath($nameModule);
                 // Generating the directory of the requested TinyMCE configuration
                 $tinyMCEconfig = $path . str_replace($nameModule, '', $configDir);
             }
 
             if (!is_null($tinyMCEconfig)) {
-                // Getting the tinyMCE configuration from php file
                 $tinyMCEconfig = include($tinyMCEconfig);
-                // Assigning selector of the tinyMCE
                 $tinyMCEconfig['selector'] = (!empty($selector)) ? $selector : '';
-                // Set Language of the TinyMCE
                 $container = new Container('meliscore');
                 $locale = $container['melis-lang-locale'];
                 $tinyMCEconfig['language'] = ($locale != 'en_EN') ? $locale : 'en';
@@ -174,7 +147,6 @@ class MelisTinyMceController extends MelisAbstractActionController
             $config = $this->getEventManager()->trigger('meliscore_tinymce_config', $this);
             $tmpCfg = array();
 
-            // reconstruct data
             foreach ($config as $configKey => $cfg) {
 
                 if ($cfg) {
@@ -184,7 +156,6 @@ class MelisTinyMceController extends MelisAbstractActionController
                 }
 
                 if (isset($cfg['exclude']) && !empty($cfg['exclude'])) {
-                    // remove the excluded configuration(s)
                     foreach ($cfg['exclude'] as $exclude) {
                         if (isset($tmpCfg[$exclude])) {
                             unset($tmpCfg[$exclude]);
@@ -196,7 +167,6 @@ class MelisTinyMceController extends MelisAbstractActionController
             // merge reconstructed data to tinyMCE configuration
             foreach ($tmpCfg as $idx => $cfg) {
                 if ($cfg) {
-                    // get the merged and additional tinyMCE configurations
                     $tinyMCEconfig = \Laminas\Stdlib\ArrayUtils::merge($tinyMCEconfig, $cfg);
                 }
             }
@@ -218,14 +188,12 @@ class MelisTinyMceController extends MelisAbstractActionController
         $request = $this->getRequest();
 
         $modulesSvc = $this->getServiceManager()->get('ModulesService');
-        // Getting the Posted Values
         $postValues = $request->getPost()->toArray();
 
         $type = $postValues['type'];
         $selector = $postValues['selector'];
         $options = !empty($postValues['options']) ? $postValues['options'] : array();
 
-        // Get the list of TinyMce configuration files declared
         $config = $this->getServiceManager()->get('config');
         $configTinyMce = $config['tinyMCE'];
 
@@ -242,15 +210,11 @@ class MelisTinyMceController extends MelisAbstractActionController
      */
     public function getTinyTemplatesAction()
     {
-        // get site id from the url
         $siteId = $this->params()->fromRoute('siteId', $this->params()->fromQuery('siteId', ''));
         $prefix = $this->params()->fromRoute('prefix', $this->params()->fromQuery('prefix', ''));
-        // tinyMCE type
         $type   = $this->params()->fromRoute('type', $this->params()->fromQuery('type', ''));
-        // mini templates
         $tinyTemplates = [];
 
-        // check if service is present
         if ($this->getServiceManager()->has('MelisCmsMiniTemplateGetterService')) {
             $service = $this->getServiceManager()->get('MelisCmsMiniTemplateGetterService');
             /**
@@ -513,8 +477,6 @@ class MelisTinyMceController extends MelisAbstractActionController
         return '';
     }
 
-     
-
     /**
      * get the mini templates by module dir (old method) edit since 2021-01-11
      */
@@ -523,7 +485,6 @@ class MelisTinyMceController extends MelisAbstractActionController
         $tinyTemplates = [];
         /** @var \MelisEngine\Model\Tables\MelisTemplateTable $tplTable */
         $tplTable = $this->getServiceManager()->get('MelisEngineTableTemplate');
-        // get site data
         $siteData = $tplTable->getData(null, $siteId, null, null, null, null, 1);
         if (!empty($siteData)) {
             $siteData = $siteData->toArray();
@@ -531,7 +492,6 @@ class MelisTinyMceController extends MelisAbstractActionController
             $moduleName = $siteData['tpl_zf2_website_folder'];
             $publicPath = '/public/' . self::MINI_TEMPLATES_FOLDER;
 
-            // Checking if the module path is vendor
             $composerSrv = $this->getServiceManager()->get('ModulesService');
             $path = $composerSrv->getComposerModulePath($moduleName);
             if (!empty($path)) {
@@ -591,7 +551,6 @@ class MelisTinyMceController extends MelisAbstractActionController
         if (!is_dir($target))
             mkdir($target, 0755);
 
-        // File Input
         $fileInput = new \Laminas\InputFilter\FileInput('file');
         $fileInput->setRequired(true);
         $fileInput->getFilterChain()->attachByName(
@@ -627,17 +586,11 @@ class MelisTinyMceController extends MelisAbstractActionController
         return true;
     }
 
-    /**
-     * get a service
-     */
     private function getService($serviceName)
     {
         return $this->getServiceManager()->get($serviceName);  
     }
 
-    /**
-     * get tinyMCE configuration
-     */
     private function getTinyMCEByType($type)
     {
         $config = [];

@@ -120,7 +120,6 @@ class MelisCoreConfigService extends MelisServiceManager implements MelisCoreCon
                 }
             }
 
-
             // Reput elements in good order
             $elementsFound = [];
             $oldElementsReordered = [];
@@ -147,7 +146,6 @@ class MelisCoreConfigService extends MelisServiceManager implements MelisCoreCon
             $appConfigForm['elements'] = $elementsReordered;
         }
 
-        // Let's merge well input_filters
         if (!empty($appConfigForm) && !empty($appConfigForm['input_filter'])) {
             $inputFilters = $appConfigForm['input_filter'];
             $newInputFilters = [];
@@ -199,9 +197,7 @@ class MelisCoreConfigService extends MelisServiceManager implements MelisCoreCon
              * Reverse order so we can take only the last definition of fields
              * in case some fields are redefined in other modules
              */
-            //    krsort($elements);
         }
-
 
         return $appConfigForm;
     }

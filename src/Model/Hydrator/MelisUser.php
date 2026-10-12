@@ -9,7 +9,6 @@
 
 namespace MelisCore\Model\Hydrator;
 
-#[\AllowDynamicProperties]
 class MelisUser
 {
     /**

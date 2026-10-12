@@ -41,11 +41,8 @@ class MelisAbstractFactory implements AbstractFactoryInterface
         /**
          * RequestedName must have Melis to create the service
          */
-//        $reflector = new \ReflectionClass($requestedName);
-//        if (0 !== strpos($requestedName, self::SERVICE_PREFIX) &&
 //            0 !== strpos($reflector->getFileName(), '\\module\\') &&
 //            0 !== strpos($reflector->getFileName(), '\\melisplatform\\'))
-//            return false;
 
         if (class_exists($requestedName)) {
             $instance = new $requestedName();
@@ -69,7 +66,6 @@ class MelisAbstractFactory implements AbstractFactoryInterface
      */
     public function __invoke(ContainerInterface $container, $requestedName, ?array $options = null)
     {
-        // Requested class instance
         $instance = new $requestedName();
 
         /**
@@ -106,7 +102,6 @@ class MelisAbstractFactory implements AbstractFactoryInterface
          * This method initialized the serviceManger to requsted service name
          */
         if (method_exists($instance, 'setServiceManager')) {
-            // Service manager instance
             $instance->setServiceManager($container);
         }
 

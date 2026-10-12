@@ -327,7 +327,6 @@ class MelisCoreSecurityAuditService extends MelisGeneralService
                 $this->getServiceManager()->get('MelisCoreSecurityAlert')->evaluate($event);
             }
         } catch (\Exception $e) {
-            // Same for alerting.
         }
     }
 

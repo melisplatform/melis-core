@@ -34,7 +34,6 @@ class MelisCoreEmailSendingService extends MelisServiceManager
 
 	    if ($message_text!=null){
 	        
-	        // Add Alternative Email Text Content
     	    $text = new MimePart($message_text);
     	    $text->type = 'text/plain';
             $text->charset = 'UTF-8';
@@ -45,7 +44,6 @@ class MelisCoreEmailSendingService extends MelisServiceManager
 	        $body->addPart($html);
 	    }
 
-	    
 	    $message = new Message();
 	    $message->setFrom($emailFrom, $fromName);
 	    $message->addTo($emailTo);
@@ -66,7 +64,6 @@ class MelisCoreEmailSendingService extends MelisServiceManager
              * to specify their own Mailing Service Provider
              */
             try{
-                // Setup SMTP transport using LOGIN authentication
                 $transport = new SmtpTransport();
                 $options   = new SmtpOptions(array(
                     'name'              => $transportConfig['name'],
@@ -86,7 +83,6 @@ class MelisCoreEmailSendingService extends MelisServiceManager
                 throw new \Exception($exception->getMessage());
             }
         }
-
 
         $transport->send($message);
 	}

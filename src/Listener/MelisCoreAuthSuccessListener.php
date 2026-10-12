@@ -32,7 +32,6 @@ class MelisCoreAuthSuccessListener extends MelisGeneralListener implements Liste
                 $authSvc = $sm->get('MelisCoreAuth');
                 $userId = (int) ($params['usr_id'] ?? 0);
 
-                // update the session last_login_date
                 $user = $authSvc->getStorage()->read();
 
                 if (!empty($user)) {

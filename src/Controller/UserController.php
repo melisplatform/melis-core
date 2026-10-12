@@ -15,8 +15,6 @@ use Laminas\Session\Container;
 use Laminas\Form\Factory;
 use MelisCore\Model\Hydrator\MelisResultSet;
 
-
-
 /**
  * This class deals with User functionalities
  *
@@ -51,7 +49,6 @@ class UserController extends MelisAbstractActionController
              
         return $view;
     }
-    
 
     /**
      * Renders to the Lost Password form
@@ -139,8 +136,7 @@ class UserController extends MelisAbstractActionController
         $appConfigForm = $melisMelisCoreConfig->getItem('/meliscore_login');
         if (!empty($appConfigForm['datas']['login_background']))
             $background = $appConfigForm['datas']['login_background'];
-        
-            
+
         $this->layout()->addChild($view, 'content');
         $this->layout()->isLogin = 1;
         $this->layout()->login_background = $background;
@@ -192,7 +188,6 @@ class UserController extends MelisAbstractActionController
             }
         }
 
-
         $factory = new \Laminas\Form\Factory();
         $forgotForm = $factory->createForm($appConfigForm);
         
@@ -208,16 +203,12 @@ class UserController extends MelisAbstractActionController
             $passValidator = $this->passwordValidatorFor($login);
             
                 if(true) { // length is enforced by the password policy
-                    // if(strlen($confirmPass) >= 8) {
-                        //$passValidator = new \Laminas\Validator\Regex(array('pattern' => '/^(?=.*?[0-9])(?=.*?[a-z])(?=.*?[A-Z])(?=.*?[^\w\s]).{8,}$/'));
                         $passValidator = $this->passwordValidatorFor($login);
                         if($passValidator->isValid($password))
                         {
-                            // password and confirm password matching
                             if($password == $confirmPass)
                             {
                                 // The service revalidates the token: an expired link must not
-                                // report a successful password change.
                                 if($melisLostPass->processUpdatePassword($rhash, $password))
                                 {
                                     $textMessage = "tr_meliscore_user_password_change_succes";
@@ -242,10 +233,6 @@ class UserController extends MelisAbstractActionController
                                 $success = 0;
                                 $textMessage = implode('<br>', $passValidator->getMessages());
                         } // password regex validator
-                    // }
-                    // else {
-                    //     $success = 0;
-                    //     $textMessage = 'tr_meliscore_tool_user_usr_confirm_password_error_low';
                     // }// end confirm password length
                 }
                 else {
@@ -253,8 +240,7 @@ class UserController extends MelisAbstractActionController
                     $textMessage = 'tr_meliscore_tool_user_usr_password_error_low';
                 }// end password length
         }
-        
-        
+
         $view->setVariable('meliscore_resetpass', $forgotForm);
         $view->setVariable('formFactory', $factory);
         $view->setVariable('formConfig', $appConfigForm);
@@ -313,7 +299,6 @@ class UserController extends MelisAbstractActionController
             $confirmPass = $this->getRequest()->getPost('usr_pass_confirm');
             $passValidator = $this->passwordValidatorFor($login);
 
-            // password and confirm password matching
             if ($password == $confirmPass) {
                 $userTable = $this->getServiceManager()->get('MelisCoreTableUser');
                 $user = $userTable->getEntryByField('usr_login', $login)->current();
@@ -323,7 +308,6 @@ class UserController extends MelisAbstractActionController
                 if (file_exists($file)) {
                     $config = $this->getServiceManager()->get('MelisCoreConfig')->getItem('meliscore/datas/login');
                 } else {
-                    //get default
                     $config = $this->getServiceManager()->get('MelisCoreConfig')->getItem('meliscore/datas/otherconfig_default/login');
                 }
 
@@ -459,11 +443,8 @@ class UserController extends MelisAbstractActionController
                 $passValidator = $this->passwordValidatorFor($login);
 
                 if (true) { // length is enforced by the password policy
-                    // if (strlen($confirmPass) >= 8) {
-                        //$passValidator = new \Laminas\Validator\Regex(array('pattern' => '/^(?=.*?[0-9])(?=.*?[a-z])(?=.*?[A-Z])(?=.*?[^\w\s]).{8,}$/'));
                         $passValidator = $this->passwordValidatorFor($login);
                         if ($passValidator->isValid($password)) {
-                            // password and confirm password matching
                             if ($password == $confirmPass) {
                                 $melisCreatePass->processUpdatePassword($rhash, $password);
                                 $textMessage = "tr_meliscore_user_password_change_succes";
@@ -477,9 +458,6 @@ class UserController extends MelisAbstractActionController
                             $success = 0;
                             $textMessage = implode('<br>', $passValidator->getMessages());
                         } // password regex validator
-                    // } else {
-                    //     $success = 0;
-                    //     $textMessage = 'tr_meliscore_tool_user_usr_confirm_password_error_low';
                     // }// end confirm password length
                 } else {
                     $success = 0;
@@ -491,7 +469,6 @@ class UserController extends MelisAbstractActionController
                 $textMessage = 'tr_meliscore_tool_user_password_request_invalid';
             }// end confirm if link is valid
         }
-
 
         $view->setVariable('meliscore_resetpass', $forgotForm);
         $view->setVariable('formFactory', $factory);
@@ -581,11 +558,8 @@ class UserController extends MelisAbstractActionController
                 $passValidator = $this->passwordValidatorFor($login);
 
                 if (true) { // length is enforced by the password policy
-                    // if (strlen($confirmPass) >= 8) {
-                        //$passValidator = new \Laminas\Validator\Regex(array('pattern' => '/^(?=.*?[0-9])(?=.*?[a-z])(?=.*?[A-Z])(?=.*?[^\w\s]).{8,}$/'));
                         $passValidator = $this->passwordValidatorFor($login);
                         if ($passValidator->isValid($password)) {
-                            // password and confirm password matching
                             if ($password == $confirmPass) {
                                 $melisCreatePass->processUpdatePassword($rhash, $password);
                                 $textMessage = "tr_meliscore_user_password_change_succes";
@@ -599,9 +573,6 @@ class UserController extends MelisAbstractActionController
                             $success = 0;
                             $textMessage = implode('<br>', $passValidator->getMessages());
                         } // password regex validator
-                    // } else {
-                    //     $success = 0;
-                    //     $textMessage = 'tr_meliscore_tool_user_usr_confirm_password_error_low';
                     // }// end confirm password length
                 } else {
                     $success = 0;
@@ -614,12 +585,10 @@ class UserController extends MelisAbstractActionController
             }// end confirm if link is valid
         }
 
-        //$config = $this->getServiceManager()->get('MelisCoreConfig')->getItem('meliscore/datas/login');
         $file = $_SERVER['DOCUMENT_ROOT'] . '/../vendor/melisplatform/melis-core/config/app.login.php';
         if (file_exists($file)) {
             $config = $this->getServiceManager()->get('MelisCoreConfig')->getItem('meliscore/datas/login');
         } else {
-            //get default
             $config = $this->getServiceManager()->get('MelisCoreConfig')->getItem('meliscore/datas/otherconfig_default/login');
         }
 
@@ -696,7 +665,6 @@ class UserController extends MelisAbstractActionController
                     if (file_exists($file)) {
                     	$config = $this->getServiceManager()->get('MelisCoreConfig')->getItem('meliscore/datas/login');
                     } else {
-                        //get default
                         $config = $this->getServiceManager()->get('MelisCoreConfig')->getItem('meliscore/datas/otherconfig_default/login');
                     }
 
@@ -807,7 +775,6 @@ class UserController extends MelisAbstractActionController
         if (file_exists($file)) {
             $config = $this->getServiceManager()->get('MelisCoreConfig')->getItem('meliscore/datas/login');
         } else {
-            //get default
             $config = $this->getServiceManager()->get('MelisCoreConfig')->getItem('meliscore/datas/otherconfig_default/login');
         }
 
@@ -903,8 +870,7 @@ class UserController extends MelisAbstractActionController
         $hash = $this->params()->fromRoute('rhash', $this->params()->fromQuery('rhash',''));
         $this->_hash = $hash;
     }
-    
-    
+
     /**
      * Retrieves the passed hash 
      */
