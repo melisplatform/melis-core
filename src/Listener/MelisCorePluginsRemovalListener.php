@@ -30,7 +30,6 @@ class MelisCorePluginsRemovalListener extends MelisGeneralListener implements Li
                 $params        = $e->getParams();
                 $action        = $params['action'];
                 $module        = strtolower($params['module']);
-        		// get dashboard plugins
                 if ($action == \MelisComposerDeploy\Service\MelisComposerService::REMOVE) {
                     $pluginsTbl->deleteByField('plugin_module',$module);
                 }

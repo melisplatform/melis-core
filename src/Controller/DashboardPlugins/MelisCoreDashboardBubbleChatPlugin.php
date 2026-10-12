@@ -40,12 +40,10 @@ class MelisCoreDashboardBubbleChatPlugin extends MelisCoreDashboardTemplatingPlu
 
         if ($this->getServiceManager()->has('MelisMessengerService')) {
 
-            // get messages
             $msgService = $this->getServiceManager()->get('MelisMessengerService');
             $messages = $msgService->getNewMessage($this->getCurrentUserId());
 
             foreach ($messages as $key => $val) {
-                // get conversation counter by unique users
                 if (!in_array($val['msgr_msg_cont_sender_id'], $tempUsers)) {
                     $convoCounter++;
                     $tempUsers[] = $val['msgr_msg_cont_sender_id'];

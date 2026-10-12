@@ -29,12 +29,10 @@ class MelisCoreOtherConfigListener extends MelisGeneralListener implements Liste
                 $params = $event->getParams();
                 $response = ['errors' => []];
                
-                // Get the structured payload array sent from the JS ---
                 $allConfigFormsData = $params['all_config_forms_data'] ?? [];
                
                 $coreConfigData = [];
 
-                // Loop through the payload and merge data from Core forms
                 foreach ($allConfigFormsData as $formEntry) {
                     $formName = $formEntry['form_name'] ?? null;
                     $config = $formEntry['data'];
@@ -70,7 +68,6 @@ class MelisCoreOtherConfigListener extends MelisGeneralListener implements Liste
                 $passwordSettings['password_complexity_use_upper_case']     = $coreConfigData['password_complexity_use_upper_case'] ?? '';
                 $passwordSettings['password_complexity_use_digit']          = $coreConfigData['password_complexity_use_digit'] ?? '';
 
-                // Save Data to app.login.php
                 $passwordSettingsService = $event->getTarget()->getEvent()->getApplication()->getServiceManager()->get('MelisPasswordSettingsService');
                 $result = $passwordSettingsService->saveItem($passwordSettings);
                

@@ -40,7 +40,6 @@ class MelisCoreToolUserAddNewUserListener extends MelisGeneralListener implement
         		$melisCoreRights = $sm->get('MelisCoreRights');
         		$melisCoreRights = $melisCoreRights->createXmlRightsValues($userId, $postUser);
 
-        		// Dashboard plugins
                 $melisDashboardPluginRights = $sm->get('MelisCoreDashboardPluginsService');
                 $dashboardPluginRights = $melisDashboardPluginRights->createXmlRightsValues($userId, $postUser);
 

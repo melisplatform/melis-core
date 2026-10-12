@@ -25,7 +25,6 @@ class MelisModalInvoker extends AbstractHelper
      */
     public function render(array $attribs, $type = 'invoke')
     {
-        // add another array for targetting a modal
         $additionalAttrib = ($type == 'invoke') ? array(self::MELIS_MODAL_INVOKER_INVOKE => 'modal') : array(self::MELIS_MODAL_INVOKER_DISMISS => 'modal');
         $attr = '';
         

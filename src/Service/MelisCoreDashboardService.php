@@ -45,7 +45,6 @@ class MelisCoreDashboardService extends MelisServiceManager
 	        }
 	    }
 
-        // add bubble plugins js callbacks
 	    if (empty($pluginLists)) {
             $configs = $this->getServiceManager()->get('config');
             $pluginLists = $configs['plugins']['meliscore']['interface']['melis_dashboardplugin']['interface']['melisdashboardplugin_section']['interface'];

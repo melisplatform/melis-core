@@ -15,7 +15,6 @@ class MelisCoreUserService extends MelisServiceManager implements MelisCoreUserS
                 $user = $user->current();
                 if (!empty($user)) {
                     if ($user->usr_role_id != self::ROLE_ID_CUSTOM) {
-                        // Get rights from Role table
                         $tableUserRole = $this->getServiceManager()->get('MelisCoreTableUserRole');
                         $datasRole = $tableUserRole->getEntryById($user->usr_role_id);
                         if ($datasRole) {
@@ -30,7 +29,6 @@ class MelisCoreUserService extends MelisServiceManager implements MelisCoreUserS
                 }
             }
         }
-
 
         return $rightsXML;
     }
@@ -47,7 +45,6 @@ class MelisCoreUserService extends MelisServiceManager implements MelisCoreUserS
 
         if (!empty($rightsObj->$sectionId)) {
             if ($rightService::MELIS_PLATFORM_TOOLS_PREFIX === $sectionId) {
-                // for general business app
                 if (isset($rightsObj->$sectionId->id)) {
                     foreach ($rightsObj->$sectionId->id as $item) {
 
@@ -66,7 +63,6 @@ class MelisCoreUserService extends MelisServiceManager implements MelisCoreUserS
                             }
                         }
                     }
-
 
                     // for those tools that doesn't have a proper parent tool section
                     if (isset($rightsObj->$sectionId->$toolSection->noparent)) {
@@ -113,7 +109,6 @@ class MelisCoreUserService extends MelisServiceManager implements MelisCoreUserS
                 'm' => $translator->translate('tr_meliscore_date_month'),
                 'w' => $translator->translate('tr_meliscore_date_week'),
                 'd' => $translator->translate('tr_meliscore_date_day'),
-
 
                 'h' => $translator->translate('tr_meliscore_date_hour'),
                 'i' => $translator->translate('tr_meliscore_date_minute'),

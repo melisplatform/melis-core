@@ -43,13 +43,11 @@ class LanguageController extends MelisAbstractActionController
         $moduleSvc = $this->getServiceManager()->get('ModulesService');
         $datasLang = $tableLang->fetchAll();
 
-        // Get the locale from session
         $container = new Container('meliscore');
         $currentLangLocale = $container['melis-lang-locale'];
         $currentLangLocale = explode('_', $currentLangLocale);
         $currentLangLocale = $currentLangLocale[0];
 
-        // Get the langId from session
         $container = new Container('meliscore');
         $currentLangId = 1;
         if (!empty($container['melis-lang-id']))
@@ -90,7 +88,6 @@ class LanguageController extends MelisAbstractActionController
         {
             $datasLang = $datasLang->current();
             
-            // Update session locale for melis BO
             $container = new Container('meliscore');
             if($container) {
                 $container['melis-lang-id'] = $langId;
@@ -100,17 +97,13 @@ class LanguageController extends MelisAbstractActionController
                 }
             }
             
-            // If user is connected
             if ($melisCoreAuth->hasIdentity())
             {
-                // Get user id from session auth
                 $userAuthDatas =  $melisCoreAuth->getStorage()->read();
                 $userId = $userAuthDatas->usr_id;
 
-                // Update auth user session
                 $userAuthDatas->usr_lang_id = $langId;
 
-                // Update user table
                 $datasUser = $melisUserTable->save(array('usr_lang_id' => $langId), $userId);
                 
                 // Do NOT clear the session notifications on a language change — they are stored as
@@ -118,7 +111,6 @@ class LanguageController extends MelisAbstractActionController
                 // bell keeps its messages and shows them in the newly selected language.
                 $this->getEventManager()->trigger('meliscore_get_recent_user_logs', $this, array());
 
-                //clear cache when changing language
                 $coreCacheService = $this->getServiceManager()->get('MelisCoreCacheSystemService');
                 $coreCacheService->deleteCacheByPrefix('*', PluginViewController::cacheConfig);
             }
@@ -150,7 +142,6 @@ class LanguageController extends MelisAbstractActionController
         //     anonymous and to an authenticated browser (session-state oracle, XSSI-readable since a
         //     <script> include executes cross-origin). Every caller now gets the locale it asked for,
         //     or the platform default (en_EN) — the back-office always passes ?locale= explicitly
-        //     (app.interface.php / MelisCoreHeadPluginHelper), so nothing changes for it;
         //  2. only accept a well-formed locale (xx_XX, same rule as MelisReactApiLanguageController)
         //     — the raw parameter was interpolated unescaped into the generated JavaScript
         //     (reflected XSS: /get-translations?locale=";…). An unknown but well-formed locale just
@@ -198,7 +189,6 @@ class LanguageController extends MelisAbstractActionController
         $scriptContent .= $translationCompilation;
         $response->setContent($scriptContent);
 
-
         $view = new ViewModel();
         $view->setTerminal(true);
         $view->contentHeaders = $response->getContent();
@@ -210,7 +200,6 @@ class LanguageController extends MelisAbstractActionController
         return new ViewModel();
     }
 
-
     /**
      * Creates translations for table actions in tools
      *
@@ -218,7 +207,6 @@ class LanguageController extends MelisAbstractActionController
      */
     public function getDataTableTranslationsAction()
     {
-        // Get the current language
         $container = new Container('meliscore');
         $locale = $container['melis-lang-locale'];
 
@@ -255,7 +243,6 @@ class LanguageController extends MelisAbstractActionController
         return new JsonModel($transData);
     }
 
-    // FOR LANGUAGE TOOL
     public function renderToolLanguageContainerAction()
     {
         $translator = $this->getServiceManager()->get('translator');
@@ -274,14 +261,12 @@ class LanguageController extends MelisAbstractActionController
         return $view;
     }
 
-    // HEADER SECTION
     public function renderToolLanguageHeaderAction()
     {
         $translator = $this->getServiceManager()->get('translator');
         $melisKey = $this->params()->fromRoute('melisKey', '');
         $melisTool = $this->getServiceManager()->get('MelisCoreTool');
         $melisTool->setMelisToolKey(self::TOOL_INDEX, self::TOOL_KEY);
-
 
         $view = new ViewModel();
         $view->melisKey = $melisKey;
@@ -300,9 +285,7 @@ class LanguageController extends MelisAbstractActionController
 
         return $view;
     }
-    // END HEADER SECTION
 
-    // BODY SECTION
     public function renderToolLanguageContentAction()
     {
         $translator = $this->getServiceManager()->get('translator');
@@ -310,11 +293,8 @@ class LanguageController extends MelisAbstractActionController
         $melisTool = $this->getServiceManager()->get('MelisCoreTool');
         $melisTool->setMelisToolKey(self::TOOL_INDEX, self::TOOL_KEY);
 
-
         $columns = $melisTool->getColumns();
-        // pre-add Action Columns
         $columns['actions'] = array('text' => $translator->translate('tr_meliscore_global_action'));
-
 
         $view = new ViewModel();
         $view->melisKey = $melisKey;
@@ -355,11 +335,6 @@ class LanguageController extends MelisAbstractActionController
         return new ViewModel();
     }
 
-
-    // END BODY SECTION
-
-
-    // MODAL SECTION
     public function renderToolLanguageModalAction()
     {
         $melisKey = $this->params()->fromRoute('melisKey', '');
@@ -413,10 +388,6 @@ class LanguageController extends MelisAbstractActionController
 
         return $view;
     }
-
-    // MODAL SECTION
-
-    // Events
 
     public function getLanguagesAction()
     {
@@ -478,7 +449,6 @@ class LanguageController extends MelisAbstractActionController
                 // manually modify value of the desired row
                 // no specific row to be modified
 
-
                 // add DataTable RowID, this will be added in the <tr> tags in each rows
                 $tableData[$ctr]['DT_RowId'] = $tableData[$ctr]['lang_id'];
                 $tableData[$ctr]['DT_RowAttr'] = array('data-locale' => $tableData[$ctr]['lang_locale']);
@@ -486,7 +456,6 @@ class LanguageController extends MelisAbstractActionController
             }
 
         }
-
 
         return new JsonModel(array(
             'draw' => (int) $draw,
@@ -507,7 +476,6 @@ class LanguageController extends MelisAbstractActionController
         $this->getEventManager()->trigger('meliscore_language_new_start', $this, $response);
         $langTable = $this->getServiceManager()->get('MelisCoreTableLang');
         $translator = $this->getServiceManager()->get('translator');
-
 
         $melisTool = $this->getServiceManager()->get('MelisCoreTool');
         $melisTool->setMelisToolKey(self::TOOL_INDEX, self::TOOL_KEY);
@@ -639,11 +607,8 @@ class LanguageController extends MelisAbstractActionController
         $melisTool = $this->getServiceManager()->get('MelisCoreTool');
         $melisTool->setMelisToolKey(self::TOOL_INDEX, self::TOOL_KEY);
 
-
         $columns = "";
-        // pre-add Action Columns
         $columns['actions'] = array('text' => $translator->translate('tr_meliscore_global_action'));
-
 
         $view = new ViewModel();
 
@@ -723,11 +688,6 @@ class LanguageController extends MelisAbstractActionController
         $allModules = $moduleSvc->getAllModules();
         $excludeModules = ['MelisFront', 'MelisEngine', 'MelisInstaller', 'MelisAssetManager', 'MelisModuleConfig', 'MelisSites'];
         $modules    = [];
-//         foreach($allModules as $module) {
-//             if(!in_array($module, $excludeModules)) {
-//                 $modules[] = $moduleSvc->getModulePath($module).'/language';
-//             }
-//         }
 
         $folderPath = [
             $_SERVER['DOCUMENT_ROOT'] . '../module/MelisModuleConfig/',
@@ -750,9 +710,6 @@ class LanguageController extends MelisAbstractActionController
                     }
                 }
             }
-//             else {
-//                 $logs[] = $melisTool->getTranslation('tr_meliscore_tool_language_lang_folder_not_exist', [$path]);
-//             }
         }
 
         return $logs;
@@ -769,8 +726,5 @@ class LanguageController extends MelisAbstractActionController
 
         return $hasAccess;
     }
-
-
-
 
 }

@@ -30,13 +30,11 @@ class MelisCorePluginsAdditionalListener extends MelisGeneralListener implements
                 $params        = $e->getParams();
                 $action        = $params['action'];
                 $module        = strtolower($params['module']);
-                // get dashboard plugins
                 if ($action == \MelisComposerDeploy\Service\MelisComposerService::DOWNLOAD || $action == \MelisComposerDeploy\Service\MelisComposerService::UPDATE) {
                     $pluginsTbl->deleteByField('plugin_module',$module);
                     $modulePlugins = $corePluginSvc->getModulePlugins($module);
                     if (! empty($modulePlugins)) {
                         foreach ($modulePlugins as $pluginType => $pluginName) {
-                            // check if plugin is already added
                             $tmpPluginData = $corePluginSvc->pluginsTbl->getEntryByField('plugin_name',$pluginName)->current();
                             // if plugin is not existing then add
                             if (empty($tmpPluginData)) {

@@ -40,38 +40,26 @@ class MelisGdprDeleteConfigTable extends MelisGenericTable
      */
     public function getGdprDeleteConfigData($search = "",$searchableColumns = [], $orderBy = '', $orderDirection = "DESC" , $start = 0 ,$limit = null, $siteId = 0 , $module = null )
     {
-        // table selection query
         $select = $this->getTableGateway()->getSql()->select();
-        // columns to select
         $select->columns(array('*'));
-        // searchable columns and search string
         if (!empty($searchableColumns) && !empty($search)) {
-            // zend where class
             $searchWhere = new Where();
-            // nesting searchable columns
             $nest = $searchWhere->nest();
-            // concatenating search keys
             foreach ($searchableColumns as $column) {
                 $nest->like($column, '%' . $search . '%')->or;
             }
-            // set where query
             $select->where($searchWhere);
         }
-        // site filter
         if ($siteId) {
             $select->where->equalTo('mgdprc_site_id', $siteId);
         }
-        // module filter
         if ($module) {
             $select->where->equalTo('mgdprc_module_name', $module);
         }
-        // set current data count for pagination
         $this->setCurrentDataCount((int) $this->getTableGateway()->selectWith($select)->count());
-        // length of the data
         if (!empty($limit)) {
             $select->limit($limit);
         }
-        // starting point of data
         if (!empty($start)) {
             $select->offset($start);
         }
@@ -91,14 +79,11 @@ class MelisGdprDeleteConfigTable extends MelisGenericTable
      */
     public function getDeleteConfigBySiteIdModuleName($siteId, $moduleName)
     {
-        // table selection query
         $select = $this->getTableGateway()->getSql()->select();
-        // columns to select
         $select->columns(array('*'));
         if ($siteId) {
             $select->where->equalTo('mgdprc_site_id', $siteId);
         }
-        // module filter
         if ($moduleName) {
             $select->where->equalTo('mgdprc_module_name', $moduleName);
         }

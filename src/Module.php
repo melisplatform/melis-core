@@ -193,7 +193,6 @@ class Module
         $locale = $translator->getLocale();
         $langId = 1;
 
-        // check first if the db config is available
         $env = getenv('MELIS_PLATFORM');
         $dbConfFile = 'config/autoload/platforms/' . $env . '.php';
         if (file_exists($dbConfFile)) {
@@ -246,23 +245,19 @@ class Module
 
                         $datasLang = $melisLangTable->getEntryById($usrLang);
 
-
                         // If the language was found and then exists
                         if (!empty($datasLang)) {
                             $datasLang = $datasLang->current();
 
-                            // Update session locale for melis BO
                             $container = new Container('meliscore');
                             $container['melis-lang-id'] = $usrLang;
                             $container['melis-lang-locale'] = isset($datasLang->lang_locale) ? $datasLang->lang_locale : "EN_en";
                             $container['melis-login-lang-locale'] = isset($datasLang->lang_locale) ? $datasLang->lang_locale : "EN_en";
 
-                            // Get user id from session auth
                             $userAuthDatas = $melisCoreAuth->getStorage()->read();
                             if (!isset($userAuthDatas->usr_lang_id))
                                 $userAuthDatas = (object)array("usr_lang_id" => '');
 
-                            // Update auth user session
                             $userAuthDatas->usr_lang_id = $usrLang;
                         }
                     }
@@ -322,7 +317,6 @@ class Module
         $lang = $lang[0];
     }
 
-
     public function checkIdentity(MvcEvent $e)
     {
         $sm = $e->getApplication()->getServiceManager();
@@ -330,7 +324,6 @@ class Module
         $routeMatch = $e->getRouteMatch();
         $matchedRouteName = $routeMatch->getMatchedRouteName();
 
-        // Get excluded routes
         $excludedRoutes = $sm->get('MelisConfig')->getItem('/meliscore/datas/excluded_routes');
 
         // INFO: If the route is in excludedRoutes or it's a CLI request, allow it
@@ -370,7 +363,6 @@ class Module
         // INFO: If authenticated and not caught by any of the above conditions, allow access
         return true;
     }
-
 
     private function isInInstallMode($e)
     {
@@ -419,8 +411,6 @@ class Module
 
         $events->attach(ModuleEvent::EVENT_LOAD_MODULES_POST, [new MelisGenerateBundleListener(), 'onLoadModulesPost']);
     }
-
-
 
     public function getConfig()
     {

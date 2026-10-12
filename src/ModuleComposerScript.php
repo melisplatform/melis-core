@@ -53,7 +53,6 @@ class ModuleComposerScript
         $mScripts = [];
         foreach($dirs As $module){
 
-            // Pre Autoload dump scripts
             $moduleScriptsDir =  $module.'/install/scripts/';
 
             if(is_dir($moduleScriptsDir)){
@@ -61,7 +60,6 @@ class ModuleComposerScript
                 $moduleScripts = array_filter(glob($moduleScriptsDir.'/*'), 'is_file');
 
                 if(!empty($moduleScripts)){
-                    // Executing scripts
                     foreach($moduleScripts As $scripts){
                         $moduleName = explode('/', $module);
                         $moduleName = $moduleName[count($moduleName)-1];
@@ -105,6 +103,5 @@ class ModuleComposerScript
 
         return $result;
     }
-
 
 }

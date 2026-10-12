@@ -74,7 +74,6 @@ class UserProfileController extends MelisAbstractActionController
         
         $view = new ViewModel();
         $view->melisKey = $melisKey;
-        //get the user data
         $uInfo = $this->getCurrentUserInfo(true);
         $data = array();
         
@@ -103,7 +102,6 @@ class UserProfileController extends MelisAbstractActionController
      */
     public function renderUserProfileFormAction()
     {
-        //get the melisKey
         $melisKey = $this->getMelisKey();
         
         // declare the Tool service that we will be using to completely create our tool.
@@ -111,11 +109,9 @@ class UserProfileController extends MelisAbstractActionController
         
         // tell the Tool what configuration in the app.tool.php that will be used.
         $melisTool->setMelisToolKey('meliscore', $this::TOOL_KEY);
-        //prepare the user profile form
         $form = $melisTool->getForm('meliscore_user_profile_form');
         //make the usr_image field hidden (where just going to trigger the file input on user image click)
         $form->get('usr_image')->setAttribute('style', 'display:none');
-        //set the data to the form
         if($this->getCurrentUserInfo())
             $form->setData($this->getCurrentUserInfo()[0]);
                 
@@ -141,17 +137,13 @@ class UserProfileController extends MelisAbstractActionController
         $errors = array();
         $formErrors = array();
         $reloadPage = false;
-        // translator
         $translator = $this->getServiceManager()->get('translator');
         // declare the Tool service that we will be using to completely create our tool.
         $melisTool = $this->getServiceManager()->get('MelisCoreTool');
         // tell the Tool what configuration in the app.tool.php that will be used.
         $melisTool->setMelisToolKey('meliscore', $this::TOOL_KEY);
-        //get the user profile form
         $userUpdateForm = $melisTool->getForm('meliscore_user_profile_form');
-        //prepare the users table
         $userTable = $this->getServiceManager()->get('MelisCoreTableUser');
-        //prepare the image service
         $imgService = $this->getServiceManager()->get('MelisCoreImage');
         
         $melisCoreAuth = $this->getServiceManager()->get('MelisCoreAuth');
@@ -161,7 +153,6 @@ class UserProfileController extends MelisAbstractActionController
 
         $appConfigForm = $appConfigForm['elements'];
         
-        //check if the request is on POST
         if($this->getRequest()->isPost())
         {
             //process the data from form
@@ -169,7 +160,6 @@ class UserProfileController extends MelisAbstractActionController
             $postValues = $melisTool->sanitizePost($postValues);
             $postValues = $this->getRequest()->getPost();
             
-            //set the data to from from postValues
             $userUpdateForm->setData($postValues);
             
             $password  = $this->getRequest()->getPost('usr_password');
@@ -178,7 +168,6 @@ class UserProfileController extends MelisAbstractActionController
             $userImage = $this->getCurrentUserInfo()[0]['usr_image'];
             $userLangIdCurrent = $this->getCurrentUserInfo()[0]['usr_lang_id'];
             
-            //validate the password
             $passValidator = $this->validatePassword($password, $confirmPass, $translator, $melisCoreAuth);
             
             if($userUpdateForm->isValid())//validate form
@@ -207,7 +196,6 @@ class UserProfileController extends MelisAbstractActionController
                         $tempImg = !empty($imageFile['tmp_name']) ? $imgService->createThumbnail($dirName,$safeImgName,$imageFile['tmp_name']) : null;
                         $imageContent = !empty($imageFile['tmp_name']) ? file_get_contents($dirName.'tmb_'.$safeImgName) : $userImage;
 
-                        // delete tmp image
                         if(!empty($imageFile['tmp_name']))
                         {
                             unlink($dirName.'tmb_'.$safeImgName);
@@ -218,42 +206,34 @@ class UserProfileController extends MelisAbstractActionController
                     
                     if($this->getCurrentUserInfo())
                     {
-                        //check if password is valid
                         if($passValidator['success'])
                         {
                             $newPass = $passValidator['newPass'];
-                            // remove confirm pass when updating
                             unset($data['usr_confirm_password']);
                             $data['usr_password'] = !empty($newPass) ? $newPass : $this->getCurrentUserInfo()[0]['usr_password'];
                             
-                            //save the user data
                             $res = $userTable->save($data, $this->getCurrentUserId());
                             if ($res && !empty($newPass)) {
                                 // Password history (audit item 16.0)
                                 $this->getServiceManager()->get('MelisPasswordPolicyService')->recordHistory((int) $this->getCurrentUserId(), $newPass);
                             }
                             
-                            //check if saving was success
                             if($res)
                             {
                                 $userSession = $melisCoreAuth->getStorage()->read();
-                                // update session data
                                 $userSession->usr_email = $data['usr_email'];
                                 $userSession->usr_lang_id = $data['usr_lang_id'];
                                 $userSession->usr_image = $data['usr_image'];
                                 
                                 $msg = 'tr_meliscore_user_profile_success_info';
                                 
-                                //prepare data to update in the view
                                 $uInfo = array(
                                     'profilePic'    =>  ($userSession->usr_image != "" && $userSession->usr_image != null) ? "data:image/jpeg;base64,".base64_encode($userSession->usr_image) : "/MelisCore/images/profile/default_picture.jpg",
                                     'email'         =>  $userSession->usr_email,
                                     'usrLang'       =>  $data['usr_lang_id'],
                                 );
                                 $success = true;
-                                //set whether to reload the page
                                 $reloadPage = ($userLangIdCurrent != $data['usr_lang_id']) ? true : false;
-                                //set session if $reload is  true
                                 if($reloadPage)
                                 {
                                     $container = new Container('meliscore');
@@ -290,7 +270,6 @@ class UserProfileController extends MelisAbstractActionController
             $msg = 'tr_meliscore_user_profile_failed_info';
         }
         
-        //prepare the data to return
         $response = array(
             'success'       => $success,
             'textMessage'   => $msg,
@@ -333,7 +312,6 @@ class UserProfileController extends MelisAbstractActionController
      */
     private function processErrors($errors, $appConfigForm)
     {
-        //loop through each errors
         foreach ($errors as $keyError => $valueError)
         {
             //look in the form for every failed field to specify the errors
@@ -363,13 +341,10 @@ class UserProfileController extends MelisAbstractActionController
         $success = false;
         $newPass = "";
         
-        //check if user wants to update his / her password
         if(!empty($password) || !empty($confirmPass))
         {
-            //check the length of the password
             if(strlen($password) >= 8)
             {
-                //check the length of the confirm password
                 if(strlen($confirmPass) >= 8)
                 {
                     $identity = $melisCoreAuth->getIdentity();
@@ -381,7 +356,6 @@ class UserProfileController extends MelisAbstractActionController
                     ]);
                     if($passValidator->isValid($password))
                     {
-                        // password and confirm password matching
                         if($password == $confirmPass)
                         {
                             $newPass = $melisCoreAuth->encryptPassword($password);
@@ -433,7 +407,6 @@ class UserProfileController extends MelisAbstractActionController
         }
         else 
         {
-            // update without touching the password
             $success = true;
         } // password and confirm password not empty
         return array("success"=>$success, "errors"=>$errors, 'newPass'=>$newPass);
@@ -447,7 +420,6 @@ class UserProfileController extends MelisAbstractActionController
             {
                 $usersInfo[$key]['usr_image'] = ($usersInfo[$key]['usr_image'] != "" && $usersInfo[$key]['usr_image'] != null) ? "data:image/jpeg;base64,".base64_encode($usersInfo[$key]['usr_image']) : "/MelisCore/images/profile/default_picture.jpg";
             }
-            //get the user role by role id
             $r =  "";
             $usersInfo[$key]['usr_role'] = $r[$key]['urole_name'];
         }
@@ -470,7 +442,6 @@ class UserProfileController extends MelisAbstractActionController
            {
                 $usersInfo[$key]['usr_image'] = ($usersInfo[$key]['usr_image'] != "" && $usersInfo[$key]['usr_image'] != null) ? "data:image/jpeg;base64,".base64_encode($usersInfo[$key]['usr_image']) : "/MelisCore/images/profile/default_picture.jpg";
            }
-           //get the user role by role id
            $r = $role->getEntryById($usersInfo[$key]['usr_role_id'])->toArray();
            $usersInfo[$key]['usr_role'] = $r[$key]['urole_name'] ?? '';
         }
@@ -502,6 +473,5 @@ class UserProfileController extends MelisAbstractActionController
 
         return $melisKey;
     }
-
 
 }

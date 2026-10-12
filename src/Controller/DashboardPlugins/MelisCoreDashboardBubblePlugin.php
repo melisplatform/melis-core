@@ -34,7 +34,6 @@ class MelisCoreDashboardBubblePlugin extends MelisCoreDashboardTemplatingPlugin
         $html = '';
 
         if ($showBubblePlugins) {
-            // get the plugins listed in the config
             $config = $this->getServiceManager()->get('MelisCoreConfig');
             $dashboardPlugins = $config->getItem(self::DASHBOARD_CONFIG);
             $bubblePlugins = $dashboardPlugins['interface']['MelisCoreDashboardBubblePlugin']['datas']['plugins'];
@@ -42,7 +41,6 @@ class MelisCoreDashboardBubblePlugin extends MelisCoreDashboardTemplatingPlugin
             $pluginManager = $this->getServiceManager()->get('ControllerPluginManager');
             $viewRender = $this->getServiceManager()->get('ViewRenderer');
 
-            // render the plugins
             foreach ($bubblePlugins as $pluginName) {
                 $plugin = $pluginManager->get($pluginName);
                 $pluginModel = $plugin->render();

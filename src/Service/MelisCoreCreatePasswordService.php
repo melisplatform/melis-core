@@ -15,13 +15,9 @@ class MelisCoreCreatePasswordService extends MelisGeneralService implements Meli
      */
     public function generateCreatePassRequest($login, $email)
     {
-        // Event parameters prepare
         $arrayParameters = $this->makeArrayFromParameters(__METHOD__, func_get_args());
 
-        // Sending service start event
         $arrayParameters = $this->sendEvent('meliscorecreatepassword_service_generate_create_pass_request_start', $arrayParameters);
-
-        // Service implementation start
 
         /** @var MelisCreatePasswordTable $table */
         $table = $this->getServiceManager()->get('MelisCreatePasswordTable');
@@ -34,12 +30,10 @@ class MelisCoreCreatePasswordService extends MelisGeneralService implements Meli
                 'mcp_hash' => $this->generateHash(),
                 'mcp_date' => date('Y-m-d H:i:s')
             ));
-            // first email
             $success = $this->sendPasswordCreateEmail($arrayParameters['login'], $arrayParameters['email']);
 
         }
         else {
-            // resend email
             $table->update(array(
                 'mcp_hash' => $this->generateHash(),
                 'mcp_date' => date('Y-m-d H:i:s')
@@ -47,11 +41,8 @@ class MelisCoreCreatePasswordService extends MelisGeneralService implements Meli
             $success = $this->sendPasswordCreateEmail($arrayParameters['login'], $arrayParameters['email']);
         }
 
-        // Service implementation end
-
         // Adding results to parameters for events treatment if needed
         $arrayParameters['results'] = $success;
-        // Sending service end event
         $arrayParameters = $this->sendEvent('meliscorecreatepassword_service_generate_create_pass_request_end', $arrayParameters);
 
         return $arrayParameters['results'];
@@ -66,13 +57,9 @@ class MelisCoreCreatePasswordService extends MelisGeneralService implements Meli
      */
     public function createExpiredPasswordRequest($login, $email)
     {
-        // Event parameters prepare
         $arrayParameters = $this->makeArrayFromParameters(__METHOD__, func_get_args());
 
-        // Sending service start event
         $arrayParameters = $this->sendEvent('meliscorecreatepassword_service_generate_create_pass_request_start', $arrayParameters);
-
-        // Service implementation start
 
         /** @var MelisCreatePasswordTable $table */
         $table = $this->getServiceManager()->get('MelisCreatePasswordTable');
@@ -87,10 +74,8 @@ class MelisCoreCreatePasswordService extends MelisGeneralService implements Meli
                 'mcp_hash' => $hash,
                 'mcp_date' => date('Y-m-d H:i:s')
             ));
-            // first email
         }
         else {
-            // resend email
             $table->update(array(
                 'mcp_hash' => $hash,
                 'mcp_date' => date('Y-m-d H:i:s')
@@ -107,11 +92,8 @@ class MelisCoreCreatePasswordService extends MelisGeneralService implements Meli
         $protocol = stripos($_SERVER['SERVER_PROTOCOL'],'https') === 0 ? 'https://' : 'http://';
         $url = $protocol.$cfg['host'].'/melis/renew-password/'.$hash;
 
-        // Service implementation end
-
         // Adding results to parameters for events treatment if needed
         $arrayParameters['results'] = $url;
-        // Sending service end event
         $arrayParameters = $this->sendEvent('meliscorecreatepassword_service_generate_create_pass_request_end', $arrayParameters);
 
         return $arrayParameters['results'];
@@ -124,13 +106,9 @@ class MelisCoreCreatePasswordService extends MelisGeneralService implements Meli
      */
     public function isRequestExpired($login)
     {
-        // Event parameters prepare
         $arrayParameters = $this->makeArrayFromParameters(__METHOD__, func_get_args());
 
-        // Sending service start event
         $arrayParameters = $this->sendEvent('meliscorecreatepassword_service_is_request_expired_start', $arrayParameters);
-
-        // Service implementation start
 
         $date = null;
         foreach($this->getPassRequestDataByLogin($arrayParameters['login']) as $data) {
@@ -142,11 +120,8 @@ class MelisCoreCreatePasswordService extends MelisGeneralService implements Meli
         $expiry = $cfg['pwd_request_expiry'];
         $isExpired = $date < date('Y-m-d H:i:s',strtotime('-'.$expiry.' minutes')) ? false : true;
 
-        // Service implementation end
-
         // Adding results to parameters for events treatment if needed
         $arrayParameters['results'] = $isExpired;
-        // Sending service end event
         $arrayParameters = $this->sendEvent('meliscorecreatepassword_service_is_request_expired_end', $arrayParameters);
 
         return $arrayParameters['results'];
@@ -160,13 +135,9 @@ class MelisCoreCreatePasswordService extends MelisGeneralService implements Meli
      */
     public function processUpdatePassword($hash, $password) 
     {
-        // Event parameters prepare
         $arrayParameters = $this->makeArrayFromParameters(__METHOD__, func_get_args());
 
-        // Sending service start event
         $arrayParameters = $this->sendEvent('meliscorecreatepassword_service_process_update_password_start', $arrayParameters);
-
-        // Service implementation start
 
         $data = $this->getPasswordRequestData($arrayParameters['hash']);
         $login = '';
@@ -184,16 +155,12 @@ class MelisCoreCreatePasswordService extends MelisGeneralService implements Meli
                 $this->deletePasswordRequestData($arrayParameters['hash']);
         }
 
-        // Service implementation end
-
         // Adding results to parameters for events treatment if needed
         $arrayParameters['results'] = $success;
-        // Sending service end event
         $arrayParameters = $this->sendEvent('meliscorecreatepassword_service_process_update_password_end', $arrayParameters);
 
         return $arrayParameters['results'];
     }
-    
 
     /**
      * Check if the provided hash exists
@@ -202,20 +169,15 @@ class MelisCoreCreatePasswordService extends MelisGeneralService implements Meli
      */
     public function hashExists($hash) 
     {
-        // Event parameters prepare
         $arrayParameters = $this->makeArrayFromParameters(__METHOD__, func_get_args());
 
-        // Sending service start event
         $arrayParameters = $this->sendEvent('meliscorecreatepassword_service_hash_exists_start', $arrayParameters);
-
-        // Service implementation start
 
         $data = $this->getPasswordRequestData($arrayParameters['hash']);
         $h = '';
         foreach($data as $val) 
         {
             $h = $val->mcp_login;
-            //echo $h;
         }
         
         if(!empty($h)) {
@@ -224,11 +186,8 @@ class MelisCoreCreatePasswordService extends MelisGeneralService implements Meli
             $return = false;
         }
 
-        // Service implementation end
-
         // Adding results to parameters for events treatment if needed
         $arrayParameters['results'] = $return;
-        // Sending service end event
         $arrayParameters = $this->sendEvent('meliscorecreatepassword_service_hash_exists_end', $arrayParameters);
 
         return $arrayParameters['results'];
@@ -241,13 +200,9 @@ class MelisCoreCreatePasswordService extends MelisGeneralService implements Meli
      */
     public function getUserByHash($hash)
     {
-        // Event parameters prepare
         $arrayParameters = $this->makeArrayFromParameters(__METHOD__, func_get_args());
 
-        // Sending service start event
         $arrayParameters = $this->sendEvent('meliscorecreatepassword_service_hash_exists_start', $arrayParameters);
-
-        // Service implementation start
 
         $data = $this->getPasswordRequestData($arrayParameters['hash']);
         $usr_login = '';
@@ -259,16 +214,12 @@ class MelisCoreCreatePasswordService extends MelisGeneralService implements Meli
         $usertbl = $this->getServiceManager()->get('MelisCoreTableUser');
         $user = $usertbl->getEntryByField("usr_login",$usr_login)->current();
 
-        // Service implementation end
-
         // Adding results to parameters for events treatment if needed
         $arrayParameters['results'] = $user;
-        // Sending service end event
         $arrayParameters = $this->sendEvent('meliscorecreatepassword_service_hash_exists_end', $arrayParameters);
 
         return $arrayParameters['results'];
     }
-
 
     /**
      * get user data by hash
@@ -277,26 +228,19 @@ class MelisCoreCreatePasswordService extends MelisGeneralService implements Meli
      */
     public function getUserByUsername($username)
     {
-        // Event parameters prepare
         $arrayParameters = $this->makeArrayFromParameters(__METHOD__, func_get_args());
 
-        // Sending service start event
         $arrayParameters = $this->sendEvent('meliscorecreatepassword_service_hash_exists_start', $arrayParameters);
 
-        // Service implementation start
         $usertbl = $this->getServiceManager()->get('MelisCoreTableUser');
         $user = $usertbl->getEntryByField("usr_login",$username)->current();
 
-        // Service implementation end
-
         // Adding results to parameters for events treatment if needed
         $arrayParameters['results'] = $user;
-        // Sending service end event
         $arrayParameters = $this->sendEvent('meliscorecreatepassword_service_hash_exists_end', $arrayParameters);
 
         return $arrayParameters['results'];
     }
-
 
     /**
      * Checks if the username exists in the create password table
@@ -305,13 +249,9 @@ class MelisCoreCreatePasswordService extends MelisGeneralService implements Meli
      */
     public function isDataExists($login) 
     {
-        // Event parameters prepare
         $arrayParameters = $this->makeArrayFromParameters(__METHOD__, func_get_args());
 
-        // Sending service start event
         $arrayParameters = $this->sendEvent('meliscorecreatepassword_service_is_data_exists_start', $arrayParameters);
-
-        // Service implementation start
 
         $data = $this->getPassRequestDataByLogin($arrayParameters['login']);
         $login = '';
@@ -325,11 +265,8 @@ class MelisCoreCreatePasswordService extends MelisGeneralService implements Meli
         }else
             $return = false;
 
-        // Service implementation end
-
         // Adding results to parameters for events treatment if needed
         $arrayParameters['results'] = $return;
-        // Sending service end event
         $arrayParameters = $this->sendEvent('meliscorecreatepassword_service_is_data_exists_end', $arrayParameters);
 
         return $arrayParameters['results'];
@@ -342,13 +279,10 @@ class MelisCoreCreatePasswordService extends MelisGeneralService implements Meli
      */
     public function getPassRequestDataByLogin($login) 
     {
-        // Event parameters prepare
         $arrayParameters = $this->makeArrayFromParameters(__METHOD__, func_get_args());
 
-        // Sending service start event
         $arrayParameters = $this->sendEvent('meliscorecreatepassword_service_get_pass_request_data_by_login_start', $arrayParameters);
 
-        // Service implementation start
         $result = [];
 
         /** @var MelisCreatePasswordTable $table */
@@ -358,11 +292,8 @@ class MelisCoreCreatePasswordService extends MelisGeneralService implements Meli
         if($data)
             $result = $data;
 
-        // Service implementation end
-
         // Adding results to parameters for events treatment if needed
         $arrayParameters['results'] = $result;
-        // Sending service end event
         $arrayParameters = $this->sendEvent('meliscorecreatepassword_service_get_pass_request_data_by_login_end', $arrayParameters);
 
         return $arrayParameters['results'];
@@ -374,13 +305,10 @@ class MelisCoreCreatePasswordService extends MelisGeneralService implements Meli
      */
     public function isUserExist($login)
     {
-        // Event parameters prepare
         $arrayParameters = $this->makeArrayFromParameters(__METHOD__, func_get_args());
 
-        // Sending service start event
         $arrayParameters = $this->sendEvent('meliscorecreatepassword_service_get_pass_request_data_by_login_start', $arrayParameters);
 
-        // Service implementation start
         $result = [];
 
         /** @var MelisCreatePasswordTable $table */
@@ -392,11 +320,8 @@ class MelisCoreCreatePasswordService extends MelisGeneralService implements Meli
         else
             $result = false;
 
-        // Service implementation end
-
         // Adding results to parameters for events treatment if needed
         $arrayParameters['results'] = $result;
-        // Sending service end event
         $arrayParameters = $this->sendEvent('meliscorecreatepassword_service_get_pass_request_data_by_login_end', $arrayParameters);
 
         return $arrayParameters['results'];
@@ -411,13 +336,10 @@ class MelisCoreCreatePasswordService extends MelisGeneralService implements Meli
     public function getPasswordRequestData($hash) 
     {
 
-        // Event parameters prepare
         $arrayParameters = $this->makeArrayFromParameters(__METHOD__, func_get_args());
 
-        // Sending service start event
         $arrayParameters = $this->sendEvent('meliscorecreatepassword_service_get_password_request_data_start', $arrayParameters);
 
-        // Service implementation start
         $result = [];
 
         /** @var MelisCreatePasswordTable $table */
@@ -427,12 +349,8 @@ class MelisCoreCreatePasswordService extends MelisGeneralService implements Meli
         if($data)
             $result = $data;
 
-
-        // Service implementation end
-
         // Adding results to parameters for events treatment if needed
         $arrayParameters['results'] = $result;
-        // Sending service end event
         $arrayParameters = $this->sendEvent('meliscorecreatepassword_service_get_password_request_data_end', $arrayParameters);
 
         return $arrayParameters['results'];
@@ -500,7 +418,6 @@ class MelisCoreCreatePasswordService extends MelisGeneralService implements Meli
             $table->deleteByField('mcp_hash', $hash);
     }
 
-
     /**
      * Sends an email together with the link to the user
      * @param String $login
@@ -535,12 +452,10 @@ class MelisCoreCreatePasswordService extends MelisGeneralService implements Meli
         $protocol = stripos($_SERVER['SERVER_PROTOCOL'],'https') === 0 ? 'https://' : 'http://';
         $url = $protocol.$cfg['host'].'/melis/generate-password/'.$hash;
         
-        // if($isActive){
             // Tags to be replace at email content with the corresponding value
             $name_to = $login;
             $email_to = $email;
             
-            // Fetching user language Id
             $userTable = $this->getServiceManager()->get('MelisCoreTableUser');
             $userData = $userTable->getDataByLoginAndEmail($login, $email);
             $userData = $userData->current();
@@ -570,9 +485,6 @@ class MelisCoreCreatePasswordService extends MelisGeneralService implements Meli
             }else{
                 return false;
             }
-        // }else{
-        //     return false;
-        // }
     }
     
     /**

@@ -38,10 +38,6 @@ class MelisCoreClearCacheListenerListener extends MelisGeneralListener implement
                     $coreCacheService = $sm->get('MelisCoreCacheSystemService');
                     $coreCacheService->deleteCacheByPrefix('*', PluginViewController::cacheConfig);
 
-                    /**
-                     * remove bundle-all files inside public/bundles-generated folder
-                     *
-                     */
                     $docroot = $_SERVER['DOCUMENT_ROOT'];
                     $bundleFolder = $docroot.'/../etc';
 
@@ -112,9 +108,7 @@ class MelisCoreClearCacheListenerListener extends MelisGeneralListener implement
         $bundleFiles = glob($path.'/*');
         foreach($bundleFiles as $file){
             if(is_dir($file)){
-                //set folder rights to 777
                 chmod($file.'/', 0777);
-                //iterate again
                 $this->deleteFiles($file);
             }else {
                 unlink($file); // delete file

@@ -112,7 +112,6 @@ class ModulesController extends MelisAbstractActionController
 
         $modulesInfo = $this->getModuleSvc()->getModulesAndVersions();
         $modules = $this->getModules();
-        //check for sites module
         foreach ($modules as $module => $status) {
             // exclude SiteModules because
             // it will complicate the default layout/layout of the melis-core
@@ -141,7 +140,6 @@ class ModulesController extends MelisAbstractActionController
 
         return $hasAccess;
     }
-
 
     /**
      * Saves the changes of the module modifications
@@ -176,7 +174,6 @@ class ModulesController extends MelisAbstractActionController
             $success = $this->createModuleLoaderFile($modules) === true ? 1 : 0;
 
             if($success == 1) {
-                //regenerate bundle
 
                 $textMessage = 'tr_meliscore_module_management_prompt_success';
             }
@@ -213,7 +210,6 @@ class ModulesController extends MelisAbstractActionController
             $modulesList[$modValues] = 1;
         }
 
-        // add the inactive modules
         foreach($moduleLoadFile as $index => $module) {
 
             if(!isset($modulesList[$module])) {
@@ -252,7 +248,6 @@ class ModulesController extends MelisAbstractActionController
             }
         }
 
-        // add the inactive modules
         foreach($moduleLoadFile as $index => $module) {
 
             if(!isset($modulesList[$module])) {
@@ -403,7 +398,6 @@ class ModulesController extends MelisAbstractActionController
             //cached for 1 month (2629744 seconds)
             header('Cache-Control: public, max-age=2629744, immutable');
 
-            // Output the file content
             readfile($path);
         }
         exit;
@@ -433,12 +427,10 @@ class ModulesController extends MelisAbstractActionController
             //cached for 1 month (2629744 seconds)
             header('Cache-Control: public, max-age=2629744, immutable');
 
-            // Output the file content
             readfile($path);
         }
         exit;
     }
-
 
     /**
      * Creates the module loader file and the temp holder for the enabled & disabled modules
@@ -462,8 +454,5 @@ class ModulesController extends MelisAbstractActionController
         $modulesSvc = $this->getServiceManager()->get('ModulesService');
         return $modulesSvc;
     }
-
-
-
 
 }

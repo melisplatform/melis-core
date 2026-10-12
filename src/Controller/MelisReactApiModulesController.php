@@ -90,7 +90,6 @@ class MelisReactApiModulesController extends MelisAbstractActionController
                     static fn($d) => in_array($d, $toggleable, true)
                 ));
             }
-            // Reverse → dependents.
             $dependentsMap = array_fill_keys($toggleable, []);
             foreach ($requiresMap as $module => $deps) {
                 foreach ($deps as $dep) {
@@ -151,7 +150,6 @@ class MelisReactApiModulesController extends MelisAbstractActionController
 
             // Alimente la cloche (FlashMessenger) avec les CLÉS de traduction brutes — le listener
             // est attaché à l'identifiant partagé "MelisCore", on déclenche donc via un EventManager
-            // dédié portant cet identifiant.
             try {
                 $em = new EventManager($this->getEventManager()->getSharedManager(), ['MelisCore']);
                 $em->trigger('meliscore_module_management_save_end', $this, [

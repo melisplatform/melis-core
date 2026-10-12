@@ -29,7 +29,6 @@ class MelisCoreNewPlatformListener extends MelisGeneralListener implements Liste
                 $ctr = 0;
                 $container->platforms = array();
         		foreach($platforms as $platform) {
-        		    // avoid duplicates
         		    if(empty($container['platforms'][$platform['environment']])) {
         		        $container['platforms'][$platform['environment']] = array(
         		          'plf_name' => $platform['environment']
