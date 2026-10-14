@@ -286,11 +286,15 @@ class MelisPasswordSettingsService extends MelisGeneralService
                         touch($file);
                     }
 
-                    if (PHP_OS_FAMILY === 'Linux' && DIRECTORY_SEPARATOR == '/') {
-                        shell_exec('sudo chmod 0777 '.$file);
-                    } else {
-                        chmod($file, 0777);
-                    }
+                    /**
+                     * SECURITY (audit M10) : app.login.php est un fichier PHP INCLUS AU
+                     * BOOTSTRAP (Module.php) — le rendre world-writable (0777, qui plus est
+                     * via sudo) offrait une persistance/élévation locale à tout process de la
+                     * machine. 0664 best-effort : si le fichier appartient à un autre
+                     * utilisateur et n'est pas inscriptible, toFile() échouera proprement dans
+                     * ce try/catch au lieu d'ouvrir un trou.
+                     */
+                    @chmod($file, 0664);
 
                     $configFactory = new \Laminas\Config\Factory();
 

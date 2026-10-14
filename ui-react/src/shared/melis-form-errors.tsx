@@ -36,7 +36,7 @@ function postNotif(kind: 'ok' | 'ko', title: string, message: string, issues?: F
     const fields = (issues ?? [])
       .filter((i) => i && i.label)
       .map((i) => ({ label: i.label as string, messages: [i.message] }))
-    window.postMessage({ __melisNotif: true, kind, title, message, fields }, '*')
+    window.postMessage({ __melisNotif: true, kind, title, message, fields }, window.location.origin)
   } catch { /* no-op (e.g. SSR / sandboxed frame) */ }
 }
 

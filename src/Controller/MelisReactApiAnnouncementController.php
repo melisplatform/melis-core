@@ -172,14 +172,22 @@ class MelisReactApiAnnouncementController extends MelisAbstractActionController
 
     public function saveAction(): HttpResponse
     {
+        // SECURITY (audit H2) : mutation → POST exigé (les méthodes « sûres » échappent au garde CSRF).
+        if (!$this->getRequest()->isPost()) {
+            return $this->jsonResponse(['success' => false, 'error' => 'POST required'], 405);
+        }
+
         if ($deny = $this->denyUnlessAccess()) { return $deny; }
 
         try {
             $body   = json_decode($this->getRequest()->getContent(), true) ?? [];
             $id     = isset($body['id']) && $body['id'] ? (int) $body['id'] : null;
             if ($denyCap = $this->denyUnlessCan($id ? 'edit' : 'create')) { return $denyCap; }
-            $title  = trim((string) ($body['title'] ?? ''));
-            $text   = trim((string) ($body['text'] ?? ''));
+            // SECURITY: titre = texte brut (jamais de HTML) ; texte = HTML TinyMCE
+            // rendu tel quel sur le dashboard de tous les utilisateurs → allowlist.
+            $title  = trim(strip_tags((string) ($body['title'] ?? '')));
+            $text   = $this->getServiceManager()->get('MelisCoreHtmlSanitizer')
+                ->sanitize(trim((string) ($body['text'] ?? '')));
             $status = (int) (bool) ($body['status'] ?? false);
             $date   = trim((string) ($body['date'] ?? ''));
 
@@ -232,6 +240,11 @@ class MelisReactApiAnnouncementController extends MelisAbstractActionController
 
     public function deleteAction(): HttpResponse
     {
+        // SECURITY (audit H2) : mutation atteignable en GET = CSRF sans token — POST ou DELETE exigé.
+        if (!in_array($this->getRequest()->getMethod(), ['POST', 'DELETE'], true)) {
+            return $this->jsonResponse(['success' => false, 'error' => 'POST or DELETE required'], 405);
+        }
+
         if ($deny = $this->denyUnlessAccess()) { return $deny; }
         if ($denyCap = $this->denyUnlessCan('delete')) { return $denyCap; }
 
@@ -262,7 +275,10 @@ class MelisReactApiAnnouncementController extends MelisAbstractActionController
             'id'       => (int)    $r['mca_id'],
             'status'   => (bool)   $r['mca_status'],
             'title'    => (string) $r['mca_title'],
-            'text'     => (string) $r['mca_text'],
+            // SECURITY: assaini aussi en lecture — les annonces historiques (stockées
+            // avant l'assainissement au save) repartent dans l'éditeur TinyMCE du BO.
+            'text'     => $this->getServiceManager()->get('MelisCoreHtmlSanitizer')
+                ->sanitize((string) $r['mca_text']),
             'date'     => (string) $r['mca_date'],
             'userId'   => (int)    $r['mca_user_id'],
             'userName' => $name !== '' ? $name : (string) ($r['usr_login'] ?? ('#' . (int) $r['mca_user_id'])),

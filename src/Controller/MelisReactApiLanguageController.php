@@ -156,6 +156,11 @@ class MelisReactApiLanguageController extends MelisAbstractActionController
 
     public function saveAction(): HttpResponse
     {
+        // SECURITY (audit H2) : mutation → POST exigé (les méthodes « sûres » échappent au garde CSRF).
+        if (!$this->getRequest()->isPost()) {
+            return $this->jsonResponse(['success' => false, 'error' => 'POST required'], 405);
+        }
+
         if ($deny = $this->denyUnlessAccess()) { return $deny; }
 
         try {
@@ -237,6 +242,11 @@ class MelisReactApiLanguageController extends MelisAbstractActionController
 
     public function deleteAction(): HttpResponse
     {
+        // SECURITY (audit H2) : mutation atteignable en GET = CSRF sans token — POST ou DELETE exigé.
+        if (!in_array($this->getRequest()->getMethod(), ['POST', 'DELETE'], true)) {
+            return $this->jsonResponse(['success' => false, 'error' => 'POST or DELETE required'], 405);
+        }
+
         if ($deny = $this->denyUnlessAccess()) { return $deny; }
         if ($denyCap = $this->denyUnlessCan('delete')) { return $denyCap; }
 

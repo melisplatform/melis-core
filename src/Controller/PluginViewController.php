@@ -293,6 +293,20 @@ class PluginViewController extends MelisAbstractActionController
         $melisCoreRights = $this->getServiceManager()->get('MelisCoreRights');
         $xmlRights = $melisCoreAuth->getAuthRights();
         $isAccessible = $melisCoreRights->isAccessible($xmlRights, MelisCoreRightsService::MELISCORE_PREFIX_INTERFACE, $fullKey);
+
+        /**
+         * SECURITY (audit M6) : la section « interface » est une DENY-list default-allow — à
+         * elle seule, un cpath forgé rendait le squelette d'un OUTIL jamais accordé (et les
+         * forward() ne repassent pas par le gate global). Quand le nœud appartient à l'arbre
+         * des outils (chemin *toolstree*), on exige AUSSI le droit d'accès (allow-list
+         * canAccess : admin bypass inclus, fail-closed). Les zones d'interface non-outil
+         * (header, dashboard, zones de login) ne contiennent pas « toolstree » — aucun impact
+         * sur le rendu normal.
+         */
+        if ($isAccessible && strpos((string) $fullKey, 'toolstree') !== false) {
+            $isAccessible = $melisCoreRights->canAccess($key);
+        }
+
         $isDisabled = $melisAppConfig->isInterfaceDisabled($key);
 
 

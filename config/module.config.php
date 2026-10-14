@@ -310,9 +310,13 @@ return [
                         'type'      => 'Segment',
                         'options'   => [
                             'route' => 'dashboard-plugin[/:plugin][/:function]',
-                            'constraint' => [
-                                'plugin'         => '[A-Z][a-zA-Z0-9_-]*',
-                                'function'  => '[A-Z][a-zA-Z0-9_-]*',
+                            // SECURITY (audit H6) : la clé était `constraint` (typo) → contraintes
+                            // IGNORÉES par Laminas. Corrigée en `constraints`, avec un motif qui
+                            // accepte la minuscule initiale des appels réels (getMessages, getNews…)
+                            // — l'ancien [A-Z]… aurait cassé toutes les bulles s'il avait agi.
+                            'constraints' => [
+                                'plugin'    => '[a-zA-Z][a-zA-Z0-9_-]*',
+                                'function'  => '[a-zA-Z][a-zA-Z0-9_-]*',
                             ],
                             'defaults' => [
                                 '__NAMESPACE__' => 'MelisCore\Controller',
@@ -423,6 +427,7 @@ return [
             'MelisPasswordPolicyService'            => \MelisCore\Service\MelisPasswordPolicyService::class,
             'MelisCoreCacheSystemService'           => \MelisCore\Service\MelisCoreCacheSystemService::class,
             'MelisCoreAnnouncementService'           => \MelisCore\Service\MelisCoreAnnouncementService::class,
+            'MelisCoreHtmlSanitizer'                 => \MelisCore\Service\MelisCoreHtmlSanitizerService::class,
 
             // Model
             'MelisCoreTableLang'                    => \MelisCore\Model\Tables\MelisLangTable::class,
@@ -460,6 +465,8 @@ return [
         ],
         'factories' => [
             \MelisCore\Command\PurgeSecurityLogsCommand::class => \MelisCore\Command\PurgeSecurityLogsCommandFactory::class,
+            // Sans état, hors MelisAbstractFactory (pas de setServiceManager) : invokable simple.
+            \MelisCore\Service\MelisCoreHtmlSanitizerService::class => \Laminas\ServiceManager\Factory\InvokableFactory::class,
         ]
     ],
     'controllers' => [

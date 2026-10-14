@@ -4,14 +4,28 @@
     $loginBackground = $this->login_background;
     $favicon = '/favicon.ico';
 
+    // SECURITY (audit H4) : valeurs du Platform Scheme (stockées en DB, éditables depuis l'outil
+    // Scheme) injectées dans ce layout — y compris sur la page de LOGIN, pré-authentification.
+    // $loginBackground part dans un contexte CSS url() où l'échappement HTML ne protège pas :
+    // allowlist de caractères d'URL (chemins relatifs, http(s), data:image) — valeur hostile
+    // ignorée, on garde le défaut.
+    $isSafeSchemeUrl = static function ($url) {
+        // Délimiteurs {} : la classe contient un # littéral (fragment d'URL).
+        return (bool) preg_match('{^[A-Za-z0-9/._:%#?&=~+;,\-]+$}', (string) $url);
+    };
+
     if ($schemes) {
-        if (!empty($schemes->getLoginBackground())) {
+        if (!empty($schemes->getLoginBackground()) && $isSafeSchemeUrl($schemes->getLoginBackground())) {
             $loginBackground = $schemes->getLoginBackground();
         }
 
-        if (!empty($schemes->getFavicon())) {
+        if (!empty($schemes->getFavicon()) && $isSafeSchemeUrl($schemes->getFavicon())) {
             $favicon = $schemes->getFavicon();
         }
+    }
+    // Le défaut du contrôleur transite aussi par le CSS : même garde.
+    if (!$isSafeSchemeUrl($loginBackground)) {
+        $loginBackground = '';
     }
 
     $bundle = $this->layout()->bundle;
@@ -40,7 +54,7 @@
         ->appendName('viewport', 'width=device-width, initial-scale=1.0')
         ->appendHttpEquiv('X-UA-Compatible', 'IE=edge')
     ?>
-    <link rel="icon" href="<?= $favicon; ?>" type="image/x-icon"/>
+    <link rel="icon" href="<?= $this->escapeHtmlAttr($favicon); ?>" type="image/x-icon"/>
     <!-- <link rel="shortcut icon" href="$favicon;" type="image/x-icon" />-->
     <script type="text/javascript">
         var ua = window.navigator.userAgent;

@@ -59,8 +59,14 @@ class MelisCoreDashboardAnnouncementPlugin extends MelisCoreDashboardTemplatingP
         $announcements = $announcementService->getLists(1, null, [], null, null, 'mca_date')->toArray();
 
         $tableUser = $this->getServiceManager()->get('MelisCoreTableUser');
+        /** @var \MelisCore\Service\MelisCoreHtmlSanitizerService $htmlSanitizer */
+        $htmlSanitizer = $this->getServiceManager()->get('MelisCoreHtmlSanitizer');
         $_defaultProfile = '/MelisCore/images/profile/default_picture.jpg';
         foreach($announcements as $key => $val){
+            // SECURITY: mca_text est du HTML TinyMCE rendu tel quel chez TOUS les
+            // utilisateurs — assaini ici pour couvrir aussi les données historiques,
+            // en plus de l'assainissement à la sauvegarde.
+            $announcements[$key]['mca_text'] = $htmlSanitizer->sanitize($val['mca_text']);
             $announcements[$key]['date_str'] = $this->getDate($val['mca_date']);
             //get user info
             $userDatas =  $tableUser->getEntryById($announcements[$key]['mca_user_id'])->current();

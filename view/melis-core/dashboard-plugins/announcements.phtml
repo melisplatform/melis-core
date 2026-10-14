@@ -20,11 +20,12 @@
                                             </div>
                                             <div class="media-body">
                                                 <h4 class="author"><?= $this->escapeHtml($ann['user_name']);?></h4>
-                                                <h4 class="muted"><?= $ann['mca_title'];?></h4>
+                                                <h4 class="muted"><?= $this->escapeHtml($ann['mca_title']);?></h4>
                                             </div>
                                         </div>
                                         <div class="alert alert-gray">
                                             <p class="margin-none">
+                                                <?php /* SECURITY: HTML TinyMCE assaini par MelisCoreHtmlSanitizer dans le plugin (jamais brut depuis la DB) */ ?>
                                                 <?= $ann['mca_text'];?>
                                             </p>
                                         </div>

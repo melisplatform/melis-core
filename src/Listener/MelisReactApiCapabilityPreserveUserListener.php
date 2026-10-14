@@ -41,12 +41,18 @@ class MelisReactApiCapabilityPreserveUserListener extends MelisGeneralListener i
                 try {
                     $db   = $sm->get('Laminas\Db\Adapter\AdapterInterface');
                     $rows = iterator_to_array($db->query('SELECT usr_rights FROM melis_core_user WHERE usr_id = ?', [$userId]));
-                    $fragment = Capabilities::extractSection((string) ($rows[0]['usr_rights'] ?? ''));
+                    $currentRights = (string) ($rows[0]['usr_rights'] ?? '');
+                    // Les DEUX sections React-only voyagent : capacités d'outils ET droits
+                    // microservices (section « API / microservices », audit C4) — même mécanique.
+                    $fragments = array_values(array_filter([
+                        Capabilities::extractSection($currentRights),
+                        \MelisCore\Service\MelisCoreMicroserviceRightsService::extractSection($currentRights),
+                    ], static fn ($f) => $f !== ''));
                 } catch (\Throwable) {
                     return;
                 }
-                if ($fragment === '') {
-                    return; // pas de capacités sur ce user → rien à faire
+                if (!$fragments) {
+                    return; // aucune section React sur ce user → rien à faire
                 }
 
                 $container = new Container('meliscore');
@@ -55,7 +61,7 @@ class MelisReactApiCapabilityPreserveUserListener extends MelisGeneralListener i
                 }
                 $container['action-tool-user-setrights-tmp'] = array_merge(
                     $container['action-tool-user-setrights-tmp'],
-                    [$fragment]
+                    $fragments
                 );
             },
             $priority

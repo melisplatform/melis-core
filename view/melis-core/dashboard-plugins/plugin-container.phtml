@@ -1,23 +1,26 @@
-<?php $class = strtolower(explode('_', preg_replace('/(?<!^)([A-Z])/', '-\\1', $this->pluginConfig['plugin_id']))[0]); ?>
-<div class="grid-stack-item  grid-stack-animate <?= $class ?>"
-     data-gs-id="<?php echo $this->pluginConfig['plugin_id']?>"
-     data-gs-name="<?php echo $this->pluginConfig['conf']['name']?>"
-     data-gs-module="<?php echo strTolower($this->pluginConfig['forward']['module']) ?>"
-     data-gs-x="<?php echo $this->pluginConfig['datas']['x-axis']?>"
-     data-gs-y="<?php echo $this->pluginConfig['datas']['y-axis']?>"
-     data-gs-width="<?php echo $this->pluginConfig['datas']['width']?>"
-     data-gs-height="<?php echo $this->pluginConfig['datas']['height']?>"
-     gs-x="<?php echo $this->pluginConfig['datas']['x-axis']?>"
-     gs-y="<?php echo $this->pluginConfig['datas']['y-axis']?>"
-     gs-w="<?php echo $this->pluginConfig['datas']['width']?>"
-     gs-h="<?php echo $this->pluginConfig['datas']['height']?>">
+<?php
+// SECURITY (audit H6) : la config fusionne des données de requête (GET/POST) et le XML du
+// dashboard sauvé — AUCUNE valeur n'est fiable ici : tout attribut est échappé.
+$class = strtolower(explode('_', preg_replace('/(?<!^)([A-Z])/', '-\\1', $this->pluginConfig['plugin_id']))[0]); ?>
+<div class="grid-stack-item  grid-stack-animate <?= $this->escapeHtmlAttr($class) ?>"
+     data-gs-id="<?php echo $this->escapeHtmlAttr($this->pluginConfig['plugin_id'])?>"
+     data-gs-name="<?php echo $this->escapeHtmlAttr($this->pluginConfig['conf']['name'])?>"
+     data-gs-module="<?php echo $this->escapeHtmlAttr(strTolower($this->pluginConfig['forward']['module'])) ?>"
+     data-gs-x="<?php echo $this->escapeHtmlAttr($this->pluginConfig['datas']['x-axis'])?>"
+     data-gs-y="<?php echo $this->escapeHtmlAttr($this->pluginConfig['datas']['y-axis'])?>"
+     data-gs-width="<?php echo $this->escapeHtmlAttr($this->pluginConfig['datas']['width'])?>"
+     data-gs-height="<?php echo $this->escapeHtmlAttr($this->pluginConfig['datas']['height'])?>"
+     gs-x="<?php echo $this->escapeHtmlAttr($this->pluginConfig['datas']['x-axis'])?>"
+     gs-y="<?php echo $this->escapeHtmlAttr($this->pluginConfig['datas']['y-axis'])?>"
+     gs-w="<?php echo $this->escapeHtmlAttr($this->pluginConfig['datas']['width'])?>"
+     gs-h="<?php echo $this->escapeHtmlAttr($this->pluginConfig['datas']['height'])?>">
     <div class="grid-stack-item-content">
         <div class="widget widget-inverse">
             <div class="widget-parent">
                 <div class="widget-head">
                     <div class="btn-group float-right btn-group-xs">
                     	<a class="btn btn-default dashboard-plugin-properties"><i class="fa fa-cog"></i></a>
-                    	<a class="btn btn-default dashboard-plugin-delete" <?php echo !empty($this->deleteCallBack) ? 'data-callback="' . $this->deleteCallBack . '"' : '' ?>><i class="fa fa-trash"></i></a>
+                    	<a class="btn btn-default dashboard-plugin-delete" <?php echo !empty($this->deleteCallBack) ? 'data-callback="' . $this->escapeHtmlAttr($this->deleteCallBack) . '"' : '' ?>><i class="fa fa-trash"></i></a>
                         <a class="btn btn-default dashboard-plugin-refresh"><i class="fa fa-refresh"></i></a>
                     </div>
                     <h3 class="heading"><i class="<?php echo $this->translate($this->pluginConfig['datas']['icon']); ?>"></i> <?=!empty($this->pluginConfig['datas']['dashboard_title'])?$this->translate($this->pluginConfig['datas']['dashboard_title']):$this->translate($this->pluginConfig['datas']['name']); ?></h3>

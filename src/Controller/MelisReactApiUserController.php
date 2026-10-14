@@ -169,6 +169,11 @@ class MelisReactApiUserController extends MelisAbstractActionController
 
     public function saveAction(): HttpResponse
     {
+        // SECURITY (audit H2) : mutation → POST exigé (les méthodes « sûres » échappent au garde CSRF).
+        if (!$this->getRequest()->isPost()) {
+            return $this->jsonResponse(['success' => false, 'error' => 'POST required'], 405);
+        }
+
         if ($deny = $this->denyUnlessAccess()) { return $deny; }
 
         try {
@@ -227,6 +232,31 @@ class MelisReactApiUserController extends MelisAbstractActionController
 
             $db   = $this->getServiceManager()->get('Laminas\Db\Adapter\AdapterInterface');
             $auth = $this->getServiceManager()->get('MelisCoreAuth');
+
+            // SECURITY (audit H1) : le statut administrateur ne s'accorde et ne se retire
+            // qu'entre administrateurs, et un compte administrateur n'est modifiable que par un
+            // admin (sinon un détenteur de l'outil Users changerait le mot de passe de l'admin
+            // ou se promouvrait lui-même → bypass total des droits).
+            $callerIsAdmin = !empty($auth->getIdentity()->usr_admin);
+            if (!$callerIsAdmin) {
+                $targetIsAdmin = false;
+                if ($id) {
+                    $t = iterator_to_array($db->query('SELECT usr_admin FROM melis_core_user WHERE usr_id = ?', [$id]));
+                    $targetIsAdmin = !empty($t) && !empty(((array) $t[0])['usr_admin']);
+                }
+                if ($targetIsAdmin) {
+                    return $this->jsonResponse(
+                        ['success' => false, 'error' => 'Seul un administrateur peut modifier un compte administrateur.'],
+                        403
+                    );
+                }
+                if ($isAdmin) {
+                    return $this->jsonResponse(
+                        ['success' => false, 'error' => 'Seul un administrateur peut accorder le statut d\'administrateur.'],
+                        403
+                    );
+                }
+            }
 
             if ($id) {
                 // Update — mot de passe + droits optionnels
@@ -371,6 +401,11 @@ class MelisReactApiUserController extends MelisAbstractActionController
 
     public function deleteAction(): HttpResponse
     {
+        // SECURITY (audit H2) : mutation atteignable en GET = CSRF sans token — POST ou DELETE exigé.
+        if (!in_array($this->getRequest()->getMethod(), ['POST', 'DELETE'], true)) {
+            return $this->jsonResponse(['success' => false, 'error' => 'POST or DELETE required'], 405);
+        }
+
         if ($deny = $this->denyUnlessAccess()) { return $deny; }
         if ($denyCap = $this->denyUnlessCan('delete')) { return $denyCap; }
 
@@ -393,8 +428,16 @@ class MelisReactApiUserController extends MelisAbstractActionController
             $db = $sm->get('Laminas\Db\Adapter\AdapterInterface');
 
             // Login lu avant la suppression : les jetons de mot de passe en attente sont indexes dessus
-            $rows  = iterator_to_array($db->query('SELECT usr_login FROM melis_core_user WHERE usr_id = ?', [$id]));
+            $rows  = iterator_to_array($db->query('SELECT usr_login, usr_admin FROM melis_core_user WHERE usr_id = ?', [$id]));
             $login = !empty($rows) ? ((array) $rows[0])['usr_login'] : null;
+
+            // SECURITY (audit H1) : un compte administrateur ne se supprime qu'entre admins.
+            if (!empty($rows) && !empty(((array) $rows[0])['usr_admin']) && empty($identity->usr_admin)) {
+                return $this->jsonResponse(
+                    ['success' => false, 'error' => 'Seul un administrateur peut supprimer un compte administrateur.'],
+                    403
+                );
+            }
 
             $db->query('DELETE FROM melis_core_user WHERE usr_id = ?', [$id]);
 
@@ -402,6 +445,11 @@ class MelisReactApiUserController extends MelisAbstractActionController
             // avant la suppression resterait utilisable sur un login qui n'existe plus.
             $sm->get('MelisCoreLostPassword')->deleteRequestsByLogin($login);
             $sm->get('MelisCoreCreatePassword')->deleteRequestsByLogin($login);
+
+            // SECURITY (audit H8) : la clé API microservice du compte est purgée avec lui —
+            // une ligne msoa orpheline authentifiait encore (ceinture : runAction refuse
+            // désormais aussi les propriétaires inexistants).
+            $db->query('DELETE FROM melis_core_microservice_auth WHERE msoa_user_id = ?', [$id]);
 
             return $this->jsonResponse(['success' => true, 'data' => null]);
         } catch (\Throwable $e) {
@@ -421,6 +469,11 @@ class MelisReactApiUserController extends MelisAbstractActionController
      */
     public function exportAction(): HttpResponse
     {
+        // SECURITY (audit H2) : mutation → POST exigé (les méthodes « sûres » échappent au garde CSRF).
+        if (!$this->getRequest()->isPost()) {
+            return $this->jsonResponse(['success' => false, 'error' => 'POST required'], 405);
+        }
+
         if ($deny = $this->denyUnlessAccess()) { return $deny; }
         if ($denyCap = $this->denyUnlessCan('export')) { return $denyCap; }
 
@@ -594,6 +647,11 @@ class MelisReactApiUserController extends MelisAbstractActionController
 
     public function microserviceSaveAction(): HttpResponse
     {
+        // SECURITY (audit H2) : mutation → POST exigé (les méthodes « sûres » échappent au garde CSRF).
+        if (!$this->getRequest()->isPost()) {
+            return $this->jsonResponse(['success' => false, 'error' => 'POST required'], 405);
+        }
+
         if ($deny = $this->denyUnlessAccess()) { return $deny; }
         if ($denyCap = $this->denyUnlessCan('edit')) { return $denyCap; }
 

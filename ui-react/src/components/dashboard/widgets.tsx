@@ -223,7 +223,7 @@ export function LegacyPluginContent({ pluginName }: { pluginName: string }) {
       narrowSyncedOnce.current = true
       return
     }
-    frameRef.current?.contentWindow?.postMessage({ __melisNarrow: true, narrow }, '*')
+    frameRef.current?.contentWindow?.postMessage({ __melisNarrow: true, narrow }, window.location.origin)
   }, [narrow])
 
   // Bascule de thème : on ne recharge PLUS l'iframe. On pousse les nouveaux tokens au document déjà
@@ -238,7 +238,7 @@ export function LegacyPluginContent({ pluginName }: { pluginName: string }) {
       themedOnce.current = true
       return
     }
-    frameRef.current?.contentWindow?.postMessage({ __melisRetheme: true, ...themeParams }, '*')
+    frameRef.current?.contentWindow?.postMessage({ __melisRetheme: true, ...themeParams }, window.location.origin)
   }, [themeParams])
 
   // ── Hauteur de tuile ajustée au contenu réel du plugin ────────────────────────────────────
@@ -351,7 +351,7 @@ export function LegacyPluginContent({ pluginName }: { pluginName: string }) {
           setLoading(false)
           // Rattrapage : si la largeur a changé pendant le chargement du plugin, l'URL porte l'état
           // périmé et le postMessage émis à ce moment-là n'avait pas d'écouteur en face.
-          frameRef.current?.contentWindow?.postMessage({ __melisNarrow: true, narrow: narrowRef.current }, '*')
+          frameRef.current?.contentWindow?.postMessage({ __melisNarrow: true, narrow: narrowRef.current }, window.location.origin)
           // Le plugin commence-t-il par une barre d'onglets générée ? (cf. marginTop plus haut)
           // Lecture directe du DOM de l'iframe : elle est same-origin (contenu que nous produisons),
           // donc pas besoin d'un postMessage de plus. En cas d'échec, on laisse le retrait par défaut.
@@ -378,7 +378,7 @@ export function LegacyPluginContent({ pluginName }: { pluginName: string }) {
             // On renvoie le choix à l'iframe émettrice, qui rejoue le bon callback dans son contexte.
             frameRef.current?.contentWindow?.postMessage(
               { __melisConfirmResult: true, id: confirm.id, result: kind },
-              '*',
+              window.location.origin,
             )
             setConfirm(null)
           }}

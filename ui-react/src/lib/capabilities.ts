@@ -41,6 +41,15 @@ export function useCan(toolKey: string, cap: string): boolean {
   return canCapability(toolKey, cap)
 }
 
+/**
+ * Hook réactif : l'utilisateur courant est-il administrateur ? `loaded` distingue « non-admin »
+ * de « /me pas encore chargé » (dans ce cas on laisse faire : le serveur est le vrai mur, H1).
+ */
+export function useIsAdmin(): { isAdmin: boolean; loaded: boolean } {
+  const s = useSyncExternalStore(subscribe, snapshot)
+  return { isAdmin: s.isAdmin, loaded: s.loaded }
+}
+
 // Exposé en global pour les BRIQUES de module (qui ne peuvent pas importer les modules de l'hôte) :
 // une brique appelle `window.MelisCan(toolKey, cap)`. Lecture non-réactive — les caps sont chargées
 // au boot (Topbar /me) avant qu'une brique (lazy) ne s'affiche, donc la valeur est prête.

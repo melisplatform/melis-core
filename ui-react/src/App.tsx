@@ -65,6 +65,9 @@ function TabBridge() {
   // uses below, then navigate — the existing route→tab sync effect takes it from there.
   useEffect(() => {
     const onMessage = (e: MessageEvent) => {
+      // SECURITY (audit M9) : le pont est same-origin par construction — toute fenêtre
+      // cross-origin détenant une référence vers la SPA ne doit pas pouvoir la piloter.
+      if (e.origin !== window.location.origin) return
       const d = e.data as { __melisOpenTool?: boolean; forwardKey?: string; path?: string; melisKey?: string; id?: string | number; label?: string } | null
       if (!d || !d.__melisOpenTool) return
       // `melisKey` : l'appelant ne connaît que la CLÉ MELIS de l'outil cible et pas sa route React

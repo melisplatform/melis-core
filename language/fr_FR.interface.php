@@ -148,6 +148,9 @@ return [
     'tr_meliscore_user_status_pending' => 'En attente',
 
     'tr_meliscore_user_profile' => 'Gestion du profil utilisateur',
+    'tr_meliscore_user_profile_current_password' => 'Mot de passe actuel',
+    'tr_meliscore_user_profile_current_password tooltip' => 'Requis pour changer votre email ou votre mot de passe',
+    'tr_meliscore_user_profile_current_password_invalid' => 'Le mot de passe actuel est requis et doit être correct pour changer l\'email ou le mot de passe',
     'tr_meliscore_user_profile_success_info' => 'Profil mis à jour avec succès',
     'tr_meliscore_user_profile_failed_info' => 'Impossible de mettre à jour le profil',
     'tr_meliscore_user_profile_profile_text' => 'Profil',

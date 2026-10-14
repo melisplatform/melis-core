@@ -45,7 +45,7 @@
                                             ?>
                                     		<li class="nav-item">
                                     			<a class="nav-link clearfix" data-bs-toggle="tab" data-bs-target="#<?php echo $key?>-log-type-details" href="#<?php echo $key?>-log-type-details" aria-expanded="false">
-                                    				<span><?php echo $val['lang_name']?></span>
+                                    				<span><?php echo $this->escapeHtml($val['lang_name']) /* SECURITY audit M7 */ ?></span>
                                                     <span class="float-right">
                                                         <img src="/MelisCore/images/lang/<?= $locale?>.png" class="imgDisplay float-right" onerror="javascript:this.src='MelisCore/images/lang/default.png'" />
                                                     </span>
@@ -60,7 +60,7 @@
                                     <?php foreach ($languages As $key => $val):?>
                                     	<div id="<?php echo $key ?>-log-type-details" class="tab-pane product-text-tab-content">
                                     		<div class="bg-white">
-                                    			<h3 class=""><i class="fa fa-language" aria-hidden="true"></i> <?php echo $val['lang_name']?></h3>
+                                    			<h3 class=""><i class="fa fa-language" aria-hidden="true"></i> <?php echo $this->escapeHtml($val['lang_name']) /* SECURITY audit M7 */ ?></h3>
                                     		</div>
                                             <?php
                                             	$form = clone($this->meliscore_logs_tool_log_type_form);

@@ -404,7 +404,9 @@ class LogController extends MelisAbstractActionController
 
         $selectOptions = '<option value="-1" selected>' . $translator->translate('tr_meliscore_all') . '</option>';
         foreach ($logType as $val) {
-            $selectOptions .= '<option value="' . $val->logt_id . '">' . $val->logt_code . '</option>';
+            // SECURITY (audit H7) : logt_code est auto-créé depuis le typeCode de n'importe quel
+            // événement (tous modules) — échappé comme le reste de l'outil.
+            $selectOptions .= '<option value="' . (int) $val->logt_id . '">' . htmlspecialchars((string) $val->logt_code, ENT_QUOTES, 'UTF-8') . '</option>';
         }
 
         $select = sprintf($select, $selectOptions);
@@ -575,7 +577,8 @@ class LogController extends MelisAbstractActionController
                     'log_id'         => $melisTool->escapeHtml($logId),
                     'log_title'      => $melisTool->escapeHtml($translator->translate($log->log_title)),
                     'log_message'    => $translatedMessage,
-                    'log_type'       => sprintf($logTypeBtn, $logType->logt_id, $logType->logt_code),
+                    // SECURITY (audit H7) : logt_code échappé — seule cellule qui ne l'était pas.
+                    'log_type'       => sprintf($logTypeBtn, (int) $logType->logt_id, $melisTool->escapeHtml($logType->logt_code)),
                     'log_item_id'    => $melisTool->escapeHtml($log->log_item_id),
                     'log_user'       => $melisTool->escapeHtml($usersMap[$log->log_user_id] ?? ''),
                     // Empty until flyway V36 has added the column, and for the older rows.

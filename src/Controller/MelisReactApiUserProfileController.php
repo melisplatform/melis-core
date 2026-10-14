@@ -89,6 +89,11 @@ class MelisReactApiUserProfileController extends MelisAbstractActionController
 
     public function saveAction(): HttpResponse
     {
+        // SECURITY (audit H2) : mutation → POST exigé (les méthodes « sûres » échappent au garde CSRF).
+        if (!$this->getRequest()->isPost()) {
+            return $this->jsonResponse(['success' => false, 'error' => 'POST required'], 405);
+        }
+
         if ($deny = $this->denyUnlessAccess()) { return $deny; }
 
         try {
@@ -125,8 +130,32 @@ class MelisReactApiUserProfileController extends MelisAbstractActionController
             }
 
             // Langue courante (pour décider du reload du BO si elle change).
-            $curRows = iterator_to_array($db->query('SELECT usr_lang_id FROM melis_core_user WHERE usr_id = ?', [$userId]));
+            $curRows = iterator_to_array($db->query('SELECT usr_lang_id, usr_email, usr_password FROM melis_core_user WHERE usr_id = ?', [$userId]));
             $oldLangId = (int) ($curRows[0]['usr_lang_id'] ?? 0);
+
+            /**
+             * SECURITY (audit M3, ASVS 2.1.5) : changer le mot de passe ou l'EMAIL du compte
+             * exige la preuve de possession du secret COURANT — sinon une session volée (XSS,
+             * poste partagé) devient une prise de compte permanente (l'email capte les resets).
+             */
+            $emailChanged = strcasecmp((string) ($curRows[0]['usr_email'] ?? ''), $email) !== 0;
+            if ($newPassHash !== null || $emailChanged) {
+                $currentPassword = (string) ($body['currentPassword'] ?? '');
+                if ($currentPassword === '') {
+                    return $this->jsonResponse([
+                        'success' => false,
+                        'error'   => 'Le mot de passe actuel est requis pour changer l\'email ou le mot de passe.',
+                        'fields'  => ['currentPassword' => ['required']],
+                    ], 403);
+                }
+                if (!password_verify($currentPassword, (string) ($curRows[0]['usr_password'] ?? ''))) {
+                    return $this->jsonResponse([
+                        'success' => false,
+                        'error'   => 'Mot de passe actuel incorrect.',
+                        'fields'  => ['currentPassword' => ['invalid']],
+                    ], 403);
+                }
+            }
 
             // Construction dynamique du UPDATE (n'écrit que ce qui change).
             $sets   = ['usr_email = ?', 'usr_lang_id = ?'];

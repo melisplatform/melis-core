@@ -67,18 +67,23 @@ var MelisCoreDashboardBubbleChatPlugin = {
             });
 
             $.each(response.data, function (key, value) {
+                // SECURITY: prénom/nom et message viennent d'autres utilisateurs BO —
+                // tout champ interpolé dans ce HTML est échappé (XSS stocké sinon).
+                var esc = melisCore.escapeHtml;
+                var rawMsg = String(value.msgr_msg_cont_message || '');
+                var msgPreview = (rawMsg.length > 115) ? rawMsg.substring(0, 115) + '...' : rawMsg;
                 var message = '<div class="media innerAll">\n' +
                     '<div class="media-body">\n' +
                     '<div class="row">\n' +
                     '<div class="col-md-7">\n' +
-                    '<a href="#" class="text-info">' + value.usr_firstname + ' ' + value.usr_lastname + ' </a><em>' + translations.tr_meliscore_dashboard_bubble_plugins_wrote + ': </em>\n' +
-                    '<p>' + ((value.msgr_msg_cont_message.length > 115) ? value.msgr_msg_cont_message.substring(0, 115) + '...' : value.msgr_msg_cont_message) + '</p>\n' +
+                    '<a href="#" class="text-info">' + esc(value.usr_firstname) + ' ' + esc(value.usr_lastname) + ' </a><em>' + translations.tr_meliscore_dashboard_bubble_plugins_wrote + ': </em>\n' +
+                    '<p>' + esc(msgPreview) + '</p>\n' +
                     '</div>\n' +
                     '<div class="col-md-2">\n' +
-                    '<div class="float-right label label-default">' + value.msgr_msg_cont_date + '</div>\n' +
+                    '<div class="float-right label label-default">' + esc(value.msgr_msg_cont_date) + '</div>\n' +
                     '</div>\n' +
                     '<div class="col-md-2">\n' +
-                    '<button class="btn btn-info btn-xs dashboard-bubble-chat-read-more" data-senderid="' + value.msgr_msg_cont_sender_id + '">' + translations.tr_meliscore_dashboard_bubble_plugins_read + '</button>\n' +
+                    '<button class="btn btn-info btn-xs dashboard-bubble-chat-read-more" data-senderid="' + parseInt(value.msgr_msg_cont_sender_id, 10) + '">' + translations.tr_meliscore_dashboard_bubble_plugins_read + '</button>\n' +
                     '</div>\n' +
                     '</div>\n' +
                     '</div>\n' +

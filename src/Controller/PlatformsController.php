@@ -246,11 +246,14 @@ class PlatformsController extends MelisAbstractActionController
             for($ctr = 0; $ctr < count($tableData); $ctr++)
             {
                 // apply text limits
+                // SECURITY (audit H7) : cellules rendues en HTML par la DataTable — échappées
+                // (les colonnes icônes, réécrites plus bas avec du HTML de confiance, écrasent
+                // la valeur échappée : pas d'impact).
                 foreach($tableData[$ctr] as $vKey => $vValue)
                 {
-                    $tableData[$ctr][$vKey] = $melisTool->limitedText($vValue);
+                    $tableData[$ctr][$vKey] = $melisTool->escapeHtml($melisTool->limitedText($vValue));
                 }
-                
+
                 // Updating marketplace status
                 $marketPlaceIconn = '<i class="fa fa-fw fa-circle text-success"></i>';
                 if (!$tableData[$ctr]['plf_update_marketplace'])

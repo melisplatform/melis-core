@@ -166,21 +166,50 @@ class UserProfileController extends MelisAbstractActionController
         {
             //process the data from form
             $postValues = $this->getRequest()->getPost()->toArray();
+            // SECURITY (audit M7) : le résultat de sanitizePost était immédiatement ÉCRASÉ par
+            // le POST brut (ligne supprimée) — la sanitisation ne servait à rien.
             $postValues = $melisTool->sanitizePost($postValues);
-            $postValues = $this->getRequest()->getPost();
-            
+
             //set the data to from from postValues
             $userUpdateForm->setData($postValues);
-            
+
             $password  = $this->getRequest()->getPost('usr_password');
             $confirmPass = $this->getRequest()->getPost('usr_confirm_password');
             $userId = $this->getCurrentUserInfo()[0]['usr_id'];
             $userImage = $this->getCurrentUserInfo()[0]['usr_image'];
             $userLangIdCurrent = $this->getCurrentUserInfo()[0]['usr_lang_id'];
-            
+
             //validate the password
             $passValidator = $this->validatePassword($password, $confirmPass, $translator, $melisCoreAuth);
-            
+
+            /**
+             * SECURITY (audit M3, ASVS 2.1.5) : changer le mot de passe ou l'EMAIL exige le mot
+             * de passe ACTUEL (même règle que le BO React) — une session volée ne suffit plus à
+             * prendre le compte. Champ `usr_current_password` du formulaire de profil.
+             */
+            $currentEmail   = (string) ($this->getCurrentUserInfo()[0]['usr_email'] ?? '');
+            $postedEmail    = trim((string) $this->getRequest()->getPost('usr_email', ''));
+            $wantsNewPass   = trim((string) $password) !== '';
+            $wantsNewEmail  = $postedEmail !== '' && strcasecmp($postedEmail, $currentEmail) !== 0;
+            if ($wantsNewPass || $wantsNewEmail) {
+                $currentPassword = (string) $this->getRequest()->getPost('usr_current_password', '');
+                if ($currentPassword === ''
+                    || !password_verify($currentPassword, (string) ($this->getCurrentUserInfo()[0]['usr_password'] ?? ''))) {
+                    return new JsonModel([
+                        'success' => 0,
+                        'textTitle' => $translator->translate('tr_meliscore_user_profile'),
+                        'textMessage' => $translator->translate('tr_meliscore_user_profile_current_password_invalid'),
+                        'errors' => [
+                            'usr_current_password' => [
+                                'invalid' => $translator->translate('tr_meliscore_user_profile_current_password_invalid'),
+                                'label' => $translator->translate('tr_meliscore_user_profile_current_password'),
+                            ],
+                        ],
+                        'datas' => [],
+                    ]);
+                }
+            }
+
             if($userUpdateForm->isValid())//validate form
             {
                 if($passValidator['success'])//validate password
