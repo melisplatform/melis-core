@@ -15,7 +15,7 @@
  */
 
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { Boxes, CheckSquare, ChevronRight, FileText, LayoutDashboard, Loader2, MinusSquare, Square } from 'lucide-react'
+import { Bot, Boxes, CheckSquare, ChevronRight, FileText, LayoutDashboard, Loader2, MinusSquare, Square } from 'lucide-react'
 import type { ApiMenuNode, CapActionEntry, CapTreeNode, DeclaredCapValue } from '@/lib/melis-api'
 import { fetchMenu, fetchReactModules, fetchDeclaredCapabilities } from '@/lib/melis-api'
 import { cn } from '@/lib/utils'
@@ -25,6 +25,8 @@ import { PagesRightsPanel } from '@/components/PagesRightsPanel'
 import { ALL_PAGES, parsePagesRights, pagesRightsIds } from '@/lib/pages-rights-api'
 import { DashboardPluginsRightsPanel } from '@/components/DashboardPluginsRightsPanel'
 import { DASHBOARD_ALL, dashboardRightsIds, fetchDashboardPluginRights, parseDashboardRights, type DashboardPluginRight } from '@/lib/dashboard-rights-api'
+import { AiAgentsRightsPanel } from '@/components/AiAgentsRightsPanel'
+import { AGENTS_SECTION, buildAgentsSection, fetchAgentRights, parseAgentsRights, type AgentsRightsState, type AiAgentRight } from '@/lib/ai-agents-rights-api'
 
 // ─── Pure helpers ─────────────────────────────────────────────────────────────
 
@@ -174,6 +176,7 @@ function buildRightsXml(
   checkedDash: Set<string>,
   originalXml: string,
   deniedCaps: DeniedCaps,
+  agentsSection: string[] | null,
 ): string {
   // Extrait les <id> d'une section dans l'XML original
   const extractIds = (tag: string): string[] => {
@@ -282,9 +285,31 @@ function buildRightsXml(
     L.push('</meliscore_tool_capabilities>')
   }
 
+  // Agents IA (MelisAIEngine) — écrite depuis l'état quand le panneau est affiché et édité.
+  if (agentsSection) L.push(...agentsSection)
+
+  // Toute autre section (module non éditée ici, ex. agents IA quand le panneau est masqué) est
+  // recopiée telle quelle : sinon chaque sauvegarde React la supprimait.
+  const written = ['meliscms_pages', 'meliscore_interface', 'meliscore_leftmenu', 'melis_dashboardplugin', 'meliscore_tool_capabilities']
+  if (agentsSection) written.push(AGENTS_SECTION)
+  L.push(...otherSections(originalXml, written))
+
   L.push('</document>')
 
   return L.join('\n')
+}
+
+/** Les sections de premier niveau de l'XML qui ne sont pas dans `written`, sérialisées telles quelles. */
+function otherSections(xml: string, written: string[]): string[] {
+  if (!xml?.trim()) return []
+  try {
+    const doc = new DOMParser().parseFromString(xml, 'text/xml')
+    if (doc.querySelector('parsererror') || !doc.documentElement) return []
+    const serializer = new XMLSerializer()
+    return Array.from(doc.documentElement.children)
+      .filter((el) => !written.includes(el.nodeName))
+      .map((el) => serializer.serializeToString(el))
+  } catch { return [] }
 }
 
 // ─── Composants UI ───────────────────────────────────────────────────────────
@@ -736,6 +761,14 @@ export function RightsTreeView({ rights, onChange }: RightsTreeViewProps) {
   const [dashPlugins, setDashPlugins] = useState<DashboardPluginRight[]>([])
   const [cmsActive, setCmsActive] = useState(false)
 
+  // AI agents (MelisAIEngine): null = module inactive → panel hidden, section kept as is
+  const [aiAgents, setAiAgents] = useState<AiAgentRight[] | null>(null)
+  const [agentsRights, setAgentsRights] = useState<AgentsRightsState>({ all: true, ids: new Set() })
+  const agentsRightsRef = useRef<AgentsRightsState>(agentsRights)
+  // Rights without the section (saved before the feature) allow every agent: keep them that way
+  // until the panel is actually edited, rather than writing <id>-1</id> on any save
+  const agentsEditedRef = useRef(false)
+
   // Capacités d'outils (droits avancés) : déclarées par module + retirées par user (deny-list).
   const [declaredCaps, setDeclaredCaps] = useState<Record<string, DeclaredCapValue>>({})
   // On attend ce fetch avant le 1er rendu : sinon une section is_parent_tool (ex. Market Place) affiche
@@ -768,6 +801,11 @@ export function RightsTreeView({ rights, onChange }: RightsTreeViewProps) {
     fetchDashboardPluginRights().then(setDashPlugins)
   }, [])
 
+  // AI agents for the rights editor (MelisAIEngine; null when the module isn't active).
+  useEffect(() => {
+    fetchAgentRights().then(setAiAgents)
+  }, [])
+
   // Capacités déclarées par les modules (carte melisKey → [caps]) pour afficher les cases par outil.
   useEffect(() => {
     fetchDeclaredCapabilities()
@@ -787,13 +825,38 @@ export function RightsTreeView({ rights, onChange }: RightsTreeViewProps) {
     const denied = parseDeniedCaps(rights)
     setDeniedCaps(denied)
     deniedCapsRef.current = denied
+    const agents = parseAgentsRights(rights)
+    setAgentsRights(agents)
+    agentsRightsRef.current = agents
+    agentsEditedRef.current = false
   }, [navTree, rights])
 
   function emit(tools: Set<string>, pages: Set<number>, dash: Set<string>, denied: DeniedCaps = deniedCapsRef.current) {
     if (!navTree) return
-    const xml = buildRightsXml(tools, navTree, pages, dash, originalXmlRef.current, denied)
+    // Agents section written from the panel once edited; otherwise kept as is from the original XML
+    const agentsSection = aiAgents && agentsEditedRef.current ? buildAgentsSection(agentsRightsRef.current) : null
+    const xml = buildRightsXml(tools, navTree, pages, dash, originalXmlRef.current, denied, agentsSection)
     ownXmlRef.current = xml
     onChange(xml)
+  }
+
+  function setAgents(next: AgentsRightsState) {
+    setAgentsRights(next)
+    agentsRightsRef.current = next
+    agentsEditedRef.current = true
+    emit(checkedTools, checkedPages, checkedDash)
+  }
+
+  function onToggleAgent(id: number, v: boolean) {
+    const ids = new Set(agentsRightsRef.current.ids)
+    if (v) ids.add(id); else ids.delete(id)
+    setAgents({ all: false, ids })
+  }
+
+  // Unticking "all agents" starts from every current agent ticked, so the user only removes some
+  function onToggleAllAgents(v: boolean) {
+    const ids = v || !aiAgents ? new Set<number>() : new Set(aiAgents.map((a) => a.id))
+    setAgents({ all: v, ids })
   }
 
   // Toggle d'une capacité d'un outil (checked = permise). Met à jour la deny-list + ré-émet le XML.
@@ -1021,6 +1084,18 @@ export function RightsTreeView({ rights, onChange }: RightsTreeViewProps) {
               checkedPages={checkedPages}
               onTogglePage={onTogglePage}
               onToggleAll={onToggleAll}
+            />
+          </Category>
+        )}
+
+        {/* Modular category: "AI agents" — contributed by MelisAIEngine, shown only when the module is active. */}
+        {aiAgents && (
+          <Category icon={Bot} title={t('rights.ai_agents')} accent="#0d9488">
+            <AiAgentsRightsPanel
+              agents={aiAgents}
+              rights={agentsRights}
+              onToggle={onToggleAgent}
+              onToggleAll={onToggleAllAgents}
             />
           </Category>
         )}
