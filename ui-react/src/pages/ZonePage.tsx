@@ -3,7 +3,7 @@ import { useLocation } from 'react-router-dom'
 import { Loader2, ShieldAlert } from 'lucide-react'
 import { useTabs } from '@/components/tabs/tab-store'
 import { useZonePool } from '@/components/zone/zone-pool'
-import { melisKeyForRoute, toolBaseRoute, useToolRoutesVersion } from '@/lib/tool-routes'
+import { labelForRoute, melisKeyForRoute, toolBaseRoute, useToolRoutesVersion } from '@/lib/tool-routes'
 import { useI18n } from '@/i18n/i18n-context'
 
 function formatSeg(path: string): string {
@@ -30,7 +30,8 @@ export default function ZonePage() {
   // are reflected in the URL by ToolTabBar but never spawn a new top tab.
   const base     = toolBaseRoute(pathname)
   const tabLabel = tabs.find((t) => t.id === base)?.label
-  const title    = tabLabel || formatSeg(base)
+  const menuLabel = labelForRoute(base)
+  const title    = tabLabel || menuLabel || formatSeg(base)
 
   useEffect(() => {
     if (!melisKey) return
@@ -38,6 +39,14 @@ export default function ZonePage() {
     register(melisKey, `/melis/react-tool-page?key=${encodeURIComponent(melisKey)}`)
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [melisKey, base])
+
+  // Opened by URL, the tab got the slug ("Qaclaudetoolb Conf") before the menu had loaded: once the
+  // tool's (translated) menu name is known, it replaces that fallback (Mantis #0011237)
+  useEffect(() => {
+    if (melisKey && menuLabel && tabLabel === formatSeg(base) && tabLabel !== menuLabel) {
+      openTab({ id: base, label: menuLabel, path: base })
+    }
+  }, [melisKey, menuLabel, tabLabel, base, openTab])
 
   // The tool-routes registry is built from the menu, which the backend filters by RIGHTS. So an
   // unresolvable melisKey on a /[section]/[tool] URL = a tool the current user can't access (or an
