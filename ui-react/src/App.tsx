@@ -13,7 +13,7 @@ import { TabProvider, useTabs } from '@/components/tabs/tab-store'
 import { Shell } from '@/components/layout/Shell'
 import { MODULES } from '@/lib/module-registry'
 import { useBricks, useBricksVersion, bricksReady, brickRoute } from '@/lib/bricks'
-import { hasToolRoutes, labelForRoute, routeForForward, routeForMelisKey, useToolRoutesVersion } from '@/lib/tool-routes'
+import { hasToolRoutes, labelForRoute, melisKeyForRoute, routeForForward, routeForMelisKey, toolBaseRoute, useToolRoutesVersion } from '@/lib/tool-routes'
 import LoginPage from '@/pages/LoginPage'
 import Verify2faPage from '@/pages/Verify2faPage'
 import ForgotPasswordPage from '@/pages/ForgotPasswordPage'
@@ -152,6 +152,16 @@ function TabBridge() {
     // A label passed through navigation state (e.g. the Workflow eye → page name) wins over the
     // derived "Page N"/slug fallback, so the tab shows the real name from its first paint.
     const stateLabel = (location.state as { melisTabLabel?: string } | null)?.melisTabLabel
+    // A legacy (iframe) tool: ONE top tab on its /[section]/[tool] base, named after the menu. Opened
+    // by URL it was labelled from the slug ("Qaclaudetoolb Conf"), and a deeper URL (/…/23, a record
+    // reflected by ToolTabBar) spawned an extra top tab "23" (Mantis #0011237). ZonePage opens the
+    // tool at its list on that base tab.
+    const isBrickRoute = bricks.some((b) => { const r = brickRoute(b); return !!r && (path === r || path.startsWith(r + '/')) })
+    if (melisKeyForRoute(path) && !isBrickRoute) {
+      const base = toolBaseRoute(path)
+      syncRoute({ id: base, label: labelForRoute(base) || stateLabel || deriveTabLabel(base, t), path: base })
+      return
+    }
     syncRoute({ id: path, label: stateLabel || deriveTabLabel(path, t), path })
   }, [location.pathname, location.state, syncRoute, toolRoutesVersion, bricksVersion, bricks, t])
   return null

@@ -34,6 +34,7 @@ interface ToolRouteEntry {
 
 function kebab(s: string): string {
   return s
+    .normalize('NFD').replace(/[̀-ͯ]/g, '') // é → e: accented letters were dropped ("personnalis-projets", Mantis #0011237)
     .replace(/([a-z0-9])([A-Z])/g, '$1-$2') // camelCase → camel-Case
     .replace(/[\s_]+/g, '-') // spaces/underscores → dash
     .toLowerCase()
