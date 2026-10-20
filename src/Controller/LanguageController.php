@@ -530,7 +530,14 @@ class LanguageController extends MelisAbstractActionController
                 $data = $form->getData();
                 $isExistData = $langTable->getEntryByField('lang_locale', $data['lang_locale']);
                 $isExistData = $isExistData->current();
-                if(empty($isExistData)) {
+                if (!preg_match('/^[a-zA-Z]{2}_[a-zA-Z]{2}$/', $data['lang_locale'])) {
+                    $errors = array(
+                        'lang_locale' => array(
+                            'locale_format' => $translator->translate('tr_meliscore_tool_language_lang_locale_format')
+                        ),
+                    );
+                }
+                elseif(empty($isExistData)) {
 
                     $createTranslationFiles = $melisTranslation->addTranslationFiles($data['lang_locale']);
                     if($createTranslationFiles) {

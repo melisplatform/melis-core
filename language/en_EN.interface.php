@@ -405,6 +405,7 @@ return [
     'tr_meliscore_tool_language_lang_locale tooltip' => 'Locale',
     'tr_meliscore_tool_language_lang_locale2 tooltip' => 'ex: en_EN',
     'tr_meliscore_tool_language_lang_locale_long' => 'Locale value too long, it shoule be less than 10 characters',
+    'tr_meliscore_tool_language_lang_locale_format' => 'Expected format xx_XX (e.g. en_EN, fr_FR).',
     'tr_meliscore_tool_language_lang_locale_empty' => 'Locale is empty',
     'tr_meliscore_tool_language_lang_name' => 'Name',
     'tr_meliscore_tool_language_lang_name tooltip' => 'Each language must have a name and its &#34;locale&#34; defined',

@@ -20,8 +20,9 @@ use MelisCore\Controller\MelisAbstractActionController;
  *   DELETE /melis/react-api/languages/delete/:id   → supprimer
  *
  * Contraintes métier (reprises du legacy LanguageController) :
- *   - lang_locale : format xx_XX (ex. en_EN, fr_FR), non vide, UNIQUE.
- *   - lang_name : non vide.
+ *   - lang_locale : non vide, UNIQUE, format xx_XX (ex. en_EN, fr_FR) à la création et quand il
+ *     change — un locale existant d'un autre format (créé avant cette règle) reste éditable.
+ *   - lang_name : non vide, 45 caractères max (mêmes règles que le formulaire legacy).
  *   - la langue « en_EN » est protégée : ni renommée (locale), ni supprimée.
  *   - la langue de l'utilisateur connecté, et toute langue encore utilisée par un utilisateur
  *     du back-office, ne peuvent pas être supprimées.
@@ -165,8 +166,9 @@ class MelisReactApiLanguageController extends MelisAbstractActionController
             $body   = json_decode($this->getRequest()->getContent(), true) ?? [];
             $id     = isset($body['id']) && $body['id'] ? (int) $body['id'] : null;
             if ($denyCap = $this->denyUnlessCan($id ? 'edit' : 'create')) { return $denyCap; }
-            $name   = trim((string) ($body['name'] ?? ''));
-            $locale = trim((string) ($body['locale'] ?? ''));
+            $name   = trim(strip_tags((string) ($body['name'] ?? '')));
+            $locale = trim(strip_tags((string) ($body['locale'] ?? '')));
+            $translator = $this->getServiceManager()->get('translator');
 
             // Validation : nom non vide.
             if ($name === '') {
@@ -175,15 +177,27 @@ class MelisReactApiLanguageController extends MelisAbstractActionController
                     400
                 );
             }
-            // Validation : locale au format xx_XX (ex. en_EN, fr_FR).
-            if (!preg_match('/^[a-zA-Z]{2}_[a-zA-Z]{2}$/', $locale)) {
+            if (mb_strlen($name) > 45) {
+                return $this->jsonResponse(['success' => false, 'error' => $translator->translate('tr_meliscore_tool_language_lang_name_long')], 400);
+            }
+
+            $db = $this->getServiceManager()->get('Laminas\Db\Adapter\AdapterInterface');
+            $oldLocale = null;
+            if ($id) {
+                $existing = iterator_to_array($db->query('SELECT lang_locale FROM melis_core_lang WHERE lang_id = ?', [$id]));
+                if (!$existing) {
+                    return $this->jsonResponse(['success' => false, 'error' => 'Not found'], 404);
+                }
+                $oldLocale = (string) $existing[0]['lang_locale'];
+            }
+
+            // Validation : locale au format xx_XX (ex. en_EN, fr_FR), s'il est nouveau ou modifié.
+            if ($locale !== $oldLocale && !preg_match('/^[a-zA-Z]{2}_[a-zA-Z]{2}$/', $locale)) {
                 return $this->jsonResponse(
                     ['success' => false, 'error' => 'Locale invalide : format attendu xx_XX (ex. en_EN, fr_FR).'],
                     400
                 );
             }
-
-            $db = $this->getServiceManager()->get('Laminas\Db\Adapter\AdapterInterface');
 
             // Unicité du locale (en excluant l'enregistrement courant si édition).
             $dupSql    = $id
@@ -195,11 +209,6 @@ class MelisReactApiLanguageController extends MelisAbstractActionController
             }
 
             if ($id) {
-                $existing = iterator_to_array($db->query('SELECT lang_locale FROM melis_core_lang WHERE lang_id = ?', [$id]));
-                if (!$existing) {
-                    return $this->jsonResponse(['success' => false, 'error' => 'Not found'], 404);
-                }
-                $oldLocale = (string) $existing[0]['lang_locale'];
                 // La langue par défaut (en_EN) ne peut pas voir son locale modifié.
                 if ($oldLocale === self::PROTECTED_LOCALE && $locale !== $oldLocale) {
                     return $this->jsonResponse(

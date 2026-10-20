@@ -419,6 +419,7 @@ return [
     'tr_meliscore_tool_language_lang_locale tooltip' => 'Locale',
     'tr_meliscore_tool_language_lang_locale2 tooltip' => 'ex: en_EN',
     'tr_meliscore_tool_language_lang_locale_long' => 'Locale trop longue, maximum 10 caractères',
+    'tr_meliscore_tool_language_lang_locale_format' => 'Format attendu xx_XX (ex. en_EN, fr_FR).',
     'tr_meliscore_tool_language_lang_locale_empty' => 'Veuillez saisir une locale',
     'tr_meliscore_tool_language_lang_name' => 'Nom',
     'tr_meliscore_tool_language_lang_name tooltip' => 'Chaque langage doit avoir un nom et sa &#34;locale&#34; définis',
