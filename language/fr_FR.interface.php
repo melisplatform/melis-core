@@ -434,6 +434,8 @@ return [
     'tr_meliscore_tool_language_delete_confirm' => 'Êtes-vous sûr de vouloir supprimer ce langage ?',
     'tr_meliscore_tool_language_delete_success' => 'Langage supprimé',
     'tr_meliscore_tool_language_delete_failed' => 'Impossible de supprimer le langage',
+    'tr_meliscore_tool_language_delete_current' => 'Vous ne pouvez pas supprimer la langue que vous utilisez.',
+    'tr_meliscore_tool_language_delete_in_use' => 'Cette langue est utilisée par %d utilisateur(s) du back-office. Changez d\'abord leur langue.',
     'tr_meliscore_tool_language_permission' => 'Impossible d\'ajouter un nouveau langage, veuillez vérifier vos droits pour éditer les fichiers',
     'tr_meliscore_tool_language_lang_folder_not_readable' => '%s is not readable',
     'tr_meliscore_tool_language_lang_folder_not_writable' => '%s is not writable',

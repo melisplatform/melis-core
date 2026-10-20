@@ -614,7 +614,14 @@ class LanguageController extends MelisAbstractActionController
                 $langData = $langTable->getEntryById($id);
                 $langData = $langData->current();
 
-                if(!empty($langData) && ($langData->lang_locale != 'en_EN'))
+                // The current user's language and any language still used by a back-office user stay.
+                $container = new Container('meliscore');
+                $users = $this->getServiceManager()->get('MelisCoreTableUser')->getEntryByField('usr_lang_id', (int) $id)->count();
+                if (!empty($langData) && (int) $id === (int) ($container['melis-lang-id'] ?? 1)) {
+                    $textMessage = $translator->translate('tr_meliscore_tool_language_delete_current');
+                } elseif (!empty($langData) && $users > 0) {
+                    $textMessage = sprintf($translator->translate('tr_meliscore_tool_language_delete_in_use'), $users);
+                } elseif(!empty($langData) && ($langData->lang_locale != 'en_EN'))
                 {
                     $langTable->deleteById($id);
                     $textMessage = 'tr_meliscore_tool_language_delete_success';
