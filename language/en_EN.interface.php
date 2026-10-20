@@ -365,6 +365,7 @@ return [
     'tr_meliscore_tool_platform_content' => 'Content',
     'tr_meliscore_tool_platform_modals' => 'Modals',
     'tr_meliscore_tool_platform_modal_new' => 'New platform',
+    'tr_meliscore_tool_platform_form_title' => 'Platform',
     'tr_meliscore_tool_platform_modal_edit' => 'Edit platform',
     'tr_meliscore_tool_platform_modal_del' => 'Delete platform',
     'tr_meliscore_tool_platform_prompts_confirm' => 'By removing this platform, you will also be removing critical information and settings attached to this platform, are you sure you want to delete the platform?',
