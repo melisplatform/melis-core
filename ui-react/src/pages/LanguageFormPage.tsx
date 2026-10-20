@@ -19,7 +19,7 @@ interface FormData { name: string; locale: string }
 const EMPTY_FORM: FormData = { name: '', locale: '' }
 
 /** Cache du formulaire par langue (survit à la navigation interne). */
-const _formCache = new Map<string, { form: FormData; isDefault: boolean }>()
+const _formCache = new Map<string, { form: FormData; isDefault: boolean; savedLocale: string }>()
 
 export default function LanguageFormPage() {
   const navigate = useNavigate()
@@ -45,6 +45,8 @@ export default function LanguageFormPage() {
 
   const [form, setForm]         = useState<FormData>(EMPTY_FORM)
   const [isDefault, setIsDefault] = useState(false)
+  // Locale as saved: an unchanged locale is not re-checked (legacy accepts other formats).
+  const [savedLocale, setSavedLocale] = useState('')
   const [nameError, setNameError] = useState<string | null>(null)
   const [localeError, setLocaleError] = useState<string | null>(null)
   const [loading, setLoading]   = useState(false)
@@ -55,17 +57,17 @@ export default function LanguageFormPage() {
   useEffect(() => {
     if (!isEdit || !languageId) return
     const cached = _formCache.get(String(languageId))
-    if (cached) { setForm(cached.form); setIsDefault(cached.isDefault); return }
+    if (cached) { setForm(cached.form); setIsDefault(cached.isDefault); setSavedLocale(cached.savedLocale); return }
     setLoading(true)
     languageApi.fetchLanguageById(languageId)
-      .then(l => { setForm({ name: l.name, locale: l.locale }); setIsDefault(l.isDefault) })
+      .then(l => { setForm({ name: l.name, locale: l.locale }); setIsDefault(l.isDefault); setSavedLocale(l.locale) })
       .catch(() => navigate(base))
       .finally(() => setLoading(false))
   }, [languageId, isEdit, navigate])
 
   useEffect(() => {
-    if (languageId && form.name) _formCache.set(String(languageId), { form, isDefault })
-  }, [form, isDefault, languageId])
+    if (languageId && form.name) _formCache.set(String(languageId), { form, isDefault, savedLocale })
+  }, [form, isDefault, savedLocale, languageId])
 
   useEffect(() => {
     if (isEdit && form.name) updateSubLabel(subTabPath, form.name)
@@ -82,9 +84,10 @@ export default function LanguageFormPage() {
   function validate(): boolean {
     let ok = true
     if (!form.name.trim()) { setNameError(t('languages.form.err_name_required')); ok = false }
+    else if (form.name.trim().length > 45) { setNameError(t('languages.form.err_name_long')); ok = false }
     const locale = form.locale.trim()
     if (!locale) { setLocaleError(t('languages.form.err_locale_required')); ok = false }
-    else if (!/^[a-zA-Z]{2}_[a-zA-Z]{2}$/.test(locale)) { setLocaleError(t('languages.form.err_locale_format')); ok = false }
+    else if (locale !== savedLocale && !/^[a-zA-Z]{2}_[a-zA-Z]{2}$/.test(locale)) { setLocaleError(t('languages.form.err_locale_format')); ok = false }
     return ok
   }
 
@@ -113,7 +116,7 @@ export default function LanguageFormPage() {
     _formCache.delete(String(languageId))
     setLoading(true)
     languageApi.fetchLanguageById(languageId)
-      .then(l => { setForm({ name: l.name, locale: l.locale }); setIsDefault(l.isDefault) })
+      .then(l => { setForm({ name: l.name, locale: l.locale }); setIsDefault(l.isDefault); setSavedLocale(l.locale) })
       .catch(() => null)
       .finally(() => setTimeout(() => setLoading(false), 300))
   }
@@ -167,7 +170,7 @@ export default function LanguageFormPage() {
             <h3 className="mb-3 text-xs font-semibold uppercase tracking-wide text-muted-foreground">{t('languages.form.identity')}</h3>
 
             <label className="mb-1 block text-sm font-medium">{t('languages.form.name')}</label>
-            <Input value={form.name} onChange={e => set('name', e.target.value)}
+            <Input value={form.name} onChange={e => set('name', e.target.value)} maxLength={45}
               placeholder={t('languages.form.name_ph')} autoComplete="off"
               className={cn(nameError && 'border-destructive')} />
             {nameError
@@ -175,7 +178,7 @@ export default function LanguageFormPage() {
               : <p className="mt-1 text-xs text-muted-foreground">{t('languages.form.name_hint')}</p>}
 
             <label className="mb-1 mt-4 block text-sm font-medium">{t('languages.form.locale')}</label>
-            <Input value={form.locale} onChange={e => set('locale', e.target.value)} disabled={isDefault}
+            <Input value={form.locale} onChange={e => set('locale', e.target.value)} disabled={isDefault} maxLength={10}
               placeholder={t('languages.form.locale_ph')} autoComplete="off"
               className={cn('font-mono', localeError && 'border-destructive')} />
             {localeError
