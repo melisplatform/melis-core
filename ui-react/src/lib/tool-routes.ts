@@ -76,6 +76,9 @@ export const TOOL_SLUG_OVERRIDES: Record<string, string> = {
   'MelisCms/MiniTemplateManager':                   'mini-templates',
   'MelisCms/MiniTemplateMenuManager':               'menu-manager',
   'MelisCmsCategory2/MelisCmsCategoryList':         'category',
+  // Same URL as its brick manifest: the menu key gave « melisdashboardplugincreator-conf », so the
+  // brick route showed « Access denied » and an untranslated tab label (Mantis #0011241)
+  'MelisDashboardPluginCreator/DashboardPluginCreator': 'dashboard-plugin-creator',
   // NB : périmètre volontairement limité aux modules à SUBGIT. Des outils hors-subgit ont aussi
   // des slugs moches (Tipimail dérive « meliscms », Newsletter, Sql, Cache, DocumentUpload, Cron) ;
   // ne PAS les ajouter ici sans validation — ce serait modifier le comportement d'outils hors périmètre.
