@@ -13,7 +13,7 @@ import { TabProvider, useTabs } from '@/components/tabs/tab-store'
 import { Shell } from '@/components/layout/Shell'
 import { MODULES } from '@/lib/module-registry'
 import { useBricks, useBricksVersion, bricksReady, brickRoute } from '@/lib/bricks'
-import { hasToolRoutes, labelForRoute, routeForForward, routeForMelisKey, useToolRoutesVersion } from '@/lib/tool-routes'
+import { hasToolRoutes, labelForRoute, routeForForward, routeForMelisKey, toolBaseRoute, useToolRoutesVersion } from '@/lib/tool-routes'
 import LoginPage from '@/pages/LoginPage'
 import Verify2faPage from '@/pages/Verify2faPage'
 import ForgotPasswordPage from '@/pages/ForgotPasswordPage'
@@ -152,7 +152,10 @@ function TabBridge() {
     // A label passed through navigation state (e.g. the Workflow eye → page name) wins over the
     // derived "Page N"/slug fallback, so the tab shows the real name from its first paint.
     const stateLabel = (location.state as { melisTabLabel?: string } | null)?.melisTabLabel
-    syncRoute({ id: path, label: stateLabel || deriveTabLabel(path, t), path })
+    // A tool's own route (e.g. a brick opened by URL) is named after the (translated) menu, not after its
+    // last URL segment ("Dashboard Plugin Creator" in the French back office, Mantis #0011241)
+    const menuLabel = toolBaseRoute(path) === path ? labelForRoute(path) : null
+    syncRoute({ id: path, label: stateLabel || menuLabel || deriveTabLabel(path, t), path })
   }, [location.pathname, location.state, syncRoute, toolRoutesVersion, bricksVersion, bricks, t])
   return null
 }
