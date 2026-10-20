@@ -21,6 +21,7 @@ import { ColumnManager, visibleCols, type ColDef } from '@/components/ColumnMana
 import { ExpandToggle, HiddenColsRow } from '@/components/ExpandableRow'
 import { useIsNarrow } from '@/hooks/useIsNarrow'
 import { useCan } from '@/lib/capabilities'
+import { koNotify } from '@/shared/melis-form-errors'
 
 const TOOL_KEY = 'meliscore_tool_language'
 
@@ -218,7 +219,11 @@ export default function LanguageListPage() {
       setToDelete(null)
       reload()
       languageApi.fetchLanguageStats().then(setStats).catch(() => null)
-    } catch { setToDelete(null) }
+    } catch (e) {
+      // Refusé (langue utilisée par des utilisateurs…) : le serveur dit pourquoi.
+      setToDelete(null)
+      koNotify(t('languages.delete.title'), e instanceof Error ? e.message : String(e))
+    }
   }
 
   const cellContent = (l: languageApi.LanguageItem, id: string) => {
@@ -349,7 +354,7 @@ export default function LanguageListPage() {
                           <Pencil className="size-3.5" />
                         </button>
                       )}
-                      {canDelete && !l.isDefault && (
+                      {canDelete && !l.isDefault && !l.isCurrent && (
                         <button onClick={() => setToDelete(l)} title={t('common.delete')}
                           className="inline-flex size-7 items-center justify-center rounded-md text-red-500 hover:bg-red-50 dark:hover:bg-red-950/20">
                           <Trash2 className="size-3.5" />

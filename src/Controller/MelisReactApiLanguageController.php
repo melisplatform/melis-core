@@ -5,6 +5,7 @@ namespace MelisCore\Controller;
 use MelisReactApi\Controller\CapabilityGuardTrait;
 
 use Laminas\Http\PhpEnvironment\Response as HttpResponse;
+use Laminas\Session\Container;
 use MelisCore\Controller\MelisAbstractActionController;
 
 /**
@@ -22,6 +23,8 @@ use MelisCore\Controller\MelisAbstractActionController;
  *   - lang_locale : format xx_XX (ex. en_EN, fr_FR), non vide, UNIQUE.
  *   - lang_name : non vide.
  *   - la langue « en_EN » est protégée : ni renommée (locale), ni supprimée.
+ *   - la langue de l'utilisateur connecté, et toute langue encore utilisée par un utilisateur
+ *     du back-office, ne peuvent pas être supprimées.
  *   - à la CRÉATION, les fichiers de traduction du nouveau locale sont générés
  *     via MelisCoreTranslation->addTranslationFiles() (parité avec addLanguageAction).
  */
@@ -255,6 +258,14 @@ class MelisReactApiLanguageController extends MelisAbstractActionController
             if ((string) $rows[0]['lang_locale'] === self::PROTECTED_LOCALE) {
                 return $this->jsonResponse(['success' => false, 'error' => 'Impossible de supprimer la langue par défaut (en_EN).'], 400);
             }
+            $translator = $this->getServiceManager()->get('translator');
+            if ($id === $this->currentLangId()) {
+                return $this->jsonResponse(['success' => false, 'error' => $translator->translate('tr_meliscore_tool_language_delete_current')], 409);
+            }
+            $users = $this->getServiceManager()->get('MelisCoreTableUser')->getEntryByField('usr_lang_id', $id)->count();
+            if ($users > 0) {
+                return $this->jsonResponse(['success' => false, 'error' => sprintf($translator->translate('tr_meliscore_tool_language_delete_in_use'), $users)], 409);
+            }
             $db->query('DELETE FROM melis_core_lang WHERE lang_id = ?', [$id]);
             return $this->jsonResponse(['success' => true, 'data' => null]);
         } catch (\Throwable $e) {
@@ -273,7 +284,16 @@ class MelisReactApiLanguageController extends MelisAbstractActionController
             'name'      => (string) $r['lang_name'],
             // true pour la langue par défaut (en_EN) → l'UI verrouille rename/delete.
             'isDefault' => $locale === self::PROTECTED_LOCALE,
+            // true pour la langue de l'utilisateur connecté → l'UI masque delete (comme le legacy).
+            'isCurrent' => (int) $r['lang_id'] === $this->currentLangId(),
         ];
+    }
+
+    /** Langue du back-office de l'utilisateur connecté (session, comme le legacy). */
+    private function currentLangId(): int
+    {
+        $container = new Container('meliscore');
+        return (int) ($container['melis-lang-id'] ?? 1);
     }
 
     /**
