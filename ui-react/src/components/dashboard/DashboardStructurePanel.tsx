@@ -202,9 +202,29 @@ export function DashboardStructurePanel({
   // widget ne bougeait pas tant que plusieurs frappes ne s'étaient pas cumulées jusqu'à franchir
   // le prochain palier de colonne. En travaillant directement en colonnes, chaque pas EST un palier
   // représentable → effet immédiat sur le dashboard.
-  const applyWidthDraft = (id: string, raw: string) => {
+  const applyWidthDraft = (id: string, raw: string, min = MIN_WIDGET_WIDTH) => {
     const n = Math.round(Number(raw))
-    if (Number.isFinite(n)) onSetWidth(id, Math.max(MIN_WIDGET_WIDTH, Math.min(MAX_WIDGET_WIDTH, n)))
+    if (Number.isFinite(n)) onSetWidth(id, Math.max(min, Math.min(MAX_WIDGET_WIDTH, n)))
+  }
+  // Out-of-range W/H (Mantis #0011218): the field showed the value typed (0, -3, 13, 41…) while a clamped
+  // one was applied and saved. A value that more typing can never make valid (over the max, 0, negative)
+  // is corrected in the field at once; one still too small (e.g. "1" on the way to "12") is shown in
+  // red until the field is left, when it is replaced by the size really applied.
+  // The width minimum is the widget's own `minW` (its definition, as DashboardGrid gives it to GridStack,
+  // which never goes below it: typing 1 saved 2).
+  const widthMinOf = (item: GridItem) =>
+    Math.max(MIN_WIDGET_WIDTH, widgetMap[widgetIdOf(item.i)]?.minW ?? item.minW ?? MIN_WIDGET_WIDTH)
+  const sizeDraft = (raw: string, min: number, max: number): string => {
+    const n = Math.round(Number(raw))
+    if (raw.trim() === '' || !Number.isFinite(n)) return raw
+    if (n > max) return String(max)
+    if (n <= 0) return String(min)
+    return raw
+  }
+  const sizeOutOfRange = (raw: string | undefined, min: number, max: number) => {
+    if (raw === undefined || raw.trim() === '') return false
+    const n = Math.round(Number(raw))
+    return !Number.isFinite(n) || n < min || n > max
   }
   // Champ H en lignes de grille NATIVES (2-`MAX_WIDGET_HEIGHT`), même principe que W ci-dessus :
   // pas de conversion pourcentage, chaque pas de la saisie correspond directement à une ligne de
@@ -858,24 +878,26 @@ export function DashboardStructurePanel({
                         <div className="relative min-w-0 flex-1">
                           <input
                             type="number"
-                            min={MIN_WIDGET_WIDTH}
+                            min={widthMinOf(item)}
                             max={MAX_WIDGET_WIDTH}
                             step={1}
                             value={widthDraft[item.i] ?? String(Math.round(item.w))}
                             onMouseDown={(e) => e.stopPropagation()}
                             onClick={(e) => e.stopPropagation()}
                             onChange={(e) => {
-                              const raw = e.target.value
+                              const raw = sizeDraft(e.target.value, widthMinOf(item), MAX_WIDGET_WIDTH)
                               setWidthDraft((d) => ({ ...d, [item.i]: raw }))
-                              applyWidthDraft(item.i, raw)
+                              applyWidthDraft(item.i, raw, widthMinOf(item))
                             }}
                             onBlur={() => clearWidthDraft(item.i)}
                             onKeyDown={(e) => {
                               if (e.key === 'Enter') e.currentTarget.blur()
                             }}
                             aria-label={t('widget.width_field')}
-                            title={t('widget.width_field')}
-                            className="w-full min-w-0 rounded-md border border-border/70 bg-background py-1 pl-2 pr-5 text-xs tabular-nums text-foreground outline-none transition-colors focus:border-primary focus:ring-1 focus:ring-primary/30"
+                            aria-invalid={sizeOutOfRange(widthDraft[item.i], widthMinOf(item), MAX_WIDGET_WIDTH) || undefined}
+                            title={`${t('widget.width_field')} (${widthMinOf(item)}-${MAX_WIDGET_WIDTH})`}
+                            className={cn('w-full min-w-0 rounded-md border border-border/70 bg-background py-1 pl-2 pr-5 text-xs tabular-nums text-foreground outline-none transition-colors focus:border-primary focus:ring-1 focus:ring-primary/30',
+                              sizeOutOfRange(widthDraft[item.i], widthMinOf(item), MAX_WIDGET_WIDTH) && 'border-destructive text-destructive focus:border-destructive focus:ring-destructive/30')}
                           />
                           <span className="pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 text-[10px] text-muted-foreground/60">/12</span>
                         </div>
@@ -892,7 +914,7 @@ export function DashboardStructurePanel({
                             onMouseDown={(e) => e.stopPropagation()}
                             onClick={(e) => e.stopPropagation()}
                             onChange={(e) => {
-                              const raw = e.target.value
+                              const raw = sizeDraft(e.target.value, MIN_WIDGET_HEIGHT, MAX_WIDGET_HEIGHT)
                               setHeightDraft((d) => ({ ...d, [item.i]: raw }))
                               applyHeightDraft(item.i, raw)
                             }}
@@ -901,8 +923,10 @@ export function DashboardStructurePanel({
                               if (e.key === 'Enter') e.currentTarget.blur()
                             }}
                             aria-label={t('widget.height_field')}
-                            title={t('widget.height_field')}
-                            className="w-full min-w-0 rounded-md border border-border/70 bg-background px-2 py-1 text-xs tabular-nums text-foreground outline-none transition-colors focus:border-primary focus:ring-1 focus:ring-primary/30"
+                            aria-invalid={sizeOutOfRange(heightDraft[item.i], MIN_WIDGET_HEIGHT, MAX_WIDGET_HEIGHT) || undefined}
+                            title={`${t('widget.height_field')} (${MIN_WIDGET_HEIGHT}-${MAX_WIDGET_HEIGHT})`}
+                            className={cn('w-full min-w-0 rounded-md border border-border/70 bg-background px-2 py-1 text-xs tabular-nums text-foreground outline-none transition-colors focus:border-primary focus:ring-1 focus:ring-primary/30',
+                              sizeOutOfRange(heightDraft[item.i], MIN_WIDGET_HEIGHT, MAX_WIDGET_HEIGHT) && 'border-destructive text-destructive focus:border-destructive focus:ring-destructive/30')}
                           />
                         </div>
                       </label>
