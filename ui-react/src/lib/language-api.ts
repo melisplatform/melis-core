@@ -25,6 +25,8 @@ export interface LanguageItem {
   name: string
   /** Langue par défaut (en_EN) → non renommable / non supprimable. */
   isDefault: boolean
+  /** Langue de l'utilisateur connecté → non supprimable (comme le legacy). */
+  isCurrent: boolean
 }
 
 export interface LanguageStats {

@@ -530,7 +530,14 @@ class LanguageController extends MelisAbstractActionController
                 $data = $form->getData();
                 $isExistData = $langTable->getEntryByField('lang_locale', $data['lang_locale']);
                 $isExistData = $isExistData->current();
-                if(empty($isExistData)) {
+                if (!preg_match('/^[a-zA-Z]{2}_[a-zA-Z]{2}$/', $data['lang_locale'])) {
+                    $errors = array(
+                        'lang_locale' => array(
+                            'locale_format' => $translator->translate('tr_meliscore_tool_language_lang_locale_format')
+                        ),
+                    );
+                }
+                elseif(empty($isExistData)) {
 
                     $createTranslationFiles = $melisTranslation->addTranslationFiles($data['lang_locale']);
                     if($createTranslationFiles) {
@@ -614,7 +621,14 @@ class LanguageController extends MelisAbstractActionController
                 $langData = $langTable->getEntryById($id);
                 $langData = $langData->current();
 
-                if(!empty($langData) && ($langData->lang_locale != 'en_EN'))
+                // The current user's language and any language still used by a back-office user stay.
+                $container = new Container('meliscore');
+                $users = $this->getServiceManager()->get('MelisCoreTableUser')->getEntryByField('usr_lang_id', (int) $id)->count();
+                if (!empty($langData) && (int) $id === (int) ($container['melis-lang-id'] ?? 1)) {
+                    $textMessage = $translator->translate('tr_meliscore_tool_language_delete_current');
+                } elseif (!empty($langData) && $users > 0) {
+                    $textMessage = sprintf($translator->translate('tr_meliscore_tool_language_delete_in_use'), $users);
+                } elseif(!empty($langData) && ($langData->lang_locale != 'en_EN'))
                 {
                     $langTable->deleteById($id);
                     $textMessage = 'tr_meliscore_tool_language_delete_success';

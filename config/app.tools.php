@@ -1735,7 +1735,7 @@ return [
                                             'name' => 'StringLength',
                                             'options' => [
                                                 'encoding' => 'UTF-8',
-                                                'max' => 10,
+                                                'max' => 45,
                                                 'messages' => [
                                                     \Laminas\Validator\StringLength::TOO_LONG => 'tr_meliscore_tool_language_lang_name_long',
                                                 ],
