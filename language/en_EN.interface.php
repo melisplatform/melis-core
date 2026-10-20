@@ -420,6 +420,8 @@ return [
     'tr_meliscore_tool_language_delete_confirm' => 'Are you sure you want to delete this language?',
     'tr_meliscore_tool_language_delete_success' => 'Language deleted sucessfully',
     'tr_meliscore_tool_language_delete_failed' => 'Unable to delete language',
+    'tr_meliscore_tool_language_delete_current' => 'You cannot delete the language you are using.',
+    'tr_meliscore_tool_language_delete_in_use' => 'This language is used by %d back-office user(s). Change their language first.',
     'tr_meliscore_tool_language_update_failed' => 'Unable to update language',
     'tr_meliscore_tool_language_permission' => 'Unable to add language, please check your rights to write files',
     'tr_meliscore_tool_language_lang_folder_not_readable' => '%s is not readable',
