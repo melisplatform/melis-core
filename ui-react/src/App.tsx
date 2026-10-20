@@ -162,7 +162,10 @@ function TabBridge() {
       syncRoute({ id: base, label: labelForRoute(base) || stateLabel || deriveTabLabel(base, t), path: base })
       return
     }
-    syncRoute({ id: path, label: stateLabel || deriveTabLabel(path, t), path })
+    // A tool's own route (e.g. a brick opened by URL) is named after the (translated) menu, not after its
+    // last URL segment ("Dashboard Plugin Creator" in the French back office, Mantis #0011241)
+    const menuLabel = toolBaseRoute(path) === path ? labelForRoute(path) : null
+    syncRoute({ id: path, label: stateLabel || menuLabel || deriveTabLabel(path, t), path })
   }, [location.pathname, location.state, syncRoute, toolRoutesVersion, bricksVersion, bricks, t])
   return null
 }
