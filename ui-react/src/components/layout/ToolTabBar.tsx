@@ -4,7 +4,7 @@ import { X } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { useBricks, brickRoute, bricksReady } from '@/lib/bricks'
 import { useToolTabs } from '@/components/tabs/tool-tab-bridge'
-import { melisKeyForRoute, toolBaseRoute, parseToolTabId, subtoolName, useToolRoutesVersion } from '@/lib/tool-routes'
+import { labelForRoute, melisKeyForRoute, toolBaseRoute, parseToolTabId, subtoolName, useToolRoutesVersion } from '@/lib/tool-routes'
 import { useToolView } from '@/lib/tool-view-mode'
 import { useI18n } from '@/i18n/i18n-context'
 
@@ -39,7 +39,7 @@ export function ToolTabBar() {
   const { t } = useI18n()
   const bricks = useBricks()
   useToolRoutesVersion()
-  const { tabsFor, activate, close } = useToolTabs()
+  const { tabsFor, activate, close, isOpening } = useToolTabs()
 
   // The active tool's melisKey: from a brick route, OR from a tree-derived /[section]/[tool]
   // route (classic tools in the zone pool — e.g. the Sites tool — also publish their tabs).
@@ -49,7 +49,8 @@ export function ToolTabBar() {
   })
   const zoneKey = melisKeyForRoute(pathname)
   const melisKey = brick?.melisKey ?? zoneKey
-  const listLabel = brick?.label ?? (zoneKey ? formatKey(zoneKey) : t('layout.tool_list_tab'))
+  // The tool's menu name, not its key: the list sub-tab read "Qaclaudetoolf Tool" (Mantis #0011237)
+  const listLabel = brick?.label ?? (zoneKey ? (labelForRoute(toolBaseRoute(pathname)) || formatKey(zoneKey)) : t('layout.tool_list_tab'))
   const tabs = tabsFor(melisKey)
   const primary = tabs.find((t) => t.primary)
   const secondary = tabs.filter((t) => !t.primary)
@@ -60,7 +61,7 @@ export function ToolTabBar() {
   // Cosmetic only (history.replaceState) — it never spawns a top tab nor touches React Router,
   // so the tab system is untouched. The deep URL is rebuilt from the open sub-tabs' data-ids
   // ("<entityId>_id_<targetMelisKey>"): the first record level is just its id, deeper levels add
-  // the sub-entity name. (Forward reflection; a deep-link reload opens the tool at its list.)
+  // the sub-entity name. (A deep-link reload re-opens the first record: ZonePage → requestOpen.)
   useEffect(() => {
     if (!melisKey) return
     // Outils auto-gérés : ils possèdent leur URL (reflètent eux-mêmes /:id) → ne pas la réécrire.
@@ -94,6 +95,8 @@ export function ToolTabBar() {
     // (zoneKey non-null) ; pour un outil React (zoneKey null même si brick.melisKey existe), on ne
     // touche pas à l'URL.
     if (nonPrimary.length === 0) {
+      // A deep-linked record is still opening in the iframe: keep its /<id> (Mantis #0011237)
+      if (isOpening(melisKey)) return
       if (zoneKey && window.location.pathname !== home) {
         window.history.replaceState(window.history.state, '', home)
       }
@@ -115,7 +118,7 @@ export function ToolTabBar() {
     if (window.location.pathname !== full) {
       window.history.replaceState(window.history.state, '', full)
     }
-  }, [tabs, melisKey, zoneKey, pathname])
+  }, [tabs, melisKey, zoneKey, pathname, isOpening])
 
   // Show the sub-tab bar ONLY when at least one record (sub-screen) is open. With no record,
   // the tool is on its list and the main top tab already represents it — no redundant 2nd line.

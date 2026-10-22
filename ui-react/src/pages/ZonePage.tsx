@@ -3,6 +3,7 @@ import { useLocation } from 'react-router-dom'
 import { Loader2, ShieldAlert } from 'lucide-react'
 import { useTabs } from '@/components/tabs/tab-store'
 import { useZonePool } from '@/components/zone/zone-pool'
+import { useToolTabs } from '@/components/tabs/tool-tab-bridge'
 import { labelForRoute, melisKeyForRoute, toolBaseRoute, useToolRoutesVersion } from '@/lib/tool-routes'
 import { useI18n } from '@/i18n/i18n-context'
 
@@ -24,6 +25,7 @@ export default function ZonePage() {
   useToolRoutesVersion()  // re-resolve once the registry is populated (deep-link cold load)
   const { openTab, tabs } = useTabs()
   const { register }      = useZonePool()
+  const { requestOpen }   = useToolTabs()
 
   const melisKey = melisKeyForRoute(pathname)
   // The top tab is the tool's BASE route /[section]/[tool]; deeper segments (record drill-down)
@@ -39,6 +41,16 @@ export default function ZonePage() {
     register(melisKey, `/melis/react-tool-page?key=${encodeURIComponent(melisKey)}`)
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [melisKey, base])
+
+  // Opened at /[section]/[tool]/<id> (link, reload, or a link while the tool is open): open that
+  // record, not just the list (Mantis #0011237). The record URLs ToolTabBar reflects use
+  // history.replaceState, which the router doesn't see → no loop.
+  useEffect(() => {
+    if (!melisKey) return
+    const recordId = pathname.slice(base.length).split('/').filter(Boolean)[0]
+    if (recordId) requestOpen(melisKey, decodeURIComponent(recordId))
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [melisKey, pathname])
 
   // Opened by URL, the tab got the slug ("Qaclaudetoolb Conf") before the menu had loaded: once the
   // tool's (translated) menu name is known, it replaces that fallback (Mantis #0011237)
