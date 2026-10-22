@@ -40,7 +40,13 @@ export interface UserItem {
 export interface UserDetail extends UserItem {
   langId: number
   rights: string
+  /** Only where a module adds the field to the legacy user form (see fetchUserFields). */
+  phone?: string
 }
+
+/** A field a module adds to the legacy user form, as that form declares it. */
+export interface UserExtraField { label: string; placeholder: string; maxLength: number }
+export interface UserFields { phone: UserExtraField | null }
 
 export interface UserConnection {
   id: number
@@ -92,6 +98,7 @@ export interface UserSavePayload {
   langId?: number
   tags?: string
   password?: string
+  phone?: string
 }
 
 export interface UserStats {
@@ -154,6 +161,11 @@ export async function saveUser(payload: UserSavePayload): Promise<{ id: number; 
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(payload),
   })
+}
+
+/** Fields modules add to the legacy user form (e.g. phone, melis-login-2fa-primotexto): shown iff legacy shows them. */
+export async function fetchUserFields(isNew: boolean): Promise<UserFields> {
+  return apiFetch<UserFields>(`/melis/react-api/users/fields${isNew ? '?new=1' : ''}`)
 }
 
 export async function deleteUser(id: number): Promise<void> {

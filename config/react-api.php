@@ -370,6 +370,17 @@ return [
                                     ],
                                 ],
                             ],
+                            'users-fields' => [
+                                'type'    => 'Segment',
+                                'options' => [
+                                    'route'    => '/users/fields[/]',
+                                    'defaults' => [
+                                        '__NAMESPACE__' => 'MelisCore\Controller',
+                                        'controller'    => 'MelisReactApiUser',
+                                        'action'        => 'fields',
+                                    ],
+                                ],
+                            ],
                             'users-delete' => [
                                 'type'    => 'Segment',
                                 'options' => [
