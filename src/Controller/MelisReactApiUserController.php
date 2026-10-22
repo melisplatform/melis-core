@@ -160,7 +160,14 @@ class MelisReactApiUserController extends MelisAbstractActionController
                 return $this->jsonResponse(['success' => false, 'error' => 'User not found'], 404);
             }
 
-            return $this->jsonResponse(['success' => true, 'data' => $this->formatUser((array) $rows[0], true)]);
+            $data = $this->formatUser((array) $rows[0], true);
+            // Phone only where a module adds it to the legacy form (the column comes with that module).
+            if ($this->phoneField(false) !== null) {
+                $phoneRows = iterator_to_array($db->query('SELECT usr_phone FROM melis_core_user WHERE usr_id = ?', [$id]));
+                $data['phone'] = (string) (((array) ($phoneRows[0] ?? []))['usr_phone'] ?? '');
+            }
+
+            return $this->jsonResponse(['success' => true, 'data' => $data]);
         } catch (\Throwable $e) {
             return $this->errorResponse($e);
         }
@@ -209,6 +216,26 @@ class MelisReactApiUserController extends MelisAbstractActionController
                     'error'   => $message,
                     'fields'  => ['email' => [$message]],
                 ], 422);
+            }
+            // Fields that modules add to the legacy user form (e.g. usr_phone, from
+            // melis-login-2fa-primotexto): validated with that form's own rules, saved as legacy does.
+            $phone = null;
+            if (array_key_exists('phone', $body) && ($phoneForm = $this->legacyUserForm(!$id)) && $phoneForm->has('usr_phone')) {
+                $phoneForm->setData(['usr_phone' => (string) $body['phone']]);
+                $phoneForm->setValidationGroup(['usr_phone']);
+                if (!$phoneForm->isValid()) {
+                    $translator = $this->getServiceManager()->get('translator');
+                    $messages = array_values(array_map(
+                        static fn($m) => $translator->translate((string) $m),
+                        (array) ($phoneForm->getMessages()['usr_phone'] ?? [])
+                    ));
+                    return $this->jsonResponse([
+                        'success' => false,
+                        'error'   => implode(' • ', $messages),
+                        'fields'  => ['phone' => $messages],
+                    ], 422);
+                }
+                $phone = (string) ($phoneForm->getData()['usr_phone'] ?? '');
             }
             if (!$id && !$password) {
                 return $this->jsonResponse(
@@ -286,6 +313,10 @@ class MelisReactApiUserController extends MelisAbstractActionController
                     );
                 }
 
+                if ($phone !== null) {
+                    $db->query('UPDATE melis_core_user SET usr_phone = ? WHERE usr_id = ?', [$phone, $id]);
+                }
+
                 // Self-edit: if the updated user is the one currently logged in, refresh the
                 // SESSION identity (getAuthRights() reads usr_rights from the identity, not the DB).
                 // Without this the new rights — menu filtering, canAccess — only take effect after a
@@ -361,6 +392,9 @@ class MelisReactApiUserController extends MelisAbstractActionController
             )[0]['id'];
             // Password history (audit item 16.0)
             $this->getServiceManager()->get('MelisPasswordPolicyService')->recordHistory($newId, $passwordHash);
+            if ($phone !== null) {
+                $db->query('UPDATE melis_core_user SET usr_phone = ? WHERE usr_id = ?', [$phone, $newId]);
+            }
 
             // Le cache de droits du nouvel utilisateur est généré par MelisCoreRightsCacheListener sur
             // l'event `meliscore_tooluser_savenew_end` ci-dessous (il lit les droits en DB). Pas de
@@ -744,7 +778,74 @@ class MelisReactApiUserController extends MelisAbstractActionController
         return $langId > 0 ? $langId : 1;
     }
 
+    // ─── GET /users/fields ────────────────────────────────────────────────────
+
+    /**
+     * Fields that modules add to the legacy user form, as that form declares them (merged config), so the
+     * React form shows exactly what the legacy one shows. Today: usr_phone (melis-login-2fa-primotexto).
+     * ?new=1 describes the creation form, otherwise the edit form.
+     */
+    public function fieldsAction(): HttpResponse
+    {
+        if ($deny = $this->denyUnlessAccess()) { return $deny; }
+        if ($denyCap = $this->denyUnlessCan('list')) { return $denyCap; }
+
+        try {
+            $isNew = (bool) $this->params()->fromQuery('new', false);
+            return $this->jsonResponse(['success' => true, 'data' => ['phone' => $this->phoneField($isNew)]]);
+        } catch (\Throwable $e) {
+            return $this->errorResponse($e);
+        }
+    }
+
     // ─── Helpers ──────────────────────────────────────────────────────────────
+
+    /**
+     * The legacy user form (creation or edit), with the elements and validators modules merge into it,
+     * built the way ToolUserController builds it (edit: MelisCoreTool::getForm; creation:
+     * getAddNewUserForm(), from the merged and ordered config).
+     */
+    private function legacyUserForm(bool $isNew)
+    {
+        try {
+            $sm = $this->getServiceManager();
+            if (!$isNew) {
+                $tool = $sm->get('MelisCoreTool');
+                $tool->setMelisToolKey('meliscore', 'meliscore_tool_user');
+                return $tool->getForm('meliscore_tool_user_form_edit');
+            }
+            $config = $sm->get('MelisCoreConfig')->getFormMergedAndOrdered(
+                'meliscore/tools/meliscore_tool_user/forms/meliscore_tool_user_form_new',
+                'meliscore_tool_user_form_new'
+            );
+            $factory = new \Laminas\Form\Factory();
+            $factory->setFormElementManager($sm->get('FormElementManager'));
+            $chain = new \Laminas\Validator\ValidatorChain();
+            $chain->setPluginManager($sm->get('ValidatorManager'));
+            $factory->createForm([])->getFormFactory()->getInputFilterFactory()->setDefaultValidatorChain($chain);
+            return $factory->createForm($config);
+        } catch (\Throwable) {
+            return null;
+        }
+    }
+
+    /** The phone field as the legacy form declares it (label, placeholder, max length), or null without it. */
+    private function phoneField(bool $isNew): ?array
+    {
+        $form = $this->legacyUserForm($isNew);
+        if (!$form || !$form->has('usr_phone')) {
+            return null;
+        }
+        $element    = $form->get('usr_phone');
+        $translator = $this->getServiceManager()->get('translator');
+        return [
+            'label'       => $translator->translate((string) $element->getLabel()),
+            'placeholder' => $translator->translate((string) ($element->getAttribute('placeholder') ?? '')),
+            'maxLength'   => (int) ($element->getAttribute('maxlength') ?: 0),
+        ];
+    }
+
+
 
     private function formatUser(array $r, bool $withLang = false): array
     {

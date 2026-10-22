@@ -310,6 +310,7 @@ interface FormData {
   tags: string; password: string; confirmPassword: string; rights: string
   /** Back-office language, chosen at creation only (Mantis #0011114); 0 = not loaded yet */
   langId: number
+  phone: string
 }
 type Errors = Partial<Record<keyof FormData, string>>
 
@@ -317,6 +318,7 @@ const EMPTY_FORM: FormData = {
   login: '', email: '', firstname: '', lastname: '',
   roleId: 1, status: 1, isAdmin: false,
   tags: '', password: '', confirmPassword: '', rights: '', langId: 0,
+  phone: '',
 }
 
 type FormCache = { form: FormData; roles: userApi.UserRole[]; activeTab: Tab }
@@ -427,6 +429,13 @@ export default function UserFormPage() {
     userApi.fetchPasswordPolicy().then(setPwPolicy).catch(() => null)
   }, [])
 
+  // Fields a module adds to the legacy user form (phone, melis-login-2fa-primotexto): same as legacy,
+  // shown only when that module is there, with its own label and rules.
+  const [phoneField, setPhoneField] = useState<userApi.UserExtraField | null>(null)
+  useEffect(() => {
+    userApi.fetchUserFields(!isEdit).then((f) => setPhoneField(f.phone)).catch(() => setPhoneField(null))
+  }, [isEdit])
+
   useEffect(() => {
     if (!isEdit || !userId) return
     const cached = _formCache.get(subTabPath)
@@ -437,7 +446,7 @@ export default function UserFormPage() {
         login: user.login, email: user.email,
         firstname: user.firstname, lastname: user.lastname,
         roleId: user.roleId, status: user.status, isAdmin: user.isAdmin,
-        tags: user.tags, password: '', confirmPassword: '', rights: user.rights ?? '', langId: user.langId ?? 0,
+        tags: user.tags, password: '', confirmPassword: '', rights: user.rights ?? '', langId: user.langId ?? 0, phone: user.phone ?? '',
       }))
       .catch(() => navigate(base))
       .finally(() => setLoading(false))
@@ -491,9 +500,9 @@ export default function UserFormPage() {
         firstname: form.firstname, lastname: form.lastname,
         roleId: form.roleId, status: form.status, isAdmin: form.isAdmin, tags: form.tags,
         ...(form.rights !== undefined ? { rights: form.rights } : {}),
-        // only at creation: an edit keeps the language the user chose in the back-office
         // Language: chosen at creation and editable afterwards, as in the legacy edit form.
         ...(form.langId ? { langId: form.langId } : {}),
+        ...(phoneField ? { phone: form.phone } : {}),
       }
       if (form.password) payload.password = form.password
       const res = await userApi.saveUser(payload)
@@ -517,10 +526,15 @@ export default function UserFormPage() {
       setTimeout(() => navigate(isEdit ? `${base}/${savedId}` : base), 600)
     } catch (err) {
       // Refused email (server rule = legacy's: domain with a known TLD): show it on the field too.
-      const emailRefused = err instanceof userApi.UserApiError && !!err.fields.email
-      const msg = emailRefused ? t('users.err.email_invalid') : err instanceof Error ? err.message : t('common.err_save')
-      if (emailRefused) { setErrors((p) => ({ ...p, email: msg })); setActiveTab('profil') }
-      else setSaveError(msg)
+      // Phone refused (rules of the module's legacy field): its own message, on the field.
+      const fieldErrs = err instanceof userApi.UserApiError ? err.fields : {}
+      const emailRefused = !!fieldErrs.email
+      const phoneMsg = fieldErrs.phone?.join(' ') ?? ''
+      const msg = emailRefused ? t('users.err.email_invalid') : phoneMsg || (err instanceof Error ? err.message : t('common.err_save'))
+      if (emailRefused || phoneMsg) {
+        setErrors((p) => ({ ...p, ...(emailRefused ? { email: t('users.err.email_invalid') } : {}), ...(phoneMsg ? { phone: phoneMsg } : {}) }))
+        setActiveTab('profil')
+      } else setSaveError(msg)
       koNotify(t('users.title'), msg)
     } finally { setSaving(false) }
   }
@@ -539,7 +553,7 @@ export default function UserFormPage() {
         login: user.login, email: user.email,
         firstname: user.firstname, lastname: user.lastname,
         roleId: user.roleId, status: user.status, isAdmin: user.isAdmin,
-        tags: user.tags, password: '', confirmPassword: '', rights: user.rights ?? '', langId: user.langId ?? 0,
+        tags: user.tags, password: '', confirmPassword: '', rights: user.rights ?? '', langId: user.langId ?? 0, phone: user.phone ?? '',
       }))
       .catch(() => null)
       .finally(() => { setLoading(false); setTimeout(() => setRefreshing(false), 600) })
@@ -554,6 +568,7 @@ export default function UserFormPage() {
   const fieldLabels: Partial<Record<keyof FormData, string>> = {
     login: t('users.field.login'),
     email: t('users.field.email'),
+    phone: phoneField?.label ?? 'Phone',
     firstname: t('users.field.firstname'),
     lastname: t('users.field.lastname'),
     password: isEdit ? t('users.field.new_password') : t('users.field.password'),
@@ -637,6 +652,13 @@ export default function UserFormPage() {
                 <Input type="email" value={form.email} onChange={(e) => set('email', e.target.value)}
                   placeholder={t('users.ph.email')} className={cn(errors.email && 'border-destructive')} />
               </Field>
+              {phoneField && (
+                <Field label={phoneField.label} error={errors.phone}>
+                  <Input type="tel" inputMode="numeric" value={form.phone} onChange={(e) => set('phone', e.target.value)}
+                    maxLength={phoneField.maxLength || undefined} placeholder={phoneField.placeholder}
+                    className={cn(errors.phone && 'border-destructive')} />
+                </Field>
+              )}
             </div>
             <div className="mt-4">
               <Field label={t('users.field.tags')}>
