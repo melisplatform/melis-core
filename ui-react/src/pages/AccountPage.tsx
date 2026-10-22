@@ -48,6 +48,7 @@ function formatDate(ymd: string, locale: string): string {
 function errorMessage(t: (k: never) => string, raw: string): string {
   const map: Record<string, string> = {
     tr_meliscore_tool_user_usr_email_error_empty: 'account.err.email',
+    tr_meliscore_tool_user_invalid_email: 'account.err.email',
     tr_meliscore_tool_user_usr_lang_id_error_empty: 'account.err.lang',
     tr_meliscore_tool_user_usr_password_error_low: 'account.err.pass_low',
     tr_meliscore_tool_user_usr_confirm_password_error_low: 'account.err.pass_low',
@@ -162,8 +163,11 @@ export default function AccountPage() {
       if (res.reload) { window.location.reload(); return }
       setTimeout(() => setSaved(false), 2500)
     } catch (e) {
-      const msg = errorMessage(t as never, String((e as Error)?.message ?? e))
-      setSaveErr(msg)
+      const raw = String((e as Error)?.message ?? e)
+      const msg = errorMessage(t as never, raw)
+      // Refused email (server rule = legacy's: domain with a known TLD): show it on the field too.
+      if (raw === 'tr_meliscore_tool_user_invalid_email') setErrors((p) => ({ ...p, email: msg }))
+      else setSaveErr(msg)
       koNotify(t('account.title'), msg)
     } finally {
       setSaving(false)

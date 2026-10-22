@@ -21,6 +21,7 @@ use MelisCore\Controller\MelisAbstractActionController;
 class MelisReactApiUserController extends MelisAbstractActionController
 {
     use CapabilityGuardTrait;
+    use MelisReactUserEmailTrait;
 
     /** melisKey de l'outil — utilisé par les gardes de droits (accès + capacité). */
     private const MELIS_KEY = 'meliscore_tool_user';
@@ -199,6 +200,15 @@ class MelisReactApiUserController extends MelisAbstractActionController
                     ['success' => false, 'error' => 'Champs obligatoires manquants : login, email, prénom, nom'],
                     400
                 );
+            }
+            // Same email rule as the legacy user form (domain with a known TLD).
+            if (!$this->isValidUserEmail($email)) {
+                $message = $this->getServiceManager()->get('translator')->translate('tr_meliscore_tool_user_invalid_email');
+                return $this->jsonResponse([
+                    'success' => false,
+                    'error'   => $message,
+                    'fields'  => ['email' => [$message]],
+                ], 422);
             }
             if (!$id && !$password) {
                 return $this->jsonResponse(

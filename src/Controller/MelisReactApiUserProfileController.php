@@ -21,6 +21,8 @@ use MelisCore\Controller\MelisAbstractActionController;
  */
 class MelisReactApiUserProfileController extends MelisAbstractActionController
 {
+    use MelisReactUserEmailTrait;
+
     /** melisKey de l'outil (garde d'accès). « Mon compte » = tout utilisateur authentifié. */
     private const MELIS_KEY = 'meliscore_user_profile';
 
@@ -104,9 +106,12 @@ class MelisReactApiUserProfileController extends MelisAbstractActionController
             $confirm  = (string) ($body['confirmPassword'] ?? '');
             $image    = $body['image'] ?? null; // data URI, '' (efface), ou null (inchangé)
 
-            // Email obligatoire + format.
-            if ($email === '' || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            // Email obligatoire + format, même règle que le formulaire legacy (domaine avec TLD connu).
+            if ($email === '') {
                 return $this->jsonResponse(['success' => false, 'error' => 'tr_meliscore_tool_user_usr_email_error_empty'], 400);
+            }
+            if (!$this->isValidUserEmail($email)) {
+                return $this->jsonResponse(['success' => false, 'error' => 'tr_meliscore_tool_user_invalid_email'], 400);
             }
             // Langue obligatoire + existante.
             $db = $this->getServiceManager()->get('Laminas\Db\Adapter\AdapterInterface');
