@@ -103,6 +103,12 @@ export interface UserStats {
 
 // ─── HTTP client ──────────────────────────────────────────────────────────────
 
+/** Error of the users API, with the field errors it returned (e.g. `{ email: [...] }`). */
+export class UserApiError extends Error {
+  fields: Record<string, string[]>
+  constructor(message: string, fields: Record<string, string[]> = {}) { super(message); this.fields = fields }
+}
+
 async function apiFetch<T>(url: string, opts?: RequestInit): Promise<T> {
   const res = await fetch(url, {
     ...opts,
@@ -111,11 +117,13 @@ async function apiFetch<T>(url: string, opts?: RequestInit): Promise<T> {
   })
   if (!res.ok) {
     let msg = `HTTP ${res.status}`
+    let fields: Record<string, string[]> = {}
     try {
-      const d = (await res.json()) as { error?: string }
+      const d = (await res.json()) as { error?: string; fields?: Record<string, string[]> }
       if (d.error) msg = d.error
+      if (d.fields) fields = d.fields
     } catch { /* ignore */ }
-    throw new Error(msg)
+    throw new UserApiError(msg, fields)
   }
   const data = (await res.json()) as { success: boolean; data?: T; error?: string }
   if (!data.success) throw new Error(data.error ?? 'API error')

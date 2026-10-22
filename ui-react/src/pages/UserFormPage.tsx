@@ -499,8 +499,11 @@ export default function UserFormPage() {
       }
       setTimeout(() => navigate(isEdit ? `${base}/${savedId}` : base), 600)
     } catch (err) {
-      const msg = err instanceof Error ? err.message : t('common.err_save')
-      setSaveError(msg)
+      // Refused email (server rule = legacy's: domain with a known TLD): show it on the field too.
+      const emailRefused = err instanceof userApi.UserApiError && !!err.fields.email
+      const msg = emailRefused ? t('users.err.email_invalid') : err instanceof Error ? err.message : t('common.err_save')
+      if (emailRefused) { setErrors((p) => ({ ...p, email: msg })); setActiveTab('profil') }
+      else setSaveError(msg)
       koNotify(t('users.title'), msg)
     } finally { setSaving(false) }
   }
