@@ -81,7 +81,8 @@ class MelisCoreLogService  extends MelisGeneralService
 			$arrayParameters['limit'],
 			$arrayParameters['order'],
 			$arrayParameters['search'],
-			$arrayParameters['status']
+			$arrayParameters['status'],
+			$this->getTranslationKeysMatching($arrayParameters['search'])
 		);
 
 		// Collect rows and unique type IDs in one pass
@@ -145,8 +146,44 @@ class MelisCoreLogService  extends MelisGeneralService
 			$dateCreationMin,
 			$dateCreationMax,
 			$search,
-			$status
+			$status,
+			$this->getTranslationKeysMatching($search)
 		);
+	}
+
+	/**
+	 * Translation keys whose text, in the current back-office language, contains $search. Log titles and
+	 * messages are mostly stored as keys and translated for display: searching the stored value found keys
+	 * nobody sees and missed the displayed text (Mantis #0011224).
+	 * @param string|null $search
+	 * @return string[]
+	 */
+	public function getTranslationKeysMatching($search): array
+	{
+		$search = trim((string) $search);
+		if ($search === '') {
+			return [];
+		}
+		try {
+			$translator = $this->getServiceManager()->get('translator');
+			// Only the keys stored in the logs (a few hundred), not the whole translation catalogue
+			$used = $this->getServiceManager()->get('Laminas\Db\Adapter\AdapterInterface')->query(
+				"SELECT log_title AS k FROM melis_core_log WHERE log_title LIKE 'tr\\_%'
+				 UNION SELECT log_message FROM melis_core_log WHERE log_message LIKE 'tr\\_%'", []
+			);
+		} catch (\Throwable $e) {
+			return [];
+		}
+		$keys = [];
+		foreach ($used as $row) {
+			$key = (string) ((array) $row)['k'];
+			$shown = html_entity_decode(strip_tags((string) $translator->translate($key)), ENT_QUOTES | ENT_HTML5, 'UTF-8');
+			if ($shown !== $key && mb_stripos($shown, $search) !== false) {
+				$keys[] = $key;
+			}
+		}
+
+		return $keys;
 	}
 
 	/**

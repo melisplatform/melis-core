@@ -205,6 +205,11 @@ class MelisReactApiPlatformController extends MelisAbstractActionController
                      WHERE plf_id = ?',
                     [$name, $marketplace, $cache, $id]
                 );
+                $this->triggerCoreEvent('meliscore_platform_save_end', [
+                    'success' => 1, 'textTitle' => 'tr_meliscore_tool_platform_title',
+                    'textMessage' => 'tr_meliscore_tool_platform_prompts_edit_success', 'errors' => [],
+                    'typeCode' => 'CORE_PLATFORM_UPDATE', 'itemId' => $id, 'id' => $id,
+                ]);
                 return $this->jsonResponse(['success' => true, 'data' => ['id' => $id]]);
             }
 
@@ -215,6 +220,13 @@ class MelisReactApiPlatformController extends MelisAbstractActionController
                 [$name, $marketplace, $cache]
             );
             $newId = (int) iterator_to_array($db->query('SELECT LAST_INSERT_ID() AS id', []))[0]['id'];
+            // Same event as the legacy tool: log CORE_PLATFORM_ADD, and MelisCms gives the platform its
+            // page/template id ranges (MelisCmsPlatformIdListener) — React platforms had none (Mantis #0011221)
+            $this->triggerCoreEvent('meliscore_platform_save_end', [
+                'success' => 1, 'textTitle' => 'tr_meliscore_tool_platform_title',
+                'textMessage' => 'tr_meliscore_tool_platform_prompts_new_success', 'errors' => [],
+                'typeCode' => 'CORE_PLATFORM_ADD', 'itemId' => $newId, 'id' => $newId,
+            ]);
 
             return $this->jsonResponse(['success' => true, 'data' => ['id' => $newId]], 201);
         } catch (\Throwable $e) {
@@ -245,6 +257,14 @@ class MelisReactApiPlatformController extends MelisAbstractActionController
                 return $this->jsonResponse(['success' => false, 'error' => 'Impossible de supprimer la plateforme courante.'], 400);
             }
             $db->query('DELETE FROM melis_core_platform WHERE plf_id = ?', [$id]);
+            // Same event as the legacy tool: log CORE_PLATFORM_DELETE, and MelisCms removes the platform's
+            // id ranges and site domains (Mantis #0011221)
+            $this->triggerCoreEvent('meliscore_platform_delete_end', [
+                'success' => 1, 'textTitle' => 'tr_meliscore_tool_platform_title',
+                'textMessage' => 'tr_meliscore_tool_platform_prompts_delete_success',
+                'platform' => (string) $rows[0]['plf_name'], 'id' => $id,
+                'typeCode' => 'CORE_PLATFORM_DELETE', 'itemId' => $id,
+            ]);
             return $this->jsonResponse(['success' => true, 'data' => null]);
         } catch (\Throwable $e) {
             return $this->errorResponse($e);
@@ -252,6 +272,17 @@ class MelisReactApiPlatformController extends MelisAbstractActionController
     }
 
     // ─── Helpers ──────────────────────────────────────────────────────────────
+
+    /** Legacy event, on the « MelisCore » identifier its listeners (logs, bell, MelisCms) attach to */
+    private function triggerCoreEvent(string $event, array $params): void
+    {
+        try {
+            (new \Laminas\EventManager\EventManager($this->getEventManager()->getSharedManager(), ['MelisCore']))
+                ->trigger($event, $this, $params);
+        } catch (\Throwable $e) {
+            error_log($event . ': ' . $e->getMessage());
+        }
+    }
 
     private function formatPlatform(array $r, string $current = ''): array
     {

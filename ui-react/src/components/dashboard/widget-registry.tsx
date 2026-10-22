@@ -14,6 +14,8 @@ export interface WidgetDef {
   titleKey: I18nKey
   /** Overrides titleKey for dynamic/legacy widgets where no i18n key exists. */
   titleLabel?: string
+  /** Card header title when it differs from the menu title (legacy plugin datas.dashboard_title, Mantis #0011245). */
+  cardTitle?: string
   /** Description du plugin (config PHP traduite) — infobulle de l'item dans la palette, comme le
    *  menu de plugins legacy. Absente pour les widgets natifs sans équivalent legacy. */
   description?: string
@@ -75,6 +77,8 @@ export function buildLegacyWidgetDef(plugin: LegacyDashboardPlugin): WidgetDef {
     id,
     titleKey: 'widget.sec.legacy',
     titleLabel: plugin.title || plugin.pluginName,
+    // header of the card: the plugin dashboard_title, as the legacy plugin container (Mantis #0011245)
+    cardTitle: plugin.dashboardTitle || undefined,
     description: plugin.description || undefined,
     // Icône DÉCLARÉE par le plugin dans sa config PHP (`datas.icon`, ex. `fa fa-calendar`), remontée
     // par /dashboard/legacy-plugins — même source que le dashboard legacy. Rendue avec l'icône

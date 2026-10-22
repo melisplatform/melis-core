@@ -155,6 +155,8 @@ return [
     'tr_meliscore_user_profile_creation_date' => 'Date de création de l\'utilisateur',
 
     'tr_meliscore_tool_user_update_success_info' => 'Infos utilisateur mises à jour avec succès.',
+    // message of the CORE_USER_ADD / CORE_USER_UPDATE logs written by the React users tool (Mantis #0011225)
+    'tr_meliscore_tool_user_save_success' => 'Utilisateur enregistré avec succès',
     'tr_meliscore_tool_user_update_fail_info' => 'Echec de mise à jour des infos utilisateur',
     'tr_meliscore_tool_user_reset_rights_success_info' => 'Droits d\'utilisateur réinitialisés avec succès\'',
     'tr_meliscore_tool_user_reset_rights_fail_info' => 'Impossible de réinitialiser les droits d\'utilisateur',
@@ -330,6 +332,7 @@ return [
     'tr_meliscore_module_management_prompt_confirm' => 'Êtes-vous sûr de vouloir appliquer ces paramètres ?',
     'tr_meliscore_module_management_prompt_success' => 'Les paramètres des modules ont été mis à jour',
     'tr_meliscore_module_management_prompt_failed' => 'Impossible de mettre à jour les paramètres des modules',
+    'tr_meliscore_module_management_missing_requirements' => 'Non enregistré : ces modules actifs ont besoin d’un module désactivé : %s',
     'tr_meliscore_module_management_notification_tip' => "Glisser/déposer les modules pour arranger l'ordre",
     'tr_meliscore_module_management_inactive_confirm' => '<i class="fa fa-warning"></i> Voici les listes des modules dépendants de <strong>%s</strong>, êtes-vous sûr de vouloir désactiver <strong>%s</strong>?',
     'tr_meliscore_module_management_inactive_title' => 'Deactivate module',

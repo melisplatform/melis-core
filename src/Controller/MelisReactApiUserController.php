@@ -182,7 +182,7 @@ class MelisReactApiUserController extends MelisAbstractActionController
             $roleId    = (int) ($body['roleId']  ?? 1);
             $status    = (int) ($body['status']  ?? 1);
             $isAdmin   = (int) (bool) ($body['isAdmin'] ?? false);
-            $langId    = (int) ($body['langId']  ?? 1);
+            $langId    = isset($body['langId']) && (int) $body['langId'] > 0 ? (int) $body['langId'] : null;
             $tags      = trim((string) ($body['tags']     ?? ''));
             $password  = trim((string) ($body['password'] ?? ''));
             // Normalisation défensive : ne JAMAIS stocker de séquences d'échappement LITTÉRALES
@@ -227,6 +227,16 @@ class MelisReactApiUserController extends MelisAbstractActionController
 
             $db   = $this->getServiceManager()->get('Laminas\Db\Adapter\AdapterInterface');
             $auth = $this->getServiceManager()->get('MelisCoreAuth');
+
+            // Language (Mantis #0011114): chosen in the create form (default: the administrator's own language).
+            // An edit does not send it: it keeps the user's language — 1 (English) was written on every React edit.
+            if ($langId !== null && !iterator_to_array($db->query('SELECT lang_id FROM melis_core_lang WHERE lang_id = ?', [$langId]))) {
+                $langId = null;
+            }
+            if ($langId === null) {
+                $current = $id ? iterator_to_array($db->query('SELECT usr_lang_id FROM melis_core_user WHERE usr_id = ?', [$id])) : [];
+                $langId  = $current ? (int) ((array) $current[0])['usr_lang_id'] : $this->currentBoLangId();
+            }
 
             if ($id) {
                 // Update — mot de passe + droits optionnels
@@ -689,6 +699,39 @@ class MelisReactApiUserController extends MelisAbstractActionController
         } catch (\Throwable $e) {
             return $this->errorResponse($e);
         }
+    }
+
+    /**
+     * GET /users/languages — back-office languages for the create form, and the language of the
+     * administrator (default choice). The legacy form asks for it; React created every user in English
+     * (Mantis #0011114). Kept on the users API: /languages needs the Languages tool rights.
+     */
+    public function languagesAction(): HttpResponse
+    {
+        if ($deny = $this->denyUnlessAccess()) { return $deny; }
+        if ($denyCap = $this->denyUnlessCan('list')) { return $denyCap; }
+
+        try {
+            $items = [];
+            $db = $this->getServiceManager()->get('Laminas\Db\Adapter\AdapterInterface');
+            foreach ($db->query('SELECT lang_id, lang_locale, lang_name FROM melis_core_lang ORDER BY lang_id', []) as $r) {
+                $r = (array) $r;
+                $items[] = ['id' => (int) $r['lang_id'], 'locale' => (string) $r['lang_locale'], 'name' => (string) $r['lang_name']];
+            }
+
+            return $this->jsonResponse(['success' => true, 'data' => ['items' => $items, 'currentLangId' => $this->currentBoLangId()]]);
+        } catch (\Throwable $e) {
+            return $this->errorResponse($e);
+        }
+    }
+
+    /** Back-office language of the logged-in administrator, 1 when unknown */
+    private function currentBoLangId(): int
+    {
+        $container = new \Laminas\Session\Container('meliscore');
+        $langId = (int) ($container['melis-lang-id'] ?? 0);
+
+        return $langId > 0 ? $langId : 1;
     }
 
     // ─── Helpers ──────────────────────────────────────────────────────────────

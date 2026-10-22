@@ -65,12 +65,28 @@ class MelisReactApiLogController extends MelisAbstractActionController
             if ($startDate !== null) { $filterWhere[] = 'l.log_date_added >= ?'; $filterParams[] = $startDate; }
             if ($endDate   !== null) { $filterWhere[] = 'l.log_date_added <= ?'; $filterParams[] = $endDate; }
             if ($search !== null) {
-                // NB : log_title/log_message sont les CLÉS de traduction (le texte affiché est
-                // traduit à la volée, absent de la base) → la recherche porte sur ces clés
-                // brutes + le code de type, comme le legacy (qui matchait logt_code/traductions).
-                $like = '%' . $search . '%';
-                $filterWhere[] = '(l.log_title LIKE ? OR l.log_message LIKE ? OR COALESCE(t.logt_code,\'\') LIKE ?)';
-                $filterParams = array_merge($filterParams, [$like, $like, $like]);
+                // Search on what the user sees (Mantis #0011224): log_title/log_message are mostly translation
+                // KEYS translated for display, so the keys whose TEXT matches are searched, plus the values
+                // stored as plain text, the type code and the user name — no longer the raw keys themselves.
+                $like  = '%' . $search . '%';
+                $keys  = $this->getServiceManager()->get('MelisCoreLogService')->getTranslationKeysMatching($search);
+                $or    = [
+                    "(l.log_title LIKE ? AND l.log_title NOT LIKE 'tr\\_%')",
+                    "(l.log_message LIKE ? AND l.log_message NOT LIKE 'tr\\_%')",
+                    "COALESCE(t.logt_code,'') LIKE ?",
+                    'CAST(l.log_id AS CHAR) LIKE ?',
+                    "EXISTS (SELECT 1 FROM melis_core_user su WHERE su.usr_id = l.log_user_id
+                             AND CONCAT(COALESCE(su.usr_firstname,''),' ',COALESCE(su.usr_lastname,'')) LIKE ?)",
+                ];
+                $orParams = [$like, $like, $like, $like, $like];
+                if ($keys) {
+                    $in = implode(',', array_fill(0, count($keys), '?'));
+                    $or[] = "l.log_title IN ($in)";
+                    $or[] = "l.log_message IN ($in)";
+                    $orParams = array_merge($orParams, $keys, $keys);
+                }
+                $filterWhere[] = '(' . implode(' OR ', $or) . ')';
+                $filterParams = array_merge($filterParams, $orParams);
             }
 
             // Tri server-side (whitelist = COL_ORDER de la page). Chaque expression NON-NULL.

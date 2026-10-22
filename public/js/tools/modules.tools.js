@@ -143,7 +143,15 @@ $(function() {
                             if (data.success == 1) {
                                 melisHelper.melisOkNotification(data.textTitle, data.textMessage);
                                 melisCoreTool.processing();
-                                setTimeout(function() {window.location.reload(true) }, 3000);
+                                setTimeout(function() {
+                                    // React « Ancien » view: reload the whole React back-office, not only this
+                                    // iframe, so the menu drops the deactivated modules' tools (Mantis #0011151)
+                                    var host = window.__melisRealParent;
+                                    if (host && host !== window) {
+                                        try { host.location.reload(); return; } catch (e) {}
+                                    }
+                                    window.location.reload(true);
+                                }, 3000);
                             } else {
                                 melisHelper.melisKoNotification(data.textTitle, data.textMessage);
                             }

@@ -254,7 +254,8 @@ const fr = {
   'platforms.form.err_save': 'Erreur lors de la sauvegarde',
   'platforms.form.saved': 'Enregistré ✓',
   'platforms.delete.title': 'Supprimer la plateforme',
-  'platforms.delete.confirm': 'Supprimer {name} ? Cette action est irréversible.',
+  // as the legacy tool: the platform id ranges and site domains linked to it are deleted too (Mantis #0011221)
+  'platforms.delete.confirm': 'Supprimer {name} ? Les informations et paramètres critiques rattachés à cette plateforme (plages d’identifiants, domaines des sites) seront aussi supprimés. Cette action est irréversible.',
 
   // ── Langues (back-office) ──
   'languages.title': 'Langues',
@@ -422,6 +423,8 @@ const fr = {
   'users.form.password_hint': '(laisser vide pour ne pas changer)',
   'users.form.status': 'Statut',
   'users.form.role': 'Rôle',
+  'users.form.language': 'Langue',
+  'users.form.language_hint': 'Langue du back-office de l’utilisateur ; il pourra ensuite la changer lui-même.',
   'users.form.rights': 'Droits',
   'users.form.admin': 'Administrateur',
   'users.field.firstname': 'Prénom',
@@ -1167,7 +1170,7 @@ const en: Record<I18nKey, string> = {
   'platforms.form.err_save': 'Error while saving',
   'platforms.form.saved': 'Saved ✓',
   'platforms.delete.title': 'Delete platform',
-  'platforms.delete.confirm': 'Delete {name}? This action is irreversible.',
+  'platforms.delete.confirm': 'Delete {name}? The critical information and settings attached to this platform (id ranges, site domains) are deleted too. This action is irreversible.',
 
   // ── Languages (back-office) ──
   'languages.title': 'Languages',
@@ -1335,6 +1338,8 @@ const en: Record<I18nKey, string> = {
   'users.form.password_hint': '(leave empty to keep current)',
   'users.form.status': 'Status',
   'users.form.role': 'Role',
+  'users.form.language': 'Language',
+  'users.form.language_hint': 'Back-office language of the user; they can change it themselves afterwards.',
   'users.form.rights': 'Rights',
   'users.form.admin': 'Administrator',
   'users.field.firstname': 'First name',

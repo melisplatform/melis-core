@@ -136,7 +136,8 @@ export default function ModulesPage() {
     while (stack.length) {
       const cur = stack.pop()!
       for (const dep of byName[cur]?.requires ?? []) {
-        if (!out.has(dep)) { out.add(dep); stack.push(dep) }
+        // a cycle leads back to the module itself: it is not one of its own requirements (Mantis #0011152)
+        if (dep !== name && !out.has(dep)) { out.add(dep); stack.push(dep) }
       }
     }
     return [...out]
@@ -149,7 +150,8 @@ export default function ModulesPage() {
     while (stack.length) {
       const cur = stack.pop()!
       for (const dep of byName[cur]?.dependents ?? []) {
-        if (byName[dep]?.active && !out.has(dep)) { out.add(dep); stack.push(dep) }
+        // MelisLogin2fa ⇄ MelisLogin2faEmail: the cycle listed the module among its own dependents (Mantis #0011152)
+        if (dep !== name && byName[dep]?.active && !out.has(dep)) { out.add(dep); stack.push(dep) }
       }
     }
     return [...out]

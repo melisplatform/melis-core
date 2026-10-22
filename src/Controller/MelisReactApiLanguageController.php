@@ -224,6 +224,12 @@ class MelisReactApiLanguageController extends MelisAbstractActionController
                     'UPDATE melis_core_lang SET lang_name = ?, lang_locale = ? WHERE lang_id = ?',
                     [$name, $locale, $id]
                 );
+                // Logged like the other language actions (the legacy tool has no rename) (Mantis #0011221)
+                $this->triggerCoreEvent('meliscore_language_update_end', [
+                    'success' => 1, 'textTitle' => 'tr_meliscore_tool_language',
+                    'textMessage' => 'tr_meliscore_tool_language_edit_success',
+                    'typeCode' => 'CORE_LANGUAGE_UPDATE', 'itemId' => $id,
+                ]);
                 return $this->jsonResponse(['success' => true, 'data' => ['id' => $id]]);
             }
 
@@ -238,6 +244,12 @@ class MelisReactApiLanguageController extends MelisAbstractActionController
                 [$locale, $name]
             );
             $newId = (int) iterator_to_array($db->query('SELECT LAST_INSERT_ID() AS id', []))[0]['id'];
+            // Same event as the legacy tool: CORE_LANGUAGE_ADD log and notification (Mantis #0011221)
+            $this->triggerCoreEvent('meliscore_language_new_end', [
+                'success' => 1, 'textTitle' => 'tr_meliscore_tool_language',
+                'textMessage' => 'tr_meliscore_tool_language_add_success', 'errors' => [],
+                'typeCode' => 'CORE_LANGUAGE_ADD', 'itemId' => $newId,
+            ]);
 
             return $this->jsonResponse(['success' => true, 'data' => ['id' => $newId]], 201);
         } catch (\Throwable $e) {
@@ -276,6 +288,12 @@ class MelisReactApiLanguageController extends MelisAbstractActionController
                 return $this->jsonResponse(['success' => false, 'error' => sprintf($translator->translate('tr_meliscore_tool_language_delete_in_use'), $users)], 409);
             }
             $db->query('DELETE FROM melis_core_lang WHERE lang_id = ?', [$id]);
+            // Same event as the legacy tool: CORE_LANGUAGE_DELETE log and notification (Mantis #0011221)
+            $this->triggerCoreEvent('meliscore_language_delete_end', [
+                'success' => 1, 'textTitle' => 'tr_meliscore_tool_language',
+                'textMessage' => 'tr_meliscore_tool_language_delete_success',
+                'typeCode' => 'CORE_LANGUAGE_DELETE', 'itemId' => $id,
+            ]);
             return $this->jsonResponse(['success' => true, 'data' => null]);
         } catch (\Throwable $e) {
             return $this->errorResponse($e);
@@ -283,6 +301,17 @@ class MelisReactApiLanguageController extends MelisAbstractActionController
     }
 
     // ─── Helpers ──────────────────────────────────────────────────────────────
+
+    /** Legacy event, on the « MelisCore » identifier its listeners (logs, bell) attach to */
+    private function triggerCoreEvent(string $event, array $params): void
+    {
+        try {
+            (new \Laminas\EventManager\EventManager($this->getEventManager()->getSharedManager(), ['MelisCore']))
+                ->trigger($event, $this, $params);
+        } catch (\Throwable $e) {
+            error_log($event . ': ' . $e->getMessage());
+        }
+    }
 
     private function formatLanguage(array $r): array
     {

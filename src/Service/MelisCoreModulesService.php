@@ -366,6 +366,29 @@ class MelisCoreModulesService extends MelisServiceManager
      *
      * @return array
      */
+    /**
+     * « Module → requirement » pairs where an enabled module requires a module that is posted as inactive.
+     * Requirements absent from $moduleStates (core modules the tool does not manage) are ignored (Mantis #0011150).
+     * @param array $enabledModules modules to activate
+     * @param array $moduleStates   module name => 1|0, as posted by the Modules tool
+     * @return string[]
+     */
+    public function getMissingRequirements(array $enabledModules, array $moduleStates): array
+    {
+        $states  = array_change_key_case($moduleStates, CASE_LOWER);
+        $missing = [];
+        foreach ($enabledModules as $module) {
+            foreach ((array) $this->getDependencies($module) as $required) {
+                $key = strtolower((string) $required);
+                if (array_key_exists($key, $states) && (int) $states[$key] !== 1) {
+                    $missing[] = $module . ' → ' . $required;
+                }
+            }
+        }
+
+        return $missing;
+    }
+
     public function getDependencies($moduleName, $convertPackageNameToNamespace = true)
     {
         $modulePath = $this->getModulePath($moduleName);

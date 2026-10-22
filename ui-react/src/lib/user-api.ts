@@ -160,6 +160,12 @@ export async function fetchRoles(): Promise<UserRole[]> {
   return apiFetch<UserRole[]>('/melis/react-api/roles')
 }
 
+/** Back-office languages for the create form, and the administrator's own one (Mantis #0011114). */
+export interface UserLanguage { id: number; locale: string; name: string }
+export async function fetchUserLanguages(): Promise<{ items: UserLanguage[]; currentLangId: number }> {
+  return apiFetch<{ items: UserLanguage[]; currentLangId: number }>('/melis/react-api/users/languages')
+}
+
 /** Politique de complexité du mot de passe effective (défauts otherconfig + app.login.php). */
 export interface PasswordPolicy {
   minLength: number

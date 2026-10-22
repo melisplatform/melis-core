@@ -172,6 +172,15 @@ class ModulesController extends MelisAbstractActionController
                 }
             }
 
+            // An active module whose requirement is deactivated broke its tool (QCM: HTTP 500): refused
+            // server side too, whatever the client sent (Mantis #0011150)
+            $missing = $this->getModuleSvc()->getMissingRequirements($enabledModules, $this->params()->fromPost());
+            if ($missing) {
+                $textMessage = $this->getServiceManager()->get('MelisCoreTool')
+                    ->getTranslation('tr_meliscore_module_management_missing_requirements', [implode(', ', $missing)]);
+                return new JsonModel(['success' => 0, 'textTitle' => $translator->translate($textTitle), 'textMessage' => $textMessage]);
+            }
+
             $modules = $enabledModules;
             $success = $this->createModuleLoaderFile($modules) === true ? 1 : 0;
 
@@ -286,7 +295,9 @@ class ModulesController extends MelisAbstractActionController
             $module = $tool->sanitize($request->getPost('module'));
 
             if ($module) {
-                $modules = $this->getModuleSvc()->getChildDependencies($module);
+                // Direct AND indirect dependents: MelisCmsMcq (requires MelisCmsMcqEngine, which requires
+                // MelisCmsTags) stayed active when MelisCmsTags was deactivated (Mantis #0011150)
+                $modules = $this->getAllDependents($module);
                 if ($modules) {
                     $message = $tool->getTranslation('tr_meliscore_module_management_inactive_confirm', array($module, $module));
                     $success = 1;
@@ -454,6 +465,30 @@ class ModulesController extends MelisAbstractActionController
     /**
      * @return \MelisCore\Service\MelisCoreModulesService
      */
+    /**
+     * Every module that depends on $module, directly or through another module, the module itself excluded
+     * (requirements can be circular, e.g. MelisLogin2fa ⇄ MelisLogin2faEmail).
+     */
+    private function getAllDependents(string $module): array
+    {
+        $svc  = $this->getModuleSvc();
+        $seen = [strtolower($module) => true];
+        $out  = [];
+        $todo = [$module];
+        while ($todo) {
+            foreach ($svc->getChildDependencies(array_pop($todo)) as $dependent) {
+                if (isset($seen[strtolower($dependent)])) {
+                    continue;
+                }
+                $seen[strtolower($dependent)] = true;
+                $out[]  = $dependent;
+                $todo[] = $dependent;
+            }
+        }
+
+        return $out;
+    }
+
     protected function getModuleSvc()
     {
         /**
