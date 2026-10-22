@@ -141,6 +141,19 @@ class MelisReactApiModulesController extends MelisAbstractActionController
                 }
             }
 
+            // An enabled module whose requirement is not enabled is refused, whatever the client sent: the
+            // « Ancien » view could save MelisCmsMcq without MelisCmsMcqEngine (QCM: HTTP 500, Mantis #0011150).
+            $states = [];
+            foreach ($this->getModuleSvc()->getModulePlugins(self::EXCLUDE_MODULES) as $module) {
+                $states[$module] = in_array($module, $enabled, true) ? 1 : 0;
+            }
+            $missing = $this->getModuleSvc()->getMissingRequirements($enabled, $states);
+            if ($missing) {
+                $msg = $this->getServiceManager()->get('MelisCoreTool')
+                    ->getTranslation('tr_meliscore_module_management_missing_requirements', [implode(', ', $missing)]);
+                return $this->jsonResponse(['success' => false, 'error' => $msg, 'missing' => $missing], 422);
+            }
+
             // Réécrit config/melis.module.load.php (cœur en tête, modules dans l'ordre fourni,
             // MelisModuleConfig en bas) — exactement comme ModulesController::createModuleLoaderFile().
             $status = (bool) $this->getModuleSvc()->createModuleLoader(

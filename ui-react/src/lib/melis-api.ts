@@ -579,6 +579,8 @@ export async function fetchDashboardStats(): Promise<DashboardStats | null> {
 export interface LegacyDashboardPlugin {
   pluginName: string
   title: string
+  /** Title of the card (datas.dashboard_title, translated); empty → the menu title is used (Mantis #0011245). */
+  dashboardTitle?: string
   /** Texte d'aide du plugin (config PHP `datas.description`, traduite) — affiché en infobulle sur
    *  l'item de la palette, comme le `title="…"` du menu de plugins legacy. Vide si non déclaré. */
   description?: string

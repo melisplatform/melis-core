@@ -36,7 +36,8 @@ class MelisLogTable extends MelisGenericTable
 		$limit = null,
 		$order = null,
 		$search = null,
-		$status = null
+		$status = null,
+		array $searchKeys = []
 	) {
 		$select = $this->tableGateway->getSql()->select();
 
@@ -89,13 +90,7 @@ class MelisLogTable extends MelisGenericTable
 			));
 		}
 
-		if (!is_null($search)) {
-			$likeSearch = '%' . $search . '%';
-			$select->where->NEST->like('log_id', $likeSearch)
-				->or->like('melis_core_log_type.logt_code', $likeSearch)
-				->or->like('melis_core_log_type_trans.logtt_name', $likeSearch)
-				->or->like('melis_core_log_type_trans.logtt_description', $likeSearch);
-		}
+		$this->applySearch($select, $search, $searchKeys);
 
 		if (!is_null($start) && is_numeric($start)) {
 			$select->offset((int) $start);
@@ -117,7 +112,8 @@ class MelisLogTable extends MelisGenericTable
 		$dateCreationMin = null,
 		$dateCreationMax = null,
 		$search = null,
-		$status = null
+		$status = null,
+		array $searchKeys = []
 	) {
 		$select = $this->tableGateway->getSql()->select();
 		$select->columns(['total' => new \Laminas\Db\Sql\Expression('COUNT(DISTINCT melis_core_log.log_id)')]);
@@ -168,13 +164,7 @@ class MelisLogTable extends MelisGenericTable
 			));
 		}
 
-		if (!is_null($search)) {
-			$likeSearch = '%' . $search . '%';
-			$select->where->NEST->like('log_id', $likeSearch)
-				->or->like('melis_core_log_type.logt_code', $likeSearch)
-				->or->like('melis_core_log_type_trans.logtt_name', $likeSearch)
-				->or->like('melis_core_log_type_trans.logtt_description', $likeSearch);
-		}
+		$this->applySearch($select, $search, $searchKeys);
 
 		$result = $this->tableGateway->selectWith($select)->current();
 
@@ -322,5 +312,35 @@ class MelisLogTable extends MelisGenericTable
 		return (int) $this->getTableGateway()->delete(function ($delete) use ($before) {
 			$delete->where->lessThan('log_date_added', $before);
 		});
+	}
+
+	/**
+	 * Search on what the Logs tool shows (Mantis #0011224): id, type, user name, the titles and messages
+	 * stored as plain text, and those stored as translation keys whose TEXT matches ($searchKeys, see
+	 * MelisCoreLogService::getTranslationKeysMatching). The raw keys themselves are not searched any more.
+	 */
+	private function applySearch($select, $search, array $searchKeys): void
+	{
+		if (is_null($search)) {
+			return;
+		}
+		$like = '%' . $search . '%';
+		$where = $select->where->NEST;
+		$where->like('melis_core_log.log_id', $like)
+			->or->like('melis_core_log_type.logt_code', $like)
+			->or->like('melis_core_log_type_trans.logtt_name', $like)
+			->or->like('melis_core_log_type_trans.logtt_description', $like)
+			->or->NEST->like('melis_core_log.log_title', $like)->and->notLike('melis_core_log.log_title', 'tr\_%')->UNNEST
+			->or->NEST->like('melis_core_log.log_message', $like)->and->notLike('melis_core_log.log_message', 'tr\_%')->UNNEST
+			->or->expression(
+				"EXISTS (SELECT 1 FROM melis_core_user su WHERE su.usr_id = melis_core_log.log_user_id"
+				. " AND CONCAT(COALESCE(su.usr_firstname, ''), ' ', COALESCE(su.usr_lastname, '')) LIKE ?)",
+				[$like]
+			);
+		if ($searchKeys) {
+			$where->or->in('melis_core_log.log_title', $searchKeys)
+				->or->in('melis_core_log.log_message', $searchKeys);
+		}
+		$where->UNNEST;
 	}
 }

@@ -681,7 +681,7 @@ function WidgetPortal({ widgetDef, onRemove }: { widgetId: string; widgetDef: Wi
   const [configOpen, setConfigOpen] = useState(false)
   // Confirmation avant de retirer la tuile — comme le legacy (jarviswidget → confirm à la fermeture).
   const [confirmRemove, setConfirmRemove] = useState(false)
-  const title = widgetDef.titleLabel ?? t(widgetDef.titleKey)
+  const title = widgetDef.cardTitle ?? widgetDef.titleLabel ?? t(widgetDef.titleKey)
   // Engrenage affiché sur TOUS les widgets, pour un cadre homogène. Les widgets NATIFS n'ont pas
   // de plugin legacy derrière eux (donc rien à configurer) : la modale affiche alors simplement
   // « aucun paramètre », sans appel réseau.

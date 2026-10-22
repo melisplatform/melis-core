@@ -4,7 +4,7 @@ import { SUBTABS_CHANGED, useSubTabs } from '@/components/tabs/sub-tab-store'
 import { routeForForward } from '@/lib/tool-routes'
 import {
   Activity, AlertCircle, Calendar, Check, Circle, Copy, Cpu, ExternalLink, Eye, EyeOff,
-  KeyRound, Link as LinkIcon, Loader2, RefreshCw, RotateCcw, Save, Shield, ShieldCheck,
+  KeyRound, Languages, Link as LinkIcon, Loader2, RefreshCw, RotateCcw, Save, Shield, ShieldCheck,
   ToggleLeft, ToggleRight, User, UserPlus,
 } from 'lucide-react'
 
@@ -308,13 +308,15 @@ interface FormData {
   login: string; email: string; firstname: string; lastname: string
   roleId: number; status: 0 | 1; isAdmin: boolean
   tags: string; password: string; confirmPassword: string; rights: string
+  /** Back-office language, chosen at creation only (Mantis #0011114); 0 = not loaded yet */
+  langId: number
 }
 type Errors = Partial<Record<keyof FormData, string>>
 
 const EMPTY_FORM: FormData = {
   login: '', email: '', firstname: '', lastname: '',
   roleId: 1, status: 1, isAdmin: false,
-  tags: '', password: '', confirmPassword: '', rights: '',
+  tags: '', password: '', confirmPassword: '', rights: '', langId: 0,
 }
 
 type FormCache = { form: FormData; roles: userApi.UserRole[]; activeTab: Tab }
@@ -398,6 +400,19 @@ export default function UserFormPage() {
   const [visitedTabs, setVisitedTabs] = useState<Set<Tab>>(() => new Set(['profil']))
   const [pwPolicy, setPwPolicy] = useState<userApi.PasswordPolicy | null>(userApi.cachedPasswordPolicy())
   const rolesModuleActive = useModuleActive('MelisSmallBusiness')
+  const [languages, setLanguages] = useState<userApi.UserLanguage[]>([])
+
+  // Language of a new user: as the legacy form, chosen at creation, default = the administrator's own
+  // language. Afterwards the user changes it in the back-office (Mantis #0011114).
+  useEffect(() => {
+    if (isEdit) return
+    userApi.fetchUserLanguages()
+      .then(({ items, currentLangId }) => {
+        setLanguages(items)
+        setForm((p) => (p.langId ? p : { ...p, langId: currentLangId }))
+      })
+      .catch(() => null)
+  }, [isEdit])
 
   useEffect(() => {
     if (!rolesModuleActive) return
@@ -423,7 +438,7 @@ export default function UserFormPage() {
         login: user.login, email: user.email,
         firstname: user.firstname, lastname: user.lastname,
         roleId: user.roleId, status: user.status, isAdmin: user.isAdmin,
-        tags: user.tags, password: '', confirmPassword: '', rights: user.rights ?? '',
+        tags: user.tags, password: '', confirmPassword: '', rights: user.rights ?? '', langId: user.langId ?? 0,
       }))
       .catch(() => navigate(base))
       .finally(() => setLoading(false))
@@ -477,6 +492,8 @@ export default function UserFormPage() {
         firstname: form.firstname, lastname: form.lastname,
         roleId: form.roleId, status: form.status, isAdmin: form.isAdmin, tags: form.tags,
         ...(form.rights !== undefined ? { rights: form.rights } : {}),
+        // only at creation: an edit keeps the language the user chose in the back-office
+        ...(!isEdit && form.langId ? { langId: form.langId } : {}),
       }
       if (form.password) payload.password = form.password
       const res = await userApi.saveUser(payload)
@@ -519,7 +536,7 @@ export default function UserFormPage() {
         login: user.login, email: user.email,
         firstname: user.firstname, lastname: user.lastname,
         roleId: user.roleId, status: user.status, isAdmin: user.isAdmin,
-        tags: user.tags, password: '', confirmPassword: '', rights: user.rights ?? '',
+        tags: user.tags, password: '', confirmPassword: '', rights: user.rights ?? '', langId: user.langId ?? 0,
       }))
       .catch(() => null)
       .finally(() => { setLoading(false); setTimeout(() => setRefreshing(false), 600) })
@@ -684,6 +701,19 @@ export default function UserFormPage() {
               </span>
             </button>
           </div>
+
+          {!isEdit && languages.length > 0 && (
+            <div className="rounded-xl border border-border bg-card p-4 shadow-sm">
+              <h3 className="mb-3 flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                <Languages className="size-3.5" />{t('users.form.language')}
+              </h3>
+              <select value={form.langId} onChange={(e) => set('langId', parseInt(e.target.value))}
+                className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-ring">
+                {languages.map((l) => <option key={l.id} value={l.id}>{l.name}</option>)}
+              </select>
+              <p className="mt-2 text-xs text-muted-foreground">{t('users.form.language_hint')}</p>
+            </div>
+          )}
 
           {rolesModuleActive && (
             <div className="rounded-xl border border-border bg-card p-4 shadow-sm">

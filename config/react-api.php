@@ -370,6 +370,18 @@ return [
                                     ],
                                 ],
                             ],
+                            // Back-office languages for the user create form (Mantis #0011114)
+                            'users-languages' => [
+                                'type'    => 'Segment',
+                                'options' => [
+                                    'route'    => '/users/languages[/]',
+                                    'defaults' => [
+                                        '__NAMESPACE__' => 'MelisCore\Controller',
+                                        'controller'    => 'MelisReactApiUser',
+                                        'action'        => 'languages',
+                                    ],
+                                ],
+                            ],
                             'users-delete' => [
                                 'type'    => 'Segment',
                                 'options' => [
