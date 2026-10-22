@@ -402,14 +402,13 @@ export default function UserFormPage() {
   const rolesModuleActive = useModuleActive('MelisSmallBusiness')
   const [languages, setLanguages] = useState<userApi.UserLanguage[]>([])
 
-  // Language of a new user: as the legacy form, chosen at creation, default = the administrator's own
-  // language. Afterwards the user changes it in the back-office (Mantis #0011114).
+  // Language of the user, as in the legacy form: chosen at creation (default = the administrator's own
+  // language, Mantis #0011114) and editable afterwards (Mantis #0011113).
   useEffect(() => {
-    if (isEdit) return
     userApi.fetchUserLanguages()
       .then(({ items, currentLangId }) => {
         setLanguages(items)
-        setForm((p) => (p.langId ? p : { ...p, langId: currentLangId }))
+        if (!isEdit) setForm((p) => (p.langId ? p : { ...p, langId: currentLangId }))
       })
       .catch(() => null)
   }, [isEdit])
@@ -493,7 +492,8 @@ export default function UserFormPage() {
         roleId: form.roleId, status: form.status, isAdmin: form.isAdmin, tags: form.tags,
         ...(form.rights !== undefined ? { rights: form.rights } : {}),
         // only at creation: an edit keeps the language the user chose in the back-office
-        ...(!isEdit && form.langId ? { langId: form.langId } : {}),
+        // Language: chosen at creation and editable afterwards, as in the legacy edit form.
+        ...(form.langId ? { langId: form.langId } : {}),
       }
       if (form.password) payload.password = form.password
       const res = await userApi.saveUser(payload)
@@ -705,7 +705,7 @@ export default function UserFormPage() {
             </button>
           </div>
 
-          {!isEdit && languages.length > 0 && (
+          {languages.length > 0 && (
             <div className="rounded-xl border border-border bg-card p-4 shadow-sm">
               <h3 className="mb-3 flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
                 <Languages className="size-3.5" />{t('users.form.language')}
