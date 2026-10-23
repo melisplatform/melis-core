@@ -787,7 +787,22 @@ class MelisCoreToolService extends MelisServiceManager implements MelisCoreToolS
                     }
                     // convert UTF-8 to UTF-16LE encoding for excel encoding rendering
 //                    $value = mb_convert_encoding($value, 'UTF-8', 'UTF-8');
-                    $content .= $enclosed . $this->replaceAccents($value) . $enclosed . $separator;
+                    /**
+                     * SECURITY (audit prospects PRO-H3, sink partagé par tous les exports CSV) :
+                     * 1) doubler l'enclos dans la valeur (sinon une " sort de la cellule et forge
+                     *    des colonnes) ; 2) neutraliser l'injection de formule tableur — une
+                     *    cellule commençant par = + - @ TAB CR (saisissable par un ANONYME via
+                     *    les formulaires front, ex. prospects) serait évaluée par Excel.
+                     *    Préfixe apostrophe, sauf nombres légitimes.
+                     */
+                    $value = (string) $this->replaceAccents($value);
+                    if ($enclosed !== '') {
+                        $value = str_replace($enclosed, $enclosed . $enclosed, $value);
+                    }
+                    if ($value !== '' && strpbrk($value[0], "=+-@\t\r") !== false && !is_numeric($value)) {
+                        $value = "'" . $value;
+                    }
+                    $content .= $enclosed . $value . $enclosed . $separator;
 
                 }
                 $content .= "\r\n";
