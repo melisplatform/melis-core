@@ -23,7 +23,7 @@ const TOOL_KEY = 'meliscore_tool_user_module_management'
 
 /** Toast vers la chrome React (cf. components/Notifications.tsx). */
 function notify(kind: 'ok' | 'ko', title: string, message: string) {
-  window.postMessage({ __melisNotif: true, kind, title, message }, '*')
+  window.postMessage({ __melisNotif: true, kind, title, message }, window.location.origin)
 }
 
 // ─── Cache module-level — survit au démontage (page montée en permanence) ──────

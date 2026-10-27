@@ -564,6 +564,27 @@ class MelisTinyMceController extends MelisAbstractActionController
     }
 
     /**
+     * SECURITY: extensions que le serveur pourrait exécuter (ou interpréter comme
+     * configuration) — refusées à l'upload quelle que soit leur position dans le
+     * nom (`shell.php.jpg` compris, cf. AddHandler Apache).
+     */
+    private const UPLOAD_FORBIDDEN_EXTENSIONS = [
+        'php', 'php3', 'php4', 'php5', 'php7', 'php8', 'phtml', 'pht', 'phar', 'phps',
+        'cgi', 'pl', 'py', 'sh', 'asp', 'aspx', 'jsp', 'jspx', 'shtml', 'htaccess', 'htpasswd',
+    ];
+
+    /**
+     * SECURITY: types MIME détectés sur le CONTENU réel (finfo), refusés même sous
+     * une extension anodine — un `shell.jpg` contenant `<?php` est détecté text/x-php.
+     */
+    private const UPLOAD_FORBIDDEN_MIMETYPES = [
+        'text/x-php', 'application/x-php', 'application/x-httpd-php', 'application/x-httpd-php-source',
+        'application/x-phar', 'text/html', 'application/xhtml+xml',
+        'text/x-shellscript', 'application/x-sh', 'application/x-perl', 'text/x-perl',
+        'application/x-python', 'text/x-python', 'application/x-asp',
+    ];
+
+    /**
      * upload image
      */
     public function uploadImageAction()
@@ -594,6 +615,31 @@ class MelisTinyMceController extends MelisAbstractActionController
         // File Input
         $fileInput = new \Laminas\InputFilter\FileInput('file');
         $fileInput->setRequired(true);
+        // SECURITY: les validateurs d'un FileInput s'exécutent AVANT la chaîne de
+        // filtres, donc sur le tmp_name d'origine — rien n'est renommé ni déplacé
+        // si l'un d'eux échoue. Deny-list volontaire (pas de whitelist) : on refuse
+        // l'exécutable, on laisse passer le reste.
+        $fileInput->getValidatorChain()
+            ->attachByName('FileExcludeExtension', [
+                'extension' => self::UPLOAD_FORBIDDEN_EXTENSIONS,
+                'case' => false,
+            ])
+            ->attachByName('FileExcludeMimeType', [
+                'mimeType' => self::UPLOAD_FORBIDDEN_MIMETYPES,
+            ])
+            ->attach(new \Laminas\Validator\Callback(function ($value) {
+                // Double extension (shell.php.jpg) : FileExcludeExtension ne regarde
+                // que le dernier segment ; on refuse si N'IMPORTE QUEL segment après
+                // le premier point est une extension exécutable.
+                $name = is_array($value) ? ($value['name'] ?? '') : (string) $value;
+                $segments = array_slice(explode('.', strtolower(basename($name))), 1);
+                foreach ($segments as $segment) {
+                    if (in_array($segment, self::UPLOAD_FORBIDDEN_EXTENSIONS, true)) {
+                        return false;
+                    }
+                }
+                return true;
+            }));
         $fileInput->getFilterChain()->attachByName(
             'filerenameupload',
             [

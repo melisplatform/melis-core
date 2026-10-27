@@ -28,7 +28,7 @@ import { useCan } from '@/lib/capabilities'
 const TOOL_KEY = 'meliscore_tool_platform_scheme'
 
 function notify(kind: 'ok' | 'ko', title: string, message: string) {
-  window.postMessage({ __melisNotif: true, kind, title, message }, '*')
+  window.postMessage({ __melisNotif: true, kind, title, message }, window.location.origin)
 }
 
 function Flag({ locale }: { locale: string }) {

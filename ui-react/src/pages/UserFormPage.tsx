@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useState, type ReactNode } from 'react'
+import { Fragment, useEffect, useMemo, useState, type ReactNode } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { SUBTABS_CHANGED, useSubTabs } from '@/components/tabs/sub-tab-store'
 import { routeForForward } from '@/lib/tool-routes'
@@ -15,10 +15,12 @@ import { Badge } from '@/components/ui/badge'
 import { cn, copyToClipboard } from '@/lib/utils'
 import * as userApi from '@/lib/user-api'
 import { RightsTreeView } from '@/components/RightsTreeView'
+import { MicroservicesRightsPanel } from '@/components/MicroservicesRightsPanel'
+import { fetchMicroserviceRights, parseMicroserviceGrants, spliceMicroserviceGrants, type MicroserviceModuleGroup } from '@/lib/microservice-rights-api'
 import { ExpandToggle, HiddenColsRow } from '@/components/ExpandableRow'
 import { useIsNarrow } from '@/hooks/useIsNarrow'
 import { useModuleActive } from '@/lib/bricks'
-import { useCan } from '@/lib/capabilities'
+import { useCan, useIsAdmin } from '@/lib/capabilities'
 import { useI18n } from '@/i18n/i18n-context'
 import type { I18nKey } from '@/i18n/dictionaries'
 import { FormErrorBanner, koNotify, type FormIssue } from '@/shared/melis-form-errors'
@@ -26,7 +28,7 @@ import { FormErrorBanner, koNotify, type FormIssue } from '@/shared/melis-form-e
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
 function notify(kind: 'ok' | 'ko', title: string, message: string) {
-  window.postMessage({ __melisNotif: true, kind, title, message }, '*')
+  window.postMessage({ __melisNotif: true, kind, title, message }, window.location.origin)
 }
 
 function fmtDay(d: string | null) {
@@ -147,7 +149,15 @@ function ConnectionsTab({ userId }: { userId: number }) {
 
 // ─── Tab: Microservice ────────────────────────────────────────────────────────
 
-function MicroserviceTab({ userId }: { userId: number }) {
+function MicroserviceTab({ userId, rights, onRightsChange, panelResetKey }: {
+  userId: number
+  /** XML usr_rights du formulaire — la section <meliscore_microservice> s'édite ici (audit C4). */
+  rights: string
+  /** Réécrit form.rights ; la sauvegarde passe par le bouton Enregistrer global, comme les droits. */
+  onRightsChange: (xml: string) => void
+  /** Incrémenté à chaque activation de l'onglet : remonte le panel → accordéons refermés. */
+  panelResetKey: number
+}) {
   const { t } = useI18n()
   const [data, setData]       = useState<userApi.UserMicroservice | null | undefined>(undefined)
   const [loading, setLoading] = useState(true)
@@ -157,9 +167,21 @@ function MicroserviceTab({ userId }: { userId: number }) {
   const [showKey, setShowKey] = useState(false)
   const [confirmRegen, setConfirmRegen] = useState(false)
 
+  // Droits « API / microservices » : catalogue core (modules → services) + services ACTIVÉS du
+  // XML courant (allow-list, default-deny : rien n'est coché tant que rien n'est accordé).
+  const [msCatalog, setMsCatalog] = useState<MicroserviceModuleGroup[]>([])
+  const allowedMs = useMemo(() => parseMicroserviceGrants(rights), [rights])
+
   useEffect(() => {
     userApi.fetchUserMicroservice(userId).then(setData).catch(() => setData(null)).finally(() => setLoading(false))
+    fetchMicroserviceRights().then(setMsCatalog)
   }, [userId])
+
+  function toggleMs(keys: string[], enabled: boolean) {
+    const next = new Set(allowedMs)
+    keys.forEach((k) => (enabled ? next.add(k) : next.delete(k)))
+    onRightsChange(spliceMicroserviceGrants(rights, next))
+  }
 
   async function handleAction(action: 'toggle' | 'generate') {
     setConfirmRegen(false)
@@ -284,6 +306,25 @@ function MicroserviceTab({ userId }: { userId: number }) {
         </div>
       )}
 
+      {/* Droits « API / microservices » (audit C4) : accès par service pour la clé de ce compte.
+          Écrits dans la section <meliscore_microservice> de usr_rights — sauvegardés par le bouton
+          Enregistrer global, comme l'onglet Droits. */}
+      {msCatalog.length > 0 && (
+        <div className="space-y-2">
+          <div>
+            <h3 className="text-sm font-semibold">{t('rights.microservices')}</h3>
+            <p className="mt-0.5 text-xs text-muted-foreground">{t('users.ms.rights_save_hint')}</p>
+          </div>
+          <MicroservicesRightsPanel
+            key={panelResetKey}
+            catalog={msCatalog}
+            allowed={allowedMs}
+            onToggle={(key, enabled) => toggleMs([key], enabled)}
+            onToggleMany={toggleMs}
+          />
+        </div>
+      )}
+
       {confirmRegen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
           <div className="w-full max-w-sm rounded-xl border border-border bg-card p-6 shadow-xl">
@@ -400,6 +441,19 @@ export default function UserFormPage() {
   // (then kept mounted, hidden by CSS, so their state survives tab switches) - otherwise
   // opening any user form would log two sensitive reads the user never made.
   const [visitedTabs, setVisitedTabs] = useState<Set<Tab>>(() => new Set(['profil']))
+  // Incrémenté à chaque OUVERTURE de l'onglet Microservice : remonte le panel de droits API
+  // (accordéons refermés) sans toucher au reste de l'onglet (clé API, etc.).
+  const [msTabVisits, setMsTabVisits] = useState(0)
+  // SECURITY (audit H1) : seuls les administrateurs accordent/retirent le statut admin — la
+  // checkbox affiche une modale d'avertissement au clic pour les autres (le serveur refuse
+  // de toute façon : la modale n'est que l'UX du refus).
+  const { isAdmin: meIsAdmin, loaded: meLoaded } = useIsAdmin()
+  const [adminGuardOpen, setAdminGuardOpen] = useState(false)
+
+  function toggleIsAdmin() {
+    if (meLoaded && !meIsAdmin) { setAdminGuardOpen(true); return }
+    set('isAdmin', !form.isAdmin)
+  }
   const [pwPolicy, setPwPolicy] = useState<userApi.PasswordPolicy | null>(userApi.cachedPasswordPolicy())
   const rolesModuleActive = useModuleActive('MelisSmallBusiness')
   const [languages, setLanguages] = useState<userApi.UserLanguage[]>([])
@@ -539,7 +593,9 @@ export default function UserFormPage() {
     } finally { setSaving(false) }
   }
 
-  const showSave = activeTab === 'profil' || activeTab === 'rights'
+  // L'onglet Microservice porte aussi des droits (section API / microservices de usr_rights) →
+  // le bouton Enregistrer y est visible. Seules les Connexions sont en lecture pure.
+  const showSave = activeTab === 'profil' || activeTab === 'rights' || activeTab === 'microservice'
 
   const [refreshing, setRefreshing] = useState(false)
 
@@ -613,7 +669,11 @@ export default function UserFormPage() {
           return (
             <button key={tab.id} type="button"
               disabled={!isEdit && (tab.id === 'connections' || tab.id === 'microservice')}
-              onClick={() => { setActiveTab(tab.id); setVisitedTabs(v => v.has(tab.id) ? v : new Set(v).add(tab.id)) }}
+              onClick={() => {
+                setActiveTab(tab.id)
+                setVisitedTabs(v => v.has(tab.id) ? v : new Set(v).add(tab.id))
+                if (tab.id === 'microservice') setMsTabVisits(c => c + 1)
+              }}
               className={cn('relative -mb-px flex items-center gap-1.5 border-b-2 px-4 py-3 text-sm font-medium transition-colors disabled:opacity-40 disabled:cursor-not-allowed',
                 activeTab === tab.id ? 'border-primary text-primary' : 'border-transparent text-muted-foreground hover:text-foreground')}>
               <Icon className="size-3.5 shrink-0" />{t(tab.labelKey)}
@@ -758,8 +818,8 @@ export default function UserFormPage() {
             </h3>
             <label className="flex cursor-pointer items-center gap-2.5">
               <div role="checkbox" aria-checked={form.isAdmin} tabIndex={0}
-                onClick={() => set('isAdmin', !form.isAdmin)}
-                onKeyDown={(e) => e.key === ' ' && set('isAdmin', !form.isAdmin)}
+                onClick={toggleIsAdmin}
+                onKeyDown={(e) => e.key === ' ' && toggleIsAdmin()}
                 className={cn('flex h-5 w-5 shrink-0 items-center justify-center rounded border transition-colors',
                   form.isAdmin ? 'border-primary bg-primary text-primary-foreground' : 'border-input bg-background')}>
                 {form.isAdmin && (
@@ -787,7 +847,27 @@ export default function UserFormPage() {
       {/* ── Tab: Microservice ────────────────────────────────────────────────── */}
       {isEdit && userId && visitedTabs.has('microservice') && (
         <div className={cn('flex flex-1 flex-col overflow-hidden', activeTab !== 'microservice' && 'hidden')}>
-          <MicroserviceTab userId={userId} />
+          <MicroserviceTab userId={userId} rights={form.rights} onRightsChange={(v) => set('rights', v)} panelResetKey={msTabVisits} />
+        </div>
+      )}
+
+      {/* Modale d'avertissement : statut admin réservé aux administrateurs (audit H1). */}
+      {adminGuardOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+          <div className="w-full max-w-sm rounded-xl border border-border bg-card p-6 shadow-xl">
+            <div className="flex items-start gap-3">
+              <div className="grid size-9 shrink-0 place-items-center rounded-full bg-amber-500/15 text-amber-600">
+                <ShieldCheck className="size-4" />
+              </div>
+              <div>
+                <h3 className="text-base font-semibold">{t('users.admin_guard.title')}</h3>
+                <p className="mt-1.5 text-sm text-muted-foreground">{t('users.admin_guard.message')}</p>
+              </div>
+            </div>
+            <div className="mt-5 flex justify-end">
+              <Button type="button" size="sm" onClick={() => setAdminGuardOpen(false)}>{t('users.admin_guard.close')}</Button>
+            </div>
+          </div>
         </div>
       )}
     </form>

@@ -146,6 +146,9 @@ return [
     'tr_meliscore_user_status_pending' => 'Pending',
 
     'tr_meliscore_user_profile' => 'User Profile Management',
+    'tr_meliscore_user_profile_current_password' => 'Current password',
+    'tr_meliscore_user_profile_current_password tooltip' => 'Required to change your email or password',
+    'tr_meliscore_user_profile_current_password_invalid' => 'The current password is required and must be correct to change the email or password',
     'tr_meliscore_user_profile_success_info' => 'Profile successfully updated',
     'tr_meliscore_user_profile_failed_info' => 'Unable to update profile',
     'tr_meliscore_user_profile_profile_text' => 'Profile',

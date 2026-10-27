@@ -70,20 +70,23 @@ var MelisCoreDashboardBubbleUpdatesPlugin = {
 			// plugin back content/list
 			$.each(response.data, function(key, value) {
 				if (value.status === -1) {
+					// SECURITY: données issues du flux marketplace distant — échappées
+					// avant interpolation HTML (zéro confiance dans un flux externe).
+					var esc = melisCore.escapeHtml;
 					var update =
 						'<tr class="dashboard-bubble-update-details" data-packageid="' +
-						value.packageId +
+						esc(value.packageId) +
 						'" data-packagename="' +
-						value.module_name +
+						esc(value.module_name) +
 						'">\n' +
 						'<td class="center">' +
-						value.module_name +
+						esc(value.module_name) +
 						"</td>\n" +
 						'<td class="center">' +
-						value.currentVersion +
+						esc(value.currentVersion) +
 						"</td>\n" +
 						'<td class="center">' +
-						value.latestVersion +
+						esc(value.latestVersion) +
 						"</td>\n" +
 						"</tr>";
 

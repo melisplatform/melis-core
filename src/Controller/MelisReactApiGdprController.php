@@ -96,6 +96,11 @@ class MelisReactApiGdprController extends MelisAbstractActionController
 
     public function extractAction(): HttpResponse
     {
+        // SECURITY (audit H2) : mutation → POST exigé (les méthodes « sûres » échappent au garde CSRF).
+        if (!$this->getRequest()->isPost()) {
+            return $this->jsonResponse(['success' => false, 'error' => 'POST required'], 405);
+        }
+
         if ($deny = $this->denyUnlessAccess()) { return $deny; }
         if ($denyCap = $this->denyUnlessCan('export')) { return $denyCap; }
 
@@ -123,6 +128,11 @@ class MelisReactApiGdprController extends MelisAbstractActionController
 
     public function deleteAction(): HttpResponse
     {
+        // SECURITY (audit H2) : mutation → POST exigé (les méthodes « sûres » échappent au garde CSRF).
+        if (!$this->getRequest()->isPost()) {
+            return $this->jsonResponse(['success' => false, 'error' => 'POST required'], 405);
+        }
+
         if ($deny = $this->denyUnlessAccess()) { return $deny; }
         if ($denyCap = $this->denyUnlessCan('delete')) { return $denyCap; }
 
@@ -187,6 +197,11 @@ class MelisReactApiGdprController extends MelisAbstractActionController
 
     public function smtpSaveAction(): HttpResponse
     {
+        // SECURITY (audit H2) : mutation → POST exigé (les méthodes « sûres » échappent au garde CSRF).
+        if (!$this->getRequest()->isPost()) {
+            return $this->jsonResponse(['success' => false, 'error' => 'POST required'], 405);
+        }
+
         if ($deny = $this->denyUnlessAccess()) { return $deny; }
         if ($denyCap = $this->denyUnlessCan('edit')) { return $denyCap; }
         try {
@@ -232,6 +247,11 @@ class MelisReactApiGdprController extends MelisAbstractActionController
 
     public function smtpDeleteAction(): HttpResponse
     {
+        // SECURITY (audit H2) : mutation → POST exigé (les méthodes « sûres » échappent au garde CSRF).
+        if (!$this->getRequest()->isPost()) {
+            return $this->jsonResponse(['success' => false, 'error' => 'POST required'], 405);
+        }
+
         if ($deny = $this->denyUnlessAccess()) { return $deny; }
         if ($denyCap = $this->denyUnlessCan('delete')) { return $denyCap; }
         try {
@@ -280,6 +300,11 @@ class MelisReactApiGdprController extends MelisAbstractActionController
 
     public function bannerSaveAction(): HttpResponse
     {
+        // SECURITY (audit H2) : mutation → POST exigé (les méthodes « sûres » échappent au garde CSRF).
+        if (!$this->getRequest()->isPost()) {
+            return $this->jsonResponse(['success' => false, 'error' => 'POST required'], 405);
+        }
+
         if ($deny = $this->denyUnlessAccess()) { return $deny; }
         if ($denyCap = $this->denyUnlessCan('edit')) { return $denyCap; }
         try {
@@ -369,6 +394,11 @@ class MelisReactApiGdprController extends MelisAbstractActionController
 
     public function adSaveAction(): HttpResponse
     {
+        // SECURITY (audit H2) : mutation → POST exigé (les méthodes « sûres » échappent au garde CSRF).
+        if (!$this->getRequest()->isPost()) {
+            return $this->jsonResponse(['success' => false, 'error' => 'POST required'], 405);
+        }
+
         if ($deny = $this->denyUnlessAccess()) { return $deny; }
         if ($denyCap = $this->denyUnlessCan('edit')) { return $denyCap; }
         try {
@@ -452,6 +482,11 @@ class MelisReactApiGdprController extends MelisAbstractActionController
 
     public function adDeleteAction(): HttpResponse
     {
+        // SECURITY (audit H2) : mutation → POST exigé (les méthodes « sûres » échappent au garde CSRF).
+        if (!$this->getRequest()->isPost()) {
+            return $this->jsonResponse(['success' => false, 'error' => 'POST required'], 405);
+        }
+
         if ($deny = $this->denyUnlessAccess()) { return $deny; }
         if ($denyCap = $this->denyUnlessCan('delete')) { return $denyCap; }
         try {
@@ -464,6 +499,11 @@ class MelisReactApiGdprController extends MelisAbstractActionController
 
     public function adRunAction(): HttpResponse
     {
+        // SECURITY (audit H2) : mutation → POST exigé (les méthodes « sûres » échappent au garde CSRF).
+        if (!$this->getRequest()->isPost()) {
+            return $this->jsonResponse(['success' => false, 'error' => 'POST required'], 405);
+        }
+
         if ($deny = $this->denyUnlessAccess()) { return $deny; }
         if ($denyCap = $this->denyUnlessCan('edit')) { return $denyCap; }
         try {

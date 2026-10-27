@@ -65,6 +65,9 @@ export function ToolTabBridgeProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     const onMsg = (e: MessageEvent) => {
+      // SECURITY (audit M9) : seules les iframes same-origin (pool d'outils legacy) parlent à
+      // ce pont — e.source est mémorisé comme destinataire de commandes, jamais cross-origin.
+      if (e.origin !== window.location.origin) return
       const d = e.data as { __melisToolTabs?: boolean; melisKey?: string; tabs?: ToolTab[] } | null
       if (!d || !d.__melisToolTabs || !d.melisKey) return
       if (e.source) sources.current[d.melisKey] = e.source as Window
@@ -84,7 +87,7 @@ export function ToolTabBridgeProvider({ children }: { children: ReactNode }) {
   const value: ToolTabCtx = {
     tabsFor: (k) => (k ? state.byKey[k] ?? [] : []),
     activate: (k, id) =>
-      sources.current[k]?.postMessage({ __melisToolTabCmd: true, melisKey: k, cmd: 'activate', id }, '*'),
+      sources.current[k]?.postMessage({ __melisToolTabCmd: true, melisKey: k, cmd: 'activate', id }, window.location.origin),
     close: (k, id) => {
       // Compute where to land AFTER closing: the last viewed tab still open (sub-tab or the
       // primary list), so the closed pane's content is replaced — like the main top tabs.
@@ -96,7 +99,7 @@ export function ToolTabBridgeProvider({ children }: { children: ReactNode }) {
       const primary = remaining.find((t) => t.primary)
       const next = hist[0] ?? primary?.id ?? remaining[remaining.length - 1]?.id ?? null
       historyRef.current[k] = (historyRef.current[k] ?? []).filter((hid) => hid !== id)
-      sources.current[k]?.postMessage({ __melisToolTabCmd: true, melisKey: k, cmd: 'close', id, next }, '*')
+      sources.current[k]?.postMessage({ __melisToolTabCmd: true, melisKey: k, cmd: 'close', id, next }, window.location.origin)
     },
     requestOpen: (k, id) => {
       // A cold iframe gets it with its first tab report; a pooled (already loaded) one right away.

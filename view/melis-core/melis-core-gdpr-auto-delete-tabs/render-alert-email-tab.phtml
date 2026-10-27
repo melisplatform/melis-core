@@ -9,7 +9,7 @@ $availableLang = "";
     <div class="tab-pane" id="alert_emails_<?= strtolower($data['lang_cms_locale'])?>" role="tabpanel" aria-labelledby="alert_emails_<?= strtolower($data['lang_cms_locale'])?>">
         <div data-melisKey='<?= $this->melisKey ?>' class="" id="<?= $this->zoneconfig['conf']['id']?>" role="tabpanel" aria-labelledby="<?= $this->zoneconfig['conf']['id'] ?>">
             <div class="me-heading bg-white border-bottom">
-                <h3 class=""><i class="fa fa-language" aria-hidden="true"></i> <?= $data['lang_cms_name'] ?></h3>
+                <h3 class=""><i class="fa fa-language" aria-hidden="true"></i> <?= $this->escapeHtml($data['lang_cms_name']) /* SECURITY audit M7 */ ?></h3>
             </div>
             <!-- accordion alert email -->
             <div id="accordion-alert-email-<?= $data['lang_cms_locale'] ?>" class="">

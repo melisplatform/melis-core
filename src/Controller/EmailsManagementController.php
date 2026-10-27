@@ -990,7 +990,9 @@ class EmailsManagementController extends MelisAbstractActionController
         $title = ($emailsPropertiesAndDetails['email_name']) ? $emailsPropertiesAndDetails['email_name'] : $datas['codename'];
 
         $textTitle = 'tr_emails_management_title_deletion';
-        $textMessage = $translator->translate('tr_emails_management_email').' '.$title.' '.$translator->translate('tr_emails_management_deleted');
+        // SECURITY (audit M7) : textMessage est rendu en HTML par les notifications gritter —
+        // le nom d'email (saisi par un utilisateur BO) est échappé.
+        $textMessage = $translator->translate('tr_emails_management_email').' '.htmlspecialchars((string) $title, ENT_QUOTES, 'UTF-8').' '.$translator->translate('tr_emails_management_deleted');
 
         $response = array(
             'success' => 1,

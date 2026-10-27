@@ -339,6 +339,30 @@ class MelisAuthController extends MelisAbstractActionController
                         $logTypeId = current($melisCoreTableLogType->getEntryByField('logt_code', self::ACCOUNT_LOCKED)->toArray())['logt_id'];
                         $dateAccountWasLocked = $melisCoreTableLog->getDateAccountWasLocked($logTypeId, $userData->usr_id);
 
+                        /**
+                         * SECURITY (audit M2) : usr_status=0 sert AUSSI à la désactivation
+                         * manuelle (offboarding, compte compromis). Avant, n'importe quel vieux
+                         * log ACCOUNT_LOCKED réactivait le compte à la première tentative après
+                         * le timer — même désactivé par un admin, même avec un mauvais mot de
+                         * passe. On n'honore le verrou QUE s'il est l'événement le plus récent :
+                         * postérieur au dernier déverrouillage ET au dernier enregistrement du
+                         * compte par un gestionnaire (CORE_USER_UPDATE, journalisé par les deux
+                         * BO). Un compte désactivé par un admin ne se réactive plus tout seul.
+                         */
+                        $lockIsCurrent = !empty($dateAccountWasLocked);
+                        if ($lockIsCurrent) {
+                            $unlockTypeRow = current($melisCoreTableLogType->getEntryByField('logt_code', self::ACCOUNT_UNLOCKED)->toArray());
+                            $lastUnlock = !empty($unlockTypeRow['logt_id'])
+                                ? $melisCoreTableLog->getDateAccountWasUnlocked($unlockTypeRow['logt_id'], $userData->usr_id)
+                                : null;
+                            $updateTypeRow = current($melisCoreTableLogType->getEntryByField('logt_code', 'CORE_USER_UPDATE')->toArray());
+                            $lastAdminSave = !empty($updateTypeRow['logt_id'])
+                                ? $melisCoreTableLog->getDateAccountWasUnlocked($updateTypeRow['logt_id'], $userData->usr_id)
+                                : null;
+                            $lockIsCurrent = (empty($lastUnlock) || $dateAccountWasLocked > $lastUnlock)
+                                && (empty($lastAdminSave) || $dateAccountWasLocked > $lastAdminSave);
+                        }
+
                         $days = (int) $config['login_account_duration_days'];
                         $hours = (int) $config['login_account_duration_hours'];
                         $minutes = (int) $config['login_account_duration_minutes'];
@@ -351,7 +375,7 @@ class MelisAuthController extends MelisAbstractActionController
                         $currentDateTime = (new DateTime('now'))->format('Y-m-d H:i:s');
 
                         // Account is now unlocked
-                        if ($currentDateTime > $accountWillUnlockDateTime) {
+                        if ($lockIsCurrent && $currentDateTime > $accountWillUnlockDateTime) {
                             $melisUserTable = $this->getServiceManager()->get('MelisCore\Model\Tables\MelisUserTable');
                             $userData->usr_status = self::USER_ACTIVE;
                             $melisUserTable->save(['usr_status' => $userData->usr_status], $userData->usr_id);
@@ -489,46 +513,15 @@ class MelisAuthController extends MelisAbstractActionController
                                                 $melisUserTable = $this->getServiceManager()->get('MelisCore\Model\Tables\MelisUserTable');
                                                 $melisUserTable->save(['usr_status' => self::USER_INACTIVE], $userData->usr_id);
                                                 
-                                                // COMMAND INJECTION: Account Locked Notification (Complex JS)
-                                                $icon = '<div style="text-align: center;"><a href="#" class="glyphicons lock"><i></i></a></div>';
-                                                $adminEmail = $config['login_account_admin_email'];
-                                                $maxFailedAttemptsMsg = $translator->translate('tr_meliscore_login_maximum_amount_of_failed_login_attempts_message');
-                                                $contactAdminMsg = $translator->translate('tr_meliscore_login_contact_an_administrator_for_assistance_message');
-
-                                                $firstSentence = '<h4 style="margin-top: 10px; margin-bottom: 15px; text-align: center;">' . $maxFailedAttemptsMsg . '</h4>';
-                                                $thirdSentence = '<p style="text-align: center;"><i>' . str_replace('%s', '<strong>' . $adminEmail . '</strong>', $contactAdminMsg) . '</i></p>';
-
-                                                if ($config['login_account_type_of_lock'] == 'admin') {
-                                                    $secondSentence = '<p style="text-align: center; font-size: 1rem;">' . $translator->translate('tr_meliscore_login_account_is_now_locked_message') . '</p>';
-                                                    $message = $firstSentence . $secondSentence . $thirdSentence;
-                                                } else { // timer
-                                                    $daysString = $translator->translate('tr_meliscore_login_locked_in_days_message');
-                                                    $hoursString = $translator->translate('tr_meliscore_login_locked_in_hours_message');
-                                                    $minutesString = $translator->translate('tr_meliscore_login_locked_in_minutes_message');
-                                                    
-                                                    $components = [];
-                                                    if ($config['login_account_duration_days'] > 0) { $components[] = str_replace('%d', $config['login_account_duration_days'], $daysString); }
-                                                    if ($config['login_account_duration_hours'] > 0) { $components[] = str_replace('%d', $config['login_account_duration_hours'], $hoursString); }
-                                                    if ($config['login_account_duration_minutes'] > 0) { $components[] = str_replace('%d', $config['login_account_duration_minutes'], $minutesString); }
-                                                    
-                                                    $durationString = '<strong>' . (count($components) === 1 ? $components[0] : implode(', ', $components)) . "</strong>.";
-                                                    
-                                                    $secondSentence = '<p style="text-align: center; font-size: 1rem;">' . $translator->translate('tr_meliscore_login_account_is_now_locked_for_duration_message') . $durationString . '</p>';
-                                                    $message = $firstSentence . $secondSentence . $thirdSentence;
-                                                    // dd($message);
-                                                }
-                                                
-                                                $jsCommand = $this->buildKoNotificationCommand($icon, $message);
-                                                $errorLogMessage = $translator->translate('tr_meliscore_login_auth_failed_too_many_failed_attempts');
-                                                // dd($jsCommand);
-                                                $result = [
-                                                    'success' => false,
-                                                    'errors' => ['empty' => $errorLogMessage],
-                                                    'command' => $jsCommand, // <-- Final lock command
-                                                    'textTitle' => 'Account locked',
-                                                    'textMessage' => 'Account locked',
-                                                    'datas' => [],
-                                                ];
+                                                /**
+                                                 * SECURITY (audit M4) : le verrouillage reste (usr_status=0 ci-dessus)
+                                                 * et l'événement ACCOUNT_LOCKED est journalisé/alerté — mais la RÉPONSE
+                                                 * HTTP est le même corps générique que tout échec de login. L'ancienne
+                                                 * notification différenciée était un oracle d'énumération (elle ne
+                                                 * sortait que pour un compte EXISTANT) et fuitait l'email de
+                                                 * l'administrateur (login_account_admin_email) à un anonyme.
+                                                 */
+                                                $result = $this->buildFailedAuthResult();
                                                 $this->getEventManager()->trigger('meliscore_login_attempt_end', $this, array_merge($result, ['typeCode' => self::ACCOUNT_LOCKED, 'itemId' => $userData->usr_id]));
                                             } else {
                                                 // Wrong password, lock policy armed but threshold not reached:

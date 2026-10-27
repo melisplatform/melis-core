@@ -360,8 +360,10 @@ class MelisCoreGdprAutoDeleteController extends MelisAbstractActionController
                 }
                 // set data for match fields
                 $formattedData[$ctr]['DT_RowId'] = $data[$ctr]['mgdprc_id'];
-                $formattedData[$ctr]['mgdprc_site_id'] = $this->getGdprAutoDeleteToolService()->getSiteNameBySiteId($data[$ctr]['mgdprc_site_id']);
-                $formattedData[$ctr]['mgdprc_module_name'] = $data[$ctr]['mgdprc_module_name'];
+                // SECURITY (audit H7) : nom de site (saisi via l'outil Sites) et nom de module
+                // échappés — la DataTable rend les cellules en HTML.
+                $formattedData[$ctr]['mgdprc_site_id'] = $this->getTool()->escapeHtml($this->getGdprAutoDeleteToolService()->getSiteNameBySiteId($data[$ctr]['mgdprc_site_id']));
+                $formattedData[$ctr]['mgdprc_module_name'] = $this->getTool()->escapeHtml($data[$ctr]['mgdprc_module_name']);
                 $formattedData[$ctr]['mgdprc_alert_email_status'] = $data[$ctr]['mgdprc_alert_email_status'] ? $data[$ctr]['mgdprc_alert_email_days'] . ($data[$ctr]['mgdprc_alert_email_days'] > 1 ? " $daysTrans"  :  " $daysTrans") . $this->getLocaleEmailTrans($data[$ctr]['mgdprc_id'], MelisGdprDeleteEmailsTable::EMAIL_WARNING) : $deactivatedTrans;
                 $formattedData[$ctr]['mgdprc_alert_email_resend'] = $data[$ctr]['mgdprc_alert_email_resend'] ? $activatedTrans . $this->getLocaleEmailTrans($data[$ctr]['mgdprc_id'], MelisGdprDeleteEmailsTable::EMAIL_WARNING): $deactivatedTrans;
                 $formattedData[$ctr]['mgdprc_delete_days'] = $data[$ctr]['mgdprc_delete_days'] . " $daysTrans " . $this->getLocaleEmailTrans($data[$ctr]['mgdprc_id'], MelisGdprDeleteEmailsTable::EMAIL_DELETED);

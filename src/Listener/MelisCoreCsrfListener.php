@@ -120,10 +120,18 @@ class MelisCoreCsrfListener implements ListenerAggregateInterface
             // The client is being handed the token in THIS response; it cannot have echoed it
             // back. Refusing here would reject the first POST of a fresh browser (typically the
             // React login form on a /melis-react deep link) and make it work only on retry.
-            // See MelisCoreCsrfService::wasJustMinted() for why this weakens nothing.
-            $this->log('ALLOW', 'token-just-minted', 'grace', $method, $path);
+            //
+            // SECURITY (audit M1) : la grâce dispense du TOKEN, jamais du contrôle d'ORIGINE.
+            // Sans ce test, un formulaire auto-soumis depuis un site tiers vers
+            // /melis/authenticate passait (session vierge → token frais → grâce) : login CSRF,
+            // la victime se retrouvait connectée dans le compte de l'attaquant. Le navigateur
+            // envoie Origin sur tout POST cross-site : la grâce ne couvre que le same-origin.
+            if ($this->isSameOrigin($request)) {
+                $this->log('ALLOW', 'token-just-minted', 'grace', $method, $path);
 
-            return;
+                return;
+            }
+            // Origine absente/étrangère : flux complet — check() refusera avec le bon motif.
         }
 
         $reason = $this->check($request);

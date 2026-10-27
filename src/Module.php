@@ -18,6 +18,7 @@ use MelisCore\Listener\MelisCoreAuthSuccessListener;
 use MelisCore\Listener\MelisCoreSecurityAuditListener;
 use MelisCore\Listener\MelisCoreApiErrorSanitizerListener;
 use MelisCore\Listener\MelisCoreCsrfListener;
+use MelisCore\Listener\MelisCoreReflectedParamsSanitizerListener;
 use MelisCore\Listener\MelisCoreCheckUserRightsListener;
 use MelisCore\Listener\MelisCoreDashboardMenuListener;
 use MelisCore\Listener\MelisCoreFlashMessengerListener;
@@ -77,6 +78,22 @@ class Module
 
         $eventManager->attach(MvcEvent::EVENT_ROUTE, function ($e) {
             $this->checkIdentity($e);
+
+            /**
+             * SECURITY (audit M9) : anti-clickjacking sur tout l'arbre du back-office.
+             * Le pool d'iframes du BO React est same-origin → `frame-ancestors 'self'`
+             * n'affecte aucun flux légitime ; le site front n'est pas touché.
+             */
+            $routeMatch = $e->getRouteMatch();
+            if ($routeMatch
+                && strpos((string) $routeMatch->getMatchedRouteName(), 'melis-backoffice') === 0) {
+                $response = $e->getResponse();
+                if ($response instanceof \Laminas\Http\Response) {
+                    $response->getHeaders()
+                        ->addHeaderLine('X-Frame-Options', 'SAMEORIGIN')
+                        ->addHeaderLine('Content-Security-Policy', "frame-ancestors 'self'");
+                }
+            }
         });
 
         /** @var \MelisCore\Service\MelisCoreModulesService $moduleSvc */
@@ -110,6 +127,10 @@ class Module
             // Garde-fou CSRF GLOBAL du back-office (audit DEKRA 10.0) : vérifie le jeton de session
             // + l'origine sur chaque requête qui modifie l'état. Démarre en mode `report`.
             (new MelisCoreCsrfListener())->attach($eventManager);
+            // SECURITY (audit H5) : les paramètres-identifiants (melisKey, id, codename…) sont
+            // normalisés à la source pour tout l'arbre melis-backoffice — les dizaines d'échos
+            // bruts des templates de containers (tous modules) cessent d'être des XSS réfléchis.
+            (new MelisCoreReflectedParamsSanitizerListener())->attach($eventManager);
             // Scrubbe les réponses JSON d'erreur du back-office (audit DEKRA 13.0) : le message
             // d'exception, le file:line et la stack trace que les contrôleurs React API
             // renvoyaient tels quels sont remplacés par un message générique + un identifiant

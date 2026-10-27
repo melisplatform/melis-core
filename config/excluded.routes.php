@@ -20,7 +20,10 @@ return [
                     'melis-backoffice/microservice_list',
                     'melis-backoffice/get-platform-color-css',
                     'melis-backoffice/reset-old-password',
-                    'melis-backoffice/webpack_builder',
+                    // SECURITY (audit asset-manager AM-H1): build-webpack is a back-office developer
+                    // tool that writes files on disk (chmod + webpack.mix.js) and leaks absolute
+                    // paths. It must NOT be anonymous — removed from the exclusion list so
+                    // checkIdentity applies. (The bundle-serving routes below stay public.)
                     'melis-backoffice/gdpr-autodelete-cron',
                     'melis-backoffice/generate-password',
                     'melis-backoffice/create-password',

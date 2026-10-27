@@ -669,7 +669,11 @@ class ToolUserController extends MelisAbstractActionController
 
                             $data['usr_id'] = null;
                             $data['usr_password'] = $melisCoreAuth->encryptPassword($data['usr_password']);
-                            $data['usr_admin'] = ($data['usr_admin']) ? 1 : 0;
+                            // SECURITY (audit H1) : le statut administrateur ne s'accorde
+                            // qu'entre administrateurs — un POST forgé d'un non-admin ne peut
+                            // pas créer un compte admin (mass assignment).
+                            $callerIsAdmin = !empty($melisCoreAuth->getIdentity()->usr_admin);
+                            $data['usr_admin'] = ($callerIsAdmin && $data['usr_admin']) ? 1 : 0;
                             $data['usr_image'] = $imageContent;
                             $data['usr_creation_date'] = date('Y-m-d H:i:s');
                             $data['usr_last_login_date'] = null;
@@ -769,12 +773,27 @@ class ToolUserController extends MelisAbstractActionController
                 $user = $userTable->getEntryById($id)->current();
                 $login = !empty($user->usr_login) ? $user->usr_login : null;
 
+                // SECURITY (audit H1) : un compte administrateur ne se supprime qu'entre admins
+                // — même règle que le chemin React (sinon le mass-assignment legacy restait
+                // une porte de contournement).
+                $callerIdentity = $this->getServiceManager()->get('MelisCoreAuth')->getIdentity();
+                if (!empty($user->usr_admin) && empty($callerIdentity->usr_admin)) {
+                    return new JsonModel([
+                        'textTitle' => $textTitle,
+                        'textMessage' => 'tr_meliscore_tool_user_delete_unable',
+                        'success' => 0,
+                    ]);
+                }
+
                 $userTable->deleteById($id);
 
                 // Purge any pending lost/create password request, otherwise a token emailed
                 // before the deletion would stay usable against a login that no longer exists.
                 $this->getServiceManager()->get('MelisCoreLostPassword')->deleteRequestsByLogin($login);
                 $this->getServiceManager()->get('MelisCoreCreatePassword')->deleteRequestsByLogin($login);
+
+                // SECURITY (audit H8) : la clé API microservice du compte est purgée avec lui.
+                $this->getServiceManager()->get('MelisMicroServiceAuthTable')->deleteByField('msoa_user_id', (int) $id);
 
                 $success = 1;
                 $textMessage = 'tr_meliscore_tool_user_delete_success';
@@ -1026,12 +1045,17 @@ class ToolUserController extends MelisAbstractActionController
                     $tableData[$ctr]['DT_RowClass'] = "clsCurrent";
                 }
                 $tableData[$ctr]['usr_image'] = $image;
-                $tableData[$ctr]['usr_firstname'] = $tableData[$ctr]['usr_firstname'] . ' ' . $tableData[$ctr]['usr_lastname'];
+                // SECURITY (audit H7) : la DataTable rend les cellules en HTML — les champs
+                // saisis par l'utilisateur (nom, login, email, tags) sont échappés ; le nom
+                // l'est AUSSI dans l'attribut title de l'image (injection d'attribut sinon).
+                $fullName = $tableData[$ctr]['usr_firstname'] . ' ' . $tableData[$ctr]['usr_lastname'];
+                $tableData[$ctr]['usr_firstname'] = $melisTool->escapeHtml($fullName);
+                $tableData[$ctr]['usr_login'] = $melisTool->escapeHtml($tableData[$ctr]['usr_login'] ?? '');
                 $tableData[$ctr]['usr_status'] = '<span class="' . $status . '"><i class="fa fa-fw fa-circle"></i></span>';
                 $tableData[$ctr]['usr_is_online'] = '<span class="' . $online . '"><i class="fa fa-fw fa-circle"></i></span>';
-                $tableData[$ctr]['usr_image'] = '<img src="' . $image . '" width="24" height="24" alt="profile image" title="Profile picture of ' . $tableData[$ctr]['usr_firstname'] . '"/>';
+                $tableData[$ctr]['usr_image'] = '<img src="' . $image . '" width="24" height="24" alt="profile image" title="Profile picture of ' . htmlspecialchars($fullName, ENT_QUOTES, 'UTF-8') . '"/>';
                 $tableData[$ctr]['usr_last_login_date'] = ($tableData[$ctr]['usr_last_login_date']) ? $melisTool->formatDate(strtotime($tableData[$ctr]['usr_last_login_date']), null, \IntlDateFormatter::NONE) : '';
-                $tableData[$ctr]['usr_email'] = $melisTool->limitedText($tableData[$ctr]['usr_email'], 35);
+                $tableData[$ctr]['usr_email'] = $melisTool->escapeHtml($melisTool->limitedText($tableData[$ctr]['usr_email'], 35));
                 // remove critical details
                 unset($tableData[$ctr]['usr_password']);
                 unset($tableData[$ctr]['usr_rights']);
@@ -1429,7 +1453,13 @@ class ToolUserController extends MelisAbstractActionController
                             $data['usr_login'] = $userInfo['usr_login'];
                             $data['usr_password'] = $savedPassword;
                             // $data['usr_lang_id'] = $userInfo['usr_lang_id'];
-                            $data['usr_admin'] = ($data['usr_admin']) ? 1 : 0;
+                            // SECURITY (audit H1) : le statut administrateur ne se change
+                            // qu'entre administrateurs — pour un appelant non-admin, le flag
+                            // du POST est ignoré et la valeur existante est conservée.
+                            $callerIdentity = $this->getServiceManager()->get('MelisCoreAuth')->getIdentity();
+                            $data['usr_admin'] = !empty($callerIdentity->usr_admin)
+                                ? (($data['usr_admin']) ? 1 : 0)
+                                : (int) ($userInfo['usr_admin'] ?? 0);
                             $data['usr_rights'] = $userInfo['usr_rights'];
                             $data['usr_creation_date'] = $userInfo['usr_creation_date'];
                             $data['usr_last_login_date'] = $userInfo['usr_last_login_date'];

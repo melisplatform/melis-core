@@ -99,8 +99,12 @@ class MelisFlashMessengerController extends MelisAbstractActionController
         if($flashMessages)
         {
             foreach($flashMessages as $fmKey => $fmValues) {
-                $title   = $translator->translate($fmValues->title);
-                $message =  $translator->translate($fmValues->message);
+                // SECURITY (audit M7) : la cloche rend ces champs en HTML. Le service échappe à
+                // l'ÉCRITURE, mais la re-traduction ici réintroduisait du brut (une clé tr_
+                // stockée ressort traduite, HTML compris). decode→escape est idempotent : les
+                // valeurs déjà échappées ne doublent pas, les traductions sont neutralisées.
+                $title   = $tool->escapeHtml(html_entity_decode($translator->translate($fmValues->title), ENT_QUOTES, 'UTF-8'));
+                $message = $tool->escapeHtml(html_entity_decode($translator->translate($fmValues->message), ENT_QUOTES, 'UTF-8'));
                 $fmArray[] = array(
                     'title' => ($title),
                     'message' => ($message),

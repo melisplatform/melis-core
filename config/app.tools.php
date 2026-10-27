@@ -1154,6 +1154,28 @@ return [
                                 ],
 
                                 [
+                                    // SECURITY (audit M3) : preuve de possession du secret courant,
+                                    // exigée côté serveur quand email ou mot de passe change.
+                                    'spec' => [
+                                        'name' => 'usr_current_password',
+                                        'type' => 'Password',
+                                        'options' => [
+                                            'label' => 'tr_meliscore_user_profile_current_password',
+                                            'tooltip' => 'tr_meliscore_user_profile_current_password tooltip',
+                                            'label_options' => [
+                                                'disable_html_escape' => true,
+                                            ],
+                                        ],
+                                        'attributes' => [
+                                            'id' => 'id_usr_profile_current_password',
+                                            'value' => '',
+                                            'placeholder' => 'tr_meliscore_login_pass_placeholder',
+                                            'class' => 'form-control',
+                                            'autocomplete' => 'current-password',
+                                        ],
+                                    ],
+                                ],
+                                [
                                     'spec' => [
                                         'name' => 'usr_password',
                                         'type' => 'Password',

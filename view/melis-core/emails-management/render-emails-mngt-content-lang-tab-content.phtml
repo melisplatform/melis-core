@@ -32,7 +32,7 @@
 	<?php for ($i = 0; $i<count($this->coreLangDatas); $i++){ ?>
     	<div id="<?php echo $this->codename.'_'.$this->coreLangDatas[$i]['lang_locale'] ?>" class="tab-pane product-text-tab-content">
     		<div class="me-heading bg-white border-bottom">
-    			<h3 class=""><i class="fa fa-language" aria-hidden="true"></i> <?php echo $this->coreLangDatas[$i]['lang_name'] ?></h3>
+    			<h3 class=""><i class="fa fa-language" aria-hidden="true"></i> <?php echo $this->escapeHtml($this->coreLangDatas[$i]['lang_name']) /* SECURITY audit M7 */ ?></h3>
     		</div>
     		<div class="product-text-tab-form-content">
     			<?php

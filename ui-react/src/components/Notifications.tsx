@@ -25,6 +25,8 @@ export function Notifications() {
 
   useEffect(() => {
     const onMsg = (e: MessageEvent) => {
+      // SECURITY (audit M9) : pas de toast forgeable par une fenêtre cross-origin.
+      if (e.origin !== window.location.origin) return
       const d = e.data as { __melisNotif?: boolean; kind?: string; title?: string; message?: string; fields?: ErrorField[] } | null
       if (!d || !d.__melisNotif) return
       const kind: Toast['kind'] = d.kind === 'ko' ? 'ko' : 'ok'

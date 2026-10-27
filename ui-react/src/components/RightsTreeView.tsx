@@ -27,6 +27,7 @@ import { DashboardPluginsRightsPanel } from '@/components/DashboardPluginsRights
 import { DASHBOARD_ALL, dashboardRightsIds, fetchDashboardPluginRights, parseDashboardRights, type DashboardPluginRight } from '@/lib/dashboard-rights-api'
 import { AiAgentsRightsPanel } from '@/components/AiAgentsRightsPanel'
 import { AGENTS_SECTION, buildAgentsSection, fetchAgentRights, parseAgentsRights, type AgentsRightsState, type AiAgentRight } from '@/lib/ai-agents-rights-api'
+import { parseMicroserviceGrants } from '@/lib/microservice-rights-api'
 
 // ─── Pure helpers ─────────────────────────────────────────────────────────────
 
@@ -177,6 +178,7 @@ function buildRightsXml(
   originalXml: string,
   deniedCaps: DeniedCaps,
   agentsSection: string[] | null,
+  allowedMs: Set<string>,
 ): string {
   // Extrait les <id> d'une section dans l'XML original
   const extractIds = (tag: string): string[] => {
@@ -288,9 +290,17 @@ function buildRightsXml(
   // Agents IA (MelisAIEngine) — écrite depuis l'état quand le panneau est affiché et édité.
   if (agentsSection) L.push(...agentsSection)
 
+  // Droits « API / microservices » (audit C4) — édités dans l'onglet API du formulaire user,
+  // PRÉSERVÉS ici à l'identique (allow-list default-deny : section absente = aucun accès).
+  if (allowedMs.size) {
+    L.push('<meliscore_microservice>')
+    for (const k of [...allowedMs].sort()) L.push(`\t<id>${k}</id>`)
+    L.push('</meliscore_microservice>')
+  }
+
   // Toute autre section (module non éditée ici, ex. agents IA quand le panneau est masqué) est
   // recopiée telle quelle : sinon chaque sauvegarde React la supprimait.
-  const written = ['meliscms_pages', 'meliscore_interface', 'meliscore_leftmenu', 'melis_dashboardplugin', 'meliscore_tool_capabilities']
+  const written = ['meliscms_pages', 'meliscore_interface', 'meliscore_leftmenu', 'melis_dashboardplugin', 'meliscore_tool_capabilities', 'meliscore_microservice']
   if (agentsSection) written.push(AGENTS_SECTION)
   L.push(...otherSections(originalXml, written))
 
@@ -777,6 +787,11 @@ export function RightsTreeView({ rights, onChange }: RightsTreeViewProps) {
   const [deniedCaps, setDeniedCaps] = useState<DeniedCaps>({})
   const deniedCapsRef = useRef<DeniedCaps>({})
 
+  // Droits « API / microservices » (audit C4) : édités dans l'onglet API du formulaire user, PAS
+  // ici — mais la section doit survivre à chaque reconstruction du XML : simple PASSTHROUGH
+  // (parse à l'arrivée, réécriture à l'identique dans buildRightsXml).
+  const allowedMsRef = useRef<Set<string>>(new Set())
+
   // Tracks the last XML we ourselves emitted via onChange — to ignore those echoes
   const ownXmlRef = useRef('')
   // Stores the original XML (server-loaded) to preserve non-leftmenu sections on rebuild
@@ -814,7 +829,8 @@ export function RightsTreeView({ rights, onChange }: RightsTreeViewProps) {
       .finally(() => setCapsLoaded(true))
   }, [])
 
-  // Re-parse whenever rights changes from OUTSIDE (server load), not from our own onChange
+  // Re-parse whenever rights changes from OUTSIDE (server load, OU édition de la section
+  // microservices depuis l'onglet API du formulaire), not from our own onChange
   useEffect(() => {
     if (!navTree) return
     if (rights === ownXmlRef.current) return // our own emit, ignore
@@ -829,13 +845,20 @@ export function RightsTreeView({ rights, onChange }: RightsTreeViewProps) {
     setAgentsRights(agents)
     agentsRightsRef.current = agents
     agentsEditedRef.current = false
+    allowedMsRef.current = parseMicroserviceGrants(rights)
   }, [navTree, rights])
 
-  function emit(tools: Set<string>, pages: Set<number>, dash: Set<string>, denied: DeniedCaps = deniedCapsRef.current) {
+  function emit(
+    tools: Set<string>,
+    pages: Set<number>,
+    dash: Set<string>,
+    denied: DeniedCaps = deniedCapsRef.current,
+    ms: Set<string> = allowedMsRef.current,
+  ) {
     if (!navTree) return
     // Agents section written from the panel once edited; otherwise kept as is from the original XML
     const agentsSection = aiAgents && agentsEditedRef.current ? buildAgentsSection(agentsRightsRef.current) : null
-    const xml = buildRightsXml(tools, navTree, pages, dash, originalXmlRef.current, denied, agentsSection)
+    const xml = buildRightsXml(tools, navTree, pages, dash, originalXmlRef.current, denied, agentsSection, ms)
     ownXmlRef.current = xml
     onChange(xml)
   }
@@ -968,6 +991,7 @@ export function RightsTreeView({ rights, onChange }: RightsTreeViewProps) {
   const totalChecked = allTools.filter((t) => checkedTools.has(nodeKey(t))).length
 
   // « Tout sélectionner » = ABSOLUMENT tout : outils + pages (si CMS) + plugins dashboard.
+  // (Les droits « API / microservices » s'éditent dans l'onglet API du formulaire — pas touchés ici.)
   // Distinct du « Sélectionner tous les outils » (outils uniquement) dans la catégorie Outils.
   function toggleEverything(v: boolean) {
     const tools = new Set<string>(v ? allTools.map(nodeKey) : [])

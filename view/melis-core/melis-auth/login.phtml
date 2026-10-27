@@ -20,7 +20,7 @@ if($schemes) {
     <div class="login spacing-x2">
      	<div class="placeholder main-login-page text-center">    	
      		<div class="business-logo-container">
-     			<img class="melis-services-img" alt="melis technologies services" src="<?= $loginLogo ?>">
+     			<img class="melis-services-img" alt="melis technologies services" src="<?= $this->escapeHtmlAttr($loginLogo) /* SECURITY audit H4 */ ?>">
      		</div>
      	</div>
      	<div class="container-fluid">
