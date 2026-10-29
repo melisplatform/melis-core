@@ -389,7 +389,7 @@ class MelisPasswordSettingsService extends MelisGeneralService
             return [];
         }
 
-        $config = include $file;
+        $config = include_once $file;
         $settings = is_array($config) ? ($config['plugins']['meliscore']['datas']['login'] ?? []) : [];
         if (!is_array($settings) || empty($settings)) {
             return [];
