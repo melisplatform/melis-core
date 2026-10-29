@@ -510,7 +510,9 @@ class MelisAuthController extends MelisAbstractActionController
                                                  * l'administrateur (login_account_admin_email) à un anonyme.
                                                  */
                                                 $result = $this->buildFailedAuthResult();
-                                                $this->getEventManager()->trigger('meliscore_login_attempt_end', $this, array_merge($result, ['typeCode' => self::ACCOUNT_LOCKED, 'itemId' => $userData->usr_id]));
+                                                // The ACCOUNT_LOCKED log row needs a title: it dates the lock for the timer unlock
+                                                $this->getEventManager()->trigger('meliscore_login_attempt_end', $this,
+                                                    $this->authFailureEventPayload(self::ACCOUNT_LOCKED, $userData->usr_id, 'Account locked'));
                                             } else {
                                                 // Wrong password, lock policy armed but threshold not reached:
                                                 // same body as any other failure (the former "too many failed
