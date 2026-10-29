@@ -585,8 +585,9 @@ fires `meliscore_module_management_save_end`).
 
 ### B3.9 `MelisReactApiOtherConfigController` — guard `meliscore_tool_other_config`
 Base `/melis/react-api/otherconfig`. Actions: `get` (`list`; effective login/password policy via
-`MelisCoreConfig`), `save` (`edit`; validates + writes `app.login.php` via `MelisPasswordSettingsService`;
-422 + `fields` on validation failure).
+`MelisPasswordSettingsService::getLoginSettings()`), `save` (`edit`; validates + saves to the
+`melis_core_login_config` table via `MelisPasswordSettingsService`; 422 + `fields` on validation
+failure or when the database write fails).
 
 ### B3.10 `MelisReactApiPlatformController` — guard `meliscore_tool_platform`
 Base `/melis/react-api/platforms`. Actions: `list` (`list`), `stats` (`list`), `get` (`edit`),

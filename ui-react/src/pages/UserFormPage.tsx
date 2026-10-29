@@ -475,7 +475,7 @@ export default function UserFormPage() {
     userApi.fetchRoles().then(r => { _rolesCache = r; setRoles(r) }).catch(() => null)
   }, [rolesModuleActive])
 
-  // Politique de complexité effective (défauts otherconfig + app.login.php) — pour le feedback
+  // Politique de complexité effective (défauts otherconfig + outil « Other config ») — pour le feedback
   // client. Le serveur reste la source de vérité : la validation serveur bloque de toute façon.
   // Toujours re-fetchée au montage : la config peut avoir été changée entre-temps par l'outil
   // Other Config (React ou legacy) sans reload du SPA — le cache ne sert qu'au 1ᵉʳ rendu.

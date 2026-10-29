@@ -319,13 +319,7 @@ class UserController extends MelisAbstractActionController
                 $user = $userTable->getEntryByField('usr_login', $login)->current();
                 $userId = $user->usr_id;
 
-                $file = $_SERVER['DOCUMENT_ROOT'] . '/../vendor/melisplatform/melis-core/config/app.login.php';
-                if (file_exists($file)) {
-                    $config = $this->getServiceManager()->get('MelisCoreConfig')->getItem('meliscore/datas/login');
-                } else {
-                    //get default
-                    $config = $this->getServiceManager()->get('MelisCoreConfig')->getItem('meliscore/datas/otherconfig_default/login');
-                }
+                $config = $this->getServiceManager()->get('MelisPasswordSettingsService')->getLoginSettings();
 
                 $passwordDuplicateCheckSuccessful = true;
 
@@ -614,14 +608,7 @@ class UserController extends MelisAbstractActionController
             }// end confirm if link is valid
         }
 
-        //$config = $this->getServiceManager()->get('MelisCoreConfig')->getItem('meliscore/datas/login');
-        $file = $_SERVER['DOCUMENT_ROOT'] . '/../vendor/melisplatform/melis-core/config/app.login.php';
-        if (file_exists($file)) {
-            $config = $this->getServiceManager()->get('MelisCoreConfig')->getItem('meliscore/datas/login');
-        } else {
-            //get default
-            $config = $this->getServiceManager()->get('MelisCoreConfig')->getItem('meliscore/datas/otherconfig_default/login');
-        }
+        $config = $this->getServiceManager()->get('MelisPasswordSettingsService')->getLoginSettings();
 
         $view->setVariable('meliscore_renewpass', $forgotForm);
         $view->setVariable('formFactory', $factory);
@@ -692,13 +679,7 @@ class UserController extends MelisAbstractActionController
                     $user = $userTable->getEntryByField('usr_login', $login)->current();
                     $userId = $user->usr_id;
 
-                    $file = $_SERVER['DOCUMENT_ROOT'] . '/../vendor/melisplatform/melis-core/config/app.login.php';
-                    if (file_exists($file)) {
-                    	$config = $this->getServiceManager()->get('MelisCoreConfig')->getItem('meliscore/datas/login');
-                    } else {
-                        //get default
-                        $config = $this->getServiceManager()->get('MelisCoreConfig')->getItem('meliscore/datas/otherconfig_default/login');
-                    }
+                    $config = $this->getServiceManager()->get('MelisPasswordSettingsService')->getLoginSettings();
 
                     $passwordDuplicateCheckSuccessful = true;
 
@@ -801,15 +782,8 @@ class UserController extends MelisAbstractActionController
 
         $passwordComplexityConfigForm = $melisCoreConfig->getFormMergedAndOrdered('meliscore/forms/meliscore_other_config_password_complexity_form', 'meliscore_other_config_password_complexity_form');
         $passwordComplexityForm = $factory->createForm($passwordComplexityConfigForm);
-        
-		$file = $_SERVER['DOCUMENT_ROOT'] . '/../vendor/melisplatform/melis-core/config/app.login.php';
 
-        if (file_exists($file)) {
-            $config = $this->getServiceManager()->get('MelisCoreConfig')->getItem('meliscore/datas/login');
-        } else {
-            //get default
-            $config = $this->getServiceManager()->get('MelisCoreConfig')->getItem('meliscore/datas/otherconfig_default/login');
-        }
+        $config = $this->getServiceManager()->get('MelisPasswordSettingsService')->getLoginSettings();
 
         $loginAccountLockData = new MelisResultSet();
 
@@ -937,26 +911,9 @@ class UserController extends MelisAbstractActionController
      */
     public function renderUserLoginTabsMainAction()
     {
-        $filePermissionErrors = [];
-
-        $module = $_SERVER['DOCUMENT_ROOT'] . '/../vendor/melisplatform/melis-core';
-        $configFile = $module . '/config/app.login.php';
-        
-        if (!is_writable($module)) {
-            $filePermissionErrors[] = 'tr_meliscore_tool_other_config_password_config_file_permission_module';
-        }
-
-        if (file_exists($configFile) && !is_writable($configFile)) {
-            $filePermissionErrors[] = 'tr_meliscore_tool_other_config_password_config_file_permission_config';
-        }
-
         $view = new ViewModel();
         $melisKey = $this->params()->fromRoute('melisKey', '');
         $view->melisKey = $melisKey;
-
-        if (!empty($filePermissionErrors)) {
-            $view->filePermissionErrors = $filePermissionErrors;
-        }
 
         return $view;
     }

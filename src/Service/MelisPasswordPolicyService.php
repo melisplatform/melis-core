@@ -15,7 +15,7 @@ namespace MelisCore\Service;
  * Every path that sets a password (user tool, own profile, reset / create / renew links,
  * React endpoints) MUST go through check(). It applies, in order:
  *   1. complexity   — the effective login config (config/otherconfig.php defaults overridden by
- *                     config/app.login.php, i.e. the "Other config" tool)
+ *                     the melis_core_login_config table, i.e. the "Other config" tool)
  *   2. blocklist    — config/password-blocklist.txt (common passwords) and the user's own
  *                     login / e-mail local part
  *   3. history      — password_duplicate_status / password_duplicate_lifetime, when a user id is
@@ -42,21 +42,13 @@ class MelisPasswordPolicyService extends MelisGeneralService
     private static $blocklist = null;
 
     /**
-     * Effective login/password config: defaults overridden by app.login.php.
+     * Effective login/password config: defaults overridden by the "Other config" tool's values.
      */
     public function getConfig(): array
     {
         $cfg = self::DEFAULTS;
         try {
-            $melisConfig = $this->getServiceManager()->get('MelisCoreConfig');
-            $defaults = $melisConfig->getItem('meliscore/datas/otherconfig_default/login');
-            $saved    = $melisConfig->getItem('meliscore/datas/login');
-            if (is_array($defaults)) {
-                $cfg = array_merge($cfg, $defaults);
-            }
-            if (is_array($saved)) {
-                $cfg = array_merge($cfg, $saved);
-            }
+            $cfg = array_merge($cfg, $this->getServiceManager()->get('MelisPasswordSettingsService')->getLoginSettings());
         } catch (\Throwable $e) {
             // keep DEFAULTS
         }

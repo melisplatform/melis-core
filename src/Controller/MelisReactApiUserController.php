@@ -253,8 +253,8 @@ class MelisReactApiUserController extends MelisAbstractActionController
             // (MelisPasswordValidatorWithConfig, appliqué par le formulaire new + à la main sur l'edit).
             // À la création le mot de passe est toujours présent ; en édition il n'est validé que
             // s'il est fourni (sinon l'ancien est conservé). La politique effective vient des défauts
-            // (config/otherconfig.php) surchargés par app.login.php → la règle « min 8 caractères »
-            // s'applique même sans app.login.php, comme attendu.
+            // (config/otherconfig.php) surchargés par les valeurs de l'outil « Other config » → la règle
+            // « min 8 caractères » s'applique même si rien n'a été enregistré, comme attendu.
             if ($password !== '') {
                 $pwdErrors = $this->getServiceManager()->get('MelisPasswordPolicyService')
                     ->check($password, $id, $login, $email);
@@ -787,8 +787,8 @@ class MelisReactApiUserController extends MelisAbstractActionController
     // ─── GET /users/password-policy ──────────────────────────────────────────
 
     /**
-     * Politique de complexité effective (défauts config/otherconfig.php surchargés par
-     * app.login.php). Sert le feedback client du formulaire utilisateur : min. de caractères
+     * Politique de complexité effective (défauts config/otherconfig.php surchargés par les
+     * valeurs de l'outil « Other config »). Sert le feedback client du formulaire utilisateur : min. de caractères
      * + classes de caractères requises. Gardé sur l'accès à l'outil comme le reste.
      */
     public function passwordPolicyAction(): HttpResponse

@@ -1362,13 +1362,7 @@ class ToolUserController extends MelisAbstractActionController
                                 $user = $userTable->getEntryByField('usr_login', $userInfo['usr_login'])->current();
                                 $userId = $user->usr_id;
 
-                                $file = $_SERVER['DOCUMENT_ROOT'] . '/../vendor/melisplatform/melis-core/config/app.login.php';
-                                if (file_exists($file)) {                                   
-                                    $config = $this->getServiceManager()->get('MelisCoreConfig')->getItem('meliscore/datas/login');
-                                } else {                                   
-                                    //get default
-                                    $config = $this->getServiceManager()->get('MelisCoreConfig')->getItem('meliscore/datas/otherconfig_default/login');                                    
-                                }
+                                $config = $this->getServiceManager()->get('MelisPasswordSettingsService')->getLoginSettings();
                                 $passwordDuplicateCheckSuccessful = true;
 
                                 if ($config['password_duplicate_status'] == 1) {

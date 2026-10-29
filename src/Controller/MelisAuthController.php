@@ -320,14 +320,6 @@ class MelisAuthController extends MelisAbstractActionController
                         }
                     }
 
-                    // Load config again if necessary (already done above, but keeping structure for safety)
-                    // if (file_exists($_SERVER['DOCUMENT_ROOT'] . '/../vendor/melisplatform/melis-core/config/app.login.php')) {
-                    //     $config = $this->getServiceManager()->get('MelisCoreConfig')->getItem('meliscore/datas/login');
-                    // } else {
-                    //     //get default
-                    //     $config = $this->getServiceManager()->get('MelisCoreConfig')->getItem('meliscore/datas/otherconfig_default/login');
-                    // }
-                    
                     // Account Lock Status Check and Activation (Timer lock lapsed)
                     if (isset($config['login_account_lock_status'])
                         && !empty($config['login_account_lock_status'])
@@ -485,11 +477,7 @@ class MelisAuthController extends MelisAbstractActionController
                                     }
                                 } else { 
                                         // Authentication failed due to wrong password/etc.
-                                        if (file_exists($_SERVER['DOCUMENT_ROOT'] . '/../vendor/melisplatform/melis-core/config/app.login.php')) {
-                                            $config = $this->getServiceManager()->get('MelisCoreConfig')->getItem('meliscore/datas/login');
-                                        } else {
-                                            $config = $this->getServiceManager()->get('MelisCoreConfig')->getItem('meliscore/datas/otherconfig_default/login');
-                                        }
+                                        $config = $this->getLoginConfig();
 
                                         // If login account lock is activated
                                         if (isset($config['login_account_lock_status']) && !empty($config['login_account_lock_status'])) {
@@ -631,18 +619,7 @@ class MelisAuthController extends MelisAbstractActionController
 
     protected function getLoginConfig()
     {
-        // Check for custom config file path
-        $file = $_SERVER['DOCUMENT_ROOT'] . '/../vendor/melisplatform/melis-core/config/app.login.php';
-        
-        if (file_exists($file)) {
-            // Load custom config
-            $config = $this->getServiceManager()->get('MelisCoreConfig')->getItem('meliscore/datas/login');
-        } else {
-            // Load default config
-            $config = $this->getServiceManager()->get('MelisCoreConfig')->getItem('meliscore/datas/otherconfig_default/login');
-        }
-        
-        return $config;
+        return $this->getServiceManager()->get('MelisPasswordSettingsService')->getLoginSettings();
     }
 
     /**

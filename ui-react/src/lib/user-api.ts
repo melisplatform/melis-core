@@ -186,7 +186,7 @@ export async function fetchUserLanguages(): Promise<{ items: UserLanguage[]; cur
   return apiFetch<{ items: UserLanguage[]; currentLangId: number }>('/melis/react-api/users/languages')
 }
 
-/** Politique de complexité du mot de passe effective (défauts otherconfig + app.login.php). */
+/** Politique de complexité du mot de passe effective (défauts otherconfig + outil « Other config »). */
 export interface PasswordPolicy {
   minLength: number
   requireLower: boolean
