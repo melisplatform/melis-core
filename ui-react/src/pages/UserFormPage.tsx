@@ -352,6 +352,8 @@ interface FormData {
   /** Back-office language, chosen at creation only (Mantis #0011114); 0 = not loaded yet */
   langId: number
   phone: string
+  /** Admin flag: the user must choose a new password at the next login (no email sent) */
+  forcePasswordReset: boolean
 }
 type Errors = Partial<Record<keyof FormData, string>>
 
@@ -359,7 +361,7 @@ const EMPTY_FORM: FormData = {
   login: '', email: '', firstname: '', lastname: '',
   roleId: 1, status: 1, isAdmin: false,
   tags: '', password: '', confirmPassword: '', rights: '', langId: 0,
-  phone: '',
+  phone: '', forcePasswordReset: false,
 }
 
 type FormCache = { form: FormData; roles: userApi.UserRole[]; activeTab: Tab }
@@ -501,6 +503,7 @@ export default function UserFormPage() {
         firstname: user.firstname, lastname: user.lastname,
         roleId: user.roleId, status: user.status, isAdmin: user.isAdmin,
         tags: user.tags, password: '', confirmPassword: '', rights: user.rights ?? '', langId: user.langId ?? 0, phone: user.phone ?? '',
+        forcePasswordReset: user.forcePasswordReset ?? false,
       }))
       .catch(() => navigate(base))
       .finally(() => setLoading(false))
@@ -557,6 +560,7 @@ export default function UserFormPage() {
         // Language: chosen at creation and editable afterwards, as in the legacy edit form.
         ...(form.langId ? { langId: form.langId } : {}),
         ...(phoneField ? { phone: form.phone } : {}),
+        forcePasswordReset: form.forcePasswordReset,
       }
       if (form.password) payload.password = form.password
       const res = await userApi.saveUser(payload)
@@ -610,6 +614,7 @@ export default function UserFormPage() {
         firstname: user.firstname, lastname: user.lastname,
         roleId: user.roleId, status: user.status, isAdmin: user.isAdmin,
         tags: user.tags, password: '', confirmPassword: '', rights: user.rights ?? '', langId: user.langId ?? 0, phone: user.phone ?? '',
+        forcePasswordReset: user.forcePasswordReset ?? false,
       }))
       .catch(() => null)
       .finally(() => { setLoading(false); setTimeout(() => setRefreshing(false), 600) })
@@ -647,6 +652,11 @@ export default function UserFormPage() {
           form.status === 1 ? 'text-emerald-600 bg-emerald-500/10 border-emerald-200' : 'text-red-600 bg-red-500/10 border-red-200')}>
           {form.status === 1 ? t('users.status.active') : t('users.status.inactive')}
         </Badge>
+        {form.forcePasswordReset && (
+          <Badge variant="default" className={cn('gap-1 text-amber-700 bg-amber-500/10 border-amber-200 dark:text-amber-400', narrow && 'hidden')}>
+            <KeyRound className="size-3" />{t('users.form.force_reset_badge')}
+          </Badge>
+        )}
         {isEdit && (
           <button type="button" onClick={handleRefresh} title={t('common.refresh')}
             className="inline-flex size-8 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-accent hover:text-foreground">
@@ -768,6 +778,22 @@ export default function UserFormPage() {
                 </div>
               )
             })()}
+            {/* No email, no password to type: the user is sent to the reset page at the next login. */}
+            <div className="mt-4 border-t border-border pt-4">
+              <button type="button" role="switch" aria-checked={form.forcePasswordReset}
+                onClick={() => set('forcePasswordReset', !form.forcePasswordReset)}
+                className="flex w-full items-start gap-3 text-left">
+                <span className={cn('relative mt-0.5 inline-flex h-5 w-9 shrink-0 items-center rounded-full transition-colors',
+                  form.forcePasswordReset ? 'bg-amber-500' : 'bg-muted-foreground/30')}>
+                  <span className={cn('inline-block size-4 transform rounded-full bg-white shadow transition-transform',
+                    form.forcePasswordReset ? 'translate-x-4' : 'translate-x-0.5')} />
+                </span>
+                <span className="min-w-0">
+                  <span className="block text-sm font-medium">{t('users.form.force_reset')}</span>
+                  <span className="mt-0.5 block text-xs text-muted-foreground">{t('users.form.force_reset_hint')}</span>
+                </span>
+              </button>
+            </div>
           </div>
         </div>
 

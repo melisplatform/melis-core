@@ -166,6 +166,7 @@ class MelisReactApiUserController extends MelisAbstractActionController
                 $phoneRows = iterator_to_array($db->query('SELECT usr_phone FROM melis_core_user WHERE usr_id = ?', [$id]));
                 $data['phone'] = (string) (((array) ($phoneRows[0] ?? []))['usr_phone'] ?? '');
             }
+            $data['forcePasswordReset'] = $this->forcedPasswordReset($db, $id);
 
             return $this->jsonResponse(['success' => true, 'data' => $data]);
         } catch (\Throwable $e) {
@@ -206,6 +207,8 @@ class MelisReactApiUserController extends MelisAbstractActionController
             $rights    = isset($body['rights'])
                 ? str_replace(['\\r\\n', '\\n', '\\t'], ["\n", "\n", "\t"], (string) $body['rights'])
                 : null;
+            // « Forcer le changement de mot de passe à la prochaine connexion » — absent = inchangé
+            $forceReset = array_key_exists('forcePasswordReset', $body) ? (bool) $body['forcePasswordReset'] : null;
 
             if (!$login || !$email || !$firstname || !$lastname) {
                 return $this->jsonResponse(
@@ -346,6 +349,9 @@ class MelisReactApiUserController extends MelisAbstractActionController
                 if ($phone !== null) {
                     $db->query('UPDATE melis_core_user SET usr_phone = ? WHERE usr_id = ?', [$phone, $id]);
                 }
+                if ($forceReset !== null) {
+                    $this->saveForcedPasswordReset($db, $id, $forceReset);
+                }
 
                 // Self-edit: if the updated user is the one currently logged in, refresh the
                 // SESSION identity (getAuthRights() reads usr_rights from the identity, not the DB).
@@ -424,6 +430,9 @@ class MelisReactApiUserController extends MelisAbstractActionController
             $this->getServiceManager()->get('MelisPasswordPolicyService')->recordHistory($newId, $passwordHash);
             if ($phone !== null) {
                 $db->query('UPDATE melis_core_user SET usr_phone = ? WHERE usr_id = ?', [$phone, $newId]);
+            }
+            if ($forceReset) {
+                $this->saveForcedPasswordReset($db, $newId, true);
             }
 
             // Le cache de droits du nouvel utilisateur est généré par MelisCoreRightsCacheListener sur
@@ -904,6 +913,29 @@ class MelisReactApiUserController extends MelisAbstractActionController
     }
 
 
+
+    /**
+     * « Forcer le changement de mot de passe à la prochaine connexion » (usr_force_password_reset).
+     * Lu/écrit à part et sans casser l'écran si la colonne n'existe pas encore (migration non jouée).
+     */
+    private function forcedPasswordReset($db, int $id): bool
+    {
+        try {
+            $rows = iterator_to_array($db->query('SELECT usr_force_password_reset FROM melis_core_user WHERE usr_id = ?', [$id]));
+            return !empty(((array) ($rows[0] ?? []))['usr_force_password_reset']);
+        } catch (\Throwable) {
+            return false;
+        }
+    }
+
+    private function saveForcedPasswordReset($db, int $id, bool $forceReset): void
+    {
+        try {
+            $db->query('UPDATE melis_core_user SET usr_force_password_reset = ? WHERE usr_id = ?', [$forceReset ? 1 : 0, $id]);
+        } catch (\Throwable $e) {
+            error_log('MelisCore: force password reset flag not saved: ' . $e->getMessage());
+        }
+    }
 
     private function formatUser(array $r, bool $withLang = false): array
     {

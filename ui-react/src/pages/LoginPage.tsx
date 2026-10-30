@@ -131,6 +131,10 @@ export default function LoginPage() {
       navigate(`/verify-2fa?hash=${encodeURIComponent(result.twoFaHash)}`)
       return
     }
+    if (result.resetHash) {
+      navigate(`/reset-password/${encodeURIComponent(result.resetHash)}?forced=1`)
+      return
+    }
     if (result.redirectUrl) {
       // Mot de passe expiré : formulaire legacy de renouvellement, hors du routeur React.
       window.location.assign(result.redirectUrl)

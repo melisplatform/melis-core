@@ -7,6 +7,8 @@ export interface SignInOutcome {
   twoFaHash?: string
   /** Mot de passe expiré : URL du formulaire de renouvellement à suivre (navigation complète). */
   redirectUrl?: string
+  /** Changement de mot de passe imposé par un administrateur : jeton de /reset-password/:hash. */
+  resetHash?: string
 }
 
 export interface AuthState {

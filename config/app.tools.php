@@ -317,6 +317,24 @@ return [
                                 ],
                                 [
                                     'spec' => [
+                                        'name' => 'usr_force_password_reset',
+                                        'type' => 'Laminas\Form\Element\Select',
+                                        'options' => [
+                                            'label' => 'tr_meliscore_tool_user_col_force_password_reset',
+                                            'tooltip' => 'tr_meliscore_tool_user_col_force_password_reset tooltip',
+                                            'value_options' => [
+                                                '0' => 'tr_meliscore_tool_user_force_password_reset_no',
+                                                '1' => 'tr_meliscore_tool_user_force_password_reset_yes',
+                                            ],
+                                        ],
+                                        'attributes' => [
+                                            'id' => 'id_usr_force_password_reset_new',
+                                            'value' => '0',
+                                        ],
+                                    ],
+                                ],
+                                [
+                                    'spec' => [
                                         'name' => 'usr_firstname',
                                         'type' => 'MelisText',
                                         'options' => [
@@ -411,6 +429,19 @@ return [
                                 ],
                             ], // end elements
                             'input_filter' => [
+                                'usr_force_password_reset' => [
+                                    'name' => 'usr_force_password_reset',
+                                    'required' => false,
+                                    'validators' => [
+                                        [
+                                            'name' => 'InArray',
+                                            'options' => [
+                                                'haystack' => ['0', '1'],
+                                            ],
+                                        ],
+                                    ],
+                                    'filters' => [],
+                                ],
                                 'usr_login' => [
                                     'name' => 'usr_login',
                                     'required' => true,
@@ -832,6 +863,24 @@ return [
                                         ],
                                     ],
                                 ],
+                                [
+                                    'spec' => [
+                                        'name' => 'usr_force_password_reset',
+                                        'type' => 'Laminas\Form\Element\Select',
+                                        'options' => [
+                                            'label' => 'tr_meliscore_tool_user_col_force_password_reset',
+                                            'tooltip' => 'tr_meliscore_tool_user_col_force_password_reset tooltip',
+                                            'value_options' => [
+                                                '0' => 'tr_meliscore_tool_user_force_password_reset_no',
+                                                '1' => 'tr_meliscore_tool_user_force_password_reset_yes',
+                                            ],
+                                        ],
+                                        'attributes' => [
+                                            'id' => 'id_usr_force_password_reset',
+                                            'value' => '0',
+                                        ],
+                                    ],
+                                ],
 
                                 [
                                     'spec' => [
@@ -941,6 +990,19 @@ return [
 
                             ], // end edit elements
                             'input_filter' => [
+                                'usr_force_password_reset' => [
+                                    'name' => 'usr_force_password_reset',
+                                    'required' => false,
+                                    'validators' => [
+                                        [
+                                            'name' => 'InArray',
+                                            'options' => [
+                                                'haystack' => ['0', '1'],
+                                            ],
+                                        ],
+                                    ],
+                                    'filters' => [],
+                                ],
                                 'usr_id' => [
                                     'name' => 'usr_id',
                                     'required' => false,

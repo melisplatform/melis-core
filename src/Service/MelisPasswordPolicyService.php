@@ -175,6 +175,24 @@ class MelisPasswordPolicyService extends MelisGeneralService
     }
 
     /**
+     * The user chose a new password themselves (reset page, creation link, own profile): lift the
+     * "force password reset at next login" flag an administrator may have set on the account.
+     * Not called when an administrator sets the password, so that "temporary password + forced
+     * change" keeps working.
+     */
+    public function clearForcedReset(int $userId): void
+    {
+        if (!$userId) {
+            return;
+        }
+        try {
+            $this->getServiceManager()->get('MelisCoreTableUser')->update(['usr_force_password_reset' => 0], 'usr_id', $userId);
+        } catch (\Throwable $e) {
+            // column not created yet (migration not run): there is no flag to lift
+        }
+    }
+
+    /**
      * Policy as exposed to the UIs (React feedback), without any secret.
      */
     public function describe(): array

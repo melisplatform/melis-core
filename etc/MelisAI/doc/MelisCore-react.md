@@ -544,6 +544,9 @@ Base `/melis/react-api/users` (+ `/roles`). Actions: `list` (`list`), `stats` (`
 (`edit`), `microservice`/`microserviceSave` (`edit`), `roles` (`list`, at `/roles`),
 `passwordPolicy` (`list`, at `/users/password-policy`). Services: `Laminas\Db\Adapter\AdapterInterface`,
 `MelisCoreAuth`, `MelisCoreConfig`, `MelisCoreUser`, EventManager (`meliscore_tooluser_*` events).
+`get`/`save` carry `forcePasswordReset` (`usr_force_password_reset`): the user is sent to the reset
+page at the next login (`/melis/authenticate` answers `resetHash`), nothing is mailed; the flag is
+lifted when the user sets a password themselves.
 
 ### B3.2 `MelisReactApiUserProfileController` — guard `meliscore_user_profile` (auth-only, no capability)
 Base `/melis/react-api/user-profile`. Actions: `get`, `save` (own email/lang/password/avatar; refreshes

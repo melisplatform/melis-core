@@ -42,6 +42,8 @@ export interface UserDetail extends UserItem {
   rights: string
   /** Only where a module adds the field to the legacy user form (see fetchUserFields). */
   phone?: string
+  /** The user must choose a new password at the next login (set by an administrator). */
+  forcePasswordReset?: boolean
 }
 
 /** A field a module adds to the legacy user form, as that form declares it. */
@@ -99,6 +101,7 @@ export interface UserSavePayload {
   tags?: string
   password?: string
   phone?: string
+  forcePasswordReset?: boolean
 }
 
 export interface UserStats {

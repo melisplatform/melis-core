@@ -666,6 +666,8 @@ class ToolUserController extends MelisAbstractActionController
                             $data = $userAddForm->getData();
                             // remove confirm pass when adding
                             unset($data['usr_confirm_password']);
+                            $forceReset = !empty($data['usr_force_password_reset']);
+                            unset($data['usr_force_password_reset']);
 
                             $data['usr_id'] = null;
                             $data['usr_password'] = $melisCoreAuth->encryptPassword($data['usr_password']);
@@ -701,6 +703,7 @@ class ToolUserController extends MelisAbstractActionController
                                 $data['usr_id'] = $userTable->save($data);
                                 if ($data['usr_id'] > 0) {
                                     $success = true;
+                                    $this->saveForcedPasswordReset($data['usr_id'], $forceReset);
                                 }
                             }
                         } else {
@@ -912,6 +915,7 @@ class ToolUserController extends MelisAbstractActionController
                     $data['usr_last_login_date'] = is_null($userVal->usr_last_login_date) ? '-' : $melisTool->formatDate(strtotime($userVal->usr_last_login_date))  . ' ' . $connectionTime;
                     $data['usr_role_id'] = $userVal->usr_role_id;
                     $data['usr_tags'] = $userVal->usr_tags;
+                    $data['usr_force_password_reset'] = (int) ($userVal->usr_force_password_reset ?? 0);
                 }
 
                 $success = true;
@@ -1297,6 +1301,10 @@ class ToolUserController extends MelisAbstractActionController
                         ];
                     }
                     $data = $userUpdateForm->getData();
+                    $forceReset = array_key_exists('usr_force_password_reset', $postValues)
+                        ? !empty($data['usr_force_password_reset'])
+                        : null;
+                    unset($data['usr_force_password_reset']);
 
                     $imageContent = null;
 
@@ -1481,6 +1489,9 @@ class ToolUserController extends MelisAbstractActionController
                             }
 
                             $userTable->save($data, $userId);
+                            if ($forceReset !== null) {
+                                $this->saveForcedPasswordReset($userId, $forceReset);
+                            }
 
                             if ((int) $userInfo['usr_status'] === 0 && (int) $data['usr_status'] === 1) {
                                 $this->getEventManager()->trigger('meliscore_login_attempt_end', $this, [
@@ -1681,6 +1692,20 @@ class ToolUserController extends MelisAbstractActionController
      * Saves user account details
      * @return JsonModel
      */
+    /**
+     * "Force password reset at next login" flag, written on its own: on a platform where the
+     * column does not exist yet (migration not run) the rest of the user is still saved.
+     */
+    private function saveForcedPasswordReset($userId, $forceReset)
+    {
+        try {
+            $this->getServiceManager()->get('MelisCoreTableUser')
+                ->update(['usr_force_password_reset' => $forceReset ? 1 : 0], 'usr_id', (int) $userId);
+        } catch (\Exception $e) {
+            error_log('MelisCore: force password reset flag not saved: ' . $e->getMessage());
+        }
+    }
+
     public function updateUserAction()
     {
         $response = [];

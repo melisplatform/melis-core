@@ -166,6 +166,39 @@ class MelisCoreLostPasswordService extends MelisServiceManager implements MelisC
 
         return $success;
     }
+
+    /**
+     * Issues a reset token for $login WITHOUT sending anything: used at login when an
+     * administrator forced a password reset on the account (MelisAuthController), the user having
+     * just proved their current password. The token is regenerated, so any link already sent is
+     * revoked; it expires like any other reset request.
+     *
+     * @param  string $login
+     * @param  string $email
+     * @return string the token, to put in the reset page URL
+     */
+    public function issueResetToken($login, $email)
+    {
+        $table = $this->getServiceManager()->get('MelisLostPasswordTable');
+        $hash  = $this->generateHash();
+
+        if ($table->getEntryByField('rh_login', $login)->current()) {
+            $table->update(array(
+                'rh_hash' => $hash,
+                'rh_date' => date('Y-m-d H:i:s')
+            ), 'rh_login', $login);
+        } else {
+            $table->save(array(
+                'rh_id' => null,
+                'rh_login' => $login,
+                'rh_email' => $email,
+                'rh_hash' => $hash,
+                'rh_date' => date('Y-m-d H:i:s')
+            ));
+        }
+
+        return $hash;
+    }
     
     /**
      * Processes the password reset and deletes the existing record in the lost password table
@@ -429,7 +462,9 @@ class MelisCoreLostPasswordService extends MelisServiceManager implements MelisC
             // Password history (audit item 16.0): every path that sets a password records it.
             $user = $userTable->getEntryByField('usr_login', $login)->current();
             if ($user) {
-                $this->getServiceManager()->get('MelisPasswordPolicyService')->recordHistory((int) $user->usr_id, $hash);
+                $policy = $this->getServiceManager()->get('MelisPasswordPolicyService');
+                $policy->recordHistory((int) $user->usr_id, $hash);
+                $policy->clearForcedReset((int) $user->usr_id);
             }
             
             $success = true;

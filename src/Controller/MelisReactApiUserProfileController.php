@@ -182,7 +182,9 @@ class MelisReactApiUserProfileController extends MelisAbstractActionController
             $db->query('UPDATE melis_core_user SET ' . implode(', ', $sets) . ' WHERE usr_id = ?', $params);
             if ($newPassHash !== null) {
                 // Password history (audit item 16.0)
-                $this->getServiceManager()->get('MelisPasswordPolicyService')->recordHistory($userId, $newPassHash);
+                $policy = $this->getServiceManager()->get('MelisPasswordPolicyService');
+                $policy->recordHistory($userId, $newPassHash);
+                $policy->clearForcedReset($userId);
             }
 
             // Met à jour la session (header/avatar/langue reflétés sans reconnexion).

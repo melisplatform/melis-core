@@ -63,6 +63,27 @@ class MelisAuthController extends MelisAbstractActionController
      * Anything meant for the log listeners travels in the event payload only,
      * never in the HTTP body: see authFailureEventPayload().
      */
+    /**
+     * Login answer when an administrator forced a password reset on the account: not logged in,
+     * sent straight to the reset page with a one-time token. Nothing is mailed, the user having
+     * just typed the current password.
+     */
+    private function buildForcedResetResult($userData, $translator)
+    {
+        $hash = $this->getServiceManager()->get('MelisCoreLostPassword')
+            ->issueResetToken($userData->usr_login, $userData->usr_email);
+        $message = $translator->translate('tr_meliscore_login_password_reset_required');
+
+        return [
+            'success' => false,
+            'errors' => ['empty' => $message],
+            // React login page: opens its own /reset-password/<hash> page
+            'resetHash' => $hash,
+            // Legacy login page: evaluates the command
+            'command' => "window.location.replace('/melis/reset-password/" . $hash . "');",
+        ];
+    }
+
     private function buildFailedAuthResult()
     {
         $translator = $this->getServiceManager()->get('translator');
@@ -391,7 +412,12 @@ class MelisAuthController extends MelisAbstractActionController
 
                     // If user is active
                     if ($userData->usr_status == self::USER_ACTIVE) {
-                        if(!$isPassExpired) {
+                        if ($passwordOk && !empty($userData->usr_force_password_reset)) {
+                            // Correct password, but an administrator requires a new one first
+                            // ("Force password reset at next login", Users tool). Checked before
+                            // 2FA and the expiry rule; only ever reached with the right password.
+                            $result = $this->buildForcedResetResult($userData, $translator);
+                        } elseif(!$isPassExpired) {
                             if (!$needReset) {
                                 $melisCoreAuth->getAdapter()->setIdentity($postValues['usr_login'])
                                     ->setCredential($password);
