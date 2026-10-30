@@ -358,7 +358,7 @@ return [
                                 ],
                             ],
                             // Politique de complexité de mot de passe effective (défauts otherconfig
-                            // + app.login.php) — pour le feedback client du formulaire utilisateur.
+                            // + outil « Other config ») — pour le feedback client du formulaire utilisateur.
                             'users-password-policy' => [
                                 'type'    => 'Segment',
                                 'options' => [

@@ -63,12 +63,7 @@ class MelisCoreAuthSuccessListener extends MelisGeneralListener implements Liste
             return;
         }
 
-        $file = $_SERVER['DOCUMENT_ROOT'] . '/../vendor/melisplatform/melis-core/config/app.login.php';
-        if (file_exists($file)) {
-            $config = $sm->get('MelisCoreConfig')->getItem('meliscore/datas/login');
-        } else {
-            $config = $sm->get('MelisCoreConfig')->getItem('meliscore/datas/otherconfig_default/login');
-        }
+        $config = $sm->get('MelisPasswordSettingsService')->getLoginSettings();
 
         if (empty($config['login_account_lock_status'])) {
             return;

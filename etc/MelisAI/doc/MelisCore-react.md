@@ -544,6 +544,9 @@ Base `/melis/react-api/users` (+ `/roles`). Actions: `list` (`list`), `stats` (`
 (`edit`), `microservice`/`microserviceSave` (`edit`), `roles` (`list`, at `/roles`),
 `passwordPolicy` (`list`, at `/users/password-policy`). Services: `Laminas\Db\Adapter\AdapterInterface`,
 `MelisCoreAuth`, `MelisCoreConfig`, `MelisCoreUser`, EventManager (`meliscore_tooluser_*` events).
+`get`/`save` carry `forcePasswordReset` (`usr_force_password_reset`): the user is sent to the reset
+page at the next login (`/melis/authenticate` answers `resetHash`), nothing is mailed; the flag is
+lifted when the user sets a password themselves.
 
 ### B3.2 `MelisReactApiUserProfileController` — guard `meliscore_user_profile` (auth-only, no capability)
 Base `/melis/react-api/user-profile`. Actions: `get`, `save` (own email/lang/password/avatar; refreshes
@@ -585,8 +588,9 @@ fires `meliscore_module_management_save_end`).
 
 ### B3.9 `MelisReactApiOtherConfigController` — guard `meliscore_tool_other_config`
 Base `/melis/react-api/otherconfig`. Actions: `get` (`list`; effective login/password policy via
-`MelisCoreConfig`), `save` (`edit`; validates + writes `app.login.php` via `MelisPasswordSettingsService`;
-422 + `fields` on validation failure).
+`MelisPasswordSettingsService::getLoginSettings()`), `save` (`edit`; validates + saves to the
+`melis_core_login_config` table via `MelisPasswordSettingsService`; 422 + `fields` on validation
+failure or when the database write fails).
 
 ### B3.10 `MelisReactApiPlatformController` — guard `meliscore_tool_platform`
 Base `/melis/react-api/platforms`. Actions: `list` (`list`), `stats` (`list`), `get` (`edit`),

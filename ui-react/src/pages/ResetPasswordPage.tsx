@@ -1,5 +1,5 @@
 import { type FormEvent, useEffect, useState } from 'react'
-import { Link, useNavigate, useParams } from 'react-router-dom'
+import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import { AlertCircle, ArrowRight, CheckCircle, Eye, EyeOff, Loader2, Lock } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
@@ -28,6 +28,8 @@ export default function ResetPasswordPage() {
   const brand = useReactTheme()
   useEffect(() => { loadReactTheme() }, [])
   const { hash } = useParams<{ hash: string }>()
+  // Ouvert depuis la connexion : un administrateur impose un nouveau mot de passe
+  const forced = useSearchParams()[0].get('forced') === '1'
   const navigate = useNavigate()
 
   const [password, setPassword] = useState('')
@@ -87,7 +89,7 @@ export default function ResetPasswordPage() {
           <h2 className="mt-7 font-[var(--font-display)] text-2xl font-semibold tracking-tight">
             {t('reset.title')}
           </h2>
-          <p className="mt-1.5 text-sm text-muted-foreground">{t('reset.subtitle')}</p>
+          <p className="mt-1.5 text-sm text-muted-foreground">{t(forced ? 'reset.subtitle_forced' : 'reset.subtitle')}</p>
         </div>
 
         {done ? (

@@ -841,5 +841,8 @@ class MelisCoreMicroServiceController extends MelisAbstractActionController
         return $view;
     }
 
-
+    private function hasAccess($key): bool
+    {
+        return $this->getServiceManager()->get('MelisCoreRights')->canAccess($key);
+    }
 }

@@ -454,6 +454,7 @@ return [
             'MelisGdprDeleteEmailsTable'            => \MelisCore\Model\Tables\MelisGdprDeleteEmailsTable::class,
             'MelisGdprDeleteEmailsSmtp'             => \MelisCore\Model\Tables\MelisGdprDeleteEmailsSmtpTable::class,
             'MelisUserPasswordHistoryTable'         => \MelisCore\Model\Tables\MelisUserPasswordHistoryTable::class,
+            'MelisCoreLoginConfigTable'             => \MelisCore\Model\Tables\MelisCoreLoginConfigTable::class,
             'MelisAnnouncementTable'         => \MelisCore\Model\Tables\MelisAnnouncementTable::class,
         ],
         'abstract_factories' => [

@@ -27,6 +27,8 @@ export interface LoginResult {
    *  par email et répond un simple message) ; on garde le suivi de cette commande pour une
    *  installation encore sur l'ancien comportement. */
   redirectUrl?: string
+  /** Un administrateur impose un nouveau mot de passe : jeton à passer à /reset-password/:hash. */
+  resetHash?: string
 }
 
 /** Réponse brute de /melis/authenticate. */
@@ -34,6 +36,7 @@ interface AuthenticateResponse {
   success: boolean
   errors?: unknown
   command?: string
+  resetHash?: string
 }
 
 /** Extrait un message lisible de la structure `errors` hétérogène de Melis. */
@@ -119,6 +122,11 @@ export async function login(
       return { success: false, twoFaHash: decodeURIComponent(hashMatch[1]) }
     }
     return { success: true }
+  }
+  // Changement de mot de passe imposé par un administrateur (mot de passe correct, pas de session) :
+  // le serveur donne un jeton à usage unique, la page React de réinitialisation prend le relais.
+  if (data.resetHash) {
+    return { success: false, resetHash: data.resetHash, message: extractError(data.errors) }
   }
   // Ancien comportement du mot de passe expiré : success:false + command de redirection vers le
   // formulaire legacy de renouvellement. Le legacy eval() la commande ; ici on la suit.

@@ -1,11 +1,11 @@
 /**
  * Client API de l'outil "Autres Configurations" (onglet Core) — politique de connexion /
- * mot de passe (app.login.php). Enveloppe standard MelisReactApi : { success, data?, error? }.
+ * mot de passe (table melis_core_login_config). Enveloppe standard MelisReactApi : { success, data?, error? }.
  */
 
 const XHR_HEADER = { 'X-Requested-With': 'XMLHttpRequest' } as const
 
-// ─── Type : les 16 clés de config (toutes en string, comme app.login.php) ──────
+// ─── Type : les 16 clés de config (toutes en string, comme en base) ────────────
 export interface OtherConfig {
   login_account_lock_status: string            // '1' | '0'
   login_account_admin_email: string
@@ -53,7 +53,7 @@ export async function fetchOtherConfig(): Promise<OtherConfig> {
   return data.config
 }
 
-/** Valide (côté Melis) + écrit app.login.php. Lève en cas d'erreur de validation. */
+/** Valide (côté Melis) + enregistre en base. Lève en cas d'erreur de validation. */
 export async function saveOtherConfig(config: OtherConfig): Promise<void> {
   await apiFetch<{ saved: boolean }>('/melis/react-api/otherconfig/save', {
     method: 'POST',

@@ -462,7 +462,9 @@ class MelisCoreCreatePasswordService extends MelisGeneralService implements Meli
             // Password history (audit item 16.0): every path that sets a password records it.
             $user = $userTable->getEntryByField('usr_login', $login)->current();
             if ($user) {
-                $this->getServiceManager()->get('MelisPasswordPolicyService')->recordHistory((int) $user->usr_id, $hash);
+                $policy = $this->getServiceManager()->get('MelisPasswordPolicyService');
+                $policy->recordHistory((int) $user->usr_id, $hash);
+                $policy->clearForcedReset((int) $user->usr_id);
             }
             
             $success = true;

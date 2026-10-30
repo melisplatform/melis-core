@@ -1,5 +1,42 @@
 <?php
 
+// "Force password reset at next login" (Yes/No), shared by the new-user and edit-user forms of the
+// user tool. Only the element id differs between the two modals.
+$forcePasswordResetElement = static function ($id) {
+    return [
+        'spec' => [
+            'name' => 'usr_force_password_reset',
+            'type' => \Laminas\Form\Element\Select::class,
+            'options' => [
+                'label' => 'tr_meliscore_tool_user_col_force_password_reset',
+                'tooltip' => 'tr_meliscore_tool_user_col_force_password_reset tooltip',
+                'value_options' => [
+                    '0' => 'tr_meliscore_tool_user_force_password_reset_no',
+                    '1' => 'tr_meliscore_tool_user_force_password_reset_yes',
+                ],
+            ],
+            'attributes' => [
+                'id' => $id,
+                'value' => '0',
+            ],
+        ],
+    ];
+};
+
+$forcePasswordResetFilter = [
+    'name' => 'usr_force_password_reset',
+    'required' => false,
+    'validators' => [
+        [
+            'name' => 'InArray',
+            'options' => [
+                'haystack' => ['0', '1'],
+            ],
+        ],
+    ],
+    'filters' => [],
+];
+
 return [
     'plugins' => [
         'melisModuleDiagnostics' => [
@@ -315,6 +352,7 @@ return [
                                         ],
                                     ],
                                 ],
+                                $forcePasswordResetElement('id_usr_force_password_reset_new'),
                                 [
                                     'spec' => [
                                         'name' => 'usr_firstname',
@@ -411,6 +449,7 @@ return [
                                 ],
                             ], // end elements
                             'input_filter' => [
+                                'usr_force_password_reset' => $forcePasswordResetFilter,
                                 'usr_login' => [
                                     'name' => 'usr_login',
                                     'required' => true,
@@ -832,6 +871,7 @@ return [
                                         ],
                                     ],
                                 ],
+                                $forcePasswordResetElement('id_usr_force_password_reset'),
 
                                 [
                                     'spec' => [
@@ -941,6 +981,7 @@ return [
 
                             ], // end edit elements
                             'input_filter' => [
+                                'usr_force_password_reset' => $forcePasswordResetFilter,
                                 'usr_id' => [
                                     'name' => 'usr_id',
                                     'required' => false,

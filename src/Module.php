@@ -483,10 +483,6 @@ class Module
 
         ];
 
-        // include login config if it exists
-        $loginConfigPath = __DIR__ . '/../config/app.login.php';
-        $configFiles[] = file_exists($loginConfigPath) ? include $loginConfigPath : [];
-
         foreach ($configFiles as $file) {
             $config = ArrayUtils::merge($config, $file);
         }
