@@ -889,7 +889,11 @@ class MelisCoreRightsService extends MelisServiceManager implements MelisCoreRig
         ];
         $tools = [];
         foreach ($appConfigPaths as $idx => $path) {
-            $appConfigPath = $melisKeys[$path];
+            // Skip sections whose module is not loaded (e.g. melisai_toolstree_section without MelisAI).
+            $appConfigPath = $melisKeys[$path] ?? null;
+            if ($appConfigPath === null) {
+                continue;
+            }
             $appsConfig = $melisAppConfig->getItem($appConfigPath);
             $orderInterface = $melisAppConfig->getOrderInterfaceConfig($path);
             // An `is_parent_tool` section (MelisMarketPlace is the only one) has NO interface
@@ -1464,7 +1468,13 @@ class MelisCoreRightsService extends MelisServiceManager implements MelisCoreRig
         $tools = [];
 
         foreach ($appConfigPaths as $idx => $path) {
-            $appConfigPath = $melisKeys[$path];
+            // A section whose module is not loaded (e.g. melisai_toolstree_section without MelisAI)
+            // has no melisKey: skip it instead of emitting an "Undefined array key" warning that
+            // leaks into every react-api JSON response (breaks res.json() + sends headers early).
+            $appConfigPath = $melisKeys[$path] ?? null;
+            if ($appConfigPath === null) {
+                continue;
+            }
             $appsConfig = $this->getConfig()->getItem($appConfigPath);
             $orderInterface = $this->getConfig()->getOrderInterfaceConfig($path);
 
