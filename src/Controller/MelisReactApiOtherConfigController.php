@@ -9,13 +9,13 @@ use MelisCore\Controller\MelisAbstractActionController;
 
 /**
  * API REST pour l'outil "Autres Configurations" (onglet Core) de MelisCore — politique de
- * connexion / mot de passe stockée dans `vendor/melisplatform/melis-core/config/app.login.php`.
+ * connexion / mot de passe stockée dans la table `melis_core_login_config`.
  *
  * Routes :
  *   GET  /melis/react-api/otherconfig        → { config: { ...16 clés... } } (valeurs courantes)
- *   POST /melis/react-api/otherconfig/save   → body { config: {...} } → valide + écrit app.login.php
+ *   POST /melis/react-api/otherconfig/save   → body { config: {...} } → valide + enregistre en base
  *
- * Toute la logique métier (validation conditionnelle des 4 formulaires + écriture du fichier)
+ * Toute la logique métier (validation conditionnelle des 4 formulaires + enregistrement)
  * reste côté Melis : on délègue à `MelisPasswordSettingsService::saveItem()`, le même service
  * que le listener legacy `meliscore_save_other_config`. Ce contrôleur ne fait que lire/sérialiser.
  */
@@ -26,7 +26,7 @@ class MelisReactApiOtherConfigController extends MelisAbstractActionController
     /** melisKey de l'outil — gardes de droits (accès + capacité). */
     private const MELIS_KEY = 'meliscore_tool_other_config';
 
-    /** Les 16 clés de configuration (app.login.php → plugins.meliscore.datas.login). */
+    /** Les 16 clés de configuration (une ligne par clé dans melis_core_login_config). */
     private const KEYS = [
         'login_account_lock_status',
         'login_account_admin_email',
@@ -54,12 +54,11 @@ class MelisReactApiOtherConfigController extends MelisAbstractActionController
         if ($denyCap = $this->denyUnlessCan('list')) { return $denyCap; }
 
         try {
-            // Parité stricte avec le legacy : les valeurs par défaut (app.login.php absent)
-            // viennent de `meliscore/datas/otherconfig_default/login` (config/otherconfig.php),
-            // et sont écrasées par `meliscore/datas/login` (app.login.php mergé au boot) quand
-            // le fichier existe. NE PAS hardcoder les défauts ici : le legacy pré-remplit p.ex.
-            // login_account_admin_email = contact@melistechnology.com — sans quoi un simple
-            // « Enregistrer » échoue sur le validateur email requis et app.login.php n'est jamais écrit.
+            // Parité stricte avec le legacy : les valeurs par défaut (rien d'enregistré) viennent
+            // de `meliscore/datas/otherconfig_default/login` (config/otherconfig.php), écrasées par
+            // les valeurs enregistrées en base. NE PAS hardcoder les défauts ici : le legacy
+            // pré-remplit p.ex. login_account_admin_email = contact@melistechnology.com — sans quoi
+            // un simple « Enregistrer » échoue sur le validateur email requis.
             $config = $this->effectiveLoginConfig();
             return $this->jsonResponse(['success' => true, 'data' => ['config' => $config]]);
         } catch (\Throwable $e) {
@@ -69,14 +68,11 @@ class MelisReactApiOtherConfigController extends MelisAbstractActionController
 
     /**
      * Config effective de la politique connexion/mot de passe : les 16 clés, en string.
-     * Défauts (`otherconfig_default/login`) surchargés par les valeurs sauvegardées (`login`).
+     * Défauts (`otherconfig_default/login`) surchargés par les valeurs enregistrées en base.
      */
     private function effectiveLoginConfig(): array
     {
-        $melisConfig = $this->getServiceManager()->get('MelisCoreConfig');
-        $defaults = $melisConfig->getItem('meliscore/datas/otherconfig_default/login') ?: [];
-        $saved    = $melisConfig->getItem('meliscore/datas/login') ?: [];
-        $merged   = array_merge(is_array($defaults) ? $defaults : [], is_array($saved) ? $saved : []);
+        $merged = $this->getServiceManager()->get('MelisPasswordSettingsService')->getLoginSettings();
 
         $config = [];
         foreach (self::KEYS as $k) {
@@ -106,19 +102,15 @@ class MelisReactApiOtherConfigController extends MelisAbstractActionController
                 $settings[$k] = isset($in[$k]) ? (string) $in[$k] : '';
             }
 
-            // Délègue toute la logique métier (validation conditionnelle + écriture app.login.php).
+            // Délègue toute la logique métier (validation conditionnelle + enregistrement en base).
             $result = $this->getServiceManager()->get('MelisPasswordSettingsService')->saveItem($settings);
 
             if (empty($result['success'])) {
                 $fields = $result['errors'] ?? [];
-                // Pas d'erreurs de champ → la validation est passée mais l'écriture d'app.login.php
-                // a échoué (MelisPasswordSettingsService avale l'exception). Cause typique : le dossier
-                // config de melis-core n'est pas accessible en écriture par le process PHP (www-data).
                 $message = $this->flattenErrors($fields);
                 if ($message === '') {
-                    $message = "Configuration valide mais impossible d'écrire app.login.php : "
-                        . "le dossier vendor/melisplatform/melis-core/config n'est pas accessible "
-                        . "en écriture par le serveur.";
+                    $message = $this->getServiceManager()->get('translator')
+                        ->translate('tr_meliscore_tool_other_config_unable_to_save');
                 }
                 return $this->jsonResponse([
                     'success' => false,
@@ -134,11 +126,6 @@ class MelisReactApiOtherConfigController extends MelisAbstractActionController
     }
 
     // ─── Helpers ──────────────────────────────────────────────────────────────
-
-    private function configFile(): string
-    {
-        return $_SERVER['DOCUMENT_ROOT'] . '/../vendor/melisplatform/melis-core/config/app.login.php';
-    }
 
     /** Aplatit les messages d'erreur de formulaire Laminas en une chaîne lisible. */
     private function flattenErrors(array $errors): string

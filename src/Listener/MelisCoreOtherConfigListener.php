@@ -70,7 +70,7 @@ class MelisCoreOtherConfigListener extends MelisGeneralListener implements Liste
                 $passwordSettings['password_complexity_use_upper_case']     = $coreConfigData['password_complexity_use_upper_case'] ?? '';
                 $passwordSettings['password_complexity_use_digit']          = $coreConfigData['password_complexity_use_digit'] ?? '';
 
-                // Save Data to app.login.php
+                // Save Data to the melis_core_login_config table
                 $passwordSettingsService = $event->getTarget()->getEvent()->getApplication()->getServiceManager()->get('MelisPasswordSettingsService');
                 $result = $passwordSettingsService->saveItem($passwordSettings);
                

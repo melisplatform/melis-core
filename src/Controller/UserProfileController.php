@@ -259,7 +259,9 @@ class UserProfileController extends MelisAbstractActionController
                             $res = $userTable->save($data, $this->getCurrentUserId());
                             if ($res && !empty($newPass)) {
                                 // Password history (audit item 16.0)
-                                $this->getServiceManager()->get('MelisPasswordPolicyService')->recordHistory((int) $this->getCurrentUserId(), $newPass);
+                                $policy = $this->getServiceManager()->get('MelisPasswordPolicyService');
+                                $policy->recordHistory((int) $this->getCurrentUserId(), $newPass);
+                                $policy->clearForcedReset((int) $this->getCurrentUserId());
                             }
                             
                             //check if saving was success

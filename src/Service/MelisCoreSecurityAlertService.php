@@ -278,12 +278,7 @@ class MelisCoreSecurityAlertService extends MelisGeneralService
         $emails = isset($config['alert_emails']) ? (string) $config['alert_emails'] : '';
 
         if (trim($emails) === '') {
-            $loginConfig = $this->getServiceManager()->get('MelisCoreConfig')->getItem('meliscore/datas/login');
-
-            if (empty($loginConfig)) {
-                $loginConfig = $this->getServiceManager()->get('MelisCoreConfig')
-                    ->getItem('meliscore/datas/otherconfig_default/login');
-            }
+            $loginConfig = $this->getServiceManager()->get('MelisPasswordSettingsService')->getLoginSettings();
 
             $emails = isset($loginConfig['login_account_admin_email']) ? $loginConfig['login_account_admin_email'] : '';
         }
