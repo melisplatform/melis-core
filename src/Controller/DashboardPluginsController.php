@@ -29,14 +29,11 @@ class DashboardPluginsController extends MelisAbstractActionController
     public function dashboardMenuAction()
     {
         $melisKey = $this->params()->fromRoute('melisKey', '');
-        // melis plugin service
         $pluginSvc = $this->getServiceManager()->get('MelisCorePluginsService');
         // check for new  or manually installed plugins and saved in db
         $pluginSvc->checkDashboardPlugins();
         // put section of dashboard plugins
-        // get the latest plugin installed
         $latesPlugin = $pluginSvc->getLatestPlugin($pluginSvc::DASHBOARD_PLUGIN_TYPE);
-        // for new plugin notifications
         $pluginMenuHandler = $pluginSvc->getNewPluginMenuHandlerNotifDuration();
 
         $view = new ViewModel();
@@ -47,7 +44,6 @@ class DashboardPluginsController extends MelisAbstractActionController
         return $view;
     }
 
-
     /**
      * Render Dashboard Menu Content
      *
@@ -56,10 +52,6 @@ class DashboardPluginsController extends MelisAbstractActionController
     public function dashboardMenuContentAction()
     {
 
-        /**
-         * Check if cache exist
-         */
-        // Get Current User ID
         $melisCoreAuth = $this->getServiceManager()->get('MelisCoreAuth');
         $userAuthDatas = $melisCoreAuth->getStorage()->read();
         $melisCoreCacheSystem = $this->getServiceManager()->get('MelisCoreCacheSystemService');
@@ -130,29 +122,16 @@ class DashboardPluginsController extends MelisAbstractActionController
 
             }
         }
-        // melis plugin service
-//        $pluginSvc = $this->getServiceManager()->get('MelisCorePluginsService');
         // check for new  or manually installed plugins and saved in db
-//        $pluginSvc->checkDashboardPlugins();
         // put section of dashboard plugins
         $plugins = $this->putSectionOnPlugins($plugins);
         // organized plugins or put them into their respective sections
         $plugins = array_filter($this->organizedPluginsBySection($plugins));
-        // get the latest plugin installed
-//        $latesPlugin = $pluginSvc->getLatestPlugin($pluginSvc::DASHBOARD_PLUGIN_TYPE);
-        // for new plugin notifications
-//        $pluginMenuHandler = $pluginSvc->getNewPluginMenuHandlerNotifDuration();
 
         $view = new ViewModel();
         $view->setTemplate('melis-core/dashboard-plugin/dashboard-menu-content')->setVariables([
             'plugins' => $plugins
         ]);
-//        $view->setVariable('plugins', $plugins);
-//        $view->melisKey = $melisKey;
-//        $view->latestPluginInstalled = $latesPlugin;
-//        $view->newPluginNotification = $pluginMenuHandler;
-
-//        return $view;
 
         $renderer       = $this->getServiceManager()->get('ViewRenderer');
         $renderedView = $renderer->render($view);
@@ -177,7 +156,6 @@ class DashboardPluginsController extends MelisAbstractActionController
         $dashboardPluginsService = $this->getServiceManager()->get('MelisCoreDashboardPluginsService');
         $hasPlugins = $dashboardPluginsService->hasPlugins();
 
-        // Dashboard ID
         $dashboardId = $this->params()->fromQuery('dashboardId', 'id_meliscore_toolstree_section_dashboard');
 
         $moduleSvc = $this->getServiceManager()->get('MelisAssetManagerModulesService');
@@ -223,7 +201,6 @@ class DashboardPluginsController extends MelisAbstractActionController
      */
     public function getPluginAction()
     {
-        // return plugin view
         $request = $this->getRequest();
         $pluginConfigPost = $request->getPost()->toArray();
 
@@ -332,7 +309,6 @@ class DashboardPluginsController extends MelisAbstractActionController
             }
         }
 
-
         return $pluginList;
     }
     private function organizedPluginsBySection($plugins)
@@ -350,7 +326,6 @@ class DashboardPluginsController extends MelisAbstractActionController
             $fallbackSection = $configSvc->getItem('/meliscore/datas/fallBacksection');
             $marketPlaceModuleSection = $fallbackSection;
         }
-        //custom section
         $customSection = [
             'MelisCommerce', // special section
             'Others',
@@ -366,7 +341,6 @@ class DashboardPluginsController extends MelisAbstractActionController
             }
         }
         if (! empty($plugins)) {
-            // organized plugins by section
             $publicModules = $melisPuginsSvc->getMelisPublicModules(null,true);
            foreach ($plugins  as $moduleName => $dashboardPlugins) {
                /*
@@ -390,7 +364,6 @@ class DashboardPluginsController extends MelisAbstractActionController
                            $pluginSection = $config['section'];
                        }
                        if (in_array($pluginSection,$melisSection)) {
-                           // set a plugin in a section
                            $newPluginList[$pluginSection][$moduleName][$pluginId] = $config;
                            // indication that the plugin is newly installed
                            $newPluginList[$pluginSection][$moduleName][$pluginId]['isNew'] = $melisPuginsSvc->pluginIsNew($pluginId);

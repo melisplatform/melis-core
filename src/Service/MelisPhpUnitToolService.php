@@ -170,7 +170,6 @@ class MelisPhpUnitToolService extends MelisCoreLogService
             $results = 'Error: <strong>'.$phpUnit.'</strong> not found, please download the latest release at : https://phar.phpunit.de/phpunit.phar';
         }
 
-
         return $results;
     }
 
@@ -225,13 +224,11 @@ class MelisPhpUnitToolService extends MelisCoreLogService
                 $totalSuccess = $totalTests - $totalFailed;
 
                 if($totalTests > 1) {
-                    // loop through test cases
 
                     foreach($testcase as $count => $testChild) {
                         $status = 'success';
                         $message = '';
                         $type = '';
-
 
                         if(isset($testChild['failure'])) {
                             $status = 'failed';

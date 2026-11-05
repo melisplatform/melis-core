@@ -27,7 +27,6 @@ class MelisCoreCheckUserRightsListener extends MelisGeneralListener implements L
             function ($e) {
 
                 $sm = $e->getTarget()->getEvent()->getApplication()->getServiceManager();
-                // update the session last check and interval
                 $container  = new Container('meliscore');
                 $userSvc    = $sm->get('MelisCoreAuth');
                 $user       = $userSvc->getIdentity();
@@ -38,7 +37,6 @@ class MelisCoreCheckUserRightsListener extends MelisGeneralListener implements L
                     $difference = $lastUpdate->diff($timeNow)->i;
                 }
 
-                // checks the user accessibility in every 5 minutes
                 if($difference >= self::INTERVAL_TO_UPDATE) {
 
                     $container->melis_user_session_last_update = date('H:i:s');
@@ -52,21 +50,17 @@ class MelisCoreCheckUserRightsListener extends MelisGeneralListener implements L
                         if (empty($userData)) {
                             $e->getTarget()->forward()->dispatch(
                                 'MelisCore\Controller\MelisAuth',array('action' => 'logout'));
-                            // force redirect to login
                             $e->getTarget()->plugin('redirect')->toUrl('/melis/login');
                         }  else {
                             $isActive= (bool) $userData->usr_status;
-                            // check if the user is still active
                             if (!$isActive) {
                                 $e->getTarget()->forward()->dispatch(
                                     'MelisCore\Controller\MelisAuth',array('action' => 'logout'));
                                 $e->getTarget()->plugin('redirect')->toUrl('/melis/login');
                             } else {
-                                // or, reload the rights
 
                                 // Update the rights of the user if it's not a custom role
                                 if ($user->usr_role_id != 1) {
-                                    // Get rights from Role table
                                     $tableUserRole = $sm->get('MelisCoreTableUserRole');
                                     $datasRole = $tableUserRole->getEntryById($user->usr_role_id);
                                     if ($datasRole) {

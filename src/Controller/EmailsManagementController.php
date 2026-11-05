@@ -26,9 +26,6 @@ class EmailsManagementController extends MelisAbstractActionController
     const TOOL_KEY = 'meliscore_emails_mngt_tool';
     const INTERFACE_KEY = 'meliscore_tool_emails_mngt';
 
-    /*
-     * Render Emails Mngt. Contanier
-     * */
     public function renderToolEmailsMngtContainerAction(){
 
         $translator = $this->getServiceManager()->get('translator');
@@ -44,18 +41,12 @@ class EmailsManagementController extends MelisAbstractActionController
         return $view;
     }
 
-    /*
-     * Render Emails Mngt. Header
-     * */
     public function renderToolEmailsMngtHeaderAction(){
         $view = new ViewModel();
         $view->melisKey = $this->params()->fromRoute('melisKey', '');
         return $view;
     }
 
-    /*
-     * Render Emails Mngt. Header Add Button
-     * */
     public function renderToolEmailsMngtHeaderBtnAddAction(){
 
         $view = new ViewModel();
@@ -64,33 +55,23 @@ class EmailsManagementController extends MelisAbstractActionController
 
     }
 
-    /*
-     * Render Emails Mngt. Page Refresh Button
-     * */
     public function renderToolEmailsMngtTableRefreshAction(){
         $view = new ViewModel();
         $view->melisKey = $this->params()->fromRoute('melisKey', '');
         return $view;
     }
 
-    /*
-     * Render Emails Mngt. Page Search Input
-     * */
     public function renderToolEmailsMngtTableSearchAction(){
         $view = new ViewModel();
         $view->melisKey = $this->params()->fromRoute('melisKey', '');
         return $view;
     }
 
-    /*
-     * Render Emails Mngt. Table Action Edit
-     * */
     public function renderToolEmailsMngtContentActionEditAction(){
         $view = new ViewModel();
         $view->melisKey = $this->params()->fromRoute('melisKey', '');
         return $view;
     }
-
 
     /**
      * Getting the Tab title for Tab Edition
@@ -108,27 +89,18 @@ class EmailsManagementController extends MelisAbstractActionController
         return new JsonModel(array('title'=>$title));
     }
 
-    /*
-     * Render Emails Mngt. Table Action Edit
-     * */
     public function renderToolEmailsMngtContentActionDeleteAction(){
         $view = new ViewModel();
         $view->melisKey = $this->params()->fromRoute('melisKey', '');
         return $view;
     }
 
-    /*
-     * Render Emails Mngt. Content
-     * */
     public function renderToolEmailsMngtContentAction(){
         $view = new ViewModel();
         $view->melisKey = $this->params()->fromRoute('melisKey', '');
         return $view;
     }
 
-    /*
-     * Render Emails Mngt. Content Table
-     * */
     public function renderToolEmailsMngtContentTableAction(){
 
         $translator = $this->getServiceManager()->get('translator');
@@ -136,7 +108,6 @@ class EmailsManagementController extends MelisAbstractActionController
         $melisTool->setMelisToolKey(self::TOOL_INDEX, self::TOOL_KEY);
 
         $columns = $melisTool->getColumns();
-        // pre-add Action Columns
         $columns['actions'] = array('text' => $translator->translate('tr_meliscore_global_action'));
 
         // Custom Datatable configuration
@@ -151,9 +122,6 @@ class EmailsManagementController extends MelisAbstractActionController
         return $view;
     }
 
-    /*
-     * Get Current Emails Entries
-     * */
     public function getEmailsEntriesAction(){
         /** @INFO: Access check (tool right) */
         if (! $this->hasAccess(self::INTERFACE_KEY)) {
@@ -177,10 +145,8 @@ class EmailsManagementController extends MelisAbstractActionController
 
             $dataCount = $BOEmails->getTotalData();
 
-            // Get Email App
             $melisMelisCoreConfig = $this->getServiceManager()->get('MelisCoreConfig');
             $emailsConfig = $melisMelisCoreConfig->getItem('meliscore/emails/');
-
 
             $getData = $BOEmails->fetchAll();
             $tableData = $getData->toArray();
@@ -192,7 +158,6 @@ class EmailsManagementController extends MelisAbstractActionController
                     $tableData[$ctr][$vKey] = $melisTool->escapeHtml($melisTool->limitedText($vValue,50));
                 }
 
-                // Init indicator
                 $tableData[$ctr]['boe_indicator'] = '';
                 $tableData[$ctr]['boe_lang'] = $this->getEmailsLanguages($tableData[$ctr]['boe_code_name']);
 
@@ -214,8 +179,6 @@ class EmailsManagementController extends MelisAbstractActionController
                             $tableData[$ctr]['boe_reply_to'] = ($tableData[$ctr]['boe_reply_to']) ? $tableData[$ctr]['boe_reply_to'] : $boe_reply_to;
                             $tableData[$ctr]['DT_RowClass'] = 'boEmailsMergeData';
 
-
-
                             unset($emailsConfig[$key]);
                         }
                     }
@@ -226,7 +189,6 @@ class EmailsManagementController extends MelisAbstractActionController
                 $tempTableData[$ctr] = $tableData[$ctr];
             }
 
-            // Sorting Array
             // Database Data with Data from App.emails will place at the top/first of the array
             usort($tempTableData, function($a, $b) {
                 return $a['boe_indicator'] <=> $b['boe_indicator'];
@@ -235,7 +197,6 @@ class EmailsManagementController extends MelisAbstractActionController
             $tempEmailsConfig = array();
             foreach ($emailsConfig As $key => $val){
 
-                // Get the Email Content Languages Available
                 $melisMelisCoreConfig = $this->getServiceManager()->get('MelisCoreConfig');
                 $emailsConfigData = $melisMelisCoreConfig->getItem('meliscore/emails/'.$key);
 
@@ -256,7 +217,6 @@ class EmailsManagementController extends MelisAbstractActionController
                         }
                     }
                 }
-
 
                 $emailLangString = implode(', ', $emailLangString);
 
@@ -323,10 +283,6 @@ class EmailsManagementController extends MelisAbstractActionController
         return $emailLangString;
     }
 
-
-    /**
-     * Render Page Creation and Edition
-     * */
     public function renderEmailsMngtAction(){
 
         $translator = $this->getServiceManager()->get('translator');
@@ -344,9 +300,6 @@ class EmailsManagementController extends MelisAbstractActionController
         return $view;
     }
 
-    /*
-     * Render Page Creation and Edition Header
-     * */
     public function renderEmailsMngtHeaderAction(){
         $translator = $this->getServiceManager()->get('translator');
         $codename = $this->params()->fromRoute('codename', $this->params()->fromQuery('codename', ''));
@@ -368,9 +321,6 @@ class EmailsManagementController extends MelisAbstractActionController
         return $view;
     }
 
-    /*
-     * Render Page Creation and Edition Header Save Button
-     * */
     public function renderEmailsMngtHeaderSaveAction(){
         $translator = $this->getServiceManager()->get('translator');
         $codename = $this->params()->fromRoute('codename', $this->params()->fromQuery('codename', ''));
@@ -381,18 +331,12 @@ class EmailsManagementController extends MelisAbstractActionController
         return $view;
     }
 
-    /*
-     * Render Page Creation and Edition Content
-     * */
     public function renderEmailsMngtContentAction(){
         $view = new ViewModel();
         $view->melisKey = $this->params()->fromRoute('melisKey', '');
         return $view;
     }
 
-    /*
-     * Render Page Creation and Edition Tab Navigator
-     * */
     public function renderEmailsMngtContentlangTabNavAction(){
         $translator = $this->getServiceManager()->get('translator');
         $codename = $this->params()->fromRoute('codename', $this->params()->fromQuery('codename', ''));
@@ -415,9 +359,6 @@ class EmailsManagementController extends MelisAbstractActionController
         return $view;
     }
 
-    /*
-     * Render Page Creation and Edition Tab Content
-     * */
     public function renderEmailsMngtContentLangTabContentAction() {
         $view = new ViewModel();
         $translator = $this->getServiceManager()->get('translator');
@@ -453,7 +394,6 @@ class EmailsManagementController extends MelisAbstractActionController
 
             $dbExist = TRUE;
 
-            // Get Email App
             $melisMelisCoreConfig = $this->getServiceManager()->get('config');
             $emailsConfig = isset($melisMelisCoreConfig['plugins']['meliscore']['emails'][$codename]) ? $melisMelisCoreConfig['plugins']['meliscore']['emails'][$codename] : array();
 
@@ -574,7 +514,6 @@ class EmailsManagementController extends MelisAbstractActionController
                     array_push($emailsDetailsData, $tempemailsDetailsData);
                 }
 
-
                 $view->emailsDetailsDatas = $emailsDetailsData;
 
             }else{
@@ -612,12 +551,10 @@ class EmailsManagementController extends MelisAbstractActionController
                 }
             }
 
-            // Get Layout file's status
             $boeContentLayout = $generalPropertiesForm->get('boe_content_layout')->getValue() ?? '';           
             $view->layout = $this->getLayoutFileStatus($boeContentLayout);
         }
 
-        // Get Cms Platform ID form from  App Tool
         $melisMelisCoreConfig = $this->getServiceManager()->get('MelisCoreConfig');
         $emailsDetails = $melisMelisCoreConfig->getFormMergedAndOrdered('meliscore/tools/meliscore_emails_mngt_tool/forms/meliscore_emails_mngt_tool_emails_details_form','meliscore_emails_mngt_tool_emails_details_form');
         $emailsDetailsForm = $factory->createForm($emailsDetails);
@@ -644,12 +581,10 @@ class EmailsManagementController extends MelisAbstractActionController
             'status' => false,
             'msg' => $translator->translate('tr_meliscore_file_not_exists') // File was not found.
         ];
-        // construct file path
         $internalPath   = explode('/', $path);
         $fileName       = $internalPath[count($internalPath) - 1];
         $module         = $internalPath[0]; //str_replace(' ', '', ucwords(str_replace('-', ' ', $internalPath[0])));
 
-        // Getting subfolders
         $subfolders     = '';
         for ($i = 1; $i < count($internalPath) - 1; $i++) {
             $subfolders .= $internalPath[$i] . '/';
@@ -666,9 +601,6 @@ class EmailsManagementController extends MelisAbstractActionController
         return $fileStatus;
     }
 
-    /*
-     * Adding new Email
-     * */
     public function saveEmailAction(){
         /** @INFO: Access check (tool right) */
         if (! $this->hasAccess(self::INTERFACE_KEY)) {
@@ -731,14 +663,12 @@ class EmailsManagementController extends MelisAbstractActionController
 
                 $datas = array_merge($datas, $request->getFiles()->toArray(), $layoutFtrInfoPost);
 
-                // File Input Validator and Filter
                 $fileInput = new FileInput('boe_content_layout_logo');
                 $fileInput->setRequired(false);
 
                 // You only need to define validators and filters
                 // as if only one file was being uploaded. All files
                 // will be run through the same validators and filters
-                // automatically.
                 $fileInput->getValidatorChain()
                     ->attachByName('filesize',
                         [
@@ -760,8 +690,6 @@ class EmailsManagementController extends MelisAbstractActionController
                     mkdir(__DIR__.'/../../../../../public/media/email-layout-logo', 0755);
 
                 // All files will be renamed, i.e.:
-                //   ../melis-logo_4b3403665fea6.png,
-                //   .../melis-logo_5c45147660fb7.png
                 $fileInput->getFilterChain()                  // Filters are run second w/ FileInput
                 ->attach(new \Laminas\Filter\File\RenameUpload(
                         array(
@@ -775,26 +703,11 @@ class EmailsManagementController extends MelisAbstractActionController
                 $inputFilter->add($fileInput);
                 $propertyForm->setInputFilter($inputFilter);
 
-                // File input end
-
                 $codename = $datas['codename'];
-
-                // if ($codename=='NEW'){
-                //     $logTypeCode = 'CORE_BO_EMAIL_ADD';
-                // }else{
-                //     $logTypeCode = 'CORE_BO_EMAIL_UPDATE';
-                // }
 
                 unset($datas['codename']);
 
                 // // Response Temporary Initialized and can be overrided
-                // if ($codename!='NEW'){
-                //     $textTitle = 'tr_emails_management_edition';
-                //     $textMessage = 'tr_emails_management_unable_to_update';
-                // }else{
-                //     $textTitle = 'tr_emails_management_creation';
-                //     $textMessage = 'tr_emails_management_unable_to_add';
-                // }
 
                 // Reinitialize Codename if not Set
                 // This means that Codename is Exist in App.mail that disabled on Email Edition
@@ -834,7 +747,6 @@ class EmailsManagementController extends MelisAbstractActionController
                     }
                 }
 
-                // Codename "NEW" is reserve Codename
                 if ($datas['boe_code_name']=='NEW'){
                     $codeNameError['boe_code_name'] = array(
                         'codenameReserve' => $translator->translate('tr_emails_management_emal_boe_code_name_reserved')
@@ -916,7 +828,6 @@ class EmailsManagementController extends MelisAbstractActionController
                 $errors = $propertyForm->getMessages();
             }
 
-
             if (!empty($errors)) {
                 $appConfigForm = $generalProperties['elements'];
 
@@ -929,7 +840,6 @@ class EmailsManagementController extends MelisAbstractActionController
                     }
                 }
 
-                // Fileinput error messages
                 if (!empty($errors['boe_content_layout_logo'])) {
                     $fileInputErr = $errors['boe_content_layout_logo'];
 
@@ -940,9 +850,6 @@ class EmailsManagementController extends MelisAbstractActionController
                     if (!empty($fileInputErr['fileMimeTypeFalse']))
                         $errors['boe_content_layout_logo']['fileMimeTypeFalse'] = $translator->translate('tr_emails_management_invalid_image_type');
 
-                    //                if (!empty($fileInputErr['fileImageSizeWidthTooBig']))
-                    //                    $errors['boe_content_layout_logo']['fileImageSizeWidthTooBig'] = $translator->translate('Image width should be 800 pexils or less');
-
                     if (!empty($fileInputErr['fileSizeTooBig']))
                         $errors['boe_content_layout_logo']['fileSizeTooBig'] = $translator->translate('tr_emails_management_invalid_image_size');
 
@@ -952,7 +859,6 @@ class EmailsManagementController extends MelisAbstractActionController
             }
         }
 
-        //die(var_dump($errors));
         $response = array(
             'success' => $status,
             'textTitle' => $textTitle,
@@ -966,9 +872,6 @@ class EmailsManagementController extends MelisAbstractActionController
         return new JsonModel($response);
     }
 
-    /*
-     * Deleting Email
-     * */
     public function deleteEmailAction(){
         /** @INFO: Access check (tool right) */
         if (! $this->hasAccess(self::INTERFACE_KEY)) {
@@ -1018,7 +921,6 @@ class EmailsManagementController extends MelisAbstractActionController
 
         $melisCoreBOEmailService = $this->getServiceManager()->get('MelisCoreBOEmailService');
         $BoEmailId = $melisCoreBOEmailService->deleteEmail("Get");
-
 
         $response = array(
             'success' => 1,

@@ -69,18 +69,15 @@ class PlatformsController extends MelisAbstractActionController
         $melisKey = $this->params()->fromRoute('melisKey', '');
         $melisTool = $this->getServiceManager()->get('MelisCoreTool');
         $melisTool->setMelisToolKey(self::TOOL_INDEX, self::TOOL_KEY);
-        
-        
+
         $columns = $melisTool->getColumns();
-        // pre-add Action Columns
         $columns['actions'] = array('text' => $translator->translate('tr_meliscore_global_action'));
         
         $view = new ViewModel();
         $view->melisKey = $melisKey;
         $view->tableColumns = $columns;
         $view->getToolDataTableConfig = $melisTool->getDataTableConfiguration();
-        
-        
+
         return $view;
     }
     
@@ -251,7 +248,6 @@ class PlatformsController extends MelisAbstractActionController
                     $tableData[$ctr][$vKey] = $melisTool->limitedText($vValue);
                 }
                 
-                // Updating marketplace status
                 $marketPlaceIconn = '<i class="fa fa-fw fa-circle text-success"></i>';
                 if (!$tableData[$ctr]['plf_update_marketplace'])
                 {
@@ -263,8 +259,6 @@ class PlatformsController extends MelisAbstractActionController
                 if (getenv('MELIS_PLATFORM') == $tableData[$ctr]['plf_name']){
                     $tableData[$ctr]['DT_RowClass'] = 'noPlatformDeleteBtn';
                 }
-                //check if cache is active
-                // Updating marketplace status
                 $isCacheActive = '<i class="fa fa-fw fa-circle text-success"></i>';
                 if (!$tableData[$ctr]['plf_activate_cache'])
                 {

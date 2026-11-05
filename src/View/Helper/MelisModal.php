@@ -124,7 +124,6 @@ class MelisModal extends AbstractHelper
        //find the tab id in the tabs string
        $posTabText = strpos($this->_tabs, $tabId);
        $postContentText = strpos($this->_contents, '<div class="tab-pane" id="'.$tabId.'">');
-       // for the tab
        if($posTabText !== false) {
 
            $capturedText = substr($this->_tabs, 0, $posTabText) . $tabId;
@@ -132,7 +131,6 @@ class MelisModal extends AbstractHelper
            $reStateTab = $this->_tabs;
            $this->_tabs = str_replace($capturedText, $activeState, $reStateTab);
            
-           // for the content
            $capturedContentText = substr($this->_contents, 0, $postContentText);
            $activeContentState  = str_replace('<div class="tab-pane" id="'.$tabId.'">', '<div class="tab-pane active" id="'.$tabId.'"  data-edited="true">', $capturedContentText);
            $reStateContent = $this->_contents;

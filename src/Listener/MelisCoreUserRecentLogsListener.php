@@ -23,7 +23,6 @@ class MelisCoreUserRecentLogsListener extends MelisGeneralListener implements Li
 			function($e){
 				$sm = $e->getTarget()->getEvent()->getApplication()->getServiceManager();
 				
-				// Get Cureent User ID
 				$melisCoreAuth = $sm->get('MelisCoreAuth');
 				$userAuthDatas =  $melisCoreAuth->getStorage()->read();
 				$userId = (int) $userAuthDatas->usr_id;
@@ -46,20 +45,10 @@ class MelisCoreUserRecentLogsListener extends MelisGeneralListener implements Li
                     }
                 }
 
-//        		foreach ($recentUserLogs As $key => $val)
-//        		{
 //
 //        		    // Retrieving the Log from Log Entity
-//					$log = $val->getLog();
-//					if (! empty($log)) {
-//						$title   = $log->log_title;
-//						$message = $log->log_message;
-//						$icon = ($log->log_action_status) ? $flashMsgSrv::INFO : $flashMsgSrv::WARNING;
 //
-//						$flashMsgSrv->addToFlashMessenger($title, $message, $icon, $log->log_date_added);
-//					}
 //
-//        		}
 		});
 	}
 }

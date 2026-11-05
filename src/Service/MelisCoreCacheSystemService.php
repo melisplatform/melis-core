@@ -69,7 +69,6 @@ class MelisCoreCacheSystemService extends MelisServiceManager
 		{
 			$conf = $config['caches'][$confCache];
 			
-			// Get default ttl from adapater config
 			if (!empty($conf['adapter']['options']['ttl']))
 				$ttl = $conf['adapter']['options']['ttl'];
 			
@@ -98,8 +97,6 @@ class MelisCoreCacheSystemService extends MelisServiceManager
 	public function getCacheByKey($cacheKey, $confCache, $getForce = false)
 	{
 		// only when in BO mode
-//		if ($this->getRenderMode() != 'melis' && !$getForce)
-//            return null;
 		
 		$active = $this->isCacheConfActive($confCache);
 		if ($active)
@@ -126,8 +123,6 @@ class MelisCoreCacheSystemService extends MelisServiceManager
 	 */
 	public function setCacheByKey($cacheKey, $confCache, $results, $getForce = false)
 	{
-//		if ($this->getRenderMode() != 'melis' && !$getForce)
-//            return;
 
 		$active = $this->isCacheConfActive($confCache);
 

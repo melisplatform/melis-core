@@ -52,12 +52,10 @@ class MelisCoreDashboardRecentUserActivityPlugin extends MelisCoreDashboardTempl
             
         $userTable = $this->getServiceManager()->get('MelisCoreTableUser');
         
-        // Max lines
         $maxLines = 8;
         if (!empty($this->pluginConfig['max_lines']))
             $maxLines = $this->pluginConfig['max_lines'];
             
-        // Getting last users' logged in
         $users = $userTable->getLastLoggedInUsers((int)$maxLines);
         if ($users) {
             $users = $users->toArray();

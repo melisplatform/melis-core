@@ -10,8 +10,6 @@
 namespace MelisCore\Controller;
 
 use Laminas\View\Model\ViewModel;
-// use Laminas\View\Model\JsonModel;
-// use MelisCore\Service\MelisCoreRightsService;
 
 /**
  * This class renders Melis CMS appConfig views recursively

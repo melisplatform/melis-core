@@ -32,11 +32,9 @@ class MelisCoreInstallNewPlatformListener extends MelisGeneralListener implement
          		$tablePlatform = $sm->get('MelisCoreTablePlatform');
          		$installHelper = $sm->get('InstallerHelper');
         		
-        		// add the default platform
          		$tablePlatform->save(array('plf_name' => $installHelper->getMelisPlatform()));
         		
                 if(!empty($platforms)) {
-                    // add new platform here
                     foreach($platforms as $platform) {
                         $platformData = $tablePlatform->getEntryByField('plf_name', $platform['plf_name']);
                         $platformData = $platformData->current();

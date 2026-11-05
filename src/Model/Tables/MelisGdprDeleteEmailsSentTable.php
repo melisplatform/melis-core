@@ -27,11 +27,8 @@ class MelisGdprDeleteEmailsSentTable extends MelisGenericTable
 
 	public function getEmailSentByValidationKey($validationKey,$moduleName)
     {
-        // table selection query
         $select = $this->getTableGateway()->getSql()->select();
-        // columns to select
         $select->columns(array('*'));
-        // email
         $select->where->equalTo('mgdprs_validation_key', $validationKey);
         $select->where->equalTo('mgdprs_module_name', $moduleName);
 

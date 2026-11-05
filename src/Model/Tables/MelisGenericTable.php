@@ -139,7 +139,6 @@ class MelisGenericTable extends MelisServiceManager
 		return $hydratingResultSet = new HydratingResultSet(new ObjectPropertyHydrator(), new MelisResultSet());
 	}
 
-
 	public function fetchAll()
 	{
 		$resultSet = $this->getTableGateway()->select();
@@ -209,8 +208,7 @@ class MelisGenericTable extends MelisServiceManager
 		
 		return $final;
 	}
-	
-	
+
 	/**
 	 * Returns the columns of the table
 	 * @param Array $table
@@ -261,7 +259,6 @@ class MelisGenericTable extends MelisServiceManager
 		$resultSet->buffer();
 		$this->_selectedValues = $resultSet;
 	
-		//return $resultSet = $this->getSelectedValues();
 		return $resultSet;
 	
 	}
@@ -340,7 +337,6 @@ class MelisGenericTable extends MelisServiceManager
 		// Bound BETWEEN predicate (column whitelisted, dates bound by the driver) instead of raw SQL.
 		$dateFilterPredicate = self::dateFilterPredicate($dateFilter);
 
-		// this is used when searching
 		if(!empty($where) && !empty($whereValue)) {
 			$w = new Where();
 			$p = new PredicateSet();
@@ -374,25 +370,17 @@ class MelisGenericTable extends MelisServiceManager
 		// used when column ordering is clicked (column whitelisted, direction strict ASC/DESC)
 		self::addSafeOrder($select, $order, $orderDir);
 
-//        $artistTable = new TableGateway($this->$this->getTableGateway()->getTable(), $this->$this->getTableGateway()->getAdapter());
-//        $res = $artistTable->selectWith($select);
-//        dd($res->count());
-
 		$getCount = $this->getTableGateway()->selectWith($select);
 		$this->setCurrentDataCount((int) $getCount->count());
 
-
-		// this is used in paginations
 		$select->limit($limit);
 		$select->offset($start);
-
 
 		$resultSet = $this->getTableGateway()->selectWith($select);
 		
 		return $resultSet;
 	}
-	
-	
+
 	/**
 	 * Returns the total rows of the selected table
 	 * @return int

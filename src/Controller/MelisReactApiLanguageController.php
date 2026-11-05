@@ -165,7 +165,6 @@ class MelisReactApiLanguageController extends MelisAbstractActionController
             $name   = trim((string) ($body['name'] ?? ''));
             $locale = trim((string) ($body['locale'] ?? ''));
 
-            // Validation : nom non vide.
             if ($name === '') {
                 return $this->jsonResponse(
                     ['success' => false, 'error' => 'Le nom de la langue est obligatoire.'],

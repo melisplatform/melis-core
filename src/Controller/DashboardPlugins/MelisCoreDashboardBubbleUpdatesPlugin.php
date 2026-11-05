@@ -119,7 +119,6 @@ class MelisCoreDashboardBubbleUpdatesPlugin extends MelisCoreDashboardTemplating
                     $currentVersion = $moduleVersion['version'];
                 }
             }
-            //Get the version difference of local modules from repo modules
             $status = 0;
             if($this->getServiceManager()->has('MelisMarketPlaceService')) {//Make sure marketplace service is active (Marketplace module is not deactivated)
                 $marketplaceService = $this->getServiceManager()->get('MelisMarketPlaceService');
@@ -158,12 +157,4 @@ class MelisCoreDashboardBubbleUpdatesPlugin extends MelisCoreDashboardTemplating
     }
 
     //test func, remove this after testing
-    /* public function sleep() 
-    {        
-        sleep(20);
-
-        return new JsonModel([
-            'sleep' => true,           
-        ]);
-    } */
 }

@@ -52,7 +52,6 @@ class MelisPasswordSettingsService extends MelisGeneralService
                 $inputFilter->remove('login_account_duration_hours');
                 $inputFilter->remove('login_account_duration_minutes');
 
-                // Add this numeric validation rule for 'login_account_duration_days' field
                 $inputFilter->add([
                     'name'       => 'login_account_duration_days',
                     'required'   => false,
@@ -70,7 +69,6 @@ class MelisPasswordSettingsService extends MelisGeneralService
                     ],
                 ]);
 
-                // Add this numeric validation rule for 'login_account_duration_hours' field
                 $inputFilter->add([
                     'name'       => 'login_account_duration_hours',
                     'required'   => false,
@@ -88,7 +86,6 @@ class MelisPasswordSettingsService extends MelisGeneralService
                     ],
                 ]);
 
-                // Add this numeric validation rule for 'login_account_duration_minutes' field
                 $inputFilter->add([
                     'name'       => 'login_account_duration_minutes',
                     'required'   => false,
@@ -152,7 +149,6 @@ class MelisPasswordSettingsService extends MelisGeneralService
                 
                 $inputFilter->remove('password_validity_lifetime');
 
-                // Add a new validation rule for 'password_validity_lifetime' field
                 $inputFilter->add([
                     'name'       => 'password_validity_lifetime',
                     'required'   => false,
@@ -202,7 +198,6 @@ class MelisPasswordSettingsService extends MelisGeneralService
                 
                 $inputFilter->remove('password_duplicate_lifetime');
 
-                // Add a new validation rule for 'password_validity_lifetime' field
                 $inputFilter->add([
                     'name'       => 'password_duplicate_lifetime',
                     'required'   => false,
@@ -306,7 +301,6 @@ class MelisPasswordSettingsService extends MelisGeneralService
 
                     $configFactory->toFile($file, $config);
 
-                    // check if opcache zend_extension is installed/enabled in server
                     if (function_exists('opcache_reset')) {
                         opcache_reset();
                     }

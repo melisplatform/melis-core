@@ -34,7 +34,6 @@ class MelisCoreGdprAutoDeleteToolService extends MelisGeneralService
      */
     public function setServiceManager(ServiceManager $service)
     {
-        // Tables declaration
         /** @var MelisGdprDeleteConfigTable $gdprDeleteConfigTbl */
         $this->gdprAutoDeleteConfigTable     = $service->get('MelisGdprDeleteConfigTable');
         /** @var MelisGdprDeleteEmailsTable $gdprDeleteEmailsTbl */
@@ -58,17 +57,13 @@ class MelisCoreGdprAutoDeleteToolService extends MelisGeneralService
      */
     public function getGdprDeleteConfigData($searchValue,$searchableCols, $selColOrder, $orderDirection , $start ,$length, $sitId = 0, $module = null )
     {
-        // Event parameters prepare
         $arrayParameters = $this->makeArrayFromParameters(__METHOD__, func_get_args());
-        // Sending service start event
         $arrayParameters = $this->sendEvent('melis_core_gdpr_auto_delete_get_gdrp_delete_config_data_start', $arrayParameters);
-        // get the updated value of a variable
         foreach ($arrayParameters as $var => $val) {
             $$var = $val;
         }
         // Adding results to parameters for events treatment if needed
         $arrayParameters['results'] = $this->gdprAutoDeleteConfigTable->getGdprDeleteConfigData($searchValue,$searchableCols,$selColOrder, $orderDirection, $start, $length, $sitId , $module)->toArray();
-        // Sending service end event
         $arrayParameters = $this->sendEvent('melis_core_gdpr_auto_delete_get_gdrp_delete_config_data_end', $arrayParameters);
 
         return $arrayParameters['results'];
@@ -89,17 +84,13 @@ class MelisCoreGdprAutoDeleteToolService extends MelisGeneralService
      */
     public function getGdprDeleteEmailLogsData($searchValue,$searchableCols, $selColOrder, $orderDirection , $start ,$length, $siteId, $moduleName)
     {
-        // Event parameters prepare
         $arrayParameters = $this->makeArrayFromParameters(__METHOD__, func_get_args());
-        // Sending service start event
         $arrayParameters = $this->sendEvent('melis_core_gdpr_auto_delete_get_gdrp_delete_email_logs_data_start', $arrayParameters);
-        // get the updated value of a variable
         foreach ($arrayParameters as $var => $val) {
             $$var = $val;
         }
         // Adding results to parameters for events treatment if needed
         $arrayParameters['results'] = $this->gdprAutoDeleteEmailsLogsTable->getGdprDeleteEmailsLogsData($searchValue,$searchableCols,$selColOrder, $orderDirection, $start, $length, $siteId, $moduleName)->toArray();
-        // Sending service end event
         $arrayParameters = $this->sendEvent('melis_core_gdpr_auto_delete_get_gdrp_delete_email_logs_data_end', $arrayParameters);
 
         return $arrayParameters['results'];
@@ -112,7 +103,6 @@ class MelisCoreGdprAutoDeleteToolService extends MelisGeneralService
             return $data->toArray();
         }
     }
-
 
     /**
      * @return MelisLangTable
@@ -150,17 +140,14 @@ class MelisCoreGdprAutoDeleteToolService extends MelisGeneralService
         // trigger event to get list of modules
         $list = $this->getEventManager()->trigger('melis_core_gdpr_auto_delete_modules_list');
         $moduleList = [];
-        // get the returned data from each module listener
         for ($list->rewind();$list->valid();$list->next()) {
             // check if current data is not empty
             if (!empty($list->current())) {
-                // get the lists
                 foreach ($list->current()['modules_list'] as $moduleName => $moduleOptions) {
                     $moduleList[$moduleName] = $moduleOptions['name'] ?? $moduleName;
                 }
             }
         };
-
 
         return $moduleList;
     }
@@ -192,7 +179,6 @@ class MelisCoreGdprAutoDeleteToolService extends MelisGeneralService
     {
         /** @var MelisCoreToolService $toolSvc */
         $toolSvc = $this->getServiceManager()->get('MelisCoreTool');
-        // set melis tool key
         $toolSvc->setMelisToolKey('MelisCoreGdprAutoDelete', 'melis_core_gdpr_auto_delete');
 
         return $toolSvc;
@@ -255,7 +241,6 @@ class MelisCoreGdprAutoDeleteToolService extends MelisGeneralService
      */
     public function validateForm($postData)
     {
-        // errors data
         $errors = [];
 
         $gdprAutoDeleteForms = [
@@ -283,13 +268,9 @@ class MelisCoreGdprAutoDeleteToolService extends MelisGeneralService
 
         foreach ($gdprAutoDeleteForms as $formkey => $form) {
             /** @var MelisForm $form */
-            // validate form
             $validatedForm = $form['form']->setData($postData);
-            // check form it its valid
             if (!$validatedForm->isValid()) {
-                // error indications
                 $errors['indications'][] = $form['name'];
-                // set form errors
                 $errors['errors'] = array_merge($errors['errors'] ?? [], $this->formatErrorMessage($validatedForm->getMessages(), "MelisCoreGdprAutoDelete/tools/melis_core_gdpr_auto_delete/forms/" . $formkey)) ;
             }
         }
@@ -308,9 +289,7 @@ class MelisCoreGdprAutoDeleteToolService extends MelisGeneralService
     {
         /** @var MelisCoreConfigService $config */
         $config = $this->getServiceManager()->get('MelisCoreConfig');
-        // get form elements
         $formConfig = $config->getItem($formConfigPath)['elements'];
-        // set label for each field
         foreach ($errors as $keyError => $valueError) {
             foreach ($formConfig as $keyForm => $valueForm) {
                 if ($valueForm['spec']['name'] == $keyError) {
@@ -353,7 +332,6 @@ class MelisCoreGdprAutoDeleteToolService extends MelisGeneralService
      */
     public function getAllGdprAutoDeleteConfigDataWithEmailTrans()
     {
-        // get gdpr auto delete config data
         $configData = $this->gdprAutoDeleteConfigTable->fetchAll()->toArray();
         if (!empty($configData)) {
             foreach ($configData as $idx => $data) {
@@ -374,16 +352,13 @@ class MelisCoreGdprAutoDeleteToolService extends MelisGeneralService
         $data = [];
         if (!empty($alertEmailsTransData)) {
             foreach($alertEmailsTransData as $idx => $transData) {
-                // get the link url
                 $transData['mgdpre_link'] = $this->getLinkUrl($transData['mgdpre_link']);
                 // group the data by email type
                 switch ($transData['mgdpre_type']) {
                     case MelisGdprDeleteEmailsTable::EMAIL_WARNING;
-                        // set data
                         $data[self::EMAIL_WARNING_CONTENT_TYPE][] = $transData;
                         break;
                     case MelisGdprDeleteEmailsTable::EMAIL_DELETED;
-                        // set data
                         $data[self::EMAIL_DELETE_CONTENT_TYPE][] = $transData;
                         break;
                     default;break;
@@ -485,10 +460,8 @@ class MelisCoreGdprAutoDeleteToolService extends MelisGeneralService
      */
     public function deleteEverything($configId, $emailType, $langId )
     {
-        // get the data
         $data = $this->gdprAutoDeleteEmailsTable->getAlertEmailsTransData($configId, $emailType,$langId)->current();
 
-        // set fields into null
         return $this->gdprAutoDeleteEmailsTable->save([
             'mgdpre_link' => null,
             'mgdpre_subject' => null,
@@ -504,7 +477,6 @@ class MelisCoreGdprAutoDeleteToolService extends MelisGeneralService
     public function deleteConfig($id)
     {
         $data = $this->getGdprAutoDeleteConfigDataById($id);
-        // delete logs data
 
         return $this->gdprAutoDeleteConfigTable->deleteById($id);
     }

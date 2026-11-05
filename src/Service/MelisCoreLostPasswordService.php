@@ -346,7 +346,6 @@ class MelisCoreLostPasswordService extends MelisServiceManager implements MelisC
         foreach($data as $val)
         {
             $login = $val->rh_login;
-            //echo $login;
         }
 
         $usertbl = $this->getServiceManager()->get('MelisCoreTableUser');
@@ -450,7 +449,6 @@ class MelisCoreLostPasswordService extends MelisServiceManager implements MelisC
         if($data)
             $table->deleteByField('rh_hash', $hash);
     }
-    
 
     /**
      * Sends an email together with the link to the user 
@@ -484,7 +482,6 @@ class MelisCoreLostPasswordService extends MelisServiceManager implements MelisC
             
         $url = $cfg['platform_scheme'].'://'.$cfg['host'].'/melis/reset-password/'.$hash;
         
-        // if($isActive){ // redundant checker, MelisCoreBOEmailService->sendBoEmailByCode already has a complete checker
             // Tags to be replace at email content with the corresponding value
             $tags = array(
                 'USER_Login' => $login,
@@ -494,7 +491,6 @@ class MelisCoreLostPasswordService extends MelisServiceManager implements MelisC
             $name_to = $login;
             $email_to = $email;
             
-            // Fetching user language Id
             $userTable = $this->getServiceManager()->get('MelisCoreTableUser');
             $userData = $userTable->getDataByLoginAndEmail($login, $email);
             $userData = $userData->current();
@@ -508,9 +504,6 @@ class MelisCoreLostPasswordService extends MelisServiceManager implements MelisC
             }else{
                 return false;
             }
-        // }else{
-        //     return false;
-        // }
     }
     
     /**

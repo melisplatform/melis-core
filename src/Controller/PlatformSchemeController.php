@@ -29,7 +29,6 @@ class PlatformSchemeController extends MelisAbstractActionController
      */
     const MELIS_KEY = 'meliscore_tool_platform_scheme';
 
-
     const SCHEME_FOLDER_PERMISSION = 0755;
 
     /**
@@ -61,8 +60,6 @@ class PlatformSchemeController extends MelisAbstractActionController
         return $view;
     }
 
-
-
     public function saveAction()
     {
         /** @INFO: Access check (tool right) */
@@ -91,7 +88,6 @@ class PlatformSchemeController extends MelisAbstractActionController
             $form->setData(json_decode($colors, 1));
 
             if ($form->isValid()) {
-
 
                 /**
                  * Flag holder for file input that has file(s) uploaded
@@ -123,7 +119,6 @@ class PlatformSchemeController extends MelisAbstractActionController
                         $nonEmptyImages[] = $name;
                     }
                 }
-
 
                 /**
                  * Apply validation before uploading
@@ -166,9 +161,6 @@ class PlatformSchemeController extends MelisAbstractActionController
                      */
                     $absPath = $_SERVER['DOCUMENT_ROOT'].$platformSchemeMediaPath;
 
-                    /**
-                     * Check if the physical directory exist
-                     */
                     if(file_exists($absPath)) {
 
                         /**
@@ -189,7 +181,6 @@ class PlatformSchemeController extends MelisAbstractActionController
                                 )
                             ));
 
-
                             /**
                              * this will hold the data that will be used in saving into the table
                              */
@@ -199,12 +190,8 @@ class PlatformSchemeController extends MelisAbstractActionController
 
                                 $fileName = $images[$name]['name'];
 
-                                /**
-                                 * Create new instance for Http
-                                 */
                                 $adapter = new Http();
 
-                                // re-apply validators for second checking
                                 $adapter->setValidators(array($size, $extension), $name);
 
                                 if($adapter->isValid($name)) {
@@ -291,12 +278,8 @@ class PlatformSchemeController extends MelisAbstractActionController
                                     ), $savableData);
                                 $success = $this->getPlatformSchemeSvc()->saveScheme($data, $schemeId, true);
 
-                                /**
-                                 * Return "1" if saving was successful
-                                 */
                                 if($success) {
 
-                                    // generate a new scheme.css file in public
                                     ini_set('memory_limit', '-1');
                                     set_time_limit(0);
                                     $content = $this->melisTool()->getViewContent([
@@ -315,7 +298,6 @@ class PlatformSchemeController extends MelisAbstractActionController
                                         file_put_contents($assetsFolder.'schemes.css', $content);
                                     }
 
-                                    //generate scheme file time
                                     $platformTable = $this->getServiceManager()->get('MelisCoreTablePlatform');
                                     $platformData = $platformTable->getEntryByField('plf_name', getenv('MELIS_PLATFORM'))->current();
                                     if(!empty($platformData)){
@@ -365,7 +347,6 @@ class PlatformSchemeController extends MelisAbstractActionController
 
     }
 
-
     /**
      * @return JsonModel
      */
@@ -378,8 +359,6 @@ class PlatformSchemeController extends MelisAbstractActionController
         /** @INFO: End Access Check */
         $success      = 0;
         $request      = $this->getRequest();
-        /*$message      = 'Failed to restore platform scheme';
-        $title        = 'Restore platform scheme';*/
         $message      = 'tr_meliscore_platform_scheme_failed_restore_message';
         $title        = 'tr_meliscore_platform_scheme_failed_restore_title';
         // for now directly modify the MELIS_SCHEME_1
@@ -388,7 +367,6 @@ class PlatformSchemeController extends MelisAbstractActionController
         if ($request->isXmlHttpRequest()) {
 
             $success  = $this->getPlatformSchemeSvc()->resetScheme($schemeId);
-            // generate a new scheme.css file in public
             ini_set('memory_limit', '-1');
             set_time_limit(0);
             $content = $this->melisTool()->getViewContent([
@@ -536,12 +514,10 @@ class PlatformSchemeController extends MelisAbstractActionController
         $docRoot      = $_SERVER['DOCUMENT_ROOT'] . '';
         $schemeFolder = $docRoot.$uriPath;
 
-        // check if the folder exists
         if(!file_exists($schemeFolder)) {
             mkdir($schemeFolder, self::SCHEME_FOLDER_PERMISSION,true);
         }
         else {
-            // check writable permission
             if(!is_writable($schemeFolder)) {
                 chmod($schemeFolder, self::SCHEME_FOLDER_PERMISSION);
             }
@@ -598,7 +574,6 @@ class PlatformSchemeController extends MelisAbstractActionController
         $path      = $config->getItem('meliscore/interface/meliscore_leftmenu/interface/meliscore_toolstree_section/interface/meliscore_tool_system_config/interface/meliscore_tool_platform_scheme');
         $imagesize = null;
 
-
         if($path) {
             $imageSize = isset($path['datas']['image_size_limit']) ? $path['datas']['image_size_limit'] : null;
         }
@@ -615,7 +590,6 @@ class PlatformSchemeController extends MelisAbstractActionController
         $config = $this->getServiceManager()->get('MelisCoreConfig');
         $path   = $config->getItem('meliscore/interface/meliscore_leftmenu/interface/meliscore_toolstree_section/interface/meliscore_tool_system_config/interface/meliscore_tool_platform_scheme');
         $ext    = null;
-
 
         if($path) {
             $ext = isset($path['datas']['allowed_file_extension']) ? $path['datas']['allowed_file_extension'] : 'jpeg,jpg,png,svg,ico,gif';

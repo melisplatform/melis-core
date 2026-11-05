@@ -33,10 +33,8 @@ class MelisCoreAnnouncementService extends MelisGeneralService
      */
     public function getLists($status = null, $searchValue = '', $searchKeys = [], $start = null, $limit = null, $orderColumn = 'mca_id', $order = 'DESC', $count = false)
     {
-        // Event parameters prepare
         $arrayParameters = $this->makeArrayFromParameters(__METHOD__, func_get_args());
 
-        // Sending service start event
         $arrayParameters = $this->sendEvent('melis_core_announcement_get_lists_start', $arrayParameters);
 
         $results = $this->announcementTable()->getLists(
@@ -52,7 +50,6 @@ class MelisCoreAnnouncementService extends MelisGeneralService
 
         // Adding results to parameters for events treatment if needed
         $arrayParameters['results'] = $results;
-        // Sending service end event
         $arrayParameters = $this->sendEvent('melis_core_announcement_get_lists_end', $arrayParameters);
 
         return $arrayParameters['results'];
@@ -65,16 +62,13 @@ class MelisCoreAnnouncementService extends MelisGeneralService
      */
     public function saveAnnouncement($data, $id = null)
     {
-        // Event parameters prepare
         $arrayParameters = $this->makeArrayFromParameters(__METHOD__, func_get_args());
 
-        // Sending service start event
         $arrayParameters = $this->sendEvent('melis_core_announcement_save_start', $arrayParameters);
         $results = $this->announcementTable()->save($arrayParameters['data'], $arrayParameters['id']);
 
         // Adding results to parameters for events treatment if needed
         $arrayParameters['results'] = $results;
-        // Sending service end event
         $arrayParameters = $this->sendEvent('melis_core_announcement_save_end', $arrayParameters);
 
         return $arrayParameters['results'];
@@ -86,19 +80,15 @@ class MelisCoreAnnouncementService extends MelisGeneralService
      */
     public function deleteAnnouncement($id)
     {
-        // Event parameters prepare
         $arrayParameters = $this->makeArrayFromParameters(__METHOD__, func_get_args());
         $results = null;
 
-        // Sending service start event
         $arrayParameters = $this->sendEvent('melis_core_announcement_delete_start', $arrayParameters);
 
-        // Service implementation start
         $results = $this->announcementTable()->deleteById($arrayParameters['id']);
 
         // Adding results to parameters for events treatment if needed
         $arrayParameters['results'] = $results;
-        // Sending service end event
         $arrayParameters = $this->sendEvent('melis_core_announcement_delete_end', $arrayParameters);
 
         return $arrayParameters['results'];

@@ -83,9 +83,6 @@ class PluginViewController extends MelisAbstractActionController
             $isXmlHttpRequest = true;
         }
 
-        /**
-         * Get the params from php call
-         */
         $appconfigpath = $this->params()->fromRoute('appconfigpath', '/');
         $keyView = $this->params()->fromRoute('keyview', 'melis');
 
@@ -107,9 +104,6 @@ class PluginViewController extends MelisAbstractActionController
         if ($this->getRequest()->getQuery('forceFlagXmlHttpRequestTofalse', false))
             $isXmlHttpRequest = false;
 
-        /**
-         * Get the appConfig
-         */
         $melisAppConfig = $this->getServiceManager()->get('MelisCoreConfig');
 
         /**
@@ -128,7 +122,6 @@ class PluginViewController extends MelisAbstractActionController
         }
 
         list($jsCallBacks, $datasCallback) = $melisAppConfig->getJsCallbacksDatas($appsConfig);
-
 
         /**
          * Generate the views recursively
@@ -172,9 +165,6 @@ class PluginViewController extends MelisAbstractActionController
 
             return $jsonModel;
         } else {
-            /**
-             * Return view
-             */
             return $zoneView;
         }
     }
@@ -237,19 +227,12 @@ class PluginViewController extends MelisAbstractActionController
         /**
          * This will whether config is came from the dashboard plugin
          */
-//        if ($melisAppConfig->isParentOf($key, MelisCore::DASHBOARD_PLUGINS)) {
-//            return null;
-//        }
 
         $isXmlHttpRequest = false;
         if ($this->getRequest()->isXmlHttpRequest()) {
             $isXmlHttpRequest = true;
         }
 
-
-        /**
-         * Get the corresponding appConfig part
-         */
         $itemConfig = $melisAppConfig->getItem($fullKey);
 
         /**
@@ -284,7 +267,6 @@ class PluginViewController extends MelisAbstractActionController
 
         }
 
-
         /**
          * Second check if rendering is allowed for the user
          * according to his rights
@@ -294,7 +276,6 @@ class PluginViewController extends MelisAbstractActionController
         $xmlRights = $melisCoreAuth->getAuthRights();
         $isAccessible = $melisCoreRights->isAccessible($xmlRights, MelisCoreRightsService::MELISCORE_PREFIX_INTERFACE, $fullKey);
         $isDisabled = $melisAppConfig->isInterfaceDisabled($key);
-
 
         if (!$isAccessible || $isDisabled) {
             $view = new ViewModel();
@@ -324,9 +305,6 @@ class PluginViewController extends MelisAbstractActionController
 
         if($melisKeyFollow || $isXmlHttpRequest)
         {
-            /**
-             * Check cache for this view
-             */
             $cacheActivated = false;
             $cacheKey = null;
             $melisCoreCacheSystem = $this->getServiceManager()->get('MelisCoreCacheSystemService');
@@ -338,11 +316,7 @@ class PluginViewController extends MelisAbstractActionController
                  */
                 if(!empty($platformSettings)) {
                     if ($platformSettings->plf_activate_cache) {
-                        /**
-                         * Check if cache is active
-                         */
                         if($itemConfig['cache']['activated']){
-                            // Get Current User ID
                             $melisCoreAuth = $this->getServiceManager()->get('MelisCoreAuth');
                             $userAuthDatas = $melisCoreAuth->getStorage()->read();
                             /**
@@ -378,9 +352,6 @@ class PluginViewController extends MelisAbstractActionController
                                             }
                                         }
                                     }
-                                    /**
-                                     * Get cache based on cache key
-                                     */
                                     if ($this->getServiceManager()->has(self::cacheConfig)) {//make sure cache service is present
                                         $results = $melisCoreCacheSystem->getCacheByKey($cacheKey, self::cacheConfig);
                                         if (!empty($results)) {
@@ -405,7 +376,6 @@ class PluginViewController extends MelisAbstractActionController
                 }
             }
 
-
             /**
              * Dashboard plugin interface
              */
@@ -422,15 +392,12 @@ class PluginViewController extends MelisAbstractActionController
             
             if (!empty($itemConfig['forward']) && !empty($itemConfig['forward']['controller'])
                 && !empty($itemConfig['forward']['action'])) {
-                // Preparing dispatch
                 $ctrlPath = $itemConfig['forward']['controller'];
                 if (!empty($itemConfig['forward']['module'])) {
                     $ctrlPath = $itemConfig['forward']['module'] . '\\Controller\\' . $ctrlPath;
                 }
 
-                // Add the action for dispatch
                 $datas = array_merge_recursive($recDatas, ['action' => $itemConfig['forward']['action']]);
-                // Add the fullKey for data-id rendering
 
                 if (!empty($itemConfig['conf']) && !empty($itemConfig['conf']['melisKey'])) {
                     $datas['melisKey'] = $itemConfig['conf']['melisKey'];
@@ -440,9 +407,7 @@ class PluginViewController extends MelisAbstractActionController
 
                 $datas['zoneconfig'] = $itemConfig;
 
-                // Get the view
                 try {
-                    // maxNestedForwards for generation of interface
                     $config = $this->getServiceManager()->get('config');
                     $specialConfigZf2 = $config['plugins']['meliscore']['datas']['zf2'];
 
@@ -461,7 +426,6 @@ class PluginViewController extends MelisAbstractActionController
                     };
                     $ctrlPath = $ctrlPath . '/' . $itemConfig['forward']['action'];
                     // Audit 13.0: the exception message is internal (SQL, absolute paths,
-                    // service names). Only the controller path and a correlation id are shown;
                     // the detail goes to the PHP log (grep MELIS_API_ERROR).
                     $view->setVariable('meliscore_error_dispatch',
                         'Error: ' . $ctrlPath . '<br />'
@@ -522,9 +486,6 @@ class PluginViewController extends MelisAbstractActionController
              */
             if(!empty($platformSettings)) {
                 if ($platformSettings->plf_activate_cache) {
-                    /**
-                     * Check if cache is active and save it
-                     */
                     if ($cacheActivated) {
                         if ($this->getServiceManager()->has(self::cacheConfig)) {//make sure cache service is present
                             $melisCoreCacheSystem->setCacheByKey($cacheKey, self::cacheConfig, $this->renderViewRec($view));

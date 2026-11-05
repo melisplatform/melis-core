@@ -42,7 +42,6 @@ class MelisModuleManager
         $modules = (php_sapi_name() == "cli") ? include __DIR__ . '/../../../../' . self::MELIS_MODULE_LOAD : self::getModules();
 
         foreach ($modules As $module) {
-            // Checking module path from composer
             $modulePath = $composer->getComposerModulePath($module);
 
             if (php_sapi_name() == "cli") 
@@ -52,7 +51,6 @@ class MelisModuleManager
                 $moduleComponents = array_merge($moduleComponents , include $modulePath . DIRECTORY_SEPARATOR . self::MODULE_LOAD_FILE);
             } 
             else {
-                // Check module/ dir if module has module.load
                 if (file_exists('/module/' . $module . DIRECTORY_SEPARATOR . self::MODULE_LOAD_FILE)) {
                     $moduleComponents = array_merge($moduleComponents, include '/module/'.$module. DIRECTORY_SEPARATOR .self::MODULE_LOAD_FILE);
                 }

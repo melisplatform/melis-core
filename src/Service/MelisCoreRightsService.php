@@ -522,7 +522,6 @@ class MelisCoreRightsService extends MelisServiceManager implements MelisCoreRig
             return true;
         }
 
-        // Tools
         if ($sectionId == self::MELIS_PLATFORM_TOOLS_PREFIX) {
 
             // check if the user has access to all business app tools
@@ -573,7 +572,6 @@ class MelisCoreRightsService extends MelisServiceManager implements MelisCoreRig
                 }
                 $toolIds[] = self::MELIS_DASHBOARD;
 
-                // check for root section access
                 if (isset($rightsObj->$sectionId->$toolSection->id)) {
                     $toolSectionsRightsId = (array) $rightsObj->$sectionId->$toolSection->id;
                 }
@@ -596,7 +594,6 @@ class MelisCoreRightsService extends MelisServiceManager implements MelisCoreRig
                 $appsConfig = $this->getItemCached($appconfigpath);
                 $tmpToolIds = $toolIds;
 
-                // include specified section parents
                 foreach ($tmpToolIds as $tool) {
 
                     $parent = null;
@@ -606,7 +603,6 @@ class MelisCoreRightsService extends MelisServiceManager implements MelisCoreRig
                         }
                     }
 
-                    // old MelisCms tool section
                     if ($parent == self::OLD_MELISCMS_TOOLSTREE) {
                         $parent = self::MELISCMS_PREFIX_TOOLS;
                     }
@@ -617,10 +613,8 @@ class MelisCoreRightsService extends MelisServiceManager implements MelisCoreRig
                             $toolIds[] = $parent;
                         }
 
-                        // check the new list tool IDs with their parents
                         return $this->grantAccess($itemId, $toolIds);
                     }
-
 
                     // if item ID is a parent, check if one of their children is in the rights
                     if ($this->configIsParentOf($tool, $itemId)) {
@@ -727,7 +721,6 @@ class MelisCoreRightsService extends MelisServiceManager implements MelisCoreRig
             ],
         ];
 
-        // interface rights
         $interfaceItems = [];
         $config = $this->getServiceManager()->get('config');
         foreach ($config['plugins'] as $pluginName => $plugin) {
@@ -738,12 +731,9 @@ class MelisCoreRightsService extends MelisServiceManager implements MelisCoreRig
         }
         $rightsItems[0]['children'] = $interfaceItems;
 
-
-        // tools rights
         $toolsItems = $this->getToolsKeys($xml);
         $rightsItems[1]['children'] = $toolsItems;
 
-        // Return values
         return $rightsItems;
     }
 
@@ -775,7 +765,6 @@ class MelisCoreRightsService extends MelisServiceManager implements MelisCoreRig
             }
             $keyInterface = $fullKey;
         }
-
 
         if (isset($configInterface['conf']['rightsDisplay'])) {
             $isReference = false;
@@ -845,7 +834,6 @@ class MelisCoreRightsService extends MelisServiceManager implements MelisCoreRig
             self::MELISCOMMERCE_PREFIX_TOOLS,
             self::MELISOTHERS_PREFIX_TOOLS,
         ];
-        // check key is in the specialcase array
         if (in_array($key,$specialcase)) {
             // if no interface under a category then make it empty
             if (!isset($configInterface['interface']) || empty($configInterface['interface'])) {
@@ -882,9 +870,7 @@ class MelisCoreRightsService extends MelisServiceManager implements MelisCoreRig
         $melisKeys = $this->getConfig()->getMelisKeys();
         $appConfigPaths = $this->getMelisKeyPaths();
         $exemptedPath = [
-            // custom category for custom projects
             self::MELISCUSTOM_PREFIX_TOOLS,
-            // marketplace category
             self::MELISMARKETPLACE_PREFIX_TOOLS,
         ];
         $tools = [];
@@ -914,7 +900,6 @@ class MelisCoreRightsService extends MelisServiceManager implements MelisCoreRig
             $selectedTools = $melisCoreUser->isItemRightChecked($userXml, self::MELIS_PLATFORM_TOOLS_PREFIX, $sectionNodeKey);
             // show only a category when there are keys [interface] present on it
             if ((isset($appsConfig['interface']) && ! empty($appsConfig['interface'])) || in_array($path,$exemptedPath)) {
-                // tool category
                 $tools[$idx] = [
                     'key' => $sectionNodeKey,
                     'title' => $appsConfig['conf']['name'] ?? $path,
@@ -926,7 +911,6 @@ class MelisCoreRightsService extends MelisServiceManager implements MelisCoreRig
                         'colorSelected' => '#99C975',
                     ],
                 ];
-                // first level, sections
                 $appCtr = 0;
                 foreach ($appsConfig['interface'] as $appKey => $appSection) {
                     /**
@@ -956,7 +940,6 @@ class MelisCoreRightsService extends MelisServiceManager implements MelisCoreRig
                         ],
                     ];
 
-                    // Second level, tools
                     $appToolCtr = 0;
                     $seenNodeKeys = [$appNodeKey => true];
                     if (isset($appSection['interface'])) {
@@ -1199,7 +1182,6 @@ class MelisCoreRightsService extends MelisServiceManager implements MelisCoreRig
         $nodesInterface = Json::decode($datas[self::MELISCORE_PREFIX_INTERFACE . '_root']);
         $nodesTools = Json::decode($datas[self::MELIS_PLATFORM_TOOLS_PREFIX . '_root']);
 
-        // Creating interface xml
         $interfaceNode = self::MELISCORE_PREFIX_INTERFACE . '_root';
         $xmlRights = '<' . self::MELISCORE_PREFIX_INTERFACE . '>' . self::XML_ENDLINE;
         if (!empty($nodesInterface) && !empty($nodesInterface->$interfaceNode)) {
@@ -1214,7 +1196,6 @@ class MelisCoreRightsService extends MelisServiceManager implements MelisCoreRig
         }
         $xmlRights .= '</' . self::MELISCORE_PREFIX_INTERFACE . '>' . self::XML_ENDLINE;
 
-        // Creating tools xml
         $toolsNode = self::MELIS_PLATFORM_TOOLS_PREFIX . '_root';
         $xmlRights .= '<' . self::MELIS_PLATFORM_TOOLS_PREFIX . '>' . self::XML_ENDLINE;
 
@@ -1226,7 +1207,6 @@ class MelisCoreRightsService extends MelisServiceManager implements MelisCoreRig
                     $parent = $this->getSectionParent($idTool) ?? null;
 
                     if (! $parent) {
-                        // check if this tool ID exists in xml
                         if (! preg_match("/$idTool/", $xmlRights) && $idTool !== $toolsNode) {
                             $xmlRights .= self::XML_SPACER . self::XML_SPACER . '<noparent>' . $idTool . '</noparent>' . self::XML_ENDLINE;
                         }
@@ -1419,7 +1399,6 @@ class MelisCoreRightsService extends MelisServiceManager implements MelisCoreRig
         // toolKey that is absent from the map leaves `sectionParent` at its previous value, so e.g.
         // isParentOf('meliscommerce_categories_page', 'melismarketing_toolstree_section') returns the
         // stale marketing parent and wrongly grants access to every commerce tool for a user who only
-        // has a marketing grant.
         if (is_null($data)) {
             $this->sectionParent = null;
             $data = $this->getToolSectionMap();
@@ -1478,7 +1457,6 @@ class MelisCoreRightsService extends MelisServiceManager implements MelisCoreRig
             $appsConfig = $this->getConfig()->getItem($appConfigPath);
             $orderInterface = $this->getConfig()->getOrderInterfaceConfig($path);
 
-            // tool category
             $tools[$idx] = [
                 'key' => $path,
                 'title' => $appsConfig['conf']['name'] ?? $path,
@@ -1506,7 +1484,6 @@ class MelisCoreRightsService extends MelisServiceManager implements MelisCoreRig
                 ];
             }
 
-            // first level, sections
             $appCtr = 0;
             foreach (($appsConfig['interface'] ?? []) as $appKey => $appSection) {
 
@@ -1516,7 +1493,6 @@ class MelisCoreRightsService extends MelisServiceManager implements MelisCoreRig
                     // clé de tableau pour les nœuds type-linked (MelisCommerce, MelisAI) et certains
                     // wrappers → sert aux alias d'allow-set (cf. buildResolvedRights). Champ ADDITIF :
                     // les consommateurs existants (getSectionParent/isParentOf) ne lisent que
-                    // 'key'/'section'/'children'.
                     'melisKey' => $appSection['conf']['melisKey'] ?? $appKey,
                     'title' => $appSection['conf']['name'] ?? $appKey,
                     'lazy' => false,
@@ -1525,7 +1501,6 @@ class MelisCoreRightsService extends MelisServiceManager implements MelisCoreRig
                     'children' => [],
                 ];
 
-                // Second level, tools
                 $appToolCtr = 0;
                 if (isset($appSection['interface'])) {
                     foreach ($appSection['interface'] as $toolKey => $toolName) {

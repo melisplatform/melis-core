@@ -46,13 +46,11 @@ class MelisCoreDashboardBubbleNewsMelisPlugin extends MelisCoreDashboardTemplati
         if ($locale === 'fr_FR')
             $dateFormat = 'd-m-Y';
 
-        // get url for api in config
         $config = $this->getServiceManager()->get('MelisCoreConfig');
         $dashboardPlugins = $config->getItem(self::DASHBOARD_CONFIG);
         $newsMelisConfig = $dashboardPlugins['interface']['MelisCoreDashboardBubbleNewsMelisPlugin'];
         $url = $newsMelisConfig['datas']['url'];
 
-        // get news list
         $curl = curl_init();
         curl_setopt($curl, CURLOPT_URL, $url);
         curl_setopt($curl, CURLOPT_POSTFIELDS, $newsMelisConfig['datas']['filter']);
@@ -71,7 +69,6 @@ class MelisCoreDashboardBubbleNewsMelisPlugin extends MelisCoreDashboardTemplati
             // we will only display a number of news and not all
             $data = array_splice($response, 0, self::NUM_OF_NEWS);
 
-            // add formated date to data
             foreach ($data as &$news) {
                 $news['newsDateFormated'] = date(
                     $dateFormat,

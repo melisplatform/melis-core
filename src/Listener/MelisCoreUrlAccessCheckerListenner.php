@@ -56,7 +56,6 @@ class MelisCoreUrlAccessCheckerListenner implements ListenerAggregateInterface
                     if ($uri->getHost() != $host) {
                         $url = $scheme . "://" . $host . "/melis";
                         if ($url) {
-                            // Redirection
                             $response = $e->getResponse();
                             $response->setHeaders($response->getHeaders()->addHeaderLine('Location', $url));
                             $response->setHeaders($response->getHeaders()->addHeaderLine('Cache-Control', 'no-cache, no-store, must-revalidate'));
@@ -67,14 +66,10 @@ class MelisCoreUrlAccessCheckerListenner implements ListenerAggregateInterface
                             exit ();
                         }
                     }else{
-                        /**
-                         * Check if user is already logged in
-                         */
                         $pathUri = rtrim($uri->getPath(), "/");
                         if(in_array($pathUri, ['/melis/lost-password', '/melis/login', '/melis/reset-password'])){
                             $melisCoreAuth = $sm->get('MelisCoreAuth');
                             $controllerPluginManager = $sm->get('ControllerPluginManager');
-                            // Get the Redirect plugin
                             /** @var Redirect $redirectPlugin */
                             $redirectPlugin = $controllerPluginManager->get('redirect');
 

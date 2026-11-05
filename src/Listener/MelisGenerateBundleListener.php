@@ -31,7 +31,6 @@ class MelisGenerateBundleListener
             if (count($matches) > 1)
                 return;
 
-            //check if we are in BO
             if ($uri == '/melis' || $uri == '/melis/login')
             {
                 /** @var ServiceManager $serviceManager */
@@ -40,15 +39,11 @@ class MelisGenerateBundleListener
                 $docroot = $_SERVER['DOCUMENT_ROOT'];
                 $bundleFolder = $docroot.'/../etc';
 
-                //check if bundle already exist
                 if (!file_exists($bundleFolder . '/'.ModulesController::BUNDLE_FOLDER_NAME.'/css/bundle-all.css')
                     && !file_exists($bundleFolder . '/'.ModulesController::BUNDLE_FOLDER_NAME.'/js/bundle-all.js')) {
 
                     $coreConfig = $serviceManager->get('MelisCoreConfig');
                     $buildBundle = $coreConfig->getItem('/meliscore/datas/')[getenv('MELIS_PLATFORM')]['build_bundle'] ?? true;
-                    /**
-                     * Check if we build the bundle all
-                     */
                     if($buildBundle) {
                         $moduleService = $serviceManager->get('ModulesService');
                         $moduleService->generateBundle();

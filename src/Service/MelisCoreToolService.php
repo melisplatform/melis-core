@@ -92,14 +92,12 @@ class MelisCoreToolService extends MelisServiceManager implements MelisCoreToolS
         $factory = $this->getServiceManager()->get('MelisCoreFormService');
         $formElements = $this->getServiceManager()->get('FormElementManager');
 
-//        print_r(get_class($formElements));
 //        exit;
         $factory->setFormElementManager($formElements);
         $form = $factory->createForm($formConfig);
 
         return $form;
     }
-
 
     /**
      * Returns the melis tool key configuration text
@@ -321,7 +319,6 @@ class MelisCoreToolService extends MelisServiceManager implements MelisCoreToolS
         if (!empty($date)) {
             if ($date != '0') {
                 $sDate = str_replace($delimiter, '-', $date);
-                // breakdown dates
                 $aDate = explode('-', $sDate);
 
                 $container = new Container('meliscore');
@@ -414,7 +411,6 @@ class MelisCoreToolService extends MelisServiceManager implements MelisCoreToolS
             $centerDom = '<"fb-dt-center col-xs-12 col-md-4"';
             $rightDom = '<"fb-dt-right col-xs-12 col-md-4"';
 
-            // datatables predefined filter plugins
             $preDefDTFilter = ['l', 'f'];
 
             $searchInputClass = '';
@@ -481,11 +477,9 @@ class MelisCoreToolService extends MelisServiceManager implements MelisCoreToolS
                                         });';
             }
 
-
             $tableTop .= $leftDom . '>' . $centerDom . '>' . $rightDom . '>>>';
             $tableBottom = '<"bottom" t<"pagination-cont"rip>>';
 
-            // check if the filter array configuration is empty
             if (empty($left) && empty($center) && empty($right)) {
                 $sDomStructure = '';
             } else {
@@ -493,7 +487,6 @@ class MelisCoreToolService extends MelisServiceManager implements MelisCoreToolS
                 $sDomStructure = $tableTop . $tableBottom;
             }
 
-            // Action Buttons
             $actionButtons = '';
             $action = '';
             $forward = $this->getServiceManager()->get('ControllerPluginManager')->get('forward');
@@ -505,20 +498,16 @@ class MelisCoreToolService extends MelisServiceManager implements MelisCoreToolS
             // remove unnecessary new lines and text paragraphs (not <p> tags)
             $actionButtons = trim(preg_replace('/\s+/', ' ', $actionButtons));
 
-            // retrieve the css configuration inside each columns
             $colCtr = 1; // starts with index 1 since this will be used in JS configuration for jquery nth-child
             $colKeyId = array_keys($columns);
 
-            // Action Column
             $actionColumn = null;
-            // convert columns in Javascript JSON
             $jsonColumns = '[';
             foreach ($colKeyId as $colId) {
                 $jsonColumns .= '{"data":"' . $colId . '"},';
             }
 
             if (!empty($actionButtons)) {
-                //$jsonColumns .= '{"data":"actions"}'; commented, generates warning, https://datatables.net/tn/4
                 $jsonColumns .= '{"data": null}';
 
                 // Preparing the Table Action column Buttons
@@ -571,24 +560,19 @@ class MelisCoreToolService extends MelisServiceManager implements MelisCoreToolS
             $columnCtr = 0;
             foreach ($columns as $colKey => $colArrValue) {
                 if (isset($colArrValue['sortable'])) {
-                    // Getting unsortable columns
                     $isSortable = $colArrValue['sortable'] == false ? array_push($unSortableColumns, $columnCtr) : '';
                 }
                 $columnCtr++;
             }
             $unSortableColumnsStr = '';
             if (!empty($unSortableColumns)) {
-                // Creating config string for Unsortable Columns
                 $unSortableColumnsStr = '{ targets: [' . implode(',', $unSortableColumns) . '], orderable: false},';
             }
-            // Column Unsortable End
 
-            // Preparing Table Column Styles
             $columnsStyles = [];
             $columnCtr = 0;
             foreach ($columns as $colKey => $colArrValue) {
                 if (isset($colArrValue['css'])) {
-                    // Getting Style of the columns
                     $columnStyles = $colArrValue['css'];
                 }
                 // Adding the Ctr/index/number of the column
@@ -599,7 +583,6 @@ class MelisCoreToolService extends MelisServiceManager implements MelisCoreToolS
             }
             $columnsStylesStr = '';
             if (!empty($columnsStyles)) {
-                // Creating Column config string
                 foreach ($columnsStyles As $sVal) {
                     $columnStyle = [];
                     foreach ($sVal As $cKey => $cVal) {
@@ -611,7 +594,6 @@ class MelisCoreToolService extends MelisServiceManager implements MelisCoreToolS
                     $columnsStylesStr .= '{ ' . implode(', ', $columnStyle) . ' },' . PHP_EOL;
                 }
             }
-            // Columns Styles End
 
             // Default Melis Table Configuration
             // This can be override from Param
@@ -625,28 +607,20 @@ class MelisCoreToolService extends MelisServiceManager implements MelisCoreToolS
             // Merging Default Configuration and Param Configuration
             // This process will override default config if index exist on param config
             $finalTblOption = array_merge($defaultTblOptions, $tableOption);
-            // Table Option
             $finalTblOptionStr = '';
             foreach ($finalTblOption As $key => $val) {
                 if (is_array($val)) {
-                    // If Option has multiple options
                     $val = json_encode($val);
                 }
                 $finalTblOptionStr .= $key . ': ' . $val . ',' . PHP_EOL;
             }
 
-            // Table language translations
             if (!$tableLangTrans)
                 $tableLangTrans = 'default';
             $language = 'melisDataTable.tableLanguage.'.$tableLangTrans;
 
-            //remove special characters in function name
             $fnName = preg_replace('/\W/', '', $fnName);
 
-            // processing: true,
-            // bSort: true,
-            
-            // simulate javascript code function here
             $dtJScript = 'window.' . $fnName . ' = function() {
                 ' . $reInitTable . '
                 var ' . str_replace("#", "$", $tableId) . ' = $("' . $tableId . '").DataTable({
@@ -698,7 +672,6 @@ class MelisCoreToolService extends MelisServiceManager implements MelisCoreToolS
                 ' . $tableSearchPlugin . '
             });';
 
-            // remove new lines
             $dtJScript = preg_replace("/\s+|\n+|\r/", ' ', $dtJScript);
         }
 
@@ -751,7 +724,6 @@ class MelisCoreToolService extends MelisServiceManager implements MelisCoreToolS
         $striptags = (int) $csvConfig['striptags'] == 1 ? true : false;
         $response = '';
 
-        // check what file name to use when exporting
         if (!empty($this->_appConfig['export']) && !empty($this->_appConfig['export']['csvFileName'])) {
             $csvFileName = $this->_appConfig['export']['csvFileName'];
         } else {
@@ -764,13 +736,11 @@ class MelisCoreToolService extends MelisServiceManager implements MelisCoreToolS
             $content = '';
             $ctr = 0;
 
-            // for columns
             foreach ($csvColumn as $key => $colText) {
                 $content .= $key . $separator;
             }
             $content .= "\r\n";
 
-            // for contents
             foreach ($data as $dataKey => $dataValue) {
 
                 foreach ($dataValue as $key => $value) {
@@ -785,8 +755,6 @@ class MelisCoreToolService extends MelisServiceManager implements MelisCoreToolS
                             $value = (string) $value;
                         }
                     }
-                    // convert UTF-8 to UTF-16LE encoding for excel encoding rendering
-//                    $value = mb_convert_encoding($value, 'UTF-8', 'UTF-8');
                     $content .= $enclosed . $this->replaceAccents($value) . $enclosed . $separator;
 
                 }
@@ -1071,12 +1039,10 @@ class MelisCoreToolService extends MelisServiceManager implements MelisCoreToolS
         $locale = $container['melis-lang-locale'];
         switch ($locale) {
             case 'fr_FR':
-                //converts dd/mm/yyyy to yyyy-mm-dd
                 $date = !empty($date) ? str_replace('/', '-', $date) : null;
                 $date = !empty($date) ? date("Y-m-d " . $timeFormat, strtotime($date)) : null;
                 break;
             default:
-                //converts mm/dd/yyyy to yyyy-mm-dd
                 $date = !empty($date) ? date("Y-m-d " . $timeFormat, strtotime($date)) : null;
                 break;
         }
@@ -1259,7 +1225,6 @@ class MelisCoreToolService extends MelisServiceManager implements MelisCoreToolS
                     }, $arrData);
                 }
             }
-
 
             $handler = fopen('php://output', 'w');
             ob_start();

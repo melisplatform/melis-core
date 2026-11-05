@@ -77,9 +77,7 @@ class MelisFieldRow extends FormRow
                 $element->setLabel($label);
             }
         }
-        
-    
-        
+
         if ($this->getClass($element) == self::MELIS_TOGGLE_BUTTON_FACTORY){
 
             // recreate checkbox to render into a toggle button
@@ -189,7 +187,6 @@ class MelisFieldRow extends FormRow
 
         }elseif ($element->getAttribute('type') == self::MELIS_SELECT_FACTORY) {
 
-            // render to bootstrap select element
             $elementClass = $element->getAttribute('class');
             $elementClass = implode(' ', ['form-control', $elementClass]);
 
@@ -200,7 +197,6 @@ class MelisFieldRow extends FormRow
                 $elementHelper       = $this->getElementHelper();
                 $elementString = str_replace('id="'. $element->getAttribute('id') .'"', "", $elementHelper->render($element));
 
-                //add style
                 $newElementString = substr_replace($elementString, 'style="border-radius:0px;border-color:#e5e5e5"',50, 0);
                 $formElement = '<div class="form-group">
                                     <label for=" ' . $element->getName() . ' " class="col-sm-2 control-label"> ' . $element->getOption('label') . ' </label>
@@ -214,15 +210,10 @@ class MelisFieldRow extends FormRow
 
         }elseif ($element->getAttribute('class') == self::MELIS_MULTI_VAL_INPUT){
 
-            // Get Value
             $dataTags = $element->getValue();
-            // Set Input to Null value as default
             $element->setAttribute('data-tags', $dataTags);
-            // set value to null in order to hide the text
             $element->setAttribute('value', null);
-            // get option if it's editable
             $notEditable = $element->getOption('not_editable');
-            // text for no available tags
             $textNoTags = $element->getOption('no_tags_text');
 
             $multiValTooltip = empty($element->getOption('tooltip')) ? '' : '<i class="fa fa-info-circle fa-lg" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="' . $element->getOption('tooltip') . '"></i>';

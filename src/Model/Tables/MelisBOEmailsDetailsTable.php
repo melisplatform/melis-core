@@ -26,9 +26,6 @@ class MelisBOEmailsDetailsTable extends MelisGenericTable
         $this->idField = self::PRIMARY_KEY;
     }
     
-    /*
-     * Fetching Email details By LangID
-     * */
     public function getEmailDetailsByEmailId($emailId, $langId = null){
         $select = $this->tableGateway->getSql()->select();
         

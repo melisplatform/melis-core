@@ -41,13 +41,9 @@ class TreeToolsController extends MelisAbstractActionController
         $melisAppConfig = $this->getServiceManager()->get('MelisCoreConfig');
         $melisKeys = $melisAppConfig->getMelisKeys();
 
-        // Get the order list for ordering tools
         $appconfigpath = $melisKeys[$melisKey];
 
         $appsConfig = $melisAppConfig->getItem($appconfigpath);
-
-//        var_dump($appsConfig);
-
 
         $orderInterface = $melisAppConfig->getOrderInterfaceConfig($melisKey);
         $tools = [];
@@ -65,7 +61,6 @@ class TreeToolsController extends MelisAbstractActionController
         }
 
         if (isset($appsConfig['interface']) && !empty($appsConfig['interface'])) {
-            // Show sections first
 
             foreach ($appsConfig['interface'] as $key => $toolSectionName) {
                 $isNavChild = false;
@@ -79,7 +74,6 @@ class TreeToolsController extends MelisAbstractActionController
                 // allow-set. Gating the group on it hid it from every non-admin no matter what was
                 // granted — the same wrapper-node trap fixed in the React nav. Let a container through and
                 // derive its visibility from whether a child tool is actually granted (see $isNavChild),
-                // so nothing empty leaks.
                 $sectionKey         = $toolSectionName['conf']['melisKey'] ?? $key;
                 // A node is a pure CONTAINER only when its interface children are real NAVIGABLE tools
                 // (they carry an icon + left_menu_display). A leaf tool can ALSO declare `interface`
@@ -100,7 +94,6 @@ class TreeToolsController extends MelisAbstractActionController
 
                 if ($melisCoreRights->canAccess($sectionKey) || $sectionIsContainer) {
 
-                    // Second level, tools
                     if (isset($toolSectionName['interface'])) {
                         foreach ($toolSectionName['interface'] as $keyTool => $toolName) {
                             $leftMenuDisplay = $toolName['conf']['left_menu_display'] ?? true;
@@ -160,7 +153,6 @@ class TreeToolsController extends MelisAbstractActionController
 
                     // Show the section when it has a granted nav child, or (non-container) it is a real
                     // tool/section that carries its own icon — preserving the original icon fallback while
-                    // keeping an empty container hidden.
                     if ($isNavChild || (!$sectionIsContainer && !empty($toolSectionName['conf']['icon']))) {
 
                         $toolConfig = [
@@ -180,11 +172,9 @@ class TreeToolsController extends MelisAbstractActionController
 
                 }
 
-
                 $tools[$key]['toolsection_has_nav_child'] = $isNavChild;
             }
         } else {
-            // for parent tool
             if (isset($appsConfig['conf']['is_parent_tool']) && $appsConfig['conf']['is_parent_tool']) {
                 if ($melisCoreRights->canAccess($melisKey)) {
                     $tools[$melisKey] = $appsConfig;
@@ -304,7 +294,6 @@ class TreeToolsController extends MelisAbstractActionController
 
         $melisKeys = $melisAppConfig->getMelisKeys();
 
-        // Get the order list for ordering tools
         $appconfigpath = $melisKeys['meliscore_toolstree'];
         $appsConfig = $melisAppConfig->getItem($appconfigpath);
         $orderInterface = $melisAppConfig->getOrderInterfaceConfig('meliscore_toolstree');
@@ -319,7 +308,6 @@ class TreeToolsController extends MelisAbstractActionController
                 $sectionOrderInterface = $orderInterface[$keySection];
             }
             $toolsSectionOrdered = [];
-
 
             foreach ($tools[$keySection]['toolsection_children'] as $keyInterface => $childinterface) {
                 $toolsOrdered[$keySection]['toolsection_children'][$keyInterface] = $childinterface;
@@ -338,7 +326,6 @@ class TreeToolsController extends MelisAbstractActionController
      */
     public function hasRightsAction()
     {
-        // melis/MelisCore/TreeTools/hasRights
         /** @var \MelisCore\Service\MelisCoreConfigService $config */
         $config = $this->getServiceManager()->get('MelisCoreConfig');
         /** @var \MelisCore\Service\MelisCoreRightsService $rights */
@@ -348,11 +335,7 @@ class TreeToolsController extends MelisAbstractActionController
 
         dd($rights->canAccess('melismarketplace_toolstree_section'));
 
-
         die;
     }
-
-
-
 
 }

@@ -79,7 +79,6 @@ class MelisPhpUnitToolController extends MelisAbstractActionController
         $moduleSvc   = $this->getServiceManager()->get('ModulesService');
         $modulesInfo = $moduleSvc->getModulesAndVersions();
 
-
         $view->modules = $modules;
         $view->warningLogs = $this->checkAllModule();
         $view->modulesInfo = $modulesInfo;
@@ -111,7 +110,6 @@ class MelisPhpUnitToolController extends MelisAbstractActionController
         return $modules;
     }
 
-
     /**
      * Provides a basic information about modules before doing a test
      * @return array
@@ -126,7 +124,6 @@ class MelisPhpUnitToolController extends MelisAbstractActionController
         $coreModulesArray = $modSvc->getCoreModules(['melisinstaller', 'melissites', 'melisassetmanager']);
         $coreModules = array();
         foreach($coreModulesArray as $module) {
-            //echo 'test';
             $coreModules[] = $module;
         }
 
@@ -136,7 +133,6 @@ class MelisPhpUnitToolController extends MelisAbstractActionController
         $testCfgFile = $testCfgDir.'/test.application.config.php';
         $logs = array();
 
-        // TEST FOLDER
         if(!is_readable($testCfgDir)) {
             $logs[] = $testCfgDir . ' is not readable';
         }
@@ -177,7 +173,6 @@ class MelisPhpUnitToolController extends MelisAbstractActionController
                 }
 
                 if(file_exists($modulePath.'/'.$testFolder)) {
-                    // permission force change
                     @chmod($modulePath.'/'.$testFolder, 0777);
                     if(!is_readable($modulePath.'/'.$testFolder)) {
                         $logs[] = $module.'/'.$testFolder . ' is not readable';
@@ -190,7 +185,6 @@ class MelisPhpUnitToolController extends MelisAbstractActionController
             }
 
         }
-
 
         return $logs;
     }
@@ -237,7 +231,6 @@ class MelisPhpUnitToolController extends MelisAbstractActionController
                                     }
                                 }
                                 $summary = $testResults['summary'];
-                                // change this to progress bar
                                 $statistics = '<hr/><h4>Test Summary</h4><br/>
 
                                     <div class="col-md-6 col-sm-12">
@@ -253,7 +246,6 @@ class MelisPhpUnitToolController extends MelisAbstractActionController
                             else {
                                 $response .= $this->koMessage('No tests found!');
                             }
-
 
                         }
                         $response .= $runTestResponse . '<br/>' . $results . $statistics;
@@ -275,7 +267,6 @@ class MelisPhpUnitToolController extends MelisAbstractActionController
                             $response .= 'Unable to read from <strong>' . $testModulePath . '</strong><br/>';
                         }
                     }
-
 
                 }
                 else {
@@ -306,11 +297,9 @@ class MelisPhpUnitToolController extends MelisAbstractActionController
         $config = $this->getServiceManager()->get('MelisCoreConfig');
         $modules = $modSvc->getActiveModules(array('MelisDesign', 'MelisModuleConfig'));
 
-
         $coreModulesArray = $modSvc->getCoreModules(['melisinstaller', 'melissites', 'melisassetmanager']);
         $coreModules = array();
         foreach($coreModulesArray as $module) {
-            //echo 'test';
             $coreModules[] = $module;
         }
 
@@ -325,7 +314,6 @@ class MelisPhpUnitToolController extends MelisAbstractActionController
 
             if($phpUnitCfg) {
                 $testFolder = isset($phpUnitCfg['testFolder']) ? $phpUnitCfg['testFolder'] : null;
-
 
                 if(file_exists($modulePath) && !file_exists($modulePath.'/'.$testFolder)) {
                     $modulePathDisplay = $modSvc->getModulePath($module, false);
@@ -343,7 +331,6 @@ class MelisPhpUnitToolController extends MelisAbstractActionController
             }
 
         }
-
 
         return $logs;
     }
@@ -400,6 +387,5 @@ class MelisPhpUnitToolController extends MelisAbstractActionController
 
         return $hasAccess;
     }
-
 
 }

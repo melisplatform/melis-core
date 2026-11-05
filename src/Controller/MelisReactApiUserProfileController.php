@@ -104,11 +104,9 @@ class MelisReactApiUserProfileController extends MelisAbstractActionController
             $confirm  = (string) ($body['confirmPassword'] ?? '');
             $image    = $body['image'] ?? null; // data URI, '' (efface), ou null (inchangé)
 
-            // Email obligatoire + format.
             if ($email === '' || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
                 return $this->jsonResponse(['success' => false, 'error' => 'tr_meliscore_tool_user_usr_email_error_empty'], 400);
             }
-            // Langue obligatoire + existante.
             $db = $this->getServiceManager()->get('Laminas\Db\Adapter\AdapterInterface');
             if ($langId <= 0 || !iterator_to_array($db->query('SELECT lang_id FROM melis_core_lang WHERE lang_id = ?', [$langId]))) {
                 return $this->jsonResponse(['success' => false, 'error' => 'tr_meliscore_tool_user_usr_lang_id_error_empty'], 400);

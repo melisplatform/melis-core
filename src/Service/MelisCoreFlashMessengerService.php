@@ -39,7 +39,6 @@ class MelisCoreFlashMessengerService extends MelisServiceManager implements  Mel
         $container = new Container('meliscore');
         $locale = $container['melis-lang-locale'];
         
-        // create date time
         if(is_null($logDate)){
             $time = date('h:i A');
             $date = date('M d y');
@@ -94,8 +93,6 @@ class MelisCoreFlashMessengerService extends MelisServiceManager implements  Mel
             $flashMessages = array_reverse($flashMessages);
         }
 
-
-        
         return Json::encode($flashMessages);
     }
     
@@ -128,7 +125,6 @@ class MelisCoreFlashMessengerService extends MelisServiceManager implements  Mel
         $yesterday = date('M d y', strtotime('yesterday'));
         
         switch($date){
-            // date today
             case $today:
                 $data = $translatorSvc->getMessage('tr_meliscore_date_today', $locale);
                 break;

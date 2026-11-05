@@ -48,18 +48,12 @@ class MelisCoreHeadPluginHelper extends AbstractHelper
          * if we return the bundled files or not
          */
         if($returnBundle) {
-            /**
-             * check if we are in login page
-             */
             if ($path == 'meliscore_login') {
                 $platformTable = $this->serviceManager->get('MelisCoreTablePlatform');
                 $platformData = $platformTable->getEntryByField('plf_name', getenv('MELIS_PLATFORM'))->current();
                 $time = '';
                 if(!empty($platformData))
                     $time = '?v='.$platformData->plf_bundle_cache_time;
-                /**
-                 * check if bundle for login is available
-                 */
                 $docroot = $_SERVER['DOCUMENT_ROOT'];
                 $bundleFolder = $docroot.'/../etc';
 

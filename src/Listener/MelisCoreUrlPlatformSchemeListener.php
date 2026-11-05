@@ -23,18 +23,14 @@ class MelisCoreUrlPlatformSchemeListener extends MelisGeneralListener implements
             '*',
             MvcEvent::EVENT_DISPATCH,
             function ($e) {
-                // get service manager
                 $sm = $e->getTarget()->getEvent()->getApplication()->getServiceManager();
 				$configSvc  = $sm->get('MelisCoreConfig');
-                // get platform scheme config
                 $config = $configSvc->getItem('meliscore/datas/' . getenv('MELIS_PLATFORM'));
-                // check for platform_scheme config
 				if (isset($config['platform_scheme']) && $config['platform_scheme']) {
 					// check if current scheme is not the same as the set platform_scheme
 					if ($_SERVER['REQUEST_SCHEME'] != $config['platform_scheme']) {
 						// we redirect according to its config scheme
 						$url = $config['platform_scheme'] . "://" . $config['host'] . "/melis";
-						// redirect
 						$e->getTarget()->plugin('redirect')->toUrl($url);
 					}
 				}

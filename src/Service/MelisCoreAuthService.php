@@ -60,7 +60,6 @@ class MelisCoreAuthService
 
         $rightsXML = '';
 
-        // if (!empty($user) && is_object($user)) {
         if (!empty($user)) {
             // NB: le bypass super-admin (usr_admin=1) est géré en aval par
             // MelisCoreRightsService::isCurrentUserAdmin() (canAccess court-circuité). On NE renvoie
@@ -242,7 +241,6 @@ class MelisCoreAuthService
             if ($node === $oldToolParentNode || $node === $newToolParentNode) {
                 foreach ($leftMenuToolNodes as $idx => $tool) {
                     if (! isset($itemId[$tool])) {
-                        // add the tool node to the left menu node
                         $newRights[$toolNode][$tool] = [];
                         if (isset($sectionItems[$tool])) {
                             $newRights[$toolNode][$tool] = $sectionItems[$tool];
@@ -338,7 +336,6 @@ class MelisCoreAuthService
         foreach ($rights as $keyNode => $node) {
             if ($toolParentNode === $keyNode) {
                 $isToolParentNodeExists = true;
-                // check for the tool child nodes
                 foreach ($node as $toolNodeKey => $toolNode) {
                     if (in_array($toolNodeKey, $nodesToCheck)) {
                         $isToolChildExistsAndComplete = true;

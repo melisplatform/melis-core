@@ -87,7 +87,6 @@ class MelisReactApiPlatformSchemeReactController extends MelisAbstractActionCont
             $in   = is_array($body['scheme'] ?? null) ? $body['scheme'] : [];
             $inTr = is_array($body['translations'] ?? null) ? $body['translations'] : [];
 
-            // Champs mono-valeur.
             $kv = [];
             foreach (self::FIELDS as $api => $dbKey) {
                 if (array_key_exists($api, $in)) {
@@ -128,7 +127,6 @@ class MelisReactApiPlatformSchemeReactController extends MelisAbstractActionCont
                 return $this->jsonResponse(['success' => false, 'error' => 'POST required'], 405);
             }
 
-            // Champs mono-valeur → null.
             $kv = [];
             foreach (self::FIELDS as $dbKey) { $kv[$dbKey] = null; }
             $this->schemeSvc()->setMany($kv);

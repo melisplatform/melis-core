@@ -38,7 +38,6 @@ class MelisCoreGdprAutoDeleteSmtpController extends MelisAbstractActionControlle
     public function renderContentContainerAction()
     {
         $view = new ViewModel();
-        // pass meliskey
         $view->setVariable('melisKey', $this->getMelisKey());
 
         return $view;
@@ -50,17 +49,13 @@ class MelisCoreGdprAutoDeleteSmtpController extends MelisAbstractActionControlle
     public function renderContentAction()
     {
         $view = new ViewModel();
-        // pass meliskey
         $view->setVariable('melisKey', $this->getMelisKey());
-        // get smtp config
         $smtpConfigData = $this->getGdprAutoDeleteSmtpTable()->fetchAll()->current();
         $hasConfig = false;
         if (! empty($smtpConfigData)) {
             $hasConfig = true;
         }
-        // smtp form
         $view->setVariable('smtpForm', $this->getGdprAutoDeleteSmtpForm($smtpConfigData));
-        // set has config
         $view->setVariable('hasConfig', $hasConfig);
 
         return $view;
@@ -90,11 +85,9 @@ class MelisCoreGdprAutoDeleteSmtpController extends MelisAbstractActionControlle
     {
         $id = null;
         $success = 0;
-        // request
         $request = $this->getRequest();
         if ($request->isPost()){
             $params = $request->getPost()->toArray();
-            // set data for validation
             $form = $this->getGdprAutoDeleteSmtpForm();
             // remove filter if it s empty for updating to keep it's current password
             if (!empty($params['mgdpr_smtp_id'])) {
@@ -103,7 +96,6 @@ class MelisCoreGdprAutoDeleteSmtpController extends MelisAbstractActionControlle
                     $form->getInputFilter()->remove('mgdpr_smtp_confirm_password');
                 }
             }
-            // set data
             $form = $form->setData($params);
             if ($form->isValid()) {
                 $formData = $form->getData();
@@ -111,19 +103,15 @@ class MelisCoreGdprAutoDeleteSmtpController extends MelisAbstractActionControlle
                     $formData['mgdpr_smtp_password'] = $this->verifyUserPassword($formData['mgdpr_smtp_password'], $formData['mgdpr_smtp_confirm_password']);
                 }
                 if (empty($this->formErrors)) {
-                    // remove confirm password field
                     unset($formData['mgdpr_smtp_confirm_password']);
-                    // check if id is present
                     if (isset($formData['mgdpr_smtp_id']) && !empty($formData['mgdpr_smtp_id'])) {
                         // remove field when it's empty to avoid password update
                         if (empty($formData['mgdpr_smtp_password'])) {
                             unset($formData['mgdpr_smtp_password']);
                         }
-                        // update and set id for logs
                         $id = $this->getGdprAutoDeleteSmtpTable()->save($formData, $formData['mgdpr_smtp_id']);
                     } else {
                         unset($formData['mgdpr_smtp_id']);
-                        // save new entry
                         $id = $this->getGdprAutoDeleteSmtpTable()->save($formData);
                     }
                     $success = true;
@@ -144,7 +132,6 @@ class MelisCoreGdprAutoDeleteSmtpController extends MelisAbstractActionControlle
     {
         $id = null;
         $success = false;
-        // request
         $request = $this->getRequest();
         if ($request->isPost()){
             $params = $request->getPost()->toArray();
@@ -190,7 +177,6 @@ class MelisCoreGdprAutoDeleteSmtpController extends MelisAbstractActionControlle
             ];
         }
 
-
         return $validatedPassword;
     }
 
@@ -217,7 +203,6 @@ class MelisCoreGdprAutoDeleteSmtpController extends MelisAbstractActionControlle
     private function getTool()
     {
         $toolSvc = $this->getServiceManager()->get('MelisCoreTool');
-        // set melis tool key
         $toolSvc->setMelisToolKey('MelisCoreGdprAutoDelete', 'melis_core_gdpr_auto_delete');
 
         return $toolSvc;

@@ -23,7 +23,6 @@ class MelisCoreGetRightsTreeViewListener extends MelisGeneralListener implements
 {
     public function attach(EventManagerInterface $events, $priority = 1)
     {
-        // Listening to Tool User start
         $this->attachEventListener(
             $events,
         	'MelisCore',
@@ -35,7 +34,6 @@ class MelisCoreGetRightsTreeViewListener extends MelisGeneralListener implements
 
 	        	$userId = $sm->get('request')->getQuery()->get('userId');
 
-	        	// Getting the rights
 	        	if (empty($container['action-tool-user-getrights-tmp']))
 	        		$container['action-tool-user-getrights-tmp'] = array();
 	        	$melisCoreRights = $sm->get('MelisCoreRights');

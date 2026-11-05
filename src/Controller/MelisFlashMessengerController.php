@@ -37,13 +37,10 @@ class MelisFlashMessengerController extends MelisAbstractActionController
     }
     public function setFlashMessageAction()
     {
-        // translator service
         $translator = $this->getServiceManager()->get('translator');
 
-        // tool service
         $tool = $this->getServiceManager()->get('MelisCoretool');
 
-        // flash messenger service
         $flashMessenger = $this->getServiceManager()->get('MelisCoreFlashMessenger');
 
         $flashMessages = Json::decode($flashMessenger->getFlashMessengerMessages());
@@ -52,19 +49,15 @@ class MelisFlashMessengerController extends MelisAbstractActionController
         $fmArray = array();
         $fmCtr = 0;
 
-
         return new JsonModel(array(
             'flashMessage' => $fmArray,
         ));
     }
     public function clearFlashMessageAction(){
-        // translator service
         $translator = $this->getServiceManager()->get('translator');
 
-        // flash messenger service
         $flashMessenger = $this->getServiceManager()->get('MelisCoreFlashMessenger');
 
-        // clear flash message
         $flashMessenger->clearFlashMessage();
 
         $noNotiff = $translator->translate('tr_meliscore_no_notificaions');
@@ -81,13 +74,10 @@ class MelisFlashMessengerController extends MelisAbstractActionController
      */
     public function getflashMessageAction()
     {
-        // translator service
         $translator = $this->getServiceManager()->get('translator');
 
-        // tool service
         $tool = $this->getServiceManager()->get('MelisCoreTool');
         
-        // flash messenger service
         $flashMessenger = $this->getServiceManager()->get('MelisCoreFlashMessenger');
         
         $flashMessages = Json::decode($flashMessenger->getFlashMessengerMessages());

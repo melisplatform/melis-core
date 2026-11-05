@@ -47,7 +47,6 @@ class MelisCoreMicroServiceController extends MelisAbstractActionController
          */
         if ($userApiData) {
 
-            // set the langauge 
             $melisLangTable = $this->getServiceManager()->get('MelisCore\Model\Tables\MelisLangTable');
             $langData = $melisLangTable->getEntryById($userApiData->usr_lang_id)->current();
             if($langData) {
@@ -65,7 +64,6 @@ class MelisCoreMicroServiceController extends MelisAbstractActionController
              */
             if ($isUserCanExec) {
 
-                // check if the module in the route param exists
                 $moduleSvc = $this->getServiceManager()->get('ModulesService');
                 $modules = $moduleSvc->getAllModules();
 
@@ -74,7 +72,6 @@ class MelisCoreMicroServiceController extends MelisAbstractActionController
                  */
                 if (in_array($module, $modules)) {
 
-                    // check if the service alias exists
                     $config = $this->getServiceManager()->get('config');
                     $services = array_merge($config['service_manager']['aliases'], $config['service_manager']['factories']);
                     $servicesKeys = array_keys($services);
@@ -89,10 +86,8 @@ class MelisCoreMicroServiceController extends MelisAbstractActionController
 
                         $servicePath = "\\$module\\Service\\$service";
                         $methodExists = method_exists($servicePath, $method);
-                        //echo func_num_args($servicePath."\\" . $method);
                         $coreConfig = $this->getServiceManager()->get('MelisCoreConfig');
                         $form = $coreConfig->getItem('microservice/' . $module . '/' . $service . '/' . $method);
-                       
 
                         /**
                          * Checker whether the requested method exists in the provided Service, and return JSON if
@@ -176,7 +171,6 @@ class MelisCoreMicroServiceController extends MelisAbstractActionController
                                                 'errors'   => ['execution' => 'The service could not process the request with the given parameters.'],
                                             ]);
                                         }
-                                        
 
                                         /**
                                          * This listener trigger handles the modification of the results returned by invokeArgs
@@ -187,7 +181,6 @@ class MelisCoreMicroServiceController extends MelisAbstractActionController
                                             $data = $tmpData[0]['results'];
                                         }
 
-                                        // Check data if it's an Object
                                         if(is_object($data)){
                                           
                                             // This will check if the property of an object is protected
@@ -204,7 +197,6 @@ class MelisCoreMicroServiceController extends MelisAbstractActionController
                                                 $data = $this->tool()->convertObjectToArray($data);
                                             }
                                         }
-                                        // Check data if it's an array
                                         if(is_array($data)){
                                             
                                             $data = $this->tool()->convertObjectToArray($data);
@@ -238,7 +230,6 @@ class MelisCoreMicroServiceController extends MelisAbstractActionController
                              * If provided arguments has errors then return the form with the error message(s)
                              */
                             else {
-                                // get the form configuration in app.microservice configuration file
                                 $this->layout('layout/layoutBlank');
                                 $view = new ViewModel();
                                 $view->setTerminal(true);
@@ -261,13 +252,10 @@ class MelisCoreMicroServiceController extends MelisAbstractActionController
                               
                                 if ($form) {
 
-                                    //Get the number of arguments passed
                                     $arguments =  new \ReflectionMethod($servicePath, $method);
                                     $numberOfParameters = $arguments->getNumberOfParameters();
-                                    //Display the form only when there is parameter(s)
                                     if($numberOfParameters > 0 )
                                      {
-                                        // get the form configuration in app.microservice configuration file
                                         $this->layout('layout/layoutBlank');
                                         $view = new ViewModel();
                                         $view->setTerminal(true);
@@ -302,7 +290,6 @@ class MelisCoreMicroServiceController extends MelisAbstractActionController
                                             ]);
                                         }
 
-                                         // Check data if it's an Object
                                         if(is_object($data)){
                                           
                                             // This will check if the property of an object is protected
@@ -319,7 +306,6 @@ class MelisCoreMicroServiceController extends MelisAbstractActionController
                                                 $data = $this->tool()->convertObjectToArray($data);
                                             }
                                         }
-                                        // Check data if it's an array
                                         if(is_array($data)){
                                             
                                             $data = $this->tool()->convertObjectToArray($data);
@@ -362,7 +348,6 @@ class MelisCoreMicroServiceController extends MelisAbstractActionController
                 $message = 'tr_meliscore_microservice_api_key_inactive';
                 $hasError = true;
             }   
-
 
         } else {
             $message = 'tr_meliscore_microservice_api_key_invalid';
@@ -464,7 +449,6 @@ class MelisCoreMicroServiceController extends MelisAbstractActionController
                 $scheme = $uri->getScheme();
                 $url = $scheme . '://' . $host.'/melis/api/'.$authData->msoa_api_key;
 
-
                 /**
                  * The API key of a user is being displayed. A leaked key is exactly what the
                  * audit found (item 6.0), so reading one has to leave a trace (item 21.0).
@@ -513,7 +497,6 @@ class MelisCoreMicroServiceController extends MelisAbstractActionController
                 if ($authData) {
 
                     // A new API key now exists for this user: worth knowing when a key has to
-                    // be revoked or traced back.
                     $this->getServiceManager()->get('MelisCoreSecurityAudit')
                         ->logSensitiveRead('user microservice API key generated', $userId);
 
@@ -621,9 +604,6 @@ class MelisCoreMicroServiceController extends MelisAbstractActionController
         $userApiData  = $this->getMicroServiceAuthTable()->getUserByApiKey($apiKey)->current(); 
         $apiStatus    = '';
         $toolTranslator = $this->getServiceManager()->get('MelisCoreTranslation');
-        
-
-        
 
         if($userApiData) {
             
@@ -633,7 +613,6 @@ class MelisCoreMicroServiceController extends MelisAbstractActionController
                 $config       = $this->getServiceManager()->get('MelisCoreConfig');
                 $microservice = $config->getItem('microservice');
              
-                // set the langauge 
                 $melisLangTable = $this->getServiceManager()->get('MelisCore\Model\Tables\MelisLangTable');
                 $langData = $melisLangTable->getEntryById($userApiData->usr_lang_id)->current();
                 if($langData) {
@@ -641,7 +620,6 @@ class MelisCoreMicroServiceController extends MelisAbstractActionController
                     $container['melis-lang-locale'] = $langData->lang_locale;
                 }
 
-                //Exclude array 'conf' key
                 if(array_key_exists('conf',$microservice)){
                     unset($microservice['conf']);
                 }
@@ -712,6 +690,5 @@ class MelisCoreMicroServiceController extends MelisAbstractActionController
         $view->setTerminal(true);
         return $view;
     }
-
 
 }

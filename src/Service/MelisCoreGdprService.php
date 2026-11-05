@@ -88,10 +88,8 @@ class MelisCoreGdprService extends MelisGeneralService {
      */
     public function getUserInfo($formInputs = [])
     {
-        // Create search index for the array
         $arrayParameters['search'] = $formInputs;
 
-        // Sending service start event
         $arrayParameters = $this->sendEvent('melis_core_gdpr_user_info_event', $arrayParameters);
 
         return $arrayParameters;
@@ -126,16 +124,13 @@ class MelisCoreGdprService extends MelisGeneralService {
      */
     public function extractSelected($idsToBeExtractedArray = [])
     {
-        //created selected index
         $arrayParameters['selected'] = $idsToBeExtractedArray;
 
-        // Sending service start event
         $arrayParameters = $this->sendEvent('melis_core_gdpr_user_extract_event', $arrayParameters);
 
         $xml = '';
 
         if (isset($arrayParameters['results']) && count($arrayParameters['results']) > 0) {
-            // Generate and structure the xml
             $xmlDoc = new \DOMDocument('1.0', 'UTF-8');
             $xmlDoc->formatOutput = true;
             $root = $xmlDoc->appendChild($xmlDoc->createElement("xml"));
@@ -161,8 +156,6 @@ class MelisCoreGdprService extends MelisGeneralService {
             $xml = $xmlDoc->saveXML();
         }
 
-        // Sending service end event
-        //$arrayParameters = $this->sendEvent('melis_core_gdpr_user_extract_event_end', $xml);
         return $xml;
     }
 
@@ -194,13 +187,10 @@ class MelisCoreGdprService extends MelisGeneralService {
      */
     public function deleteSelected($idsToBeDeletedArray = [])
     {
-        // Create selected index for the array
         $arrayParameters['selected'] = $idsToBeDeletedArray;
 
-        // Sending service start event
         $arrayParameters = $this->sendEvent('melis_core_gdpr_user_delete_event', $arrayParameters);
 
-        // Sending service end event
         $arrayParameters = $this->sendEvent('melis_core_gdpr_user_delete_event_end', $arrayParameters);
 
         return $arrayParameters;

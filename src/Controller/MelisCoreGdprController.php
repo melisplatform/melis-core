@@ -66,7 +66,6 @@ class MelisCoreGdprController extends MelisAbstractActionController
         $xml = $melisCoreGdprService->extractSelected($idsToBeExtracted);
 
         $name = "melisplatformgdpr.xml";
-        //$response = $this->downloadXml($name, $xml);
 
         $response = $this->getResponse();
 
@@ -85,7 +84,6 @@ class MelisCoreGdprController extends MelisAbstractActionController
 
         return $view;
     }
-
 
     /**
      * This will delete the data based on the selected ids
@@ -196,7 +194,6 @@ class MelisCoreGdprController extends MelisAbstractActionController
         return $view;
     }
 
-
     /**
      * Content of the Gdpr page
      * which will call all the interfaces
@@ -253,7 +250,6 @@ class MelisCoreGdprController extends MelisAbstractActionController
             $modulesData = $melisCoreGdprService->getUserInfo($finalData);
         }
 
-
         $view = new ViewModel();
         $view->melisKey = $melisKey;
         $view->show = $show;
@@ -263,7 +259,6 @@ class MelisCoreGdprController extends MelisAbstractActionController
 
         return $view;
     }
-
 
     /**
      * Gets the tool
@@ -316,7 +311,6 @@ class MelisCoreGdprController extends MelisAbstractActionController
      */
     private function downloadXml($fileName, $xml)
     {
-        //$response = new HttpResponse();
         $response = $this->getResponse();
 
         $headers  = $response->getHeaders();

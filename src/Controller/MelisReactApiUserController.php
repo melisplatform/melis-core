@@ -229,7 +229,6 @@ class MelisReactApiUserController extends MelisAbstractActionController
             $auth = $this->getServiceManager()->get('MelisCoreAuth');
 
             if ($id) {
-                // Update — mot de passe + droits optionnels
                 $rightsSql    = $rights !== null ? ', usr_rights=?' : '';
                 $rightsParams = $rights !== null ? [$rights] : [];
 
@@ -294,7 +293,6 @@ class MelisReactApiUserController extends MelisAbstractActionController
 
                 // Événements legacy de FIN de sauvegarde. Le save React n'en émettait AUCUN : tous les
                 // listeners branchés sur la sauvegarde d'un user restaient donc muets depuis /melis-react.
-                //  • meliscore_tooluser_save_info_end → MelisCoreClearCacheListenerListener :
                 //    deleteCacheByPrefix('*_'.usr_id) — purge le cache de rendu DE CET utilisateur (le
                 //    menu en fait partie). Sans lui, il fallait re-sauver depuis l'ancien BO pour voir le
                 //    menu à jour. Le listener lit `success` + `datas['usr_id']` (cf. ToolUserController
@@ -347,7 +345,6 @@ class MelisReactApiUserController extends MelisAbstractActionController
             // régénération directe ici → on évite le double rebuild (perf).
 
             // Pendant création du `meliscore_tooluser_save_end` ci-dessus (cf. son commentaire) :
-            // MelisCoreRightsCacheListener + MelisCoreFlashMessengerListener écoutent `savenew_end`.
             // Là encore, PAS de `_start` (MelisCoreToolUserAddNewUserListener y rejoue la mécanique
             // legacy sur un POST fancytree inexistant côté React).
             try {
@@ -627,7 +624,6 @@ class MelisReactApiUserController extends MelisAbstractActionController
                 ]]);
             }
 
-            // toggle
             if (empty($existing)) {
                 $newKey = bin2hex(random_bytes(16));
                 $db->query('INSERT INTO melis_core_microservice_auth (msoa_user_id, msoa_status, msoa_api_key) VALUES (?,1,?)', [$id, $newKey]);

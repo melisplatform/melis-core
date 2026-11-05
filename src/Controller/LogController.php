@@ -156,7 +156,6 @@ class LogController extends MelisAbstractActionController
         return $view;
     }
 
-
     /**
      * Render Log Modal Edit Content
      *
@@ -179,7 +178,6 @@ class LogController extends MelisAbstractActionController
     public function  validateExportLogsAction()
     {
 
-
         $textTitle = 'tr_meliscore_logs_tool_export_modal_title';
         $request = $this->getRequest();
         $textMessage = '';
@@ -188,7 +186,6 @@ class LogController extends MelisAbstractActionController
         $errors = array();
 
         if ($request->isPost()) {
-
 
             $logSrv = $this->getServiceManager()->get('MelisCoreLogService');
             $translator = $this->getServiceManager()->get('translator');
@@ -337,7 +334,6 @@ class LogController extends MelisAbstractActionController
      */
     public function renderLogsToolTableUserFilterAction()
     {
-        // Get Cureent User ID
         $melisCoreAuth = $this->getServiceManager()->get('MelisCoreAuth');
         $userId        = null;
 
@@ -348,7 +344,6 @@ class LogController extends MelisAbstractActionController
                 $userId = (int) $userAuthDatas->usr_id;
             }
         }
-
 
         $isAdmin = false;
         $userTable = $this->getServiceManager()->get('MelisCoreTableUser');
@@ -436,11 +431,9 @@ class LogController extends MelisAbstractActionController
         $tableData = array();
 
         if ($this->getRequest()->isPost()) {
-            // Get the locale used from meliscore session
             $container = new Container('meliscore');
             $locale = $container['melis-lang-locale'];
 
-            // Get Cureent User ID
             $melisCoreAuth = $this->getServiceManager()->get('MelisCoreAuth');
             $userAuthDatas =  $melisCoreAuth->getStorage()->read();
             $userId = (int) $userAuthDatas->usr_id;
@@ -478,11 +471,9 @@ class LogController extends MelisAbstractActionController
         $tableData = array();
 
         if ($this->getRequest()->isPost()) {
-            // Get the locale used from meliscore session
             $container = new Container('meliscore');
             $locale = $container['melis-lang-locale'];
 
-            // Get Cureent User ID
             $melisCoreAuth = $this->getServiceManager()->get('MelisCoreAuth');
             $userAuthDatas =  $melisCoreAuth->getStorage()->read();
             $userId = (int) $userAuthDatas->usr_id;
@@ -499,7 +490,6 @@ class LogController extends MelisAbstractActionController
             $translator = $this->getServiceManager()->get('translator');
             $melisTranslation = $this->getServiceManager()->get('MelisCoreTranslation');
 
-            // Getting the table configuration from config tool
             $melisTool = $this->getServiceManager()->get('MelisCoreTool');
             $melisTool->setMelisToolKey('meliscore', 'meliscore_logs_tool');
 
@@ -626,8 +616,6 @@ class LogController extends MelisAbstractActionController
         return $view;
     }
 
-
-
     public function saveLogTypeTransAction()
     {
 
@@ -646,7 +634,6 @@ class LogController extends MelisAbstractActionController
             $translator = $this->getServiceManager()->get('translator');
             $logSrv = $this->getServiceManager()->get('MelisCoreLogService');
 
-            // Getting the Site Redirect Form from Tool config
             $melisMelisCoreConfig = $this->getServiceManager()->get('MelisCoreConfig');
             $appConfigForm = $melisMelisCoreConfig->getFormMergedAndOrdered('meliscore/tools/meliscore_logs_tool/forms/meliscore_logs_tool_log_type_form', 'meliscore_logs_tool_log_type_form');
 
@@ -679,7 +666,6 @@ class LogController extends MelisAbstractActionController
                         // adding the form id's where the error occured
                         $errors[$keyError]['form'][] = $key . '_log_form';
 
-                        // Getting the error label from form config label
                         foreach ($appConfigForm['elements'] as $keyForm => $valueForm) {
                             if ($valueForm['spec']['name'] == $keyError && !empty($valueForm['spec']['options']['label'])) {
                                 $errors[$keyError]['label'] = $translator->translate($valueForm['spec']['options']['label']);
@@ -701,7 +687,6 @@ class LogController extends MelisAbstractActionController
                 $errors['logtt_name']['form'] = $formIds;
 
                 if (!isset($errors['logtt_name']['label'])) {
-                    // Getting the error label from form config label
                     foreach ($appConfigForm['elements'] as $keyForm => $valueForm) {
                         if ($valueForm['spec']['name'] == 'logtt_name' && !empty($valueForm['spec']['options']['label'])) {
                             $errors['logtt_name']['label'] = $translator->translate($valueForm['spec']['options']['label']);

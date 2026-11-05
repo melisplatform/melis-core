@@ -306,8 +306,6 @@ class MelisReactApiGdprController extends MelisAbstractActionController
         } catch (\Throwable $e) { return $this->errorResponse($e); }
     }
 
-    // ══ Auto-Delete / Anonymisation ════════════════════════════════════════════
-
     public function adMetaAction(): HttpResponse
     {
         if ($deny = $this->denyUnlessAccess()) { return $deny; }
@@ -386,7 +384,6 @@ class MelisReactApiGdprController extends MelisAbstractActionController
 
             // Erreurs de validation : on renvoie des CLÉS i18n (traduites côté React selon la
             // locale de session), jamais du texte figé — + la carte champ => clé pour l'affichage
-            // sous chaque champ.
             $errors = [];
             if ($module === '') {
                 $errors['module'] = 'gdpr.ad.err_module';

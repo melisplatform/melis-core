@@ -55,7 +55,6 @@ class MelisCoreInsertDashboardPluginListener extends MelisGeneralListener implem
 
                                 $dashboardSrv = $sm->get('MelisCoreDashboardsTable');
 
-                                //set default dashboard plugin to user
                                 $dashboardSrv->save([
                                     'd_dashboard_id' => 'id_meliscore_toolstree_section_dashboard',
                                     'd_user_id' => $userId,

@@ -142,12 +142,9 @@ class MelisCoreDashboardPluginsRightsService extends MelisServiceManager impleme
             )
         );
 
-
-        // tools rights
         $toolsItems = $this->getPluginsKeys($xml);
         $rightsItems[0]['children'] = $toolsItems;
 
-        // Return values
         return $rightsItems;
     }
 
@@ -231,7 +228,6 @@ class MelisCoreDashboardPluginsRightsService extends MelisServiceManager impleme
             $dashboardPlugins[] = 'MelisCoreDashboardAnnouncementPlugin';
         }
 
-        // parent node
         $xmlRights .= '<' . self::MELISCORE_DASHBOARDPLUGIN_PREFIX . '>' . PHP_EOL;
         foreach ($dashboardPlugins as $plugin) {
             $xmlRights .= "\t<id>$plugin</id>" . PHP_EOL;

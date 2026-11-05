@@ -38,14 +38,11 @@ class MelisGdprDeleteEmailsTable extends MelisGenericTable
 
 	public function getAlertEmailsTransData($configId, $type = null, $langId = null)
     {
-        // table selection query
         $select = $this->getTableGateway()->getSql()->select();
-        // columns to select
         $select->columns(array('*'));
         if ($configId) {
             $select->where->equalTo('mgdpre_config_id', $configId);
         }
-        // module filter
         if ($type) {
             $select->where->equalTo('mgdpre_type', $type);
         }
@@ -55,6 +52,5 @@ class MelisGdprDeleteEmailsTable extends MelisGenericTable
 
         return $this->getTableGateway()->selectWith($select);
     }
-
 
 }

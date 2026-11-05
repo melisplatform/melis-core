@@ -57,7 +57,6 @@ class MelisUserConnectionDateTable extends MelisGenericTable
          }
 
          $getCount = $this->tableGateway->selectWith($select);
-         // set current data count for pagination
          $this->setCurrentDataCount((int) $getCount->getFieldCount());
 
          if(!empty($limit)) {
@@ -70,7 +69,6 @@ class MelisUserConnectionDateTable extends MelisGenericTable
          
          $resultSet = $this->tableGateway->selectWith($select);
 
-         
          return $resultSet;
      }
      
@@ -106,13 +104,11 @@ class MelisUserConnectionDateTable extends MelisGenericTable
 
          $select->where->equalTo('usrcd_usr_login', $userId);
 
-
          if(!empty($orderBy)) {
              MelisGenericTable::addSafeOrder($select, $orderBy, $orderDirection);
          }
 
          $getCount = $this->tableGateway->selectWith($select);
-         // set current data count for pagination
          $this->setCurrentDataCount((int) $getCount->count());
 
          if(!empty($limit)) {
@@ -127,7 +123,5 @@ class MelisUserConnectionDateTable extends MelisGenericTable
 
          return $resultSet;
      }
-
-
 
 }

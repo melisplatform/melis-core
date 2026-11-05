@@ -37,7 +37,6 @@ class MelisSetupPostDownloadController extends MelisAbstractActionController imp
     {
         $request = $this->getRequest();
 
-        //startSetup button indicator
         $btnStatus = (bool) $request->getQuery()->get('btnStatus');
 
         $form = $this->getForm();
@@ -98,10 +97,8 @@ class MelisSetupPostDownloadController extends MelisAbstractActionController imp
 
         $data = $this->getTool()->sanitizeRecursive($this->params()->fromRoute('post', $this->getRequest()->getPost()));
 
-
         $form = $this->getForm();
         $form->setData($data);
-
 
         if ($form->isValid()) {
 
@@ -113,7 +110,6 @@ class MelisSetupPostDownloadController extends MelisAbstractActionController imp
             $password = $melisCoreAuth->encryptPassword($form->get('password')->getValue());
             $userFirstname = $form->get('firstname')->getValue();
             $userLastname = $form->get('lastname')->getValue();
-
 
             $container = new Container('melis_modules_configuration_status');
             $hasErrors = false;
@@ -175,7 +171,6 @@ class MelisSetupPostDownloadController extends MelisAbstractActionController imp
                     ], $existingUserId);
 
                     $installerSession = new Container('melisinstaller');
-                    // save platforms
                     $melisCorePlatformTable = $this->getServiceManager()->get('MelisCoreTablePlatform');
                     $defaultPlatform = getenv('MELIS_PLATFORM');
                     $platforms = isset($installerSession['environments']) ? $installerSession['environments'] : null;
@@ -200,10 +195,8 @@ class MelisSetupPostDownloadController extends MelisAbstractActionController imp
                         }
                     }
 
-                    // Dashboard
                     $this->generateDashboardPlugins($userId);
 
-                    // save to password history service
                     $passwordHistService = $this->getServiceManager()->get('MelisUpdatePasswordHistoryService');
                     $passwordHistService->saveItem($userId, $password);
                     $success = true;
@@ -257,7 +250,6 @@ class MelisSetupPostDownloadController extends MelisAbstractActionController imp
 
             $dashboardSrv = $this->getServiceManager()->get('MelisCoreDashboardsTable');
 
-            //set default dashboard plugin to user
             $dashboardSrv->save([
                 'd_dashboard_id' => 'id_meliscore_toolstree_section_dashboard',
                 'd_user_id' => $userId,

@@ -58,7 +58,6 @@ class MelisCorePhpWarningListener implements ListenerAggregateInterface
                         // Adding the warning message to the response content
                         $response->setContent(implode('<br>', $warning).'<br><br>'.$page);
 
-                        // Generating view
                         $renderer = $sm->get('ViewRenderer');
                         $view = new ViewModel();
                         $view->setTemplate('layout/warning');
@@ -71,7 +70,6 @@ class MelisCorePhpWarningListener implements ListenerAggregateInterface
                         $warning = str_replace('<b>', '', implode("\n", $warning));
                         $warning = str_replace('</b>', '',$warning);
 
-                        // Addning title
                         $warning = $filePersmissionTitle."\n\n".$warning;
                         // Adding the warning message to the response content
                         $response->setContent($warning."\n\n".$page);

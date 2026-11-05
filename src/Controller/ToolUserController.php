@@ -49,7 +49,6 @@ class ToolUserController extends MelisAbstractActionController
         $view->melisKey = $melisKey;
         $view->hasAccess = $hasAccess;
 
-
         return $view;
     }
 
@@ -63,7 +62,6 @@ class ToolUserController extends MelisAbstractActionController
         $zoneConfig = $this->params()->fromRoute('zoneconfig', array());
         $melisTool = $this->getServiceManager()->get('MelisCoreTool');
         $melisTool->setMelisToolKey('meliscore', $this::TOOL_KEY);
-
 
         $view = new ViewModel();
         $view->title = $melisTool->getTitle();
@@ -154,11 +152,9 @@ class ToolUserController extends MelisAbstractActionController
         $scheme = isset($get['scheme']) ? $get['scheme'] : null;
 
         $columns = $melisTool->getColumns();
-        // add action column
         $columns['actions'] = array('text' => $translator->translate('tr_meliscore_global_action'), 'css' => 'width:10%');
 
         $netStatus = $melisTool->isConnected();
-
 
         $view = new ViewModel();
         $view->melisKey = $melisKey;
@@ -239,7 +235,6 @@ class ToolUserController extends MelisAbstractActionController
         return $view;
     }
 
-
     /**
      * Renders to the empty modal (no need to create a modal handler for this in app.interface)
      * @return \Laminas\View\Model\ViewModel
@@ -289,10 +284,8 @@ class ToolUserController extends MelisAbstractActionController
         // tell the Tool what configuration in the app.tool.php that will be used.
         $melisTool->setMelisToolKey('meliscore', $this::TOOL_KEY);
 
-
         $view = new ViewModel();
         $view->melisKey = $melisKey;
-        // $view->setVariable('meliscore_tool_user_form_new', $melisTool->getForm('meliscore_tool_user_form_new'));
         $view->setVariable('meliscore_tool_user_form_new', $this->getAddNewUserForm());
 
         return $view;
@@ -319,7 +312,6 @@ class ToolUserController extends MelisAbstractActionController
         return $view;
     }
 
-
     /**
      * Renders to the Edit Form content for the modal
      * @return \Laminas\View\Model\ViewModel
@@ -334,14 +326,12 @@ class ToolUserController extends MelisAbstractActionController
         // tell the Tool what configuration in the app.tool.php that will be used.
         $melisTool->setMelisToolKey('meliscore', $this::TOOL_KEY);
 
-
         $view = new ViewModel();
         $view->melisKey = $melisKey;
         $view->setVariable('meliscore_tool_user_form_edit', $melisTool->getForm('meliscore_tool_user_form_edit'));
 
         return $view;
     }
-
 
     /**
      * Handles the rights if Edit Content should be displayed for the user
@@ -385,7 +375,6 @@ class ToolUserController extends MelisAbstractActionController
         return $view;
     }
 
-
     /**
      * Renders to the Edit Rights Form content for the modal
      * @return \Laminas\View\Model\ViewModel
@@ -393,7 +382,6 @@ class ToolUserController extends MelisAbstractActionController
     public function renderToolUserModalRightsAction()
     {
         $melisKey = $this->params()->fromRoute('melisKey', '');
-
 
         $view = new ViewModel();
         $view->melisKey = $melisKey;
@@ -408,7 +396,6 @@ class ToolUserController extends MelisAbstractActionController
     public function renderToolUserModalNewRightsAction()
     {
         $melisKey = $this->params()->fromRoute('melisKey', '');
-
 
         $view = new ViewModel();
         $view->melisKey = $melisKey;
@@ -443,15 +430,12 @@ class ToolUserController extends MelisAbstractActionController
 
         $columns = $melisTool->getColumns();
 
-
         $view = new ViewModel();
         $view->melisKey = $melisKey;
         $view->tableColumns = $columns;
 
-
         return $view;
     }
-
 
     /**
      * Checks whether the user has access to this tools or not
@@ -464,10 +448,6 @@ class ToolUserController extends MelisAbstractActionController
 
         return $hasAccess;
     }
-
-    /**
-     * --------- TOOL EVENT HANDLERS ---------------
-     **/
 
     /**
      * Adds a new user to the database
@@ -586,7 +566,6 @@ class ToolUserController extends MelisAbstractActionController
 
             $translator = $this->getServiceManager()->get('translator');
             /** @var \Laminas\Form\Form $userAddForm */
-            // $userAddForm = $melisTool->getForm('meliscore_tool_user_form_new');
             $userAddForm = $this->getAddNewUserForm();
             $userTable = $this->getServiceManager()->get('MelisCoreTableUser');
             $imgService = $this->getServiceManager()->get('MelisCoreImage');
@@ -602,7 +581,6 @@ class ToolUserController extends MelisAbstractActionController
             $roleId = empty($postValues['usr_role_id']) ? 0 : (int)$postValues['usr_role_id'];
 
             if ($userAddForm->isValid()) {
-                //check if email already exist
                 $userDatasEmail = $userTable->getEntryByField('usr_email', $postValues['usr_email']);
                 $userDatasEmail = $userDatasEmail->current();
                 if (!empty($userDatasEmail)) {
@@ -611,7 +589,6 @@ class ToolUserController extends MelisAbstractActionController
                         'label' => $translator->translate('tr_meliscore_tool_user_col_Email')
                     ];
                 } else {
-                    // check if the user exists
                     $userDatas = $userTable->getEntryByField('usr_login', $userLogin);
                     $userDatas = $userDatas->current();
                     if (!empty($userDatas->usr_login)) {
@@ -655,7 +632,6 @@ class ToolUserController extends MelisAbstractActionController
                                         }
                                         $imageContent = !empty($imageFile['tmp_name']) ? file_get_contents($dirName . 'tmb_' . $safeImgName) : null;
 
-                                        // delete tmp image
                                         if (!empty($imageFile['tmp_name'])) {
                                             unlink($dirName . 'tmb_' . $safeImgName);
                                         }
@@ -664,7 +640,6 @@ class ToolUserController extends MelisAbstractActionController
                             }
 
                             $data = $userAddForm->getData();
-                            // remove confirm pass when adding
                             unset($data['usr_confirm_password']);
 
                             $data['usr_id'] = null;
@@ -693,7 +668,6 @@ class ToolUserController extends MelisAbstractActionController
                             }
 
                             if (empty($errors)) {
-                                //                            $data['usr_status'] = 2;
                                 $data['usr_id'] = $userTable->save($data);
                                 if ($data['usr_id'] > 0) {
                                     $success = true;
@@ -994,11 +968,9 @@ class ToolUserController extends MelisAbstractActionController
                     $differenceMonths         = $lastConnectionTime->diff($now)->m;
                     $differenceYears         = $lastConnectionTime->diff($now)->y;
 
-
                     // if user has been away for 5mins, automatically set the user status to "offline"
 
                     if ((int)$differenceYears > 0 || (int)$differenceMonths > 0 || (int)$differenceMonths > 0 || (int)$differenceDays > 0 || (int)$differenceHours > 0 || (int)$difference > 5) {
-                        // update user status
                         $userTable->save([
                             'usr_is_online' => 0
                         ], $userId);
@@ -1020,7 +992,6 @@ class ToolUserController extends MelisAbstractActionController
                         $status = 'text-danger';
                 }
 
-                // manual data manipulation
                 $tableData[$ctr]['DT_RowId'] = $userId;
                 if ($tableData[$ctr]['usr_login'] == $user->usr_login) {
                     $tableData[$ctr]['DT_RowClass'] = "clsCurrent";
@@ -1032,7 +1003,6 @@ class ToolUserController extends MelisAbstractActionController
                 $tableData[$ctr]['usr_image'] = '<img src="' . $image . '" width="24" height="24" alt="profile image" title="Profile picture of ' . $tableData[$ctr]['usr_firstname'] . '"/>';
                 $tableData[$ctr]['usr_last_login_date'] = ($tableData[$ctr]['usr_last_login_date']) ? $melisTool->formatDate(strtotime($tableData[$ctr]['usr_last_login_date']), null, \IntlDateFormatter::NONE) : '';
                 $tableData[$ctr]['usr_email'] = $melisTool->limitedText($tableData[$ctr]['usr_email'], 35);
-                // remove critical details
                 unset($tableData[$ctr]['usr_password']);
                 unset($tableData[$ctr]['usr_rights']);
                 unset($tableData[$ctr]['usr_role_id']);
@@ -1104,7 +1074,6 @@ class ToolUserController extends MelisAbstractActionController
                 'limit' => $limit,
             ];
 
-
             $usersTable = $this->getServiceManager()->get('MelisCoreTableUser');
             $users = $usersTable->getUsers($where);
 
@@ -1172,14 +1141,12 @@ class ToolUserController extends MelisAbstractActionController
                 $lastConnectionTime = new \DateTime($userConnectionData->usrcd_last_connection_time);
                 $difference         = $lastConnectionTime->diff($now);
 
-                // get the total minutes
                 $days         = (int) $difference->d * 24 * 60;
                 $hours        = (int) $difference->h * 60;
                 $minutes      = (int) $difference->i;
                 $totalMinutes = $days + $hours + $minutes;
 
                 if ($totalMinutes > 5) {
-                    // set user to offline
                     $userTable->save([
                         'usr_is_online' => 0
                     ], $userConnectionData->usrcd_usr_login);
@@ -1219,7 +1186,6 @@ class ToolUserController extends MelisAbstractActionController
         $errors = [];
         $datas = [];
         $userInfo = [];
-        // translator
         $translator = $this->getServiceManager()->get('translator');
 
         // declare the Tool service that we will be using to completely create our tool.
@@ -1234,7 +1200,6 @@ class ToolUserController extends MelisAbstractActionController
             $postValues = $melisTool->sanitizePost($this->getRequest()->getPost()->toArray());
             $userUpdateForm->setData($postValues);
 
-            // get the user id for sql wildcard
             $userId = empty($postValues['usr_id']) ? null : $postValues['usr_id'];
             $password = empty($postValues['usr_password']) ? '' : $postValues['usr_password'];
             $confirmPass = empty($postValues['usr_confirm_password']) ? '' : $postValues['usr_confirm_password'];
@@ -1247,7 +1212,6 @@ class ToolUserController extends MelisAbstractActionController
                 $melisCoreAuth = $this->getServiceManager()->get('MelisCoreAuth');
                 $newXmlRights = ''; // xml rights temp holder
 
-                //check if email already exist
                 $userDatasEmail = $userTable->checkUserEmailIfExist($postValues['usr_email'], $userId);
                 $userDatasEmail = $userDatasEmail->current();
 
@@ -1302,8 +1266,6 @@ class ToolUserController extends MelisAbstractActionController
                                 }
                                 $imageContent = !empty($imageFile['tmp_name']) ? file_get_contents($dirName . 'tmb_' . $imageFile['name']) : $userInfo['usr_image'];
 
-
-                                // delete tmp image
                                 if (!empty($imageFile['tmp_name'])) {
                                     unlink($dirName . 'tmb_' . $imageFile['name']);
                                 }
@@ -1324,7 +1286,6 @@ class ToolUserController extends MelisAbstractActionController
                     }
 
                     $newPass = '';
-                    // check if the user exists
                     if ($userInfo) {
                         if (!empty($password) || !empty($confirmPass)) {
                             $passValidator = new \MelisCore\Validator\MelisPasswordValidatorWithConfig([
@@ -1342,7 +1303,6 @@ class ToolUserController extends MelisAbstractActionController
                                 if (file_exists($file)) {                                   
                                     $config = $this->getServiceManager()->get('MelisCoreConfig')->getItem('meliscore/datas/login');
                                 } else {                                   
-                                    //get default
                                     $config = $this->getServiceManager()->get('MelisCoreConfig')->getItem('meliscore/datas/otherconfig_default/login');                                    
                                 }
                                 $passwordDuplicateCheckSuccessful = true;
@@ -1371,7 +1331,6 @@ class ToolUserController extends MelisAbstractActionController
                                     if ($passValidator->isValid($password)) {
                                         $melisEmailBO = $this->getServiceManager()->get('MelisCoreBOEmailService');
 
-                                        // Fetching user language Id
                                         $userTable = $this->getServiceManager()->get('MelisCoreTableUser');
                                         $userDataResult = $userTable->getEntryById($userId);
                                         $userDatas = $userDataResult->current();
@@ -1414,7 +1373,6 @@ class ToolUserController extends MelisAbstractActionController
                                 $success = false;
                             }
                         } else {
-                            // update without touching the password
                             $success = true;
                         } // password and confirm password not empty
 
@@ -1423,12 +1381,10 @@ class ToolUserController extends MelisAbstractActionController
                             unset($data["usr_image_remove"]);
 
                             $savedPassword = !empty($newPass) ? $newPass : $userInfo['usr_password'];
-                            // remove confirm pass when updating
                             unset($data['usr_confirm_password']);
 
                             $data['usr_login'] = $userInfo['usr_login'];
                             $data['usr_password'] = $savedPassword;
-                            // $data['usr_lang_id'] = $userInfo['usr_lang_id'];
                             $data['usr_admin'] = ($data['usr_admin']) ? 1 : 0;
                             $data['usr_rights'] = $userInfo['usr_rights'];
                             $data['usr_creation_date'] = $userInfo['usr_creation_date'];
@@ -1470,10 +1426,8 @@ class ToolUserController extends MelisAbstractActionController
 
                             $isMyInfo = false;
                             $loadProfile = null;
-                            // check if you are updating your own info
                             $userSession = $melisCoreAuth->getStorage()->read();
                             if ($data['usr_login'] == $userSession->usr_login) {
-                                // update session data
                                 $userSession->usr_status = $data['usr_status'];
                                 $userSession->usr_email = $data['usr_email'];
                                 $userSession->usr_firstname = $data['usr_firstname'];
@@ -1494,7 +1448,6 @@ class ToolUserController extends MelisAbstractActionController
                                 'usr_id' => $userId
                             ];
 
-                            // free up memory
                             unset($data);
                         }
                     }
@@ -1521,7 +1474,6 @@ class ToolUserController extends MelisAbstractActionController
 
         return new JsonModel($response);
     }
-
 
     /**
      * Export CSV de la liste des utilisateurs (audit DEKRA 7.0).
@@ -1624,7 +1576,6 @@ class ToolUserController extends MelisAbstractActionController
             $userSession->usr_rights = $newXmlRights;
         }
 
-
         // NB: $userTable->save() returns the saved row id (e.g. the usr_id), NOT a 0/1 flag.
         // The JSON contract expected by the front (and the React tool-iframe notification bridge)
         // is success = 1/0 — see updateUserAction which normalises it. If we leaked the raw id here,
@@ -1672,7 +1623,6 @@ class ToolUserController extends MelisAbstractActionController
         $errors = [];
         $datas = [];
         $textTitle = 'tr_meliscore_tool_user';
-        //$textMessage = '';
 
         if (!empty($container['action-tool-user-tmp'])) {
             if (!empty($container['action-tool-user-tmp']['success'])) {
@@ -1749,7 +1699,6 @@ class ToolUserController extends MelisAbstractActionController
         return new JsonModel($response);
     }
 
-
     public function getUserConnectionDataAction()
     {
         $melisKey = $this->params()->fromRoute('melisKey', '');
@@ -1824,11 +1773,9 @@ class ToolUserController extends MelisAbstractActionController
                 }
 
                 $loginDate = $melisTool->formatDate(strtotime($tableData[$ctr]['usrcd_last_login_date']), null, \IntlDateFormatter::SHORT, null, null, 'MMMM d');
-                // $loginDate = explode(' ' , $loginDate)[0];
 
                 $connectionTime = $userSvc->getUserSessionTime((int) $tableData[$ctr]['usr_id'], $tableData[$ctr]['usrcd_last_login_date']) == '-' ? '0' :
                     $userSvc->getUserSessionTime((int) $tableData[$ctr]['usr_id'], $tableData[$ctr]['usrcd_last_login_date'], false);
-
 
                 $tableData[$ctr]['usrcd_id']                   = date('H:i:s', strtotime($tableData[$ctr]['usrcd_last_login_date']));
                 $tableData[$ctr]['usrcd_usr_login']            = date('H:i:s', strtotime($tableData[$ctr]['usrcd_last_connection_time']));

@@ -54,21 +54,17 @@ class MelisCoreBOEmailService extends MelisServiceManager
 	        array_push($langEmailDetailsContainer, $langEmailDetails);
 	    }
 	    
-	    // Saving Data
 	    if ($codename!='NEW'){
 	        
 	        $melisBOEmailsResult = $melisBOEmails->getEntryByField('boe_code_name', $codename);
 	        $melisBOEmailsData = $melisBOEmailsResult->current();
 	        if (!empty($melisBOEmailsData)){
-	            // Email Edition Statement
 	            $boeID = $melisBOEmailsData->boe_id;
                 $melisBOEmails->save($data,$boeID);
 	        }else{
-	            // Adding new database row
 	            $boeID = $melisBOEmails->save($data);
 	        }
 	    }else{
-	        // Adding Email Statement
 	        $boeID = $melisBOEmails->save($data);
 	    }
 	    
@@ -185,7 +181,6 @@ class MelisCoreBOEmailService extends MelisServiceManager
 	            $melisBOEmailsData = $melisBOEmailsResult->current();
 	            if(!empty($melisBOEmailsData)){
 
-	                // Get Email App
 	                $melisMelisCoreConfig = $this->getServiceManager()->get('config');
 	                $emailsConfig = (isset($melisMelisCoreConfig['plugins']['meliscore']['emails'][$codename])) ? $melisMelisCoreConfig['plugins']['meliscore']['emails'][$codename] : array();
 	                
@@ -209,7 +204,6 @@ class MelisCoreBOEmailService extends MelisServiceManager
 	                $result['layout_logo']          = ($melisBOEmailsData->boe_content_layout_logo) ? $melisBOEmailsData->boe_content_layout_logo : $layoutLogo;
 	                $result['layout_ftr_info']      = ($melisBOEmailsData->boe_content_layout_ftr_info) ? $melisBOEmailsData->boe_content_layout_ftr_info : $layoutFtrInfo;
 
-
 	                $result['headers']['tags'] = '';
 	                if (!empty($melisBOEmailsData->boe_tag_accepted_list)||!empty($tags)){
 	                    
@@ -221,8 +215,7 @@ class MelisCoreBOEmailService extends MelisServiceManager
 	                    
                         $result['headers']['tags'] = implode(',', array_unique(array_merge($configEmail, $dbCongif)));
 	                }
-	                
-	                    
+
 	                $getEmailsDetails = $melisBOEmailsDetails->getEmailDetailsByEmailId($melisBOEmailsData->boe_id, $langId);
 	                
 	                if (!empty($getEmailsDetails)){
@@ -264,7 +257,6 @@ class MelisCoreBOEmailService extends MelisServiceManager
 	        }
 	        
 	        if (empty($result['headers'])){
-	            // Get Email App
 	            $melisMelisCoreConfig = $this->getServiceManager()->get('config');
 	            $emailsConfig = (isset($melisMelisCoreConfig['plugins']['meliscore']['emails'][$codename])) ? $melisMelisCoreConfig['plugins']['meliscore']['emails'][$codename] : array();
 	             
@@ -316,7 +308,6 @@ class MelisCoreBOEmailService extends MelisServiceManager
 	 */
 	public function sendBoEmailByCode($codename, $tags, $email_to, $name_to = null, $langId = null) {
 	    
-	    // Getting the Current Dev. Environment
 	    $configPath = 'meliscore/datas';
 	    $melisConfig = $this->getServiceManager()->get('MelisCoreConfig');
 	    $emailCfg = $melisConfig->getItemPerPlatform($configPath);
@@ -335,7 +326,6 @@ class MelisCoreBOEmailService extends MelisServiceManager
 	        if (!empty($emailsPropertiesAndDetails['headers'])){
 	            $emailHeaders = $emailsPropertiesAndDetails['headers'];
 	            
-	            // Email Headers variables
 	            $email_from         = $emailHeaders['from'];
 	            $from_name          = $emailHeaders['from_name'];
 	            $replyTo            = $emailHeaders['replyTo'];
@@ -352,7 +342,6 @@ class MelisCoreBOEmailService extends MelisServiceManager
 	                if(is_array($tags)){
 	                    
 	                    $acceptedTags = array();
-	                    // Parsing Param Tags
 	                    // Getting only the Accepted Tag base on data stored on App.emails.php and Database
 	                    foreach ($tags As $key => $val){
 	                        // Checking Accepted Tags on Param Tags is Allowable base on data from Database
@@ -382,7 +371,6 @@ class MelisCoreBOEmailService extends MelisServiceManager
 	                
 	                foreach ($emailPropertiesDetails As $key => $val){
 	                    $subject = $emailPropertiesDetails[$key]['subject'];
-	                    // initializing content of the email
 	                    // if html doesn;t hav value text version can be use as email content
 	                    $message_text = ($emailPropertiesDetails[$key]['text']) ? $emailPropertiesDetails[$key]['text'] : '';
 	                    $message_html = ($emailPropertiesDetails[$key]['html']) ? $emailPropertiesDetails[$key]['html'] : $message_text;
@@ -458,7 +446,6 @@ class MelisCoreBOEmailService extends MelisServiceManager
     	                        $message_html = $view->render($viewModel);
     	                    }
     	                    
-    	                    // Send Email
     	                    $sendEmailBO->sendEmail($email_from, $from_name, $email_to, $name_to, $replyTo, $subject, $message_html, $message_text);
     	                    // Set Flag to TRUE after executing Sending of Email function
     	                    $sendFlag = TRUE;

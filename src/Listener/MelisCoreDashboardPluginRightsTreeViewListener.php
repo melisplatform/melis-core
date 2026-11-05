@@ -9,7 +9,6 @@
 
 namespace MelisCore\Listener;
 
-
 use Laminas\EventManager\EventManagerInterface;
 use Laminas\EventManager\ListenerAggregateInterface;
 use Laminas\Session\Container;
@@ -26,14 +25,12 @@ class MelisCoreDashboardPluginRightsTreeViewListener extends MelisGeneralListene
                 $sm = $e->getTarget()->getEvent()->getApplication()->getServiceManager();
                 $container = new Container('meliscore');
 
-                // Add MelisDashboardPlugins right management rights management
                 $userId = $sm->get('request')->getQuery()->get('userId');
 
                 if (empty($container['action-tool-user-getrights-tmp']))
                     $container['action-tool-user-getrights-tmp'] = array();
                 $melisCmsRights = $sm->get('MelisCoreDashboardPluginsService');
                 $rightsDashboard = $melisCmsRights->getRightsValues($userId);
-
 
                 // Merge the DashboardPlugin rights with other ones (from Core or other modules)
                 $container['action-tool-user-getrights-tmp'] = array_merge($container['action-tool-user-getrights-tmp'], $rightsDashboard);

@@ -64,7 +64,6 @@ class MelisGeneralService extends MelisServiceManager implements EventManagerAwa
 		if (empty($class_method))
 			return array();
 		
-		// Get the class name and the method name
 		list($className, $methodName) = explode('::', $class_method);
 		if (empty($className) || empty($methodName))
 			return array();
@@ -77,14 +76,11 @@ class MelisGeneralService extends MelisServiceManager implements EventManagerAwa
 		$parametersArray = array();
 		try 
 		{
-			// Gets the data of class/method from Reflection object
 			$reflectionMethod = new \ReflectionMethod($className, $methodName);
 			$parameters = $reflectionMethod->getParameters();
 			
-			// Loop on parameters
 			foreach ($parameters as $keyParameter => $parameter)
 			{
-				// Check if we have a value given
 				if (!empty($parameterValues[$keyParameter]))
 					$parametersArray[$parameter->getName()] = $parameterValues[$keyParameter];
 					else
@@ -92,7 +88,6 @@ class MelisGeneralService extends MelisServiceManager implements EventManagerAwa
 						if ($parameter->isOptional())
 							$parametersArray[$parameter->getName()] = $parameter->getDefaultValue();
 							else
-								// Else
 								$parametersArray[$parameter->getName()] = null;
 			}
 		}
