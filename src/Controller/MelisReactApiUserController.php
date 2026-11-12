@@ -305,6 +305,30 @@ class MelisReactApiUserController extends MelisAbstractActionController
                 }
             }
 
+            // Same rule as the legacy tool: a login and an email belong to one user. The table has no
+            // unique index, so this is the only guard. The edited user is excluded from the search.
+            $translator = $this->getServiceManager()->get('translator');
+            $taken      = [];
+            foreach ([
+                'login' => ['usr_login', $login, 'tr_meliscore_tool_user_new_fail_user_exists'],
+                'email' => ['usr_email', $email, 'tr_meliscore_tool_user_email_exist'],
+            ] as $field => [$column, $value, $messageKey]) {
+                $rows = iterator_to_array($db->query(
+                    "SELECT usr_id FROM melis_core_user WHERE $column = ? AND usr_id <> ? LIMIT 1",
+                    [$value, (int) $id]
+                ));
+                if (!empty($rows)) {
+                    $taken[$field] = [$translator->translate($messageKey)];
+                }
+            }
+            if ($taken) {
+                return $this->jsonResponse([
+                    'success' => false,
+                    'error'   => implode(' • ', array_merge(...array_values($taken))),
+                    'fields'  => $taken,
+                ], 422);
+            }
+
             if ($id) {
                 // Update — mot de passe + droits optionnels
                 $rightsSql    = $rights !== null ? ', usr_rights=?' : '';
