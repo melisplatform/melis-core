@@ -63,6 +63,27 @@ class MelisAuthController extends MelisAbstractActionController
      * Anything meant for the log listeners travels in the event payload only,
      * never in the HTTP body: see authFailureEventPayload().
      */
+    /**
+     * Login answer when an administrator forced a password reset on the account: not logged in,
+     * sent straight to the reset page with a one-time token. Nothing is mailed, the user having
+     * just typed the current password.
+     */
+    private function buildForcedResetResult($userData, $translator)
+    {
+        $hash = $this->getServiceManager()->get('MelisCoreLostPassword')
+            ->issueResetToken($userData->usr_login, $userData->usr_email);
+        $message = $translator->translate('tr_meliscore_login_password_reset_required');
+
+        return [
+            'success' => false,
+            'errors' => ['empty' => $message],
+            // React login page: opens its own /reset-password/<hash> page
+            'resetHash' => $hash,
+            // Legacy login page: evaluates the command
+            'command' => "window.location.replace('/melis/reset-password/" . $hash . "');",
+        ];
+    }
+
     private function buildFailedAuthResult()
     {
         $translator = $this->getServiceManager()->get('translator');
@@ -320,14 +341,6 @@ class MelisAuthController extends MelisAbstractActionController
                         }
                     }
 
-                    // Load config again if necessary (already done above, but keeping structure for safety)
-                    // if (file_exists($_SERVER['DOCUMENT_ROOT'] . '/../vendor/melisplatform/melis-core/config/app.login.php')) {
-                    //     $config = $this->getServiceManager()->get('MelisCoreConfig')->getItem('meliscore/datas/login');
-                    // } else {
-                    //     //get default
-                    //     $config = $this->getServiceManager()->get('MelisCoreConfig')->getItem('meliscore/datas/otherconfig_default/login');
-                    // }
-                    
                     // Account Lock Status Check and Activation (Timer lock lapsed)
                     if (isset($config['login_account_lock_status'])
                         && !empty($config['login_account_lock_status'])
@@ -399,7 +412,12 @@ class MelisAuthController extends MelisAbstractActionController
 
                     // If user is active
                     if ($userData->usr_status == self::USER_ACTIVE) {
-                        if(!$isPassExpired) {
+                        if ($passwordOk && !empty($userData->usr_force_password_reset)) {
+                            // Correct password, but an administrator requires a new one first
+                            // ("Force password reset at next login", Users tool). Checked before
+                            // 2FA and the expiry rule; only ever reached with the right password.
+                            $result = $this->buildForcedResetResult($userData, $translator);
+                        } elseif(!$isPassExpired) {
                             if (!$needReset) {
                                 $melisCoreAuth->getAdapter()->setIdentity($postValues['usr_login'])
                                     ->setCredential($password);
@@ -485,11 +503,7 @@ class MelisAuthController extends MelisAbstractActionController
                                     }
                                 } else { 
                                         // Authentication failed due to wrong password/etc.
-                                        if (file_exists($_SERVER['DOCUMENT_ROOT'] . '/../vendor/melisplatform/melis-core/config/app.login.php')) {
-                                            $config = $this->getServiceManager()->get('MelisCoreConfig')->getItem('meliscore/datas/login');
-                                        } else {
-                                            $config = $this->getServiceManager()->get('MelisCoreConfig')->getItem('meliscore/datas/otherconfig_default/login');
-                                        }
+                                        $config = $this->getLoginConfig();
 
                                         // If login account lock is activated
                                         if (isset($config['login_account_lock_status']) && !empty($config['login_account_lock_status'])) {
@@ -522,7 +536,9 @@ class MelisAuthController extends MelisAbstractActionController
                                                  * l'administrateur (login_account_admin_email) à un anonyme.
                                                  */
                                                 $result = $this->buildFailedAuthResult();
-                                                $this->getEventManager()->trigger('meliscore_login_attempt_end', $this, array_merge($result, ['typeCode' => self::ACCOUNT_LOCKED, 'itemId' => $userData->usr_id]));
+                                                // The ACCOUNT_LOCKED log row needs a title: it dates the lock for the timer unlock
+                                                $this->getEventManager()->trigger('meliscore_login_attempt_end', $this,
+                                                    $this->authFailureEventPayload(self::ACCOUNT_LOCKED, $userData->usr_id, 'Account locked'));
                                             } else {
                                                 // Wrong password, lock policy armed but threshold not reached:
                                                 // same body as any other failure (the former "too many failed
@@ -631,18 +647,7 @@ class MelisAuthController extends MelisAbstractActionController
 
     protected function getLoginConfig()
     {
-        // Check for custom config file path
-        $file = $_SERVER['DOCUMENT_ROOT'] . '/../vendor/melisplatform/melis-core/config/app.login.php';
-        
-        if (file_exists($file)) {
-            // Load custom config
-            $config = $this->getServiceManager()->get('MelisCoreConfig')->getItem('meliscore/datas/login');
-        } else {
-            // Load default config
-            $config = $this->getServiceManager()->get('MelisCoreConfig')->getItem('meliscore/datas/otherconfig_default/login');
-        }
-        
-        return $config;
+        return $this->getServiceManager()->get('MelisPasswordSettingsService')->getLoginSettings();
     }
 
     /**

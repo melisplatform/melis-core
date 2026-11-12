@@ -114,6 +114,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
     if (result.twoFaHash) return { twoFaHash: result.twoFaHash }
     if (result.redirectUrl) return { redirectUrl: result.redirectUrl }
+    if (result.resetHash) return { resetHash: result.resetHash }
     return { error: result.message ?? 'Identifiants invalides.' }
   }, [completeAuth])
 

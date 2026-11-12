@@ -278,52 +278,126 @@ class MelisPasswordSettingsService extends MelisGeneralService
                 $arrayParameters['success'] = 0;
                 $arrayParameters['errors'] = $mergedErrors;
             } else {
-                $file = $_SERVER['DOCUMENT_ROOT'] . '/../vendor/melisplatform/melis-core/config/app.login.php';
-
                 try {
-
-                    if (!file_exists($file)) {
-                        touch($file);
-                    }
-
-                    /**
-                     * SECURITY (audit M10) : app.login.php est un fichier PHP INCLUS AU
-                     * BOOTSTRAP (Module.php) — le rendre world-writable (0777, qui plus est
-                     * via sudo) offrait une persistance/élévation locale à tout process de la
-                     * machine. 0664 best-effort : si le fichier appartient à un autre
-                     * utilisateur et n'est pas inscriptible, toFile() échouera proprement dans
-                     * ce try/catch au lieu d'ouvrir un trou.
-                     */
-                    @chmod($file, 0664);
-
-                    $configFactory = new \Laminas\Config\Factory();
-
-                    $config = [
-                        'plugins' => [
-                            'meliscore' => [
-                                'datas' => [
-                                    'login' => $arrayParameters['passwordSettingsData']
-                                ]
-                            ]
-                        ]
-                    ];
-
-                    $configFactory->toFile($file, $config);
-
-                    // check if opcache zend_extension is installed/enabled in server
-                    if (function_exists('opcache_reset')) {
-                        opcache_reset();
-                    }
-
+                    $this->saveLoginSettings($arrayParameters['passwordSettingsData']);
                     $arrayParameters['success'] = 1;
                 } catch (\Exception $e) {
-                    echo $e->getMessage();
-                }                     
+                    error_log('MelisCore login settings not saved: ' . $e->getMessage());
+                    // Non-empty errors: both the legacy listener and the React API report a failure
+                    $arrayParameters['success'] = 0;
+                    $arrayParameters['errors'] = [
+                        'other_config' => [
+                            'label' => $translator->translate('tr_meliscore_tool_other_config'),
+                            'saveFailed' => $translator->translate('tr_meliscore_tool_other_config_unable_to_save'),
+                        ],
+                    ];
+                }
             }
         }
-        
+
         $arrayParameters = $this->sendEvent('password_settings_service_save_item_end', $arrayParameters);
 
         return $arrayParameters;
+    }
+
+    /** @var array|null Per-request cache of getLoginSettings() */
+    private $loginSettings = null;
+
+    /**
+     * Effective login / password policy: the defaults of config/otherconfig.php
+     * (meliscore/datas/otherconfig_default/login) overridden by the values saved in the
+     * melis_core_login_config table by the "Other config" tool.
+     *
+     * @return array
+     */
+    public function getLoginSettings()
+    {
+        if ($this->loginSettings === null) {
+            $defaults = $this->getServiceManager()->get('MelisCoreConfig')->getItem('meliscore/datas/otherconfig_default/login');
+            $saved = [];
+
+            try {
+                foreach ($this->getServiceManager()->get('MelisCoreLoginConfigTable')->fetchAll() as $row) {
+                    $saved[$row->lcfg_key] = $row->lcfg_value;
+                }
+
+                if (empty($saved)) {
+                    $saved = $this->importLegacyLoginFile();
+                }
+            } catch (\Exception $e) {
+                // Table not created yet (migration not run): the defaults apply, the login keeps working
+                error_log('MelisCore login settings not read, defaults used: ' . $e->getMessage());
+                $saved = [];
+            }
+
+            $this->loginSettings = array_merge(is_array($defaults) ? $defaults : [], $saved);
+        }
+
+        return $this->loginSettings;
+    }
+
+    /**
+     * Upserts every setting in one transaction, so that every server reads the same policy.
+     *
+     * @param array $settings setting key => value
+     */
+    private function saveLoginSettings(array $settings)
+    {
+        $gateway = $this->getServiceManager()->get('MelisCoreLoginConfigTable')->getTableGateway();
+        $connection = $gateway->getAdapter()->getDriver()->getConnection();
+
+        $ids = [];
+        foreach ($gateway->select() as $row) {
+            $ids[$row->lcfg_key] = $row->lcfg_id;
+        }
+
+        $connection->beginTransaction();
+        try {
+            foreach ($settings as $key => $value) {
+                $data = [
+                    'lcfg_key' => $key,
+                    'lcfg_value' => $value === null ? null : (string) $value,
+                ];
+
+                if (isset($ids[$key])) {
+                    $gateway->update($data, ['lcfg_id' => $ids[$key]]);
+                } else {
+                    $gateway->insert($data);
+                }
+            }
+            $connection->commit();
+        } catch (\Exception $e) {
+            $connection->rollback();
+            throw $e;
+        }
+
+        $this->loginSettings = null;
+    }
+
+    /**
+     * One-time upgrade: the policy used to be saved in config/app.login.php, which is lost on
+     * every new server pod (hence the table). A platform that still has that file keeps its
+     * policy: the values are moved to the table, then the file is deleted.
+     *
+     * @return array the imported settings, empty when there is no such file
+     */
+    private function importLegacyLoginFile()
+    {
+        // Fixed path, never user input: the file Module::getConfig() used to include on every request
+        $file = __DIR__ . '/../../config/app.login.php';
+        if (!is_file($file)) {
+            return [];
+        }
+
+        $config = include_once $file;
+        $settings = is_array($config) ? ($config['plugins']['meliscore']['datas']['login'] ?? []) : [];
+        if (!is_array($settings) || empty($settings)) {
+            return [];
+        }
+
+        $this->saveLoginSettings($settings);
+        @unlink($file);
+
+        return $settings;
     }
 }

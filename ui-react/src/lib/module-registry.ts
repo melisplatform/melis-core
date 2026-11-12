@@ -168,7 +168,7 @@ export const MODULES: ReactModuleDef[] = [
     icon: Settings2,
     forwardKey: 'MelisCore/MelisCoreOtherConfig',
     melisKey: 'meliscore_tool_other_config',
-    // Outil SPÉCIAL (page unique de réglages) : politique connexion / mot de passe (app.login.php).
+    // Outil SPÉCIAL (page unique de réglages) : politique connexion / mot de passe (table melis_core_login_config).
     list: lazyRetry(() => import('@/pages/OtherConfigPage'), 'OtherConfigPage'),
     persistent: true,
     viewToggle: true,
