@@ -145,20 +145,9 @@ class ToolUserController extends MelisAbstractActionController
         $translator = $this->getServiceManager()->get('translator');
         $melisTool->setMelisToolKey('meliscore', $this::TOOL_KEY);
 
-        $moduleSvc       =  $this->getServiceManager()->get('ModulesService');
-        $modules         = $moduleSvc->getAllModules();
-
-        $request = $this->getRequest();
-        $uri     = $request->getUri();
-        $domain = isset($get['domain']) ? $get['domain'] : null;
-        $scheme = isset($get['scheme']) ? $get['scheme'] : null;
-
         $columns = $melisTool->getColumns();
         // add action column
         $columns['actions'] = array('text' => $translator->translate('tr_meliscore_global_action'), 'css' => 'width:10%');
-
-        $netStatus = $melisTool->isConnected();
-
 
         $view = new ViewModel();
         $view->melisKey = $melisKey;
@@ -167,11 +156,6 @@ class ToolUserController extends MelisAbstractActionController
 
         $melisTool->setMelisToolKey('meliscore', 'user_view_date_connection_tool');
         $view->getToolDataTableConfigForDateConnection = $melisTool->getDataTableConfiguration('#tableUserViewDateConnection', null, null, array('order' => '[[ 0, "desc" ]]'));
-        $view->modules = serialize($modules);
-
-        $view->scheme  = $scheme;
-        $view->domain  = $domain;
-        $view->netStatus  = $netStatus;
 
         return $view;
     }

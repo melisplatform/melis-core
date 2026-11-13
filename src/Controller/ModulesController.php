@@ -57,9 +57,6 @@ class ModulesController extends MelisAbstractActionController
     public function renderToolModulesAction()
     {
         $translator      = $this->getServiceManager()->get('translator');
-        $moduleSvc       =  $this->getServiceManager()->get('ModulesService');
-        $coreTool        =  $this->getServiceManager()->get('MelisCoreTool');
-        $modules         = $moduleSvc->getAllModules();
 
         $melisKey = $this->params()->fromRoute('melisKey', '');
         $noAccessPrompt = '';
@@ -68,18 +65,8 @@ class ModulesController extends MelisAbstractActionController
             $noAccessPrompt = $translator->translate('tr_tool_no_access');
         }
 
-        $request = $this->getRequest();
-        $domain = isset($get['domain']) ? $get['domain'] : null;
-        $scheme = isset($get['scheme']) ? $get['scheme'] : null;
-        $melisKey = $this->params()->fromRoute('melisKey', '');
-        $netStatus = $coreTool->isConnected();
-
         $view = new ViewModel();
         $view->melisKey = $melisKey;
-        $view->modules = serialize($modules);
-        $view->scheme  = $scheme;
-        $view->domain  = $domain;
-        $view->netStatus  = $netStatus;
 
         return $view;
     }

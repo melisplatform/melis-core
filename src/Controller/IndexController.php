@@ -135,30 +135,13 @@ class IndexController extends MelisAbstractActionController
         $melisKey = $this->params()->fromRoute('melisKey', '');
 
         $moduleSvc       =  $this->getServiceManager()->get('ModulesService');
-        $coreTool        =  $this->getServiceManager()->get('MelisCoreTool');
-        $modules         =  $moduleSvc->getAllModules();
         $platformVersion =  $moduleSvc->getModulesAndVersions('MelisCore');
 
-        $request = $this->getRequest();
-        $uri     = $request->getUri();
-
-        $domain        = $uri->getHost();
-        $scheme        = $uri->getScheme();
-        $netConnection = $coreTool->isConnected();
-
-        $this->layout()->setVariable("modules",serialize($modules));
-        $this->layout()->setVariable("scheme",$scheme);
-        $this->layout()->setVariable("domain",$domain);
-        $this->layout()->setVariable("netConn",$netConnection);
         $this->layout()->setVariable("platformVersion",$platformVersion['version']);
 
         $view = new ViewModel();
         $view->melisKey = $melisKey;
         $view->platformVersion = $platformVersion['version'];
-        $view->modules = serialize($modules);
-        $view->scheme  = $scheme;
-        $view->domain  = $domain;
-        $view->netConn = $netConnection;
         return $view;
     }
 

@@ -30,9 +30,6 @@ if (!empty($this->zoneconfig['conf']['id']))
 		echo $this->melisGenericTable()->renderTable();
 		
 		?>
-        <?php if($this->netStatus){?>
-            <iframe class="marketplaceUpdate" src="about:blank" width="1px" height="1px" style="border-color: transparent; background: transparent;"></iframe>
-        <?php }?>
 		<script type="text/javascript">
 			// render table to DataTable plugin
 			$(function() {
