@@ -535,11 +535,17 @@ export default function UserListPage() {
     if (_cache?.stats) return
     userApi.fetchUserStats().then(setStats).catch(() => null)
   }, [])
+  // Roles (« Rôle » filter + column): re-fetched every time the list becomes the active page, and on
+  // Refresh. The list stays mounted (persistent tool), so a one-shot fetch kept the roles of the first
+  // page load: a role created meanwhile in the Roles tool never showed up (Mantis #0011499). The
+  // cached roles stay on screen until the fresh list arrives.
+  const listActive = location.pathname === base
   useEffect(() => {
-    if (!rolesModuleActive) return
-    if (_cache?.roles?.length) return
-    userApi.fetchRoles().then(setRoles).catch(() => null)
-  }, [rolesModuleActive])
+    if (!rolesModuleActive || !listActive) return
+    let alive = true
+    userApi.fetchRoles().then((r) => { if (alive) setRoles(r) }).catch(() => null)
+    return () => { alive = false }
+  }, [rolesModuleActive, listActive, refreshKey])
 
   // Chargement keyset : reset=true → premier lot (remplace) ; reset=false → lot suivant
   // (append) via le curseur. Un req-id invalide les réponses périmées (filtre/tri changé

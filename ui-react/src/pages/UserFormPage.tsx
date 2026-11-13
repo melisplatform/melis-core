@@ -471,8 +471,12 @@ export default function UserFormPage() {
 
   useEffect(() => {
     if (!rolesModuleActive) return
-    if (_rolesCache) { setRoles(_rolesCache); return }
-    userApi.fetchRoles().then(r => { _rolesCache = r; setRoles(r) }).catch(() => null)
+    // The cache only gives an instant first render: the roles are always re-fetched when the form
+    // opens, so a role created meanwhile in the Roles tool is offered (Mantis #0011499).
+    if (_rolesCache) setRoles(_rolesCache)
+    let alive = true
+    userApi.fetchRoles().then(r => { _rolesCache = r; if (alive) setRoles(r) }).catch(() => null)
+    return () => { alive = false }
   }, [rolesModuleActive])
 
   // Politique de complexité effective (défauts otherconfig + app.login.php) — pour le feedback
