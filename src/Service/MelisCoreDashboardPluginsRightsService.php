@@ -12,6 +12,13 @@ class MelisCoreDashboardPluginsRightsService extends MelisServiceManager impleme
 
     public function hasPlugins(): bool
     {
+        // Administrator (usr_admin=1): every plugin, whatever the role's rights — same rule as
+        // canAccess() and the menus. Without it an admin whose role has no dashboard plugin got
+        // "your rights don't allow you to use dashboard plugins" (Mantis #0011502).
+        if ($this->isAdminUser()) {
+            return true;
+        }
+
         $melisCoreAuth = $this->getServiceManager()->get('MelisCoreAuth');
         $xmlRights = $melisCoreAuth->getAuthRights();
         $rightsObj = simplexml_load_string(trim($xmlRights));
@@ -38,12 +45,9 @@ class MelisCoreDashboardPluginsRightsService extends MelisServiceManager impleme
     public function canAccess($key): bool
     {
         // Super-administrateur (usr_admin=1) = accès TOTAL, indépendamment de son usr_rights.
-        try {
-            $identity = $this->getServiceManager()->get('MelisCoreAuth')->getIdentity();
-            if (!empty($identity) && !empty($identity->usr_admin)) {
-                return true;
-            }
-        } catch (\Throwable $e) { /* pas d'identité → on continue avec le gate normal */ }
+        if ($this->isAdminUser()) {
+            return true;
+        }
 
         // Plugins « plateforme » marqués exclude_rights_display (ex. l'Announcement) : accordés à tous,
         // volontairement non gérables via l'arbre des droits → toujours accessibles.
@@ -63,6 +67,17 @@ class MelisCoreDashboardPluginsRightsService extends MelisServiceManager impleme
         }
 
         return $this->isAccessible($xmlRights, self::MELISCORE_DASHBOARDPLUGIN_PREFIX, $key);
+    }
+
+    /** Logged-in user is an administrator (usr_admin=1). No identity → false (normal gate). */
+    private function isAdminUser(): bool
+    {
+        try {
+            $identity = $this->getServiceManager()->get('MelisCoreAuth')->getIdentity();
+            return !empty($identity) && !empty($identity->usr_admin);
+        } catch (\Throwable $e) {
+            return false;
+        }
     }
 
     /**
