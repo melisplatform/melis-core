@@ -342,6 +342,9 @@ return [
                                         ],
                                         [
                                             'name' => 'EmailAddress',
+                                            // Mantis #0011549: stop here when invalid — the regex below
+                                            // reported the same "invalid email" message a second time.
+                                            'break_chain_on_failure' => true,
                                             'options' => [
                                                 'domain' => 'true',
                                                 'hostname' => 'true',
@@ -379,6 +382,9 @@ return [
                                         ],
                                         [
                                             'name' => 'EmailAddress',
+                                            // Mantis #0011549: stop here when invalid — the regex below
+                                            // reported the same "invalid email" message a second time.
+                                            'break_chain_on_failure' => true,
                                             'options' => [
                                                 'domain' => 'true',
                                                 'hostname' => 'true',

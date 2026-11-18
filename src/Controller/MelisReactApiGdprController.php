@@ -317,12 +317,31 @@ class MelisReactApiGdprController extends MelisAbstractActionController
             if (!$siteId) {
                 return $this->jsonResponse(['success' => false, 'error' => 'Aucun site sélectionné.'], 400);
             }
+            // Mantis #0011545: the site must exist, and every language must be a CMS language —
+            // checked BEFORE any write, so a bad request changes nothing.
+            $siteRow = $this->sm()->has('MelisEngineTableSite')
+                ? $this->sm()->get('MelisEngineTableSite')->getEntryById($siteId)->current()
+                : null;
+            if (!$siteRow) {
+                return $this->jsonResponse(['success' => false, 'error' => 'Site introuvable.'], 400);
+            }
+            $langIds = array_map(static fn ($l) => (int) $l['id'], $this->listCmsLangs());
+            foreach (array_keys($contents) as $langId) {
+                if (!in_array((int) $langId, $langIds, true)) {
+                    return $this->jsonResponse(['success' => false, 'error' => 'Langue inconnue.'], 400);
+                }
+            }
             $svc = $this->sm()->get('MelisGdprService');
             foreach ($contents as $langId => $c) {
-                $id    = (int) ($c['id'] ?? 0);
-                $value = (string) ($c['value'] ?? '');
+                $langId = (int) $langId;
+                $value  = (string) ($c['value'] ?? '');
+                // The row is resolved on the server from (site, language) — the id sent in the body is
+                // NOT trusted: it let a request for one site delete or move another site's banner text.
+                $row = $svc->getGdprBannerText($siteId, $langId);
+                $cur = is_object($row) && method_exists($row, 'current') ? $row->current() : null;
+                $id  = $cur ? (int) (((array) $cur)['mcgdpr_text_id'] ?? 0) : 0;
                 if (trim($value) !== '') {
-                    $svc->saveBanner($id ?: null, $value, $siteId, (int) $langId);
+                    $svc->saveBanner($id ?: null, $value, $siteId, $langId);
                 } elseif ($id) {
                     $svc->deleteBannerById($id);
                 }
@@ -430,6 +449,41 @@ class MelisReactApiGdprController extends MelisAbstractActionController
             if ($alertStatus && $resend && $deleteDays > 0 && ($deleteDays - $alertDays) < 7) {
                 $errors['resend'] = 'gdpr.ad.err_resend_gap';
             }
+            // Mantis #0011546: same rules as the legacy form (melisgdprautodelete_add_edit_email_setup:
+            // From = NotEmpty + EmailAddress, Reply-to = EmailAddress when filled) — the cron sends
+            // the alert/anonymisation emails with these addresses.
+            $fromEmail = trim((string) ($c['fromEmail'] ?? ''));
+            $replyTo   = trim((string) ($c['replyTo'] ?? ''));
+            $emailOk   = new \Laminas\Validator\EmailAddress();
+            if ($fromEmail === '') {
+                $errors['fromEmail'] = 'gdpr.ad.err_from_email_required';
+            } elseif (!$emailOk->isValid($fromEmail)) {
+                $errors['fromEmail'] = 'gdpr.ad.err_email_invalid';
+            }
+            if ($replyTo !== '' && !$emailOk->isValid($replyTo)) {
+                $errors['replyTo'] = 'gdpr.ad.err_email_invalid';
+            }
+            // Mantis #0011547: one config per site + module (the legacy editor and the cron assume it).
+            // A pair already duplicated before this fix stays editable as long as its own site/module
+            // is unchanged — otherwise neither of its configs could be saved any more.
+            if ($module !== '' && !isset($errors['module'])) {
+                $tool    = $this->sm()->get('MelisCoreGdprAutoDeleteToolService');
+                $current = null;
+                $clash   = false;
+                foreach ((array) $tool->getAllGdprAutoDeleteConfigData() as $row) {
+                    $r = (array) $row;
+                    if ((int) ($r['mgdprc_id'] ?? 0) === $id) { $current = $r; continue; }
+                    if ((int) ($r['mgdprc_site_id'] ?? 0) === $siteId && (string) ($r['mgdprc_module_name'] ?? '') === $module) {
+                        $clash = true;
+                    }
+                }
+                $keepsPair = $current !== null
+                    && (int) ($current['mgdprc_site_id'] ?? 0) === $siteId
+                    && (string) ($current['mgdprc_module_name'] ?? '') === $module;
+                if ($clash && !$keepsPair) {
+                    $errors['module'] = 'gdpr.ad.err_duplicate';
+                }
+            }
             if ($errors) {
                 return $this->jsonResponse([
                     'success'  => false,
@@ -448,8 +502,8 @@ class MelisReactApiGdprController extends MelisAbstractActionController
                 'mgdprc_alert_email_resend'      => $resend,
                 'mgdprc_delete_days'             => $deleteDays,
                 'mgdprc_email_conf_from_name'    => (string) ($c['fromName'] ?? ''),
-                'mgdprc_email_conf_from_email'   => (string) ($c['fromEmail'] ?? ''),
-                'mgdprc_email_conf_reply_to'     => (string) ($c['replyTo'] ?? ''),
+                'mgdprc_email_conf_from_email'   => $fromEmail,
+                'mgdprc_email_conf_reply_to'     => $replyTo,
                 'mgdprc_email_conf_layout'       => (string) ($c['layout'] ?? 'melis-core/view/layout/layoutEmail.phtml'),
                 'mgdprc_email_conf_layout_title' => (string) ($c['layoutTitle'] ?? ''),
                 'mgdprc_email_conf_layout_desc'  => (string) ($c['layoutDesc'] ?? ''),

@@ -156,18 +156,18 @@ export default function GdprSmtpTab({ actionsHost }: { actionsHost?: HTMLElement
         </div>
         <div>
           <label className="mb-1 block text-xs font-medium text-muted-foreground">{t('gdpr.smtp.username')}</label>
-          <Input value={username} onChange={(e) => { setUsername(e.target.value); clearField('username') }} placeholder="user@example.com" disabled={!canEdit} className={errorRing('username')} />
+          <Input value={username} onChange={(e) => { setUsername(e.target.value); clearField('username') }} placeholder="user@example.com" autoComplete="off" disabled={!canEdit} className={errorRing('username')} />
           {fieldError('username')}
         </div>
         <div>
           <label className="mb-1 block text-xs font-medium text-muted-foreground">{t('gdpr.smtp.password')}</label>
-          <Input type="password" value={password} onChange={(e) => { setPassword(e.target.value); clearField('password', 'confirm') }} placeholder={hasPassword ? '••••••••' : ''} disabled={!canEdit} className={errorRing('password')} />
+          <Input type="password" value={password} onChange={(e) => { setPassword(e.target.value); clearField('password', 'confirm') }} placeholder={hasPassword ? '••••••••' : ''} autoComplete="new-password" disabled={!canEdit} className={errorRing('password')} />
           {fieldError('password')}
           {hasPassword && !fieldErrors.password && <p className="mt-1 text-[11px] text-muted-foreground">{t('gdpr.smtp.password_hint')}</p>}
         </div>
         <div>
           <label className="mb-1 block text-xs font-medium text-muted-foreground">{t('gdpr.smtp.confirm')}</label>
-          <Input type="password" value={confirm} onChange={(e) => { setConfirm(e.target.value); clearField('confirm') }} disabled={!canEdit} className={errorRing('confirm')} />
+          <Input type="password" value={confirm} onChange={(e) => { setConfirm(e.target.value); clearField('confirm') }} autoComplete="new-password" disabled={!canEdit} className={errorRing('confirm')} />
           {fieldError('confirm')}
         </div>
       </div>

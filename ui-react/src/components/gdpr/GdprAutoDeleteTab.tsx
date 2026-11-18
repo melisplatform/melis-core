@@ -30,11 +30,24 @@ function emptyConfig(): AdConfig {
   return { id: 0, siteId: 0, siteLabel: '', module: '', alertStatus: false, alertDays: 0, resend: false, deleteDays: 0, fromName: '', fromEmail: '', replyTo: '', layoutTitle: '', layoutDesc: '' }
 }
 
-/** Validation client, miroir de celle du contrôleur (mêmes clés i18n). */
-function validate(c: AdConfig): FieldErrors {
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+
+/** Validation client, miroir de celle du contrôleur (mêmes clés i18n). `configs` = la liste chargée
+ *  (unicité site + module, Mantis #0011547) ; `original` = la config telle qu'ouverte (null si nouvelle). */
+function validate(c: AdConfig, configs: AdConfig[], original: AdConfig | null): FieldErrors {
   const e: FieldErrors = {}
   if (!c.module) e.module = 'gdpr.ad.err_module'
   if (!c.siteId || c.siteId <= 0) e.siteId = 'gdpr.ad.err_site'
+  // Une seule config par site + module. Une paire déjà en doublon AVANT la correction reste éditable
+  // tant qu'on ne change ni son site ni son module (sinon on ne pourrait plus la modifier).
+  const keepsPair = !!original && original.siteId === c.siteId && original.module === c.module
+  if (c.module && c.siteId > 0 && !keepsPair && configs.some((o) => o.id !== c.id && o.module === c.module && o.siteId === c.siteId)) {
+    e.module = 'gdpr.ad.err_duplicate'
+  }
+  // Même règle que le formulaire legacy (NotEmpty + EmailAddress) — Mantis #0011546.
+  if (!c.fromEmail.trim()) e.fromEmail = 'gdpr.ad.err_from_email_required'
+  else if (!EMAIL_RE.test(c.fromEmail.trim())) e.fromEmail = 'gdpr.ad.err_email_invalid'
+  if (c.replyTo.trim() && !EMAIL_RE.test(c.replyTo.trim())) e.replyTo = 'gdpr.ad.err_email_invalid'
   if (!c.deleteDays || c.deleteDays <= 0) e.deleteDays = 'gdpr.ad.err_delete_days'
   if (c.alertStatus && c.alertDays > 0 && c.deleteDays > 0 && c.alertDays >= c.deleteDays) e.alertDays = 'gdpr.ad.err_alert_after'
   if (c.alertStatus && c.resend && c.deleteDays > 0 && c.deleteDays - c.alertDays < 7) e.resend = 'gdpr.ad.err_resend_gap'
@@ -74,6 +87,8 @@ export default function GdprAutoDeleteTab() {
   const [toDelete, setToDelete] = useState<AdConfig | null>(null)
 
   const [form, setForm] = useState<AdConfig>(emptyConfig())
+  /** La config telle qu'ouverte (null = nouvelle) — pour la règle d'unicité site + module. */
+  const [original, setOriginal] = useState<AdConfig | null>(null)
   const [emails, setEmails] = useState<AdEmails>({ warning: {}, delete: {} })
   const [activeLang, setActiveLang] = useState(0)
   const [configLogs, setConfigLogs] = useState<AdLog[]>([])
@@ -119,7 +134,7 @@ export default function GdprAutoDeleteTab() {
   function openNew() {
     if (!meta) return
     clearErrors()
-    setForm(emptyConfig()); setEmails(emptyEmails(meta.langs)); setView('edit')
+    setForm(emptyConfig()); setOriginal(null); setEmails(emptyEmails(meta.langs)); setView('edit')
   }
   async function openEdit(id: number) {
     if (!meta) return
@@ -132,7 +147,7 @@ export default function GdprAutoDeleteTab() {
         if (em.warning[String(l.id)]) base.warning[String(l.id)] = em.warning[String(l.id)]
         if (em.delete[String(l.id)]) base.delete[String(l.id)] = em.delete[String(l.id)]
       }
-      setForm(config); setEmails(base); setView('edit')
+      setForm(config); setOriginal(config); setEmails(base); setView('edit')
       setConfigLogs([]); setConfigLogsLoading(true)
       gdprApi.fetchAdLogs({ module: config.module, siteId: config.siteId })
         .then(setConfigLogs).catch(() => null).finally(() => setConfigLogsLoading(false))
@@ -148,7 +163,7 @@ export default function GdprAutoDeleteTab() {
   }
 
   async function save() {
-    const errs = validate(form)
+    const errs = validate(form, configs, original)
     if (Object.keys(errs).length) { setFieldErrors(errs); setAlert('gdpr.ad.err_form'); return }
     clearErrors()
     setSaving(true)
@@ -267,7 +282,7 @@ export default function GdprAutoDeleteTab() {
             </div>
             <div className="min-w-[200px] flex-1">
               <label className="mb-1 block text-xs font-medium text-muted-foreground">{t('gdpr.ad.site')} *</label>
-              <select value={form.siteId} onChange={(e) => patchForm({ siteId: Number(e.target.value) }, 'siteId')} disabled={!canEdit}
+              <select value={form.siteId} onChange={(e) => patchForm({ siteId: Number(e.target.value) }, 'siteId', 'module')} disabled={!canEdit}
                 className={cn('h-9 w-full rounded-md border border-input bg-card px-3 text-sm', errorRing('siteId'))}>
                 <option value={0}>{t('gdpr.ad.choose_site')}</option>
                 {meta.sites.map((s) => <option key={s.id} value={s.id}>{s.label}</option>)}
@@ -312,8 +327,16 @@ export default function GdprAutoDeleteTab() {
           <h3 className="text-sm font-semibold">{t('gdpr.ad.section_email_setup')}</h3>
           <div className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-2">
             <div><label className="mb-1 block text-xs font-medium text-muted-foreground">{t('gdpr.ad.from_name')}</label><Input value={form.fromName} onChange={(e) => setForm({ ...form, fromName: e.target.value })} disabled={!canEdit} /></div>
-            <div><label className="mb-1 block text-xs font-medium text-muted-foreground">{t('gdpr.ad.from_email')}</label><Input value={form.fromEmail} onChange={(e) => setForm({ ...form, fromEmail: e.target.value })} disabled={!canEdit} /></div>
-            <div><label className="mb-1 block text-xs font-medium text-muted-foreground">{t('gdpr.ad.reply_to')}</label><Input value={form.replyTo} onChange={(e) => setForm({ ...form, replyTo: e.target.value })} disabled={!canEdit} /></div>
+            <div>
+              <label className="mb-1 block text-xs font-medium text-muted-foreground">{t('gdpr.ad.from_email')} *</label>
+              <Input type="email" value={form.fromEmail} onChange={(e) => patchForm({ fromEmail: e.target.value }, 'fromEmail')} disabled={!canEdit} className={errorRing('fromEmail')} />
+              <ErrorText field="fromEmail" />
+            </div>
+            <div>
+              <label className="mb-1 block text-xs font-medium text-muted-foreground">{t('gdpr.ad.reply_to')}</label>
+              <Input type="email" value={form.replyTo} onChange={(e) => patchForm({ replyTo: e.target.value }, 'replyTo')} disabled={!canEdit} className={errorRing('replyTo')} />
+              <ErrorText field="replyTo" />
+            </div>
             <div><label className="mb-1 block text-xs font-medium text-muted-foreground">{t('gdpr.ad.layout_title')}</label><Input value={form.layoutTitle} onChange={(e) => setForm({ ...form, layoutTitle: e.target.value })} disabled={!canEdit} /></div>
           </div>
           <div className="mt-3">

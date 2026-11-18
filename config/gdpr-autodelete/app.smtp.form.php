@@ -49,7 +49,9 @@ return [
                                         ],
                                         'attributes' => [
                                             'required' => 'required',
-                                            'placeholder' => 'Username'
+                                            'placeholder' => 'Username',
+                                            // Mantis #0011548: never autofilled with the back-office login.
+                                            'autocomplete' => 'off',
                                         ]
                                     ]
                                 ],
@@ -64,7 +66,9 @@ return [
                                         'attributes' => [
                                             'required' => 'required',
                                             'class' => 'form-control',
-                                            'placeholder' => 'Password'
+                                            'placeholder' => 'Password',
+                                            // Mantis #0011548: never autofilled with the back-office password.
+                                            'autocomplete' => 'new-password',
                                         ]
                                     ]
                                 ],
@@ -79,7 +83,8 @@ return [
                                         'attributes' => [
                                             'required' => 'required',
                                             'class' => 'form-control',
-                                            'placeholder' => 'Password'
+                                            'placeholder' => 'Password',
+                                            'autocomplete' => 'new-password',
                                         ]
                                     ]
                                 ],
