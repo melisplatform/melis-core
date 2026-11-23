@@ -9,9 +9,6 @@
  *
  * En dev, ces routes sont proxifiées par Vite vers MELIS_TARGET (cf. vite.config.ts)
  * pour rester *same-origin* : le cookie de session est ainsi transmis sans CORS.
- *
- * ⚠️ Pas de jeton CSRF sur le formulaire de login Melis (vérifié dans app.forms.php :
- *    le form `meliscore_login` n'expose que usr_login / usr_password / login_submit).
  */
 
 const XHR_HEADER = { 'X-Requested-With': 'XMLHttpRequest' } as const

@@ -65,9 +65,7 @@ const PANEL_COMPACT_BELOW_PX = 80
  *  occupent ≈ 72px de l'en-tête). En dessous, l'icône seule + infobulle. */
 const PANEL_TITLE_MIN_COLS_COMPACT = 9
 /** Colonnes en dessous desquelles les 3 boutons d'action (règle / config / retirer) n'ont plus la
- *  place de tenir — SEUIL DIFFÉRENT selon où ils s'affichent (retour DEKRA #0011020 : illisibles/
- *  chevauchants sur les cartes étroites, PUIS retour utilisateur : des cartes pourtant assez
- *  larges pour les 3 boutons se repliaient quand même) :
+ *  place de tenir — SEUIL DIFFÉRENT selon où ils s'affichent :
  *   - carte NORMALE (barre du bas séparée, cf. PANEL_COMPACT_BELOW_PX) : les 3 boutons (≈ 76px +
  *     gouttières) sont SEULS dans leur rangée, sans concurrence — tiennent dès 4 colonnes
  *     (≈ 104px, ≈ 84px de zone utile une fois le padding de la carte déduit).

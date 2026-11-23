@@ -20,8 +20,6 @@ namespace MelisCore\Service;
  *                     login / e-mail local part
  *   3. history      — password_duplicate_status / password_duplicate_lifetime, when a user id is
  *                     known (MelisCoreAuth::isPasswordDuplicate)
- *
- * Audit item 16.0.
  */
 class MelisPasswordPolicyService extends MelisGeneralService
 {

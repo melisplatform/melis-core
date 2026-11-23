@@ -191,7 +191,7 @@ class MelisLogTable extends MelisGenericTable
 				->equalTo('log_user_id', (int) $userId)
 				// Strictly AFTER the reference date (last successful login / password change /
 				// unlock): with ">=" the failures logged in the same second as a successful login
-				// were counted again and locked the account on the next 1-2 mistakes (audit item 16.0).
+				// were counted again and locked the account on the next 1-2 mistakes.
 				->greaterThan('log_date_added', (string) $date);
 		}
 

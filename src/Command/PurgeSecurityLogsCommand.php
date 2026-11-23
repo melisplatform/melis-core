@@ -15,20 +15,16 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * Deletes audit log rows older than the retention period (DEKRA correction plan, item 21.0).
+ * Deletes audit log rows older than the retention period.
  *
- * Two reasons for this to exist:
- *  - the trail now records client IPs, which are personal data: keeping them forever is not an
- *    option under the GDPR, a retention period has to be decided and applied
- *  - a login event per login makes melis_core_log grow much faster than before
+ * The trail records client IPs (personal data under the GDPR), so a retention period applies.
  *
- * Nothing runs it automatically. An administrator schedules it (cron, Kubernetes CronJob,
- * MelisCron task) once the retention period has been agreed:
+ * To be scheduled by an administrator (cron, Kubernetes CronJob, MelisCron task):
  *
  *     php public/index.php melis:security:purge-logs --days=365
  *
- * Without --days it uses log_retention_days from config/app.security.php, and does nothing at
- * all when that is 0 - which is the default, so installing this changes no data by itself.
+ * Without --days it uses log_retention_days from config/app.security.php, and does nothing
+ * when that is 0 (the default).
  */
 final class PurgeSecurityLogsCommand extends Command
 {

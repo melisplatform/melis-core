@@ -23,8 +23,8 @@ class LanguageController extends MelisAbstractActionController
     const INTERFACE_KEY = 'meliscore_tool_language';
 
     /**
-     * Actions partagées (audit DEKRA 7.0) : les libellés DataTables sont chargés par
-     * melisDataTable.js dans TOUS les outils — connexion seule, pas le droit Langues.
+     * Actions partagées : les libellés DataTables sont chargés par melisDataTable.js
+     * dans tous les outils — connexion seule, pas le droit Langues.
      */
     const TOOL_KEY_MAP = [
         'getDataTableTranslations' => '@login',
@@ -143,21 +143,13 @@ class LanguageController extends MelisAbstractActionController
      */
     public function getTranslationsAction()
     {
-        // SECURITY (DEKRA audit, action #19): this route is PUBLIC (excluded_routes) and is loaded as a
-        // <script> by the back-office. Its output must therefore
-        //  1. never depend on the caller's session — it used to fall back to the locale stored in the
-        //     session when the parameter was missing, so the same URL answered differently to an
-        //     anonymous and to an authenticated browser (session-state oracle, XSSI-readable since a
-        //     <script> include executes cross-origin). Every caller now gets the locale it asked for,
+        // Loaded as a <script> by the back-office. The output
+        //  1. does not depend on the caller's session: every caller gets the locale it asked for,
         //     or the platform default (en_EN) — the back-office always passes ?locale= explicitly
-        //     (app.interface.php / MelisCoreHeadPluginHelper), so nothing changes for it;
-        //  2. only accept a well-formed locale (xx_XX, same rule as MelisReactApiLanguageController)
-        //     — the raw parameter was interpolated unescaped into the generated JavaScript
-        //     (reflected XSS: /get-translations?locale=";…). An unknown but well-formed locale just
-        //     yields an empty translation set;
-        //  3. be emitted as JavaScript literals via json_encode (keys, values, locale, date format)
-        //     — a translation containing a quote or a </script> sequence also broke out of the
-        //     single-quoted strings the old concatenation produced.
+        //     (app.interface.php / MelisCoreHeadPluginHelper);
+        //  2. only accepts a well-formed locale (xx_XX, same rule as MelisReactApiLanguageController).
+        //     An unknown but well-formed locale just yields an empty translation set;
+        //  3. is emitted as JavaScript literals via json_encode (keys, values, locale, date format).
         $defaultLocale = 'en_EN';
         $melisTranslation = $this->getServiceManager()->get('MelisCoreTranslation');
 
@@ -167,7 +159,7 @@ class LanguageController extends MelisAbstractActionController
         }
 
         // Set the headers of this route. `nosniff`: the body is script, never to be re-interpreted
-        // as anything else; caching stays public because the content is now session-independent.
+        // as anything else; caching stays public because the content is session-independent.
         $response = $this->getResponse();
         $response->getHeaders()
             ->addHeaderLine('Content-Type', 'text/javascript; charset=utf-8')
@@ -181,9 +173,8 @@ class LanguageController extends MelisAbstractActionController
             return json_encode((string) $value, $jsFlags) ?: '""';
         };
 
-        // Catalogue built from the language files of the requested locale only — NOT from the
-        // translator's session-loaded files (getTranslationMessages()), which made the body depend
-        // on the caller's session and ignored the locale parameter altogether. Values arrive raw
+        // Catalogue built from the language files of the requested locale only, not from the
+        // translator's session-loaded files (getTranslationMessages()). Values arrive raw
         // (no pre-escaped quotes); json_encode is the single escaping step.
         $translationCompilation = '';
         foreach($melisTranslation->getTranslationMessagesForLocale($locale, $defaultLocale) as $transKey => $transValue)

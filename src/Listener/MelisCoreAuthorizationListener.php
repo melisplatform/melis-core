@@ -14,58 +14,37 @@ use Laminas\EventManager\ListenerAggregateInterface;
 use Laminas\Mvc\MvcEvent;
 
 /**
- * Garde-fou d'autorisation GLOBAL du back-office (audit DEKRA 7.0).
+ * Back-office route authorization.
  *
- * `Module::checkIdentity()` ne vérifie que l'AUTHENTIFICATION : tout compte connecté atteint
- * n'importe quelle action dispatchée. L'autorisation, elle, est laissée à des appels
- * `hasAccess()`/`denyUnlessAccess()` recopiés dans ~190 contrôleurs sur ~500 — en oublier un
- * n'ouvre aucune alarme, ça ouvre juste l'endpoint.
+ * On every back-office route, resolves the tool key of the routed controller and checks it
+ * with `MelisCoreRights::canAccess()` before the controller is dispatched.
  *
- * Ce listener déplace la décision à l'ENTRÉE : sur chaque route du back-office, il résout l'outil
- * visé et interroge `MelisCoreRights::canAccess()` AVANT que le contrôleur ne s'exécute.
+ * The key is read from the controller CLASS (`const MELIS_KEY`, `TOOL_KEY` or `INTERFACE_KEY`),
+ * so a module adding a controller declares its key in the controller itself.
  *
- * RÉSOLUTION SANS TABLE DE CORRESPONDANCE : la clé d'outil est lue sur la CLASSE du contrôleur
- * routé (`const MELIS_KEY` ou `const TOOL_KEY`), constantes qui existent déjà dans une centaine de
- * contrôleurs. Rien à maintenir au centre ; un module qui ajoute un contrôleur déclare sa clé chez
- * lui, comme il déclare déjà ses capacités (`react.capabilities.php`).
- * Cas particulier — un contrôleur qui sert PLUSIEURS outils déclare en plus :
+ * A controller serving several tools can also declare a per-action map:
  *     const TOOL_KEY_MAP = ['getUserConnectionData' => 'user_view_date_connection_tool'];
- * (clé = nom d'action, comparé sans tiret/casse ; sinon la constante de classe s'applique).
- * La valeur peut aussi être :
- *   - une LISTE de clés — l'action est partagée par plusieurs outils, UNE seule suffit :
+ * (key = action name, compared case-insensitively and without dashes; otherwise the class
+ * constant applies). The value can also be:
+ *   - a LIST of keys — the action is shared by several tools, ONE of them is enough:
  *         'getOrderListData' => ['meliscommerce_order_list_page', 'meliscommerce_clients_list_page'],
- *   - `'@login'` (self::LOGIN_ONLY) — lecture appelée par n'importe quel outil (sélecteur de page,
- *     liste d'auteurs…) : connexion requise, aucun droit d'outil. Tracé `OPEN`, jamais refusé,
- *     y compris en mode strict — c'est une exception DÉCLARÉE, pas un oubli.
- *
- * DEUX MODES (`meliscore/datas/security/access_gate_mode`, env `MELIS_ACCESS_GATE_MODE`) :
- *   - `report` (défaut) : rien n'est bloqué, chaque décision est tracée dans le journal PHP. C'est
- *     la phase d'inventaire : elle liste les contrôleurs RÉELLEMENT dispatchés qui n'ont pas encore
- *     de clé, sans risquer d'enfermer qui que ce soit dehors.
- *   - `enforce` : un refus devient un vrai 403. Les routes non résolues restent passantes tant que
- *     `access_gate_strict` n'est pas activé (dernière marche, une fois l'inventaire terminé).
- *
- * Périmètre : uniquement l'arbre de routes du back-office (`melis-backoffice*`). Le site front,
- * la CLI et les `excluded_routes` (login, setup, mot de passe oublié, shell SPA…) ne sont jamais
- * touchés — c'est la même liste que `checkIdentity()`.
+ *   - `'@login'` (self::LOGIN_ONLY) — generic read used by any tool (page selector, author
+ *     list…): requires an authenticated user, no tool right.
  */
 class MelisCoreAuthorizationListener implements ListenerAggregateInterface
 {
     public $listeners = [];
 
-    /** Préfixe des lignes de journal, pour récolter l'inventaire : `docker logs | grep`. */
     const LOG_PREFIX = 'MELIS_ACCESS_GATE';
 
-    /** Arbre de routes protégé (le back-office). */
     const BACKOFFICE_ROUTE_PREFIX = 'melis-backoffice';
 
-    /** Valeur de TOOL_KEY_MAP : action réservée aux comptes connectés, sans droit d'outil. */
+    /** TOOL_KEY_MAP value: authenticated user, no tool right required. */
     const LOGIN_ONLY = '@login';
 
     public function attach(EventManagerInterface $events, $priority = -100)
     {
-        // Priorité négative : passe APRÈS Module::checkIdentity() (priorité par défaut), donc
-        // l'utilisateur est déjà authentifié — ou déjà redirigé — quand on décide de l'autorisation.
+        // Negative priority: runs after Module::checkIdentity(), so the user is already authenticated.
         $this->listeners[] = $events->attach(MvcEvent::EVENT_ROUTE, [$this, 'onRoute'], $priority);
     }
 
@@ -91,20 +70,20 @@ class MelisCoreAuthorizationListener implements ListenerAggregateInterface
 
         $routeName = (string) $routeMatch->getMatchedRouteName();
         if (strpos($routeName, self::BACKOFFICE_ROUTE_PREFIX) !== 0) {
-            return; // site front, assets, routes d'un autre arbre : hors périmètre
+            return;
         }
 
         $sm = $e->getApplication()->getServiceManager();
 
         if ($this->isExcludedRoute($sm, $routeName)) {
-            return; // login, setup, mot de passe oublié, shell SPA… (même liste que checkIdentity)
+            return;
         }
 
         $controller = (string) $routeMatch->getParam('controller', '');
         $action     = (string) $routeMatch->getParam('action', '');
         $mode       = $this->getMode($sm);
 
-        // Règle propre à l'action (TOOL_KEY_MAP) : prioritaire sur la clé de classe.
+        // Per-action rule (TOOL_KEY_MAP) takes precedence over the class key.
         $rule = $this->resolveActionRule($sm, $controller, $action);
 
         if ($rule === self::LOGIN_ONLY) {
@@ -114,7 +93,7 @@ class MelisCoreAuthorizationListener implements ListenerAggregateInterface
         }
 
         if (is_array($rule) && count($rule) > 1) {
-            // Action partagée : UNE des clés accordables suffit.
+            // Shared action: access to ONE of the keys is enough.
             $grantable = array_values(array_filter($rule, function ($key) use ($sm) {
                 return $this->isGrantableKey($sm, $key);
             }));
@@ -136,7 +115,7 @@ class MelisCoreAuthorizationListener implements ListenerAggregateInterface
 
         $candidates = $rule !== null ? $rule : $this->resolveToolKey($sm, $controller, $action);
 
-        // Première candidate que l'arbre des droits sait accorder (cf. isGrantableKey).
+        // First candidate known to the rights tree.
         $toolKey = null;
         foreach ((array) $candidates as $candidate) {
             if ($this->isGrantableKey($sm, $candidate)) {
@@ -147,13 +126,11 @@ class MelisCoreAuthorizationListener implements ListenerAggregateInterface
 
         if ($toolKey === null) {
             if (!empty($candidates)) {
-                // Le contrôleur annonce une clé, mais aucune n'est accordable : on journalise.
                 $this->log('UNMAPPED', $mode, $routeName, $controller, $action, $candidates[0]);
 
                 return;
             }
 
-            // Inventaire : ce contrôleur n'annonce pas d'outil. On ne bloque qu'en mode strict.
             $this->log('UNMAPPED', $mode, $routeName, $controller, $action, null);
 
             return $this->isStrict($sm) && $mode === 'enforce' ? $this->deny($e, $controller) : null;
@@ -169,8 +146,8 @@ class MelisCoreAuthorizationListener implements ListenerAggregateInterface
     }
 
     /**
-     * La clé est-elle accordable par l'arbre des droits (sections + outils de
-     * getToolSectionMap, sous leur clé de config ET leur melisKey résolu) ?
+     * Whether the key exists in the rights tree (sections and tools of getToolSectionMap,
+     * under their config key and their resolved melisKey).
      */
     private function isGrantableKey($sm, $key)
     {
@@ -198,7 +175,7 @@ class MelisCoreAuthorizationListener implements ListenerAggregateInterface
                 };
                 $collect($sm->get('MelisCoreRights')->getToolSectionMap(), 0);
             } catch (\Throwable $e) {
-                $grantable = []; // arbre illisible : plus aucune clé n'est « accordable » → on ne bloque pas
+                $grantable = [];
             }
         }
 
@@ -206,8 +183,8 @@ class MelisCoreAuthorizationListener implements ListenerAggregateInterface
     }
 
     /**
-     * Règle de TOOL_KEY_MAP pour l'action routée : self::LOGIN_ONLY, une liste de clés, ou null
-     * (pas d'entrée → la clé de classe s'applique).
+     * TOOL_KEY_MAP rule for the routed action: self::LOGIN_ONLY, a list of keys, or null
+     * (no entry → the class key applies).
      */
     private function resolveActionRule($sm, $controller, $action)
     {
@@ -235,17 +212,17 @@ class MelisCoreAuthorizationListener implements ListenerAggregateInterface
                 return $keys ?: null;
             }
         } catch (\Throwable $ignored) {
-            // Classe illisible : traité comme non résolu (jamais comme une autorisation).
         }
 
         return null;
     }
 
     /**
-     * Clés d'outil annoncées par la classe du contrôleur routé (par ordre de préférence), ou null.
+     * Tool keys declared by the routed controller class, in order of preference, or null.
      *
-     * Aucune instanciation : le nom de contrôleur est traduit en classe via la configuration
-     * `controllers` (invokables/aliases/factories), puis lu par réflexion.
+     * No instantiation: the controller name is mapped to its class through the `controllers`
+     * config (invokables/aliases/factories), then read by reflection. Candidates are returned
+     * in order and the caller keeps the first one the rights tree knows.
      */
     private function resolveToolKey($sm, $controller, $action)
     {
@@ -257,11 +234,6 @@ class MelisCoreAuthorizationListener implements ListenerAggregateInterface
         try {
             $reflection = new \ReflectionClass($class);
 
-            // INTERFACE_KEY est inclus à dessein : plusieurs contrôleurs legacy (Platforms,
-            // Langues, Emails, Langues CMS, Platform IDs CMS, liste Blog) portent leur clé de
-            // DROIT sous ce nom, `TOOL_KEY` désignant chez eux un identifiant d'outil interne
-            // que l'arbre des droits ne connaît pas. Les candidates sont renvoyées dans l'ordre
-            // et l'appelant retient la première que l'arbre sait accorder.
             $candidates = [];
             foreach (['MELIS_KEY', 'TOOL_KEY', 'INTERFACE_KEY'] as $constant) {
                 if ($reflection->hasConstant($constant)) {
@@ -275,13 +247,12 @@ class MelisCoreAuthorizationListener implements ListenerAggregateInterface
                 return $candidates;
             }
         } catch (\Throwable $ignored) {
-            // Classe illisible : traité comme non résolu (jamais comme une autorisation).
         }
 
         return null;
     }
 
-    /** Nom de contrôleur routé → nom de classe, sans instancier le contrôleur. */
+    /** Routed controller name to class name, without instantiating it. */
     private function resolveControllerClass($sm, $controller)
     {
         if ($controller === '') {
@@ -300,7 +271,7 @@ class MelisCoreAuthorizationListener implements ListenerAggregateInterface
         foreach (['invokables', 'aliases'] as $section) {
             $target = $controllersConfig[$section][$controller] ?? null;
             if (is_string($target) && $target !== '') {
-                // Un alias peut pointer vers un autre alias : on suit une fois.
+                // An alias may point to another alias: follow it once.
                 return class_exists($target)
                     ? $target
                     : ($controllersConfig['invokables'][$target] ?? $controllersConfig['aliases'][$target] ?? null);
@@ -312,7 +283,7 @@ class MelisCoreAuthorizationListener implements ListenerAggregateInterface
             : null;
     }
 
-    /** `get-user-connection-data`, `getUserConnectionData`, `GetUserConnectionData` → même clé. */
+    /** `get-user-connection-data`, `getUserConnectionData`, `GetUserConnectionData` → same key. */
     private function normalizeAction($action)
     {
         return strtolower(str_replace(['-', '_'], '', (string) $action));
@@ -329,7 +300,6 @@ class MelisCoreAuthorizationListener implements ListenerAggregateInterface
         return is_array($excluded) && in_array($routeName, $excluded, true);
     }
 
-    /** 'report' (défaut) ou 'enforce'. */
     private function getMode($sm)
     {
         $mode = strtolower((string) $this->getSecurityValue($sm, 'access_gate_mode', 'report'));
@@ -337,7 +307,6 @@ class MelisCoreAuthorizationListener implements ListenerAggregateInterface
         return $mode === 'enforce' ? 'enforce' : 'report';
     }
 
-    /** Mode strict : une route non résolue est refusée (dernière marche du déploiement). */
     private function isStrict($sm)
     {
         $strict = strtolower((string) $this->getSecurityValue($sm, 'access_gate_strict', '0'));
@@ -353,16 +322,14 @@ class MelisCoreAuthorizationListener implements ListenerAggregateInterface
                 return $config[$key];
             }
         } catch (\Throwable $ignored) {
-            // Configuration illisible : on reste sur le défaut (report), jamais sur un blocage.
         }
 
         return $default;
     }
 
     /**
-     * 403. JSON pour les appels d'API/XHR (le front React attend `{success,error}`), texte sinon.
-     * Retourner une Response depuis EVENT_ROUTE court-circuite le dispatch : le contrôleur n'est
-     * jamais exécuté, donc aucun effet de bord ni fuite de données.
+     * 403 response: JSON for API/XHR calls (the React front expects `{success,error}`), plain text
+     * otherwise. Returning a Response from EVENT_ROUTE short-circuits the dispatch.
      */
     private function deny(MvcEvent $e, $what)
     {
@@ -387,11 +354,6 @@ class MelisCoreAuthorizationListener implements ListenerAggregateInterface
         return $response;
     }
 
-    /**
-     * Une ligne par requête dans le journal PHP (jamais dans `melis_core_log` : en mode report le
-     * volume est celui de la navigation entière, ce n'est pas une alerte de sécurité mais un
-     * inventaire). Récolte : `docker logs <conteneur> | grep MELIS_ACCESS_GATE`.
-     */
     private function log($decision, $mode, $routeName, $controller, $action, $toolKey)
     {
         error_log(sprintf(

@@ -10,14 +10,12 @@
 namespace MelisCore\Service;
 
 /**
- * Detection rules and alerting (DEKRA correction plan, item 21.0 - "add detection + alerts").
+ * Detection rules and alerting.
  *
- * Logging an attack is only half the job: someone has to be told while it is happening.
  * Each rule is a count over the last few minutes in melis_core_log, run right after the event
  * that could trigger it, so no scheduled task is required.
  *
- * Alerts are OFF by default (config/app.security.php). An environment turns them on with
- * MELIS_SECURITY_ALERTS_ENABLED=1, so enabling this never surprises an existing install.
+ * Configured in config/app.security.php (MELIS_SECURITY_ALERTS_ENABLED).
  */
 class MelisCoreSecurityAlertService extends MelisGeneralService
 {
@@ -80,8 +78,7 @@ class MelisCoreSecurityAlertService extends MelisGeneralService
     }
 
     /**
-     * Repeated failures on ONE account. The account lock (when enabled) already stops the
-     * attempt; the alert is what makes someone aware of it.
+     * Repeated failures on ONE account.
      */
     private function checkFailedPerAccount(array $event, array $config, $since)
     {
@@ -111,9 +108,6 @@ class MelisCoreSecurityAlertService extends MelisGeneralService
 
     /**
      * Failures from ONE IP across ANY accounts.
-     *
-     * This is the rule the per-account lock cannot see: an attacker trying one password on a
-     * hundred different logins never reaches the lock threshold on any single account.
      */
     private function checkFailedPerIp(array $config, $since, $ip)
     {
@@ -143,7 +137,7 @@ class MelisCoreSecurityAlertService extends MelisGeneralService
     }
 
     /**
-     * Attempts on accounts that do not exist: somebody is guessing login names.
+     * Attempts on accounts that do not exist, from ONE IP.
      */
     private function checkUnknownPerIp(array $config, $since, $ip)
     {
@@ -190,10 +184,7 @@ class MelisCoreSecurityAlertService extends MelisGeneralService
     }
 
     /**
-     * Sends an alert, unless the same one was already sent recently.
-     *
-     * The throttle matters: an attack in progress fires its rule on every single attempt, and
-     * an inbox with a thousand identical mails is an inbox nobody reads.
+     * Sends an alert, unless the same one was already sent recently (throttle).
      *
      * @param string $ruleKey identifies the rule AND its target (per IP, per account)
      */

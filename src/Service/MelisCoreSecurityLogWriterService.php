@@ -10,12 +10,8 @@
 namespace MelisCore\Service;
 
 /**
- * Writes a copy of every log event outside the platform's own database
- * (DEKRA correction plan, item 21.0 - "externalise the logs").
- *
- * Logs kept only in melis_core_log can be deleted by whoever manages to get into the
- * platform: the evidence sits inside the thing that was broken into. One JSON line per event
- * is therefore sent to a stream the application cannot rewrite afterwards.
+ * Writes a copy of every log event outside the platform's own database, as one JSON line
+ * per event.
  *
  * The destination is chosen by configuration, because it depends on the hosting:
  *   - a container (Docker, Kubernetes) collects stderr, so 'stderr' is enough there
@@ -24,7 +20,7 @@ namespace MelisCore\Service;
  *
  * Several destinations can be combined, comma separated ('stderr,file').
  *
- * Default is 'none': until an environment opts in, behaviour is exactly what it was before.
+ * Default is 'none'.
  *
  * @see config/app.security.php
  */
@@ -50,8 +46,7 @@ class MelisCoreSecurityLogWriterService extends MelisGeneralService
             return;
         }
 
-        // Several destinations at once are allowed, comma separated: a file is easy to grep,
-        // while stderr is the copy the application itself cannot erase.
+        // Several destinations at once are allowed, comma separated.
         foreach (array_filter(array_map('trim', explode(',', $target))) as $destination) {
             switch ($destination) {
                 case 'stderr':
@@ -70,9 +65,7 @@ class MelisCoreSecurityLogWriterService extends MelisGeneralService
     /**
      * The event as it leaves the platform.
      *
-     * Only what a SIEM needs: never a password, a hash, a token or a session id. Log lines are
-     * copied to places with looser access than the database, so a secret in a log line is a
-     * secret leaked wider, not a secret protected.
+     * Only what a SIEM needs: never a password, a hash, a token or a session id.
      *
      * @return array
      */
@@ -106,7 +99,7 @@ class MelisCoreSecurityLogWriterService extends MelisGeneralService
      *
      * Note for PHP-FPM: workers send their output to /dev/null unless the pool sets
      * catch_workers_output = yes (with decorate_workers_output = no, so the line stays valid
-     * JSON). Without it, this writes into the void - see iac/melis/docker/config/www.conf.
+     * JSON).
      */
     private function writeToStderr($line)
     {
@@ -133,8 +126,7 @@ class MelisCoreSecurityLogWriterService extends MelisGeneralService
     }
 
     /**
-     * Append to a file. The weakest option: a file the application can write, it can also
-     * erase - only use it when an agent ships the lines away quickly.
+     * Append to a file, meant to be tailed by a log shipping agent.
      */
     private function writeToFile($line, array $config)
     {

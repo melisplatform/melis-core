@@ -295,10 +295,9 @@ class MelisCoreLogService  extends MelisGeneralService
 	 * @param String $typeCode, Type Code of the Log type
 	 * @param int $itemId, ItemId of the log
 	 * @param int $logId, the primary key of Log, if specified this will update the log
-	 * @param array $context, optional security details (DEKRA item 21.0): client IP, login
-	 *        typed on a failed attempt, explicit user id, and a small free-form array stored
-	 *        as JSON. Filled by MelisCoreSecurityAuditService; any other caller can ignore it
-	 *        and keeps the previous behaviour.
+	 * @param array $context, optional security details: client IP, login typed on a failed
+	 *        attempt, explicit user id, and a small free-form array stored as JSON. Filled by
+	 *        MelisCoreSecurityAuditService; any other caller can ignore it.
 	 * @return Int|null if the saving is failed
 	 */
 	public function saveLog($title, $message, $status, $typeCode, $itemId = null, $logId = null, array $context = [])
@@ -345,18 +344,15 @@ class MelisCoreLogService  extends MelisGeneralService
 		}
 
 		/**
-		 * Security events can happen with nobody logged in - a login attempt on an account
-		 * that does not exist has no user id at all. Those used to be dropped here, which is
-		 * why a sweep over unknown logins left no trace (DEKRA item 21.0). They are now kept,
-		 * with a NULL user id. Every other log still requires a user, as before.
+		 * Security events can happen with nobody logged in (e.g. a login attempt on an account
+		 * that does not exist). They are kept with a NULL user id. Every other log requires a user.
 		 */
 		$audit              = $this->getSecurityAudit();
 		$isAnonymousAllowed = $audit && $audit->isAnonymousType($arrayParameters['typeCode']);
 
 		/**
-		 * Security events always carry the client IP, even when the caller passed no context:
-		 * failed logins are logged through the flash messenger, which knows nothing about all
-		 * this, and the IP is exactly what the detection rules need.
+		 * Security events always carry the client IP, even when the caller passed no context
+		 * (failed logins are logged through the flash messenger).
 		 */
 		if ($audit && empty($context['ip']) && $audit->isSecurityType($arrayParameters['typeCode'])) {
 			$context['ip'] = $audit->getClientIp();

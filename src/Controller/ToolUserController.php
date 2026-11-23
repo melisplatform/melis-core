@@ -636,9 +636,8 @@ class ToolUserController extends MelisAbstractActionController
 
                             if (file_exists($dirName)) {
                                 $imageFile = $this->params()->fromFiles('usr_image');
-                                // Sécurité : le nom de fichier vient du client → basename() une seule
-                                // fois et on l'utilise pour l'écriture, la relecture et la suppression
-                                // (empêche une traversée de répertoire via un nom comme "../../x.png").
+                                // Nom de fichier réduit par basename(), réutilisé pour l'écriture, la
+                                // relecture et la suppression.
                                 $safeImgName = basename((string) ($imageFile['name'] ?? ''));
 
                                 /** Ensuring file is an image */
@@ -771,8 +770,7 @@ class ToolUserController extends MelisAbstractActionController
 
                 $userTable->deleteById($id);
 
-                // Purge any pending lost/create password request, otherwise a token emailed
-                // before the deletion would stay usable against a login that no longer exists.
+                // Purge any pending lost/create password request of this login.
                 $this->getServiceManager()->get('MelisCoreLostPassword')->deleteRequestsByLogin($login);
                 $this->getServiceManager()->get('MelisCoreCreatePassword')->deleteRequestsByLogin($login);
 
@@ -1524,16 +1522,14 @@ class ToolUserController extends MelisAbstractActionController
 
 
     /**
-     * Export CSV de la liste des utilisateurs (audit DEKRA 7.0).
+     * Export CSV de la liste des utilisateurs.
      *
-     * L'action n'avait AUCUN contrôle d'accès : n'importe quel compte connecté au back-office —
-     * y compris sans le moindre droit sur l'outil Utilisateurs — pouvait télécharger la table
-     * complète des comptes (vérifié : 154 Ko de CSV pour un compte n'ayant que News/Blog).
-     * Le refus est un vrai 403 et non un JsonModel : ce que le navigateur attend ici est un
-     * fichier, pas une structure lue par du JS.
+     * Réservé aux utilisateurs ayant le droit sur l'outil Utilisateurs. Le refus est un vrai 403
+     * et non un JsonModel : ce que le navigateur attend ici est un fichier, pas une structure
+     * lue par du JS.
      *
-     * La journalisation, elle, est déjà centralisée : MelisCoreToolService::exportDataToCsv()
-     * écrit l'entrée USER_EXPORT pour tous les exports de la plateforme (item 21.0).
+     * La journalisation est centralisée : MelisCoreToolService::exportDataToCsv() écrit
+     * l'entrée USER_EXPORT pour tous les exports de la plateforme.
      */
     public function exportToCsvAction()
     {
@@ -1564,13 +1560,10 @@ class ToolUserController extends MelisAbstractActionController
         for ($x = 0; $x < count($userData); $x++) {
             $userData[$x]['usr_rights'] = '';
             $userData[$x]['usr_image'] = '';
-            // The password hashes were exported in clear in the CSV, next to the logins.
-            // Anyone who obtains the file can run an offline cracking attack at leisure, so the
-            // column is blanked like the two above.
+            // The password hash is not exported: the column is blanked like the two above.
             $userData[$x]['usr_password'] = '';
-            // Vider usr_rights sans vider son CACHE ne cachait rien : usr_rights_cache contient
-            // l'allow-set résolu (`{"allow":{"<melisKey>":1,...}}`) et sa signature — soit
-            // exactement les droits qu'on vient d'effacer, en clair, dans le même fichier.
+            // usr_rights_cache contient l'allow-set résolu (`{"allow":{"<melisKey>":1,...}}`) et
+            // sa signature, c'est-à-dire les mêmes droits que usr_rights : vidés eux aussi.
             $userData[$x]['usr_rights_cache'] = '';
             $userData[$x]['usr_rights_cache_sig'] = '';
         }
@@ -1787,14 +1780,10 @@ class ToolUserController extends MelisAbstractActionController
             $userId            = (int) $post['usr_id'];
 
             /**
-             * IDOR (audit DEKRA 7.0) : `usr_id` arrivait du POST sans le moindre contrôle. Le
-             * champ est posé côté navigateur (`setUserDateConnection` dans users.tools.js, à
-             * partir de la ligne sélectionnée), donc n'importe quel compte connecté pouvait le
-             * remplacer et lire l'historique de connexion de N'IMPORTE QUEL utilisateur.
-             *
-             * On filtre selon L'APPELANT, jamais selon l'identifiant reçu : sans droit sur
-             * l'outil Utilisateurs, la seule réponse possible est son propre historique. Un
-             * utilisateur habilité (et l'admin) garde le comportement d'origine.
+             * `usr_id` est posé côté navigateur (`setUserDateConnection` dans users.tools.js, à
+             * partir de la ligne sélectionnée). Sans droit sur l'outil Utilisateurs, seul
+             * l'historique de l'appelant est renvoyé ; un utilisateur habilité (et l'admin)
+             * obtient celui de l'utilisateur demandé.
              */
             if (!$this->hasAccess(static::TOOL_KEY)) {
                 $identity = $this->getServiceManager()->get('MelisCoreAuth')->getIdentity();

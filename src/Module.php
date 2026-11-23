@@ -103,17 +103,13 @@ class Module
             (new MelisCorePhpWarningListener())->attach($eventManager);
             (new MelisCoreDashboardPluginRightsTreeViewListener())->attach($eventManager);
             (new MelisCoreUrlAccessCheckerListenner())->attach($eventManager);
-            // Garde-fou d'autorisation GLOBAL du back-office (audit DEKRA 7.0) : checkIdentity()
-            // ci-dessus n'authentifie que ; ce listener décide de l'ACCÈS À L'OUTIL avant le
-            // dispatch. Démarre en mode `report` (trace seule, rien n'est bloqué).
+            // Autorisation du back-office : décide de l'accès à l'outil avant le dispatch
+            // (checkIdentity() ci-dessus gère l'authentification).
             (new MelisCoreAuthorizationListener())->attach($eventManager);
-            // Garde-fou CSRF GLOBAL du back-office (audit DEKRA 10.0) : vérifie le jeton de session
-            // + l'origine sur chaque requête qui modifie l'état. Démarre en mode `report`.
+            // CSRF du back-office : jeton de session + origine sur les requêtes qui modifient l'état.
             (new MelisCoreCsrfListener())->attach($eventManager);
-            // Scrubbe les réponses JSON d'erreur du back-office (audit DEKRA 13.0) : le message
-            // d'exception, le file:line et la stack trace que les contrôleurs React API
-            // renvoyaient tels quels sont remplacés par un message générique + un identifiant
-            // de corrélation ; le détail part dans le log serveur (grep MELIS_API_ERROR).
+            // Réponses JSON d'erreur du back-office : message générique + identifiant de
+            // corrélation, le détail part dans le log serveur.
             (new MelisCoreApiErrorSanitizerListener())->attach($eventManager);
             (new MelisCoreTableColumnDisplayListener())->attach($eventManager);
             (new MelisCoreClearCacheListenerListener())->attach($eventManager);
@@ -157,14 +153,10 @@ class Module
 
     public function initSession(MvcEvent $e)
     {
-        // Harden the session cookie params: HttpOnly (JS can't read PHPSESSID -> XSS can't steal
-        // it), SameSite=Strict, Secure over HTTPS, strict-mode (reject attacker-fixated ids).
-        // HTTPS is detected through the proxy too (TLS ends at the ingress, so $_SERVER['HTTPS']
-        // is empty inside the container and a `Secure` cookie would otherwise never be set).
+        // Session cookie params: HttpOnly, SameSite=Strict, Secure over HTTPS, strict mode.
+        // HTTPS is detected through the proxy too (see MelisCoreCsrfService::isHttps()).
         // Only while no session is active yet: on PHP 8 ini_set() on session.* is refused with a
-        // warning once a session has been started, so setting them unconditionally never applied
-        // anything and, with display_errors on, leaked warning HTML into every response (React API
-        // JSON unparsable, "headers already sent" on the legacy back-office).
+        // warning once a session has been started.
         $isHttps = MelisCoreCsrfService::isHttps();
         if (session_status() == PHP_SESSION_NONE) {
             ini_set('session.use_strict_mode', '1');
@@ -179,7 +171,7 @@ class Module
             session_start();
         }
 
-        // CSRF token of the session + its JS-readable mirror cookie (audit 10.0). Back-office only:
+        // CSRF token of the session + its JS-readable mirror cookie. Back-office only:
         // the front-office site must not get an extra cookie (it is cached page by page).
         // `/melis`, `/melis/react-api`, `/melis-react` match - `/MelisCore/…` assets do not.
         if (strpos((string) ($_SERVER['REQUEST_URI'] ?? ''), '/melis') === 0) {

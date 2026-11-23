@@ -10,18 +10,13 @@
 namespace MelisCore\Service;
 
 /**
- * CSRF token (audit item 10.0).
+ * CSRF token.
  *
- * ONE token per session, stored in two places:
- *   - the PHP session: the reference value, unreachable from another site;
- *   - the cookie `melis_csrf`: the same value, deliberately NOT HttpOnly so the back-office
- *     JavaScript can read it and echo it back in the `X-Melis-Csrf` header (or in a hidden
- *     `melis_csrf` field for a classic form post).
- *
- * Why that is enough: a page hosted by an attacker can MAKE the browser send our cookies, but the
- * same-origin policy forbids it to READ them. It can therefore never produce the header/field, and
- * MelisCoreCsrfListener rejects the request. The token being bound to the session (and not merely
- * compared cookie-to-field) also defeats an attacker who can write cookies from a sibling domain.
+ * One token per session, stored in two places:
+ *   - the PHP session: the reference value;
+ *   - the cookie `melis_csrf`: the same value, not HttpOnly so the back-office JavaScript can
+ *     read it and echo it back in the `X-Melis-Csrf` header (or in a hidden `melis_csrf` field
+ *     for a classic form post). The submitted value is compared with the session value.
  *
  * Static on purpose: it is called from the bootstrap, from a listener and from controllers, before
  * or without a service manager, and it holds no state of its own beyond the session.
@@ -40,15 +35,12 @@ class MelisCoreCsrfService
     /** Field used by classic (non-AJAX) form posts. */
     const FIELD_NAME = 'melis_csrf';
 
-    /**
-     * True when the token was CREATED during the current request, i.e. the client is receiving it
-     * in this very response and cannot have echoed it back. See wasJustMinted().
-     */
+    /** True when the token was created during the current request. See wasJustMinted(). */
     private static $justMinted = false;
 
     /**
      * Token of the current session, created on first call, and mirror cookie kept in sync.
-     * Returns '' when there is no session (CLI, cron): nothing to protect.
+     * Returns '' when there is no session.
      */
     public static function ensureToken()
     {
@@ -71,13 +63,12 @@ class MelisCoreCsrfService
     }
 
     /**
-     * New token. Called at login, right after session_regenerate_id(): the token of the anonymous
-     * session must not survive into the authenticated one.
+     * New token. Called at login, right after session_regenerate_id().
      */
     public static function regenerate()
     {
         unset($_SESSION[self::SESSION_KEY]);
-        self::$justMinted = false; // a rotation at login is not a first handout; see wasJustMinted()
+        self::$justMinted = false;
 
         $token = self::ensureToken();
         self::$justMinted = false;
@@ -86,17 +77,7 @@ class MelisCoreCsrfService
     }
 
     /**
-     * Was the token created during THIS request?
-     *
-     * The token is minted at bootstrap, so the request that receives it for the first time is
-     * also checked by MelisCoreCsrfListener - and it cannot possibly carry a token it is only
-     * now being handed. That happens for real: the React shell (/melis-react) is streamed by
-     * MelisAssetManager before MelisCore's initSession ever runs, so a browser deep-linking
-     * straight to it and posting the login form would be refused once, then work on the retry.
-     *
-     * The listener therefore lets such a request through. Nothing is weakened: an attacker cannot
-     * empty a victim's session, so a session that has no token yet has nothing worth forging -
-     * it is not authenticated. Every request after this one is checked normally.
+     * Was the token created during this request?
      */
     public static function wasJustMinted()
     {
@@ -151,7 +132,7 @@ class MelisCoreCsrfService
             'expires'  => 0, // session cookie: dies with the browser, like PHPSESSID
             'path'     => '/',
             'secure'   => self::isHttps(),
-            'httponly' => false, // ON PURPOSE: the back-office JS has to read it (see class doc)
+            'httponly' => false, // the back-office JS has to read it (see class doc)
             'samesite' => 'Lax',
         ]);
 
