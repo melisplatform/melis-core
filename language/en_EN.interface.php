@@ -963,7 +963,7 @@ return [
     'tr_melis_core_announcement_plugin_tomorrow' => 'Tomorrow',
     'tr_meliscore_toolstree_section_others' => 'Others',
     'tr_meliscore_toolstree_section_custom' => 'Custom / Projects',
-    // Security audit trail (DEKRA item 21.0)
+    // Security audit trail
     'tr_meliscore_logs_tool_log_ip' => 'IP address',
     'tr_meliscore_logs_tool_log_anonymous' => 'Anonymous',
     'tr_meliscore_security_log_login_ok' => 'Login',

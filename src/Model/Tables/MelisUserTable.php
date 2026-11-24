@@ -171,7 +171,7 @@ class MelisUserTable extends MelisGenericTable
     {
         $select = $this->tableGateway->getSql()->select();
 
-        // Bound parameters: the email comes straight from the user form (audit item 11.0).
+        // Bound parameters: the email comes straight from the user form.
         $select->where->equalTo('usr_email', (string) $email);
         $select->where->notEqualTo('usr_id', (int) $userId);
 

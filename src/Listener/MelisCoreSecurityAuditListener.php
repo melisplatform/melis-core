@@ -13,13 +13,9 @@ use Laminas\EventManager\EventManagerInterface;
 use Laminas\EventManager\ListenerAggregateInterface;
 
 /**
- * Logs successful logins and logouts (DEKRA correction plan, item 21.0).
+ * Logs successful logins and logouts.
  *
- * Failed logins were already recorded, successful ones were not: the audit trail could show
- * that somebody tried to get in, never that they succeeded.
- *
- * Listening to the events rather than patching the controllers means the three ways of logging
- * in are covered at once: the legacy back-office, the React one (both post to
+ * Listening to the events covers the legacy back-office, the React one (both post to
  * /melis/authenticate) and melis-login-2fa, which triggers the same event after the code is
  * validated.
  */

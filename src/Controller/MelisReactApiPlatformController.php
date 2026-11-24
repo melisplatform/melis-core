@@ -282,7 +282,7 @@ class MelisReactApiPlatformController extends MelisAbstractActionController
 
     /**
      * Garde de droits : chaque endpoint exige l'ACCÈS à l'outil (`meliscore_tool_platform`),
-     * pas seulement une session — ferme la back-door API/URL (cf. gabarit Users). 401/403/null.
+     * pas seulement une session (cf. gabarit Users). 401/403/null.
      */
     private function denyUnlessAccess(): ?HttpResponse
     {

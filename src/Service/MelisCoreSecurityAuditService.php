@@ -10,7 +10,7 @@
 namespace MelisCore\Service;
 
 /**
- * Security audit trail (DEKRA correction plan, item 21.0).
+ * Security audit trail.
  *
  * One entry point for every security event, used by BOTH back-offices:
  * the legacy jQuery controllers and the React API controllers call the same methods, so an
@@ -112,10 +112,6 @@ class MelisCoreSecurityAuditService extends MelisGeneralService
     /**
      * A login attempt on an account that does not exist.
      *
-     * The response shown to the visitor must stay identical to a wrong-password response
-     * (otherwise the login form tells an attacker which accounts exist); only the log knows
-     * the difference.
-     *
      * @param string $login the login that was typed
      */
     public function logLoginFailureUnknownUser($login)
@@ -151,8 +147,7 @@ class MelisCoreSecurityAuditService extends MelisGeneralService
 
     /**
      * A read of sensitive data: user rights, microservice tokens, connection history,
-     * platform configuration. Ordinary list browsing is NOT logged - the trail has to stay
-     * readable, and an entry per page view would bury the events that matter.
+     * platform configuration. Not meant for ordinary list browsing.
      *
      * @param string   $what   what was read, e.g. "user microservice token"
      * @param int|null $itemId the record concerned
@@ -221,8 +216,7 @@ class MelisCoreSecurityAuditService extends MelisGeneralService
     /**
      * Client IP of the current request.
      *
-     * X-Forwarded-For is only trusted when the request actually reaches us through one of the
-     * configured reverse proxies: the header is a plain request header, anyone can send it.
+     * X-Forwarded-For is only used when REMOTE_ADDR is one of the configured trusted proxies.
      *
      * @return string|null
      */
@@ -358,7 +352,6 @@ class MelisCoreSecurityAuditService extends MelisGeneralService
                 'data'            => $context,
             ]);
         } catch (\Exception $e) {
-            // A security event that cannot be stored must not break the action it describes.
         }
     }
 }

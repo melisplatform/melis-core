@@ -1,12 +1,10 @@
 -- ============================================================================
 -- 26092201_core_security_audit_log.sql
--- Security audit trail (DEKRA correction plan, item 21.0).
+-- Security audit trail.
 --
 -- Three things happen here:
---   1. melis_core_log.log_user_id becomes nullable. Security events that have no logged-in
---      user (a login attempt on an account that does not exist) could not be stored before:
---      MelisCoreLogService::saveLog() drops the row when the user id is null, and the column
---      was NOT NULL anyway. This is why a password sweep over unknown logins left no trace.
+--   1. melis_core_log.log_user_id becomes nullable, so security events that have no logged-in
+--      user (a login attempt on an account that does not exist) can be stored.
 --   2. Three columns are added: the client IP, the login that was typed (for failed attempts
 --      on unknown accounts, where no user id exists) and a small free-form JSON context.
 --   3. The security log types are seeded, with their EN/FR names, so they can be filtered in
@@ -121,8 +119,8 @@ DEALLOCATE PREPARE stmt;
 --
 -- The list is spelled out inline as a derived table (SELECT ... UNION ALL ...) rather than
 -- loaded into a temporary table: the deploy accounts do not hold CREATE TEMPORARY TABLES,
--- so a CREATE TEMPORARY TABLE there fails with error 1044 "Access denied ... to database",
--- which is what stopped this migration on dev4. A derived table needs no privilege beyond
+-- so a CREATE TEMPORARY TABLE there fails with error 1044 "Access denied ... to database".
+-- A derived table needs no privilege beyond
 -- the SELECT and INSERT already required.
 --
 -- Two things are spelled out on the literals, both needed because the connection charset is

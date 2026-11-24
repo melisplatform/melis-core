@@ -730,10 +730,8 @@ class MelisCoreToolService extends MelisServiceManager implements MelisCoreToolS
     public function exportDataToCsv($data, $fileName = null, $customSeparator = null, $customIsEnclosed = null)
     {
         /**
-         * Every CSV export of the platform goes through this method - users, logs, prospects,
-         * templates, newsletters, commerce categories, SQL tool - so this is where an export is
-         * recorded, once, for all tools at the same time (DEKRA item 21.0). Logging it in each
-         * controller instead would mean patching seven modules and missing the next one written.
+         * CSV exports of the platform go through this method, so the export is recorded here
+         * for all tools at once.
          */
         $this->logExportToAuditTrail($data, $fileName);
 
@@ -1462,7 +1460,6 @@ class MelisCoreToolService extends MelisServiceManager implements MelisCoreToolS
             $this->getServiceManager()->get('MelisCoreSecurityAudit')
                 ->logExport($toolName, is_array($data) ? count($data) : 0, $context);
         } catch (\Exception $e) {
-            // Auditing an export must never prevent the export itself.
         }
     }
 }

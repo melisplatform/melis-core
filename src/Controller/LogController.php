@@ -20,8 +20,8 @@ use Laminas\Session\Container;
 class LogController extends MelisAbstractActionController
 {
     /**
-     * Outil auquel ce contrôleur appartient (audit DEKRA 7.0) : MelisCoreAuthorizationListener
-     * vérifie canAccess() sur cette clé AVANT le dispatch.
+     * Outil auquel ce contrôleur appartient : MelisCoreAuthorizationListener
+     * vérifie canAccess() sur cette clé avant le dispatch.
      */
     const MELIS_KEY = 'meliscore_logs_tool';
 
@@ -548,7 +548,7 @@ class LogController extends MelisAbstractActionController
             $usersMap    = [];
             foreach ($pageUserIds as $uid) {
                 // Security events can have no user at all: a login attempt on an account that
-                // does not exist is logged with a NULL user id (DEKRA item 21.0).
+                // does not exist is logged with a NULL user id.
                 if (empty($uid)) {
                     $usersMap[$uid] = $translator->translate('tr_meliscore_logs_tool_log_anonymous');
                     continue;

@@ -17,8 +17,8 @@ use Laminas\Session\Container;
 class MelisCoreMicroServiceController extends MelisAbstractActionController
 {
     /**
-     * Outil auquel ce contrôleur appartient (audit DEKRA 7.0) : MelisCoreAuthorizationListener
-     * vérifie canAccess() sur cette clé AVANT le dispatch.
+     * Outil auquel ce contrôleur appartient : MelisCoreAuthorizationListener
+     * vérifie canAccess() sur cette clé avant le dispatch.
      */
     const MELIS_KEY = 'meliscore_tool_user';
 
@@ -554,9 +554,8 @@ class MelisCoreMicroServiceController extends MelisAbstractActionController
 
 
                 /**
-                 * The API key of a user is being displayed. A leaked key is exactly what the
-                 * audit found (item 6.0), so reading one has to leave a trace (item 21.0).
-                 * The key itself is never written to the log.
+                 * The API key of a user is being displayed: reading one leaves a trace in
+                 * the security log. The key itself is never written to the log.
                  */
                 $this->getServiceManager()->get('MelisCoreSecurityAudit')
                     ->logSensitiveRead('user microservice API key', $userId);

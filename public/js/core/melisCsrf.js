@@ -1,5 +1,5 @@
 /**
- * CSRF token, legacy back-office side (audit item 10.0).
+ * CSRF token, legacy back-office side.
  *
  * The server puts the session token in the JS-readable cookie `melis_csrf`
  * (MelisCore\Service\MelisCoreCsrfService). This file echoes it back on every state-changing

@@ -279,7 +279,7 @@ class MelisReactApiUserController extends MelisAbstractActionController
                             [$id]
                         )
                     );
-                    // Password history (audit item 16.0)
+                    // Password history
                     $this->getServiceManager()->get('MelisPasswordPolicyService')->recordHistory($id, $passwordHash);
                 } else {
                     $db->query(
@@ -369,7 +369,7 @@ class MelisReactApiUserController extends MelisAbstractActionController
             $newId = (int) iterator_to_array(
                 $db->query('SELECT LAST_INSERT_ID() AS id', [])
             )[0]['id'];
-            // Password history (audit item 16.0)
+            // Password history
             $this->getServiceManager()->get('MelisPasswordPolicyService')->recordHistory($newId, $passwordHash);
 
             // Le cache de droits du nouvel utilisateur est généré par MelisCoreRightsCacheListener sur
@@ -464,8 +464,8 @@ class MelisReactApiUserController extends MelisAbstractActionController
      *
      * The React list builds its CSV/Excel file in the browser, from rows it already holds, so
      * the server never sees the export. This endpoint is what the page calls just before
-     * generating the file, so an export leaves the same trace whichever interface performed it
-     * (DEKRA item 21.0). It writes a log entry and nothing else.
+     * generating the file, so an export leaves the same trace whichever interface performed it.
+     * It writes a log entry and nothing else.
      */
     public function exportAction(): HttpResponse
     {
@@ -538,7 +538,7 @@ class MelisReactApiUserController extends MelisAbstractActionController
             return $this->jsonResponse(['success' => false, 'error' => 'Invalid ID'], 400);
         }
 
-        // Connection history of another user is personal data (DEKRA item 21.0). Same entry as
+        // Connection history of another user is personal data. Same entry as
         // the legacy tool writes, so both interfaces leave the same trace.
         $this->getServiceManager()->get('MelisCoreSecurityAudit')
             ->logSensitiveRead('user connection history', $id);
@@ -609,8 +609,8 @@ class MelisReactApiUserController extends MelisAbstractActionController
             return $this->jsonResponse(['success' => false, 'error' => 'Invalid ID'], 400);
         }
 
-        // Displaying a user's API key: a leaked key is what the audit found (item 6.0), so
-        // reading one leaves a trace. The key itself is never written to the log.
+        // Displaying a user's API key: reading one leaves a trace. The key itself is never
+        // written to the log.
         $this->getServiceManager()->get('MelisCoreSecurityAudit')
             ->logSensitiveRead('user microservice API key', $id);
 
@@ -782,9 +782,8 @@ class MelisReactApiUserController extends MelisAbstractActionController
 
     /**
      * Rights guard for the Users tool. Every endpoint here requires ACCESS to the tool
-     * (`meliscore_tool_user`), not merely an authenticated session — so a user whose rights
-     * don't include the tool can't read/write users by hitting the API directly (the left menu
-     * already hides it; this closes the API/URL back-doors). Returns the deny response or null.
+     * (`meliscore_tool_user`), not merely an authenticated session. Returns the deny response
+     * or null.
      */
     private function denyUnlessAccess(): ?HttpResponse
     {

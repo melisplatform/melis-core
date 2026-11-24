@@ -18,7 +18,7 @@ import { prefetchDashboard } from '@/lib/dashboard-prefetch'
 import { installCsrf } from '@/lib/csrf'
 
 // Avant TOUT appel réseau (y compris le prefetch du dashboard plus bas) : chaque requête qui
-// modifie l'état renvoie le jeton CSRF de session (audit 10.0, cf. lib/csrf.ts).
+// modifie l'état renvoie le jeton CSRF de session (cf. lib/csrf.ts).
 installCsrf()
 
 const w = window as unknown as {

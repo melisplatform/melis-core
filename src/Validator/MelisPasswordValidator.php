@@ -3,9 +3,8 @@
 namespace MelisCore\Validator;
 
 /**
- * @deprecated Kept for backward compatibility only. It used to enforce a hard-coded
- * "8 characters + 1 lower case + 1 digit" rule that ignored the configured policy.
- * It now behaves exactly like MelisPasswordValidatorWithConfig; pass a 'serviceManager'
+ * @deprecated Kept for backward compatibility only.
+ * Behaves exactly like MelisPasswordValidatorWithConfig; pass a 'serviceManager'
  * option to get the configured policy, translations and password history.
  */
 class MelisPasswordValidator extends MelisPasswordValidatorWithConfig

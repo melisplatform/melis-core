@@ -115,16 +115,8 @@ class MelisCoreRightsService extends MelisServiceManager implements MelisCoreRig
     /**
      * Accès à un outil pour l'utilisateur courant.
      *
-     * FONCTION TOTALE : elle renvoie TOUJOURS un booléen, elle ne laisse JAMAIS remonter
-     * d'exception. C'est une propriété de sécurité, pas une commodité : le gabarit
-     * `denyUnlessAccess()` recopié dans les contrôleurs React entoure l'appel d'un
-     * `try { ... } catch (\Throwable) {}` puis laisse passer la requête — une exception ici
-     * (base injoignable, service absent, XML de droits corrompu) sautait donc par-dessus le 403
-     * et VALAIT AUTORISATION (fail-open, audit DEKRA 7.0). En échouant fermé ici, à l'unique
-     * endroit où la décision est prise, les ~1131 appels du plateau sont couverts d'un coup.
-     *
-     * Conséquence assumée : si le service de droits est réellement cassé, l'utilisateur reçoit un
-     * refus (y compris un admin) au lieu d'obtenir tout. L'incident est tracé dans le journal de
+     * Renvoie toujours un booléen et ne laisse jamais remonter d'exception : en cas d'erreur,
+     * l'accès est refusé (y compris à un admin). L'incident est tracé dans le journal de
      * sécurité, une fois par erreur distincte et par requête (canAccess() est appelé en boucle).
      */
     public function canAccess($key): bool
@@ -189,8 +181,7 @@ class MelisCoreRightsService extends MelisServiceManager implements MelisCoreRig
             return isset($resolved['allow'][$key]);
         }
 
-        // Fallback (pas d'utilisateur / droits vides = accès total / erreur cache) : calcul live,
-        // strictement le comportement historique — jamais de blocage à cause du cache.
+        // Pas de cache résolu : calcul live.
         $melisCoreAuth = $this->getServiceManager()->get('MelisCoreAuth');
         $xmlRights = $melisCoreAuth->getAuthRights();
 
@@ -207,8 +198,8 @@ class MelisCoreRightsService extends MelisServiceManager implements MelisCoreRig
      *
      * Source = colonne `usr_rights_cache` (générée à la sauvegarde). Validée par une SIGNATURE
      * (md5(usr_rights) + version config) : toute modification des droits (user OU rôle propagé) ou
-     * de la config invalide le cache → reconstruction paresseuse. Retourne null (⇒ calcul live) si
-     * pas d'utilisateur, droits vides (accès total, déjà rapide) ou erreur : jamais de blocage.
+     * de la config invalide le cache → reconstruction paresseuse. Retourne null (⇒ calcul live)
+     * quand le cache n'est pas utilisable.
      */
     public function getResolvedRights(): ?array
     {
@@ -227,7 +218,7 @@ class MelisCoreRightsService extends MelisServiceManager implements MelisCoreRig
 
             $xml = (string) $auth->getAuthRights();
             if (trim($xml) === '') {
-                // Droits vides = accès total ; isAccessible() court-circuite déjà → inutile de cacher.
+                // Droits vides : pas de cache, isAccessible() traite ce cas.
                 return $this->resolved = null;
             }
 
@@ -286,7 +277,7 @@ class MelisCoreRightsService extends MelisServiceManager implements MelisCoreRig
         // → toute la branche disparaît du menu legacy pour un NON-admin alors que l'outil EST accordé
         // (l'admin court-circuite canAccess() → bug invisible en admin).
         // On alias donc la clé de tableau sur le droit DÉJÀ calculé de son melisKey résolu.
-        // Purement ADDITIF et sans escalade possible : allow[alias] n'est posé QUE si allow[melisKey]
+        // Purement ADDITIF : allow[alias] n'est posé QUE si allow[melisKey]
         // existe déjà. Aucune identité, aucune donnée stockée, aucune migration.
         foreach ($this->toolKeyAliases() as $arrayKey => $melisKey) {
             if (!isset($allow[$arrayKey]) && isset($allow[$melisKey])) {
@@ -889,7 +880,11 @@ class MelisCoreRightsService extends MelisServiceManager implements MelisCoreRig
         ];
         $tools = [];
         foreach ($appConfigPaths as $idx => $path) {
-            $appConfigPath = $melisKeys[$path];
+            // Skip sections whose module is not loaded (e.g. melisai_toolstree_section without MelisAI).
+            $appConfigPath = $melisKeys[$path] ?? null;
+            if ($appConfigPath === null) {
+                continue;
+            }
             $appsConfig = $melisAppConfig->getItem($appConfigPath);
             $orderInterface = $melisAppConfig->getOrderInterfaceConfig($path);
             // An `is_parent_tool` section (MelisMarketPlace is the only one) has NO interface
@@ -1411,11 +1406,7 @@ class MelisCoreRightsService extends MelisServiceManager implements MelisCoreRig
      */
     public function isParentOf($toolKey, $parentKey, $data = null)
     {
-        // Reset the shared accumulator on the top-level call — see getSectionParent(). Without it, a
-        // toolKey that is absent from the map leaves `sectionParent` at its previous value, so e.g.
-        // isParentOf('meliscommerce_categories_page', 'melismarketing_toolstree_section') returns the
-        // stale marketing parent and wrongly grants access to every commerce tool for a user who only
-        // has a marketing grant.
+        // Reset the shared accumulator on the top-level call — see getSectionParent().
         if (is_null($data)) {
             $this->sectionParent = null;
             $data = $this->getToolSectionMap();
@@ -1464,7 +1455,13 @@ class MelisCoreRightsService extends MelisServiceManager implements MelisCoreRig
         $tools = [];
 
         foreach ($appConfigPaths as $idx => $path) {
-            $appConfigPath = $melisKeys[$path];
+            // A section whose module is not loaded (e.g. melisai_toolstree_section without MelisAI)
+            // has no melisKey: skip it instead of emitting an "Undefined array key" warning that
+            // leaks into every react-api JSON response (breaks res.json() + sends headers early).
+            $appConfigPath = $melisKeys[$path] ?? null;
+            if ($appConfigPath === null) {
+                continue;
+            }
             $appsConfig = $this->getConfig()->getItem($appConfigPath);
             $orderInterface = $this->getConfig()->getOrderInterfaceConfig($path);
 
@@ -1561,13 +1558,7 @@ class MelisCoreRightsService extends MelisServiceManager implements MelisCoreRig
                     }
                 }
 
-                // $appCtr must advance for EVERY child, not only those carrying a sub-`interface`.
-                // While it lived inside the isset() above, a leaf node (no sub-interface) left the
-                // index unchanged and was overwritten by its next sibling, so most `conf.type` link
-                // nodes (MelisCommerce's 13 tools) never reached this map at all. They were then
-                // absent from toolKeyAliases(), their array key never entered the allow-set, and the
-                // legacy menu — which gates on the ARRAY KEY (TreeToolsController L127) — dropped
-                // them even though the right was granted.
+                // $appCtr must advance for every child, not only those carrying a sub-`interface`.
                 $appCtr++;
             }
 

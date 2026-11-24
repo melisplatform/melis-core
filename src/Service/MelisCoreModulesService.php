@@ -960,10 +960,8 @@ class MelisCoreModulesService extends MelisServiceManager
      * @param string $fileName
      */
     /**
-     * SSRF guard for the asset bundler: use the PLATFORM-CONFIGURED host, not the client-supplied
-     * `Host` header, when building the internal URLs the bundler fetches server-side. For a
-     * legitimate request this is the same value as HTTP_HOST, so behaviour is unchanged; a spoofed
-     * Host can no longer redirect these server-side fetches to an internal/arbitrary target.
+     * Host used to build the internal URLs the asset bundler fetches server-side: the
+     * platform-configured host rather than the request `Host` header.
      */
     private function getSafeAssetHost()
     {

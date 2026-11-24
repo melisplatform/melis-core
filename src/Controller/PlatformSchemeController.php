@@ -24,8 +24,8 @@ use Laminas\Validator;
 class PlatformSchemeController extends MelisAbstractActionController
 {
     /**
-     * Outil auquel ce contrôleur appartient (audit DEKRA 7.0) : MelisCoreAuthorizationListener
-     * vérifie canAccess() sur cette clé AVANT le dispatch.
+     * Outil auquel ce contrôleur appartient : MelisCoreAuthorizationListener
+     * vérifie canAccess() sur cette clé avant le dispatch.
      */
     const MELIS_KEY = 'meliscore_tool_platform_scheme';
 
@@ -140,7 +140,7 @@ class PlatformSchemeController extends MelisAbstractActionController
                         );
                     } else {
                         /**
-                         * if valid, then will check if it is a valid image, this is to avoid PHP eval exploitation
+                         * if valid, then will check if it is a valid image
                          */
                         if(!$imgValidator->isValid($images[$name])) {
                             $imgErrors[$name] = array(

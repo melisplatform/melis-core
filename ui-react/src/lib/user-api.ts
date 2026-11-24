@@ -216,14 +216,11 @@ export async function saveMicroservice(
 }
 
 /**
- * Journalise un export de données utilisateurs (piste d'audit, item DEKRA 21.0).
+ * Journalise un export de données utilisateurs (piste d'audit).
  *
- * Le fichier est construit dans le navigateur à partir des lignes déjà chargées : le serveur ne
- * voit donc jamais l'export. Cet appel est ce qui lui permet de l'enregistrer, exactement comme
- * le back-office legacy le fait pour son propre export CSV.
- *
- * L'échec n'est jamais bloquant : on n'empêche pas un export parce que sa trace n'a pas pu être
- * écrite — l'appelant ignore la promesse rejetée.
+ * Le fichier est construit dans le navigateur à partir des lignes déjà chargées : cet appel
+ * permet au serveur d'enregistrer l'export, comme le back-office legacy le fait pour son propre
+ * export CSV.
  */
 export async function logExport(
   rows: number,

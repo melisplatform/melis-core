@@ -62,10 +62,10 @@ class MelisCoreAuthService
 
         // if (!empty($user) && is_object($user)) {
         if (!empty($user)) {
-            // NB: le bypass super-admin (usr_admin=1) est géré en aval par
-            // MelisCoreRightsService::isCurrentUserAdmin() (canAccess court-circuité). On NE renvoie
-            // PLUS '' ici : les vrais usr_rights de l'admin contiennent <meliscms_pages><id>-1</id>,
-            // indispensable à l'arbre de pages CMS (liste positive : XML vide = AUCUNE page).
+            // NB: l'accès super-admin (usr_admin=1) est géré par
+            // MelisCoreRightsService::isCurrentUserAdmin(). Les vrais usr_rights de l'admin sont
+            // renvoyés : ils contiennent <meliscms_pages><id>-1</id>, indispensable à l'arbre de
+            // pages CMS (liste positive : XML vide = AUCUNE page).
 
             // Garde-fou : certains usr_rights (données importées / ancien chemin) contiennent des
             // séquences d'échappement LITTÉRALES "\n"/"\t" au lieu de vrais espaces. Elles sont
@@ -126,19 +126,15 @@ class MelisCoreAuthService
 
     /**
      * Bcrypt hash of a random string, same algorithm and cost as encryptPassword()
-     * produces today (PASSWORD_DEFAULT = bcrypt cost 12 since PHP 8.4). It never
-     * matches anything: its only purpose is to be verified against when the login
-     * typed does not belong to any account, so that an unknown login costs the
-     * same bcrypt time as a wrong password on a current account.
+     * produces today (PASSWORD_DEFAULT = bcrypt cost 12 since PHP 8.4). Used by
+     * verifyDummyPassword(); it never matches anything.
      * Regenerate if the default cost changes: password_hash(random, PASSWORD_DEFAULT).
      */
     const DUMMY_PASSWORD_HASH = '$2y$12$RmYP9.M5FZgJ4zqFyivu8e.kUjVK0cFnHYyROGVj9vhnZqGjajboy';
 
     /**
-     * Burn the same bcrypt time as isPasswordCorrect() without any account.
-     *
-     * Called on the "unknown login" path of the login so that the response
-     * time no longer reveals whether the login exists (audit item 18.0).
+     * Runs the same bcrypt verification as isPasswordCorrect() without any account.
+     * Called on the "unknown login" path of the login.
      *
      * @param string $providedPassword
      */

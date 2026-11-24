@@ -176,7 +176,7 @@ class MelisReactApiUserProfileController extends MelisAbstractActionController
 
             $db->query('UPDATE melis_core_user SET ' . implode(', ', $sets) . ' WHERE usr_id = ?', $params);
             if ($newPassHash !== null) {
-                // Password history (audit item 16.0)
+                // Password history
                 $this->getServiceManager()->get('MelisPasswordPolicyService')->recordHistory($userId, $newPassHash);
             }
 
@@ -229,7 +229,7 @@ class MelisReactApiUserProfileController extends MelisAbstractActionController
         if ($password !== $confirm) {
             return 'tr_meliscore_tool_user_usr_password_not_match';
         }
-        // Whole server-side policy (complexity, blocklist, history) — audit item 16.0.
+        // Whole server-side policy (complexity, blocklist, history).
         // Returns translated messages (not tr_ keys): the React page shows them as-is.
         $login  = '';
         try {

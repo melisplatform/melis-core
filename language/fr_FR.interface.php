@@ -974,7 +974,7 @@ return [
     'tr_melis_core_announcement_plugin_tomorrow' => 'Demain',
     'tr_meliscore_toolstree_section_others' => 'Autres',
     'tr_meliscore_toolstree_section_custom' => 'Personnalisé / Projets',
-    // Piste d'audit de sécurité (DEKRA item 21.0)
+    // Piste d'audit de sécurité
     'tr_meliscore_logs_tool_log_ip' => 'Adresse IP',
     'tr_meliscore_logs_tool_log_anonymous' => 'Anonyme',
     'tr_meliscore_security_log_login_ok' => 'Connexion',

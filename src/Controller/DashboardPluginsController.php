@@ -237,7 +237,7 @@ class DashboardPluginsController extends MelisAbstractActionController
         }
         catch (\Throwable $e) // \Throwable : une méthode inexistante est une \Error en PHP 8, pas une \Exception
         {
-            // Audit 13.0: never echo an exception message into the page.
+            // Never echo an exception message into the page.
             echo \MelisCore\Support\MelisErrorReference::message($e, 'DashboardPlugins/' . $plugin . '::' . $function);
         }
     }
@@ -333,7 +333,7 @@ class DashboardPluginsController extends MelisAbstractActionController
             $this->getEventManager()->trigger('meliscore_save_dashboard_plugin_end', $this, $result);
             
         }catch (\Exception $e){
-            // Audit 13.0: generic message + correlation id, detail in the PHP log.
+            // Generic message + correlation id, detail in the PHP log.
             $result = array(
                 'success' => $success,
                 'message' => \MelisCore\Support\MelisErrorReference::message($e, 'DashboardPlugins::savePlugins')

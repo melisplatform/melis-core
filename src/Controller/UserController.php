@@ -95,9 +95,8 @@ class UserController extends MelisAbstractActionController
         $appConfigForm = $melisMelisCoreConfig->getItem($pathAppConfigForm);
         $translator = $this->getServiceManager()->get('translator');
         
-        // The answer never depends on whether the account exists, otherwise this public form
-        // tells an attacker which login/email pairs are valid (account enumeration). Same
-        // message, same structure, whether an email was sent or not.
+        // The answer never depends on whether the account exists: same message, same
+        // structure, whether an email was sent or not.
         $message = $translator->translate('tr_meliscore_email_lost_password_request_generic');
 
         if($this->getRequest()->isPost())
@@ -155,7 +154,7 @@ class UserController extends MelisAbstractActionController
      */
     /**
      * Password validator carrying the whole server-side policy (complexity, blocklist,
-     * history) for the account behind $login. Audit item 16.0.
+     * history) for the account behind $login.
      */
     private function passwordValidatorFor($login)
     {

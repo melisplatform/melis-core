@@ -229,9 +229,8 @@ class UserProfileController extends MelisAbstractActionController
                     {
                         // process image, convert image content into mysql BLOB || image validation needed (file size & file type)
                         $imageFile = $this->params()->fromFiles('usr_image');
-                        // Sécurité : nom de fichier fourni par le client (endpoint self-service, tout
-                        // utilisateur authentifié) → basename() une fois, réutilisé partout, pour
-                        // empêcher une traversée de répertoire (écriture/lecture/suppression).
+                        // Nom de fichier réduit par basename(), réutilisé pour l'écriture, la
+                        // relecture et la suppression.
                         $safeImgName = basename((string) ($imageFile['name'] ?? ''));
                         $tempImg = !empty($imageFile['tmp_name']) ? $imgService->createThumbnail($dirName,$safeImgName,$imageFile['tmp_name']) : null;
                         $imageContent = !empty($imageFile['tmp_name']) ? file_get_contents($dirName.'tmb_'.$safeImgName) : $userImage;
@@ -258,7 +257,7 @@ class UserProfileController extends MelisAbstractActionController
                             //save the user data
                             $res = $userTable->save($data, $this->getCurrentUserId());
                             if ($res && !empty($newPass)) {
-                                // Password history (audit item 16.0)
+                                // Password history
                                 $this->getServiceManager()->get('MelisPasswordPolicyService')->recordHistory((int) $this->getCurrentUserId(), $newPass);
                             }
                             

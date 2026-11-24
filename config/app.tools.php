@@ -2378,7 +2378,7 @@ return [
                                 'css' => ['width' => '15%'],
                                 'sortable' => false,
                             ],
-                            // Client IP of the event (security audit, DEKRA item 21.0).
+                            // Client IP of the event.
                             'log_ip' => [
                                 'text' => 'tr_meliscore_logs_tool_log_ip',
                                 'css' => ['width' => '10%'],

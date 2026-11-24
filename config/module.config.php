@@ -8,7 +8,7 @@
  */
 return [
     /**
-     * Console command that applies the audit log retention period (DEKRA item 21.0).
+     * Console command that applies the audit log retention period.
      * Nothing schedules it: see the command's documentation.
      */
     'laminas-cli' => [
@@ -406,7 +406,7 @@ return [
             'MelisCoreEmailSendingService'          => \MelisCore\Service\MelisCoreEmailSendingService::class,
             'ModulesService'                        => \MelisCore\Service\MelisCoreModulesService::class,
             'MelisCoreLogService'                   => \MelisCore\Service\MelisCoreLogService::class,
-            // Security audit trail (DEKRA item 21.0). Shared by the legacy back-office and
+            // Security audit trail. Shared by the legacy back-office and
             // the React API, so an action is logged the same way whichever one performed it.
             'MelisCoreSecurityAudit'                => \MelisCore\Service\MelisCoreSecurityAuditService::class,
             'MelisCoreSecurityLogWriter'            => \MelisCore\Service\MelisCoreSecurityLogWriterService::class,
