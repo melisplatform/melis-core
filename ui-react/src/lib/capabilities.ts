@@ -43,7 +43,7 @@ export function useCan(toolKey: string, cap: string): boolean {
 
 /**
  * Hook réactif : l'utilisateur courant est-il administrateur ? `loaded` distingue « non-admin »
- * de « /me pas encore chargé » (dans ce cas on laisse faire : le serveur est le vrai mur, H1).
+ * de « /me pas encore chargé » (dans ce cas on laisse faire : le contrôle est fait côté serveur).
  */
 export function useIsAdmin(): { isAdmin: boolean; loaded: boolean } {
   const s = useSyncExternalStore(subscribe, snapshot)

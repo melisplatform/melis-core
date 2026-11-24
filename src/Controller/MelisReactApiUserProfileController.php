@@ -89,7 +89,7 @@ class MelisReactApiUserProfileController extends MelisAbstractActionController
 
     public function saveAction(): HttpResponse
     {
-        // SECURITY (audit H2) : mutation → POST exigé (les méthodes « sûres » échappent au garde CSRF).
+        // Mutation : POST exigé.
         if (!$this->getRequest()->isPost()) {
             return $this->jsonResponse(['success' => false, 'error' => 'POST required'], 405);
         }
@@ -134,9 +134,7 @@ class MelisReactApiUserProfileController extends MelisAbstractActionController
             $oldLangId = (int) ($curRows[0]['usr_lang_id'] ?? 0);
 
             /**
-             * SECURITY (audit M3, ASVS 2.1.5) : changer le mot de passe ou l'EMAIL du compte
-             * exige la preuve de possession du secret COURANT — sinon une session volée (XSS,
-             * poste partagé) devient une prise de compte permanente (l'email capte les resets).
+             * Changer le mot de passe ou l'email du compte exige le mot de passe actuel.
              */
             $emailChanged = strcasecmp((string) ($curRows[0]['usr_email'] ?? ''), $email) !== 0;
             if ($newPassHash !== null || $emailChanged) {

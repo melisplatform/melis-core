@@ -70,8 +70,7 @@ var MelisCoreDashboardBubbleUpdatesPlugin = {
 			// plugin back content/list
 			$.each(response.data, function(key, value) {
 				if (value.status === -1) {
-					// SECURITY: données issues du flux marketplace distant — échappées
-					// avant interpolation HTML (zéro confiance dans un flux externe).
+					// Données du flux marketplace : échappées avant interpolation HTML.
 					var esc = melisCore.escapeHtml;
 					var update =
 						'<tr class="dashboard-bubble-update-details" data-packageid="' +

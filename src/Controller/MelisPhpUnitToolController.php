@@ -201,10 +201,7 @@ class MelisPhpUnitToolController extends MelisAbstractActionController
         $response = $this->koMessage('No tests found!');
 
         /**
-         * SECURITY (audit M5) : ce contrôleur n'a aucune clé d'outil (il passe le gate
-         * d'autorisation global en UNMAPPED) et cette action lance un shell_exec(phpunit)
-         * + des chmod — exécution de code de test à la demande. Réservée aux administrateurs,
-         * comme tout outil de diagnostic.
+         * Action réservée aux administrateurs, comme tout outil de diagnostic.
          */
         $identity = $this->getServiceManager()->get('MelisCoreAuth')->getIdentity();
         if (empty($identity->usr_admin)) {

@@ -1,5 +1,5 @@
 /**
- * Droits « API / microservices » (section core `<meliscore_microservice>`, audit C4).
+ * Droits « API / microservices » (section core `<meliscore_microservice>`).
  *
  * Le catalogue est AUTORITATIF et groupé par module, servi par
  *   GET /melis/react-api/rights/microservices
@@ -9,7 +9,7 @@
  * Modèle XML : ALLOW-LIST, default-DENY — seuls les services explicitement activés sont listés :
  *   <meliscore_microservice><id>MelisCms/MelisCmsSiteService</id></meliscore_microservice>
  * Section absente = AUCUN service accessible (même sémantique que la allow-list d'outils
- * `meliscore_leftmenu` ; usr_admin=1 bypasse côté serveur). Un seul droit (activer/désactiver),
+ * `meliscore_leftmenu` ; usr_admin=1 a accès à tout). Un seul droit (activer/désactiver),
  * pas de capacités. Édition React uniquement (onglet API du formulaire user) : le legacy
  * transporte la section sans la lire (préservée à son save par
  * MelisReactApiCapabilityPreserveUserListener).

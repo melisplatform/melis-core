@@ -64,9 +64,8 @@ var MelisCoreDashboardBubbleNewsMelisPlugin = {
             });
 
             $.each(response.data, function (key, value) {
-                // SECURITY: contenu issu du flux distant melistechnology.com — zéro
-                // confiance : tout champ interpolé dans ce HTML est échappé. Le scheme
-                // de link/img reste sûr par construction (domaine https codé en dur).
+                // Champs interpolés dans ce HTML : échappés. link/img sont construits
+                // sur un domaine https codé en dur.
                 var esc = melisCore.escapeHtml;
                 var description = String(value.cnews_paragraph1 || '').replace(/<([^ >]+)[^>]*>.*?<\/\1>|<[^\/]+\/>/ig, ""),
                     newsPageId  = '91',

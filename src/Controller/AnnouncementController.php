@@ -155,8 +155,7 @@ class AnnouncementController extends MelisAbstractActionController
 
                 $tableData[$key]['mca_status'] = $status;
                 $tableData[$key]['mca_date'] = $this->getTool()->dateFormatLocale($val['mca_date']);
-                // SECURITY: la DataTable rend les cellules en HTML — aperçus en texte
-                // pur (strip AVANT la troncature pour ne jamais couper une balise).
+                // Aperçus en texte pur, échappés (strip avant la troncature pour ne jamais couper une balise).
                 $tableData[$key]['mca_text'] = htmlspecialchars(mb_strimwidth(trim(strip_tags($val['mca_text'])), 0, 50, ' ....'), ENT_QUOTES, 'UTF-8');
                 $tableData[$key]['mca_title'] = htmlspecialchars(mb_strimwidth(trim(strip_tags($val['mca_title'])), 0, 50, ' ....'), ENT_QUOTES, 'UTF-8');
             }
@@ -252,8 +251,7 @@ class AnnouncementController extends MelisAbstractActionController
             if($form->isValid()){
                 $service = $this->getServiceManager()->get('MelisCoreAnnouncementService');
                 $data = $form->getData();
-                // SECURITY: titre = texte brut (jamais de HTML) ; texte = HTML TinyMCE
-                // rendu tel quel sur le dashboard de tous les utilisateurs → allowlist.
+                // Titre = texte brut ; texte = HTML TinyMCE filtré par allowlist.
                 $data['mca_title'] = trim(strip_tags((string) $data['mca_title']));
                 $data['mca_text'] = $this->getServiceManager()->get('MelisCoreHtmlSanitizer')->sanitize($data['mca_text']);
                 $announcementId = $data['mca_id'];

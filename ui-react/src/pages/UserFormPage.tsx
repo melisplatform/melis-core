@@ -151,7 +151,7 @@ function ConnectionsTab({ userId }: { userId: number }) {
 
 function MicroserviceTab({ userId, rights, onRightsChange, panelResetKey }: {
   userId: number
-  /** XML usr_rights du formulaire — la section <meliscore_microservice> s'édite ici (audit C4). */
+  /** XML usr_rights du formulaire — la section <meliscore_microservice> s'édite ici. */
   rights: string
   /** Réécrit form.rights ; la sauvegarde passe par le bouton Enregistrer global, comme les droits. */
   onRightsChange: (xml: string) => void
@@ -306,7 +306,7 @@ function MicroserviceTab({ userId, rights, onRightsChange, panelResetKey }: {
         </div>
       )}
 
-      {/* Droits « API / microservices » (audit C4) : accès par service pour la clé de ce compte.
+      {/* Droits « API / microservices » : accès par service pour la clé de ce compte.
           Écrits dans la section <meliscore_microservice> de usr_rights — sauvegardés par le bouton
           Enregistrer global, comme l'onglet Droits. */}
       {msCatalog.length > 0 && (
@@ -440,9 +440,8 @@ export default function UserFormPage() {
   // Incrémenté à chaque OUVERTURE de l'onglet Microservice : remonte le panel de droits API
   // (accordéons refermés) sans toucher au reste de l'onglet (clé API, etc.).
   const [msTabVisits, setMsTabVisits] = useState(0)
-  // SECURITY (audit H1) : seuls les administrateurs accordent/retirent le statut admin — la
-  // checkbox affiche une modale d'avertissement au clic pour les autres (le serveur refuse
-  // de toute façon : la modale n'est que l'UX du refus).
+  // Seuls les administrateurs accordent/retirent le statut admin : pour les autres, la
+  // checkbox affiche une modale d'avertissement au clic (contrôle fait côté serveur).
   const { isAdmin: meIsAdmin, loaded: meLoaded } = useIsAdmin()
   const [adminGuardOpen, setAdminGuardOpen] = useState(false)
 
@@ -796,7 +795,7 @@ export default function UserFormPage() {
         </div>
       )}
 
-      {/* Modale d'avertissement : statut admin réservé aux administrateurs (audit H1). */}
+      {/* Modale d'avertissement : statut admin réservé aux administrateurs. */}
       {adminGuardOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
           <div className="w-full max-w-sm rounded-xl border border-border bg-card p-6 shadow-xl">

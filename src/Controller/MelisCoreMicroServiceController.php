@@ -35,9 +35,7 @@ class MelisCoreMicroServiceController extends MelisAbstractActionController
         $errors = [];
         $hasError = false;
         $apiKey = $this->params()->fromRoute('api_key');
-        // SECURITY (audit H8) : la clé peut désormais arriver en header X-Melis-Api-Key
-        // (une URL part dans les access logs / proxys / Referer). Le segment d'URL reste
-        // supporté — strictement additif, aucune intégration existante ne casse.
+        // La clé est acceptée en header X-Melis-Api-Key ou en segment d'URL.
         if (empty($apiKey)) {
             $headerKey = $this->getRequest()->getHeader('X-Melis-Api-Key');
             if ($headerKey) {
@@ -66,19 +64,17 @@ class MelisCoreMicroServiceController extends MelisAbstractActionController
 
             /**
              * check whether user's accessibility is still "active" or not
-             * SECURITY (audit H8) : la clé meurt avec son propriétaire — compte supprimé
-             * (jointure LEFT sans correspondance : usr_id NULL) ou désactivé ⇒ refus.
-             * L'offboarding d'un utilisateur coupe donc aussi son accès machine.
+             * La clé n'est valide que si son propriétaire existe et est actif (compte
+             * supprimé — jointure LEFT sans correspondance : usr_id NULL — ou désactivé ⇒ refus).
              */
             $isUserCanExec = (bool)$userApiData->msoa_status
                 && !empty($userApiData->usr_id)
                 && (int) $userApiData->usr_status === 1;
 
             /**
-             * SECURITY (audit C4) : la clé ne suffit pas — le service demandé doit être
-             * explicitement activé pour le PORTEUR de la clé (section <meliscore_microservice>
-             * de ses droits, éditée dans le BO React ; allow-list, default-DENY). Admin :
-             * bypass, comme partout ailleurs dans la plateforme.
+             * Le service demandé doit être explicitement activé pour le porteur de la clé
+             * (section <meliscore_microservice> de ses droits, éditée dans le BO React ;
+             * allow-list). Les administrateurs ont accès à tous les services.
              */
             $serviceAccessDenied = false;
             if ($isUserCanExec
@@ -88,10 +84,8 @@ class MelisCoreMicroServiceController extends MelisAbstractActionController
             }
 
             /**
-             * SECURITY (audit H8) : trace applicative de chaque appel API — la table
-             * melis_core_microservice_logs existait depuis l'installation mais n'était
-             * jamais alimentée (une clé volée était indétectable). La clé est EXPURGÉE
-             * de l'URL journalisée ; le log ne fait jamais échouer l'appel.
+             * Journalisation de chaque appel API dans melis_core_microservice_logs.
+             * La clé est masquée dans l'URL journalisée ; le log ne fait jamais échouer l'appel.
              */
             try {
                 $logDb = $this->getServiceManager()->get('Laminas\Db\Adapter\AdapterInterface');
@@ -408,8 +402,7 @@ class MelisCoreMicroServiceController extends MelisAbstractActionController
                 }
 
             }else{
-                // Service refusé au porteur ≠ clé inactive : le message générique « no access »
-                // (clé déjà traduite) ne confirme pas à un tiers que la clé serait valide par ailleurs.
+                // Service refusé au porteur : message générique « no access » (clé déjà traduite).
                 $message = $serviceAccessDenied
                     ? 'tr_meliscore_microservice_api_key_no_access'
                     : 'tr_meliscore_microservice_api_key_inactive';
@@ -439,7 +432,7 @@ class MelisCoreMicroServiceController extends MelisAbstractActionController
     }
 
     /**
-     * SECURITY (audit C4) : le service `Module/Service` est-il autorisé pour le porteur de la
+     * Le service `Module/Service` est-il autorisé pour le porteur de la
      * clé API ? Droits effectifs = usr_rights du porteur, sinon ceux de son rôle (urole_rights) ;
      * usr_admin=1 court-circuite, comme MelisCoreRightsService::canAccess. Allow-list,
      * default-DENY : cf. MelisCoreMicroserviceRightsService.
@@ -534,8 +527,7 @@ class MelisCoreMicroServiceController extends MelisAbstractActionController
         $data = [];
         $request = $this->getRequest();
 
-        /** SECURITY (audit H8) : lire la clé API d'un utilisateur = outil Utilisateurs —
-         *  droit exigé dans l'action même (défense en profondeur sous le gate global). */
+        /** Lire la clé API d'un utilisateur = outil Utilisateurs — droit exigé. */
         if (!$this->hasAccess(self::MELIS_KEY)) {
             return new JsonModel(['success' => 0, 'response' => []]);
         }
@@ -583,7 +575,7 @@ class MelisCoreMicroServiceController extends MelisAbstractActionController
         $data    = [];
         $request = $this->getRequest();
 
-        /** SECURITY (audit H8) : générer une clé API = outil Utilisateurs — droit exigé. */
+        /** Générer une clé API = outil Utilisateurs — droit exigé. */
         if (!$this->hasAccess(self::MELIS_KEY)) {
             return new JsonModel(['success' => 0, 'response' => []]);
         }
@@ -635,7 +627,7 @@ class MelisCoreMicroServiceController extends MelisAbstractActionController
         $data = [];
         $request = $this->getRequest();
 
-        /** SECURITY (audit H8) : même droit que les autres actions de gestion de clés. */
+        /** Même droit que les autres actions de gestion de clés. */
         if (!$this->hasAccess(self::MELIS_KEY)) {
             return new JsonModel(['success' => 0, 'response' => []]);
         }
@@ -663,7 +655,7 @@ class MelisCoreMicroServiceController extends MelisAbstractActionController
         $data    = [];
         $request = $this->getRequest();
 
-        /** SECURITY (audit H8) : activer/désactiver une clé API = outil Utilisateurs — droit exigé. */
+        /** Activer/désactiver une clé API = outil Utilisateurs — droit exigé. */
         if (!$this->hasAccess(self::MELIS_KEY)) {
             return new JsonModel(['success' => 0, 'response' => []]);
         }
@@ -693,11 +685,9 @@ class MelisCoreMicroServiceController extends MelisAbstractActionController
     private function generateCode($length = 16)
     {
         /**
-         * SECURITY (audit H8) : random_bytes (CSPRNG) remplace rand() — prédictible, et la
-         * collation *_ci réduisait encore l'espace effectif. Format aligné sur le chemin
-         * React : 32 hex = 128 bits (VARCHAR(45) ok ; la casse n'importe plus en hex).
-         * $length (historique) est ignoré : un appelant ne doit pas pouvoir affaiblir la clé.
-         * Corrige aussi le `return` manquant de la récursion sur collision (clé NULL possible).
+         * Clé générée par random_bytes (CSPRNG). Format aligné sur le chemin React :
+         * 32 hex = 128 bits (VARCHAR(45) ok). $length (historique) est ignoré.
+         * Nouvelle génération en cas de collision.
          */
         do {
             $randomString = bin2hex(random_bytes(16));
@@ -716,7 +706,7 @@ class MelisCoreMicroServiceController extends MelisAbstractActionController
         $view         = new ViewModel();
         $translator   = $this->getServiceManager()->get('translator');
         $apiKey       = trim($this->params()->fromRoute('api_key', ''));
-        // SECURITY (audit H8) : clé acceptée aussi en header X-Melis-Api-Key (additive).
+        // Clé acceptée aussi en header X-Melis-Api-Key.
         if ($apiKey === '') {
             $headerKey = $this->getRequest()->getHeader('X-Melis-Api-Key');
             if ($headerKey) {
@@ -734,8 +724,7 @@ class MelisCoreMicroServiceController extends MelisAbstractActionController
 
         if($userApiData) {
             
-            // SECURITY (audit H8) : même règle que runAction — clé active ET propriétaire
-            // existant et actif (la clé meurt avec son compte).
+            // Même règle que runAction — clé active ET propriétaire existant et actif.
             $apiStatus = $userApiData->msoa_status
                 && !empty($userApiData->usr_id)
                 && (int) $userApiData->usr_status === 1;
@@ -757,7 +746,7 @@ class MelisCoreMicroServiceController extends MelisAbstractActionController
                     unset($microservice['conf']);
                 }
 
-                // SECURITY (audit C4) : le catalogue d'une clé restreinte n'affiche pas les
+                // Le catalogue d'une clé restreinte n'affiche pas les
                 // services refusés à son porteur (même règle que runAction).
                 foreach ($microservice as $msModule => $msServices) {
                     if (!is_array($msServices)) {

@@ -96,7 +96,7 @@ class MelisReactApiGdprController extends MelisAbstractActionController
 
     public function extractAction(): HttpResponse
     {
-        // SECURITY (audit H2) : mutation → POST exigé (les méthodes « sûres » échappent au garde CSRF).
+        // Mutation : POST exigé.
         if (!$this->getRequest()->isPost()) {
             return $this->jsonResponse(['success' => false, 'error' => 'POST required'], 405);
         }
@@ -128,7 +128,7 @@ class MelisReactApiGdprController extends MelisAbstractActionController
 
     public function deleteAction(): HttpResponse
     {
-        // SECURITY (audit H2) : mutation → POST exigé (les méthodes « sûres » échappent au garde CSRF).
+        // Mutation : POST exigé.
         if (!$this->getRequest()->isPost()) {
             return $this->jsonResponse(['success' => false, 'error' => 'POST required'], 405);
         }
@@ -197,7 +197,7 @@ class MelisReactApiGdprController extends MelisAbstractActionController
 
     public function smtpSaveAction(): HttpResponse
     {
-        // SECURITY (audit H2) : mutation → POST exigé (les méthodes « sûres » échappent au garde CSRF).
+        // Mutation : POST exigé.
         if (!$this->getRequest()->isPost()) {
             return $this->jsonResponse(['success' => false, 'error' => 'POST required'], 405);
         }
@@ -247,7 +247,7 @@ class MelisReactApiGdprController extends MelisAbstractActionController
 
     public function smtpDeleteAction(): HttpResponse
     {
-        // SECURITY (audit H2) : mutation → POST exigé (les méthodes « sûres » échappent au garde CSRF).
+        // Mutation : POST exigé.
         if (!$this->getRequest()->isPost()) {
             return $this->jsonResponse(['success' => false, 'error' => 'POST required'], 405);
         }
@@ -300,7 +300,7 @@ class MelisReactApiGdprController extends MelisAbstractActionController
 
     public function bannerSaveAction(): HttpResponse
     {
-        // SECURITY (audit H2) : mutation → POST exigé (les méthodes « sûres » échappent au garde CSRF).
+        // Mutation : POST exigé.
         if (!$this->getRequest()->isPost()) {
             return $this->jsonResponse(['success' => false, 'error' => 'POST required'], 405);
         }
@@ -394,7 +394,7 @@ class MelisReactApiGdprController extends MelisAbstractActionController
 
     public function adSaveAction(): HttpResponse
     {
-        // SECURITY (audit H2) : mutation → POST exigé (les méthodes « sûres » échappent au garde CSRF).
+        // Mutation : POST exigé.
         if (!$this->getRequest()->isPost()) {
             return $this->jsonResponse(['success' => false, 'error' => 'POST required'], 405);
         }
@@ -482,7 +482,7 @@ class MelisReactApiGdprController extends MelisAbstractActionController
 
     public function adDeleteAction(): HttpResponse
     {
-        // SECURITY (audit H2) : mutation → POST exigé (les méthodes « sûres » échappent au garde CSRF).
+        // Mutation : POST exigé.
         if (!$this->getRequest()->isPost()) {
             return $this->jsonResponse(['success' => false, 'error' => 'POST required'], 405);
         }
@@ -499,7 +499,7 @@ class MelisReactApiGdprController extends MelisAbstractActionController
 
     public function adRunAction(): HttpResponse
     {
-        // SECURITY (audit H2) : mutation → POST exigé (les méthodes « sûres » échappent au garde CSRF).
+        // Mutation : POST exigé.
         if (!$this->getRequest()->isPost()) {
             return $this->jsonResponse(['success' => false, 'error' => 'POST required'], 405);
         }

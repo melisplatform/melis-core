@@ -12,16 +12,14 @@ namespace MelisCore\Service;
 /**
  * Droits d'accès par microservice (section « API / microservices » de l'éditeur de droits React).
  *
- * SECURITY (audit C4) : historiquement, une clé API active ouvrait TOUTE la surface microservice
- * de la plateforme, sans aucun lien avec les droits de l'utilisateur porteur. Cette classe ajoute
- * un droit d'accès par service, stocké dans `usr_rights` :
+ * Un droit d'accès par service, stocké dans `usr_rights` :
  *
  *   <meliscore_microservice>
  *       <id>MelisCms/MelisCmsSiteService</id>
  *   </meliscore_microservice>
  *
  * - ALLOW-LIST, default-DENY : seuls les services explicitement activés sont accessibles ;
- *   section absente = aucun accès (sauf usr_admin=1, bypass géré par l'appelant). Même
+ *   section absente = aucun accès (sauf usr_admin=1, géré par l'appelant). Même
  *   sémantique que la allow-list d'outils `meliscore_leftmenu`.
  * - Clé de droit = `Module/Service` — le périmètre que déclarent les modules dans leur
  *   `app.microservice.php`. Les modules n'ont RIEN d'autre à déclarer : le catalogue est énuméré

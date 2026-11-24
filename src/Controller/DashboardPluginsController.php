@@ -108,8 +108,8 @@ class DashboardPluginsController extends MelisAbstractActionController
 
                         //use the plugin name if translated value is null
                         $name = !empty($name) ? $name : $pluginName;
-                        // SECURITY (audit H6) : ce JSON part dans le HTML du menu (et en cache) —
-                        // mêmes flags HEX que le container, transparents pour JSON.parse.
+                        // JSON inséré dans le HTML du menu (et en cache) : mêmes flags HEX que
+                        // le container, transparents pour JSON.parse.
                         $pluginRaw = json_encode($plugin, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT);
                         $plugins[$module][$name] = [
                             'module' => $module,
@@ -211,15 +211,9 @@ class DashboardPluginsController extends MelisAbstractActionController
             $tmp = $pluginManager->get($plugin);
 
             /**
-             * SECURITY (audit H6) : `plugin` et `function` viennent de l'URL. Sans garde,
-             * N'IMPORTE QUEL controller plugin enregistré (y compris les plugins Laminas :
-             * redirect, forward…) était instanciable et N'IMPORTE QUELLE méthode publique
-             * invocable. On exige : un plugin DASHBOARD (hérite de la classe de templating —
-             * vrai pour tous les plugins de tous les modules, y compris tiers), et une méthode
-             * publique déclarée par le plugin LUI-MÊME — jamais l'infrastructure héritée
-             * (render, sendViewResult, loadPostDataPluginConfig…) ni les méthodes magiques.
-             * Tous les appels existants (getMessages, getNews, getUpdates, sleep,
-             * getDashboardStats…) satisfont ces règles : zéro changement fonctionnel.
+             * `plugin` et `function` viennent de l'URL : seuls un plugin dashboard (hérite de
+             * la classe de templating) et une méthode publique déclarée par le plugin lui-même
+             * (ni méthodes héritées ni magiques) sont acceptés.
              */
             $templatingBase = \MelisCore\Controller\DashboardPlugins\MelisCoreDashboardTemplatingPlugin::class;
             if (!$tmp instanceof $templatingBase) {
@@ -272,8 +266,8 @@ class DashboardPluginsController extends MelisAbstractActionController
         $pluginName = $pluginConfigPost['plugin'] ?? (!empty($pluginConfigPost['forward']['plugin'])) ? $pluginConfigPost['forward']['plugin'] : null;
         $newPlugin = (isset($pluginConfigPost['datas']['is_new_plugin'])) ? true : false;
         $plugin = $pluginManager->get($pluginName);
-        // SECURITY (audit H6) : même règle que generateDahsboardPluginAction — `plugin` vient du
-        // POST, seul un vrai plugin dashboard (classe de templating) est instanciable ici.
+        // Même règle que generateDahsboardPluginAction : seul un plugin dashboard (classe de
+        // templating) est accepté.
         if (!$plugin instanceof \MelisCore\Controller\DashboardPlugins\MelisCoreDashboardTemplatingPlugin) {
             return new JsonModel(['html' => '', 'jsCallbacks' => [], 'jsDatas' => []]);
         }

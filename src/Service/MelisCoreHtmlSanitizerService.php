@@ -10,14 +10,12 @@
 namespace MelisCore\Service;
 
 /**
- * SECURITY: assainisseur de HTML riche saisi dans le back-office (annonces,
- * messages… tout contenu TinyMCE réaffiché chez un AUTRE utilisateur).
+ * Assainisseur de HTML riche saisi dans le back-office (annonces, messages…
+ * contenu TinyMCE).
  *
- * Doctrine ALLOWLIST, jamais blacklist : le HTML est reconstruit via DOM —
- * seuls les éléments et attributs listés survivent, tout le reste (balises
- * script/iframe…, attributs on*, URL javascript:) disparaît silencieusement.
- * À utiliser aux deux bouts : à la sauvegarde (données neuves propres) ET au
- * rendu (données historiques déjà stockées).
+ * Allowlist : le HTML est reconstruit via DOM — seuls les éléments et
+ * attributs listés sont conservés, le reste est retiré.
+ * À utiliser à la sauvegarde et au rendu (données déjà stockées).
  *
  * Volontairement sans état ni dépendance : `(new ...)->sanitize($html)` ou via
  * le service manager (`MelisCoreHtmlSanitizer`).
@@ -36,7 +34,7 @@ class MelisCoreHtmlSanitizerService
         'figure', 'figcaption',
     ];
 
-    /** Éléments supprimés AVEC leur contenu (déballer un <script> en texte serait pire). */
+    /** Éléments supprimés avec leur contenu. */
     private const DROPPED_TAGS = [
         'script', 'style', 'noscript', 'template', 'iframe', 'frame', 'frameset',
         'object', 'embed', 'applet', 'form', 'input', 'select', 'option', 'textarea',
@@ -149,7 +147,7 @@ class MelisCoreHtmlSanitizerService
             }
         }
 
-        // Une cible _blank sans rel laisse la page ouvrante pilotable (reverse tabnabbing).
+        // Un lien target="_blank" reçoit rel="noopener noreferrer".
         if ($tag === 'a' && strtolower($element->getAttribute('target')) === '_blank') {
             $element->setAttribute('rel', 'noopener noreferrer');
         }

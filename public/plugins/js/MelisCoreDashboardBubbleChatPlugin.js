@@ -67,8 +67,7 @@ var MelisCoreDashboardBubbleChatPlugin = {
             });
 
             $.each(response.data, function (key, value) {
-                // SECURITY: prénom/nom et message viennent d'autres utilisateurs BO —
-                // tout champ interpolé dans ce HTML est échappé (XSS stocké sinon).
+                // Champs interpolés dans ce HTML : échappés.
                 var esc = melisCore.escapeHtml;
                 var rawMsg = String(value.msgr_msg_cont_message || '');
                 var msgPreview = (rawMsg.length > 115) ? rawMsg.substring(0, 115) + '...' : rawMsg;

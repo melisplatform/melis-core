@@ -284,7 +284,7 @@ function buildRightsXml(
     L.push('</meliscore_tool_capabilities>')
   }
 
-  // Droits « API / microservices » (audit C4) — édités dans l'onglet API du formulaire user,
+  // Droits « API / microservices » — édités dans l'onglet API du formulaire user,
   // PRÉSERVÉS ici à l'identique (allow-list default-deny : section absente = aucun accès).
   if (allowedMs.size) {
     L.push('<meliscore_microservice>')
@@ -754,7 +754,7 @@ export function RightsTreeView({ rights, onChange }: RightsTreeViewProps) {
   const [deniedCaps, setDeniedCaps] = useState<DeniedCaps>({})
   const deniedCapsRef = useRef<DeniedCaps>({})
 
-  // Droits « API / microservices » (audit C4) : édités dans l'onglet API du formulaire user, PAS
+  // Droits « API / microservices » : édités dans l'onglet API du formulaire user, PAS
   // ici — mais la section doit survivre à chaque reconstruction du XML : simple PASSTHROUGH
   // (parse à l'arrivée, réécriture à l'identique dans buildRightsXml).
   const allowedMsRef = useRef<Set<string>>(new Set())

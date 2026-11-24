@@ -205,8 +205,7 @@ abstract class MelisCoreDashboardTemplatingPlugin extends AbstractPlugin
             $modelVars->pluginId = $this->pluginConfig['plugin_id'];
         }
         $modelVars->pluginConfig = $this->pluginConfig;
-        // SECURITY (audit H6) : ce JSON est échoué dans un <div> du container — HEX_TAG & co
-        // neutralisent tout `<`/`"` d'une valeur de config (le merge GET/POST la rend non fiable).
+        // JSON inséré dans un <div> du container, encodé avec les flags HEX.
         // Transparent pour les consommateurs : gridstack lit .text() puis JSON.parse (les \uXXXX
         // sont décodés par le parseur JSON).
         $modelVars->jsonPluginConfig = json_encode(

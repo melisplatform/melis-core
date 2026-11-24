@@ -461,8 +461,7 @@ class LanguageController extends MelisAbstractActionController
             for($ctr = 0; $ctr < count($tableData); $ctr++)
             {
                 // apply text limits
-                // SECURITY (audit H7) : cellules rendues en HTML par la DataTable — échappées
-                // (lang_label et lang_name sont saisis dans l'outil Langues).
+                // Cellules rendues en HTML par la DataTable : valeurs échappées.
                 foreach($tableData[$ctr] as $vKey => $vValue)
                 {
                     $tableData[$ctr][$vKey] = $melisTool->escapeHtml($melisTool->limitedText($vValue));

@@ -1,11 +1,11 @@
 /**
  * MicroservicesRightsPanel — the "API / microservices" rights section (core
- * `<meliscore_microservice>`, audit C4), shown in the user form's API tab.
+ * `<meliscore_microservice>`), shown in the user form's API tab.
  *
  * Services are GROUPED BY MODULE (collapsed by default), in module-merge order. ONE action only:
  * enable/disable per service — no capabilities. ALLOW-LIST with default-DENY: nothing is granted
  * until explicitly checked; a checked box writes an `<id>` entry to the rights XML, and an absent
- * section means no microservice access at all (admins bypass server-side).
+ * section means no microservice access at all (admins have full access).
  */
 
 import { useState } from 'react'

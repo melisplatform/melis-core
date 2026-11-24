@@ -33,7 +33,7 @@ export interface AccountSavePayload {
   /** Optionnel : renseigné seulement pour changer le mot de passe. */
   password?: string
   confirmPassword?: string
-  /** SECURITY (audit M3) : mot de passe ACTUEL — exigé par le serveur pour changer email ou mot de passe. */
+  /** Mot de passe actuel — requis pour changer l'email ou le mot de passe. */
   currentPassword?: string
   /** data URI (nouvel avatar), '' (efface) ou undefined (inchangé). */
   image?: string

@@ -340,14 +340,11 @@ class MelisAuthController extends MelisAbstractActionController
                         $dateAccountWasLocked = $melisCoreTableLog->getDateAccountWasLocked($logTypeId, $userData->usr_id);
 
                         /**
-                         * SECURITY (audit M2) : usr_status=0 sert AUSSI à la désactivation
-                         * manuelle (offboarding, compte compromis). Avant, n'importe quel vieux
-                         * log ACCOUNT_LOCKED réactivait le compte à la première tentative après
-                         * le timer — même désactivé par un admin, même avec un mauvais mot de
-                         * passe. On n'honore le verrou QUE s'il est l'événement le plus récent :
+                         * usr_status=0 sert aussi à la désactivation manuelle d'un compte.
+                         * Le verrou n'est pris en compte que s'il est l'événement le plus récent :
                          * postérieur au dernier déverrouillage ET au dernier enregistrement du
                          * compte par un gestionnaire (CORE_USER_UPDATE, journalisé par les deux
-                         * BO). Un compte désactivé par un admin ne se réactive plus tout seul.
+                         * BO). Un compte désactivé par un admin ne se réactive pas tout seul.
                          */
                         $lockIsCurrent = !empty($dateAccountWasLocked);
                         if ($lockIsCurrent) {
@@ -512,12 +509,9 @@ class MelisAuthController extends MelisAbstractActionController
                                                 $melisUserTable->save(['usr_status' => self::USER_INACTIVE], $userData->usr_id);
                                                 
                                                 /**
-                                                 * SECURITY (audit M4) : le verrouillage reste (usr_status=0 ci-dessus)
-                                                 * et l'événement ACCOUNT_LOCKED est journalisé/alerté — mais la RÉPONSE
-                                                 * HTTP est le même corps générique que tout échec de login. L'ancienne
-                                                 * notification différenciée était un oracle d'énumération (elle ne
-                                                 * sortait que pour un compte EXISTANT) et fuitait l'email de
-                                                 * l'administrateur (login_account_admin_email) à un anonyme.
+                                                 * Compte verrouillé (usr_status=0 ci-dessus), événement ACCOUNT_LOCKED
+                                                 * journalisé ; la réponse HTTP est le même corps générique que tout
+                                                 * échec de login.
                                                  */
                                                 $result = $this->buildFailedAuthResult();
                                                 $this->getEventManager()->trigger('meliscore_login_attempt_end', $this, array_merge($result, ['typeCode' => self::ACCOUNT_LOCKED, 'itemId' => $userData->usr_id]));

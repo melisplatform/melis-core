@@ -38,8 +38,8 @@ export function ToolTabBridgeProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     const onMsg = (e: MessageEvent) => {
-      // SECURITY (audit M9) : seules les iframes same-origin (pool d'outils legacy) parlent à
-      // ce pont — e.source est mémorisé comme destinataire de commandes, jamais cross-origin.
+      // Seules les iframes same-origin (pool d'outils legacy) parlent à ce pont ;
+      // e.source est mémorisé comme destinataire des commandes.
       if (e.origin !== window.location.origin) return
       const d = e.data as { __melisToolTabs?: boolean; melisKey?: string; tabs?: ToolTab[] } | null
       if (!d || !d.__melisToolTabs || !d.melisKey) return

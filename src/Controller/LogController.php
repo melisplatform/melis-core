@@ -404,8 +404,7 @@ class LogController extends MelisAbstractActionController
 
         $selectOptions = '<option value="-1" selected>' . $translator->translate('tr_meliscore_all') . '</option>';
         foreach ($logType as $val) {
-            // SECURITY (audit H7) : logt_code est auto-créé depuis le typeCode de n'importe quel
-            // événement (tous modules) — échappé comme le reste de l'outil.
+            // logt_code échappé comme le reste de l'outil.
             $selectOptions .= '<option value="' . (int) $val->logt_id . '">' . htmlspecialchars((string) $val->logt_code, ENT_QUOTES, 'UTF-8') . '</option>';
         }
 
@@ -577,7 +576,6 @@ class LogController extends MelisAbstractActionController
                     'log_id'         => $melisTool->escapeHtml($logId),
                     'log_title'      => $melisTool->escapeHtml($translator->translate($log->log_title)),
                     'log_message'    => $translatedMessage,
-                    // SECURITY (audit H7) : logt_code échappé — seule cellule qui ne l'était pas.
                     'log_type'       => sprintf($logTypeBtn, (int) $logType->logt_id, $melisTool->escapeHtml($logType->logt_code)),
                     'log_item_id'    => $melisTool->escapeHtml($log->log_item_id),
                     'log_user'       => $melisTool->escapeHtml($usersMap[$log->log_user_id] ?? ''),

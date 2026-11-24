@@ -133,9 +133,8 @@ class MelisReactApiPlatformSchemeController extends MelisAbstractActionControlle
                 'pscheme_favicon'             => (string) ($in['favicon'] ?? ''),
             ];
 
-            // SECURITY (audit H4) : ces URLs sont réinjectées dans le layout du BO — page de
-            // login (pré-auth) comprise, dont une en contexte CSS url() inéchappable en HTML.
-            // Allowlist de caractères d'URL (relatif, http(s), data:image) — refus sinon.
+            // Ces URLs sont réinjectées dans le layout du BO (page de login comprise, dont une
+            // en contexte CSS url()). Allowlist de caractères d'URL (relatif, http(s), data:image) — refus sinon.
             foreach (['pscheme_sidebar_header_logo', 'pscheme_login_logo', 'pscheme_login_background', 'pscheme_favicon'] as $urlField) {
                 $val = trim($data[$urlField]);
                 // Délimiteurs {} : la classe contient un # littéral (fragment d'URL).

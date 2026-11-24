@@ -668,9 +668,7 @@ class ToolUserController extends MelisAbstractActionController
 
                             $data['usr_id'] = null;
                             $data['usr_password'] = $melisCoreAuth->encryptPassword($data['usr_password']);
-                            // SECURITY (audit H1) : le statut administrateur ne s'accorde
-                            // qu'entre administrateurs — un POST forgé d'un non-admin ne peut
-                            // pas créer un compte admin (mass assignment).
+                            // Seul un administrateur peut accorder le statut administrateur.
                             $callerIsAdmin = !empty($melisCoreAuth->getIdentity()->usr_admin);
                             $data['usr_admin'] = ($callerIsAdmin && $data['usr_admin']) ? 1 : 0;
                             $data['usr_image'] = $imageContent;
@@ -772,9 +770,8 @@ class ToolUserController extends MelisAbstractActionController
                 $user = $userTable->getEntryById($id)->current();
                 $login = !empty($user->usr_login) ? $user->usr_login : null;
 
-                // SECURITY (audit H1) : un compte administrateur ne se supprime qu'entre admins
-                // — même règle que le chemin React (sinon le mass-assignment legacy restait
-                // une porte de contournement).
+                // Seul un administrateur peut supprimer un compte administrateur (même règle
+                // que le BO React).
                 $callerIdentity = $this->getServiceManager()->get('MelisCoreAuth')->getIdentity();
                 if (!empty($user->usr_admin) && empty($callerIdentity->usr_admin)) {
                     return new JsonModel([
@@ -790,7 +787,7 @@ class ToolUserController extends MelisAbstractActionController
                 $this->getServiceManager()->get('MelisCoreLostPassword')->deleteRequestsByLogin($login);
                 $this->getServiceManager()->get('MelisCoreCreatePassword')->deleteRequestsByLogin($login);
 
-                // SECURITY (audit H8) : la clé API microservice du compte est purgée avec lui.
+                // La clé API microservice du compte est supprimée avec lui.
                 $this->getServiceManager()->get('MelisMicroServiceAuthTable')->deleteByField('msoa_user_id', (int) $id);
 
                 $success = 1;
@@ -1043,9 +1040,8 @@ class ToolUserController extends MelisAbstractActionController
                     $tableData[$ctr]['DT_RowClass'] = "clsCurrent";
                 }
                 $tableData[$ctr]['usr_image'] = $image;
-                // SECURITY (audit H7) : la DataTable rend les cellules en HTML — les champs
-                // saisis par l'utilisateur (nom, login, email, tags) sont échappés ; le nom
-                // l'est AUSSI dans l'attribut title de l'image (injection d'attribut sinon).
+                // La DataTable rend les cellules en HTML : nom, login, email et tags sont
+                // échappés, le nom aussi dans l'attribut title de l'image.
                 $fullName = $tableData[$ctr]['usr_firstname'] . ' ' . $tableData[$ctr]['usr_lastname'];
                 $tableData[$ctr]['usr_firstname'] = $melisTool->escapeHtml($fullName);
                 $tableData[$ctr]['usr_login'] = $melisTool->escapeHtml($tableData[$ctr]['usr_login'] ?? '');
@@ -1451,9 +1447,8 @@ class ToolUserController extends MelisAbstractActionController
                             $data['usr_login'] = $userInfo['usr_login'];
                             $data['usr_password'] = $savedPassword;
                             // $data['usr_lang_id'] = $userInfo['usr_lang_id'];
-                            // SECURITY (audit H1) : le statut administrateur ne se change
-                            // qu'entre administrateurs — pour un appelant non-admin, le flag
-                            // du POST est ignoré et la valeur existante est conservée.
+                            // Seul un administrateur peut changer le statut administrateur :
+                            // pour un appelant non-admin, la valeur existante est conservée.
                             $callerIdentity = $this->getServiceManager()->get('MelisCoreAuth')->getIdentity();
                             $data['usr_admin'] = !empty($callerIdentity->usr_admin)
                                 ? (($data['usr_admin']) ? 1 : 0)

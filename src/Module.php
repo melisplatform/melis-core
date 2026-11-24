@@ -80,9 +80,8 @@ class Module
             $this->checkIdentity($e);
 
             /**
-             * SECURITY (audit M9) : anti-clickjacking sur tout l'arbre du back-office.
-             * Le pool d'iframes du BO React est same-origin → `frame-ancestors 'self'`
-             * n'affecte aucun flux légitime ; le site front n'est pas touché.
+             * Le back-office n'est affichable en iframe que depuis la même origine
+             * (le pool d'iframes du BO React est same-origin) ; le site front n'est pas touché.
              */
             $routeMatch = $e->getRouteMatch();
             if ($routeMatch

@@ -564,9 +564,7 @@ class MelisTinyMceController extends MelisAbstractActionController
     }
 
     /**
-     * SECURITY: extensions que le serveur pourrait exécuter (ou interpréter comme
-     * configuration) — refusées à l'upload quelle que soit leur position dans le
-     * nom (`shell.php.jpg` compris, cf. AddHandler Apache).
+     * Extensions refusées à l'upload, quelle que soit leur position dans le nom.
      */
     private const UPLOAD_FORBIDDEN_EXTENSIONS = [
         'php', 'php3', 'php4', 'php5', 'php7', 'php8', 'phtml', 'pht', 'phar', 'phps',
@@ -574,8 +572,7 @@ class MelisTinyMceController extends MelisAbstractActionController
     ];
 
     /**
-     * SECURITY: types MIME détectés sur le CONTENU réel (finfo), refusés même sous
-     * une extension anodine — un `shell.jpg` contenant `<?php` est détecté text/x-php.
+     * Types MIME refusés à l'upload, détectés sur le contenu réel du fichier (finfo).
      */
     private const UPLOAD_FORBIDDEN_MIMETYPES = [
         'text/x-php', 'application/x-php', 'application/x-httpd-php', 'application/x-httpd-php-source',
@@ -615,10 +612,9 @@ class MelisTinyMceController extends MelisAbstractActionController
         // File Input
         $fileInput = new \Laminas\InputFilter\FileInput('file');
         $fileInput->setRequired(true);
-        // SECURITY: les validateurs d'un FileInput s'exécutent AVANT la chaîne de
+        // Les validateurs d'un FileInput s'exécutent AVANT la chaîne de
         // filtres, donc sur le tmp_name d'origine — rien n'est renommé ni déplacé
-        // si l'un d'eux échoue. Deny-list volontaire (pas de whitelist) : on refuse
-        // l'exécutable, on laisse passer le reste.
+        // si l'un d'eux échoue.
         $fileInput->getValidatorChain()
             ->attachByName('FileExcludeExtension', [
                 'extension' => self::UPLOAD_FORBIDDEN_EXTENSIONS,
@@ -628,9 +624,8 @@ class MelisTinyMceController extends MelisAbstractActionController
                 'mimeType' => self::UPLOAD_FORBIDDEN_MIMETYPES,
             ])
             ->attach(new \Laminas\Validator\Callback(function ($value) {
-                // Double extension (shell.php.jpg) : FileExcludeExtension ne regarde
-                // que le dernier segment ; on refuse si N'IMPORTE QUEL segment après
-                // le premier point est une extension exécutable.
+                // Refus si un segment du nom après le premier point est une
+                // extension interdite.
                 $name = is_array($value) ? ($value['name'] ?? '') : (string) $value;
                 $segments = array_slice(explode('.', strtolower(basename($name))), 1);
                 foreach ($segments as $segment) {

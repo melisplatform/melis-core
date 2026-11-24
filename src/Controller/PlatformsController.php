@@ -246,9 +246,8 @@ class PlatformsController extends MelisAbstractActionController
             for($ctr = 0; $ctr < count($tableData); $ctr++)
             {
                 // apply text limits
-                // SECURITY (audit H7) : cellules rendues en HTML par la DataTable — échappées
-                // (les colonnes icônes, réécrites plus bas avec du HTML de confiance, écrasent
-                // la valeur échappée : pas d'impact).
+                // Cellules rendues en HTML par la DataTable : valeurs échappées (les colonnes
+                // icônes sont réécrites plus bas avec leur propre HTML).
                 foreach($tableData[$ctr] as $vKey => $vValue)
                 {
                     $tableData[$ctr][$vKey] = $melisTool->escapeHtml($melisTool->limitedText($vValue));

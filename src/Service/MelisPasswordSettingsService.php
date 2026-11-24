@@ -287,12 +287,9 @@ class MelisPasswordSettingsService extends MelisGeneralService
                     }
 
                     /**
-                     * SECURITY (audit M10) : app.login.php est un fichier PHP INCLUS AU
-                     * BOOTSTRAP (Module.php) — le rendre world-writable (0777, qui plus est
-                     * via sudo) offrait une persistance/élévation locale à tout process de la
-                     * machine. 0664 best-effort : si le fichier appartient à un autre
-                     * utilisateur et n'est pas inscriptible, toFile() échouera proprement dans
-                     * ce try/catch au lieu d'ouvrir un trou.
+                     * app.login.php est inclus au bootstrap (Module.php) : permissions 0664,
+                     * best-effort. Si le fichier n'est pas inscriptible, toFile() échoue
+                     * dans ce try/catch.
                      */
                     @chmod($file, 0664);
 

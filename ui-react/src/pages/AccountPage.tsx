@@ -102,7 +102,7 @@ export default function AccountPage() {
   const [langId, setLangId] = useState(0)
   const [password, setPassword] = useState('')
   const [confirm, setConfirm] = useState('')
-  // SECURITY (audit M3) : mot de passe ACTUEL — le serveur l'exige pour changer email/mot de passe.
+  // Mot de passe actuel — requis pour changer email/mot de passe.
   const [currentPassword, setCurrentPassword] = useState('')
   const [image, setImage] = useState<string | undefined>(undefined) // undefined = inchangé
   const [preview, setPreview] = useState<string | null>(null)
@@ -137,7 +137,7 @@ export default function AccountPage() {
     if (!mail || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(mail)) errs.email = t('account.err.email')
     if (!langId) errs.langId = t('account.err.lang')
     if (password && password !== confirm) errs.confirm = t('account.err.pass_match')
-    // SECURITY (audit M3) : email ou mot de passe modifié → mot de passe actuel requis.
+    // Email ou mot de passe modifié → mot de passe actuel requis.
     const emailChanged = profile ? mail.toLowerCase() !== profile.email.toLowerCase() : false
     if ((password || emailChanged) && !currentPassword) errs.currentPassword = t('account.err.current_password')
     return errs
@@ -295,7 +295,7 @@ export default function AccountPage() {
                         <Input type="email" value={email} onChange={(e) => { setEmail(e.target.value); setErrors((p) => ({ ...p, email: undefined })); setSaveErr(null) }}
                           className={cn(errors.email && 'border-destructive')} />
                       </Field>
-                      {/* SECURITY (audit M3) : requis par le serveur pour changer email/mot de passe. */}
+                      {/* Mot de passe actuel : requis pour changer email/mot de passe. */}
                       <Field label={t('account.current_password')} error={errors.currentPassword}>
                         <Input type="password" value={currentPassword}
                           onChange={(e) => { setCurrentPassword(e.target.value); setErrors((p) => ({ ...p, currentPassword: undefined })); setSaveErr(null) }}

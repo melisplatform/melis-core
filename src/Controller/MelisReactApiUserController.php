@@ -169,7 +169,7 @@ class MelisReactApiUserController extends MelisAbstractActionController
 
     public function saveAction(): HttpResponse
     {
-        // SECURITY (audit H2) : mutation → POST exigé (les méthodes « sûres » échappent au garde CSRF).
+        // Mutation : POST exigé.
         if (!$this->getRequest()->isPost()) {
             return $this->jsonResponse(['success' => false, 'error' => 'POST required'], 405);
         }
@@ -233,10 +233,8 @@ class MelisReactApiUserController extends MelisAbstractActionController
             $db   = $this->getServiceManager()->get('Laminas\Db\Adapter\AdapterInterface');
             $auth = $this->getServiceManager()->get('MelisCoreAuth');
 
-            // SECURITY (audit H1) : le statut administrateur ne s'accorde et ne se retire
-            // qu'entre administrateurs, et un compte administrateur n'est modifiable que par un
-            // admin (sinon un détenteur de l'outil Users changerait le mot de passe de l'admin
-            // ou se promouvrait lui-même → bypass total des droits).
+            // Le statut administrateur ne s'accorde et ne se retire qu'entre administrateurs,
+            // et un compte administrateur n'est modifiable que par un admin.
             $callerIsAdmin = !empty($auth->getIdentity()->usr_admin);
             if (!$callerIsAdmin) {
                 $targetIsAdmin = false;
@@ -401,7 +399,7 @@ class MelisReactApiUserController extends MelisAbstractActionController
 
     public function deleteAction(): HttpResponse
     {
-        // SECURITY (audit H2) : mutation atteignable en GET = CSRF sans token — POST ou DELETE exigé.
+        // Mutation : POST ou DELETE exigé.
         if (!in_array($this->getRequest()->getMethod(), ['POST', 'DELETE'], true)) {
             return $this->jsonResponse(['success' => false, 'error' => 'POST or DELETE required'], 405);
         }
@@ -431,7 +429,7 @@ class MelisReactApiUserController extends MelisAbstractActionController
             $rows  = iterator_to_array($db->query('SELECT usr_login, usr_admin FROM melis_core_user WHERE usr_id = ?', [$id]));
             $login = !empty($rows) ? ((array) $rows[0])['usr_login'] : null;
 
-            // SECURITY (audit H1) : un compte administrateur ne se supprime qu'entre admins.
+            // Un compte administrateur ne se supprime qu'entre admins.
             if (!empty($rows) && !empty(((array) $rows[0])['usr_admin']) && empty($identity->usr_admin)) {
                 return $this->jsonResponse(
                     ['success' => false, 'error' => 'Seul un administrateur peut supprimer un compte administrateur.'],
@@ -446,9 +444,7 @@ class MelisReactApiUserController extends MelisAbstractActionController
             $sm->get('MelisCoreLostPassword')->deleteRequestsByLogin($login);
             $sm->get('MelisCoreCreatePassword')->deleteRequestsByLogin($login);
 
-            // SECURITY (audit H8) : la clé API microservice du compte est purgée avec lui —
-            // une ligne msoa orpheline authentifiait encore (ceinture : runAction refuse
-            // désormais aussi les propriétaires inexistants).
+            // La clé API microservice du compte est supprimée avec lui.
             $db->query('DELETE FROM melis_core_microservice_auth WHERE msoa_user_id = ?', [$id]);
 
             return $this->jsonResponse(['success' => true, 'data' => null]);
@@ -469,7 +465,7 @@ class MelisReactApiUserController extends MelisAbstractActionController
      */
     public function exportAction(): HttpResponse
     {
-        // SECURITY (audit H2) : mutation → POST exigé (les méthodes « sûres » échappent au garde CSRF).
+        // Mutation : POST exigé.
         if (!$this->getRequest()->isPost()) {
             return $this->jsonResponse(['success' => false, 'error' => 'POST required'], 405);
         }
@@ -647,7 +643,7 @@ class MelisReactApiUserController extends MelisAbstractActionController
 
     public function microserviceSaveAction(): HttpResponse
     {
-        // SECURITY (audit H2) : mutation → POST exigé (les méthodes « sûres » échappent au garde CSRF).
+        // Mutation : POST exigé.
         if (!$this->getRequest()->isPost()) {
             return $this->jsonResponse(['success' => false, 'error' => 'POST required'], 405);
         }

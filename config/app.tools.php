@@ -1154,8 +1154,7 @@ return [
                                 ],
 
                                 [
-                                    // SECURITY (audit M3) : preuve de possession du secret courant,
-                                    // exigée côté serveur quand email ou mot de passe change.
+                                    // Mot de passe actuel, requis quand l'email ou le mot de passe change.
                                     'spec' => [
                                         'name' => 'usr_current_password',
                                         'type' => 'Password',

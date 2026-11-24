@@ -63,9 +63,8 @@ class MelisCoreDashboardAnnouncementPlugin extends MelisCoreDashboardTemplatingP
         $htmlSanitizer = $this->getServiceManager()->get('MelisCoreHtmlSanitizer');
         $_defaultProfile = '/MelisCore/images/profile/default_picture.jpg';
         foreach($announcements as $key => $val){
-            // SECURITY: mca_text est du HTML TinyMCE rendu tel quel chez TOUS les
-            // utilisateurs — assaini ici pour couvrir aussi les données historiques,
-            // en plus de l'assainissement à la sauvegarde.
+            // mca_text (HTML TinyMCE) est assaini au rendu, en plus de la sauvegarde,
+            // pour couvrir aussi les données historiques.
             $announcements[$key]['mca_text'] = $htmlSanitizer->sanitize($val['mca_text']);
             $announcements[$key]['date_str'] = $this->getDate($val['mca_date']);
             //get user info

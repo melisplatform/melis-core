@@ -1,6 +1,5 @@
 <?php
-// SECURITY (audit H6) : la config fusionne des données de requête (GET/POST) et le XML du
-// dashboard sauvé — AUCUNE valeur n'est fiable ici : tout attribut est échappé.
+// Tous les attributs sont échappés.
 $class = strtolower(explode('_', preg_replace('/(?<!^)([A-Z])/', '-\\1', $this->pluginConfig['plugin_id']))[0]); ?>
 <div class="grid-stack-item  grid-stack-animate <?= $this->escapeHtmlAttr($class) ?>"
      data-gs-id="<?php echo $this->escapeHtmlAttr($this->pluginConfig['plugin_id'])?>"

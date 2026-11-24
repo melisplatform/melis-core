@@ -43,7 +43,7 @@ class MelisReactApiCapabilityPreserveUserListener extends MelisGeneralListener i
                     $rows = iterator_to_array($db->query('SELECT usr_rights FROM melis_core_user WHERE usr_id = ?', [$userId]));
                     $currentRights = (string) ($rows[0]['usr_rights'] ?? '');
                     // Les DEUX sections React-only voyagent : capacités d'outils ET droits
-                    // microservices (section « API / microservices », audit C4) — même mécanique.
+                    // microservices (section « API / microservices ») — même mécanique.
                     $fragments = array_values(array_filter([
                         Capabilities::extractSection($currentRights),
                         \MelisCore\Service\MelisCoreMicroserviceRightsService::extractSection($currentRights),

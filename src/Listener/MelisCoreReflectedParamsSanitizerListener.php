@@ -14,21 +14,13 @@ use Laminas\EventManager\ListenerAggregateInterface;
 use Laminas\Mvc\MvcEvent;
 
 /**
- * SECURITY (audit H5) : normalisation des paramètres-identifiants du back-office.
+ * Normalisation des paramètres-identifiants du back-office.
  *
- * Des dizaines d'actions de rendu legacy échoent `melisKey` / `id` / `codename` / `configId`
- * BRUTS dans leurs templates de containers (attributs d'id de zone, ancres d'onglets…). Ces
- * actions sont atteignables en GET direct via la route générique `/melis/[:controller[/:action]]`
- * → XSS réfléchi par simple lien piégé envoyé à un utilisateur connecté.
- *
- * Plutôt que d'échapper ~100 échos dans ~50 templates (dont ceux des autres modules), on
- * neutralise À LA SOURCE : ces paramètres sont par sémantique des IDENTIFIANTS (clés de config
- * Melis, ids DOM, codenames d'emails) — jamais du HTML. Tout caractère hors [A-Za-z0-9_.-] est
- * retiré du RouteMatch ET de la query string, pour toutes les routes de l'arbre
- * `melis-backoffice` (même périmètre que checkIdentity ; le site front n'est pas touché).
- *
- * Un identifiant légitime passe inchangé ; un payload `"><img onerror=…>` ressort comme
- * `imgsrcxonerroralert1` — inerte dans tous les contextes (HTML, attribut, JS inline).
+ * `melisKey` / `id` / `codename` / `configId`… sont par sémantique des identifiants (clés de
+ * config Melis, ids DOM, codenames d'emails), jamais du HTML. Tout caractère hors
+ * [A-Za-z0-9_.-] est retiré du RouteMatch et de la query string, pour toutes les routes de
+ * l'arbre `melis-backoffice` (même périmètre que checkIdentity ; le site front n'est pas touché).
+ * Un identifiant valide passe inchangé.
  */
 class MelisCoreReflectedParamsSanitizerListener implements ListenerAggregateInterface
 {

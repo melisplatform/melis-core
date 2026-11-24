@@ -166,8 +166,6 @@ class UserProfileController extends MelisAbstractActionController
         {
             //process the data from form
             $postValues = $this->getRequest()->getPost()->toArray();
-            // SECURITY (audit M7) : le résultat de sanitizePost était immédiatement ÉCRASÉ par
-            // le POST brut (ligne supprimée) — la sanitisation ne servait à rien.
             $postValues = $melisTool->sanitizePost($postValues);
 
             //set the data to from from postValues
@@ -183,9 +181,8 @@ class UserProfileController extends MelisAbstractActionController
             $passValidator = $this->validatePassword($password, $confirmPass, $translator, $melisCoreAuth);
 
             /**
-             * SECURITY (audit M3, ASVS 2.1.5) : changer le mot de passe ou l'EMAIL exige le mot
-             * de passe ACTUEL (même règle que le BO React) — une session volée ne suffit plus à
-             * prendre le compte. Champ `usr_current_password` du formulaire de profil.
+             * Changer le mot de passe ou l'email exige le mot de passe actuel (même règle que
+             * le BO React). Champ `usr_current_password` du formulaire de profil.
              */
             $currentEmail   = (string) ($this->getCurrentUserInfo()[0]['usr_email'] ?? '');
             $postedEmail    = trim((string) $this->getRequest()->getPost('usr_email', ''));

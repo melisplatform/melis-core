@@ -310,10 +310,9 @@ return [
                         'type'      => 'Segment',
                         'options'   => [
                             'route' => 'dashboard-plugin[/:plugin][/:function]',
-                            // SECURITY (audit H6) : la clé était `constraint` (typo) → contraintes
-                            // IGNORÉES par Laminas. Corrigée en `constraints`, avec un motif qui
-                            // accepte la minuscule initiale des appels réels (getMessages, getNews…)
-                            // — l'ancien [A-Z]… aurait cassé toutes les bulles s'il avait agi.
+                            // Contraintes de route : `plugin`/`function` acceptent une lettre initiale
+                            // (minuscule ou majuscule, ex. getMessages, getNews…) suivie de
+                            // lettres, chiffres, `_` ou `-`.
                             'constraints' => [
                                 'plugin'    => '[a-zA-Z][a-zA-Z0-9_-]*',
                                 'function'  => '[a-zA-Z][a-zA-Z0-9_-]*',

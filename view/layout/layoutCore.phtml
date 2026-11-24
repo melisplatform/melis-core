@@ -4,11 +4,8 @@
     $loginBackground = $this->login_background;
     $favicon = '/favicon.ico';
 
-    // SECURITY (audit H4) : valeurs du Platform Scheme (stockées en DB, éditables depuis l'outil
-    // Scheme) injectées dans ce layout — y compris sur la page de LOGIN, pré-authentification.
-    // $loginBackground part dans un contexte CSS url() où l'échappement HTML ne protège pas :
-    // allowlist de caractères d'URL (chemins relatifs, http(s), data:image) — valeur hostile
-    // ignorée, on garde le défaut.
+    // URLs du Platform Scheme : allowlist de caractères d'URL (chemins relatifs, http(s),
+    // data:image) ; une valeur non conforme est ignorée et le défaut est conservé.
     $isSafeSchemeUrl = static function ($url) {
         // Délimiteurs {} : la classe contient un # littéral (fragment d'URL).
         return (bool) preg_match('{^[A-Za-z0-9/._:%#?&=~+;,\-]+$}', (string) $url);
