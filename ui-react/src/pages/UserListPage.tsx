@@ -311,8 +311,7 @@ function ExportModal({ cols, search, status, total, onClose }: {
         if (!res.nextCursor) break
         after = res.nextCursor
       }
-      // Trace de l'export côté serveur avant de générer le fichier (item DEKRA 21.0).
-      // `catch` volontaire : une trace manquante ne doit pas empêcher l'export lui-même.
+      // Trace de l'export côté serveur avant de générer le fichier.
       userApi.logExport(all.length, format, { search, status }).catch(() => {})
 
       const header = included.map(c => t(COL_LABEL[c.id]))

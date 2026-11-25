@@ -1,10 +1,10 @@
 <?php
 
 /**
- * Security audit configuration (DEKRA correction plan, item 21.0).
+ * Back-office security configuration.
  *
- * Everything is off by default: the audit trail is written to the database and nothing else
- * happens. An environment turns a feature on with an env var - no file to edit to deploy.
+ * The security audit trail is written to the database; the optional features below are
+ * configured per environment through env vars.
  *
  * Read with: $sm->get('MelisCoreConfig')->getItem('meliscore/datas/security')
  */
@@ -42,66 +42,42 @@ return [
                     'unknown_per_ip'     => (int) $env('MELIS_SECURITY_UNKNOWN_PER_IP', 5),
                     'file_deletes'       => (int) $env('MELIS_SECURITY_FILE_DELETES', 20),
 
-                    // Minimum delay between two identical alerts, so an attack in progress sends
-                    // one email instead of a thousand.
+                    // Minimum delay, in minutes, between two identical alerts.
                     'throttle_minutes'   => (int) $env('MELIS_SECURITY_THROTTLE_MINUTES', 60),
 
-                    // Behind a reverse proxy every request seems to come from the proxy, which
-                    // makes the per-IP rules useless. Listing the proxy here makes the real client
-                    // IP be read from X-Forwarded-For - a header anyone can forge, hence the list.
+                    // Reverse proxy IPs, comma separated. For requests coming from one of them, the
+                    // client IP is read from X-Forwarded-For.
                     'trusted_proxies'    => $env('MELIS_SECURITY_TRUSTED_PROXIES', ''),
 
                     // How long audit entries are kept, in days. 0 = forever. Applied by the
                     // console command melis:security:purge-logs, which has to be scheduled.
                     'log_retention_days' => (int) $env('MELIS_SECURITY_LOG_RETENTION_DAYS', 0),
 
-                    // Global back-office authorization gate (item 7.0). checkIdentity() only
-                    // authenticates; MelisCoreAuthorizationListener resolves the tool behind the
-                    // routed controller (its MELIS_KEY/TOOL_KEY constant) and asks canAccess()
-                    // BEFORE the controller runs.
-                    // 'report'  = nothing blocked, every decision written to the PHP log
-                    //             (grep MELIS_ACCESS_GATE). Inventory phase. DEFAULT.
-                    // 'enforce' = a denial becomes a real 403 before dispatch.
+                    // Back-office authorization gate. MelisCoreAuthorizationListener resolves the
+                    // tool behind the routed controller (its MELIS_KEY/TOOL_KEY constant) and
+                    // checks the user's rights before the controller runs.
+                    // 'enforce' | 'report'. Default: enforce.
                     'access_gate_mode'   => $env('MELIS_ACCESS_GATE_MODE', 'enforce'),
 
-                    // With mode=enforce only: also deny a route whose controller declares NO tool
-                    // key (deny by default). Turn on last, once the report log is clean.
+                    // Also deny a route whose controller declares no tool key. '0' | '1'.
+                    // Default: 0.
                     'access_gate_strict' => $env('MELIS_ACCESS_GATE_STRICT', '0'),
 
-                    // Shared secret for the GDPR auto-delete cron (item 7.0).
-                    // /melis/gdprautodelete/ is a PUBLIC route (a cron has no session) that DELETES
-                    // data. It now needs this token, as header X-Melis-Cron-Token or ?token=:
-                    //   curl -sS -H "X-Melis-Cron-Token: $MELIS_GDPR_CRON_TOKEN" \
-                    //        https://<host>/melis/gdprautodelete/
-                    // Empty (default) = no remote call accepted at all: a destructive endpoint
-                    // must fail closed. CLI, and a logged-in user with the GDPR tool right, always
-                    // pass. Generate one with: openssl rand -hex 32
+                    // Shared secret for the GDPR auto-delete cron, sent by the scheduler in the
+                    // X-Melis-Cron-Token header. Leave empty to disable remote calls (the CLI
+                    // command still works). Use a long random value, e.g. openssl rand -hex 32.
                     'gdpr_cron_token'    => $env('MELIS_GDPR_CRON_TOKEN', ''),
 
-                    // Global CSRF gate (item 10.0). MelisCoreCsrfListener checks, on every
-                    // state-changing back-office request (POST/PUT/PATCH/DELETE under /melis…),
-                    // the session token echoed back by the UI (header X-Melis-Csrf or field
-                    // melis_csrf) and the Origin/Referer host.
-                    // 'enforce' = a failure becomes a real 403 before dispatch. DEFAULT: a
-                    //             security control that ships disabled protects nobody - that is
-                    //             exactly how the SameSite=None line in public/.htaccess survived
-                    //             for years behind a "@todo uncomment for prod".
-                    // 'report'  = escape hatch: nothing blocked, every failure written to the PHP
-                    //             log (grep MELIS_CSRF). Pull it with MELIS_CSRF_MODE=report if a
-                    //             legitimate POST turns out not to carry the token yet, read the
-                    //             inventory, fix it, and put it back. No code change, no deploy.
+                    // CSRF protection. MelisCoreCsrfListener checks, on every state-changing
+                    // back-office request, the session token echoed back by the UI (header
+                    // X-Melis-Csrf or field melis_csrf) and the Origin/Referer host.
+                    // 'enforce' | 'report'. Default: enforce.
                     'csrf_mode'          => $env('MELIS_CSRF_MODE', 'enforce'),
 
-                    // JSON error-response scrubber (item 13.0). MelisCoreApiErrorSanitizerListener
-                    // replaces the body of a failing back-office JSON response (a 5xx, or any
-                    // payload carrying file/trace/line - the shape the React API controllers build
-                    // from a caught exception) with a generic message plus a correlation id, and
-                    // writes the original to the PHP log (grep MELIS_API_ERROR).
-                    // 'sanitize'    = DEFAULT. The exception message, the absolute paths and the
-                    //                 stack trace never reach the browser, on any environment.
-                    // 'passthrough' = developer machine only: the original body is returned as-is
-                    //                 (still logged). This is the very leak the listener closes -
-                    //                 never set it on a shared or public environment.
+                    // JSON error responses. MelisCoreApiErrorSanitizerListener replaces the body of
+                    // a failing back-office JSON response with a generic message plus a correlation
+                    // id, and writes the original to the PHP log.
+                    // 'sanitize' | 'passthrough' (local development only). Default: sanitize.
                     'api_error_mode'     => $env('MELIS_API_ERROR_MODE', 'sanitize'),
                 ],
             ],

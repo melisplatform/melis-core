@@ -392,7 +392,7 @@ export default function UserFormPage() {
   const [saved, setSaved]     = useState(false)
   const [activeTab, setActiveTab] = useState<Tab>('profil')
   // Connections and Microservice tabs each trigger a SENSITIVE_READ audit entry on the
-  // server (DEKRA item 21.0). They are mounted only once the user actually opens them
+  // server. They are mounted only once the user actually opens them
   // (then kept mounted, hidden by CSS, so their state survives tab switches) - otherwise
   // opening any user form would log two sensitive reads the user never made.
   const [visitedTabs, setVisitedTabs] = useState<Set<Tab>>(() => new Set(['profil']))

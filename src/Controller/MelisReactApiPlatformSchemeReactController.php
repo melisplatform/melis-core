@@ -39,8 +39,8 @@ class MelisReactApiPlatformSchemeReactController extends MelisAbstractActionCont
     ];
 
     // ─── GET /platformscheme-react ────────────────────────────────────────────
-    // PUBLIC (route exclue de checkIdentity) : le panneau gauche du login doit pouvoir lire le
-    // thème AVANT authentification. Ne renvoie que du branding (non sensible).
+    // Le panneau gauche du login lit le thème avant authentification : ne renvoie que du
+    // branding.
 
     public function getAction(): HttpResponse
     {

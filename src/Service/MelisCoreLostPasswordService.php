@@ -53,8 +53,7 @@ class MelisCoreLostPasswordService extends MelisServiceManager implements MelisC
             ), 'rh_login', $login);
         }
 
-        // A transport failure must not surface: it would answer 500 on a real account and 200
-        // on an unknown one, which is the enumeration leak again, through the error page.
+        // A transport failure is not surfaced: the response is the same for every login.
         try {
             $success = $this->sendPasswordLostEmail($login, $email);
         } catch (\Exception $e) {
@@ -137,8 +136,7 @@ class MelisCoreLostPasswordService extends MelisServiceManager implements MelisC
         $host   = $cfg['host'] ?? ($_SERVER['HTTP_HOST'] ?? 'localhost');
         $url    = $scheme.'://'.$host.'/melis-react/reset-password/'.$hash;
 
-        // A transport failure must not surface: it would answer 500 on a real account and 200
-        // on an unknown one, which is the enumeration leak again, through the error page.
+        // A transport failure is not surfaced: the response is the same for every login.
         try {
             $success = (bool) $this->getServiceManager()->get('MelisCoreBOEmailService')
                 ->sendBoEmailByCode($emailCode, array('USER_Login' => $login, 'URL' => $url), $email, $login, $langId);
@@ -426,7 +424,7 @@ class MelisCoreLostPasswordService extends MelisServiceManager implements MelisC
                 'usr_last_pass_update_date' => date('Y-m-d H:i:s')
             ),'usr_login', $login);
 
-            // Password history (audit item 16.0): every path that sets a password records it.
+            // Password history: every path that sets a password records it.
             $user = $userTable->getEntryByField('usr_login', $login)->current();
             if ($user) {
                 $this->getServiceManager()->get('MelisPasswordPolicyService')->recordHistory((int) $user->usr_id, $hash);
@@ -519,9 +517,7 @@ class MelisCoreLostPasswordService extends MelisServiceManager implements MelisC
      */
     private function generateHash()
     {
-        // CSPRNG: the reset token is the sole bearer credential to reset an account's password,
-        // so it must be unpredictable. uniqid() is derived from the server time (guessable) — use
-        // random_bytes for a 256-bit unguessable token.
+        // 256-bit random token.
         return bin2hex(random_bytes(32));
     }
     

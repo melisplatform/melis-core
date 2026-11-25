@@ -1,5 +1,5 @@
 /**
- * CSRF token, React back-office side (audit item 10.0).
+ * CSRF token, React back-office side.
  *
  * The server puts the session token in the JS-readable cookie `melis_csrf`
  * (MelisCore\Service\MelisCoreCsrfService). We echo it back in the `X-Melis-Csrf` header on every

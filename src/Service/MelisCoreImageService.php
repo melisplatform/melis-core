@@ -25,10 +25,7 @@ class MelisCoreImageService extends MelisServiceManager implements MelisCoreImag
      */
     public function createThumbnail($savePath, $newImageName, $srcImageFile)
     {
-        // Sécurité : $newImageName provient généralement d'un upload (nom fourni par le client) et
-        // sert à construire le chemin d'écriture → basename() pour empêcher toute traversée de
-        // répertoire (mkdir/imagepng hors du dossier média). Défense en profondeur : les appelants
-        // assainissent aussi le nom, ce basename est un point d'étranglement unique.
+        // Seul le nom de fichier est conservé (basename()).
         $newImageName = basename((string) $newImageName);
         $getImageFile = $this->resizeImage($savePath, $srcImageFile, 'tmb_'.$newImageName, 250, 250);
 
