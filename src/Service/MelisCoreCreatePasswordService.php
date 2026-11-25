@@ -459,7 +459,7 @@ class MelisCoreCreatePasswordService extends MelisGeneralService implements Meli
                 'usr_password' => $hash
             ),'usr_login', $login);
 
-            // Password history (audit item 16.0): every path that sets a password records it.
+            // Password history: every path that sets a password records it.
             $user = $userTable->getEntryByField('usr_login', $login)->current();
             if ($user) {
                 $this->getServiceManager()->get('MelisPasswordPolicyService')->recordHistory((int) $user->usr_id, $hash);
@@ -581,8 +581,7 @@ class MelisCoreCreatePasswordService extends MelisGeneralService implements Meli
      */
     private function generateHash()
     {
-        // CSPRNG: the create/reset-password token is a bearer credential — must be unpredictable.
-        // uniqid() is server-time-derived (guessable); use random_bytes for a 256-bit token.
+        // 256-bit random token.
         return bin2hex(random_bytes(32));
     }
 

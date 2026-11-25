@@ -20,7 +20,7 @@ export interface LogItem {
   /** null pour un évènement de sécurité sans utilisateur connecté (tentative sur un compte inconnu). */
   userId: number | null
   userName: string | null
-  /** IP du client à l'origine de l'évènement ; vide pour les entrées antérieures à l'audit. */
+  /** IP du client à l'origine de l'évènement ; peut être vide pour les entrées anciennes. */
   ip: string
   date: string
 }

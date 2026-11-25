@@ -39,7 +39,7 @@ class MelisAuthController extends MelisAbstractActionController
      * wrong password, but an existing account still pays for the lock bookkeeping
      * (failed-attempts count, log rows) and for the cost of its own stored hash
      * (older accounts are cost 10, current ones cost 12). Padding every failure to a
-     * common floor removes what is left of that difference (audit item 18.0).
+     * common floor removes what is left of that difference.
      */
     const AUTH_FAILURE_MIN_RESPONSE_MS = 600;
 
@@ -59,7 +59,7 @@ class MelisAuthController extends MelisAbstractActionController
      * Every failure that must not reveal anything about the account (unknown
      * login, wrong password, wrong password while a lock policy is armed,
      * account currently locked) goes through here so that the JSON is
-     * byte-identical - same keys, same message, same size (audit item 18.0).
+     * byte-identical - same keys, same message, same size.
      * Anything meant for the log listeners travels in the event payload only,
      * never in the HTTP body: see authFailureEventPayload().
      */
@@ -382,7 +382,7 @@ class MelisAuthController extends MelisAbstractActionController
 
                                 // A wrong password was already established by the bcrypt check
                                 // above: do not run the DB adapter for it, so that this path
-                                // does the same work as the unknown-login one (audit item 18.0).
+                                // does the same work as the unknown-login one.
                                 $authResult = $passwordOk ? $melisCoreAuth->authenticate() : null;
 
                                 if ($authResult !== null && $authResult->isValid()) {
@@ -411,12 +411,10 @@ class MelisAuthController extends MelisAbstractActionController
                                             }
                                         }
 
-                                        // Regenerate the session id on this privilege change (login) to
-                                        // defeat session fixation, then write the identity into the fresh session.
+                                        // Regenerate the session id at login, then write the identity into the fresh session.
                                         if (session_status() === PHP_SESSION_ACTIVE) {
                                             session_regenerate_id(true);
-                                            // New CSRF token too: the one of the anonymous session
-                                            // must not survive into the authenticated one.
+                                            // New CSRF token for the authenticated session.
                                             \MelisCore\Service\MelisCoreCsrfService::regenerate();
                                         }
                                         // Write session
@@ -532,8 +530,7 @@ class MelisAuthController extends MelisAbstractActionController
                                                 $this->getEventManager()->trigger('meliscore_login_attempt_end', $this, array_merge($result, ['typeCode' => self::ACCOUNT_LOCKED, 'itemId' => $userData->usr_id]));
                                             } else {
                                                 // Wrong password, lock policy armed but threshold not reached:
-                                                // same body as any other failure (the former "too many failed
-                                                // attempts" wording told an attacker the account exists).
+                                                // same body as any other failure.
                                                 $result = $this->buildFailedAuthResult();
                                                 $this->getEventManager()->trigger('meliscore_login_attempt_end', $this,
                                                     $this->authFailureEventPayload(self::WRONG_LOGIN_CREDENTIALS, $userData->usr_id, 'Wrong credentials on login'));
@@ -572,11 +569,6 @@ class MelisAuthController extends MelisAbstractActionController
                         // timer has not lapsed, or disabled by an administrator).
                         // Same body as any other failure: the state of the account is not
                         // revealed to somebody who does not hold its password.
-                        //
-                        // This branch used to hand out the password-RENEWAL redirect (its
-                        // "else" was mistaken for the one of the expiry check above): five
-                        // wrong passwords locked the account, and the sixth attempt answered
-                        // with a valid reset link for it, password or not.
                         $result = $this->buildFailedAuthResult();
                     }
                 } else {
@@ -584,11 +576,9 @@ class MelisAuthController extends MelisAbstractActionController
                      * No account matches the login that was typed.
                      *
                      * 1. Burn the bcrypt time that a wrong password would have cost,
-                     *    otherwise the response time tells an attacker whether the
-                     *    login exists (audit item 18.0).
-                     * 2. Record the attempt: the failure counters only ever count
-                     *    attempts against accounts that exist, so somebody trying a
-                     *    list of logins stayed invisible (audit item 21.0).
+                     *    so that both cases take the same time.
+                     * 2. Record the attempt: the failure counters only count attempts
+                     *    against accounts that exist, so this one is logged separately.
                      * 3. Answer exactly like a wrong password.
                      */
                     $melisCoreAuth->verifyDummyPassword($postValues['usr_password']);
@@ -675,10 +665,8 @@ class MelisAuthController extends MelisAbstractActionController
         $remember = $authCookieConfig['remember'];
         $isSecure = $this->isHttps();
 
-        // SECURITY: never store the password in a cookie. Only the username is remembered (to prefill
-        // the login field); the password must be re-entered. Any legacy plaintext "cookie2"
-        // (base64-encoded password) is actively expired here. cookie1/remember are HttpOnly and
-        // Secure over HTTPS: both are read server-side only, never from JS.
+        // Only the username is remembered (to prefill the login field); cookie2 is expired.
+        // cookie1/remember are HttpOnly and Secure over HTTPS.
         $user = new SetCookie('cookie1', $this->crypt($username), strtotime($remember), null, null, $isSecure, true, null, null , SetCookie::SAME_SITE_STRICT );
         $clearPass = new SetCookie('cookie2', '', strtotime('-1 day'), null, null, $isSecure, true, null, null , SetCookie::SAME_SITE_STRICT );
         $remember = new SetCookie('remember', 1, strtotime($remember), null, null, $isSecure, true, null, null , SetCookie::SAME_SITE_STRICT );

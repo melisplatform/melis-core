@@ -16,40 +16,24 @@ use Laminas\Mvc\MvcEvent;
 use MelisCore\Service\MelisCoreCsrfService;
 
 /**
- * GLOBAL CSRF gate for the back-office (audit item 10.0).
+ * Back-office CSRF check.
  *
- * Checks, on EVERY state-changing back-office request, two independent things:
+ * On state-changing back-office requests, checks:
  *   1. the token (see MelisCoreCsrfService): header `X-Melis-Csrf`, or `melis_csrf` POST field;
  *   2. the origin: the `Origin` (or, failing that, `Referer`) host must be our own host.
  *
- * ONE place, no per-controller call: the legacy back-office and the React one both simply echo the
- * cookie back, so nothing has to be touched tool by tool (and no .phtml is modified).
+ * The legacy back-office and the React one both echo the cookie back, so no per-controller
+ * call is needed.
  *
- * TWO MODES (`meliscore/datas/security/csrf_mode`, env `MELIS_CSRF_MODE`):
- *   - `enforce` (DEFAULT): a failure becomes a real 403 before dispatch. Default on purpose - a
- *     protection that ships disabled protects nobody.
- *   - `report`: escape hatch. Nothing is blocked, every failure is written to the PHP log. Set
- *     MELIS_CSRF_MODE=report if a legitimate POST turns out not to carry the token yet (a module
- *     doing its own XMLHttpRequest, a hidden-iframe upload, a third-party callback), read the
- *     inventory (`grep MELIS_CSRF`), fix it, and put enforce back. No code change, no deploy.
- *
- * SCOPE: back-office paths only (`/melis…`, which covers `/melis/react-api` and `/melis-react`).
- * The front-office site, the assets (`/MelisCore/…`) and the CLI are never touched.
- *
- * FAIL-OPEN, ON PURPOSE, IN TWO CASES, both of them a session with nothing worth forging yet:
- *   - no token in the session at all (CLI, a cron or microservice call with no session);
- *   - a token minted during THIS request, which the client is only now receiving and therefore
- *     cannot echo back (see MelisCoreCsrfService::wasJustMinted()).
- * An attacker cannot empty a victim's session, so neither case is an authenticated one.
+ * Mode: `meliscore/datas/security/csrf_mode` (`enforce` by default).
  */
 class MelisCoreCsrfListener implements ListenerAggregateInterface
 {
     public $listeners = [];
 
-    /** Log prefix, to collect the inventory: `docker logs <container> | grep MELIS_CSRF`. */
     const LOG_PREFIX = 'MELIS_CSRF';
 
-    /** Protected path tree (the back-office). Case-sensitive: `/MelisCore/…` assets are excluded. */
+    /** Back-office path prefix (case-sensitive). */
     const BACKOFFICE_PATH_PREFIX = '/melis';
 
     /** Methods that must not change state, hence not checked. */
@@ -57,8 +41,7 @@ class MelisCoreCsrfListener implements ListenerAggregateInterface
 
     public function attach(EventManagerInterface $events, $priority = -100)
     {
-        // Negative priority: runs AFTER Module::checkIdentity(), i.e. on a request that already
-        // has (or does not have) an identity, and still before the controller is dispatched.
+        // Negative priority: runs after Module::checkIdentity() and before the controller is dispatched.
         $this->listeners[] = $events->attach(MvcEvent::EVENT_ROUTE, [$this, 'onRoute'], $priority);
     }
 
@@ -109,18 +92,14 @@ class MelisCoreCsrfListener implements ListenerAggregateInterface
 
         $path = (string) $request->getUri()->getPath();
         if (strpos($path, self::BACKOFFICE_PATH_PREFIX) !== 0) {
-            return; // front-office, assets, another route tree: out of scope
+            return;
         }
 
         if (MelisCoreCsrfService::getToken() === '') {
-            return; // no session token: nothing to protect (see class doc)
+            return;
         }
 
         if (MelisCoreCsrfService::wasJustMinted()) {
-            // The client is being handed the token in THIS response; it cannot have echoed it
-            // back. Refusing here would reject the first POST of a fresh browser (typically the
-            // React login form on a /melis-react deep link) and make it work only on retry.
-            // See MelisCoreCsrfService::wasJustMinted() for why this weakens nothing.
             $this->log('ALLOW', 'token-just-minted', 'grace', $method, $path);
 
             return;
@@ -157,9 +136,7 @@ class MelisCoreCsrfListener implements ListenerAggregateInterface
     }
 
     /**
-     * `Origin` when the browser sends it (all modern browsers do on a cross-site POST, which is
-     * exactly the attack), `Referer` otherwise. Neither one = refused: a forged request is not
-     * going to be the one advertising where it comes from.
+     * Compares the `Origin` host (or `Referer` when absent) with the request host.
      */
     private function isSameOrigin(HttpRequest $request)
     {
@@ -213,7 +190,6 @@ class MelisCoreCsrfListener implements ListenerAggregateInterface
                 $mode = strtolower((string) $config['csrf_mode']);
             }
         } catch (\Throwable $ignored) {
-            // Unreadable configuration: stay on the default, which protects.
         }
 
         return $mode === 'report' ? 'report' : 'enforce';
@@ -221,15 +197,9 @@ class MelisCoreCsrfListener implements ListenerAggregateInterface
 
     /**
      * 403. JSON for API/XHR calls (the React front expects `{success,error}`), plain text otherwise.
-     * Returning a Response from EVENT_ROUTE short-circuits the dispatch: the controller never runs,
-     * so the forged request has no side effect at all.
+     * Returning a Response from EVENT_ROUTE short-circuits the dispatch.
      *
-     * The reason travels back in `X-Melis-Csrf-Reason` (origin / token-missing / token-mismatch).
-     * It is the same string written to the PHP log, repeated where an operator can actually read
-     * it: the browser's network panel. That is the only way to tell these three apart on an
-     * environment whose logs are out of reach, and it hands an attacker nothing - a cross-site
-     * forgery cannot read the response it provokes, which is what makes CSRF blind in the first
-     * place. The body stays generic.
+     * The reason (origin / token-missing / token-mismatch) is sent in `X-Melis-Csrf-Reason`.
      */
     private function deny(MvcEvent $e, $reason = '')
     {

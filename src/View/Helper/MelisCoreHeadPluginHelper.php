@@ -70,19 +70,9 @@ class MelisCoreHeadPluginHelper extends AbstractHelper
 
                 $loginJsBundle = $bundleFolder . '/'.ModulesController::BUNDLE_FOLDER_NAME.'/js/bundle-all-login.js';
 
-                // A login bundle older than melisCsrf.js is IGNORED, and the plain file list used
-                // instead until it is rebuilt.
-                //
-                // The bundle embeds its own copy of the emitter. A copy built before the emitter
-                // gained its `window.__melisCsrfInstalled` guard patches XMLHttpRequest a SECOND
-                // time, on top of the standalone file this page always loads. Both wrappers then
-                // call setRequestHeader('X-Melis-Csrf', token) on the same request, the browser
-                // joins them into "token, token", and the gate refuses every login with
-                // reason=token-mismatch - while fetch(), which the emitter does not patch, keeps
-                // working, so the React back-office is unaffected and only the legacy login breaks.
-                //
-                // Comparing mtimes heals that on its own: no shell access needed on the server, and
-                // the bundle is used again as soon as it is rebuilt from the current emitter.
+                // A login bundle older than melisCsrf.js is ignored, and the plain file list used
+                // instead until it is rebuilt: an older bundle may embed an outdated copy of the
+                // emitter, which would patch XMLHttpRequest a second time.
                 $emitterFile = __DIR__ . '/../../../public/js/core/melisCsrf.js';
                 $bundleUsable = is_file($loginJsBundle)
                     && (!is_file($emitterFile) || filemtime($loginJsBundle) >= filemtime($emitterFile));
@@ -98,11 +88,8 @@ class MelisCoreHeadPluginHelper extends AbstractHelper
         }
 
         if ($path == 'meliscore_login') {
-            // The emitter is kept OUT of the login bundle and injected on its own at render time.
-            // A bundle that embeds its own copy is a second copy on the same page, which only the
-            // emitter's install guard then stops from patching XMLHttpRequest twice - and a bundle
-            // built before that guard existed did exactly that, sending the header twice and
-            // failing every login. Never bundling it means there is nothing to guard against.
+            // The emitter is kept out of the login bundle and injected on its own at render time,
+            // so the page only ever holds one copy.
             $jsFiles = $forBundling
                 ? $this->withoutCsrfEmitter($jsFiles)
                 : $this->withCsrfEmitterFirst($jsFiles);
@@ -115,12 +102,10 @@ class MelisCoreHeadPluginHelper extends AbstractHelper
 	}
 
     /**
-     * The CSRF emitter (audit 10.0) on the login page, whatever the mode: plain file list,
-     * per-module bundles, or a pre-built login bundle (`etc/bundles/js/bundle-all-login.js`).
-     * That last one replaces the whole list, and a bundle built before the emitter existed
-     * silently drops it: every legacy login POST then fails with "Invalid CSRF token". Loading
-     * the file on its own, first, does not depend on when the bundle was last built; the script
-     * installs itself once, so a bundle that also contains it is harmless.
+     * The CSRF emitter on the login page, whatever the mode: plain file list, per-module
+     * bundles, or a pre-built login bundle (`etc/bundles/js/bundle-all-login.js`). It is loaded
+     * on its own, first, so it does not depend on when the bundle was last built; the script
+     * installs itself once.
      *
      * @param string[] $jsFiles
      * @return string[]

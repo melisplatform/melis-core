@@ -8,20 +8,16 @@ $locale = $container['melis-lang-locale'];
 
 // Cache-busting stamp for MelisCore's concatenated bundles. They are served with a one-day
 // Cache-Control and no validator, so without it a browser keeps running yesterday's bundle after a
-// deploy - which, since the bundle now carries the CSRF emitter (audit 10.0), means every legacy
-// tool answering 403 until the user hard-refreshes. The file's mtime changes only when the bundle
-// is rebuilt, so the URL stays stable and cacheable in between.
+// deploy. The file's mtime changes only when the bundle is rebuilt, so the URL stays stable and
+// cacheable in between.
 $bundleStamp = static function ($file) {
     $path = __DIR__ . '/../public/build/' . $file;
 
     return '?v=' . (is_file($path) ? filemtime($path) : '0');
 };
 
-// Same problem, same cure, for the standalone CSRF emitter (audit 10.0). It is served with a
-// one-day Cache-Control and no validator either, and its URL carried no stamp at all - so a
-// browser that had loaded it once kept running that copy for a day after every deploy. A fix to
-// the emitter then never reached the page it was written for, and the login form went on posting
-// whatever token it had stamped, refused with reason=token-mismatch.
+// Same cache-busting stamp for the standalone CSRF emitter, which is also served with a one-day
+// Cache-Control and no validator.
 $csrfEmitter = static function () {
     $path = __DIR__ . '/../public/js/core/melisCsrf.js';
 
@@ -271,7 +267,7 @@ return array(
                 ),
                 'js' => array(
                     '/melis/get-translations?locale=' . $locale,
-                    // CSRF token echoed back on every state-changing request (audit 10.0).
+                    // CSRF token echoed back on every state-changing request.
                     // Loaded FIRST: it patches XMLHttpRequest, which every tool below then uses.
                     $csrfEmitter(),
                     '/MelisCore/assets/components/library/jquery/jquery.min.js',
@@ -721,9 +717,8 @@ return array(
                 ),
                 'js' => array(
                     '/melis/get-translations?locale=' . $locale,
-                    // CSRF token echoed back on every state-changing request (audit 10.0). The
-                    // login page has its own short JS list (no bundle.js), so it needs its own
-                    // entry: without it the login POST to /melis/authenticate carries no token.
+                    // CSRF token echoed back on every state-changing request. The login page has
+                    // its own short JS list (no bundle.js), so it needs its own entry.
                     $csrfEmitter(),
                     '/MelisCore/assets/components/library/jquery/jquery.min.js?v=v1.2.3',
                     '/MelisCore/js/tools/melisCoreTool.js',

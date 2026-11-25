@@ -120,15 +120,11 @@ class MelisCoreTranslationService extends Translator implements MelisCoreTransla
     /**
      * Full back-office translation catalogue of ONE locale, built from the modules' language files
      * alone — i.e. independent of the session and of what the runtime translator happens to have
-     * loaded (SECURITY, DEKRA audit action #19: the public /melis/get-translations route must answer
-     * identically to every caller).
+     * loaded. Used by the /melis/get-translations route.
      *
-     * getTranslationMessages() above cannot do that: it re-registers the files the translator loaded
-     * for the CURRENT session (chosen from the session locale by every module's createTranslations()
-     * at bootstrap) under whatever locale is requested — so an anonymous request for en_EN returned
-     * the French set when the session was French, and the `locale` parameter had no effect at all.
-     * It also pre-escapes quotes with a backslash for the old string concatenation, which json_encode
-     * must not receive.
+     * Unlike getTranslationMessages() above, which re-registers the files the translator loaded
+     * for the current session and pre-escapes quotes with a backslash for string concatenation,
+     * the result depends only on the requested locale and is suitable for json_encode.
      *
      * Rules mirror what the modules' bootstraps load, deterministically:
      *  - only the modules BOOTED for this request (Laminas ModuleManager — the back-office set for

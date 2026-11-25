@@ -17,7 +17,7 @@ export const ACTIVITY: ActivityItem[] = [
   { id: 2, user: 'Yanis', type: 'edited', target: 'Tarifs', hoursAgo: 5 },
   { id: 3, user: 'Sophie', type: 'uploaded', target: 'hero-2026.png', hoursAgo: 8 },
   { id: 4, user: 'Marc', type: 'created', target: 'Landing — Melis AI', hoursAgo: 28 },
-  { id: 5, user: 'Camille', type: 'commented', target: 'Cas client — DEKRA', hoursAgo: 31 },
+  { id: 5, user: 'Camille', type: 'commented', target: 'Cas client', hoursAgo: 31 },
 ]
 
 export const CURRENT_USER = {

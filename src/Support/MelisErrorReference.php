@@ -10,21 +10,18 @@
 namespace MelisCore\Support;
 
 /**
- * Correlation id for an error whose detail must NOT reach the browser (audit item 13.0).
+ * Correlation id for an error whose detail is logged rather than displayed.
  *
- * MelisCoreApiErrorSanitizerListener covers everything that leaves as a JSON response. A handful
- * of places cannot be reached that way - a caught exception rendered into HTML, or echoed into a
- * JavaScript bundle - and call this instead: the detail goes to the PHP log under a reference,
- * the caller shows the reference alone.
+ * For errors that are not returned as a JSON response (e.g. a caught exception rendered into
+ * HTML or a JavaScript bundle): the detail goes to the PHP log under a reference, the caller
+ * shows the reference alone.
  *
  *     $ref = MelisErrorReference::log($e, 'PluginViewController::generateRec');
  *     $view->setVariable('error', 'An unexpected error occurred (ref: ' . $ref . ')');
- *
- * Read the detail back with: `docker logs <container> | grep MELIS_API_ERROR`.
  */
 class MelisErrorReference
 {
-    /** Same prefix as the listener, so one grep collects both. */
+    /** Same prefix as MelisCoreApiErrorSanitizerListener. */
     const LOG_PREFIX = 'MELIS_API_ERROR';
 
     /** What is shown in place of the exception message. */

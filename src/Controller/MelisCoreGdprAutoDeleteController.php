@@ -20,8 +20,8 @@ use Laminas\View\Model\ViewModel;
 class MelisCoreGdprAutoDeleteController extends MelisAbstractActionController
 {
     /**
-     * Outil auquel ce contrôleur appartient (audit DEKRA 7.0) : MelisCoreAuthorizationListener
-     * vérifie canAccess() sur cette clé AVANT le dispatch.
+     * Outil auquel ce contrôleur appartient : MelisCoreAuthorizationListener
+     * vérifie canAccess() sur cette clé avant le dispatch.
      */
     const MELIS_KEY = 'melis_core_gdpr';
 
@@ -738,9 +738,8 @@ class MelisCoreGdprAutoDeleteController extends MelisAbstractActionController
             mkdir($dirToUpload, 0755, true);
         }
 
-        // SECURITY: this field is an email-layout logo (image only). NEVER trust the client filename
-        // or extension — a raw move_uploaded_file($file['name']) let an attacker drop shell.php into
-        // the web root (= RCE). Validate the actual content is an image, then store under a
+        // This field is an email-layout logo (image only). The client filename and extension are
+        // not used: validate the actual content is an image, then store under a
         // server-generated random name with a whitelisted extension.
         $allowed = ['png' => 'image/png', 'jpg' => 'image/jpeg', 'jpeg' => 'image/jpeg', 'gif' => 'image/gif', 'webp' => 'image/webp'];
         $info = @getimagesize($file['tmp_name']);
@@ -895,23 +894,17 @@ class MelisCoreGdprAutoDeleteController extends MelisAbstractActionController
      * @return JsonModel
      */
     /**
-     * Point d'entrée CRON de la purge RGPD (audit DEKRA 7.0).
-     *
-     * La route `melis-backoffice/gdpr-autodelete-cron` figure dans `excluded_routes` : elle est
-     * donc PUBLIQUE — `checkIdentity()` la laisse passer sans authentification — et elle déclenche
-     * une SUPPRESSION de données. N'importe qui capable d'atteindre l'hôte pouvait appeler
-     * `/melis/gdprautodelete/` en boucle.
+     * Point d'entrée CRON de la purge RGPD.
      *
      * Un appelant cron n'a pas de session : on ne peut pas exiger une identité. Trois voies
-     * d'appel légitimes, et rien d'autre :
+     * d'appel acceptées :
      *   1. la CLI (console/conteneur) ;
      *   2. un jeton partagé, `MELIS_GDPR_CRON_TOKEN` (en-tête `X-Melis-Cron-Token` ou paramètre
      *      `token`), comparé en temps constant ;
      *   3. un utilisateur du back-office authentifié ayant le droit sur l'outil RGPD (exécution
      *      manuelle).
      *
-     * Sans jeton configuré, un appel HTTP distant est REFUSÉ : pour un point d'entrée destructif,
-     * s'arrêter est le seul défaut acceptable. Le refus est tracé (journal de sécurité + log PHP)
+     * Sans jeton configuré, un appel HTTP distant est refusé. Le refus est tracé (journal de sécurité + log PHP)
      * afin qu'un cron existant qui cesserait de purger soit visible immédiatement.
      */
     public function runGdprAutoDeleteCronAction()
