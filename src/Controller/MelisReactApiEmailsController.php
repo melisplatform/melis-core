@@ -178,7 +178,16 @@ class MelisReactApiEmailsController extends MelisAbstractActionController
             $isNew    = (bool) ($b['isNew'] ?? false);
             $codename = trim((string) ($b['codename'] ?? ''));
 
-            if ($denyCap = $this->denyUnlessCan($isNew ? 'create' : 'edit')) { return $denyCap; }
+            // Create vs edit decided on the server, from the code (Mantis #0011542): an email that
+            // exists in the database or in the email config is an edit (a default email can still
+            // be customised with "edit"), any other code is a creation.
+            $inDb     = $codename !== ''
+                && !empty($this->sm()->get('MelisCoreTableBOEmails')->getEntryByField('boe_code_name', $codename)->current());
+            $inConfig = $codename !== ''
+                && isset($this->sm()->get('config')['plugins']['meliscore']['emails'][$codename]);
+            $exists   = $inDb || $inConfig;
+
+            if ($denyCap = $this->denyUnlessCan($exists ? 'edit' : 'create')) { return $denyCap; }
 
             $name      = trim((string) ($b['name'] ?? ''));
             $fromName  = trim((string) ($b['fromName'] ?? ''));
@@ -199,11 +208,8 @@ class MelisReactApiEmailsController extends MelisAbstractActionController
             }
 
             // Empêche de réutiliser un code existant en création.
-            if ($isNew) {
-                $exists = $this->sm()->get('MelisCoreTableBOEmails')->getEntryByField('boe_code_name', $codename)->current();
-                if (!empty($exists)) {
-                    return $this->jsonResponse(['success' => false, 'error' => 'Ce code email existe déjà.'], 400);
-                }
+            if ($isNew && $exists) {
+                return $this->jsonResponse(['success' => false, 'error' => 'Ce code email existe déjà.'], 400);
             }
 
             $data = [
