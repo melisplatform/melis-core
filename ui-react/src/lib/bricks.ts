@@ -162,6 +162,38 @@ export function brickRoute(b: BrickDef): string {
   return (b.forwardKey ? routeForForward(b.forwardKey) : null) ?? b.route
 }
 
+/**
+ * Other URLs known for a native tool (documentation, older registry entries) → its forwardKey.
+ * Bricks don't need an entry: their manifest route is handled generically below.
+ */
+const ROUTE_ALIASES: Record<string, string> = {
+  '/melis-core/other-config': 'MelisCore/MelisCoreOtherConfig',
+  '/melis-core/otherconfig':  'MelisCore/MelisCoreOtherConfig',
+  '/otherconfig':             'MelisCore/MelisCoreOtherConfig',
+}
+
+/**
+ * The menu URL to use for `path` when `path` is ANOTHER known URL of a tool — a brick's manifest
+ * route (e.g. /melis-core/sql while the menu mounts the tool at /melis-core/melissql) or an alias
+ * above — keeping any sub-path. null when `path` is already the menu URL, unknown, or the tool is
+ * not in the user's menu (no route registered: the usual "Access denied" then applies).
+ * Mantis #0011560 / #0011541.
+ */
+export function canonicalToolPath(path: string): string | null {
+  const swap = (from: string, to: string | null) =>
+    to && to !== from && (path === from || path.startsWith(from + '/')) ? to + path.slice(from.length) : null
+  for (const b of bricks) {
+    if (!b.forwardKey || !b.route) continue
+    const hit = swap(b.route, routeForForward(b.forwardKey))
+    if (hit) return hit
+  }
+  for (const [alias, forwardKey] of Object.entries(ROUTE_ALIASES)) {
+    const hit = swap(alias, routeForForward(forwardKey))
+    if (hit) return hit
+  }
+  return null
+}
+
 /** First loaded brick with a Sidebar panel whose module is among `modules` (a nav section's modules). */
 export function sidebarBrickForModules(modules: Set<string>): BrickDef | undefined {
   return bricks.find((b) => b.Sidebar && b.module && modules.has(b.module))
