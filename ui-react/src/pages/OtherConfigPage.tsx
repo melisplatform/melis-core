@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { createContext, useContext, useEffect, useRef, useState } from 'react'
 import { useLocation } from 'react-router-dom'
 import { RotateCcw, Save, Settings2, ShieldAlert, Clock, KeyRound, Repeat } from 'lucide-react'
 
@@ -35,6 +35,34 @@ function Switch({ checked, onChange, disabled }: { checked: boolean; onChange: (
       <span className={cn('inline-block size-4 transform rounded-full bg-white shadow transition-transform',
         checked ? 'translate-x-4' : 'translate-x-0.5')} />
     </button>
+  )
+}
+
+// ─── Layout helpers ───────────────────────────────────────────────────────────
+// Declared at MODULE level on purpose (Mantis #0011539): declared inside OtherConfigPage they were
+// new component types on every render, so React unmounted/remounted their content after each
+// keystroke — the input lost focus and "200" became "2". `narrow` reaches Row through a context.
+const NarrowCtx = createContext(false)
+
+function Section({ icon: Icon, title, children }: { icon: typeof KeyRound; title: string; children: React.ReactNode }) {
+  return (
+    <section className="rounded-xl border border-border bg-card p-4 shadow-sm">
+      <h3 className="flex items-center gap-2 text-sm font-semibold"><Icon className="size-4 text-primary" />{title}</h3>
+      <div className="mt-4 flex flex-col gap-4">{children}</div>
+    </section>
+  )
+}
+
+function Row({ label, hint, children }: { label: string; hint?: string; children: React.ReactNode }) {
+  const narrow = useContext(NarrowCtx)
+  return (
+    <div className={cn('flex items-start justify-between gap-4', narrow && 'flex-col')}>
+      <div className="min-w-0">
+        <div className="text-sm font-medium">{label}</div>
+        {hint && <div className="text-xs text-muted-foreground">{hint}</div>}
+      </div>
+      <div className={cn('flex shrink-0 items-center gap-2', narrow && 'w-full flex-wrap')}>{children}</div>
+    </div>
   )
 }
 
@@ -99,23 +127,8 @@ export default function OtherConfigPage() {
     } finally { setSaving(false) }
   }
 
-  // ─── Petits helpers de rendu ────────────────────────────────────────────────
-  const Section = ({ icon: Icon, title, children }: { icon: typeof KeyRound; title: string; children: React.ReactNode }) => (
-    <section className="rounded-xl border border-border bg-card p-4 shadow-sm">
-      <h3 className="flex items-center gap-2 text-sm font-semibold"><Icon className="size-4 text-primary" />{title}</h3>
-      <div className="mt-4 flex flex-col gap-4">{children}</div>
-    </section>
-  )
-  const Row = ({ label, hint, children }: { label: string; hint?: string; children: React.ReactNode }) => (
-    <div className={cn('flex items-start justify-between gap-4', narrow && 'flex-col')}>
-      <div className="min-w-0">
-        <div className="text-sm font-medium">{label}</div>
-        {hint && <div className="text-xs text-muted-foreground">{hint}</div>}
-      </div>
-      <div className={cn('flex shrink-0 items-center gap-2', narrow && 'w-full flex-wrap')}>{children}</div>
-    </div>
-  )
-  const Num = (key: keyof OtherConfig, opts: { w?: string } = {}) => (
+  // ─── Petit helper de rendu (appelé comme fonction, pas comme composant : pas de remontage) ──
+  const Num =(key: keyof OtherConfig, opts: { w?: string } = {}) => (
     <Input type="number" min={0} value={cfg![key]} disabled={!canEdit}
       onChange={(e) => set(key, e.target.value.replace(/[^\d]/g, ''))}
       className={cn('h-8 text-sm', opts.w ?? 'w-24')} />
@@ -162,7 +175,7 @@ export default function OtherConfigPage() {
           <p className="text-sm text-muted-foreground">{t('otherconfig.no_list')}</p>
         ) : loading || !cfg ? (
           <p className="text-sm text-muted-foreground">{t('common.loading')}</p>
-        ) : (<>
+        ) : (<NarrowCtx.Provider value={narrow}>
           {/* 1. Verrouillage du compte */}
           <Section icon={ShieldAlert} title={t('otherconfig.lock.title')}>
             <Row label={t('otherconfig.lock.enable')} hint={t('otherconfig.lock.enable_hint')}>
@@ -253,7 +266,7 @@ export default function OtherConfigPage() {
               </ToolErrorBoundary>
             )
           })}
-        </>)}
+        </NarrowCtx.Provider>)}
       </div>
     </div>
   )
