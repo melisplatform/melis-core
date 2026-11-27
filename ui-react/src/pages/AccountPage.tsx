@@ -63,7 +63,7 @@ function errorMessage(t: (k: never) => string, raw: string): string {
 }
 
 export default function AccountPage() {
-  const { t, currentLocale } = useI18n()
+  const { t, currentLocale, changeLocale } = useI18n()
   const showToggle = toolHasViewToggle('account')
   const [mode, setMode] = useState<ViewMode>('react')
   const [iframeLoaded, setIframeLoaded] = useState(false)
@@ -165,8 +165,10 @@ export default function AccountPage() {
       })
       setSaved(true); setPassword(''); setConfirm(''); setCurrentPassword('')
       okNotify(t('account.title'), t('account.saved'))
-      // Changement de langue du BO → recharger pour ré-initialiser l'i18n dans la nouvelle langue.
-      if (res.reload) { window.location.reload(); return }
+      // Changement de langue du BO : même chemin que le sélecteur de langue (session serveur mise à
+      // jour + cache local de la locale, puis rechargement). Un simple reload gardait l'ancienne
+      // langue : la session et le cache local la portaient encore (Mantis #0011540).
+      if (res.reload) { changeLocale(langId); return }
       setTimeout(() => setSaved(false), 2500)
     } catch (e) {
       const raw = String((e as Error)?.message ?? e)

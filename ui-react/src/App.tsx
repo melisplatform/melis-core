@@ -12,7 +12,7 @@ import { useI18n, type I18nState } from '@/i18n/i18n-context'
 import { TabProvider, useTabs } from '@/components/tabs/tab-store'
 import { Shell } from '@/components/layout/Shell'
 import { MODULES } from '@/lib/module-registry'
-import { useBricks, useBricksVersion, bricksReady, brickRoute } from '@/lib/bricks'
+import { useBricks, useBricksVersion, bricksReady, brickRoute, canonicalToolPath } from '@/lib/bricks'
 import { hasToolRoutes, labelForRoute, melisKeyForRoute, routeForForward, routeForMelisKey, toolBaseRoute, useToolRoutesVersion } from '@/lib/tool-routes'
 import LoginPage from '@/pages/LoginPage'
 import Verify2faPage from '@/pages/Verify2faPage'
@@ -122,9 +122,18 @@ function TabBridge() {
     window.addEventListener('message', onMessage)
     return () => window.removeEventListener('message', onMessage)
   }, [navigate, openTab, bricks, t])
+  // Another known URL of a tool (brick manifest route, documented alias) → its menu URL, so a
+  // link from the documentation or a manifest opens the tool instead of « Access denied »
+  // (Mantis #0011560 / #0011541). Re-checked when the menu registry or the brick list loads.
+  useEffect(() => {
+    const target = canonicalToolPath(location.pathname)
+    if (target) navigate(target + location.search + location.hash, { replace: true, state: location.state })
+  }, [location.pathname, location.search, location.hash, location.state, navigate, toolRoutesVersion, bricksVersion])
   useEffect(() => {
     const path = location.pathname
     if (path === '/login' || path === '/setup') return
+    // About to be redirected to the tool's menu URL (effect above): no tab for this URL
+    if (canonicalToolPath(path)) return
     // Native tools (MODULES) use ONE top tab + a sub-tab bar for their entities, so an edit
     // sub-route (/[tool]/:id) must sync to the TOOL's top tab — not spawn a per-id tab ("2").
     // Bricks WITHOUT subTabs (e.g. CMS pages) keep one top tab per entity (handled below);
